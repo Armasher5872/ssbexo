@@ -24,4 +24,8 @@ pub fn install() {
   perfectpivot::install();
   roawavedash::install();
   specialafterinfliction::install();
+  unsafe {
+    // removes phantoms
+    skyline::patching::Patch::in_text(0x3e6ce8).data(0x14000012u32);
+  }
 }

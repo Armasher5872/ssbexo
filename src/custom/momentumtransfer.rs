@@ -1,19 +1,17 @@
 #![allow(unused_macros)]
 use {
-    crate::{
-        custom::main::BomaExt,
-        functions::{
-            CURRENT_MOMENTUM,
-            CURRENT_MOMENTUM_SPECIALS,
-            FIGHTER_KIND,
-            GROUND_VEL,
-            JUMP_SQUAT_FRAME,
-            JUMPSQUAT_VELOCITY,
-            JUMP_SPEED_MAX_MUL,
-            JUMP_SPEED_RATIO,
-            RAR_LENIENCY,
-            FrameInfo
-        }
+    crate::functions::{
+        CURRENT_MOMENTUM,
+        CURRENT_MOMENTUM_SPECIALS,
+        FIGHTER_KIND,
+        GROUND_VEL,
+        JUMP_SQUAT_FRAME,
+        JUMPSQUAT_VELOCITY,
+        JUMP_SPEED_MAX_MUL,
+        JUMP_SPEED_RATIO,
+        RAR_LENIENCY,
+        BomaExt,
+        FrameInfo
     },
     smash::{
         app::{

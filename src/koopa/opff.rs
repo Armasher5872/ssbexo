@@ -1,5 +1,7 @@
 use {
     crate::functions::{
+        CAN_FIREBALL,
+        FIREBALL,
         KOOPA_EXCELLENT_SMASH,
         KOOPA_EXCELLENT_SMASH_GFX,
         SPECIAL_ZOOM_GFX,
@@ -11,7 +13,10 @@ use {
         KOOPA_OK_SMASH_GFX
     },
     smash::{
-        lua2cpp::L2CFighterCommon,
+        lua2cpp::{
+            L2CFighterBase,
+            L2CFighterCommon
+        },
         hash40,
         phx::{
             Hash40,
@@ -35,6 +40,7 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
+        let end_frame = MotionModule::end_frame(module_accessor);
         let lr = PostureModule::lr(module_accessor);
         if ![*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4_START].contains(&status_kind) {
             KOOPA_OK_SMASH[entry_id] = false;
@@ -224,11 +230,102 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
                 PostureModule::update_rot_y_lr(module_accessor);
             }
         }
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
+        && [hash40("special_n_start"), hash40("special_air_n_start")].contains(&motion_kind) {
+            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                CAN_FIREBALL[entry_id] = false;
+            }
+            else {
+                CAN_FIREBALL[entry_id] = true;
+            }
+        }
+        if motion_kind == hash40("special_n") {
+            if CAN_FIREBALL[entry_id] == true {
+                if end_frame - frame < 5.0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                };
+                if frame >= 19.0 {
+                    CancelModule::enable_cancel(module_accessor);
+                };
+                MotionModule::set_rate(module_accessor, 0.775);
+            }
+            else {
+                if ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_end"), 1.0, 1.0, false, 0.0, false, false);
+                }
+            }
+        }
+		if motion_kind == hash40("special_air_n") {
+            if CAN_FIREBALL[entry_id] == true {
+                if end_frame-frame < 5.0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                };
+                if frame >= 19.0 {
+                    CancelModule::enable_cancel(module_accessor);
+                };
+                MotionModule::set_rate(module_accessor, 0.775);
+            }
+            else {
+                if ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_end"), 1.0, 1.0, false, 0.0, false, false);
+                }
+            }
+        }
+		if motion_kind == hash40("special_n_end") {
+            if CAN_FIREBALL[entry_id] == true {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+            }
+            else {
+                if end_frame - frame < 5.0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                };
+            }
+        }
+		if motion_kind == hash40("special_air_n_end") {
+            if CAN_FIREBALL[entry_id] == true {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+            }
+            else {
+                if end_frame-frame < 5.0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                };
+            }
+        }
+        if ArticleModule::is_exist(module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH)
+        && CAN_FIREBALL[entry_id] == true {
+			FIREBALL[entry_id] += 1;
+		}
+        else {
+			FIREBALL[entry_id] = 0;
+		};
+        if CAN_FIREBALL[entry_id] == true {
+            macros::EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, true);
+        }
+        println!("Can Fireball, {}", CAN_FIREBALL[entry_id]);
+    }
+}
+
+#[weapon_frame(agent = WEAPON_KIND_KOOPA_BREATH)]
+pub fn fireball_frame(weapon : &mut L2CFighterBase) {
+    unsafe {
+        let otarget_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+        let boma = smash::app::sv_battle_object::module_accessor(otarget_id);
+		let entry_id = WorkModule::get_int(&mut *boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let vector = Vector3f{x: 0.0, y: 0.0, z: 0.0};
+        if CAN_FIREBALL[entry_id] == true {
+            if FIREBALL[entry_id] % 14 == 0 {
+                EffectModule::kill_kind(weapon.module_accessor, Hash40::new("koopa_breath_m_fire"), false, true);
+                let f1: u32 = EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("sys_fireflower_shot"), smash::phx::Hash40::new("top"), &vector, &vector, 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
+                EffectModule::set_rgb(boma, f1, 1.5, 0.5, 0.5);
+                EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("koopa_breath_m_fire"), smash::phx::Hash40::new("top"), &vector, &vector, 0.4, true, 0, 0, 0, 0, 0, true, true) as u32;
+            };
+        }
     }
 }
 
 pub fn install() {
     install_agent_frames!(
+        fireball_frame,
         koopa_frame
     );
 }

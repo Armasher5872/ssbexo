@@ -95,6 +95,8 @@ pub static mut USED_FS: [bool; 9] = [false; 9]; //Flags when you just used a Fin
 pub static mut WAVEDASH_DONE: [bool; 8] = [false; 8];
 
 //Bowser Variables
+pub static mut CAN_FIREBALL: [bool; 8] = [false; 8];
+pub static mut FIREBALL: [i32; 8] = [0; 8];
 pub static mut KOOPA_EXCELLENT_SMASH: [bool; 8] = [false; 8];
 pub static mut KOOPA_EXCELLENT_SMASH_GFX: [i32; 8] = [0; 8];
 pub static mut KOOPA_GOOD_SMASH: [bool; 8] = [false; 8];
@@ -261,6 +263,30 @@ pub(crate) unsafe fn ray_check_pos(module_accessor: &mut smash::app::BattleObjec
 	GroundModule::ray_check(module_accessor, &Vector2f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor)}, &Vector2f{x: x_distance, y: y_distance}, ignore_plat)
 }
 
+//BomaExt, helps with various things
+pub trait BomaExt {
+    unsafe fn is_fighter(&mut self) -> bool;
+    unsafe fn is_status_one_of(&mut self, kinds: &[i32]) -> bool;
+	unsafe fn is_weapon(&mut self) -> bool;
+    unsafe fn kind(&mut self) -> i32;
+}
+
+impl BomaExt for BattleObjectModuleAccessor {
+    unsafe fn is_fighter(&mut self) -> bool {
+        return smash::app::utility::get_category(self) == *BATTLE_OBJECT_CATEGORY_FIGHTER;
+    }
+    unsafe fn is_status_one_of(&mut self, kinds: &[i32]) -> bool {
+        let kind = StatusModule::status_kind(self);
+        return kinds.contains(&kind);
+    }
+	unsafe fn is_weapon(&mut self) -> bool {
+        return smash::app::utility::get_category(self) == *BATTLE_OBJECT_CATEGORY_WEAPON;
+    }
+    unsafe fn kind(&mut self) -> i32 {
+        return smash::app::utility::get_kind(self);
+    }
+}
+
 //Frame Info, helps with a few things like Momentum Transfer
 pub struct FrameInfo {
 	pub lua_state: u64,
@@ -327,6 +353,7 @@ fn fighter_reset(fighter: &mut L2CFighterCommon) {
 		BOOST_INSTALL_TIMER[entry_id] = 0;
         CAN_CANCEL[entry_id] = false;
         CAN_CANCEL_TIMER[entry_id] = 0;
+		CAN_FIREBALL[entry_id] = false;
 		DASH_GRAB_SPEED[entry_id] = 0.0;
 		DID_ASTRA_2_S[entry_id] = false;
 		DID_ASTRA_5_HI[entry_id] = false;
@@ -335,6 +362,7 @@ fn fighter_reset(fighter: &mut L2CFighterCommon) {
 		FALCON_PUNCH_HIT[entry_id] = false;
 		FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
 		FIGHTER_SPECIAL_STATE[entry_id] = false;
+		FIREBALL[entry_id] = 0;
 		FIRE_PUNCH_TURN_COUNT[entry_id] = 0.0;
 		FULL_SMASH_ATTACK[entry_id] = true;
 		HITFLOW[entry_id] = false;
@@ -390,42 +418,52 @@ pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccess
 	return original!()(boma, status_kind, unk);
 }
 
-//Param Adjustments
+//Param Adjustments (mainly used in things like Bowsers Fireballs and Ness's PSIOU PK Fire)
 #[skyline::hook(offset = INT_OFFSET)]
 pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param_hash: u64) -> i32 {
-	let boma = &mut *(*((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor);
-	let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-	let ret = original!()(module_accessor, param_type, param_hash);
-	let fighter_kind = get_kind(boma);
-	if smash::app::utility::get_category(boma) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
-		return ret;
-	}
-	//PK Fire
-	if fighter_kind == *FIGHTER_KIND_NESS {
-		if param_hash == hash40("life") {
-			if OFFENSE_UP_ACTIVE[entry_id] == true {
-				return 60;
-			}
-			else {
-				return ret;
+	let mut boma = *((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor;
+	let boma_reference = &mut *boma;
+	let fighter_kind = boma_reference.kind();
+	if boma_reference.is_weapon() {
+        let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+		if fighter_kind == *WEAPON_KIND_NESS_PK_FIRE {
+			if param_type == hash40("param_pkfire") {
+				if param_hash == hash40("life") {
+					if OFFENSE_UP_ACTIVE[entry_id] == true {
+						return 60;
+					}
+					else {
+						return 20;
+					}
+				}
+				if param_hash == hash40("pillar_life") {
+					if OFFENSE_UP_ACTIVE[entry_id] == true {
+						return 0;
+					}
+					else {
+						return 100;
+					}
+				}
 			}
 		}
-		if param_hash == hash40("pillar_life") {
-			if OFFENSE_UP_ACTIVE[entry_id] == true {
-				return 1;
-			}
-			else {
-				return ret;
-			}
-		}
-		else {
-			return ret;
-		}
 	}
-	else {
-		return ret;
-	}
+	original!()(module_accessor, param_type, param_hash)
 }
+
+/*
+#[skyline::hook(offset=FLOAT_OFFSET)]
+pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, param_hash: u64) -> f32 {
+	let mut boma = *((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor;
+	let boma_reference = &mut *boma;
+	let fighter_kind = boma_reference.kind();
+	if boma_reference.is_weapon() {
+        let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    }
+	original!()(module_accessor, param_type, param_hash)
+}
+*/
 
 //Marth/Lucina Counter Transition
 pub unsafe extern "C" fn special_lw_mot_helper(fighter: &mut L2CFighterCommon) {
@@ -468,6 +506,7 @@ pub fn install() {
     }
 	install_agent_resets!(fighter_reset);
 	skyline::install_hook!(get_param_int_replace);
+	//skyline::install_hook!(get_param_float_replace);
 	skyline::install_hook!(change_status_hook);
 	skyline::install_hook!(offset_dump);
 }

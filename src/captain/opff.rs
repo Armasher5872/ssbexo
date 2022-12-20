@@ -8,6 +8,7 @@ use {
         CAN_ADD,
         CMD_CAT1,
         DASH_GRAB_SPEED,
+        FIGHTER_KIND,
         FALCON_PUNCH_HIT,
         FALCON_PUNCH_TURN_COUNT,
         HITFLOW,
@@ -19,13 +20,13 @@ use {
         SITUATION_KIND
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         hash40,
         lua2cpp::L2CFighterCommon,
-        lib::{
-            lua_const::*,
-            L2CValueType
-        },
+        lib::lua_const::*,
         phx::Hash40,
     },
     smashline::*,
@@ -41,8 +42,11 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
         let stick_y = ControlModule::get_stick_y(module_accessor);
-        let mut globals = fighter.globals_mut().clone();
         //Parry Voice
+        if FighterUtil::get_shield_type_of_guard(fighter.global_table[FIGHTER_KIND].get_i32()) as i32 == *SHIELD_TYPE_JUST_SHIELD {
+            macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
+            macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
+        }
         if [hash40("just_shield_off"), hash40("just_shield")].contains(&motion_kind) {
             if (0.0..5.0).contains(&frame) {
                 PARRIED[entry_id] = 1;
@@ -235,28 +239,11 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
             fighter.sub_transition_group_check_air_cliff();
         };
         //Down Special
-        if let L2CValueType::Void = globals["reverse"].val_type {
-            globals["reverse"] = false.into();
-        }
         if motion_kind == hash40("special_air_lw") {
             let cat = fighter.global_table[CMD_CAT1].get_int() as i32;
             if ((cat & *FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_LEFT) != 0 && GroundModule::get_touch_flag(module_accessor) == *GROUND_TOUCH_FLAG_LEFT as u64) || ((cat & *FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_RIGHT) != 0 && GroundModule::get_touch_flag(module_accessor) == *GROUND_TOUCH_FLAG_RIGHT as u64) {
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WALL_JUMP, true);
             }
-            if frame < 6.0 {
-                if ControlModule::get_stick_x(module_accessor) * PostureModule::lr(module_accessor) <= -0.66 {
-                    globals["reverse"] = true.into();
-                }
-            }
-            else if (1.0..6.0).contains(&frame)
-            && globals["reverse"].get_bool() {
-                PostureModule::reverse_lr(module_accessor);
-                PostureModule::update_rot_y_lr(module_accessor);
-                KineticModule::change_kinetic(module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-            }	
-        }
-        else {
-            globals["reverse"] = false.into();
         }
     }
 }

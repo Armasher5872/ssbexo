@@ -3,8 +3,11 @@ use {
     crate::{
         custom::momentumtransfer::momentum_install,
         functions::{
+            FIGHTER_KIND,
             HOLD_SHIELD,
             SHIELD_SPECIAL,
+            STATUS_KIND,
+            BomaExt,
             FrameInfo
         }
     },
@@ -32,6 +35,7 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         let fighter_kind = smash::app::utility::get_kind(module_accessor);
         let status_kind = StatusModule::status_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
+        let stick_x = ControlModule::get_stick_x(module_accessor) * PostureModule::lr(module_accessor);
         let stick_y = ControlModule::get_stick_y(module_accessor);
         //DACSA
 		let f5 = [*FIGHTER_KIND_FOX, *FIGHTER_KIND_SONIC, *FIGHTER_KIND_LUIGI, *FIGHTER_KIND_PFUSHIGISOU];
@@ -106,7 +110,7 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
-        //Platform Dropping/Movement Cancel Crouching
+        //Platform Dropping
         if [*FIGHTER_STATUS_KIND_WALK, *FIGHTER_STATUS_KIND_WALK_BRAKE, *FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_STATUS_KIND_RUN, *FIGHTER_STATUS_KIND_RUN_BRAKE, *FIGHTER_STATUS_KIND_TURN_RUN, *FIGHTER_STATUS_KIND_TURN_RUN_BRAKE].contains(&status_kind)
         && stick_y < -0.2
         && GroundModule::is_passable_ground(module_accessor) {
@@ -117,6 +121,7 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_PASS, true);
             }
         }
+        //Movement Cancel Crouches
         if [*FIGHTER_STATUS_KIND_WALK, *FIGHTER_STATUS_KIND_WALK_BRAKE].contains(&status_kind)
         && stick_y < -0.5
         && fighter_kind != *FIGHTER_KIND_DEMON
@@ -141,14 +146,16 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         && frame > 5.0 {
             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
         }
+        //Shield Dropping
         if status_kind == *FIGHTER_STATUS_KIND_GUARD
         && GroundModule::is_passable_ground(module_accessor) {
-            if ControlModule::get_stick_y(module_accessor) < -0.2
-            && ControlModule::get_stick_y(module_accessor) >= -0.6 {
+            if stick_y < -0.2
+            && stick_y >= -0.6 {
                 WorkModule::enable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS);
                 WorkModule::unable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE);
             }
-            else if ControlModule::get_stick_y(module_accessor) > 0.2 || ControlModule::get_stick_y(module_accessor) < -0.6 {
+            else if stick_y > 0.2 
+            || stick_y < -0.6 {
                 WorkModule::unable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS);
                 WorkModule::enable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE);
             }
@@ -170,13 +177,12 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
 }
 
 //Parry Reflects
-/*
 #[skyline::hook(replace=smash::app::FighterUtil::is_valid_just_shield_reflector)]
 unsafe fn is_valid_just_shield_reflector(_module_accessor: &mut BattleObjectModuleAccessor) -> bool {
 	return true;
 }
-*/
 
+//Parry Sound
 #[common_status_script(status = FIGHTER_STATUS_KIND_GUARD_OFF, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS, symbol = "_ZN7lua2cpp16L2CFighterCommon42sub_ftStatusUniqProcessGuardOff_exitStatusEv")]
 unsafe fn ft_status_uniq_process_guard_off_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if FighterUtil::is_valid_just_shield(fighter.module_accessor) {
@@ -198,16 +204,16 @@ unsafe fn ft_status_uniq_process_guard_off_exit_status(fighter: &mut L2CFighterC
     }
     let just_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_JUST_FRAME);
     if 0 < just_frame {
+        if fighter.global_table[FIGHTER_KIND] == *FIGHTER_KIND_CAPTAIN {
+            macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
+            macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
+        }
         WorkModule::dec_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_JUST_FRAME);
         if (just_frame - 1) == 0 {
             ShieldModule::set_status(fighter.module_accessor, *FIGHTER_SHIELD_KIND_GUARD, ShieldStatus(*SHIELD_STATUS_NONE), 0);
             let type_of_guard = FighterUtil::get_shield_type_of_guard(fighter.global_table[0x2].get_i32()) as i32;
             ShieldModule::set_shield_type(fighter.module_accessor, ShieldType(type_of_guard), *FIGHTER_SHIELD_KIND_GUARD, 0);
             ReflectorModule::set_status(fighter.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
-            if fighter.global_table[FIGHTER_KIND] == *FIGHTER_KIND_CAPTAIN {
-                macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
-                macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
-            }
         }
     }
     let cancel_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_OFF_WORK_INT_CANCEL_FRAME);
@@ -238,20 +244,7 @@ unsafe extern "C" fn if_shield_special(fighter: &mut L2CFighterCommon) -> L2CVal
     return false.into();
 }
 
-pub trait BomaExt {
-    unsafe fn is_fighter(&mut self) -> bool;
-    unsafe fn kind(&mut self) -> i32;
-}
-
-impl BomaExt for BattleObjectModuleAccessor {
-    unsafe fn is_fighter(&mut self) -> bool {
-        return smash::app::utility::get_category(self) == *BATTLE_OBJECT_CATEGORY_FIGHTER;
-    }
-    unsafe fn kind(&mut self) -> i32 {
-        return smash::app::utility::get_kind(self);
-    }
-}
-
+//Momentum Transfer Kinetic Hook
 #[skyline::hook(replace=KineticModule::change_kinetic)]
 unsafe fn change_kinetic_hook(boma: &mut BattleObjectModuleAccessor, kinetic_type: i32) -> i32 {
     let mut kinetic_type_new = kinetic_type;
@@ -266,6 +259,7 @@ unsafe fn change_kinetic_hook(boma: &mut BattleObjectModuleAccessor, kinetic_typ
     original!()(boma, kinetic_type_new)
 }
 
+//Installation of Shield Specials
 #[smashline::fighter_init]
 fn character_init(fighter: &mut L2CFighterCommon) {
     fighter.global_table[0x34].assign(&L2CValue::Ptr(if_shield_special as *const () as _));

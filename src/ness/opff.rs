@@ -172,7 +172,6 @@ fn ness_frame(fighter: &mut L2CFighterCommon) {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("ness_pkfl_bomb_max"), false, false);
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("ness_pkfl_hold"), false, false);
         }
-        println!("PK Flash Timer, {}", PK_FLASH_TIMER[entry_id]);
         //Fast Fall PK Fire
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
         && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR 

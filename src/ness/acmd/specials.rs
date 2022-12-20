@@ -275,7 +275,7 @@ unsafe fn ssbuexo_ness_pk_fire_shoot_acmd(fighter: &mut L2CAgentBase)
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if macros::is_excute(fighter) {
         if OFFENSE_UP_ACTIVE[entry_id] == true {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 0.1, 80, 80, 0, 30, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 150, 80, 0, 30, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
             AttackModule::enable_safe_pos(fighter.module_accessor);
             AttackModule::set_no_finish_camera(fighter.module_accessor, 0, true, false);
         }
@@ -294,13 +294,7 @@ unsafe fn ssbuexo_ness_grounded_pk_fire_pillar_acmd(fighter: &mut L2CAgentBase)
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if macros::is_excute(fighter) {
         if OFFENSE_UP_ACTIVE[entry_id] == true {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.9, 150, 80, 0, 30, 6.5, 0.0, 3.1, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 9.9, 150, 80, 0, 30, 4.5, 0.0, 9.6, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
-            fighter.clear_lua_stack();
-            lua_args!(fighter, 0, 1, 0.05, 200, 0.6, 0, 10, 20, 60);
-            smash::app::sv_animcmd::AREA_WIND_2ND_RAD_arg9(fighter.lua_state_agent);
-            fighter.pop_lua_stack(1);
-            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_NESS_GENERATE_ARTICLE_PK_FIRE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            AttackModule::clear_all(fighter.module_accessor);
         }
         else {
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 68, 30, 0, 10, 6.5, 0.0, 3.1, 2.0, None, None, None, 0.5, 1.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
