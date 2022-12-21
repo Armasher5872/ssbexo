@@ -1,19 +1,11 @@
 #![allow(unused_macros)]
 use {
     smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
+        app::lua_bind::*,
         lib::lua_const::*,
-        lua2cpp::{
-            L2CAgentBase,
-            L2CFighterCommon
-        },
-        phx::Hash40,
+        lua2cpp::L2CFighterCommon
     },
     smashline::*,
-    smash_script::*,
 };
 
 #[fighter_frame( agent = FIGHTER_KIND_PZENIGAME )]

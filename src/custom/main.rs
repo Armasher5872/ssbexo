@@ -35,7 +35,6 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         let fighter_kind = smash::app::utility::get_kind(module_accessor);
         let status_kind = StatusModule::status_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
-        let stick_x = ControlModule::get_stick_x(module_accessor) * PostureModule::lr(module_accessor);
         let stick_y = ControlModule::get_stick_y(module_accessor);
         //DACSA
 		let f5 = [*FIGHTER_KIND_FOX, *FIGHTER_KIND_SONIC, *FIGHTER_KIND_LUIGI, *FIGHTER_KIND_PFUSHIGISOU];

@@ -6,11 +6,8 @@ use {
             sv_animcmd::*,
         },
         lib::lua_const::*,
-        lua2cpp::{
-            L2CAgentBase,
-            L2CFighterCommon
-        },
-        phx::Hash40,
+        lua2cpp::L2CAgentBase,
+        phx::Hash40
     },
     smashline::*,
     smash_script::*,

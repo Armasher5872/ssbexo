@@ -15,7 +15,6 @@ use {
 //=================================================================
 #[skyline::hook(replace=FighterStatusModuleImpl::set_fighter_status_data)]
 unsafe fn set_fighter_status_data_hook(boma: &mut BattleObjectModuleAccessor, arg2: bool, treaded_kind: i32, arg4: bool, arg5: bool, arg6: bool, log_mask_flag: u64, status_attr: u32, power_up_attack_bit: u32, arg10: u32) {
-    let id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let mut new_status_attr = status_attr;
     if boma.is_fighter() {
         // this handles turnaround special/b-reversible moves

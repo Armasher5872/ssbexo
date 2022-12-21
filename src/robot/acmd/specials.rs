@@ -1,11 +1,5 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        SIZE1,
-        SIZE2,
-        SIZE3,
-        get_player_number
-    },
     smash::{
         app::{
             lua_bind::*,
