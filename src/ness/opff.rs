@@ -14,7 +14,10 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon,
-        phx::*,
+        phx::{
+            Hash40,
+            Vector4f
+        }
     },
     smashline::*,
     smash_script::*,

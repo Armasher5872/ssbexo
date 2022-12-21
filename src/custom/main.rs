@@ -21,7 +21,10 @@ use {
             L2CValue,
             lua_const::*,
         },
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector4f
+        }
     },
     smash_script::*,
     smashline::*,
@@ -36,6 +39,8 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
         let stick_y = ControlModule::get_stick_y(module_accessor);
+        let cbm_vec1 = Vector4f{/* Red */ x: 1.0, /* Green */ y: 1.0, /* Blue */ z: 1.0, /* Alpha */ w: 0.2};
+        let cbm_vec2 = Vector4f{/* Red */ x: 1.0, /* Green */ y: 1.0, /* Blue */ z: 0.0, /* Alpha */w: 0.8};
         //DACSA
 		let f5 = [*FIGHTER_KIND_FOX, *FIGHTER_KIND_SONIC, *FIGHTER_KIND_LUIGI, *FIGHTER_KIND_PFUSHIGISOU];
         let f6 = [*FIGHTER_KIND_PURIN, *FIGHTER_KIND_SHEIK, *FIGHTER_KIND_SNAKE, *FIGHTER_KIND_WARIO];
@@ -162,6 +167,17 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
             && StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND {
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_PASS, true);
             }
+        }
+        //Lost Double Jump Indicator
+        if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) > WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+            ColorBlendModule::set_main_color(module_accessor, /* Brightness */&cbm_vec1, /* Diffuse */&cbm_vec2, 0.21, 2.2, 5, /* Display Color */ true);
+            if (ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI) || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_FLICK_JUMP)) {
+                macros::PLAY_SE(fighter, Hash40::new("se_ingame_reach"));
+            }
+        }
+        if fighter_kind != *FIGHTER_KIND_NESS
+        && WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+            ColorBlendModule::cancel_main_color(module_accessor, 0);
         }
         //Installations
         if let Some(info) = FrameInfo::update_and_get(fighter) {

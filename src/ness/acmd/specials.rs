@@ -13,7 +13,10 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::L2CAgentBase,
-        phx::Hash40,
+        phx::{
+            Hash40,
+            Vector3f
+        }
     },
     smashline::*,
     smash_script::*,
@@ -79,6 +82,8 @@ unsafe fn ssbuexo_ness_shield_special_acmd(fighter: &mut L2CAgentBase)
 unsafe fn ssbuexo_ness_shield_special_effect(fighter: &mut L2CAgentBase) 
 {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let vectora = Vector3f {x: 0.0, y: 5.0, z: 0.0};
+    let vectorb = Vector3f {x: 0.0, y: 0.0, z: 0.0};
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("top"), 0, 7, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, false);
@@ -122,6 +127,8 @@ unsafe fn ssbuexo_ness_shield_special_effect(fighter: &mut L2CAgentBase)
             macros::EFFECT(fighter, Hash40::new("ness_pkfl_bomb_max"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
             macros::EFFECT(fighter, Hash40::new("ness_psi_atk"), Hash40::new("waist"), 0, 0, 0.0, 0.0, -90, 0, 2.0, 0, 0, 0, 0, 0, 360, true);
             macros::COL_NORMAL(fighter);
+            smash::app::FighterUtil::flash_eye_info(fighter.module_accessor);
+		    EffectModule::req_follow(fighter.module_accessor, smash::phx::Hash40::new("sys_smash_flash"), smash::phx::Hash40::new("head"), &vectora, &vectorb, 0.5, true, 0, 0, 0, 0, 0, true, true) as u32;
         }
     }
     else {
