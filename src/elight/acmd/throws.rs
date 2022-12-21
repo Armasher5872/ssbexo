@@ -16,11 +16,11 @@ use {
 //Standing Grab ACMD
 #[acmd_script( agent = "elight", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_elight_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 8.0);
+    frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
-    frame(fighter.lua_state_agent, 9.0);
+    frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         // if there is a heavy item to pick up nearby, grab it
         if !ItemModule::is_have_item(module_accessor, 0) {
@@ -36,7 +36,7 @@ unsafe fn ssbuexo_elight_grab_acmd(fighter: &mut L2CAgentBase) {
         if ItemModule::is_have_item(module_accessor, 0) {
             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP, true);
         }
-        macros::CATCH(fighter, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(fighter, 0, Hash40::new("top"), 3.3, 0.0, 8.5, 4.0, Some(0.0), Some(8.5), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     macros::game_CaptureCutCommon(fighter);
     wait(fighter.lua_state_agent, 2.0);
@@ -50,6 +50,10 @@ unsafe fn ssbuexo_elight_grab_acmd(fighter: &mut L2CAgentBase) {
 //Dash Grab ACMD
 #[acmd_script( agent = "elight", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_elight_dash_grab_acmd(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 1.0);
+    macros::FT_MOTION_RATE(fighter, 0.5);
+    frame(fighter.lua_state_agent, 3.0);
+    macros::FT_MOTION_RATE(fighter, 1.0);
     frame(fighter.lua_state_agent, 11.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
@@ -70,7 +74,7 @@ unsafe fn ssbuexo_elight_dash_grab_acmd(fighter: &mut L2CAgentBase) {
         if ItemModule::is_have_item(module_accessor, 0) {
             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP, true);
         }
-        macros::CATCH(fighter, 0, Hash40::new("top"), 2.6, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(fighter, 0, Hash40::new("top"), 3.0, 0.0, 6.6, 3.0, Some(0.0), Some(6.6), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     macros::game_CaptureCutCommon(fighter);
     wait(fighter.lua_state_agent, 2.0);
@@ -84,6 +88,10 @@ unsafe fn ssbuexo_elight_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 //Pivot Grab ACMD
 #[acmd_script( agent = "elight", script = "game_catchturn", category = ACMD_GAME )]
 unsafe fn ssbuexo_elight_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 1.0);
+    macros::FT_MOTION_RATE(fighter, 0.5);
+    frame(fighter.lua_state_agent, 3.0);
+    macros::FT_MOTION_RATE(fighter, 1);
     frame(fighter.lua_state_agent, 12.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
@@ -104,7 +112,7 @@ unsafe fn ssbuexo_elight_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
         if ItemModule::is_have_item(module_accessor, 0) {
             StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP, true);
         }
-        macros::CATCH(fighter, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -4.0, Some(0.0), Some(6.6), Some(-14.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(fighter, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -6.0, Some(0.0), Some(6.6), Some(-14.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     macros::game_CaptureCutCommon(fighter);
     wait(fighter.lua_state_agent, 2.0);

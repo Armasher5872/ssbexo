@@ -16,11 +16,11 @@ use {
 //Standing Grab ACMD
 #[acmd_script( agent = "gamewatch", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_gamewatch_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 8.0);
+    frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
-    frame(fighter.lua_state_agent, 9.0);
+    frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         // if there is a heavy item to pick up nearby, grab it
         if !ItemModule::is_have_item(module_accessor, 0) {
@@ -44,17 +44,18 @@ unsafe fn ssbuexo_gamewatch_grab_acmd(fighter: &mut L2CAgentBase) {
         grab!(fighter, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(fighter.module_accessor, false);
+        macros::FT_MOTION_RATE(fighter, 1.22);
     }
 }
 
 //Dash Grab ACMD
 #[acmd_script( agent = "gamewatch", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_gamewatch_dash_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 11.0);
+    frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
-    frame(fighter.lua_state_agent, 12.0);
+    frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         // if there is a heavy item to pick up nearby, grab it
         if !ItemModule::is_have_item(module_accessor, 0) {
@@ -78,17 +79,18 @@ unsafe fn ssbuexo_gamewatch_dash_grab_acmd(fighter: &mut L2CAgentBase) {
         grab!(fighter, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(fighter.module_accessor, false);
+        macros::FT_MOTION_RATE(fighter, 1.06);
     }
 }
 
 //Pivot Grab ACMD
 #[acmd_script( agent = "gamewatch", script = "game_catchturn", category = ACMD_GAME )]
 unsafe fn ssbuexo_gamewatch_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 12.0);
+    frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
-    frame(fighter.lua_state_agent, 13.0);
+    frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
         // if there is a heavy item to pick up nearby, grab it
         if !ItemModule::is_have_item(module_accessor, 0) {
@@ -112,6 +114,7 @@ unsafe fn ssbuexo_gamewatch_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
         grab!(fighter, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(fighter.module_accessor, false);
+        macros::FT_MOTION_RATE(fighter, 1.037);
     }
 }
 
