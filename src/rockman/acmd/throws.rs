@@ -128,5 +128,5 @@ pub fn install() {
         ssbuexo_rockman_grab_acmd,
         ssbuexo_rockman_dash_grab_acmd,
         ssbuexo_rockman_pivot_grab_acmd
-    )
+    );
 }

@@ -3,17 +3,16 @@ use {
     smash::{
         app::{
             lua_bind::*,
-            sv_animcmd::*,
+            *
         },
         lua2cpp::L2CAgentBase,
         lib::lua_const::*,
         phx::Hash40,
     },
-    smashline::*,
     smash_script::*,
 };
 
-unsafe fn inkling_generate_squid_helper(fighter: &mut L2CAgentBase) {
+pub unsafe fn inkling_generate_squid_helper(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_EXIST_SQUID) {
         if macros::is_excute(fighter) {
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, false, -1);

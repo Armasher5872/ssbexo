@@ -1,5 +1,6 @@
 #![allow(unused_macros)]
 use {
+    crate::inkling::opff::inkling_generate_squid_helper,
     smash::{
         app::{
             lua_bind::*,
@@ -53,12 +54,12 @@ unsafe fn ssbuexo_inkling_grab_acmd(fighter: &mut L2CAgentBase) {
 unsafe fn ssbuexo_inkling_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
-        inkling_generate_squid_helper();
+        inkling_generate_squid_helper(fighter);
     }
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
         VisibilityModule::set_whole(fighter.module_accessor, true);
-        ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true);
+        ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
@@ -96,12 +97,12 @@ unsafe fn ssbuexo_inkling_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 unsafe fn ssbuexo_inkling_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
-        inkling_generate_squid_helper();
+        inkling_generate_squid_helper(fighter);
     }
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
         VisibilityModule::set_whole(fighter.module_accessor, true);
-        ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true);
+        ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {

@@ -141,7 +141,6 @@ pub fn main() {
   miifighter::install();
   miigunner::install();
   miiswordsman::install();
-  murabito::install();
   nana::install();
   ness::install();
   packun::install();
