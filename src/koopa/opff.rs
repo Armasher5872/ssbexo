@@ -1,3 +1,4 @@
+//Credit to Ultimate S
 use {
     crate::functions::{
         CAN_FIREBALL,
