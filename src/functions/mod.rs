@@ -48,7 +48,7 @@ pub const FIGHTER_KIND: i32 = 0x2;
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 pub static mut FIRST_BOUNCE: bool = false; //Allows the throwing player to bounce the ball on their own side once
 pub static mut FIGHTER_SPECIAL_STATE: [bool; 8] = [false; 8];
-//pub static mut FLOAT_OFFSET: usize = 0x4dedc0;
+pub static mut FLOAT_OFFSET: usize = 0x4dedc0;
 pub static mut FULL_SMASH_ATTACK: [bool; 8] = [false; 8];
 pub static mut GOT_HIT: [i32; 9] = [0; 9]; //Tracks if a player got hit during One-Hit mode
 pub static mut GROUND_VEL: f32 = 5.0;
@@ -65,6 +65,7 @@ pub const JUMP_SQUAT_FRAME: i32 = 0x0006;
 pub static mut JUMPSQUAT_VELOCITY: f32 = 2.0;
 pub static mut LAST_TO_HIT_BALL: usize = 9; //The last player to have hit the ball
 pub static mut LOW_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the left net
+pub static NONE_VECTOR: Vector3f = Vector3f {x: 0.0, y: 0.0, z: 0.0};
 pub const PREV_STATUS_KIND: i32 = 0xA;
 pub static mut RAR_LENIENCY: f32 = 6.0;
 pub static mut READY_GO: [bool; 9] = [false; 9]; //Returns false for exactly one frame after is_ready_go becomes true, used to initiate certain events exactly once at the start of a match
@@ -96,7 +97,7 @@ pub static mut WAVEDASH_DONE: [bool; 8] = [false; 8];
 
 //Bowser Variables
 pub static mut CAN_FIREBALL: [bool; 8] = [false; 8];
-pub static mut FIREBALL: [i32; 8] = [0; 8];
+pub static mut FIREBALL_GFX: [i32; 8] = [0; 8];
 pub static mut KOOPA_EXCELLENT_SMASH: [bool; 8] = [false; 8];
 pub static mut KOOPA_EXCELLENT_SMASH_GFX: [i32; 8] = [0; 8];
 pub static mut KOOPA_GOOD_SMASH: [bool; 8] = [false; 8];
@@ -209,11 +210,9 @@ pub static INT_SEARCH_CODE: &[u8] = &[
     0x00, 0x1c, 0x40, 0xf9, 0x08, 0x00, 0x40, 0xf9, 0x03, 0x11, 0x40, 0xf9,
 ];
 
-/*
 pub static FLOAT_SEARCH_CODE: &[u8] = &[
     0x00, 0x1c, 0x40, 0xf9, 0x08, 0x00, 0x40, 0xf9, 0x03, 0x19, 0x40, 0xf9,
 ];
-*/
 
 //Gets a boma
 pub unsafe fn get_boma(entry_id: i32) -> *mut smash::app::BattleObjectModuleAccessor {
@@ -362,7 +361,6 @@ fn fighter_reset(fighter: &mut L2CFighterCommon) {
 		FALCON_PUNCH_HIT[entry_id] = false;
 		FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
 		FIGHTER_SPECIAL_STATE[entry_id] = false;
-		FIREBALL[entry_id] = 0;
 		FIRE_PUNCH_TURN_COUNT[entry_id] = 0.0;
 		FULL_SMASH_ATTACK[entry_id] = true;
 		HITFLOW[entry_id] = false;
@@ -427,6 +425,34 @@ pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param
 	if boma_reference.is_weapon() {
         let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+		if fighter_kind == *WEAPON_KIND_KOOPA_BREATH {
+			if param_type == hash40("param_special_n") {
+				if param_hash == hash40("fireframe") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 999;
+					}
+					else {
+						return 25;
+					}
+				}
+				if param_hash == hash40("gene_interval") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 70;
+					}
+					else {
+						return 7;
+					}
+				}
+				if param_hash == hash40("quake_interval") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 100;
+					}
+					else {
+						return 10;
+					}
+				}
+			}
+		}
 		if fighter_kind == *WEAPON_KIND_NESS_PK_FIRE {
 			if param_type == hash40("param_pkfire") {
 				if param_hash == hash40("life") {
@@ -451,7 +477,6 @@ pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param
 	original!()(module_accessor, param_type, param_hash)
 }
 
-/*
 #[skyline::hook(offset=FLOAT_OFFSET)]
 pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, param_hash: u64) -> f32 {
 	let mut boma = *((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor;
@@ -460,10 +485,127 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 	if boma_reference.is_weapon() {
         let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+		if fighter_kind == *WEAPON_KIND_KOOPA_BREATH {
+			if param_type == hash40("param_special_n") {
+				if param_hash == hash40("gene_angle") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 330.0;
+					}
+				}
+				if param_hash == hash40("limit_up") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 50.0;
+					}
+				}
+				if param_hash == hash40("limit_down") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 40.0;
+					}
+				}
+				if param_hash == hash40("f_ang") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 1.55;
+					}
+				}
+				if param_hash == hash40("neck_rate") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 0.3;
+					}
+				}
+				if param_hash == hash40("fire_speed_mul_max") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 1.5;
+					}
+					else {
+						return 1.2;
+					}
+				}
+				if param_hash == hash40("fire_speed_mul_min") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 1.5;
+					}
+					else {
+						return 0.15;
+					}
+				}
+				if param_hash == hash40("fire_speed_min") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.57;
+					}
+					else {
+						return 0.2;
+					}
+				}
+				if param_hash == hash40("fire_scale_min_frame") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 96.0;
+					}
+					else {
+						return 300.0;
+					}
+				}
+				if param_hash == hash40("fire_scale_min_frame") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 1080.0;
+					}
+					else {
+						return 700.0;
+					}
+				}
+			}
+			if param_type == hash40("param_breath") {
+				if param_hash == hash40("life") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 70.0;
+					}
+					else {
+						return 12.0;
+					}
+				}
+				if param_hash == hash40("hit_frames") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 70.0;
+					}
+					else {
+						return 12.0;
+					}
+				}
+				if param_hash == hash40("min_speed") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.8;
+					}
+					else {
+						return 3.5;
+					}
+				}
+				if param_hash == hash40("max_speed") {
+					if CAN_FIREBALL[entry_id] == true {
+						return 0.8;
+					}
+					else {
+						return 4.0;
+					}
+				}
+			}
+		}
     }
 	original!()(module_accessor, param_type, param_hash)
 }
-*/
 
 //Marth/Lucina Counter Transition
 pub unsafe extern "C" fn special_lw_mot_helper(fighter: &mut L2CFighterCommon) {
@@ -498,15 +640,13 @@ pub fn install() {
         if let Some(offset) = find_subsequence(text, INT_SEARCH_CODE) {
             INT_OFFSET = offset;
         }
-		/*
         if let Some(offset) = find_subsequence(text, FLOAT_SEARCH_CODE) {
             FLOAT_OFFSET = offset;
         }
-		*/
     }
 	install_agent_resets!(fighter_reset);
 	skyline::install_hook!(get_param_int_replace);
-	//skyline::install_hook!(get_param_float_replace);
+	skyline::install_hook!(get_param_float_replace);
 	skyline::install_hook!(change_status_hook);
 	skyline::install_hook!(offset_dump);
 }
