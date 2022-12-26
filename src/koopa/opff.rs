@@ -3,6 +3,7 @@ use {
     crate::functions::{
         CAN_FIREBALL,
         FIREBALL_GFX,
+        FIREBALL_TIMER,
         KOOPA_EXCELLENT_SMASH,
         KOOPA_EXCELLENT_SMASH_GFX,
         SPECIAL_ZOOM_GFX,
@@ -104,20 +105,7 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         }
         if KOOPA_OK_SMASH[entry_id] == true {
             KOOPA_OK_SMASH_GFX[entry_id] += 1;
-            if KOOPA_OK_SMASH_GFX[entry_id] == 1 {
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 0.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 0.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.2, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 0.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_bullet"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.2, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 0.0, 0.0);
-            }
             if KOOPA_OK_SMASH_GFX[entry_id] == 6 {
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), false, false);
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_revenge_aura"), false, false);
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_revenge_bullet"), false, false);
                 macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
                 macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 0.0, 0.0);
                 macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
@@ -132,20 +120,7 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         else if KOOPA_GOOD_SMASH[entry_id] == true {
             KOOPA_GOOD_SMASH_GFX[entry_id] += 1;
             KOOPA_OK_SMASH_GFX[entry_id] = 0;
-            if KOOPA_GOOD_SMASH_GFX[entry_id] == 1 {
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 1.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 1.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.4, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 1.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_bullet"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.4, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 1.0, 0.0);
-            }
             if KOOPA_GOOD_SMASH_GFX[entry_id] == 6 {
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), false, false);
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_revenge_aura"), false, false);
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_revenge_bullet"), false, false);
                 macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
                 macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 1.0, 0.0);
                 macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
@@ -160,20 +135,7 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         else if KOOPA_GREAT_SMASH[entry_id] == true {
             KOOPA_GREAT_SMASH_GFX[entry_id] += 1;
             KOOPA_GOOD_SMASH_GFX[entry_id] = 0;
-            if KOOPA_GREAT_SMASH_GFX[entry_id] == 1 {
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 1.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 1.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.6, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 1.0, 0.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_bullet"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.6, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 1.0, 0.0);
-            }
             if KOOPA_GREAT_SMASH_GFX[entry_id] == 6 {
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), false, false);
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_revenge_aura"), false, false);
-                macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_revenge_bullet"), false, false);
                 macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
                 macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 1.0, 0.0);
                 macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
@@ -188,16 +150,6 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         else if KOOPA_EXCELLENT_SMASH[entry_id] == true {
             KOOPA_EXCELLENT_SMASH_GFX[entry_id] += 1;
             KOOPA_GREAT_SMASH_GFX[entry_id] = 0;
-            if KOOPA_EXCELLENT_SMASH_GFX[entry_id] == 1 {
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("waist"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0, 1.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 7.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0, 1.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 2.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0, 1.0);
-                macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_revenge_bullet"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 2.0, true, 1.0);
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0, 1.0);
-            }
             if KOOPA_EXCELLENT_SMASH_GFX[entry_id] == 3 {
                 macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), false, false);
                 macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_revenge_aura"), false, false);
@@ -234,7 +186,8 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         }
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
         && [hash40("special_n_start"), hash40("special_air_n_start")].contains(&motion_kind) {
-            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            || FIREBALL_TIMER[entry_id] > 0 {
                 CAN_FIREBALL[entry_id] = false;
             }
             else {
@@ -244,9 +197,11 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         if motion_kind == hash40("special_n") {
             if CAN_FIREBALL[entry_id] == true {
                 if end_frame - frame < 5.0 {
+                    FIREBALL_TIMER[entry_id] = 180;
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
                 };
                 if frame >= 19.0 {
+                    FIREBALL_TIMER[entry_id] = 180;
                     CancelModule::enable_cancel(module_accessor);
                 };
                 MotionModule::set_rate(module_accessor, 0.775);
@@ -260,9 +215,11 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
 		if motion_kind == hash40("special_air_n") {
             if CAN_FIREBALL[entry_id] == true {
                 if end_frame-frame < 5.0 {
+                    FIREBALL_TIMER[entry_id] = 180;
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
                 };
                 if frame >= 19.0 {
+                    FIREBALL_TIMER[entry_id] = 180;
                     CancelModule::enable_cancel(module_accessor);
                 };
                 MotionModule::set_rate(module_accessor, 0.775);
@@ -273,8 +230,9 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
                 }
             }
         }
-		if motion_kind == hash40("special_n_end") {
+        if motion_kind == hash40("special_n_end") {
             if CAN_FIREBALL[entry_id] == true {
+                FIREBALL_TIMER[entry_id] = 180;
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
             }
             else {
@@ -293,13 +251,17 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
                 };
             }
         }
-        if ArticleModule::is_exist(module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH)
-        && CAN_FIREBALL[entry_id] == true {
-			FIREBALL_GFX[entry_id] += 1;
-		}
-        else {
-			FIREBALL_GFX[entry_id] = 0;
-		};
+        if FIREBALL_TIMER[entry_id] > 0 {
+            FIREBALL_TIMER[entry_id] -= 1;
+        }
+        if ArticleModule::is_exist(module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
+            if CAN_FIREBALL[entry_id] == true {
+                FIREBALL_GFX[entry_id] += 1;
+            }
+            else {
+                FIREBALL_GFX[entry_id] = 0;
+            };
+        }
         if CAN_FIREBALL[entry_id] == true {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, true);
         }
@@ -312,7 +274,6 @@ fn kirby_koopa_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let status_kind = StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
         let end_frame = MotionModule::end_frame(module_accessor);
@@ -348,7 +309,7 @@ fn kirby_koopa_frame(fighter: &mut L2CFighterCommon) {
                 }
             }
         }
-		if motion_kind == hash40("koopa_special_n_end") {
+        if motion_kind == hash40("koopa_special_n_end") {
             if CAN_FIREBALL[entry_id] == true {
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
             }
@@ -368,13 +329,16 @@ fn kirby_koopa_frame(fighter: &mut L2CFighterCommon) {
                 };
             }
         }
-        if ArticleModule::is_exist(module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH)
-        && CAN_FIREBALL[entry_id] == true {
-			FIREBALL_GFX[entry_id] += 1;
-		}
-        else {
-			FIREBALL_GFX[entry_id] = 0;
-		};
+        if ArticleModule::is_exist(module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
+            if CAN_FIREBALL[entry_id] == true {
+                AttackModule::set_power_up(module_accessor, 0.2);
+                FIREBALL_GFX[entry_id] += 1;
+            }
+            else {
+                AttackModule::set_power_up(module_accessor, 1.0);
+                FIREBALL_GFX[entry_id] = 0;
+            };
+        }
         if CAN_FIREBALL[entry_id] == true {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, true);
         }
@@ -386,20 +350,33 @@ pub fn fireball_gfx_frame(weapon : &mut L2CFighterBase) {
     unsafe {
         let otarget_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
         let boma = smash::app::sv_battle_object::module_accessor(otarget_id);
-        let motion_kind = MotionModule::motion_kind(weapon.module_accessor);
 		let entry_id = WorkModule::get_int(&mut *boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let color = WorkModule::get_int(&mut *boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
         if CAN_FIREBALL[entry_id] == true {
+            AttackModule::set_power_up(weapon.module_accessor, 1.0);
             if FIREBALL_GFX[entry_id] % 14 == 0 {
-                EffectModule::kill_kind(weapon.module_accessor, Hash40::new("koopa_breath_m_fire"), false, true);
-                let f1: u32 = EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("sys_fireflower_shot"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
-                EffectModule::set_rgb(boma, f1, 1.5, 0.5, 0.5);
-                EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("koopa_breath_m_fire"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.4, true, 0, 0, 0, 0, 0, true, true) as u32;
-            };
-            if motion_kind == hash40("move") {
-                if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    AttackModule::clear_all(weapon.module_accessor);
+                if color == 7 {
+                    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("koopa_breath_m_fire"), false, true);
+                    let f1: u32 = EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("sys_fireflower_shot"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
+                    EffectModule::set_rgb(boma, f1, 1.0, 1.0, 0.333);
+                    EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("koopa_breath_m_fire"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.4, true, 0, 0, 0, 0, 0, true, true) as u32;
                 }
-            }
+                else if color == 3 {
+                    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("koopa_breath_m_fire"), false, true);
+                    let f1: u32 = EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("sys_fireflower_shot"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
+                    EffectModule::set_rgb(boma, f1, 0.502, 0.494, 0.929);
+                    EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("koopa_breath_m_fire"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.4, true, 0, 0, 0, 0, 0, true, true) as u32;
+                }
+                else {
+                    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("koopa_breath_m_fire"), false, true);
+                    let f1: u32 = EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("sys_fireflower_shot"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.8, true, 0, 0, 0, 0, 0, true, true) as u32;
+                    EffectModule::set_rgb(boma, f1, 1.5, 0.5, 0.5);
+                    EffectModule::req_follow(weapon.module_accessor, smash::phx::Hash40::new("koopa_breath_m_fire"), smash::phx::Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.4, true, 0, 0, 0, 0, 0, true, true) as u32;
+                }
+            };
+        }
+        if CAN_FIREBALL[entry_id] == false {
+            AttackModule::set_power_up(weapon.module_accessor, 0.2);
         }
     }
 }

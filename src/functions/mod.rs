@@ -98,6 +98,7 @@ pub static mut WAVEDASH_DONE: [bool; 8] = [false; 8];
 //Bowser Variables
 pub static mut CAN_FIREBALL: [bool; 8] = [false; 8];
 pub static mut FIREBALL_GFX: [i32; 8] = [0; 8];
+pub static mut FIREBALL_TIMER: [i32; 8] = [0; 8];
 pub static mut KOOPA_EXCELLENT_SMASH: [bool; 8] = [false; 8];
 pub static mut KOOPA_EXCELLENT_SMASH_GFX: [i32; 8] = [0; 8];
 pub static mut KOOPA_GOOD_SMASH: [bool; 8] = [false; 8];
@@ -425,34 +426,6 @@ pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param
 	if boma_reference.is_weapon() {
         let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-		if fighter_kind == *WEAPON_KIND_KOOPA_BREATH {
-			if param_type == hash40("param_special_n") {
-				if param_hash == hash40("fireframe") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 999;
-					}
-					else {
-						return 25;
-					}
-				}
-				if param_hash == hash40("gene_interval") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 70;
-					}
-					else {
-						return 7;
-					}
-				}
-				if param_hash == hash40("quake_interval") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 100;
-					}
-					else {
-						return 10;
-					}
-				}
-			}
-		}
 		if fighter_kind == *WEAPON_KIND_NESS_PK_FIRE {
 			if param_type == hash40("param_pkfire") {
 				if param_hash == hash40("life") {
@@ -487,46 +460,6 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 		if fighter_kind == *WEAPON_KIND_KOOPA_BREATH {
 			if param_type == hash40("param_special_n") {
-				if param_hash == hash40("gene_angle") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.0;
-					}
-					else {
-						return 330.0;
-					}
-				}
-				if param_hash == hash40("limit_up") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.0;
-					}
-					else {
-						return 50.0;
-					}
-				}
-				if param_hash == hash40("limit_down") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.0;
-					}
-					else {
-						return 40.0;
-					}
-				}
-				if param_hash == hash40("f_ang") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.0;
-					}
-					else {
-						return 1.55;
-					}
-				}
-				if param_hash == hash40("neck_rate") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.0;
-					}
-					else {
-						return 0.3;
-					}
-				}
 				if param_hash == hash40("fire_speed_mul_max") {
 					if CAN_FIREBALL[entry_id] == true {
 						return 1.5;
@@ -549,22 +482,6 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 					}
 					else {
 						return 0.2;
-					}
-				}
-				if param_hash == hash40("fire_scale_min_frame") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 96.0;
-					}
-					else {
-						return 300.0;
-					}
-				}
-				if param_hash == hash40("fire_scale_min_frame") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 1080.0;
-					}
-					else {
-						return 700.0;
 					}
 				}
 			}
@@ -590,7 +507,7 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 						return 0.8;
 					}
 					else {
-						return 3.5;
+						return 0.5;
 					}
 				}
 				if param_hash == hash40("max_speed") {
@@ -598,7 +515,7 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 						return 0.8;
 					}
 					else {
-						return 4.0;
+						return 3.0;
 					}
 				}
 			}

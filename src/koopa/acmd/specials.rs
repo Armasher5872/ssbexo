@@ -28,15 +28,6 @@ unsafe fn ssbuexo_koopa_grounded_neutral_special_acmd(fighter: &mut L2CAgentBase
             wait(fighter.lua_state_agent, 7.0);
         }
     }
-    else if CAN_FIREBALL[entry_id] == true {
-        if macros::is_excute(fighter) {
-            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH, false, 0);
-        }
-        frame(fighter.lua_state_agent, 16.0);
-        if macros::is_excute(fighter) {
-            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
-        }
-    }
 }
 
 //Aerial Neutral Special ACMD
@@ -53,73 +44,20 @@ unsafe fn ssbuexo_koopa_aerial_neutral_special_acmd(fighter: &mut L2CAgentBase)
             wait(fighter.lua_state_agent, 7.0);
         }
     }
-    else if CAN_FIREBALL[entry_id] == true {
-        if macros::is_excute(fighter) {
-            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH, false, 0);
-        }
-        frame(fighter.lua_state_agent, 16.0);
-        if macros::is_excute(fighter) {
-            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
-        }
-    }
-}
-
-//Neutral Special Effect
-#[acmd_script( agent = "koopa", scripts = ["effect_specialn", "effect_specialairn"], category = ACMD_EFFECT)]
-unsafe fn ssbuexo_koopa_neutral_special_effect(fighter: &mut L2CAgentBase) 
-{
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if CAN_FIREBALL[entry_id] != true {
-        for _ in 0..i32::MAX {
-            if macros::is_excute(fighter) {
-                macros::COL_NORMAL(fighter);
-            }
-            frame(fighter.lua_state_agent, 3.0);
-            if macros::is_excute(fighter) {
-                macros::EFFECT_FOLLOW(fighter, Hash40::new("koopa_breath_m_fire"), Hash40::new("head"), -2, 5, 0, 180, 0, 50, 1, true);
-                macros::FOOT_EFFECT(fighter, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1.2, 10, 0, 18, 0, 0, 0, false);
-            }
-            frame(fighter.lua_state_agent, 15.0);
-            if macros::is_excute(fighter) {
-                macros::FLASH(fighter, 1, 0.525, 0.525, 0.314);
-                macros::FLASH_FRM(fighter, 8, 0, 0, 0, 0);
-                macros::FOOT_EFFECT(fighter, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1.2, 10, 0, 18, 0, 0, 0, false);
-            }
-            wait(fighter.lua_state_agent, 5.0);
-        }
-    }
-    else if CAN_FIREBALL[entry_id] == true {
-        if macros::is_excute(fighter) {
-            macros::COL_NORMAL(fighter);
-        }
-        frame(fighter.lua_state_agent, 3.0);
-        if macros::is_excute(fighter) {
-            macros::FOOT_EFFECT(fighter, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1.2, 10, 0, 18, 0, 0, 0, false);
-        }
-        frame(fighter.lua_state_agent, 15.0);
-        if macros::is_excute(fighter) {
-            macros::FLASH(fighter, 1, 0.525, 0.525, 0.314);
-            macros::FLASH_FRM(fighter, 8, 0, 0, 0, 0);
-            macros::FOOT_EFFECT(fighter, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1.2, 10, 0, 18, 0, 0, 0, false);
-        }
-        wait(fighter.lua_state_agent, 5.0);
-    }
 }
 
 //Fire Breath ACMD
 #[acmd_script( agent = "koopa_breath", script = "game_move", category = ACMD_GAME)]
 unsafe fn ssbuexo_koopa_fire_breath_acmd(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if CAN_FIREBALL[entry_id] == true {
-        if macros::is_excute(fighter) {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 361, 50, 0, 40, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            AttackModule::enable_safe_pos(fighter.module_accessor);
-        }
-        frame(fighter.lua_state_agent, 70.0);
-        if macros::is_excute(fighter) {
-            AttackModule::clear_all(fighter.module_accessor);
-        }
+    frame(fighter.lua_state_agent, 1.0);
+    if macros::is_excute(fighter) {
+        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 361, 50, 0, 40, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        AttackModule::enable_safe_pos(fighter.module_accessor);
+    }
+    frame(fighter.lua_state_agent, 70.0);
+    if macros::is_excute(fighter) {
+        AttackModule::clear_all(fighter.module_accessor);
     }
 }
 
@@ -212,7 +150,6 @@ pub fn install() {
     install_acmd_scripts!(
         ssbuexo_koopa_grounded_neutral_special_acmd,
         ssbuexo_koopa_aerial_neutral_special_acmd,
-        ssbuexo_koopa_neutral_special_effect,
         ssbuexo_koopa_fire_breath_acmd,
         ssbuexo_koopa_grounded_up_special_acmd,
         ssbuexo_koopa_aerial_up_special_acmd
