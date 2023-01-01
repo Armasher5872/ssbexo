@@ -411,7 +411,7 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
             //Spin Dash Nerf
             if [hash40("special_s_spin"), hash40("special_s_dash_hi"), hash40("special_s_dash_lw")].contains(&motion_kind)
             && fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR
-            && AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+            && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) {
                 MotionModule::change_motion_inherit_frame(module_accessor, Hash40::new("special_s_end_start"), 1.0, 1.0, 0.0, false, false);
             }
             //Bounce Bracelet

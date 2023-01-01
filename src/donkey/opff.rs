@@ -99,7 +99,7 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
         }
         if [hash40("special_n_loop"), hash40("special_air_n_loop")].contains(&motion_kind) {
-            if MotionModule::is_end(module_accessor) {
+            if MotionModule::end_frame(module_accessor) - frame <= 2.0 {
                 DONKEY_GIANT_PUNCH_STAGE[entry_id] += 1;
             }
         }

@@ -23,15 +23,15 @@ use {
 };
 
 //Universal Variables
-pub static mut AERIAL_KIND: [i32; 9] = [0; 9]; //Tracks a player's C-Stick aerial, used for correcting the return value of ControlModule::get_attack_air_kind
+pub static mut ALL_FIGHTERS_LAST_STOCK: bool = false; //Take a wild guess.
 pub static mut ALREADY_BOUNCED: bool = false; //Tracks if the ball has bounced at least once since being thrown
-pub static mut ASDI : f32 = 2.5; //15 for testing purposes, should be 3
+pub static mut ASDI : f32 = 2.5; //15 for testing purposes, should be 2.5
 pub static mut ASDI_START: [bool; 8] = [false; 8];
 pub static mut B_CHECK: [bool; 9] = [false; 9]; //Tracks if a fighter used a certain special move in the air
 pub static mut BALL_BOUNCED: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 9999.0}; //Tracks stats about the volleyball to determine who to KO
 pub static mut BALL_ID: u32 = 0; //The battle object ID of the ball itself
 pub static mut BALL_OWNER: i32 = 9; //Which player will start with the ball
-pub static mut BALL_VICTIMS: [i32; 4] = [9; 4]; //Which players are to be KOd
+pub static mut BALL_VICTIMS: [i32;4] = [9;4]; //Which players are to be KOd
 pub static mut CAN_ADD: [bool; 8] = [false; 8];
 pub static mut CAN_CANCEL: [bool; 8] = [false; 8];
 pub static mut CAN_CANCEL_TIMER: [i32; 8] = [0; 8];
@@ -46,12 +46,12 @@ pub static mut FIGHTER_BOOL_2: [bool; 9] = [false; 9];
 pub static mut FIGHTER_CUTIN_MANAGER_ADDR: usize = 0;
 pub const FIGHTER_KIND: i32 = 0x2;
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
-pub static mut FIRST_BOUNCE: bool = false; //Allows the throwing player to bounce the ball on their own side once
 pub static mut FIGHTER_SPECIAL_STATE: [bool; 8] = [false; 8];
+pub static mut FIRST_BOUNCE: bool = false; //Allows the throwing player to bounce the ball on their own side once
 pub static mut FLOAT_OFFSET: usize = 0x4dedc0;
 pub static mut FULL_SMASH_ATTACK: [bool; 8] = [false; 8];
-pub static mut GOT_HIT: [i32; 9] = [0; 9]; //Tracks if a player got hit during One-Hit mode
 pub static mut GROUND_VEL: f32 = 5.0;
+pub static mut GOT_HIT: [i32;9] = [0;9]; //Tracks if a player got hit during One-Hit mode
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
 pub static mut HITFLOW: [bool; 8] = [false; 8];
 pub static mut HIT_PLAYER: i32 = -1; //Tracks which players need to be respawned
@@ -68,7 +68,7 @@ pub static mut LOW_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Det
 pub static NONE_VECTOR: Vector3f = Vector3f {x: 0.0, y: 0.0, z: 0.0};
 pub const PREV_STATUS_KIND: i32 = 0xA;
 pub static mut RAR_LENIENCY: f32 = 6.0;
-pub static mut READY_GO: [bool; 9] = [false; 9]; //Returns false for exactly one frame after is_ready_go becomes true, used to initiate certain events exactly once at the start of a match
+pub static mut READY_GO: [bool;9] = [false;9]; //Returns false for exactly one frame after is_ready_go becomes true, used to initiate certain events exactly once at the start of a match
 pub static mut READY_GO_TIMER: i32 = 0; //Determines how many frames to suspend all players while respawning in Tennis and One-Hit modes
 pub static mut SHIELD_SPECIAL: [bool; 8] = [false; 8];
 pub const SITUATION_KIND: i32 = 0x16;
@@ -76,8 +76,8 @@ pub static mut SIZE0: [f32; 9] = [0.0; 9];
 pub static mut SIZE1: [f32; 9] = [0.0; 9];
 pub static mut SIZE2: [f32; 9] = [0.0; 9];
 pub static mut SIZE3: [f32; 9] = [0.0; 9];
-pub static mut SPAWN_POS: [Vector3f; 9] = [Vector3f{x: 0.0, y: 0.0, z: 0.0}; 9]; //Tracks what position to spawn the nets in in Basketball mode, and where to respawn players in Volleyball and One-Hit mode
-pub static mut SPAWN_SIDE: [bool; 9] = [false; 9]; //Tracks if a player's spawn position was on the right or left
+pub static mut SPAWN_POS: [Vector3f;9] = [Vector3f{x: 0.0, y: 0.0, z: 0.0};9]; //Tracks what position to spawn the nets in in Basketball mode, and where to respawn players in Volleyball and One-Hit mode
+pub static mut SPAWN_SIDE: [bool;9] = [false;9]; //Tracks if a player's spawn position was on the right or left
 pub static mut SPECIAL_SMASH_BODY: i32 = 0; //Etc.
 pub static mut SPECIAL_SMASH_GRAVITY: i32 = 0; //Etc.
 pub static mut SPECIAL_SMASH_HEAD: i32 = 0; //Etc.
@@ -86,13 +86,13 @@ pub static mut SPECIAL_SMASH_SIZE: i32 = 0; //Checks which mode was selected in 
 pub static mut SPECIAL_SMASH_STATUS: i32 = 0; //Etc.
 pub static mut SPECIAL_ZOOM_GFX: [i32; 8] = [0; 8];
 pub const STATUS_KIND: i32 = 0xB; //i32
-pub static mut STOCK_COUNT: [u64; 9] = [3; 9]; //Keeps track of stock count (may not work outside of standard rules)
+pub static mut STOCK_COUNT: [u64;9] = [3;9];
 pub static TAP_MAX: i32 = 25;
 pub static mut TAP_NUM : [i32; 8] = [6; 8];
 pub static mut TAP_WAIT : [i32; 8] = [6; 8];
-pub static mut TEMP_SPAWN_POS: [Vector3f; 9] = [Vector3f{x: 0.0, y: 0.0, z: 0.0}; 9]; //Used to randomize spawn pos in Volleyball mode
+pub static mut TEMP_SPAWN_POS: [Vector3f;9] = [Vector3f{x: 0.0, y: 0.0, z: 0.0};9]; //Used to randomize spawn pos in Volleyball mode
 pub static mut TOTAL_FIGHTER: i32 = 1; //Tracks how many fighters are present
-pub static mut USED_FS: [bool; 9] = [false; 9]; //Flags when you just used a Final Smash in Special Smash
+pub static mut USED_FS: [bool;9] = [false;9]; //Flags when you just used a Final Smash in Special Smash
 pub static mut WAVEDASH_DONE: [bool; 8] = [false; 8];
 
 //Bowser Variables
@@ -160,7 +160,7 @@ pub static mut DID_ASTRA_5_HI: [bool; 8] = [false; 8];
 pub static mut LANDING_HIT: [bool; 8] = [false; 8];
 pub static mut LUCINA_GFX_COUNTER: [i32; 8] = [0; 8];
 pub static mut USE_SWORDSMAN_DASH: [bool; 8] = [true; 8];
-pub static mut USE_UP_SPECIAL: [bool; 8] = [false; 8];
+pub static mut USE_UP_SPECIAL: [bool; 8] = [true; 8];
 
 //Mewtwo Variables
 pub static mut CAN_CHLOEDASH: [bool; 8] = [false; 8];
@@ -178,6 +178,14 @@ pub static mut OFFENSE_UP_ACTIVE: [bool; 8] = [false; 8];
 pub static mut OFFENSE_UP_TIMER: [i32; 8] = [0; 8];
 pub static mut OFFENSE_UP_GFX_COUNTER: [i32; 8] = [0; 8];
 pub static mut PK_FLASH_TIMER: [i32; 8] = [0; 8];
+
+//Pichu Variables
+pub static mut DISCHARGE_ACTIVE: [bool; 8] = [false; 8];
+pub static mut DISCHARGE_DAMAGE_TIMER: [i32; 8] = [60; 8];
+pub static mut DISCHARGE_GFX: [i32; 8] = [0; 8];
+pub static mut ELECTRIC_HIT: [i32; 8] = [0; 8];
+pub static mut USE_TACKLE: [bool; 8] = [true; 8];
+pub static mut VOLT_SWITCH_COUNT: [i32; 8] = [0; 8];
 
 //Ridley Variables
 pub static mut POGO_GROUND_BOUNCE: [bool; 8] = [false; 8];
@@ -215,12 +223,6 @@ pub static FLOAT_SEARCH_CODE: &[u8] = &[
     0x00, 0x1c, 0x40, 0xf9, 0x08, 0x00, 0x40, 0xf9, 0x03, 0x19, 0x40, 0xf9,
 ];
 
-//Gets a boma
-pub unsafe fn get_boma(entry_id: i32) -> *mut smash::app::BattleObjectModuleAccessor {
-	let boma = smash::app::sv_battle_object::module_accessor(smash::app::Fighter::get_id_from_entry_id(entry_id));
-	return boma;
-}
-
 //Checks what alt you are
 pub unsafe fn get_player_number(module_accessor:  &mut smash::app::BattleObjectModuleAccessor) -> usize {
     let player_number;
@@ -238,6 +240,35 @@ pub unsafe fn get_player_number(module_accessor:  &mut smash::app::BattleObjectM
         player_number = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     }
     return player_number;
+}
+
+//Gets the boma
+pub unsafe fn get_boma(entry_id: i32) -> *mut smash::app::BattleObjectModuleAccessor {
+	let boma = sv_battle_object::module_accessor(Fighter::get_id_from_entry_id(entry_id));
+	return boma;
+}
+
+//Used for Blastzone Looping
+extern "C" {
+	#[link_name = "\u{1}_ZN3app17sv_camera_manager10dead_rangeEP9lua_State"]
+	pub fn dead_range(lua_state: u64) -> Vector4f;
+}
+
+extern "C" {
+	#[link_name = "\u{1}_ZN3app17sv_camera_manager12camera_rangeEv"]
+	pub fn camera_range() -> Vector4f;
+}
+
+//Preview
+extern "C" {
+	#[link_name = "\u{1}_ZN3app9curryshot15is_preview_modeEv"]
+	pub fn is_preview_mode() -> bool;
+}
+
+//Rotation Stuff
+extern "C" {
+	#[link_name = "\u{1}_ZN3app8lua_bind28PostureModule__rot_y_lr_implEPNS_26BattleObjectModuleAccessorE"]
+	pub fn imported_rot_y_lr(boma: &mut BattleObjectModuleAccessor) -> f32;
 }
 
 //Used in Grabs/Throws
@@ -357,8 +388,12 @@ fn fighter_reset(fighter: &mut L2CFighterCommon) {
 		DASH_GRAB_SPEED[entry_id] = 0.0;
 		DID_ASTRA_2_S[entry_id] = false;
 		DID_ASTRA_5_HI[entry_id] = false;
+		DISCHARGE_ACTIVE[entry_id] = false;
+		DISCHARGE_DAMAGE_TIMER[entry_id] = 60;
+		DISCHARGE_GFX[entry_id] = 0;
 		DONKEY_DASH_ATTACK_JUMP[entry_id] = 0;
 		DONKEY_DASH_ATTACK_POWER_DOWN[entry_id] = false;
+		ELECTRIC_HIT[entry_id] = 0;
 		FALCON_PUNCH_HIT[entry_id] = false;
 		FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
 		FIGHTER_SPECIAL_STATE[entry_id] = false;
@@ -391,7 +426,9 @@ fn fighter_reset(fighter: &mut L2CFighterCommon) {
 		SPEED_X[entry_id] = 0.0;
 		SPEED_Y[entry_id] = 0.0;
 		USE_SWORDSMAN_DASH[entry_id] = true;
+		USE_TACKLE[entry_id] = true;
 		USE_UP_SPECIAL[entry_id] = true;
+		VOLT_SWITCH_COUNT[entry_id] = 0;
     }
 }
 
@@ -399,10 +436,15 @@ fn fighter_reset(fighter: &mut L2CFighterCommon) {
 #[skyline::hook(replace = StatusModule::change_status_request_from_script)]
 pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-	if get_kind(boma) == *FIGHTER_KIND_MIIFIGHTER
-	&& status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
-	&& !USE_ONSLAUGHT[entry_id as usize] {
-		return 0;
+	if get_kind(boma) == *FIGHTER_KIND_PICHU {
+		if [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind)
+		&& !USE_TACKLE[entry_id as usize] {
+			return 0;
+		}
+		if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind)
+		&& VOLT_SWITCH_COUNT[entry_id as usize] >= 2 {
+			return 0;
+		}
 	}
 	if get_kind(boma) == *FIGHTER_KIND_LUCINA {
 		if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
@@ -414,6 +456,11 @@ pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccess
 			return 0;
 		}
 	}
+	if get_kind(boma) == *FIGHTER_KIND_MIIFIGHTER
+	&& status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
+	&& !USE_ONSLAUGHT[entry_id as usize] {
+		return 0;
+	}
 	return original!()(boma, status_kind, unk);
 }
 
@@ -423,7 +470,22 @@ pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param
 	let mut boma = *((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor;
 	let boma_reference = &mut *boma;
 	let fighter_kind = boma_reference.kind();
-	if boma_reference.is_weapon() {
+	let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+	if boma_reference.is_fighter() {
+		if fighter_kind == *FIGHTER_KIND_PICHU {
+			if param_type == hash40("param_special_hi") {
+				if param_hash == hash40("special_hi_warp2_angle_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 35;
+					}
+					else {
+						return 360;
+					}
+				}
+			}
+		}
+	}
+	else if boma_reference.is_weapon() {
         let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 		if fighter_kind == *WEAPON_KIND_NESS_PK_FIRE {
@@ -455,7 +517,22 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 	let mut boma = *((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor;
 	let boma_reference = &mut *boma;
 	let fighter_kind = boma_reference.kind();
-	if boma_reference.is_weapon() {
+	let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+	if boma_reference.is_fighter() {
+		if fighter_kind == *FIGHTER_KIND_PICHU {
+			if param_type == hash40("param_special_hi") {
+				if param_hash == hash40("special_hi_warp_spd_add") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 6.5;
+					}
+					else {
+						return 9.0;
+					}
+				}
+			}
+		}
+	}
+	else if boma_reference.is_weapon() {
         let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 		if fighter_kind == *WEAPON_KIND_KOOPA_BREATH {
@@ -516,6 +593,30 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 					}
 					else {
 						return 3.0;
+					}
+				}
+			}
+		}
+		if fighter_kind == *WEAPON_KIND_PICHU_DENGEKI {
+			if param_type == hash40("param_degeki") {
+				if param_hash == hash40("move_life_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 180.0;
+					}
+					else {
+						return 0.0;
+					}
+				}
+			}
+		}
+		if fighter_kind == *WEAPON_KIND_PICHU_DENGEKIDAMA {
+			if param_type == hash40("param_degekidama") {
+				if param_hash == hash40("life_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 180.0;
+					}
+					else {
+						return 0.0;
 					}
 				}
 			}

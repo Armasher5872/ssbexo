@@ -6,6 +6,7 @@ use {
             FIGHTER_KIND,
             HOLD_SHIELD,
             SHIELD_SPECIAL,
+            SPECIAL_SMASH_STATUS,
             STATUS_KIND,
             BomaExt,
             FrameInfo
@@ -126,29 +127,45 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
             }
         }
         //Movement Cancel Crouches
-        if [*FIGHTER_STATUS_KIND_WALK, *FIGHTER_STATUS_KIND_WALK_BRAKE].contains(&status_kind)
+        if [*FIGHTER_STATUS_KIND_WALK, *FIGHTER_STATUS_KIND_WALK_BRAKE, *FIGHTER_RYU_STATUS_KIND_WALK_BACK, *FIGHTER_RYU_STATUS_KIND_WALK_BACK, *FIGHTER_DOLLY_STATUS_KIND_WALK_BACK, *FIGHTER_DOLLY_STATUS_KIND_WALK_BACK, *FIGHTER_DEMON_STATUS_KIND_WALK_BACK, *FIGHTER_DEMON_STATUS_KIND_WALK_BACK].contains(&status_kind)
         && stick_y < -0.5
-        && fighter_kind != *FIGHTER_KIND_DEMON
         && frame > 3.0 {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            if fighter_kind != *FIGHTER_KIND_DEMON {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            }
+            else {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP, true);
+            }
         }
-        if [*FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN_DASH].contains(&status_kind)
+        if [*FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_RYU_STATUS_KIND_DASH_BACK, *FIGHTER_DOLLY_STATUS_KIND_DASH_BACK, *FIGHTER_DEMON_STATUS_KIND_DASH_BACK].contains(&status_kind)
         && stick_y < -0.5
-        && fighter_kind != *FIGHTER_KIND_DEMON
         && frame > 6.0 {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            if fighter_kind != *FIGHTER_KIND_DEMON {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            }
+            else {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP, true);
+            }
         }
-        if [*FIGHTER_STATUS_KIND_RUN, *FIGHTER_STATUS_KIND_RUN_BRAKE, *FIGHTER_STATUS_KIND_TURN_RUN, *FIGHTER_STATUS_KIND_TURN_RUN_BRAKE].contains(&status_kind)
+        if [*FIGHTER_STATUS_KIND_RUN, *FIGHTER_STATUS_KIND_RUN_BRAKE].contains(&status_kind)
         && stick_y < -0.5
-        && fighter_kind != *FIGHTER_KIND_DEMON
         && frame > 10.0 {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            if fighter_kind != *FIGHTER_KIND_DEMON {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            }
+            else {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP, true);
+            }
         }
-        if [*FIGHTER_STATUS_KIND_TURN_RUN, *FIGHTER_STATUS_KIND_TURN_RUN_BRAKE].contains(&status_kind)
+        if [*FIGHTER_STATUS_KIND_TURN_RUN, *FIGHTER_STATUS_KIND_TURN_RUN_BRAKE, *FIGHTER_RYU_STATUS_KIND_TURN_RUN_BACK, *FIGHTER_DOLLY_STATUS_KIND_TURN_RUN_BACK, *FIGHTER_DEMON_STATUS_KIND_TURN_RUN_BACK].contains(&status_kind)
         && stick_y < -0.5
-        && fighter_kind != *FIGHTER_KIND_DEMON
         && frame > 5.0 {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            if fighter_kind != *FIGHTER_KIND_DEMON {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SQUAT, true);
+            }
+            else {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP, true);
+            }
         }
         //Shield Dropping
         if status_kind == *FIGHTER_STATUS_KIND_GUARD
@@ -189,6 +206,17 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
             panic!("Could not get the FrameInfo for this fighter! Is this even a fighter?")
         }
     };
+}
+
+//Special Smash
+#[skyline::hook(replace=smash::app::FighterUtil::is_valid_just_shield)]
+unsafe fn is_valid_just_shield_replace(module_accessor: &mut BattleObjectModuleAccessor) -> bool {
+	if SPECIAL_SMASH_STATUS == 2 {
+		return false;
+	}
+	else {
+		original!()(module_accessor)
+	}
 }
 
 //Parry Reflects
@@ -251,7 +279,8 @@ unsafe extern "C" fn if_shield_special(fighter: &mut L2CFighterCommon) -> L2CVal
             fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_N.into(),true.into());
             return true.into();
         }
-        if smash::app::utility::get_kind(&mut *fighter.module_accessor) == *FIGHTER_KIND_CAPTAIN {
+        if smash::app::utility::get_kind(&mut *fighter.module_accessor) == *FIGHTER_KIND_CAPTAIN
+        || smash::app::utility::get_kind(&mut *fighter.module_accessor) == *FIGHTER_KIND_PICHU {
             fighter.change_status(FIGHTER_STATUS_KIND_APPEAL.into(),true.into());
             return true.into();
         }
@@ -286,4 +315,5 @@ pub fn install() {
     install_status_scripts!(ft_status_uniq_process_guard_off_exit_status);
     skyline::install_hooks!(change_kinetic_hook);
     skyline::install_hook!(is_valid_just_shield_reflector);
+    skyline::install_hook!(is_valid_just_shield_replace);
 }
