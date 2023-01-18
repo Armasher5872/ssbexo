@@ -1,5 +1,5 @@
 # Super Smash Bros. Ultimate.: EXO (SSBU: EXO)
-## If you are here to install the latest stable release, please download from the releases channel in the SSBU: EXO Server, which is linked further down.
+## If you are here to install the latest stable release, refer to the releases section of this GitHub page.
 
 This is the main repository for the source code of SSBU: EXO. If you want to contribute to SSBU: EXO, both pull requests and suggestions in the main server are welcome! A contribution guide for pull requests doesn't currently exist, but may be done at one point down the line. To give suggestions, consult this mods [Discord] https://discord.gg/25bDDQbdF5 and feel free to ask questions and give suggestions. You may also check out my [Youtube] https://www.youtube.com/channel/UCMBoDvYeMzakK0u839U8fJA to see the latest clips and testing videos of the mod.
 
