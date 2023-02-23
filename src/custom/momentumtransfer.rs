@@ -1,4 +1,9 @@
-#![allow(unused_macros)]
+#![allow(
+    illegal_floating_point_literal_pattern,
+    unused_macros,
+    unused_mut,
+    unused_variables
+)]
 use {
     crate::functions::{
         CURRENT_MOMENTUM,
@@ -55,7 +60,7 @@ pub unsafe fn calc_melee_momentum(fighter: &mut L2CFighterCommon, aerial_attack:
 pub unsafe fn momentum_transfer_helper(fighter: &mut L2CFighterCommon, boma: &mut BattleObjectModuleAccessor, status_kind: i32, situation_kind: i32, fighter_kind: i32) {
     if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_EFLAME, *FIGHTER_KIND_ELIGHT].contains(&fighter_kind) && [*FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_PFUSHIGISOU_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_PLIZARDON_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_EFLAME_STATUS_KIND_SPECIAL_LW_OUT, *FIGHTER_ELIGHT_STATUS_KIND_SPECIAL_LW_OUT].contains(&status_kind)
     || status_kind == *FIGHTER_STATUS_KIND_REBIRTH {
-		let mut ratio = (WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0) / WorkModule::get_param_float(boma, hash40("run_speed_max"), 0));
+		let mut ratio = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0) / WorkModule::get_param_float(boma, hash40("run_speed_max"), 0);
         JUMP_SPEED_RATIO = ratio;
 	}
 	if [*FIGHTER_STATUS_KIND_TURN_RUN, *FIGHTER_STATUS_KIND_TURN_RUN_BRAKE].contains(&status_kind) {

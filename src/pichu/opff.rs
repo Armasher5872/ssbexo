@@ -9,7 +9,6 @@ use {
         SHIELD_SPECIAL,
         SITUATION_KIND,
         USE_TACKLE,
-        VOLT_SWITCH_COUNT,
         get_player_number
     },
     smash::{
@@ -37,7 +36,6 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
         let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let mut globals = fighter.globals_mut().clone();
         //Reset
         if !sv_information::is_ready_go() {
 			CAN_ADD[entry_id] = false;
@@ -45,7 +43,6 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
             DISCHARGE_GFX[entry_id] = 0;
             ELECTRIC_HIT[entry_id] = 0;
             USE_TACKLE[entry_id] = true;
-            VOLT_SWITCH_COUNT[entry_id] = 0;
 		};
         //Attack Addition Check
         if frame < 2.0
@@ -234,7 +231,7 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
                 DamageModule::add_damage(fighter.module_accessor, 1.4, 0);
             }
         }
-        if motion_kind == hash40("special_lw_hit")
+        if [hash40("special_lw_hit"), hash40("special_air_lw_hit")].contains(&motion_kind)
         && frame <= 1.0 {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) == true {
                 if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) == true  {
@@ -291,24 +288,17 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
                 if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
                     MotionModule::change_motion_inherit_frame(module_accessor, Hash40::new("special_air_s"), -1.0, 1.0, 0.0, false, false);
                 };
+                USE_TACKLE[entry_id] = false;
             }
-            if [hash40("special_hi_end"), hash40("special_air_hi_end")].contains(&motion_kind)
-            && VOLT_SWITCH_COUNT[entry_id] >= 2 {
-                if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-                    MotionModule::change_motion_inherit_frame(module_accessor, Hash40::new("special_hi_start"), -1.0, 1.0, 0.0, false, false);
-                    VOLT_SWITCH_COUNT[entry_id] = 0;
-                }
-                if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-                    MotionModule::change_motion_inherit_frame(module_accessor, Hash40::new("special_air_hi_start"), -1.0, 1.0, 0.0, false, false);
-                    VOLT_SWITCH_COUNT[entry_id] = 0;
-                };
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_LW_HIT, true);
             }
         }
-        if [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_kind) {
+        if [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_kind) {
             DISCHARGE_ACTIVE[entry_id] = false;
         }
-        if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind)
-        && VOLT_SWITCH_COUNT[entry_id] >= 2 {
+        if [*FIGHTER_STATUS_KIND_CLIFF_WAIT, *FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CLIMB, *FIGHTER_STATUS_KIND_CLIFF_JUMP1, *FIGHTER_STATUS_KIND_CLIFF_JUMP2, *FIGHTER_STATUS_KIND_CLIFF_JUMP3, *FIGHTER_STATUS_KIND_CLIFF_ATTACK, *FIGHTER_STATUS_KIND_CLIFF_ESCAPE, *FIGHTER_STATUS_KIND_CLIFF_ROBBED, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE].contains(&status_kind)
+        && ((StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_STATUS_KIND_SPECIAL_S) || (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD) || (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK) || (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK) || (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END) || (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_STATUS_KIND_SPECIAL_HI) || (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP) || (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END)) {
             DISCHARGE_ACTIVE[entry_id] = false;
         }
         if DISCHARGE_ACTIVE[entry_id] == false {
@@ -396,49 +386,54 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
             if frame > 40.0 {
                 CancelModule::enable_cancel(module_accessor);
             }
-            if ControlModule::check_button_on_trriger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-                if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
-                };
-            }
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0  {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
-            }
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4) != 0 
-            || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
-            }
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 0 
-            || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
-            }
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) != 0 
-            || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
-            }
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
-            }
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_HI, true);
-            } 
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_LW, true);
+            if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) {
+                if ControlModule::check_button_on_trriger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
+                    if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
+                    };
+                }
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0  {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
+                }
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4) != 0 
+                || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3) != 0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
+                }
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 0 
+                || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
+                }
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) != 0 
+                || (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3) != 0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
+                }
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
+                }
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_HI, true);
+                } 
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_LW, true);
+                }
             }
             if MotionModule::end_frame(module_accessor) - frame <= 2.0 {
                 StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
             }
         }
         //Wild Charge
+        if motion_kind == hash40("special_air_s_start") {
+            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, true);
+            MotionModule::change_motion_inherit_frame(module_accessor, Hash40::new("special_air_s"), -1.0, 1.0, 0.0, false, false);
+        }
         if motion_kind == hash40("special_air_s") {
             KineticModule::change_kinetic(module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
             fighter.sub_transition_group_check_air_cliff();
             if MotionModule::end_frame(module_accessor) - frame <= 2.0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END, true);
+                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                DISCHARGE_ACTIVE[entry_id] = false;
             }
         }
-        //Up Special
-        println!("Volt Switch Count {}", VOLT_SWITCH_COUNT[entry_id]);
 	}
 }
 

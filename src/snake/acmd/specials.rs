@@ -1,5 +1,6 @@
 #![allow(unused_macros)]
 use {
+    crate::functions::GRENADE_HOLD,
     smash::{
         app::{
             lua_bind::*,
@@ -12,6 +13,30 @@ use {
     smashline::*,
     smash_script::*,
 };
+
+//Neutral Special Start ACMD
+#[acmd_script( agent = "snake", scripts = ["game_specialnstart", "game_specialairnstart"], category = ACMD_GAME)]
+unsafe fn ssbuexo_snake_neutral_special_start_acmd(fighter: &mut L2CAgentBase) {
+    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    frame(fighter.lua_state_agent, 1.0);
+    if macros::is_excute(fighter) {
+        macros::CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK);
+    }
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        if GRENADE_HOLD[entry_id] != true {
+            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_GRENADE, false, -1);
+            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_GRENADE_PIN, false, -1);
+            ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_GRENADE_PIN, true, smash::app::ArticleOperationTarget(0));
+        }
+        else {
+            ItemModule::have_item(fighter.module_accessor, smash::app::ItemKind(*ITEM_KIND_SMOKESCREEN), 0, 0, false, false);
+        }
+        macros::CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
+    }
+    frame(fighter.lua_state_agent, 16.0);
+    macros::FT_MOTION_RATE(fighter, 0.5);
+}
 
 //C4 ACMD
 #[acmd_script( agent = "snake_c4", script = "game_explosion", category = ACMD_GAME)]
@@ -44,6 +69,7 @@ unsafe fn ssbuexo_snake_c4_acmd(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     install_acmd_scripts!(
+        ssbuexo_snake_neutral_special_start_acmd,
         ssbuexo_snake_c4_acmd
     );
 }

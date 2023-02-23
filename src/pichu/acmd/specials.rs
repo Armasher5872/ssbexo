@@ -1,8 +1,7 @@
 #![allow(unused_macros)]
 use {
     crate::functions::{
-        DISCHARGE_ACTIVE,
-        VOLT_SWITCH_COUNT
+        DISCHARGE_ACTIVE
     },
     smash::{
         app::{
@@ -145,6 +144,25 @@ unsafe fn ssbuexo_pichu_neutral_special_shoot_acmd(fighter: &mut L2CAgentBase)
     }
 }
 
+//Neutral Special Shoot Effect
+#[acmd_script( agent = "pichu", scripts = ["effect_specialn", "effect_specialairn", "effect_specialnshoot"], category = ACMD_EFFECT)]
+unsafe fn ssbuexo_pichu_neutral_special_shoot_effect(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 17.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("pichu_cheek2"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("pichu_cheek_elec"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("pichu_elec_shock"), Hash40::new("top"), 0, 5.5, 13, 0, 0, 0, 0.85, true);
+    }
+    wait(fighter.lua_state_agent, 6.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_OFF_KIND(fighter, Hash40::new("pichu_cheek2"), false, true);
+        macros::EFFECT_OFF_KIND(fighter, Hash40::new("pichu_cheek_elec"), false, true);
+        macros::EFFECT_OFF_KIND(fighter, Hash40::new("pichu_elec_shock"), false, true);
+    }
+}
+
 //Grounded Electroweb ACMD
 #[acmd_script( agent = "pichu_dengekidama", script = "game_regular", category = ACMD_GAME)]
 unsafe fn ssbuexo_pichu_grounded_electroweb_acmd(fighter: &mut L2CAgentBase) 
@@ -207,12 +225,50 @@ unsafe fn ssbuexo_pichu_aerial_tackle_acmd(fighter: &mut L2CAgentBase)
     }
 }
 
+//Tackle Effect
+#[acmd_script( agent = "pichu", scripts = ["effect_specialstackle", "effect_specialairstackle"], category = ACMD_EFFECT)]
+unsafe fn ssbuexo_pichu_tackle_effect(fighter: &mut L2CAgentBase) 
+{
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(fighter, Hash40::new("pichu_rocket_bomb"), Hash40::new("top"), 0, 4, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(fighter.lua_state_agent, 2.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 3, 0.5, 0, 0, -90, 0.6, true, 0.7);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.4);
+        macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 3, 0.5, 0, 90, -90, 0.8, false, 0.5);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.5);
+    }
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        fighter.clear_lua_stack();
+        lua_args!(fighter, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 3, 0.5, 0, 0, -90, 0.6, true, 0.7);
+        smash::app::sv_animcmd::EFFECT_FOLLOW_arg11(fighter.lua_state_agent);
+        fighter.pop_lua_stack(1);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.2);
+        macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 3, 0.5, 0, 45, -90, 0.8, false, 0.5);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.3);
+    }
+}
+
+//Tackle Sound
+#[acmd_script( agent = "pichu", scripts = ["sound_specialstackle", "sound_specialairstackle"], category = ACMD_SOUND)]
+unsafe fn ssbuexo_pichu_tackle_sound(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 5.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_pichu_rnd_attack"));
+        macros::PLAY_STATUS(fighter, Hash40::new("se_pichu_attackair_n01"));
+    }
+}
+
 //Wild Charge ACMD
-#[acmd_script( agent = "pichu", script = "game_specialairs", category = ACMD_GAME)]
+#[acmd_script( agent = "pichu", scripts = ["game_specialairsstart", "game_specialairs"], category = ACMD_GAME)]
 unsafe fn ssbuexo_pichu_wild_charge_acmd(fighter: &mut L2CAgentBase) 
 { 
     if macros::is_excute(fighter) {
-        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 361, 90, 0, 15, 3.2, 0.0, 3.3, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 10, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
+        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 15, 90, 0, 90, 3.2, 0.0, 3.3, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 9, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
         AttackModule::set_attack_keep_rumble(fighter.module_accessor, 0, true);
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
     }
@@ -224,9 +280,17 @@ unsafe fn ssbuexo_pichu_wild_charge_acmd(fighter: &mut L2CAgentBase)
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_SKULL_BASH_BRAKE_TRIGGER);
     }
-    frame(fighter.lua_state_agent, 39.0);
+    frame(fighter.lua_state_agent, 44.0);
     if macros::is_excute(fighter) {
-        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END, true);
+        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 5.0, 361, 120, 0, 90, 3.2, 0.0, 3.3, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_HEAD);
+    }
+    frame(fighter.lua_state_agent, 50.0);
+    if macros::is_excute(fighter) {
+        AttackModule::clear_all(fighter.module_accessor);
+    }
+    frame(fighter.lua_state_agent, 88.0);
+    if macros::is_excute(fighter) {
+        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
     }
 }
 
@@ -236,11 +300,16 @@ unsafe fn ssbuexo_pichu_up_special_1_acmd(fighter: &mut L2CAgentBase)
 {
     let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if macros::is_excute(fighter) {
-        if DISCHARGE_ACTIVE[entry_id] == true {
-            VOLT_SWITCH_COUNT[entry_id] += 1;
+    if DISCHARGE_ACTIVE[entry_id] == true {
+        if macros::is_excute(fighter) {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("neck"), 2.0, 70, 50, 0, 20, 1.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            JostleModule::set_status(fighter.module_accessor, false);
         }
-        JostleModule::set_status(fighter.module_accessor, false);
+    }
+    if DISCHARGE_ACTIVE[entry_id] == false {
+        if macros::is_excute(fighter) {
+            JostleModule::set_status(fighter.module_accessor, false);
+        }
     }
 }
 
@@ -250,11 +319,126 @@ unsafe fn ssbuexo_pichu_up_special_2_acmd(fighter: &mut L2CAgentBase)
 {
     let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if macros::is_excute(fighter) {
-        if DISCHARGE_ACTIVE[entry_id] == true {
-            VOLT_SWITCH_COUNT[entry_id] += 1;
+    if DISCHARGE_ACTIVE[entry_id] == true {
+        if macros::is_excute(fighter) {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("neck"), 3.0, 70, 150, 0, 20, 1.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            JostleModule::set_status(fighter.module_accessor, false);
         }
-        JostleModule::set_status(fighter.module_accessor, false);
+    }
+    if DISCHARGE_ACTIVE[entry_id] == false {
+        if macros::is_excute(fighter) {
+            JostleModule::set_status(fighter.module_accessor, false);
+        }
+    }
+}
+
+//Up Special Start Effect
+#[acmd_script( agent = "pichu", scripts = ["effect_specialhistart", "effect_specialairhistart"], category = ACMD_EFFECT)]
+unsafe fn ssbuexo_pichu_up_special_start_effect(fighter: &mut L2CAgentBase) 
+{
+    let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    if DISCHARGE_ACTIVE[entry_id] == true {
+        if macros::is_excute(fighter) {
+            macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+        frame(fighter.lua_state_agent, 2.0);
+        if macros::is_excute(fighter) {
+            macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("pichu_cheek_sphistart"), Hash40::new("head"), 0, 0, 0, 0, -90, -90, 1, true);
+        }
+    }
+    if DISCHARGE_ACTIVE[entry_id] == false {
+        if macros::is_excute(fighter) {
+            macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+}
+
+//Aerial Up Special Effect
+#[acmd_script( agent = "pichu", scripts = ["effect_specialairhi1", "effect_specialairhi2"], category = ACMD_EFFECT)]
+unsafe fn ssbuexo_pichu_aerial_up_special_effect(fighter: &mut L2CAgentBase) 
+{
+    let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    if DISCHARGE_ACTIVE[entry_id] == true {
+        if macros::is_excute(fighter) {
+            fighter.clear_lua_stack();
+            lua_args!(fighter, Hash40::new("pichu_denko_elec"), Hash40::new("rot"), 5, 0, 0, 0, 0, 0, 1, true);
+            smash::app::sv_animcmd::EFFECT_FLW_POS_UNSYNC_VIS(fighter.lua_state_agent);
+            fighter.pop_lua_stack(1);
+            EffectModule::enable_sync_init_pos_last(fighter.module_accessor);
+            macros::EFFECT_FLW_UNSYNC_VIS(fighter, Hash40::new("pichu_denko_line"), Hash40::new("rot"), 0, 0, 10, 90, 0, 0, 1.5, true);
+            EffectModule::enable_sync_init_pos_last(fighter.module_accessor);
+            macros::EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+        }
+        frame(fighter.lua_state_agent, 3.0);
+        if macros::is_excute(fighter) {
+            macros::EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+        }
+        frame(fighter.lua_state_agent, 5.0);
+        if macros::is_excute(fighter) {
+            macros::EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+        }
+    }
+    if DISCHARGE_ACTIVE[entry_id] == false {
+        if macros::is_excute(fighter) {
+            macros::EFFECT_FLW_UNSYNC_VIS(fighter, Hash40::new("pichu_denko_line"), Hash40::new("rot"), 0, 0, 10, 90, 0, 0, 1.5, true);
+            EffectModule::enable_sync_init_pos_last(fighter.module_accessor);
+            macros::EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+        }
+        frame(fighter.lua_state_agent, 3.0);
+        if macros::is_excute(fighter) {
+            macros::EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+        }
+        frame(fighter.lua_state_agent, 5.0);
+        if macros::is_excute(fighter) {
+            macros::EFFECT(fighter, Hash40::new("sys_flash"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 0.6, 10, 10, 10, 0, 0, 0, false);
+        }
+    }
+}
+
+//Down Special ACMD
+#[acmd_script( agent = "pichu", scripts = ["game_speciallw", "game_specialairlw"], category = ACMD_GAME)]
+unsafe fn ssbuexo_pichu_down_special_acmd(fighter: &mut L2CAgentBase) 
+{
+    let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    if DISCHARGE_ACTIVE[entry_id] == false {
+        if macros::is_excute(fighter) {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_KAMINARI_GENERATE);
+        }
+    }
+    if DISCHARGE_ACTIVE[entry_id] == true {
+        if macros::is_excute(fighter) {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+    }
+}
+
+//Down Special Hit ACMD
+#[acmd_script( agent = "pichu", scripts = ["game_speciallwhit", "game_specialairlwhit"], category = ACMD_GAME)]
+unsafe fn ssbuexo_pichu_down_special_hit_acmd(fighter: &mut L2CAgentBase) 
+{
+    let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    if DISCHARGE_ACTIVE[entry_id] == false {
+        if macros::is_excute(fighter) {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 14.0, 361, 65, 0, 90, 11.0, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
+        }
+        wait(fighter.lua_state_agent, 3.0);
+        if macros::is_excute(fighter) {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+    }
+    if DISCHARGE_ACTIVE[entry_id] == true {
+        if macros::is_excute(fighter) {
+            DamageModule::add_damage(fighter.module_accessor, -6.125, 0);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 14.0, 361, 65, 0, 90, 11.0, 0.0, 10.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 2, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
+        }
+        wait(fighter.lua_state_agent, 3.0);
+        if macros::is_excute(fighter) {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
     }
 }
 
@@ -264,12 +448,19 @@ pub fn install() {
         ssbuexo_pichu_shield_special_effect,
         ssbuexo_pichu_shield_special_sound,
         ssbuexo_pichu_neutral_special_shoot_acmd,
+        ssbuexo_pichu_neutral_special_shoot_effect,
         ssbuexo_pichu_grounded_electroweb_acmd,
         ssbuexo_pichu_aerial_electroweb_acmd,
         ssbuexo_pichu_grounded_tackle_acmd,
         ssbuexo_pichu_aerial_tackle_acmd,
+        ssbuexo_pichu_tackle_effect,
+        ssbuexo_pichu_tackle_sound,
         ssbuexo_pichu_wild_charge_acmd,
         ssbuexo_pichu_up_special_1_acmd,
-        ssbuexo_pichu_up_special_2_acmd
+        ssbuexo_pichu_up_special_2_acmd,
+        ssbuexo_pichu_up_special_start_effect,
+        ssbuexo_pichu_aerial_up_special_effect,
+        ssbuexo_pichu_down_special_acmd,
+        ssbuexo_pichu_down_special_hit_acmd
     );
 }

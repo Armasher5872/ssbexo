@@ -173,12 +173,12 @@ unsafe fn ssbuexo_armstrong_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     }
 }
 
-//Forward Throw
+//Forward Throw ACMD
 #[acmd_script( agent = "ganon", script = "game_throwf", category = ACMD_GAME)]
-unsafe fn ssbuexo_armstrong_forward_throw(fighter: &mut L2CAgentBase) 
+unsafe fn ssbuexo_armstrong_forward_throw_acmd(fighter: &mut L2CAgentBase) 
 {
     if macros::is_excute(fighter) {
-        macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 43, 70, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 45, 100, 0, 45, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(fighter.lua_state_agent, 11.0);
@@ -196,13 +196,13 @@ unsafe fn ssbuexo_armstrong_forward_throw(fighter: &mut L2CAgentBase)
     }
 }
 
-//Back Throw
+//Back Throw ACMD
 #[acmd_script( agent = "ganon", script = "game_throwb", category = ACMD_GAME)]
-unsafe fn ssbuexo_armstrong_back_throw(fighter: &mut L2CAgentBase) 
+unsafe fn ssbuexo_armstrong_back_throw_acmd(fighter: &mut L2CAgentBase) 
 {
     let vector = smash::phx::Vector3f{x: 5.0, y: 2.0, z: 0.0};
     if macros::is_excute(fighter) {
-        macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 5.0, 43, 165, 0, 30, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 5.0, 43, 155, 0, 30, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(fighter.lua_state_agent, 11.0);
@@ -225,9 +225,9 @@ unsafe fn ssbuexo_armstrong_back_throw(fighter: &mut L2CAgentBase)
     }
 }
 
-//Up Throw
+//Up Throw ACMD
 #[acmd_script( agent = "ganon", script = "game_throwhi", category = ACMD_GAME)]
-unsafe fn ssbuexo_armstrong_up_throw(fighter: &mut L2CAgentBase) 
+unsafe fn ssbuexo_armstrong_up_throw_acmd(fighter: &mut L2CAgentBase) 
 {
     let vector = smash::phx::Vector3f{x: 0.0, y: 4.0, z: 0.0};
     if macros::is_excute(fighter) {
@@ -251,13 +251,31 @@ unsafe fn ssbuexo_armstrong_up_throw(fighter: &mut L2CAgentBase)
     }
 }
 
+//Down Throw ACMD
+#[acmd_script( agent = "ganon", script = "game_throwlw", category = ACMD_GAME)]
+unsafe fn ssbuexo_armstrong_down_throw_acmd(fighter: &mut L2CAgentBase) {
+    if macros::is_excute(fighter) {
+        macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 7.0, 80, 45, 0, 75, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+    }
+    frame(fighter.lua_state_agent, 22.0);
+    if macros::is_excute(fighter) {
+        macros::CHECK_FINISH_CAMERA(fighter, 11.0, 0.0);
+    }
+    frame(fighter.lua_state_agent, 23.0);
+    if macros::is_excute(fighter) {
+        macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+    }
+}
+
 pub fn install() {
     install_acmd_scripts!(
         ssbuexo_armstrong_grab_acmd,
         ssbuexo_armstrong_dash_grab_acmd,
         ssbuexo_armstrong_pivot_grab_acmd,
-        ssbuexo_armstrong_forward_throw,
-        ssbuexo_armstrong_back_throw,
-        ssbuexo_armstrong_up_throw
+        ssbuexo_armstrong_forward_throw_acmd,
+        ssbuexo_armstrong_back_throw_acmd,
+        ssbuexo_armstrong_up_throw_acmd,
+        ssbuexo_armstrong_down_throw_acmd
     );
 }

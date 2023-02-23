@@ -204,7 +204,7 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4
         && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
         && frame >= 30.0
-        && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD)
+        && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) != true
         && PARRIED[entry_id] == 0 {
             StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
         }

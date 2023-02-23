@@ -2,6 +2,8 @@
 #![allow(unused_macros)]
 use {
     crate::functions::{
+        BARREL_ACTIVE,
+        BARREL_TIMER,
         SITUATION_KIND,
         PREV_STATUS_KIND
     },
@@ -26,14 +28,27 @@ use {
 unsafe fn donkey_special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let motion;
     let kinetic;
+    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         motion = Hash40::new("special_air_lw");
         kinetic = *FIGHTER_KINETIC_TYPE_AIR_STOP;
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING);
     }
     else {
-        motion = Hash40::new("special_lw_start");
-        kinetic = *FIGHTER_KINETIC_TYPE_GROUND_STOP;
+        if BARREL_ACTIVE[entry_id] == true
+        && BARREL_TIMER[entry_id] > 0 {
+            kinetic = *FIGHTER_KINETIC_TYPE_NONE;
+            if PostureModule::lr(fighter.module_accessor) == 1.0 {
+                motion = Hash40::new("appeal_lw_r");
+            }
+            else {
+                motion = Hash40::new("appeal_lw_l");
+            }
+        }
+        else {
+            kinetic = *FIGHTER_KINETIC_TYPE_GROUND_STOP;
+            motion = Hash40::new("special_lw_start");
+        }
         WorkModule::unable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
     }
     KineticModule::change_kinetic(fighter.module_accessor, kinetic);
@@ -69,7 +84,7 @@ pub unsafe extern "C" fn donkey_special_lw_main_loop(fighter: &mut L2CFighterCom
             FIGHTER_STATUS_KIND_FALL
         }
         else {
-            FIGHTER_DONKEY_STATUS_KIND_SPECIAL_LW_LOOP
+            FIGHTER_STATUS_KIND_WAIT
         };
         fighter.change_status(status.into(), false.into());
     }
@@ -98,6 +113,7 @@ unsafe extern "C" fn donkey_catch_pull_main_loop(fighter: &mut L2CFighterCommon)
     }
 }
 
+//Link Events. Enables proper transition into grabs
 #[skyline::hook(offset = 0x993ec0)]
 pub unsafe extern "C" fn donkey_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
     if event.link_event_kind.0 == hash40("capture") {
@@ -119,7 +135,5 @@ pub fn install() {
         donkey_special_lw_main,
         donkey_catch_pull_main
     );
-    skyline::install_hooks!(
-        donkey_link_event
-    );
+    skyline::install_hooks!(donkey_link_event);
 }

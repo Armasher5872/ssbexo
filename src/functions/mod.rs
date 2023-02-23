@@ -1,4 +1,7 @@
-#![allow(unused_macros)]
+#![allow(
+	unused_macros,
+	unused_mut
+)]
 use {
 	skyline::hooks::{
 		InlineCtx,
@@ -25,7 +28,7 @@ use {
 //Universal Variables
 pub static mut ALL_FIGHTERS_LAST_STOCK: bool = false; //Take a wild guess.
 pub static mut ALREADY_BOUNCED: bool = false; //Tracks if the ball has bounced at least once since being thrown
-pub static mut ASDI : f32 = 2.5; //15 for testing purposes, should be 2.5
+pub static mut ASDI: f32 = 2.5; //15 for testing purposes, should be 2.5
 pub static mut ASDI_START: [bool; 8] = [false; 8];
 pub static mut B_CHECK: [bool; 9] = [false; 9]; //Tracks if a fighter used a certain special move in the air
 pub static mut BALL_BOUNCED: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 9999.0}; //Tracks stats about the volleyball to determine who to KO
@@ -36,10 +39,13 @@ pub static mut CAN_ADD: [bool; 8] = [false; 8];
 pub static mut CAN_CANCEL: [bool; 8] = [false; 8];
 pub static mut CAN_CANCEL_TIMER: [i32; 8] = [0; 8];
 pub const CMD_CAT1: i32 = 0x20; //u64
-pub const CMD_CAT2: i32 = 0x21; //u64
 pub static mut CURRENT_MOMENTUM: f32 = 1.0;
 pub static mut CURRENT_MOMENTUM_SPECIALS: f32 = 7.0;
+pub static mut DAMAGED: [bool; 8] = [false; 8];
+pub static mut DAMAGED_PREVENT: [bool; 8] = [false; 8];
 pub static mut DASH_GRAB_SPEED: [f32; 8] = [0.0; 8];
+pub static mut DID_GLIDE_TOSS: [bool; 8] = [false; 8];
+pub static mut DID_MAX_JUMP_COUNT: [bool; 8] = [false; 8];
 pub static mut DIR_MULT: f32 = 57.295776842880464966688235343549; //Very fun number that turns direction that spits out ControlModule::get_stick_dir(boma) as an angle in degrees
 pub static mut FIGHTER_BOOL_1: [bool; 9] = [false; 9];
 pub static mut FIGHTER_BOOL_2: [bool; 9] = [false; 9];
@@ -50,22 +56,24 @@ pub static mut FIGHTER_SPECIAL_STATE: [bool; 8] = [false; 8];
 pub static mut FIRST_BOUNCE: bool = false; //Allows the throwing player to bounce the ball on their own side once
 pub static mut FLOAT_OFFSET: usize = 0x4dedc0;
 pub static mut FULL_SMASH_ATTACK: [bool; 8] = [false; 8];
-pub static mut GROUND_VEL: f32 = 5.0;
+pub static mut GLIDE_TOSS_ENABLE: [bool; 8] = [false; 8];
 pub static mut GOT_HIT: [i32;9] = [0;9]; //Tracks if a player got hit during One-Hit mode
+pub static mut GROUND_VEL: f32 = 5.0;
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
 pub static mut HITFLOW: [bool; 8] = [false; 8];
 pub static mut HIT_PLAYER: i32 = -1; //Tracks which players need to be respawned
-pub static mut HOLD_SHIELD: [bool; 8] = [false; 8];
 pub static mut INT_OFFSET: usize = 0x4ded80;
 pub static mut IS_WAVEDASH: [bool; 8] = [false; 8];
 pub static mut ITEM_MANAGER_ADDR: usize = 0;
 pub static mut JUMP_SPEED_RATIO: f32 = 3.0;
 pub static mut JUMP_SPEED_MAX_MUL: f32 = 14.0;
 pub const JUMP_SQUAT_FRAME: i32 = 0x0006;
-pub static mut JUMPSQUAT_VELOCITY: f32 = 2.0;
+pub static mut JUMPSQUAT_VELOCITY: f32 = 3.0;
+pub static mut LANDING_COUNTER: [i32; 8] = [0; 8];
 pub static mut LAST_TO_HIT_BALL: usize = 9; //The last player to have hit the ball
 pub static mut LOW_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the left net
 pub static NONE_VECTOR: Vector3f = Vector3f {x: 0.0, y: 0.0, z: 0.0};
+pub const PAD_FLAG: i32 = 0x1F;
 pub const PREV_STATUS_KIND: i32 = 0xA;
 pub static mut RAR_LENIENCY: f32 = 6.0;
 pub static mut READY_GO: [bool;9] = [false;9]; //Returns false for exactly one frame after is_ready_go becomes true, used to initiate certain events exactly once at the start of a match
@@ -86,7 +94,7 @@ pub static mut SPECIAL_SMASH_SIZE: i32 = 0; //Checks which mode was selected in 
 pub static mut SPECIAL_SMASH_STATUS: i32 = 0; //Etc.
 pub static mut SPECIAL_ZOOM_GFX: [i32; 8] = [0; 8];
 pub const STATUS_KIND: i32 = 0xB; //i32
-pub static mut STOCK_COUNT: [u64;9] = [3;9];
+pub static mut STOCK_COUNT: [u64;9] = [99;9];
 pub static TAP_MAX: i32 = 25;
 pub static mut TAP_NUM : [i32; 8] = [6; 8];
 pub static mut TAP_WAIT : [i32; 8] = [6; 8];
@@ -163,29 +171,40 @@ pub static mut USE_SWORDSMAN_DASH: [bool; 8] = [true; 8];
 pub static mut USE_UP_SPECIAL: [bool; 8] = [true; 8];
 
 //Mewtwo Variables
-pub static mut CAN_CHLOEDASH: [bool; 8] = [false; 8];
-pub static mut CHLOEDASH_OFF_GFX_TIMER: [i32; 8] = [0; 8];
-pub static mut CHLOEDASH_ON_GFX_TIMER: [i32; 8] = [0; 8];
-pub static mut CHLOEDASH_TIMER: [i32; 8] = [0; 8];
-pub static mut CHLOEDASHING_ENABLED: [i32; 8] = [0; 8];
+pub static mut FUTURESIGHT_CURRENT_FRAME: [i32; 8] = [0; 8];
+pub static FUTURESIGHT_EXPLOSION_TIME: i32 = 20;
+pub static FUTURESIGHT_FUSE_TIME: i32 = 300;
+pub static mut FUTURESIGHT_HIT_COOLDOWN_FRAME: [i32; 8] = [0; 8];
+pub static FUTURESIGHT_HIT_COOLDOWN_TIME: i32 = 3;
+pub static mut FUTURESIGHT_LAST_STATUS: [i32; 8] = [0; 8];
+pub static mut FUTURESIGHT_X: [f32; 8] = [0.0; 8];
+pub static mut FUTURESIGHT_Y: [f32; 8] = [0.0; 8];
+pub static mut GHOST_DASH_ENABLED: [bool; 8] = [false; 8];
+pub static mut GROUNDED_TELEPORT: [bool; 8] = [false; 8];
+pub static mut HAS_FUTURESIGHT: [bool; 8] = [false; 8];
 pub static mut SPEED_ADD: [bool; 8] = [false; 8];
+pub static mut STORED_POWER_ENABLED: [i32; 8] = [0; 8];
+pub static mut STORED_POWER_GFX_TIMER: [i32; 8] = [0; 8];
+pub static mut STORED_POWER_POINT: [i32; 8] = [0; 8];
+pub static mut STORED_POWER_TIMER: [i32; 8] = [0; 8];
+pub static mut UP_SPECIAL_CANCEL: [bool; 8] = [false; 8];
+pub static mut UP_SPECIAL_JUMP_REFRESH: [bool; 8] = [false; 8];
 
 //Mii Brawler Variables
 pub static mut USE_ONSLAUGHT: [bool; 8] = [true; 8];
 
 //Ness Variables
-pub static mut OFFENSE_UP_ACTIVE: [bool; 8] = [false; 8];
+pub static mut OFFENSE_UP_ACTIVE: [bool; 65544] = [false; 65544];
 pub static mut OFFENSE_UP_TIMER: [i32; 8] = [0; 8];
 pub static mut OFFENSE_UP_GFX_COUNTER: [i32; 8] = [0; 8];
 pub static mut PK_FLASH_TIMER: [i32; 8] = [0; 8];
 
 //Pichu Variables
-pub static mut DISCHARGE_ACTIVE: [bool; 8] = [false; 8];
+pub static mut DISCHARGE_ACTIVE: [bool; 65544] = [false; 65544];
 pub static mut DISCHARGE_DAMAGE_TIMER: [i32; 8] = [60; 8];
 pub static mut DISCHARGE_GFX: [i32; 8] = [0; 8];
 pub static mut ELECTRIC_HIT: [i32; 8] = [0; 8];
 pub static mut USE_TACKLE: [bool; 8] = [true; 8];
-pub static mut VOLT_SWITCH_COUNT: [i32; 8] = [0; 8];
 
 //Ridley Variables
 pub static mut POGO_GROUND_BOUNCE: [bool; 8] = [false; 8];
@@ -197,13 +216,14 @@ pub static mut RIDLEY_VEC2_SPECIAL_LW_BOUNCE_POS_CHECK_PREV : [Vector2f; 8] = [V
 pub static mut ROY_GFX_COUNTER: [i32; 8] = [0; 8];
 
 //Senator Armstrong Variables
-pub static mut FIRE_PUNCH_TURN_COUNT: [f32; 8] = [0.0; 8];
-pub static mut KIRBY_FIRE_PUNCH_TURN_COUNT: [f32; 8] = [0.0; 8];
+pub static mut ARMSTRONG_IS_SPECIAL_HI: [bool; 8] = [false; 8];
+pub static mut USE_DROPKICK: [bool; 8] = [false; 8];
 
 //Snake Variables
-pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_ENABLE : [bool; 8] = [false; 8];
-pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_IS_BUFFERED : [bool; 8] = [false; 8];
-pub static mut SNAKE_INT_ATTACK_S4_COMBO_COUNT : [i32; 8] = [0; 8];
+pub static mut GRENADE_HOLD: [bool; 8] = [false; 8];
+pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_ENABLE: [bool; 8] = [false; 8];
+pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_IS_BUFFERED: [bool; 8] = [false; 8];
+pub static mut SNAKE_INT_ATTACK_S4_COMBO_COUNT: [i32; 8] = [0; 8];
 
 //Sonic Variables
 pub static mut FAIR_HIT: [bool; 8] = [false; 8];
@@ -375,76 +395,38 @@ impl FrameInfo {
 fn fighter_reset(fighter: &mut L2CFighterCommon) {
     unsafe {
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        BARREL_ACTIVE[entry_id] = false;
-		BARREL_DIRECTION[entry_id] = 0;
-        BARREL_TIMER[entry_id] = 0;
-		BOOST_INSTALL_ACTIVE[entry_id] = false;
-		BOOST_INSTALL_GFX_COUNTER[entry_id] = 0;
-		BOOST_INSTALL_MOTION_RATE[entry_id] = 1.0;
-		BOOST_INSTALL_TIMER[entry_id] = 0;
-        CAN_CANCEL[entry_id] = false;
-        CAN_CANCEL_TIMER[entry_id] = 0;
-		CAN_FIREBALL[entry_id] = false;
-		DASH_GRAB_SPEED[entry_id] = 0.0;
-		DID_ASTRA_2_S[entry_id] = false;
-		DID_ASTRA_5_HI[entry_id] = false;
-		DISCHARGE_ACTIVE[entry_id] = false;
-		DISCHARGE_DAMAGE_TIMER[entry_id] = 60;
-		DISCHARGE_GFX[entry_id] = 0;
-		DONKEY_DASH_ATTACK_JUMP[entry_id] = 0;
-		DONKEY_DASH_ATTACK_POWER_DOWN[entry_id] = false;
-		ELECTRIC_HIT[entry_id] = 0;
-		FALCON_PUNCH_HIT[entry_id] = false;
-		FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
-		FIGHTER_SPECIAL_STATE[entry_id] = false;
-		FIRE_PUNCH_TURN_COUNT[entry_id] = 0.0;
-		FULL_SMASH_ATTACK[entry_id] = true;
-		HITFLOW[entry_id] = false;
-		HYPE_HIT[entry_id] = false;
-		KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
-        KIRBY_FIRE_PUNCH_TURN_COUNT[entry_id] = 0.0;
-		KROOL_HAS_UAIR[entry_id] = false;
-        KROOL_UP_SPECIAL_CANCEL[entry_id] = false;
-		KOOPA_EXCELLENT_SMASH[entry_id] = false;
-		KOOPA_EXCELLENT_SMASH_GFX[entry_id] = 0;
-		KOOPA_GOOD_SMASH[entry_id] = false;
-		KOOPA_GOOD_SMASH_GFX[entry_id] = 0;
-		KOOPA_GREAT_SMASH[entry_id] = false;
-		KOOPA_GREAT_SMASH_GFX[entry_id] = 0;
-		KOOPA_OK_SMASH[entry_id] = false;
-		KOOPA_OK_SMASH_GFX[entry_id] = 0;
-		LANDING_HIT[entry_id] = true;
-		MEGA_EVOLVE[entry_id] = false;
-		OFFENSE_UP_ACTIVE[entry_id] = false;
-		OFFENSE_UP_GFX_COUNTER[entry_id] = 0;
-		OFFENSE_UP_TIMER[entry_id] = 0;
-		PK_FLASH_TIMER[entry_id] = 0;
-		REFLECTOR_KNOCKBACK[entry_id] = 100;
-		REFLECTOR_ANGLE[entry_id] = 60;
-		SHIELD_SPECIAL[entry_id] = false;
-		SPECIAL_ZOOM_GFX[entry_id] = 0;
-		SPEED_X[entry_id] = 0.0;
-		SPEED_Y[entry_id] = 0.0;
-		USE_SWORDSMAN_DASH[entry_id] = true;
-		USE_TACKLE[entry_id] = true;
-		USE_UP_SPECIAL[entry_id] = true;
-		VOLT_SWITCH_COUNT[entry_id] = 0;
+		CAN_ADD[entry_id] = false;
     }
 }
 
-//Prevention of Moves in Air
+//Prevention of Moves in Air/Wavedash Logic (Credit to Chrispo)
 #[skyline::hook(replace = StatusModule::change_status_request_from_script)]
 pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
+	let next_status = status_kind;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-	if get_kind(boma) == *FIGHTER_KIND_PICHU {
-		if [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind)
-		&& !USE_TACKLE[entry_id as usize] {
-			return 0;
+	if get_kind(boma) == *FIGHTER_KIND_ALL {
+		if [*FIGHTER_STATUS_KIND_ESCAPE, *FIGHTER_STATUS_KIND_ESCAPE_F, *FIGHTER_STATUS_KIND_ESCAPE_B].contains(&next_status) {
+			if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) {
+				original!()(boma, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
+			} 
+			else {
+				original!()(boma, status_kind, unk);
+			}
 		}
-		if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind)
-		&& VOLT_SWITCH_COUNT[entry_id as usize] >= 2 {
-			return 0;
+		else if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&next_status) {
+			if IS_WAVEDASH[entry_id] == true {
+				StatusModule::set_situation_kind(boma, smash::app::SituationKind(*SITUATION_KIND_GROUND), true);
+			}
+			original!()(boma, status_kind, unk);
 		}
+		else {
+			original!()(boma, status_kind, unk);
+		}
+	}
+	if get_kind(boma) == *FIGHTER_KIND_PICHU
+	&& [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind)
+	&& !USE_TACKLE[entry_id as usize] {
+		return 0;
 	}
 	if get_kind(boma) == *FIGHTER_KIND_LUCINA {
 		if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
@@ -455,6 +437,11 @@ pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccess
 		&& !USE_UP_SPECIAL[entry_id as usize] {
 			return 0;
 		}
+	}
+	if get_kind(boma) == *FIGHTER_KIND_GANON
+	&& status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
+	&& !USE_DROPKICK[entry_id as usize] {
+		return 0;
 	}
 	if get_kind(boma) == *FIGHTER_KIND_MIIFIGHTER
 	&& status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
@@ -508,6 +495,18 @@ pub unsafe fn get_param_int_replace(module_accessor: u64, param_type: u64, param
 				}
 			}
 		}
+		if fighter_kind == *WEAPON_KIND_MEWTWO_SHADOWBALL {
+			if param_type == hash40("param_shadowball") {
+				if param_hash == hash40("life") {
+					if STORED_POWER_ENABLED[entry_id] == 1 {
+						return 120;
+					}
+					else {
+						return 80;
+					}
+				}
+			}
+		}
 	}
 	original!()(module_accessor, param_type, param_hash)
 }
@@ -518,6 +517,7 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 	let boma_reference = &mut *boma;
 	let fighter_kind = boma_reference.kind();
 	let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+	let sticky = ControlModule::get_stick_y(boma);
 	if boma_reference.is_fighter() {
 		if fighter_kind == *FIGHTER_KIND_PICHU {
 			if param_type == hash40("param_special_hi") {
@@ -528,6 +528,82 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 					else {
 						return 9.0;
 					}
+				}
+			}
+		}
+		if fighter_kind == *FIGHTER_KIND_GANON {
+			if param_type == hash40("air_accel_y") {
+				if WorkModule::is_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) == true {
+					return 0.33;
+				}
+				else {
+					return 0.11;
+				}
+			}
+		}
+		if fighter_kind == *FIGHTER_KIND_MEWTWO {
+			if param_type == hash40("ground_brake") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 0.0;
+				}
+				else {
+					return 0.0754;
+				}
+			}
+			if param_type == hash40("dash_speed") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 1.4;
+				}
+				else {
+					return 1.65;
+				}
+			}
+			if param_type == hash40("run_speed_max") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 1.6;
+				}
+				else {
+					return 1.95;
+				}
+			}
+			if param_type == hash40("jump_initial_y") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 20.0;
+				}
+				else {
+					return 14.0;
+				}
+			}
+			if param_type == hash40("air_accel_y") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 0.2;
+				}
+				else {
+					return 0.08;
+				}
+			}
+			if param_type == hash40("air_speed_y_stable") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 2.0;
+				}
+				else {
+					return 1.5;
+				}
+			}
+			if param_type == hash40("dive_speed_y") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 3.0;
+				}
+				else {
+					return 2.4;
+				}
+			}
+			if param_type == hash40("weight") {
+				if STORED_POWER_ENABLED[entry_id] == 1 {
+					return 115.0;
+				}
+				else {
+					return 79.0;
 				}
 			}
 		}
@@ -621,6 +697,86 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 				}
 			}
 		}
+		if fighter_kind == *WEAPON_KIND_PICHU_KAMINARI {
+			if param_type == hash40("param_kaminari") {
+				if param_hash == hash40("speed_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return -4.9;
+					}
+				}
+				if param_hash == hash40("flying_dist_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 30.0;
+					}
+				}
+				if param_hash == hash40("pass_fall_dist_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 7.5;
+					}
+				}
+				if param_hash == hash40("width_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 1.7;
+					}
+				}
+			}
+		}
+		if fighter_kind == *WEAPON_KIND_PICHU_CLOUD {
+			if param_type == hash40("param_cloud") {
+				if param_hash == hash40("speed_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return -4.9;
+					}
+				}
+				if param_hash == hash40("width_") {
+					if DISCHARGE_ACTIVE[entry_id] == true {
+						return 0.0;
+					}
+					else {
+						return 1.7;
+					}
+				}
+			}
+		}
+		if fighter_kind == *WEAPON_KIND_MEWTWO_SHADOWBALL {
+			if param_type == hash40("param_shadowball") {
+				if param_hash == hash40("angle") {
+					if STORED_POWER_ENABLED[entry_id] == 1 {
+						if sticky > 0.5 {
+							return 45.0;
+						}
+						else if sticky < -0.5 {
+							return -45.0;
+						}
+					}
+					else {
+						return 0.0;
+					}
+				}
+			}
+		}
+		if fighter_kind == *WEAPON_KIND_SNAKE_TRENCHMORTAR_BULLET {
+            if param_type == hash40("param_trenchmortarbullet") {
+				if param_hash == hash40("speed_x") {
+					return ControlModule::get_stick_x(boma) / 1.5 * PostureModule::lr(boma);
+				}
+            }
+        }
     }
 	original!()(module_accessor, param_type, param_hash)
 }

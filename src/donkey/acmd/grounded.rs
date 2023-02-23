@@ -1,5 +1,9 @@
 #![allow(unused_macros)]
 use {
+    crate::functions::{
+        BARREL_ACTIVE,
+        BARREL_TIMER
+    },
     smash::{
         lua2cpp::L2CAgentBase, 
         phx::Hash40,
@@ -25,6 +29,29 @@ unsafe fn ssbuexo_donkey_guard_off_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 12.0);
     if macros::is_excute(fighter) {
         HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
+    }
+}
+
+//Heavy Throw Forward
+#[acmd_script( agent = "donkey", script = "game_itemheavythrowf", category = ACMD_GAME)]
+unsafe fn ssbuexo_donkey_heavy_throw_forward_acmd(fighter: &mut L2CAgentBase) {
+    let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    frame(fighter.lua_state_agent, 18.0);
+    if macros::is_excute(fighter) {
+        if BARREL_ACTIVE[entry_id] == true
+        && BARREL_TIMER[entry_id] > 0 {
+            if ItemModule::get_have_item_kind(module_accessor, 0) == *ITEM_KIND_BARREL {
+                fighter.clear_lua_stack();
+                lua_args!(fighter, 2, 2, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
+                smash::app::sv_animcmd::THROW_ITEM_OFFSET(fighter.lua_state_agent);
+            }
+        }
+        else {
+            fighter.clear_lua_stack();
+            lua_args!(fighter, 21, 10, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
+            smash::app::sv_animcmd::THROW_ITEM_OFFSET(fighter.lua_state_agent);
+        }
     }
 }
 
@@ -104,6 +131,7 @@ unsafe fn ssbuexo_donkey_dash_attack_acmd(fighter: &mut L2CAgentBase)
 pub fn install() {
     install_acmd_scripts!(
         ssbuexo_donkey_guard_off_acmd,
+        ssbuexo_donkey_heavy_throw_forward_acmd,
         ssbuexo_donkey_jab_1_acmd,
         ssbuexo_donkey_jab_2_acmd,
         ssbuexo_donkey_dash_attack_acmd

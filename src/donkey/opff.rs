@@ -39,11 +39,7 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
         let backward_diagonal = [51.0, 52.0, 53.0, 54.0, 55.0, 56.0, 57.0, 58.0, 59.0, 60.0, 119.0, 120.0, 121.0, 122.0, 123.0, 178.0, 179.0, 180.0, 181.0, 182.0].contains(&frame);
         let up = [61.0, 62.0, 63.0, 64.0, 65.0, 66.0, 67.0, 68.0, 69.0, 70.0, 124.0, 125.0, 126.0, 127.0, 128.0, 129.0, 130.0, 131.0, 183.0, 184.0, 185.0].contains(&frame);
         let up_diagonal = [71.0, 72.0, 73.0, 74.0, 75.0, 76.0, 132.0, 133.0, 134.0, 135.0, 136.0, 186.0, 187.0, 188.0, 189.0, 190.0, 191.0, 192.0].contains(&frame);
-        if status_kind == *FIGHTER_STATUS_KIND_APPEAL
-        && [hash40("appeal_lw_r"), hash40("appeal_lw_l")].contains(&motion_kind) 
-        && MotionModule::end_frame(module_accessor) - frame <= 2.0 {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
-        }
+        //Taunts
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
             if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind)
             && frame >= 48.0 {
@@ -61,6 +57,7 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
                 };
             }
         };
+        //Dash Attack
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
             if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) == true {
                 macros::SET_SPEED_EX(fighter, 1.0, 0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -98,6 +95,7 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
         if DONKEY_DASH_ATTACK_JUMP[entry_id] == 1 {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
         }
+        //Neutral B
         if [hash40("special_n_loop"), hash40("special_air_n_loop")].contains(&motion_kind) {
             if MotionModule::end_frame(module_accessor) - frame <= 2.0 {
                 DONKEY_GIANT_PUNCH_STAGE[entry_id] += 1;
@@ -113,10 +111,11 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
                    AttackModule::clear_all(module_accessor);
                 }
             }
-        }   
+        }
         else {
             FIGHTER_SPECIAL_STATE[entry_id] = false;
         }
+        //Barrel Cannon
         if motion_kind == hash40("special_air_hi") {
             if frame >= 29.0
             && frame <= 209.0 {
@@ -161,6 +160,7 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
                 }
             }
         }
+        //Down Special
         if BARREL_TIMER[entry_id] > 0 {
             BARREL_TIMER[entry_id] -= 1;
         }
@@ -168,8 +168,21 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
         && BARREL_ACTIVE[entry_id] == true {
             BARREL_ACTIVE[entry_id] = false;
         }
-        println!("Speed_X: {}", SPEED_X[entry_id]);
-        println!("Speed_Y: {}", SPEED_Y[entry_id]);
+        if [
+            *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_WAIT, *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_TURN, *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_WALK, *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_PASS, *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_JUMP_SQUAT,
+            *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_JUMP_SQUAT_B, *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_JUMP, *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_FALL, *FIGHTER_DONKEY_STATUS_KIND_SUPER_LIFT_LANDING
+        ].contains(&status_kind) {
+            if BARREL_ACTIVE[entry_id] == true
+            && BARREL_TIMER[entry_id] > 0 {
+                if ItemModule::get_have_item_kind(module_accessor, 0) == *ITEM_KIND_BARREL {
+                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ITEM_THROW_HEAVY, true);
+                }
+            }
+        }
+        if [hash40("special_lw_start"), hash40("special_lw_loop")].contains(&motion_kind)
+        || [*FIGHTER_DONKEY_STATUS_KIND_SPECIAL_LW_LOOP, *FIGHTER_DONKEY_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind) {
+            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+        }
     }
 }
 

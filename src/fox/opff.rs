@@ -1,4 +1,5 @@
 use {
+    crate::functions::SITUATION_KIND,
     smash::{
         app::lua_bind::*,
         lua2cpp::L2CFighterCommon,
@@ -19,20 +20,20 @@ fn fox_frame(fighter: &mut L2CFighterCommon) {
             && !AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) 
             && ControlModule::check_button_on_trriger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
                 if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) 
-                && StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR {
+                && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
                 };
-                if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND {
+                if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
                 };
             }
             if frame >= 4.0
             && ControlModule::check_button_on_trriger(module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
                 if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) 
-                && StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_AIR {
+                && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
                 };
-                if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND {
+                if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
                 };
             }
@@ -42,7 +43,7 @@ fn fox_frame(fighter: &mut L2CFighterCommon) {
                 WorkModule::enable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS);
                 WorkModule::unable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE);
                 if WorkModule::is_enable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS)
-                && StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND {
+                && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_PASS, true);
                 }
             }

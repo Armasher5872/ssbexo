@@ -7,6 +7,8 @@ use {
         BOOST_INSTALL_TIMER,
         CAN_ADD,
         CMD_CAT1,
+        DAMAGED,
+        DAMAGED_PREVENT,
         DASH_GRAB_SPEED,
         FIGHTER_KIND,
         FALCON_PUNCH_HIT,
@@ -118,8 +120,9 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         //Boost Install
         if BOOST_INSTALL_ACTIVE[entry_id] == true {
             HYPE_HIT[entry_id] = false;
-            if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_SONG, *FIGHTER_STATUS_KIND_DAMAGE_SLEEP, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_SLEEP_FALL].contains(&status_kind) {
+            if DAMAGED[entry_id] == true {
                 BOOST_INSTALL_TIMER[entry_id] -= 120;
+                DAMAGED_PREVENT[entry_id] = true;
             }
             if BOOST_INSTALL_TIMER[entry_id] > 0 {
                 BOOST_INSTALL_TIMER[entry_id] -= 1;

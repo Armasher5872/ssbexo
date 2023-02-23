@@ -4,6 +4,7 @@ use {
         ASDI,
         ASDI_START,
         DIR_MULT,
+        LANDING_COUNTER,
         ray_check_pos
     },
     smash::{
@@ -19,17 +20,31 @@ use {
     smashline::*,
 };
 
+//Credit to Chrispo
 #[fighter_frame_callback]
 pub fn asdi(fighter: &mut L2CFighterCommon) {
     unsafe {
         let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let stickx = ControlModule::get_stick_x(module_accessor);
+        let status_kind = StatusModule::status_kind(module_accessor);
         let sticky = ControlModule::get_stick_y(module_accessor);
         let substickx = ControlModule::get_sub_stick_x(module_accessor);
         let substicky = ControlModule::get_sub_stick_y(module_accessor);
+        let remaining_hitstun = WorkModule::get_float(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
         if StopModule::is_damage(module_accessor) {
             ASDI_START[entry_id] = true;
+        };
+        if status_kind == *FIGHTER_STATUS_KIND_LANDING {
+            if remaining_hitstun > 0.0 {
+                LANDING_COUNTER[entry_id] +=1 ;
+                if LANDING_COUNTER[entry_id] >= 4 {
+                    CancelModule::enable_cancel(module_accessor);
+                };
+            };
+        } 
+        else {
+            LANDING_COUNTER[entry_id] = 0;
         };
         if ASDI_START[entry_id] 
         && !StopModule::is_damage(module_accessor) {
