@@ -6,8 +6,14 @@ use {
     crate::{
         custom::momentumtransfer::momentum_install,
         functions::{
+            ATTACK_100_ON,
+            ATTACK_ENABLE_COMBO_ON,
+            ATTACK_NO_HIT_COMBO_ON,
+            CAN_JAB,
+            CAN_RAPID_JAB,
             DAMAGED,
             DAMAGED_PREVENT,
+            DID_GLIDE_TOSS,
             DID_MAX_JUMP_COUNT,
             FIGHTER_KIND,
             GLIDE_TOSS_ENABLE,
@@ -51,6 +57,7 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let motion_kind = MotionModule::motion_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
+        let stick_x = ControlModule::get_stick_x(module_accessor) * PostureModule::lr(module_accessor);
         let stick_y = ControlModule::get_stick_y(module_accessor);
         let lr = PostureModule::lr(module_accessor);
         let cbm_veca1 = Vector4f{/* Red */ x: 1.0, /* Green */ y: 1.0, /* Blue */ z: 1.0, /* Alpha */ w: 0.2};
@@ -185,7 +192,8 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         };
         //ROA Airdodges/Aerial Glide Tossing
         if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-            if frame <= 5.0 {
+            if frame <= 5.0
+            && DID_GLIDE_TOSS[entry_id] == false {
                 GLIDE_TOSS_ENABLE[entry_id] = true;
             }
             else {
@@ -200,10 +208,10 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ITEM_THROW, false);
                     KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 1.0, y: 1.0, z: 1.0}, *FIGHTER_KINETIC_ENERGY_ID_STOP);
                     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
+                    DID_GLIDE_TOSS[entry_id] = true;
                 }
             }
-            if (18.0..=34.0).contains(&frame)
-            && (ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD) || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_GUARD_HOLD) || ControlModule::check_button_trigger(module_accessor, *CONTROL_PAD_BUTTON_CATCH)) {
+            if (18.0..=34.0).contains(&frame) {
                 KineticModule::unable_energy_all(module_accessor);
                 KineticModule::clear_speed_all(module_accessor);
             }
@@ -238,9 +246,49 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         if DamageModule::is_no_reaction_mode_perfect(module_accessor) == true {
             ColorBlendModule::set_main_color(module_accessor, /* Brightness */&cbm_vecc1, /* Diffuse */&cbm_vecb2, 0.21, 2.2, 5, /* Display Color */ true);
         }
-        if DamageModule::is_no_reaction_mode_perfect(module_accessor) == false {
+        if DamageModule::is_no_reaction_mode_perfect(module_accessor) == false
+        && DID_MAX_JUMP_COUNT[entry_id] != true {
             ColorBlendModule::cancel_main_color(module_accessor, 0);
         }
+        //Jab Overriding Prevention
+		if [*FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_DEMON_STATUS_KIND_ATTACK_COMBO].contains(&status_kind) && fighter_kind != *FIGHTER_KIND_MURABITO {
+			if ((stick_x <= 0.2 && stick_x >= -0.2) && (stick_y <= 0.2 && stick_y >= -0.2)) 
+            && ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) 
+            && ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_CATCH) 
+            && ((ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4) == 0 && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) == 0 && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) == 0 && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3) == 0 && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) == 0 && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3) == 0 && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH) == 0 && ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_JUMP)) {
+				CAN_JAB[entry_id] = 0;
+				CAN_RAPID_JAB[entry_id] = 0;
+				if ATTACK_100_ON[entry_id] {
+					WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
+				};
+				if ATTACK_ENABLE_COMBO_ON[entry_id] {
+					WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+					if fighter_kind == *FIGHTER_KIND_DEMON {
+						WorkModule::set_flag(module_accessor, true, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_CHANGE_STATUS);
+					};
+				};
+				if ATTACK_NO_HIT_COMBO_ON[entry_id] {
+					WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+				};
+			} 
+            else {
+				CAN_JAB[entry_id] = 1;
+				CAN_RAPID_JAB[entry_id] = 1;
+				if ATTACK_100_ON[entry_id] {
+					WorkModule::set_flag(module_accessor, false, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
+				};
+				if ATTACK_ENABLE_COMBO_ON[entry_id] {
+					WorkModule::set_flag(module_accessor, false, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+				};
+				if ATTACK_NO_HIT_COMBO_ON[entry_id] {
+					WorkModule::set_flag(module_accessor, false, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+				};
+			};
+		} 
+        else {
+			CAN_JAB[entry_id] = 0;
+			CAN_RAPID_JAB[entry_id] = 0;
+		};
         //Installations
         if let Some(info) = FrameInfo::update_and_get(fighter) {
             if fighter_kind == *FIGHTER_KIND_ALL {

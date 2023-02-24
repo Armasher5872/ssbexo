@@ -106,7 +106,7 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
             }
             if DISCHARGE_ACTIVE[entry_id] == false {
                 if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) == true {
-                    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) == true  {
+                    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) == true {
                         DamageModule::add_damage(fighter.module_accessor, 0.0, 0);
                     }
                     else {

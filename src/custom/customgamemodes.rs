@@ -4,9 +4,9 @@
 	non_upper_case_globals,
 	unused_imports,
 	unused_mut,
-	unused_variables
+	unused_variables,
+	unused_unsafe
 )]
-#[allow(unused_unsafe)]
 use {
     crate::functions::{
         ALL_FIGHTERS_LAST_STOCK,

@@ -96,7 +96,6 @@ fn armstrong_frame(fighter: &mut L2CFighterCommon) {
         //Side Special
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
             fighter.sub_transition_group_check_air_cliff();
-            USE_DROPKICK[entry_id] = false;
             if StatusModule::prev_status_kind(module_accessor, 0) != *FIGHTER_STATUS_KIND_SPECIAL_HI {
                 if StatusModule::is_situation_changed(fighter.module_accessor) {
                     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
@@ -108,6 +107,7 @@ fn armstrong_frame(fighter: &mut L2CFighterCommon) {
                     };
                 }
                 if MotionModule::end_frame(module_accessor) - frame <= 2.0 {
+                    USE_DROPKICK[entry_id] = false;
                     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
                         StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
                     }
