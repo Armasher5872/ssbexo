@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::FIGHTER_CUTIN_MANAGER,
+    crate::functions::ext::*,
     smash::{
         app::{
             lua_bind::*,

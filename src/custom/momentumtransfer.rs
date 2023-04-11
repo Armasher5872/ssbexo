@@ -6,17 +6,8 @@
 )]
 use {
     crate::functions::{
-        CURRENT_MOMENTUM,
-        CURRENT_MOMENTUM_SPECIALS,
-        FIGHTER_KIND,
-        GROUND_VEL,
-        JUMP_SQUAT_FRAME,
-        JUMPSQUAT_VELOCITY,
-        JUMP_SPEED_MAX_MUL,
-        JUMP_SPEED_RATIO,
-        RAR_LENIENCY,
-        BomaExt,
-        FrameInfo
+        ext::*,
+        variables::*,
     },
     smash::{
         app::{
@@ -154,10 +145,9 @@ unsafe extern "C" fn status_jump_main(fighter: &mut L2CFighterCommon) -> L2CValu
     } 
     if !MotionModule::is_end(fighter.module_accessor) {
         fighter.sub_air_check_superleaf_fall_slowly();
-
     } 
     else {
-        StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     };
     0.into()
 }

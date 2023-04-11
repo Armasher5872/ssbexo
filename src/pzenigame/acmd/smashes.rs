@@ -13,51 +13,61 @@ use {
     smash_script::*,
 };
 
-//Forward Smash F
-#[acmd_script( agent = "pzenigame", script = "game_attacks4", category = ACMD_GAME)]
-unsafe fn ssbuexo_squirtle_forward_smash_f(fighter: &mut L2CAgentBase) 
+//Forward Smash ACMD
+#[acmd_script( agent = "pzenigame", scripts = ["game_attacks4", "game_attacks4hi", "game_attacks4lw"], category = ACMD_GAME)]
+unsafe fn ssbuexo_squirtle_forward_smash_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 6.0);
+    frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(fighter.lua_state_agent, 20.0);
+    frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {
-        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 15.0, 361, 100, 0, 35, 4.2, 0.0, 4.8, 7.8, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
-        macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 15.0, 361, 100, 0, 35, 3.6, 0.0, 5.4, 12.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
-        macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 15.0, 361, 100, 0, 35, 3.4, 0.0, 5.6, 16.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
-        macros::ATTACK(fighter, 3, 0, Hash40::new("top"), 10.0, 361, 100, 0, 35, 3.2, 0.0, 5.6, 20.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
+        macros::ATTACK(fighter, 0, 0, Hash40::new("waist"), 16.0, 361, 83, 0, 25, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
-    wait(fighter.lua_state_agent, 2.0);
+    wait(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
-        AttackModule::clear_all(fighter.module_accessor);
+        macros::ATTACK(fighter, 0, 0, Hash40::new("waist"), 10.0, 361, 94, 0, 25, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
-    frame(fighter.lua_state_agent, 25.0);
-    MotionModule::set_rate(fighter.module_accessor, 1.3);
-}
-
-//Forward Smash L
-#[acmd_script( agent = "pzenigame", script = "game_attacks4lw", category = ACMD_GAME)]
-unsafe fn ssbuexo_squirtle_forward_smash_l(fighter: &mut L2CAgentBase) 
-{
-    frame(fighter.lua_state_agent, 20.0);
+    wait(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
-        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 15.0, 361, 100, 0, 35, 4.2, 0.0, 3.5, 7.8, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
-        macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 15.0, 361, 100, 0, 35, 3.6, 0.0, 3.2, 12.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
-        macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 15.0, 361, 100, 0, 35, 3.4, 0.0, 3.0, 16.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
-        macros::ATTACK(fighter, 3, 0, Hash40::new("top"), 10.0, 361, 100, 0, 35, 3.2, 0.0, 3.0, 20.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_WATER);
+        macros::ATTACK(fighter, 0, 0, Hash40::new("waist"), 6.0, 361, 104, 0, 25, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
-    wait(fighter.lua_state_agent, 2.0);
+    wait(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
     }
-    frame(fighter.lua_state_agent, 25.0);
-    MotionModule::set_rate(fighter.module_accessor, 1.3);
+    frame(fighter.lua_state_agent, 50.0);
+    if macros::is_excute(fighter) {
+        MotionModule::set_rate(fighter.module_accessor, 0.5);
+    }
+    frame(fighter.lua_state_agent, 60.0);
+    if macros::is_excute(fighter) {
+        MotionModule::set_rate(fighter.module_accessor, 1.0);
+    }
 }
 
-//Up Smash
+//Forward Smash Effect
+#[acmd_script( agent = "pzenigame", scripts = ["effect_attacks4", "effect_attacks4hi", "effect_attacks4lw"], category = ACMD_EFFECT)]
+unsafe fn ssbuexo_squirtle_forward_smash_effect(fighter: &mut L2CAgentBase) {
+    if macros::is_excute(fighter) {
+        macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 5, 12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(fighter.lua_state_agent, 14.0);
+    if macros::is_excute(fighter) {
+        macros::FOOT_EFFECT(fighter, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -4, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_atk_speedline"), Hash40::new("top"), 0, 6, 3, -25, 0, 0, 1.5, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.698, 1.0, 1.0);
+    }
+    frame(fighter.lua_state_agent, 27.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.25, true);
+    }
+}
+
+//Up Smash ACMD
 #[acmd_script( agent = "pzenigame", script = "game_attackhi4", category = ACMD_GAME)]
-unsafe fn ssbuexo_squirtle_up_smash(fighter: &mut L2CAgentBase) 
+unsafe fn ssbuexo_squirtle_up_smash_acmd(fighter: &mut L2CAgentBase) 
 {
     MotionModule::set_rate(fighter.module_accessor, 1.125);
     frame(fighter.lua_state_agent, 6.0);
@@ -139,8 +149,8 @@ unsafe fn ssbuexo_squirtle_up_smash(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     install_acmd_scripts!(
-        ssbuexo_squirtle_forward_smash_f,
-        ssbuexo_squirtle_forward_smash_l,
-        ssbuexo_squirtle_up_smash
+        ssbuexo_squirtle_forward_smash_acmd,
+        ssbuexo_squirtle_forward_smash_effect,
+        ssbuexo_squirtle_up_smash_acmd
     );
 }

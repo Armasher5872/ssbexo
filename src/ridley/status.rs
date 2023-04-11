@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::RIDLEY_INT_SPECIAL_HI_REBOUNCE_COUNT,
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

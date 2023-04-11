@@ -1,11 +1,8 @@
 #![allow(unused_macros)]
 use {
     crate::functions::{
-        SIZE0,
-        SIZE1,
-        SIZE2,
-        SIZE3,
-        get_player_number
+        ext::*,
+        variables::*,
     },
     smash::{
         app::{
@@ -222,6 +219,28 @@ unsafe fn ssbuexo_armstrong_uair_effect(fighter: &mut L2CAgentBase)
     }
 }
 
+//Dair Effect
+#[acmd_script( agent = "ganon", script = "effect_attackairlw", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_armstrong_dair_effect(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 7.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 2, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.5);
+    }
+    frame(fighter.lua_state_agent, 15.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 2, 0, -90, 0, 0, 1.8, true);
+        macros::LAST_PARTICLE_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+    }
+    frame(fighter.lua_state_agent, 16.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("ganon_attack_impact"), Hash40::new("top"), 0, 7, 0, 90, 0, 0, 1.5, true);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.5);
+        macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, -3, 0, 0, 0, 0, 2.5, true, 2);
+    }
+}
+
 pub fn install() {
     install_acmd_scripts!(
         ssbuexo_armstrong_nair_acmd,
@@ -230,6 +249,7 @@ pub fn install() {
         ssbuexo_armstrong_bair_acmd,
         ssbuexo_armstrong_bair_effect,
         ssbuexo_armstrong_uair_acmd,
-        ssbuexo_armstrong_uair_effect
+        ssbuexo_armstrong_uair_effect,
+        ssbuexo_armstrong_dair_effect
     );
 }

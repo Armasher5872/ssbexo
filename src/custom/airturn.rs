@@ -1,10 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        TAP_MAX,
-        TAP_NUM,
-        TAP_WAIT
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         lib::lua_const::*,
@@ -21,21 +17,19 @@ pub fn flip_air(fighter : &mut L2CFighterCommon) {
 		let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 		let status_kind = smash::app::lua_bind::StatusModule::status_kind(boma);
 		let stick_x = ControlModule::get_stick_x(boma) * PostureModule::lr(boma);
-		let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(boma, Hash40::new_raw(MotionModule::motion_kind(boma)), false) as f32;
-		let frame = MotionModule::frame(boma);
-		let situation_kind = StatusModule::situation_kind(boma);
+		let fall_status = [*FIGHTER_STATUS_KIND_FALL, *FIGHTER_STATUS_KIND_FALL_AERIAL, *FIGHTER_STATUS_KIND_JUMP, *FIGHTER_STATUS_KIND_JUMP_AERIAL];
+		let attack_status = [*FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW];
 		if TAP_WAIT[entry_id] > 1 {
 			TAP_WAIT[entry_id] -= 1;
 		};
 		if TAP_WAIT[entry_id] == 1 {
 			TAP_NUM[entry_id] = 0;
 		};
-		if situation_kind != *SITUATION_KIND_AIR {
+		if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
 			TAP_WAIT[entry_id] = 0;
 		};
-		if situation_kind == *SITUATION_KIND_AIR 
-        && ([*FIGHTER_STATUS_KIND_FALL, *FIGHTER_STATUS_KIND_FALL_AERIAL, *FIGHTER_STATUS_KIND_JUMP, *FIGHTER_STATUS_KIND_JUMP_AERIAL].contains(&status_kind) 
-        || (frame >= cancel_frame && cancel_frame > 0.0)) {
+		if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR 
+        && (fall_status.contains(&status_kind) || (attack_status.contains(&status_kind) && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT))) {
 			if TAP_NUM[entry_id] == 0 && stick_x < -0.5 {
 				TAP_NUM[entry_id] = 1;
 				if TAP_WAIT[entry_id] == 0 {
@@ -55,7 +49,6 @@ pub fn flip_air(fighter : &mut L2CFighterCommon) {
         else {
 			TAP_NUM[entry_id] = 0;
 		};
-		println!("wait {}, num {}, lr {}", TAP_WAIT[entry_id], TAP_NUM[entry_id], PostureModule::lr(boma));
     }
 }
 

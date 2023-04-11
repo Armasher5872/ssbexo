@@ -1,26 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        BOOST_INSTALL_ACTIVE,
-        BOOST_INSTALL_GFX_COUNTER,
-        BOOST_INSTALL_MOTION_RATE,
-        BOOST_INSTALL_TIMER,
-        CAN_ADD,
-        CMD_CAT1,
-        DAMAGED,
-        DAMAGED_PREVENT,
-        DASH_GRAB_SPEED,
-        FIGHTER_KIND,
-        FALCON_PUNCH_HIT,
-        FALCON_PUNCH_TURN_COUNT,
-        HITFLOW,
-        HYPE_HIT,
-        KIRBY_FALCON_PUNCH_TURN_COUNT,
-        PARRIED,
-        PARRY_TIMER,
-        SHIELD_SPECIAL,
-        SITUATION_KIND
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,
@@ -79,21 +59,22 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
             };
         };
         //Fair
-        if motion_kind == hash40("attack_air_f")
-        && (14.0..15.0).contains(&frame) {
-            if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true {
-                macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
-                macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
-            }
-            else {
+        if motion_kind == hash40("attack_air_f") {
+            if (0.0..14.0).contains(&frame) {
+                if AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) && LAST_ATTACK_HITBOX_ID == 0 {
+                    macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
+                    macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
+                    if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true 
+                    && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) != true {
+                        HYPE_HIT[entry_id] = true;
+                    };
+                }
+            };
+            if frame == 14.0 && LAST_ATTACK_HITBOX_ID != 0 {
                 macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_rnd_attack"));
                 macros::PLAY_SE(fighter, Hash40::new("se_captain_swing_l"));
-            };
-            if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true
-            && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) != true {
-                HYPE_HIT[entry_id] = true;
-            };
-        };
+            }
+        }
         //Dash Grab
         if status_kind == *FIGHTER_STATUS_KIND_DASH {
             DASH_GRAB_SPEED[entry_id] = 2.0;

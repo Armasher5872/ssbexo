@@ -1,7 +1,5 @@
 use {
-    crate::functions::{
-        STATUS_KIND
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,

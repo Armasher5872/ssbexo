@@ -1,16 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        BARREL_ACTIVE,
-        BARREL_DIRECTION,
-        BARREL_TIMER,
-        DONKEY_DASH_ATTACK_JUMP,
-        DONKEY_DASH_ATTACK_POWER_DOWN,
-        DONKEY_GIANT_PUNCH_STAGE,
-        FIGHTER_SPECIAL_STATE,
-        SPEED_X,
-        SPEED_Y,
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,
@@ -101,8 +91,8 @@ fn donkey_frame(fighter: &mut L2CFighterCommon) {
                 DONKEY_GIANT_PUNCH_STAGE[entry_id] += 1;
             }
         }
-        if [hash40("special_s"), hash40("special_air_s"), hash40("special_hi"), hash40("special_air_hi")].contains(&motion_kind) {
-            if [hash40("special_air_s"), hash40("special_air_hi")].contains(&motion_kind) {
+        if [hash40("special_hi"), hash40("special_air_hi")].contains(&motion_kind) {
+            if motion_kind == hash40("special_air_hi") {
                 FIGHTER_SPECIAL_STATE[entry_id] = true;
             }
             else {

@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::ARMSTRONG_IS_SPECIAL_HI,
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

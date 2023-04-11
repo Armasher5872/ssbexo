@@ -1,12 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        KOOPA_EXCELLENT_SMASH,
-        SPECIAL_ZOOM_GFX,
-        KOOPA_GREAT_SMASH,
-        KOOPA_GOOD_SMASH,
-        KOOPA_OK_SMASH
-    },
+    crate::functions::variables::*,
     smash::{
         lua2cpp::L2CAgentBase,
         phx::Hash40,

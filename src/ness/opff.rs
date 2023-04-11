@@ -1,14 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        FULL_SMASH_ATTACK,
-        OFFENSE_UP_ACTIVE,
-        OFFENSE_UP_GFX_COUNTER,
-        OFFENSE_UP_TIMER,
-        PK_FLASH_TIMER,
-        SHIELD_SPECIAL,
-        SITUATION_KIND
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,

@@ -1,5 +1,6 @@
 #![allow(unused_macros)]
 use {
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,
@@ -43,6 +44,8 @@ pub(crate) fn is_edge_cancel(fighter_kind : i32, status_kind : i32) -> bool {
         [*FIGHTER_KIND_SZEROSUIT, *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_KICK],
         [*FIGHTER_KIND_SZEROSUIT, *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_LANDING],
         [*FIGHTER_KIND_SZEROSUIT, *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_KICK_LANDING],
+        [*FIGHTER_KIND_SNAKE, *FIGHTER_STATUS_KIND_ATTACK_DASH],
+        [*FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_STATUS_KIND_ITEM_THROW],
         [*FIGHTER_KIND_DIDDY, *FIGHTER_STATUS_KIND_ATTACK_DASH],
         [*FIGHTER_KIND_DIDDY, *FIGHTER_STATUS_KIND_SPECIAL_HI],
         [*FIGHTER_KIND_SONIC, *FIGHTER_STATUS_KIND_ATTACK_DASH],
@@ -94,7 +97,6 @@ pub(crate) fn is_edge_cancel(fighter_kind : i32, status_kind : i32) -> bool {
 unsafe fn init_settings_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, situation_kind: i32, arg3: i32, arg4: u64, ground_cliff_check_kind: u64, arg6: bool, arg7: i32, arg8: i32, arg9: i32, arg10: i32) -> u64 {
     let status_kind = StatusModule::status_kind(module_accessor);
     let fighter_kind = smash::app::utility::get_kind(module_accessor);
-    let motion_kind = MotionModule::motion_kind(module_accessor);
     if smash::app::utility::get_category(module_accessor) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
         return original!()(module_accessor, situation_kind, arg3, arg4, ground_cliff_check_kind, arg6, arg7, arg8, arg9, arg10);
     }
@@ -104,13 +106,22 @@ unsafe fn init_settings_replace(module_accessor: &mut smash::app::BattleObjectMo
     else if [
         *FIGHTER_STATUS_KIND_APPEAL, *FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_STATUS_KIND_SQUAT, *FIGHTER_STATUS_KIND_SQUAT_WAIT, *FIGHTER_STATUS_KIND_SQUAT_F, 
         *FIGHTER_STATUS_KIND_SQUAT_B, *FIGHTER_STATUS_KIND_SQUAT_RV, *FIGHTER_STATUS_KIND_ITEM_LIGHT_PICKUP, *FIGHTER_STATUS_KIND_ITEM_THROW, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR, 
-        *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT, *FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE, *FIGHTER_STATUS_KIND_DAMAGE
+        *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT, *FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE, *FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FLY, 
+        *FIGHTER_STATUS_KIND_DAMAGE_FALL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL
     ].contains(&status_kind) {
         original!()(module_accessor, situation_kind, arg3, 1 as u64, ground_cliff_check_kind, arg6, arg7, arg8, arg9, arg10)
     }
-    else if fighter_kind == *FIGHTER_KIND_SNAKE
-    && motion_kind == hash40("attack_dash_item_light_throw")
-    && situation_kind == SITUATION_KIND_GROUND {
+    else if status_kind == *FIGHTER_STATUS_KIND_GUARD_DAMAGE {
+        original!()(module_accessor, situation_kind, arg3, 1 as u64, ground_cliff_check_kind, arg6, arg7, arg8, arg9, arg10);
+        KineticModule::clear_speed_all(module_accessor);
+        WorkModule::on_flag(module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_LANDING_CLEAR_SPEED);
+        WorkModule::on_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
+        KineticModule::suspend_energy(module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL)
+    }
+    else if fighter_kind == *FIGHTER_KIND_KOOPA && [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G].contains(&status_kind) {
+        original!()(module_accessor, situation_kind, arg3, 1 as u64, ground_cliff_check_kind, arg6, arg7, arg8, arg9, arg10)
+    }
+    else if fighter_kind == *FIGHTER_KIND_GAOGAEN && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
         original!()(module_accessor, situation_kind, arg3, 1 as u64, ground_cliff_check_kind, arg6, arg7, arg8, arg9, arg10)
     }
     else if fighter_kind == *FIGHTER_KIND_EDGE
@@ -118,7 +129,10 @@ unsafe fn init_settings_replace(module_accessor: &mut smash::app::BattleObjectMo
     && (StatusModule::prev_status_kind(module_accessor, 0) != *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_CHARGED_RUSH)
     && situation_kind == SITUATION_KIND_GROUND {
         original!()(module_accessor, situation_kind, arg3, 1 as u64, ground_cliff_check_kind, arg6, arg7, arg8, arg9, arg10);
-        KineticModule::clear_speed_all(module_accessor)
+        KineticModule::clear_speed_all(module_accessor);
+        WorkModule::on_flag(module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_LANDING_CLEAR_SPEED);
+        WorkModule::on_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
+        KineticModule::suspend_energy(module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL)
     }
     else {
         original!()(module_accessor, situation_kind, arg3, arg4, ground_cliff_check_kind, arg6, arg7, arg8, arg9, arg10)
@@ -130,7 +144,6 @@ unsafe fn init_settings_replace(module_accessor: &mut smash::app::BattleObjectMo
 unsafe fn correct_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, ground_correct_kind: u32) -> u64 {
     let status_kind = StatusModule::status_kind(module_accessor);
     let fighter_kind = smash::app::utility::get_kind(module_accessor);
-    let motion_kind = MotionModule::motion_kind(module_accessor);
     let situation_kind = StatusModule::situation_kind(module_accessor);
     if smash::app::utility::get_category(module_accessor) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
         original!()(module_accessor, ground_correct_kind);
@@ -138,24 +151,36 @@ unsafe fn correct_replace(module_accessor: &mut smash::app::BattleObjectModuleAc
     if [
         *FIGHTER_STATUS_KIND_APPEAL, *FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_STATUS_KIND_SQUAT, *FIGHTER_STATUS_KIND_SQUAT_WAIT, *FIGHTER_STATUS_KIND_SQUAT_F, 
         *FIGHTER_STATUS_KIND_SQUAT_B, *FIGHTER_STATUS_KIND_SQUAT_RV, *FIGHTER_STATUS_KIND_ITEM_LIGHT_PICKUP, *FIGHTER_STATUS_KIND_ITEM_THROW, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR, 
-        *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT, *FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE, *FIGHTER_STATUS_KIND_DAMAGE
+        *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT, *FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE, *FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FLY, 
+        *FIGHTER_STATUS_KIND_DAMAGE_FALL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL
     ].contains(&status_kind) {
         original!()(module_accessor, 1 as u32)
+    }
+    else if status_kind == *FIGHTER_STATUS_KIND_GUARD_DAMAGE {
+        original!()(module_accessor, 1 as u32);
+        KineticModule::clear_speed_all(module_accessor);
+        WorkModule::on_flag(module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_LANDING_CLEAR_SPEED);
+        WorkModule::on_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
+        KineticModule::suspend_energy(module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL)
     }
     else if is_edge_cancel(fighter_kind, status_kind) {
         original!()(module_accessor, *GROUND_CORRECT_KIND_GROUND as u32)
     }
-    else if fighter_kind == *FIGHTER_KIND_SNAKE
-    && motion_kind == hash40("attack_dash_item_light_throw")
-    && situation_kind == SITUATION_KIND_GROUND {
+    else if fighter_kind == *FIGHTER_KIND_KOOPA && [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G].contains(&status_kind) {
         original!()(module_accessor, *GROUND_CORRECT_KIND_GROUND as u32)
+    }
+    else if fighter_kind == *FIGHTER_KIND_GAOGAEN && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
+        original!()(module_accessor, *GROUND_CORRECT_KIND_KEEP as u32)
     }
     else if fighter_kind == *FIGHTER_KIND_EDGE
     && ([*FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_LANDING].contains(&status_kind))
     && (StatusModule::prev_status_kind(module_accessor, 0) != *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_CHARGED_RUSH)
     && situation_kind == SITUATION_KIND_GROUND {
         original!()(module_accessor, *GROUND_CORRECT_KIND_GROUND as u32);
-        KineticModule::clear_speed_all(module_accessor)
+        KineticModule::clear_speed_all(module_accessor);
+        WorkModule::on_flag(module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_LANDING_CLEAR_SPEED);
+        WorkModule::on_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
+        KineticModule::suspend_energy(module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL)
     }
     else {
         original!()(module_accessor, ground_correct_kind)

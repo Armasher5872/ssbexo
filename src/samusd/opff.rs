@@ -1,20 +1,5 @@
 use {
-    crate::functions::{
-        CHARGE_SHOT_TIMER,
-        HAS_FIRE_CHARGE_SHOT,
-        SAMUSD_CHECK_FLOAT,
-        SAMUSD_FLOAT,
-        SAMUSD_FLOAT_GFX_COUNTER,
-        SAMUSD_FLOAT_MAX,
-        SAMUSD_HAS_FLOAT,
-        SAMUSD_START_FLOAT,
-        SAMUSD_X,
-        SAMUSD_X_ACCEL_MUL,
-        SAMUSD_X_MAX,
-        SAMUSD_Y,
-        SAMUSD_Y_MAX,
-        SITUATION_KIND
-    },
+    crate::functions::variables::*,
     smash::{
         lua2cpp::L2CFighterCommon,
         hash40,

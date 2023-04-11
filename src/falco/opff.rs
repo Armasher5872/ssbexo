@@ -1,8 +1,5 @@
 use {
-    crate::functions::{
-        REFLECTOR_ANGLE,
-        REFLECTOR_KNOCKBACK
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         lua2cpp::L2CFighterCommon,

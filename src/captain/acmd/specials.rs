@@ -1,10 +1,8 @@
 #![allow(unused_macros)]
 use {
     crate::functions::{
-        BOOST_INSTALL_ACTIVE,
-        FALCON_PUNCH_TURN_COUNT,
-        FIGHTER_CUTIN_MANAGER,
-        KIRBY_FALCON_PUNCH_TURN_COUNT
+        ext::*,
+        variables::*,
     },
     smash::{
         app::{

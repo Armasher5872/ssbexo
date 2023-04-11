@@ -110,13 +110,13 @@ unsafe fn ssbuexo_armstrong_forward_tilt_hi_effect(fighter: &mut L2CAgentBase)
 {
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
-        macros::EFFECT(fighter, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, -10, -22, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
+        macros::EFFECT(fighter, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, -10, -28, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
         macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
         macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT_ALPHA(fighter, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 17, 18.5, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
+        macros::EFFECT_ALPHA(fighter, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 19, 18.5, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
     }
 }
 
@@ -126,13 +126,13 @@ unsafe fn ssbuexo_armstrong_forward_tilt_lw_effect(fighter: &mut L2CAgentBase)
 {
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
-        macros::EFFECT(fighter, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, -10, 22, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
+        macros::EFFECT(fighter, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, -10, 28, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
         macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
         macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT_ALPHA(fighter, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 7, 18.5, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
+        macros::EFFECT_ALPHA(fighter, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 3, 18.5, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
     }
 }
 
@@ -141,7 +141,7 @@ unsafe fn ssbuexo_armstrong_forward_tilt_lw_effect(fighter: &mut L2CAgentBase)
 unsafe fn ssbuexo_armstrong_forward_tilt_sound(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
-        macros::PLAY_SE(fighter, Hash40::new("vc_ganon_attack05"));
+        macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_ganon_rnd_attack"));
         macros::PLAY_SE(fighter, Hash40::new("se_ganon_swing_l"));
     }
 }
@@ -151,7 +151,7 @@ unsafe fn ssbuexo_armstrong_forward_tilt_sound(fighter: &mut L2CAgentBase) {
 unsafe fn ssbuexo_armstrong_forward_tilt_hi_sound(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
-        macros::PLAY_SE(fighter, Hash40::new("vc_ganon_attack05"));
+        macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_ganon_rnd_attack"));
         macros::PLAY_SE(fighter, Hash40::new("se_ganon_swing_l"));
     }
 }
@@ -161,7 +161,7 @@ unsafe fn ssbuexo_armstrong_forward_tilt_hi_sound(fighter: &mut L2CAgentBase) {
 unsafe fn ssbuexo_armstrong_forward_tilt_lw_sound(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
-        macros::PLAY_SE(fighter, Hash40::new("vc_ganon_attack05"));
+        macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_ganon_rnd_attack"));
         macros::PLAY_SE(fighter, Hash40::new("se_ganon_swing_l"));
     }
 }
@@ -229,8 +229,8 @@ unsafe fn ssbuexo_armstrong_up_tilt_sound(fighter: &mut L2CAgentBase)
 {
     frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
-        macros::PLAY_SE(fighter, Hash40::new("vc_ganon_attackhard_h01"));
-        macros::PLAY_SE(fighter, Hash40::new("se_ganon_attackhard_h01"));
+        macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_ganon_rnd_attack"));
+        macros::PLAY_SE(fighter, Hash40::new("se_ganon_swing_l"));
     }
 }
 

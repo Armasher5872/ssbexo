@@ -1,0 +1,1752 @@
+<?xml version="1.0" encoding="utf-8"?>
+<struct>
+  <int hash="0x123c6d982a">6</int>
+  <int hash="0x165456e37a">8</int>
+  <int hash="0x1c3b2d6dcb">5</int>
+  <int hash="0x19f75fa0bb">2</int>
+  <int hash="0x141278e313">4</int>
+  <int hash="0x1b298f8c68">5</int>
+  <int hash="0x1741108201">8</int>
+  <int hash="0x103a205f5f">70</int>
+  <int hash="0x162caafc18">2</int>
+  <int hash="escape_throw_item_frame">5</int> <!-- Window to cancel dodge into item throw -->
+  <float hash="escape_throw_item_brake_mul">1.0</float> <!-- Dodge Cancel Item Throw Friction Multiplier -->
+  <int hash="0x16b5ef2e72">6</int>
+  <float hash="0x18639cd4fe">2</float>
+  <float hash="0x1625b8c1fd">1.33</float>
+  <float hash="0x16747b02cc">0.325</float>
+  <float hash="0x166e3a9361">-0.25</float>
+  <list hash="0x0ff57aa5df">
+    <struct index="0">
+      <hash40 hash="0x0b5d03759e">0x128c67b93f</hash40>
+      <float hash="0x050f26fef6">2.6</float>
+      <float hash="0x0500814509">17</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="1">
+      <hash40 hash="0x0b5d03759e">0x128b0a7d26</hash40>
+      <float hash="0x050f26fef6">2.6</float>
+      <float hash="0x0500814509">17</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="2">
+      <hash40 hash="0x0b5d03759e">0x13ce05517b</hash40>
+      <float hash="0x050f26fef6">3.1</float>
+      <float hash="0x0500814509">90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="3">
+      <hash40 hash="0x0b5d03759e">0x135066a91c</hash40>
+      <float hash="0x050f26fef6">3.3</float>
+      <float hash="0x0500814509">-90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="4">
+      <hash40 hash="0x0b5d03759e">0x13455c51bc</hash40>
+      <float hash="0x050f26fef6">3.64</float>
+      <float hash="0x0500814509">11</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="5">
+      <hash40 hash="0x0b5d03759e">0x13213094b8</hash40>
+      <float hash="0x050f26fef6">3.64</float>
+      <float hash="0x0500814509">11</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="6">
+      <hash40 hash="0x0b5d03759e">0x1434afb6dd</hash40>
+      <float hash="0x050f26fef6">4.1</float>
+      <float hash="0x0500814509">90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="7">
+      <hash40 hash="0x0b5d03759e">0x14e7e721de</hash40>
+      <float hash="0x050f26fef6">4.62</float>
+      <float hash="0x0500814509">-90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="8">
+      <hash40 hash="0x0b5d03759e">0x1592c030fa</hash40>
+      <float hash="0x050f26fef6">3.4</float>
+      <float hash="0x0500814509">12</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="9">
+      <hash40 hash="0x0b5d03759e">0x1579bbe8d8</hash40>
+      <float hash="0x050f26fef6">2.1</float>
+      <float hash="0x0500814509">100</float>
+      <float hash="0x05ab8a01a0">0.5</float>
+    </struct>
+    <struct index="10">
+      <hash40 hash="0x0b5d03759e">0x16b7b89d4e</hash40>
+      <float hash="0x050f26fef6">2.6</float>
+      <float hash="0x0500814509">14</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="11">
+      <hash40 hash="0x0b5d03759e">0x16b0d55957</hash40>
+      <float hash="0x050f26fef6">2.6</float>
+      <float hash="0x0500814509">14</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="12">
+      <hash40 hash="0x0b5d03759e">0x17e93ccff5</hash40>
+      <float hash="0x050f26fef6">3.1</float>
+      <float hash="0x0500814509">90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="13">
+      <hash40 hash="0x0b5d03759e">0x17775f3792</hash40>
+      <float hash="0x050f26fef6">3.3</float>
+      <float hash="0x0500814509">-90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="14">
+      <hash40 hash="0x0b5d03759e">0x176265cf32</hash40>
+      <float hash="0x050f26fef6">3.64</float>
+      <float hash="0x0500814509">11</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="15">
+      <hash40 hash="0x0b5d03759e">0x1706090a36</hash40>
+      <float hash="0x050f26fef6">3.64</float>
+      <float hash="0x0500814509">11</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="16">
+      <hash40 hash="0x0b5d03759e">0x183e882164</hash40>
+      <float hash="0x050f26fef6">4.1</float>
+      <float hash="0x0500814509">90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="17">
+      <hash40 hash="0x0b5d03759e">0x18edc0b667</hash40>
+      <float hash="0x050f26fef6">4.62</float>
+      <float hash="0x0500814509">-90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="18">
+      <hash40 hash="0x0b5d03759e">0x1269490267</hash40>
+      <float hash="0x050f26fef6">3.4</float>
+      <float hash="0x0500814509">60</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="19">
+      <hash40 hash="0x0b5d03759e">0x126e24c67e</hash40>
+      <float hash="0x050f26fef6">3.4</float>
+      <float hash="0x0500814509">60</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="20">
+      <hash40 hash="0x0b5d03759e">0x13ab50a606</hash40>
+      <float hash="0x050f26fef6">4.8</float>
+      <float hash="0x0500814509">90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="21">
+      <hash40 hash="0x0b5d03759e">0x1335335e61</hash40>
+      <float hash="0x050f26fef6">4.8</float>
+      <float hash="0x0500814509">-90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="22">
+      <hash40 hash="0x0b5d03759e">0x132009a6c1</hash40>
+      <float hash="0x050f26fef6">4.4</float>
+      <float hash="0x0500814509">17</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="23">
+      <hash40 hash="0x0b5d03759e">0x13446563c5</hash40>
+      <float hash="0x050f26fef6">4.4</float>
+      <float hash="0x0500814509">17</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="24">
+      <hash40 hash="0x0b5d03759e">0x141a7eeeab</hash40>
+      <float hash="0x050f26fef6">6</float>
+      <float hash="0x0500814509">90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+    <struct index="25">
+      <hash40 hash="0x0b5d03759e">0x14c93679a8</hash40>
+      <float hash="0x050f26fef6">6</float>
+      <float hash="0x0500814509">-90</float>
+      <float hash="0x05ab8a01a0">1</float>
+    </struct>
+  </list>
+  <float hash="0x0dda220fe4">5</float>
+  <float hash="0x1c232fb9c7">1</float>
+  <float hash="0x1c0f017a6a">0.25</float>
+  <int hash="0x0e76879ff6">720</int>
+  <float hash="0x1440a47c85">2</float>
+  <float hash="0x197abf6722">25</float>
+  <int hash="0x1c4b0d1d3b">12</int>
+  <float hash="0x1ff81fae40">2</float>
+  <float hash="0x1d783e946f">-24</float>
+  <float hash="0x1d4433ab36">48</float>
+  <int hash="0x208447b98a">6</int>
+  <int hash="0x10accf788f">600</int>
+  <int hash="0x19199ce43a">120</int>
+  <int hash="0x0bc85cc7fb">600</int>
+  <int hash="0x144c6d8606">-60</int>
+  <int hash="0x0ec3ffc199">4</int>
+  <int hash="0x0bb413c078">780</int>
+  <float hash="0x13afc48529">50</float>
+  <float hash="0x19e2978d7d">30</float>
+  <int hash="0x11cd44ca86">45</int>
+  <float hash="0x189a590320">1.5</float>
+  <int hash="0x0c3b052d71">480</int>
+  <int hash="0x1202689d02">20</int>
+  <float hash="0x13ccbfbfb3">100</float>
+  <int hash="0x10b348d393">180</int>
+  <float hash="0x17353e7b76">1.7</float>
+  <float hash="0x12d15733cc">2</float>
+  <float hash="0x1734eeb991">0.5</float>
+  <float hash="0x12d087f12b">0.5</float>
+  <float hash="0x10b88df4b6">0.84</float>
+  <float hash="0x1212b5c946">1.25</float>
+  <float hash="0x1645626078">-0.5</float>
+  <float hash="0x13e7bb25aa">0.8</float>
+  <float hash="0x15979e0832">1</float>
+  <int hash="0x0d774d4e93">600</int>
+  <int hash="0x17dba7a560">1</int>
+  <int hash="0x1369f6a8a6">4</int>
+  <float hash="0x186bcfa8de">2.4</float>
+  <float hash="0x13736980ae">3</float>
+  <float hash="0x186a1f6a39">0.5</float>
+  <float hash="0x1372b94249">0.5</float>
+  <float hash="0x11c9a0c0ca">0.7</float>
+  <float hash="0x13b08b7a24">1.25</float>
+  <float hash="0x176a48c600">-0.5</float>
+  <float hash="0x1444a51b6d">0.6</float>
+  <float hash="0x16d244f70e">1</float>
+  <int hash="0x0ede67bbc2">780</int>
+  <float hash="0x14efa045eb">0.87</float>
+  <int hash="0x1cc0eeb4f0">100</int>
+  <int hash="0x1cee8fe435">5</int>
+  <int hash="0x152179488d">3</int>
+  <int hash="0x203f60377e">12</int>
+  <int hash="0x233e77ce7c">20</int>
+  <int hash="0x12eedcf2da">5</int>
+  <int hash="0x1dfa847611">10</int>
+  <int hash="0x2033f91a81">20</int>
+  <int hash="0x12f238ade8">600</int>
+  <int hash="0x16c301c3ec">100</int>
+  <int hash="0x1525679174">600</int>
+  <int hash="0x198615f7b8">100</int>
+  <float hash="0x17c66421ba">0.5</float>
+  <float hash="0x17118f93fb">1.1</float>
+  <float hash="0x19f1942c91">0.6</float>
+  <float hash="0x1460351408">1.4</float>
+  <int hash="0x150173b47c">180</int>
+  <int hash="0x0c3fa4e4b6">30</int>
+  <float hash="0x1c0ec28710">40</float>
+  <float hash="0x103ae20699">3000</float>
+  <float hash="0x155df27c6b">1</float>
+  <float hash="0x14d650912c">16</float>
+  <int hash="0x16e4dceb8e">20</int>
+  <int hash="0x0dd695a000">1</int>
+  <float hash="0x1cd289903a">0.04</float>
+  <float hash="0x109bf5dcee">0.7</float>
+  <float hash="0x10a7f8e3b7">3.5</float>
+  <float hash="0x1338d3a2d8">2</float>
+  <int hash="0x0c201a627d">520</int>
+  <int hash="0x14e0a0cc3f">6</int>
+  <int hash="0x128d58837d">30</int>
+  <int hash="0x1605ccf5a8">120</int>
+  <int hash="0x16d89b1a55">120</int>
+  <int hash="0x13a2492de8">920</int>
+  <int hash="0x199e7ff9a5">120</int>
+  <int hash="0x1c57b95e4e">60</int>
+  <int hash="0x1de745752d">120</int>
+  <int hash="0x1d3a129ad0">120</int>
+  <int hash="0x19bf11ac47">15</int>
+  <int hash="0x20e1a44c21">50</int>
+  <int hash="0x1d6c3d28d8">36</int>
+  <float hash="0x156202b420">4</float>
+  <float hash="0x15e2632465">3.2</float>
+  <int hash="0x198ad616ad">3</int>
+  <float hash="0x1beaed2953">14</float>
+  <float hash="0x1b9dea19c5">2</float>
+  <int hash="0x1937cef6c4">36</int>
+  <int hash="0x1deccbc865">4</int>
+  <float hash="0x1d6caa5820">3.2</float>
+  <int hash="0x216bcfedb6">3</int>
+  <float hash="0x2369b42844">14</float>
+  <float hash="0x231eb318d2">2</float>
+  <int hash="0x1af008e301">1</int>
+  <int hash="0x217c8b0d6b">24</int>
+  <float hash="0x19db1ab4e5">0.3</float>
+  <float hash="0x17d6892aac">0.75</float>
+  <float hash="0x1b14c0f19a">0.7</float>
+  <float hash="0x0e16d74821">3</float>
+  <float hash="0x0e440d8032">0.1</float>
+  <float hash="0x128cb7c9d9">1.5</float>
+  <float hash="0x171ca3eb3f">25</float>
+  <int hash="0x0fef214cc6">16</int>
+  <int hash="0x18957d50a7">100</int>
+  <float hash="0x1feda56310">3.4</float>
+  <float hash="0x17970805d0">0</float>
+  <float hash="0x1cb7d9b67e">8</float>
+  <float hash="0x1ae1d1b2b7">1</float>
+  <float hash="0x1a96d68221">2</float>
+  <float hash="0x1ed0586b06">0.1</float>
+  <int hash="0x1cce40a075">110</int>
+  <float hash="0x2381d69cf1">7</float>
+  <float hash="0x1b7456ca6f">1</float>
+  <float hash="0x201811747e">8</float>
+  <float hash="0x2390713713">20</float>
+  <float hash="0x1dd409d74e">35</float>
+  <float hash="0x1eef62bc0b">1</float>
+  <float hash="0x1e98658c9d">2</float>
+  <int hash="0x23b69a090f">450</int>
+  <float hash="0x1c8401846f">50</float>
+  <int hash="0x1a080f5206">2</int>
+  <float hash="0x1ae08114c9">1.3</float>
+  <float hash="0x190b25a4a0">1.3</float>
+  <float hash="0x18c6ed0776">0.5</float>
+  <float hash="0x160d341f19">1.05</float>
+  <int hash="0x16e1c091d9">10</int>
+  <float hash="0x18cb0950c2">1.8</float>
+  <float hash="0x1e8d8cb342">2</float>
+  <float hash="0x1efa8b83d4">1</float>
+  <float hash="0x1729e7d182">0.13</float>
+  <float hash="0x1958213c11">1.25</float>
+  <float hash="0x1f34998b2f">0.002</float>
+  <float hash="0x167b9d9df2">1.2</float>
+  <float hash="0x1bd616098b">0.025</float>
+  <float hash="0x1f0f966e7a">1.3</float>
+  <float hash="0x1ba111391d">0.05</float>
+  <float hash="0x1f78915eec">1.5</float>
+  <float hash="0x2672a0703c">0.8</float>
+  <float hash="0x1b0f6b0099">200</float>
+  <float hash="0x1a9a5fe75c">1</float>
+  <float hash="0x2190c4a2fe">1.25</float>
+  <float hash="0x1b4b9e79d4">4.9</float>
+  <float hash="0x165b1fef24">0.25</float>
+  <float hash="0x162c18dfb2">1.3</float>
+  <int hash="0x141476495d">1</int>
+  <float hash="0x1a12e7772e">0.05</float>
+  <int hash="0x1bdbcafa17">200</int>
+  <int hash="0x13b8bba2a5">1</int>
+  <int hash="0x1c898d92cb">15</int>
+  <float hash="0x19c8b1830d">30</float>
+  <float hash="0x19c71638f2">4</float>
+  <int hash="0x18f88c2a3a">120</int>
+  <int hash="0x139fb9440a">1</int>
+  <int hash="0x1c7a19d7b7">15</int>
+  <float hash="0x1910648aa7">30</float>
+  <float hash="0x191fc33158">4</float>
+  <int hash="0x134ced92f3">120</int>
+  <float hash="0x12f1b42f22">70</float>
+  <float hash="0x12fe1394dd">2</float>
+  <float hash="0x139a6023a3">-1</float>
+  <float hash="0x13ed671335">2</float>
+  <int hash="0x1b092afa1d">140</int>
+  <float hash="0x22ac820cb1">3</float>
+  <float hash="0x1ac9a41614">1</float>
+  <float hash="0x1f1dbad4ca">3</float>
+  <float hash="0x22bd25a753">15</float>
+  <float hash="0x1c97a7547e">20</float>
+  <float hash="0x1dc9f82224">1.1</float>
+  <float hash="0x1dbeff12b2">-0.5</float>
+  <int hash="0x135ace52f7">600</int>
+  <float hash="0x182dd3450c">1.15</float>
+  <float hash="0x11a62deb24">1</float>
+  <float hash="0x16c416f551">1</float>
+  <float hash="0x193c2e3acc">0.625</float>
+  <int hash="0x1ff9b79dd9">16</int>
+  <float hash="0x19e9820e83">0.5</float>
+  <float hash="0x19e71d5468">0.9</float>
+  <float hash="0x1692dcff12">1</float>
+  <int hash="0x123afb932e">6</int>
+  <list hash="0x0fe0af1754">
+    <struct index="0">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="1">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="2">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="3">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="4">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="5">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="6">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="7">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+    <struct index="8">
+      <float hash="0x07e7e91697">1</float>
+      <float hash="0x0709e777bb">1</float>
+      <float hash="0x079783e218">1</float>
+      <float hash="0x0978328e6a">1</float>
+      <float hash="0x0a30ee0553">1</float>
+    </struct>
+  </list>
+  <list hash="0x0ecf11bac3">
+    <struct index="0">
+      <hash40 hash="0x0a89c68eee">0x0ef53a098c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="1">
+      <hash40 hash="0x0a89c68eee">0x0ea1225bca</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="2">
+      <hash40 hash="0x0a89c68eee">0x0ee2ec2860</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="3">
+      <hash40 hash="0x0a89c68eee">0x145c87aa5f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="4">
+      <hash40 hash="0x0a89c68eee">0x14089ff819</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="5">
+      <hash40 hash="0x0a89c68eee">0x1468f3a977</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="6">
+      <hash40 hash="0x0a89c68eee">0x0cbed5c24c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="7">
+      <hash40 hash="0x0a89c68eee">0x0ed1f9fdb8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="8">
+      <hash40 hash="0x0a89c68eee">0x142986e401</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="9">
+      <hash40 hash="0x0a89c68eee">0x14ddd6bdcb</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.45</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="10">
+      <hash40 hash="0x0a89c68eee">0x06a0d82dad</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.95</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="11">
+      <hash40 hash="0x0a89c68eee">0x112ab24d60</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="12">
+      <hash40 hash="0x0a89c68eee">0x13bc1142f6</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.15</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="13">
+      <hash40 hash="0x0a89c68eee">0x16fec4d527</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="14">
+      <hash40 hash="0x0a89c68eee">0x0fce095390</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="15">
+      <hash40 hash="0x0a89c68eee">0x0ba18057d9</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.45</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="16">
+      <hash40 hash="0x0a89c68eee">0x12ec5626fe</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.4</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="17">
+      <hash40 hash="0x0a89c68eee">0x0cca113a7f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="18">
+      <hash40 hash="0x0a89c68eee">0x0607cd5541</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">4.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="19">
+      <hash40 hash="0x0a89c68eee">0x120a302025</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="20">
+      <hash40 hash="0x0a89c68eee">0x19e03395b5</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+  </list>
+  <list hash="0x0f647f13de">
+    <struct index="0">
+      <hash40 hash="0x0a89c68eee">0x0ef53a098c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="1">
+      <hash40 hash="0x0a89c68eee">0x0ea1225bca</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="2">
+      <hash40 hash="0x0a89c68eee">0x0ee2ec2860</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="3">
+      <hash40 hash="0x0a89c68eee">0x145c87aa5f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="4">
+      <hash40 hash="0x0a89c68eee">0x14089ff819</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="5">
+      <hash40 hash="0x0a89c68eee">0x1468f3a977</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="6">
+      <hash40 hash="0x0a89c68eee">0x0adec47ea3</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="7">
+      <hash40 hash="0x0a89c68eee">0x0d5aaabf9b</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="8">
+      <hash40 hash="0x0a89c68eee">0x0c8cc9db76</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="9">
+      <hash40 hash="0x0a89c68eee">0x1095b52773</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.65</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="10">
+      <hash40 hash="0x0a89c68eee">0x0cbed5c24c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="11">
+      <hash40 hash="0x0a89c68eee">0x112ab24d60</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="12">
+      <hash40 hash="0x0a89c68eee">0x13bc1142f6</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="13">
+      <hash40 hash="0x0a89c68eee">0x16fec4d527</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="14">
+      <hash40 hash="0x0a89c68eee">0x0fce095390</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="15">
+      <hash40 hash="0x0a89c68eee">0x0ba18057d9</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="16">
+      <hash40 hash="0x0a89c68eee">0x12ec5626fe</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="17">
+      <hash40 hash="0x0a89c68eee">0x0f71f4d4f8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="18">
+      <hash40 hash="0x0a89c68eee">0x0f25ec86be</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="19">
+      <hash40 hash="0x0a89c68eee">0x1220fc2660</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="20">
+      <hash40 hash="0x0a89c68eee">0x0cca113a7f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="21">
+      <hash40 hash="0x0a89c68eee">0x0607cd5541</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="22">
+      <hash40 hash="0x0a89c68eee">0x1414ca9d35</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="23">
+      <hash40 hash="0x0a89c68eee">0x12ac472b91</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.65</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="24">
+      <hash40 hash="0x0a89c68eee">0x120a302025</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.55</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="25">
+      <hash40 hash="0x0a89c68eee">0x141bbc85fe</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="26">
+      <hash40 hash="0x0a89c68eee">0x14984b7579</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="27">
+      <hash40 hash="0x0a89c68eee">0x0ae3b1cda8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="28">
+      <hash40 hash="0x0a89c68eee">0x1125bbd2b8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="29">
+      <hash40 hash="0x0a89c68eee">0x130b45999a</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="30">
+      <hash40 hash="0x0a89c68eee">0x0d07d69a9b</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="31">
+      <hash40 hash="0x0a89c68eee">0x1a4bd4f964</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="32">
+      <hash40 hash="0x0a89c68eee">0x1a450f7156</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="33">
+      <hash40 hash="0x0a89c68eee">0x1a4262b54f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="34">
+      <hash40 hash="0x0a89c68eee">0x1bfaa2e04f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="35">
+      <hash40 hash="0x0a89c68eee">0x1b64c11828</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="36">
+      <hash40 hash="0x0a89c68eee">0x10b846e0b5</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="37">
+      <hash40 hash="0x0a89c68eee">0x10cf41d023</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="38">
+      <hash40 hash="0x0a89c68eee">0x145c87aa5f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="39">
+      <hash40 hash="0x0a89c68eee">0x14089ff819</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="40">
+      <hash40 hash="0x0a89c68eee">0x144b518bb3</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="41">
+      <hash40 hash="0x0a89c68eee">0x123c4d109d</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="42">
+      <hash40 hash="0x0a89c68eee">0x123b20d484</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+  </list>
+  <list hash="0x1009f32e9e">
+    <struct index="0">
+      <hash40 hash="0x0a89c68eee">0x0ed6982b48</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="1">
+      <hash40 hash="0x0a89c68eee">0x0adec47ea3</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="2">
+      <hash40 hash="0x0a89c68eee">0x0d5aaabf9b</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="3">
+      <hash40 hash="0x0a89c68eee">0x0c8cc9db76</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="4">
+      <hash40 hash="0x0a89c68eee">0x1095b52773</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="5">
+      <hash40 hash="0x0a89c68eee">0x0cbed5c24c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="6">
+      <hash40 hash="0x0a89c68eee">0x112ab24d60</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="7">
+      <hash40 hash="0x0a89c68eee">0x13bc1142f6</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="8">
+      <hash40 hash="0x0a89c68eee">0x16fec4d527</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="9">
+      <hash40 hash="0x0a89c68eee">0x0fce095390</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="10">
+      <hash40 hash="0x0a89c68eee">0x0ba18057d9</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="11">
+      <hash40 hash="0x0a89c68eee">0x12ec5626fe</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="12">
+      <hash40 hash="0x0a89c68eee">0x0f71f4d4f8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="13">
+      <hash40 hash="0x0a89c68eee">0x0f25ec86be</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="14">
+      <hash40 hash="0x0a89c68eee">0x1220fc2660</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="15">
+      <hash40 hash="0x0a89c68eee">0x0cca113a7f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="16">
+      <hash40 hash="0x0a89c68eee">0x0607cd5541</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="17">
+      <hash40 hash="0x0a89c68eee">0x1414ca9d35</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.6</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="18">
+      <hash40 hash="0x0a89c68eee">0x12ac472b91</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.65</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="19">
+      <hash40 hash="0x0a89c68eee">0x120a302025</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.55</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="20">
+      <hash40 hash="0x0a89c68eee">0x141bbc85fe</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="21">
+      <hash40 hash="0x0a89c68eee">0x14984b7579</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="22">
+      <hash40 hash="0x0a89c68eee">0x0ae3b1cda8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="23">
+      <hash40 hash="0x0a89c68eee">0x1125bbd2b8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="24">
+      <hash40 hash="0x0a89c68eee">0x130b45999a</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="25">
+      <hash40 hash="0x0a89c68eee">0x0d07d69a9b</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="26">
+      <hash40 hash="0x0a89c68eee">0x1a4bd4f964</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="27">
+      <hash40 hash="0x0a89c68eee">0x1a450f7156</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="28">
+      <hash40 hash="0x0a89c68eee">0x1a4262b54f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="29">
+      <hash40 hash="0x0a89c68eee">0x1bfaa2e04f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="30">
+      <hash40 hash="0x0a89c68eee">0x1b64c11828</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">0.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="31">
+      <hash40 hash="0x0a89c68eee">0x10b846e0b5</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="32">
+      <hash40 hash="0x0a89c68eee">0x10cf41d023</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="33">
+      <hash40 hash="0x0a89c68eee">0x145c87aa5f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="34">
+      <hash40 hash="0x0a89c68eee">0x14089ff819</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2.7</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="35">
+      <hash40 hash="0x0a89c68eee">0x144b518bb3</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="36">
+      <hash40 hash="0x0a89c68eee">0x123c4d109d</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="37">
+      <hash40 hash="0x0a89c68eee">0x123b20d484</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">0.75</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">0.4</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+  </list>
+  <list hash="0x13e228f69d">
+    <struct index="0">
+      <hash40 hash="0x0a89c68eee">0x0ef53a098c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="1">
+      <hash40 hash="0x0a89c68eee">0x0ea1225bca</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="2">
+      <hash40 hash="0x0a89c68eee">0x0ee2ec2860</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="3">
+      <hash40 hash="0x0a89c68eee">0x145c87aa5f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="4">
+      <hash40 hash="0x0a89c68eee">0x14089ff819</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="5">
+      <hash40 hash="0x0a89c68eee">0x1468f3a977</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="6">
+      <hash40 hash="0x0a89c68eee">0x0adec47ea3</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="7">
+      <hash40 hash="0x0a89c68eee">0x0d4d7c9e77</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="8">
+      <hash40 hash="0x0a89c68eee">0x0d1964cc31</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="9">
+      <hash40 hash="0x0a89c68eee">0x0d5aaabf9b</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="10">
+      <hash40 hash="0x0a89c68eee">0x0c8cc9db76</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.4</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="11">
+      <hash40 hash="0x0a89c68eee">0x0cc9d2f2da</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="12">
+      <hash40 hash="0x0a89c68eee">0x0ed1f9fdb8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="13">
+      <hash40 hash="0x0a89c68eee">0x142986e401</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="14">
+      <hash40 hash="0x0a89c68eee">0x14ddd6bdcb</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="15">
+      <hash40 hash="0x0a89c68eee">0x06a0d82dad</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.8</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="16">
+      <hash40 hash="0x0a89c68eee">0x0cbed5c24c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="17">
+      <hash40 hash="0x0a89c68eee">0x112ab24d60</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="18">
+      <hash40 hash="0x0a89c68eee">0x13bc1142f6</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="19">
+      <hash40 hash="0x0a89c68eee">0x16fec4d527</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="20">
+      <hash40 hash="0x0a89c68eee">0x0fce095390</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="21">
+      <hash40 hash="0x0a89c68eee">0x107e0218b9</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="22">
+      <hash40 hash="0x0a89c68eee">0x0ba18057d9</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="23">
+      <hash40 hash="0x0a89c68eee">0x12ec5626fe</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="24">
+      <hash40 hash="0x0a89c68eee">0x0cca113a7f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.5</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="25">
+      <hash40 hash="0x0a89c68eee">0x12ac472b91</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="26">
+      <hash40 hash="0x0a89c68eee">0x120a302025</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="27">
+      <hash40 hash="0x0a89c68eee">0x1946449e01</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="28">
+      <hash40 hash="0x0a89c68eee">0x19e03395b5</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">2</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+  </list>
+  <list hash="0x0d66a4127d">
+    <struct index="0">
+      <hash40 hash="0x0a89c68eee">0x0ef53a098c</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="1">
+      <hash40 hash="0x0a89c68eee">0x0ea1225bca</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="2">
+      <hash40 hash="0x0a89c68eee">0x0ee2ec2860</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="3">
+      <hash40 hash="0x0a89c68eee">0x145c87aa5f</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="4">
+      <hash40 hash="0x0a89c68eee">0x14089ff819</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="5">
+      <hash40 hash="0x0a89c68eee">0x1468f3a977</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="6">
+      <hash40 hash="0x0a89c68eee">0x0adec47ea3</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="7">
+      <hash40 hash="0x0a89c68eee">0x0d4d7c9e77</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="8">
+      <hash40 hash="0x0a89c68eee">0x0d1964cc31</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="9">
+      <hash40 hash="0x0a89c68eee">0x0d5aaabf9b</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="10">
+      <hash40 hash="0x0a89c68eee">0x0c8cc9db76</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="11">
+      <hash40 hash="0x0a89c68eee">0x0f71f4d4f8</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="12">
+      <hash40 hash="0x0a89c68eee">0x0f25ec86be</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="13">
+      <hash40 hash="0x0a89c68eee">0x1220fc2660</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1.3</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+    <struct index="14">
+      <hash40 hash="0x0a89c68eee">0x0ba18057d9</hash40>
+      <hash40 hash="0x0b5deeb7fc">0x0000000000</hash40>
+      <float hash="0x08c3645feb">1</float>
+      <float hash="0x06d6d23a59">1</float>
+      <float hash="0x0682ca681f">0</float>
+      <float hash="0x08b9755e36">1</float>
+      <float hash="0x08ed6d0c70">0</float>
+    </struct>
+  </list>
+</struct>

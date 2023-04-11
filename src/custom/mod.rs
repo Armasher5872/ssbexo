@@ -13,13 +13,11 @@
 )]
 
 mod airturn;
-mod asdi;
 mod breverse;
+mod commonstatuses;
 mod customgamemodes;
-mod djc;
 mod edgecancels;
 pub mod gliding;
-mod grabbreak;
 mod main;
 pub mod momentumtransfer;
 mod perfectpivot;
@@ -28,13 +26,11 @@ mod specialafterinfliction;
 
 pub fn install() {
   airturn::install();
-  asdi::install();
   breverse::install();
+  commonstatuses::install();
   customgamemodes::install();
-  djc::install();
   edgecancels::install();
   gliding::install();
-  grabbreak::install();
   main::install();
   momentumtransfer::install();
   perfectpivot::install();

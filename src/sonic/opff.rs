@@ -1,16 +1,5 @@
 use {
-    crate::functions::{
-        BOUNCE_BRACELET_POWER,
-        CAN_ADD,
-        FAIR_HIT,
-        HOMING_ATTACK_HIT,
-        PARRIED,
-        PARRY_TIMER,
-        SITUATION_KIND,
-        SONIC_BOOST,
-        SONIC_BOOST_GFX_COUNTER,
-        SONIC_BOOST_SPEED
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,
@@ -389,9 +378,8 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
                 macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.3, 1.0);
                 macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_aura_light"), Hash40::new("bust"), 0, 0, 0, 0, 0, 0, 4.0, true, 1.0);
                 macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.3, 1.0);
-                SONIC_BOOST_GFX_COUNTER[entry_id] = 0;
             }
-        } 
+        }
         else {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"), false, false);
         };

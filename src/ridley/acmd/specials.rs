@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::SPECIAL_ZOOM_GFX,
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

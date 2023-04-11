@@ -1,10 +1,7 @@
 use {
     crate::functions::{
-        FIGHTER_BOOL_1,
-        FIGHTER_BOOL_2,
-		SITUATION_KIND,
-        STATUS_KIND,
-        get_player_number
+        ext::*,
+        variables::*,
     },
     smash::{
         app::{

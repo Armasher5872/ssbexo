@@ -2,9 +2,8 @@
 #![allow(unused_macros)]
 use {
 	crate::functions::{
-		B_CHECK,
-		STATUS_KIND,
-		get_player_number
+		ext::*,
+		variables::*,
 	},
     smash::{
         hash40,

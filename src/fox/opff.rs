@@ -1,5 +1,5 @@
 use {
-    crate::functions::SITUATION_KIND,
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         lua2cpp::L2CFighterCommon,

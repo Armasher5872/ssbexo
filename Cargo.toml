@@ -1,7 +1,7 @@
 [package]
-name = "smashline_test"
+name = "plugin"
 version = "0.1.0"
-authors = ["jam1garner <jam1.mcleod@hotmail.com>"]
+authors = ["phazoganon"]
 edition = "2018"
 
 [package.metadata.skyline]
@@ -11,6 +11,9 @@ titleid = "01006A800016E000"
 crate-type = ["cdylib"]
 
 [dependencies]
+bitflags = "1.3.2"
+lazy_static = "1.4.0"
+modular-bitfield = "0.11.2"
 skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
 skyline_smash = { git = "https://github.com/blu-dev/skyline-smash.git", features = ["weak_l2cvalue"] }
 smash_script = { git = "https://github.com/blu-dev/smash-script.git", branch = "development" }

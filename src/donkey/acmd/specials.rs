@@ -1,13 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        BARREL_ACTIVE,
-        BARREL_DIRECTION,
-        BARREL_TIMER,
-        DONKEY_GIANT_PUNCH_STAGE,
-        SPEED_X,
-        SPEED_Y
-    },
+    crate::functions::variables::*,
     smash::{
         lua2cpp::L2CAgentBase,
         phx::Hash40,
@@ -318,7 +311,6 @@ unsafe fn ssbuexo_donkey_grounded_up_special_acmd(fighter: &mut L2CAgentBase)
 {
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
-        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 15.0);
         search!(fighter, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
         shield!(fighter, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("top"), 10.0, 0.0, 11.0, -6.5, 0.0, 3.0, 11.5, 0.0, 0.0, 0, false, 1.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
@@ -392,9 +384,7 @@ unsafe fn ssbuexo_donkey_grounded_up_special_acmd(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 63.0);
     if macros::is_excute(fighter) {
-        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
         shield!(fighter, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
-        HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
         AttackModule::clear_all(fighter.module_accessor);
     }
 }

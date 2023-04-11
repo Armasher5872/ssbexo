@@ -1,11 +1,5 @@
 use {
-    crate::functions::{
-        FIGHTER_SPECIAL_STATE,
-        FULL_SMASH_ATTACK,
-        SITUATION_KIND,
-        SPECIAL_ZOOM_GFX,
-        USE_DROPKICK
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,
@@ -39,10 +33,15 @@ fn armstrong_frame(fighter: &mut L2CFighterCommon) {
         }
         //Instadrop
         if WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) == true {
-            macros::EFFECT(fighter, Hash40::new("sys_mach_stomp"), Hash40::new("top"), 0, 0, 0.0, 0.0, 0, 0, 1.0, 0, 0, 0, 0, 0, 360, true);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 75, 100, 0, 50, 9.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_mach_stomp"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.0, false);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("hip"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("bust"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 2, 0, Hash40::new("legr"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 3, 0, Hash40::new("legl"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 4, 0, Hash40::new("armr"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 5, 0, Hash40::new("arml"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
         }
-        if [*FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING].contains(&status_kind) {
+        if [*FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL].contains(&status_kind) {
             AttackModule::clear_all(module_accessor);
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_mach_stomp"), false, false);
         }
@@ -50,7 +49,7 @@ fn armstrong_frame(fighter: &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_SQUAT_WAIT {
             DamageModule::set_reaction_mul(module_accessor, 0.77);
         }
-        if status_kind != *FIGHTER_STATUS_KIND_SQUAT_WAIT {
+        if status_kind == *FIGHTER_STATUS_KIND_SQUAT_RV {
             DamageModule::set_reaction_mul(module_accessor, 1.0);
         }
         //Smash Attacks

@@ -1,15 +1,7 @@
 use {
     crate::functions::{
-        CAN_ADD,
-        DISCHARGE_ACTIVE,
-        DISCHARGE_DAMAGE_TIMER,
-        DISCHARGE_GFX,
-        ELECTRIC_HIT,
-        FIGHTER_BOOL_1,
-        SHIELD_SPECIAL,
-        SITUATION_KIND,
-        USE_TACKLE,
-        get_player_number
+        ext::*,
+        variables::*,
     },
     smash::{
         app::{
@@ -314,10 +306,6 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
         }
         //Neutral Special
         let tjolt_check = &mut FIGHTER_BOOL_1[get_player_number(module_accessor)];
-		if ArticleModule::is_exist(module_accessor, *FIGHTER_PICHU_GENERATE_ARTICLE_DENGEKIDAMA)
-        || ArticleModule::is_exist(module_accessor, *FIGHTER_PICHU_GENERATE_ARTICLE_DENGEKI) {
-			println!("Jolt exists!");
-		}
         if ![hash40("special_n"), hash40("special_air_n")].contains(&motion_kind) {
             *tjolt_check = false;
         }

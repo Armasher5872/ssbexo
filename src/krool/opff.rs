@@ -1,10 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        KROOL_HAS_UAIR,
-        KROOL_UP_SPECIAL_CANCEL,
-        SITUATION_KIND
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,

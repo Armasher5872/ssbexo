@@ -1,19 +1,8 @@
 //Credit to Ultimate S
 use {
     crate::functions::{
-        CAN_FIREBALL,
-        FIREBALL_GFX,
-        FIREBALL_TIMER,
-        KOOPA_EXCELLENT_SMASH,
-        KOOPA_EXCELLENT_SMASH_GFX,
-        SPECIAL_ZOOM_GFX,
-        KOOPA_GOOD_SMASH,
-        KOOPA_GOOD_SMASH_GFX,
-        KOOPA_GREAT_SMASH,
-        KOOPA_GREAT_SMASH_GFX,
-        KOOPA_OK_SMASH,
-        KOOPA_OK_SMASH_GFX,
-        NONE_VECTOR
+        ext::*,
+        variables::*,
     },
     smash::{
         lua2cpp::{
@@ -265,7 +254,12 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         if CAN_FIREBALL[entry_id] == true {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, true);
         }
-        println!("Can Fireball, {}", CAN_FIREBALL[entry_id]);
+        if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A].contains(&status_kind) && (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_STATUS_KIND_SPECIAL_HI | *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G) {
+            fighter.sub_transition_group_check_air_cliff();
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            fighter.set_back_cliff_hangdata(20.0, 10.0);
+            fighter.set_front_cliff_hangdata(20.0, 10.0);
+        }
     }
 }
 

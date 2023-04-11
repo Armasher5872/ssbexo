@@ -1,13 +1,7 @@
 //Credit to AParticularUser for the code
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        FIGHTER_SPECIAL_STATE,
-        POGO_GROUND_BOUNCE,
-        POGO_OPPONENT_BOUNCE,
-        RIDLEY_INT_SPECIAL_HI_REBOUNCE_COUNT,
-        RIDLEY_VEC2_SPECIAL_LW_BOUNCE_POS_CHECK_PREV
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,

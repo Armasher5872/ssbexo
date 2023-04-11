@@ -1,10 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        CHARGE_SHOT_TIMER,
-        HAS_FIRE_CHARGE_SHOT,
-        SAMUSD_HAS_FLOAT
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

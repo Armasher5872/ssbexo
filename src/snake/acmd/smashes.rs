@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::SNAKE_FLAG_ATTACK_S4_COMBO_ENABLE,
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

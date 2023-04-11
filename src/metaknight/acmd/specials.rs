@@ -26,7 +26,7 @@ unsafe fn ssbuexo_metaknight_neutral_special_spin_acmd(fighter: &mut L2CAgentBas
 }
 
 //Neutral Special End ACMD
-#[acmd_script( agent = "metaknight", script = "game_specialnend", category = ACMD_GAME)]
+#[acmd_script( agent = "metaknight", scripts = ["game_specialnend", "game_specialairnend"], category = ACMD_GAME)]
 unsafe fn ssbuexo_metaknight_neutral_special_end_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);

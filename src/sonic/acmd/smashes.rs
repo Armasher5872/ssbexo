@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::PARRIED,
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

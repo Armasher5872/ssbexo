@@ -1,8 +1,5 @@
 use {
-    crate::functions::{
-        ROY_GFX_COUNTER,
-        FULL_SMASH_ATTACK
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,

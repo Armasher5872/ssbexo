@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::FIGHTER_CUTIN_MANAGER,
+    crate::functions::ext::*,
     smash::{
         lua2cpp::L2CAgentBase, 
         phx::Hash40,

@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::BomaExt,
+    crate::functions::ext::*,
     smash::{
         app::{
             lua_bind::*,

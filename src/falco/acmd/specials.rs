@@ -1,9 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        REFLECTOR_ANGLE,
-        REFLECTOR_KNOCKBACK
-    },
+    crate::functions::variables::*,
     smash::{
         lua2cpp::L2CAgentBase, 
         phx::Hash40,

@@ -1,8 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        FIGHTER_CUTIN_MANAGER
-    },
+    crate::functions::ext::*,
     smash::{
         app::{
             lua_bind::*,
@@ -173,6 +171,18 @@ unsafe fn ssbuexo_armstrong_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     }
 }
 
+//Pummel Effect
+#[acmd_script( agent = "ganon", script = "effect_catchattack", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_armstrong_pummel_effect(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 1.0);
+    if macros::is_excute(fighter) {
+        macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_ALPHA(fighter, Hash40::new("sys_attack_impact"), Hash40::new("top"), -1, 13, 8.3, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 1.5);
+        macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("sys_attack_speedline"), Hash40::new("top"), -4, 9, -1, -23, 25, 0, 1, true);
+        macros::LAST_PARTICLE_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+    }
+}
+
 //Forward Throw ACMD
 #[acmd_script( agent = "ganon", script = "game_throwf", category = ACMD_GAME)]
 unsafe fn ssbuexo_armstrong_forward_throw_acmd(fighter: &mut L2CAgentBase) 
@@ -193,6 +203,25 @@ unsafe fn ssbuexo_armstrong_forward_throw_acmd(fighter: &mut L2CAgentBase)
     if macros::is_excute(fighter) {
         macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
         AttackModule::clear_all(fighter.module_accessor);
+    }
+}
+
+//Forward Throw Effect
+#[acmd_script( agent = "ganon", script = "effect_throwf", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_armstrong_forward_throw_effect(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 9.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_attack_arc"), Hash40::new("top"), -3, 17, 2.5, 0, -45, 50, 0.85, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+    }
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(fighter.lua_state_agent, 17.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
 }
 
@@ -225,6 +254,29 @@ unsafe fn ssbuexo_armstrong_back_throw_acmd(fighter: &mut L2CAgentBase)
     }
 }
 
+//Back Throw Effect
+#[acmd_script( agent = "ganon", script = "effect_throwb", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_armstrong_back_throw_effect(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT(fighter, Hash40::new("sys_attack_line"), Hash40::new("top"), -6, 7, 6, 215, -15, 0, 1.4, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(fighter, 0.5);
+    }
+    frame(fighter.lua_state_agent, 12.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -3, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("sys_attack_speedline"), Hash40::new("top"), -6, 6, 8, 215, -15, 12, 1.2, true);
+        macros::LAST_PARTICLE_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(fighter, 0.5);
+    }
+    frame(fighter.lua_state_agent, 16.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
+    }
+}
+
 //Up Throw ACMD
 #[acmd_script( agent = "ganon", script = "game_throwhi", category = ACMD_GAME)]
 unsafe fn ssbuexo_armstrong_up_throw_acmd(fighter: &mut L2CAgentBase) 
@@ -251,6 +303,29 @@ unsafe fn ssbuexo_armstrong_up_throw_acmd(fighter: &mut L2CAgentBase)
     }
 }
 
+//Up Throw Effect
+#[acmd_script( agent = "ganon", script = "effect_throwhi", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_armstrong_up_throw_effect(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 10.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT(fighter, Hash40::new("sys_attack_line"), Hash40::new("top"), -3, 3, -6, -80, 0, -10, 1.5, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(fighter, 0.5);
+    }
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("sys_attack_speedline"), Hash40::new("top"), -3, 6, -5, -80, 0, -10, 1.5, true);
+        macros::LAST_PARTICLE_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(fighter, 0.5);
+    }
+    frame(fighter.lua_state_agent, 17.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
+    }
+}
+
 //Down Throw ACMD
 #[acmd_script( agent = "ganon", script = "game_throwlw", category = ACMD_GAME)]
 unsafe fn ssbuexo_armstrong_down_throw_acmd(fighter: &mut L2CAgentBase) {
@@ -268,14 +343,39 @@ unsafe fn ssbuexo_armstrong_down_throw_acmd(fighter: &mut L2CAgentBase) {
     }
 }
 
+//Down Throw Effect
+#[acmd_script( agent = "ganon", script = "effect_throwlw", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_armstrong_down_throw_effect(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 13.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("sys_attack_speedline"), Hash40::new("top"), -5.5, 25, 1, 65, 0, 12, 1.6, true);
+        macros::LAST_PARTICLE_SET_COLOR(fighter, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(fighter, 0.5);
+    }
+    frame(fighter.lua_state_agent, 14.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_atk_smoke"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 12, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        macros::LAST_EFFECT_SET_RATE(fighter, 0.8);
+        macros::EFFECT(fighter, Hash40::new("sys_crown"), Hash40::new("top"), 12, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 12, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
 pub fn install() {
     install_acmd_scripts!(
         ssbuexo_armstrong_grab_acmd,
         ssbuexo_armstrong_dash_grab_acmd,
         ssbuexo_armstrong_pivot_grab_acmd,
+        ssbuexo_armstrong_pummel_effect,
         ssbuexo_armstrong_forward_throw_acmd,
+        ssbuexo_armstrong_forward_throw_effect,
         ssbuexo_armstrong_back_throw_acmd,
+        ssbuexo_armstrong_back_throw_effect,
         ssbuexo_armstrong_up_throw_acmd,
-        ssbuexo_armstrong_down_throw_acmd
+        ssbuexo_armstrong_up_throw_effect,
+        ssbuexo_armstrong_down_throw_acmd,
+        ssbuexo_armstrong_down_throw_effect
     );
 }

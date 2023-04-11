@@ -1,9 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        OFFENSE_UP_ACTIVE,
-        PK_FLASH_TIMER
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

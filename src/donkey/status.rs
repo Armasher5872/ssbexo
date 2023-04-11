@@ -1,12 +1,7 @@
 //All of this is credited to the HDR Code Repository
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        BARREL_ACTIVE,
-        BARREL_TIMER,
-        SITUATION_KIND,
-        PREV_STATUS_KIND
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,
@@ -23,6 +18,45 @@ use {
     smash_script::*,
     smashline::*,
 };
+
+#[status_script(agent = "donkey", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
+unsafe fn donkey_special_s_status_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        KineticModule::clear_speed_all(fighter.module_accessor);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    fighter.sub_shift_status_main(L2CValue::Ptr(donkey_side_special_status_loop as *const () as _));
+    original!(fighter)
+}
+
+pub unsafe fn donkey_side_special_status_loop(fighter: &mut L2CFighterCommon) -> bool {
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), true.into());
+        }
+        else {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
+        }
+        return true.into();
+    }
+    if MotionModule::is_end(fighter.module_accessor) {
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), true.into());
+        }
+        else {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
+        }
+        return true.into();
+    }
+    return false.into()
+}
 
 #[status_script(agent = "donkey", status = FIGHTER_STATUS_KIND_SPECIAL_LW, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn donkey_special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -132,6 +166,7 @@ pub unsafe extern "C" fn donkey_link_event(vtable: u64, fighter: &mut Fighter, e
 
 pub fn install() {
     install_status_scripts!(
+        donkey_special_s_status_main,
         donkey_special_lw_main,
         donkey_catch_pull_main
     );

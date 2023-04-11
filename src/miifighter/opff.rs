@@ -1,8 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        USE_ONSLAUGHT
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         lib::lua_const::*,

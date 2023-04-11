@@ -1,8 +1,8 @@
 #![allow(unused_macros)]
 use {
     crate::functions::{
-        FIGHTER_BOOL_2,
-        get_player_number
+        ext::*,
+        variables::*,
     },
     smash::{
         app::{

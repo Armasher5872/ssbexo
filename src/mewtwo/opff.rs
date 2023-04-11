@@ -1,30 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        CAN_ADD,
-        DAMAGED,
-        DAMAGED_PREVENT,
-        FUTURESIGHT_CURRENT_FRAME,
-        FUTURESIGHT_EXPLOSION_TIME,
-        FUTURESIGHT_FUSE_TIME,
-        FUTURESIGHT_HIT_COOLDOWN_FRAME,
-        FUTURESIGHT_HIT_COOLDOWN_TIME,
-        FUTURESIGHT_LAST_STATUS,
-        FUTURESIGHT_X,
-        FUTURESIGHT_Y,
-        GHOST_DASH_ENABLED,
-        GROUNDED_TELEPORT,
-        HAS_FUTURESIGHT,
-        SHIELD_SPECIAL,
-        SITUATION_KIND,
-        SPEED_ADD,
-        STORED_POWER_ENABLED,
-        STORED_POWER_GFX_TIMER,
-        STORED_POWER_POINT,
-        STORED_POWER_TIMER,
-        UP_SPECIAL_CANCEL,
-        UP_SPECIAL_JUMP_REFRESH
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

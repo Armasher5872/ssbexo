@@ -1,9 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        FULL_SMASH_ATTACK,
-        OFFENSE_UP_ACTIVE
-    },
+    crate::functions::variables::*,
     smash::{
         lua2cpp::L2CAgentBase,
         phx::Hash40,

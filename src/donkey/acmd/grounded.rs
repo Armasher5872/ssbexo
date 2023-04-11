@@ -1,9 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        BARREL_ACTIVE,
-        BARREL_TIMER
-    },
+    crate::functions::variables::*,
     smash::{
         lua2cpp::L2CAgentBase, 
         phx::Hash40,
@@ -42,9 +39,7 @@ unsafe fn ssbuexo_donkey_heavy_throw_forward_acmd(fighter: &mut L2CAgentBase) {
         if BARREL_ACTIVE[entry_id] == true
         && BARREL_TIMER[entry_id] > 0 {
             if ItemModule::get_have_item_kind(module_accessor, 0) == *ITEM_KIND_BARREL {
-                fighter.clear_lua_stack();
-                lua_args!(fighter, 2, 2, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
-                smash::app::sv_animcmd::THROW_ITEM_OFFSET(fighter.lua_state_agent);
+                ItemModule::throw_item(module_accessor, 10.0, 1.0, 0.0, 0, true, 0.0);
             }
         }
         else {

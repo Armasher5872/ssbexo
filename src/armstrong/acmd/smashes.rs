@@ -1,9 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        FULL_SMASH_ATTACK,
-        SPECIAL_ZOOM_GFX
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,
@@ -26,6 +23,20 @@ unsafe fn ssbuexo_armstrong_smash_attack_charge(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         FULL_SMASH_ATTACK[entry_id] = true;
     }
+}
+
+//Forward Smash Charge Effect
+#[acmd_script( agent = "ganon", script = "game_attacks4charge", category = ACMD_GAME)]
+unsafe fn ssbuexo_armstrong_forward_smash_charge_effect(fighter: &mut L2CAgentBase) 
+{
+    frame(fighter.lua_state_agent, 5.0);
+    if macros::is_excute(fighter) {
+        macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 15, 0, 0, 0, 0, 0, false);
+    }
+    wait(fighter.lua_state_agent, 5.0);
+    macros::EFFECT(fighter, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), -6, 9, 0, 0, 0, 0, 1, 4, 4, 4, 0, 0, 0, true);
+    macros::EFFECT_FOLLOW(fighter, Hash40::new("ganon_majinken_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+    macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
 }
 
 //Forward Smash ACMD
@@ -67,6 +78,7 @@ unsafe fn ssbuexo_armstrong_forward_smash_effect(fighter: &mut L2CAgentBase)
 {
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW(fighter, Hash40::new("ganon_majinken_start"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
         EffectModule::enable_sync_init_pos_last(fighter.module_accessor);
         macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), -3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_RATE(fighter, 0.8);
@@ -74,6 +86,7 @@ unsafe fn ssbuexo_armstrong_forward_smash_effect(fighter: &mut L2CAgentBase)
     frame(fighter.lua_state_agent, 4.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW(fighter, Hash40::new("ganon_majinken_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
     }
     frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
@@ -82,10 +95,12 @@ unsafe fn ssbuexo_armstrong_forward_smash_effect(fighter: &mut L2CAgentBase)
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW(fighter, Hash40::new("ganon_majinken_hold"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
     }
     frame(fighter.lua_state_agent, 24.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW(fighter, Hash40::new("ganon_majinken"), Hash40::new("top"), 0, 12.5, 22.5, 0, -10, 0, 0.8, true);
+        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(fighter, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_RATE(fighter, 0.7);
     }
@@ -143,7 +158,7 @@ unsafe fn ssbuexo_armstrong_up_smash_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "ganon", script = "effect_attackhi4", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_armstrong_up_smash_effect(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 21.0);
+    frame(fighter.lua_state_agent, 16.0);
 	if macros::is_excute(fighter) {
 		macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
 		macros::LAST_EFFECT_SET_RATE(fighter, 0.4);
@@ -194,14 +209,10 @@ unsafe fn ssbuexo_armstrong_down_smash_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "ganon", script = "effect_attacklw4", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_armstrong_down_smash_effect(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 15.0);
-    if macros::is_excute(fighter) {
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 10, 3, 0, -80, -90, 1.4, true);
-        macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
-    }
-    frame(fighter.lua_state_agent, 20.0);
+    frame(fighter.lua_state_agent, 18.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 10, 0, 0, -40, -90, 1.2, true);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.5);
         macros::LAST_EFFECT_SET_COLOR(fighter, 0.88, 0.35, 0.13);
     }
 }
@@ -219,6 +230,7 @@ unsafe fn ssbuexo_armstrong_down_smash_sound(fighter: &mut L2CAgentBase)
 pub fn install() {
     install_acmd_scripts!(
         ssbuexo_armstrong_smash_attack_charge,
+        ssbuexo_armstrong_forward_smash_charge_effect,
         ssbuexo_armstrong_forward_smash_acmd,
         ssbuexo_armstrong_forward_smash_effect,
         ssbuexo_armstrong_forward_smash_sound,

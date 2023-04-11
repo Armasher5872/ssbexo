@@ -1,14 +1,5 @@
 use {
-    crate::functions::{
-        DID_ASTRA_2_S,
-        DID_ASTRA_5_HI,
-        LANDING_HIT,
-        LUCINA_GFX_COUNTER,
-        SITUATION_KIND,
-        USE_SWORDSMAN_DASH,
-        USE_UP_SPECIAL,
-        special_lw_mot_helper
-    },
+    crate::functions::variables::*,
     smash::{
         app::lua_bind::*,
         hash40,
@@ -241,7 +232,7 @@ fn lucina_frame(fighter: &mut L2CFighterCommon) {
         if [hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind)
         && frame > 28.0 {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARTH_STATUS_SPECIAL_LW_FLAG_CONTINUE_MOT);
-            special_lw_mot_helper(fighter);
+            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_LW_HIT, true);
         }
     }
 }

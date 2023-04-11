@@ -1,8 +1,5 @@
 use {
-    crate::functions::{
-        HITFLOW,
-        MEGA_EVOLVE
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

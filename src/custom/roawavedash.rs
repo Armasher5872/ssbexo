@@ -1,9 +1,6 @@
 #![allow(unused_macros)]
 use {
-	crate::functions::{
-		IS_WAVEDASH,
-		WAVEDASH_DONE
-    },
+	crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::{

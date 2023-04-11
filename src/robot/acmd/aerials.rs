@@ -1,10 +1,8 @@
 #![allow(unused_macros)]
 use {
     crate::functions::{
-        SIZE1,
-        SIZE2,
-        SIZE3,
-        get_player_number
+        ext::*,
+        variables::*,
     },
     smash::{
         app::{

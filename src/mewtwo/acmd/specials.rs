@@ -1,13 +1,6 @@
 #![allow(unused_macros)]
 use {
-    crate::functions::{
-        FUTURESIGHT_CURRENT_FRAME,
-        FUTURESIGHT_FUSE_TIME,
-        FUTURESIGHT_X,
-        FUTURESIGHT_Y,
-        HAS_FUTURESIGHT,
-        STORED_POWER_ENABLED
-    },
+    crate::functions::variables::*,
     smash::{
         app::{
             lua_bind::*,

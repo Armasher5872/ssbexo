@@ -13,9 +13,49 @@ use {
     smash_script::*,
 };
 
-//Up Special
+//Shield Special Effect
+#[acmd_script( agent = "pzenigame", script = "effect_specialshield", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_squirtle_shield_special_effect(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 30.0);
+    if macros::is_excute(fighter) {
+        macros::LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.65, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(fighter.lua_state_agent, 50.0);
+    for _ in 0..5 {
+        if macros::is_excute(fighter) {
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_steam3"), Hash40::new("top"), 0, 20, 0, 0, 0, 0, 2.0, true);
+            macros::LAST_EFFECT_SET_COLOR(fighter, 0.2, 0.2, 0.2);
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_steam3"), Hash40::new("top"), 0, 20, -10, 0, 0, 0, 2.0, true);
+            macros::LAST_EFFECT_SET_COLOR(fighter, 0.2, 0.2, 0.2);
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_steam3"), Hash40::new("top"), 0, 20, 10, 0, 0, 0, 2.0, true);
+            macros::LAST_EFFECT_SET_COLOR(fighter, 0.2, 0.2, 0.2);
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_atk_speedline"), Hash40::new("top"), 0, 15, 0, -90, 0, 0, 1.5, true);
+            macros::LAST_EFFECT_SET_COLOR(fighter, 0.698, 1.0, 1.0);
+        }
+        wait(fighter.lua_state_agent, 6.0);
+    }
+}
+
+//Shield Special Sound
+#[acmd_script( agent = "pzenigame", script = "sound_specialshield", category = ACMD_SOUND)]
+unsafe fn ssbuexo_squirtle_shield_special_sound(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 12.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SE(fighter, Hash40::new("se_pzenigame_jump03"));
+    }
+    frame(fighter.lua_state_agent, 30.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SE(fighter, Hash40::new("se_pzenigame_landing01"));
+    }
+    frame(fighter.lua_state_agent, 44.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SE(fighter, Hash40::new("vc_pzenigame_attack06"));
+    }
+}
+
+//Up Special ACMD
 #[acmd_script( agent = "pzenigame", scripts = ["game_specialhi", "game_specialairhi"], category = ACMD_GAME)]
-unsafe fn ssbuexo_squirtle_up_special(fighter: &mut L2CAgentBase) 
+unsafe fn ssbuexo_squirtle_up_special_acmd(fighter: &mut L2CAgentBase) 
 {
     frame(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
@@ -54,6 +94,8 @@ unsafe fn ssbuexo_squirtle_up_special(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     install_acmd_scripts!(
-        ssbuexo_squirtle_up_special
+        ssbuexo_squirtle_shield_special_effect,
+        ssbuexo_squirtle_shield_special_sound,
+        ssbuexo_squirtle_up_special_acmd
     );
 }
