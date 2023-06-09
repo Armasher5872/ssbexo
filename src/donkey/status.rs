@@ -1,23 +1,5 @@
 //All of this is credited to the HDR Code Repository
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lib::{
-            L2CValue,
-            lua_const::*,
-        },
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 #[status_script(agent = "donkey", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn donkey_special_s_status_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -55,22 +37,21 @@ pub unsafe fn donkey_side_special_status_loop(fighter: &mut L2CFighterCommon) ->
         }
         return true.into();
     }
-    return false.into()
+    false.into()
 }
 
 #[status_script(agent = "donkey", status = FIGHTER_STATUS_KIND_SPECIAL_LW, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn donkey_special_lw_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let motion;
     let kinetic;
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         motion = Hash40::new("special_air_lw");
         kinetic = *FIGHTER_KINETIC_TYPE_AIR_STOP;
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING);
     }
     else {
-        if BARREL_ACTIVE[entry_id] == true
-        && BARREL_TIMER[entry_id] > 0 {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE) && timer > 0 {
             kinetic = *FIGHTER_KINETIC_TYPE_NONE;
             if PostureModule::lr(fighter.module_accessor) == 1.0 {
                 motion = Hash40::new("appeal_lw_r");

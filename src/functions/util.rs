@@ -1,7 +1,4 @@
-#![allow(unused_imports, dead_code, clippy::ptr_offset_with_cast, clippy::needless_lifetimes, clippy::transmute_ptr_to_ref)]
-use smash::app::{BattleObject, BattleObjectModuleAccessor};
-use smash::lua2cpp::L2CFighterCommon;
-use std::arch::asm;
+use super::*;
 
 #[macro_export]
 macro_rules! dump_trace {

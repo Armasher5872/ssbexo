@@ -1,20 +1,4 @@
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lib::{
-            L2CValue,
-            lua_const::*,
-        },
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40,
-    },
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_SNAKE )]
 fn snake_frame(fighter: &mut L2CFighterCommon) {

@@ -1,132 +1,59 @@
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        hash40,
-        lua2cpp::L2CFighterCommon,
-        lib::lua_const::*,
-        phx::{
-            Hash40,
-            Vector3f
-        }
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_GANON )]
 fn armstrong_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let motion_kind = MotionModule::motion_kind(module_accessor);
-        let status_kind = StatusModule::status_kind(module_accessor);
-        let frame = MotionModule::frame(fighter.module_accessor);
-        //Effect Clearing 
-        if status_kind != *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            EffectModule::kill_kind(module_accessor, Hash40::new("sys_dead_light"), false, true);
-        };
+        let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let motion_kind = MotionModule::motion_kind(boma);
+        let status_kind = StatusModule::status_kind(boma);
         //Damage Update
-        if StatusModule::situation_kind(module_accessor) == *SITUATION_KIND_GROUND
+        if StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND
         || [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FALL].contains(&status_kind) {
             USE_DROPKICK[entry_id] = true;
         }
         //Instadrop
-        if WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) == true {
-            macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_mach_stomp"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.0, false);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("hip"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("bust"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-            macros::ATTACK(fighter, 2, 0, Hash40::new("legr"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-            macros::ATTACK(fighter, 3, 0, Hash40::new("legl"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-            macros::ATTACK(fighter, 4, 0, Hash40::new("armr"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-            macros::ATTACK(fighter, 5, 0, Hash40::new("arml"), 1.0, 75, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+        if WorkModule::is_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) == true {
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_machstamp"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.0, false);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 75, 100, 0, 50, 7.0, 0.0, 2.0, 0.0, Some(0.0), Some(10.0), Some(0.0), 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
         }
         if [*FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL].contains(&status_kind) {
-            AttackModule::clear_all(module_accessor);
+            AttackModule::clear_all(boma);
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_mach_stomp"), false, false);
         }
         //Crouch Cancel
         if status_kind == *FIGHTER_STATUS_KIND_SQUAT_WAIT {
-            DamageModule::set_reaction_mul(module_accessor, 0.77);
+            DamageModule::set_reaction_mul(boma, 0.6);
         }
         if status_kind == *FIGHTER_STATUS_KIND_SQUAT_RV {
-            DamageModule::set_reaction_mul(module_accessor, 1.0);
-        }
-        //Smash Attacks
-        if [*FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD].contains(&status_kind)
-        && frame > 59.0 {
-            FULL_SMASH_ATTACK[entry_id] = true;
-        }
-        if [*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind) {
-            if FULL_SMASH_ATTACK[entry_id] == true {
-                if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    SPECIAL_ZOOM_GFX[entry_id] += 1;
-                    if SPECIAL_ZOOM_GFX[entry_id] < 2 {
-                        SlowModule::set_whole(module_accessor, 8, 80);
-                        macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
-                        EffectModule::req_follow(module_accessor, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.0, false, 0, 0, 0, 0, 0, false, false);
-                        macros::PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
-                        macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
-                    }
-                    if SPECIAL_ZOOM_GFX[entry_id] >= 4 {
-                        SlowModule::clear_whole(module_accessor);
-                        CameraModule::reset_all(module_accessor);
-                        EffectModule::kill_kind(module_accessor, Hash40::new("sys_bg_criticalhit"), false, false);
-                        macros::CAM_ZOOM_OUT(fighter);
-                    }
-                }
-            }
+            DamageModule::set_reaction_mul(boma, 1.0);
         }
         //Neutral Special
         if [hash40("special_n"), hash40("special_air_n")].contains(&motion_kind) {
             if motion_kind == hash40("special_air_n") {
-                FIGHTER_SPECIAL_STATE[entry_id] = true;
+                WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE);
             }
             else {
-                if FIGHTER_SPECIAL_STATE[entry_id] {
-                    MotionModule::change_motion_inherit_frame(module_accessor, Hash40::new("special_air_lw_end"), 1.0, 1.0, 0.0, false, false);
-                    AttackModule::clear_all(module_accessor);
+                if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE) {
+                    MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_lw_end"), 1.0, 1.0, 0.0, false, false);
+                    AttackModule::clear_all(boma);
                 }
             }
         }
         else {
-            FIGHTER_SPECIAL_STATE[entry_id] = false;
+            WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE);
         }
-        //Side Special
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
-            fighter.sub_transition_group_check_air_cliff();
-            if StatusModule::prev_status_kind(module_accessor, 0) != *FIGHTER_STATUS_KIND_SPECIAL_HI {
-                if StatusModule::is_situation_changed(fighter.module_accessor) {
-                    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
-                    }
-                    else {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, true);
-                        AttackModule::clear_all(module_accessor);
-                    };
-                }
-                if MotionModule::end_frame(module_accessor) - frame <= 2.0 {
-                    USE_DROPKICK[entry_id] = false;
-                    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
-                    }
-                    else {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
-                    }
-                };
-            }
-        }
-        //Down Special
+        //Down Special End
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-                KineticModule::change_kinetic(module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             }
             else {
-                KineticModule::change_kinetic(module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             }
         }
         if status_kind == *FIGHTER_GANON_STATUS_KIND_SPECIAL_LW_END {
-            AttackModule::clear_all(module_accessor);
+            AttackModule::clear_all(boma);
             StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, true);
         }
     }

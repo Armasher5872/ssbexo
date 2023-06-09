@@ -1,18 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Forward Tilt ACMD
 #[acmd_script( agent = "gamewatch", script = "game_attacks3", category = ACMD_GAME)]

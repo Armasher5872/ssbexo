@@ -1,21 +1,8 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::*,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Jab 1
 #[acmd_script( agent = "plizardon", script = "game_attack11", category = ACMD_GAME)]
-unsafe fn ssbuexo_charizard_jab_1_acmd(fighter: &mut L2CAgentBase) {
+unsafe fn ssbuexo_plizardon_jab_1_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 4.0);
     if macros::is_excute(fighter) {
         macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 2.5, 361, 30, 0, 20, 3.4, 0.0, 8.0, 4.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
@@ -40,7 +27,7 @@ unsafe fn ssbuexo_charizard_jab_1_acmd(fighter: &mut L2CAgentBase) {
 
 //Jab 2
 #[acmd_script( agent = "plizardon", script = "game_attack12", category = ACMD_GAME)]
-unsafe fn ssbuexo_charizard_jab_2_acmd(fighter: &mut L2CAgentBase) {
+unsafe fn ssbuexo_plizardon_jab_2_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         KineticModule::add_speed(fighter.module_accessor, &Vector3f{x: 0.72, y: 0.0, z: 0.0});
@@ -74,7 +61,7 @@ unsafe fn ssbuexo_charizard_jab_2_acmd(fighter: &mut L2CAgentBase) {
 
 //Dash Attack
 #[acmd_script( agent = "plizardon", script = "game_attackdash", category = ACMD_GAME)]
-unsafe fn ssbuexo_charizard_dash_attack_acmd(fighter: &mut L2CAgentBase) {
+unsafe fn ssbuexo_plizardon_dash_attack_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
         macros::ATTACK(fighter, 0, 0, Hash40::new("shoulderr"), 13.0, 55, 44, 0, 96, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
@@ -97,7 +84,7 @@ unsafe fn ssbuexo_charizard_dash_attack_acmd(fighter: &mut L2CAgentBase) {
 
 //Dash Attack Effect
 #[acmd_script( agent = "plizardon", script = "effect_attackdash", category = ACMD_EFFECT)]
-unsafe fn ssbuexo_charizard_dash_attack_effect(fighter: &mut L2CAgentBase) 
+unsafe fn ssbuexo_plizardon_dash_attack_effect(fighter: &mut L2CAgentBase) 
 {
     frame(fighter.lua_state_agent, 12.0);
     if macros::is_excute(fighter) {
@@ -130,9 +117,9 @@ unsafe fn ssbuexo_charizard_dash_attack_effect(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     install_acmd_scripts!(
-        ssbuexo_charizard_jab_1_acmd,
-        ssbuexo_charizard_jab_2_acmd,
-        ssbuexo_charizard_dash_attack_acmd,
-        ssbuexo_charizard_dash_attack_effect
+        ssbuexo_plizardon_jab_1_acmd,
+        ssbuexo_plizardon_jab_2_acmd,
+        ssbuexo_plizardon_dash_attack_acmd,
+        ssbuexo_plizardon_dash_attack_effect
     );
 }

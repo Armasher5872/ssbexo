@@ -1,47 +1,24 @@
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::{
-            L2CFighterBase,
-            L2CFighterCommon
-        },
-        phx::{
-            Hash40,
-            *
-        }
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_LUCARIO )]
 fn lucario_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let motion_kind = MotionModule::motion_kind(module_accessor);
-        let status_kind = StatusModule::status_kind(module_accessor);
-        let frame = MotionModule::frame(module_accessor);
-        if !sv_information::is_ready_go() {
-			HITFLOW[entry_id] = false;
-		};
-        if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)
-        && !AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-            HITFLOW[entry_id] = true;
+        let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let motion_kind = MotionModule::motion_kind(boma);
+        let status_kind = StatusModule::status_kind(boma);
+        let frame = MotionModule::frame(boma);
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)
+        && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
+            WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
         };
-        if HITFLOW[entry_id] == true {
-            MotionModule::set_rate(fighter.module_accessor, 1.65);
+        if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW) {
+            MotionModule::set_rate(boma, 1.65);
         }
-        if MotionModule::end_frame(module_accessor) - frame <= 2.0
-        || CancelModule::is_enable_cancel(module_accessor) {
-            HITFLOW[entry_id] = false;
-            MotionModule::set_rate(module_accessor, 1.0);
+        if MotionModule::end_frame(boma) - frame <= 2.0
+        || CancelModule::is_enable_cancel(boma) {
+            WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
+            MotionModule::set_rate(boma, 1.0);
         };
         if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind)
         && frame > 16.0
@@ -57,14 +34,14 @@ fn lucario_frame(fighter: &mut L2CFighterCommon) {
             MEGA_EVOLVE[entry_id] = false;
         }
         if MEGA_EVOLVE[entry_id] == true {
-            VisibilityModule::set_whole(fighter.module_accessor, false);
-            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, false, -1);
-            ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, true, ArticleOperationTarget(0));
+            VisibilityModule::set_whole(boma, false);
+            ArticleModule::generate_article(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, false, -1);
+            ArticleModule::set_visibility_whole(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, true, ArticleOperationTarget(0));
         }
         else {
-            VisibilityModule::set_whole(fighter.module_accessor, true);
-            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-            ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, false, ArticleOperationTarget(0));
+            VisibilityModule::set_whole(boma, true);
+            ArticleModule::remove_exist(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            ArticleModule::set_visibility_whole(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, false, ArticleOperationTarget(0));
         }
         //Up Special
         if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_BOUND, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH_END].contains(&status_kind) {

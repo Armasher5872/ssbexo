@@ -1,19 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Forward Smash Charge Effect
 #[acmd_script( agent = "koopa", script = "game_attacks4charge", category = ACMD_GAME)]
@@ -55,7 +40,7 @@ unsafe fn ssubexo_koopa_forward_smash_acmd(fighter: &mut L2CAgentBase)
         KOOPA_GOOD_SMASH[entry_id] = false;
         KOOPA_GREAT_SMASH[entry_id] = false;
         KOOPA_EXCELLENT_SMASH[entry_id] = false;
-        SPECIAL_ZOOM_GFX[entry_id] = 0;
+        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
 }
 

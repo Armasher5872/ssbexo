@@ -1,14 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        hash40,
-        lua2cpp::L2CFighterCommon,
-        lib::lua_const::*,
-    },
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_KROOL )]
 fn krool_frame(fighter: &mut L2CFighterCommon) {

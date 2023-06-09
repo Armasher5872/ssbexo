@@ -1,17 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Nair ACMD
 #[acmd_script( agent = "mewtwo", script = "game_attackairn", category = ACMD_GAME)]
@@ -217,26 +204,33 @@ unsafe fn ssbuexo_mewtwo_uair_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "mewtwo", script = "effect_attackairhi", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_mewtwo_uair_effect(fighter: &mut L2CAgentBase) 
 {
+    frame(fighter.lua_state_agent, 5.0);
+    if macros::is_excute(fighter) {
+        macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_mewtwo_tail_purple"), Hash40::new("tex_mewtwo_tail_2"), 5, Hash40::new("s_tail6"), 0.0, 0.0, 0.0, Hash40::new("s_tail7"), 5.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("s_tail7"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
+        macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_mewtwo_tail_purple"), Hash40::new("tex_mewtwo_tail_1"), 5, Hash40::new("s_tail5"), 0.0, 0.0, 0.0, Hash40::new("s_tail6"), 5.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("s_tail6"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
+        macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_mewtwo_tail_purple"), Hash40::new("tex_mewtwo_tail_1"), 4, Hash40::new("s_tail4"), 0.0, 0.0, 0.0, Hash40::new("s_tail5"), 5.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("s_tail5"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
+        macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_mewtwo_tail_purple"), Hash40::new("tex_mewtwo_tail_1"), 4, Hash40::new("s_tail3"), 0.0, 0.0, 0.0, Hash40::new("s_tail4"), 5.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("s_tail4"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
+        macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_mewtwo_tail_purple"), Hash40::new("tex_mewtwo_tail_1"), 3, Hash40::new("s_tail2"), 0.0, 0.0, 0.0, Hash40::new("s_tail3"), 5.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("s_tail3"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
+        macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_mewtwo_tail_purple"), Hash40::new("tex_mewtwo_tail_1"), 3, Hash40::new("s_tail1"), 0.0, 0.0, 0.0, Hash40::new("s_tail2"), 5.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("s_tail2"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
+    }
+    frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail7"), 0, 0, 0, 0, 0, 0, 1.0, true);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_aura"), Hash40::new("s_tail7"), 0, 0, 0, 0, 0, 0, 1.0, true);
         macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail5"), 0, 0, 0, 0, 0, 0, 0.8, true);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_aura"), Hash40::new("s_tail5"), 0, 0, 0, 0, 0, 0, 0.8, true);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail3"), 0, 0, 0, 0, 0, 0, 0.8, true);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_aura"), Hash40::new("s_tail3"), 0, 0, 0, 0, 0, 0, 0.8, true);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail1"), 0, 0, 0, 0, 0, 0, 0.8, true);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_aura"), Hash40::new("s_tail1"), 0, 0, 0, 0, 0, 0, 0.8, true);
-        macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new_raw(0x17e344269c), Hash40::new_raw(0x10444db313), 10, Hash40::new("s_tail1"), 0.0, 0.0, 0.0, Hash40::new("s_tail7"), 1.5, 1.0, 0.0, true, Hash40::new(""), Hash40::new("s_tail1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail3"), 0, 0, 0, 0, 0, 0, 0.6, true);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail1"), 0, 0, 0, 0, 0, 0, 0.4, true);
     }
-    frame(fighter.lua_state_agent, 11.0);
+    frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
-        macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("mewtwo_tail_attack_a_01"), Hash40::new("top"), 0, 9.5, -4, 0, 30, 90, 1.15, true, *EF_FLIP_YZ);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail7"), 0, 0, 0, 0, 0, 0, 1.0, true);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail5"), 0, 0, 0, 0, 0, 0, 0.8, true);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail3"), 0, 0, 0, 0, 0, 0, 0.6, true);
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_deathscythe_trace"), Hash40::new("s_tail1"), 0, 0, 0, 0, 0, 0, 0.4, true);
     }
-    frame(fighter.lua_state_agent, 20.0);
+    frame(fighter.lua_state_agent, 18.0);
     if macros::is_excute(fighter) {
-        macros::AFTER_IMAGE_OFF(fighter, 4);
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_deathscythe_trace"), false, false);
-        macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_deathscythe_aura"), false, false);
+        macros::AFTER_IMAGE_OFF(fighter, 4);
     }
 }
 

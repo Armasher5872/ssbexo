@@ -1,23 +1,10 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        lua2cpp::L2CFighterCommon,
-        lib::{
-            L2CValue,
-            lua_const::*,
-        },
-        phx::Hash40
-    },
-    smashline::*,
-};
+use super::*;
 
 //switch status before anything happens in LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN
 #[status_script(agent = "pfushigisou", status = FIGHTER_STATUS_KIND_SPECIAL_N, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
 unsafe fn ivysaur_neutral_special_status_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    IVYSAUR_IS_SPECIAL_N[entry_id] = true;
+    PFUSHIGISOU_IS_SPECIAL_N[entry_id] = true;
     fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), true.into());
     0.into()
 }
@@ -26,7 +13,7 @@ unsafe fn ivysaur_neutral_special_status_pre(fighter: &mut L2CFighterCommon) -> 
 #[status_script(agent = "pfushigisou", status = FIGHTER_STATUS_KIND_ITEM_THROW, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn ivysaur_light_item_throw_status_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if IVYSAUR_IS_SPECIAL_N[entry_id] {
+    if PFUSHIGISOU_IS_SPECIAL_N[entry_id] {
         if fighter.global_table[0x16].get_i32() == *SITUATION_KIND_GROUND {
             KineticModule::clear_speed_all(fighter.module_accessor);
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
@@ -47,7 +34,7 @@ unsafe fn ivysaur_light_item_throw_status_main(fighter: &mut L2CFighterCommon) -
 #[status_script(agent = "pfushigisou", status = FIGHTER_STATUS_KIND_ITEM_THROW, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
 unsafe fn ivysaur_light_item_throw_status_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    IVYSAUR_IS_SPECIAL_N[entry_id] = false;
+    PFUSHIGISOU_IS_SPECIAL_N[entry_id] = false;
     original!(fighter)
 }
 

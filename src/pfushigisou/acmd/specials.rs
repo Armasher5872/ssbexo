@@ -1,16 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Neutral Special ACMD
 #[acmd_script( agent = "pfushigisou", scripts = ["game_specialnstart", "game_specialairnstart"], category = ACMD_GAME)]

@@ -1,24 +1,10 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Up Smash ACMD
 #[acmd_script( agent = "sonic", script = "game_attackhi4", category = ACMD_GAME)]
 unsafe fn ssbuexo_sonic_up_smash_acmd(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let parried = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
@@ -34,7 +20,7 @@ unsafe fn ssbuexo_sonic_up_smash_acmd(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 18.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 1 {
+        if parried == 1 {
             macros::ATTACK(fighter, 0, 0, Hash40::new("waist"), 14.0, 90, 73, 0, 73, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         }
         else {
@@ -52,7 +38,7 @@ unsafe fn ssbuexo_sonic_up_smash_acmd(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 30.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 1 {
+        if parried == 1 {
             macros::ATTACK(fighter, 0, 0, Hash40::new("waist"), 14.0, 90, 73, 0, 73, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         }
         else {
@@ -69,14 +55,14 @@ unsafe fn ssbuexo_sonic_up_smash_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "sonic", script = "effect_attackhi4", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_sonic_up_smash_effect(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let parried = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
     frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 13, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
     frame(fighter.lua_state_agent, 18.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 1 {
+        if parried == 1 {
             macros::EFFECT_FOLLOW(fighter, Hash40::new_raw(0x0e27bc68a2u64), Hash40::new("top"), 0, 20, 1, 180, 270, 90, 0.85, true);
             macros::LAST_EFFECT_SET_COLOR(fighter, 1.0, 1.0, 1.0);
             macros::LAST_EFFECT_SET_RATE(fighter, 1.2);
@@ -86,7 +72,7 @@ unsafe fn ssbuexo_sonic_up_smash_effect(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 19.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 0 {
+        if parried == 0 {
             macros::EFFECT_FOLLOW_ALPHA(fighter, Hash40::new("sys_spin_wind"), Hash40::new("sphere"), 0, 0, 0, 0, -160, 270, 0.75, true, 1);
             macros::EFFECT_FOLLOW(fighter, Hash40::new("sonic_spintrace"), Hash40::new("sphere"), 0, 0, 0, 0, 0, 0, 1, true);
             EffectModule::enable_sync_init_pos_last(fighter.module_accessor);
@@ -94,26 +80,26 @@ unsafe fn ssbuexo_sonic_up_smash_effect(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 20.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 0 {
+        if parried == 0 {
             macros::LANDING_EFFECT(fighter, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         }
     }
     frame(fighter.lua_state_agent, 22.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 0 {
+        if parried == 0 {
             macros::EFFECT_FOLLOW(fighter, Hash40::new("sonic_spinwind"), Hash40::new("sphere"), 0, 0, 0, 0, 0, 0, 1, true);
             macros::EFFECT_FOLLOW(fighter, Hash40::new("sonic_spinblur_plain"), Hash40::new("sphere"), 0, 0, 0, 0, 0, 0, 1, true);
         }
     }
     frame(fighter.lua_state_agent, 32.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 0 {
+        if parried == 0 {
             macros::EFFECT(fighter, Hash40::new("sys_attack_impact"), Hash40::new("sphere"), -0.5, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 360, false);   
         }
     }
     frame(fighter.lua_state_agent, 33.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 0 {
+        if parried == 0 {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sonic_spinwind"), true, false);
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sonic_spinblur_plain"), true, false);
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sonic_spintrace"), false, true);   
@@ -121,7 +107,7 @@ unsafe fn ssbuexo_sonic_up_smash_effect(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 49.0);
     if macros::is_excute(fighter) {
-        if PARRIED[entry_id] == 0 {
+        if parried == 0 {
             macros::LANDING_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);   
         }
     }

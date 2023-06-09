@@ -1,25 +1,4 @@
-use {
-    crate::functions::{
-        ext::*,
-        variables::*,
-    },
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lib::{
-            L2CValueType,
-            lua_const::*,
-        },
-        lua2cpp::{
-            L2CFighterBase,
-            L2CFighterCommon
-        },
-    },
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_GAMEWATCH )]
 pub fn gamewatch_frame(fighter: &mut L2CFighterCommon) {

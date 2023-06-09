@@ -1,21 +1,5 @@
 //Credit to AParticularUser for the code
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::{
-            Hash40,
-            Vector2f,
-            Vector3f
-        }
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_RIDLEY )]
 fn ridley_frame(fighter: &mut L2CFighterCommon) {
@@ -40,17 +24,17 @@ fn ridley_frame(fighter: &mut L2CFighterCommon) {
         }
         if [hash40("special_lw_stab"), hash40("special_air_lw_stab")].contains(&motion_kind) {
             if motion_kind == hash40("special_air_lw_stab") {
-                FIGHTER_SPECIAL_STATE[entry_id] = true;
+                WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE);
             }
             else {
-                if FIGHTER_SPECIAL_STATE[entry_id] {
+                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE) {
                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_LANDING, true);
                    AttackModule::clear_all(module_accessor);
                 }
             }
         }
         else {
-            FIGHTER_SPECIAL_STATE[entry_id] = false;
+            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE);
         }
         if motion_kind == hash40("special_air_lw_stab") {
             WorkModule::set_int64(fighter.module_accessor, hash40("special_air_lw_stab") as i64, *FIGHTER_STATUS_WORK_ID_UTILITY_WORK_INT_MOT_AIR_KIND);

@@ -1,24 +1,4 @@
-use {
-    crate::functions::{
-        ext::*,
-        variables::*,
-    },
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::{
-            L2CFighterBase,
-            L2CFighterCommon
-        },
-        phx::Hash40
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_PICHU )]
 pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
@@ -28,25 +8,17 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
         let status_kind = StatusModule::status_kind(module_accessor);
         let frame = MotionModule::frame(module_accessor);
         let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        //Reset
-        if !sv_information::is_ready_go() {
-			CAN_ADD[entry_id] = false;
-            DISCHARGE_ACTIVE[entry_id] = false;
-            DISCHARGE_GFX[entry_id] = 0;
-            ELECTRIC_HIT[entry_id] = 0;
-            USE_TACKLE[entry_id] = true;
-		};
         //Attack Addition Check
         if frame < 2.0
         && [hash40("attack_s3_s"), hash40("attack_s4_s"), hash40("attack_lw4"), hash40("attack_air_f"), hash40("attack_air_b"), hash40("attack_air_lw"), hash40("special_n"), hash40("special_air_n"), hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind)
         && DISCHARGE_ACTIVE[entry_id] != true { // resets at the start of a move the inability to add further charge
-			CAN_ADD[entry_id] = true;
+			WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
 		};
-		if CAN_ADD[entry_id] == true 
+		if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD)
         && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) 
         && [hash40("attack_s3_s"), hash40("attack_s4_s"), hash40("attack_lw4"), hash40("attack_air_f"), hash40("attack_air_b"), hash40("attack_air_lw"), hash40("special_n"), hash40("special_air_n"), hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind)
         && DISCHARGE_ACTIVE[entry_id] != true {
-            CAN_ADD[entry_id] = false;
+            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
             ELECTRIC_HIT[entry_id] += 1;
         };
         if ELECTRIC_HIT[entry_id] > 5 {
@@ -239,11 +211,11 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
         }
         //Shield Special
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL
-        && SHIELD_SPECIAL[entry_id] == true {
+        && WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
         }
         if motion_kind == hash40("special_shield") {
-            SHIELD_SPECIAL[entry_id] = false;
+            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
             if ELECTRIC_HIT[entry_id] >= 5 {
                 DISCHARGE_ACTIVE[entry_id] = true;
                 ELECTRIC_HIT[entry_id] = 0;
@@ -380,7 +352,7 @@ pub fn pichu_frame(fighter: &mut L2CFighterCommon) {
                         StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
                     };
                 }
-                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0  {
+                else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0 {
                     StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
                 }
                 else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4) != 0 

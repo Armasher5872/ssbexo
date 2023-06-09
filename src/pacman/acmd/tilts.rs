@@ -1,17 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Up Tilt
 #[acmd_script( agent = "pacman", script = "game_attackhi3", category = ACMD_GAME)]

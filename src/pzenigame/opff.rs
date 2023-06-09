@@ -1,16 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_PZENIGAME )]
 fn squirtle_frame(fighter: &mut L2CFighterCommon) {
@@ -33,11 +21,11 @@ fn squirtle_frame(fighter: &mut L2CFighterCommon) {
         }
         //Shield Special
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL
-        && SHIELD_SPECIAL[entry_id] == true {
+        && WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
         }
         if motion_kind == hash40("special_shield") {
-            SHIELD_SPECIAL[entry_id] = false;
+            WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
         };
         if motion_kind == hash40("special_shield") && frame == 50.0 {
             if RAIN_DANCE_ACTIVE[entry_id] == false || RAIN_DANCE_FRAME[entry_id] != 600.0 {

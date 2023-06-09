@@ -1,27 +1,4 @@
-#![allow(
-	unused_macros,
-	unused_mut,
-    unused_parens
-)]
-use {
-    crate::functions::{
-        ext::*,
-        variables::*,
-    },
-	skyline::hooks::{
-		InlineCtx,
-		Region,
-		getRegionAddress
-    },
-    smash::{
-        app::{
-			lua_bind::*,
-			*
-		},
-		hash40,
-        lib::lua_const::*,
-    }
-};
+use super::*;
 
 //Related to Param Edits
 fn find_subsequence(haystack: &[u8], needle: &[u8]) -> Option<usize> {
@@ -128,7 +105,7 @@ pub unsafe fn get_param_float_replace(module_accessor: u64, param_type: u64, par
 		if fighter_kind == *FIGHTER_KIND_MEWTWO {
 			if param_type == hash40("ground_brake") {
 				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 0.0;
+					return 0.04;
 				}
 				else {
 					return 0.0754;

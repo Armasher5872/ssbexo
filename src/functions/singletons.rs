@@ -1,7 +1,4 @@
-#![allow(dead_code)]
-use std::sync::Once;
-use skyline::nn::ro::LookupSymbol;
-use smash::app::*;
+use super::*;
 
 // temporary until they are in skyline-smash
 pub type LuaManager = u8;

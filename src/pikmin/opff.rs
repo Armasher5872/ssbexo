@@ -1,16 +1,5 @@
 //Credit to Championship Edition
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::lua_bind::*, 
-        hash40,
-        lib::{
-            lua_const::*, 
-        },
-        lua2cpp::L2CFighterBase
-    },
-    smashline::*,
-};
+use super::*;
 
 #[weapon_frame( agent = WEAPON_KIND_PIKMIN_PIKMIN )]
 fn pikmin_functions(fighter: &mut L2CFighterBase) {

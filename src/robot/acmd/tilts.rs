@@ -1,21 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::{
-        ext::*,
-        variables::*,
-    },
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Up Tilt
 #[acmd_script( agent = "robot", script = "game_attackhi3", category = ACMD_GAME)]

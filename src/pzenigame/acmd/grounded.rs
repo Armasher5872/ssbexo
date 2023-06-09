@@ -1,17 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Jab 3 ACMD
 #[acmd_script( agent = "pzenigame", script = "game_attack13", category = ACMD_GAME)]

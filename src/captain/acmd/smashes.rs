@@ -1,21 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::{
-        ext::*,
-        variables::*,
-    },
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lua2cpp::L2CAgentBase,
-        lib::lua_const::*,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Forward Smash ACMD
 #[acmd_script( agent = "captain", script = "game_attacks4", category = ACMD_GAME)]

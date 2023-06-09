@@ -1,19 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Forward Smash ACMD
 #[acmd_script( agent = "ness", script = "game_attacks4", category = ACMD_GAME)]
@@ -33,7 +18,7 @@ unsafe fn ssbuexo_ness_forward_smash_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 21.0);
     if macros::is_excute(fighter) {
         if OFFENSE_UP_ACTIVE[entry_id] == true {
-            if FULL_SMASH_ATTACK[entry_id] == true {
+            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("haver"), 17.0, 361, 67, 0, 70, 2.3, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NESS_BAT, *ATTACK_REGION_BAT);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("haver"), 19.0, 361, 67, 0, 70, 2.6, 0.0, 3.85, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NESS_BAT, *ATTACK_REGION_BAT);
                 macros::ATTACK(fighter, 2, 0, Hash40::new("haver"), 25.0, 361, 67, 0, 70, 3.0, 0.0, 7.7, 0.0, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BAT, *ATTACK_REGION_BAT);
@@ -44,7 +29,7 @@ unsafe fn ssbuexo_ness_forward_smash_acmd(fighter: &mut L2CAgentBase) {
                 macros::ATTACK(fighter, 2, 0, Hash40::new("haver"), 21.0, 361, 67, 0, 70, 3.0, 0.0, 7.7, 0.0, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BAT, *ATTACK_REGION_BAT);
             }
         }
-        else if FULL_SMASH_ATTACK[entry_id] == true
+        else if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK)
         && OFFENSE_UP_ACTIVE[entry_id] != true {
             macros::ATTACK(fighter, 0, 0, Hash40::new("haver"), 15.0, 361, 67, 0, 70, 2.3, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NESS_BAT, *ATTACK_REGION_BAT);
             macros::ATTACK(fighter, 1, 0, Hash40::new("haver"), 17.0, 361, 67, 0, 70, 2.6, 0.0, 3.85, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_NESS_BAT, *ATTACK_REGION_BAT);
@@ -59,7 +44,7 @@ unsafe fn ssbuexo_ness_forward_smash_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 23.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        FULL_SMASH_ATTACK[entry_id] = false;
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     }
     frame(fighter.lua_state_agent, 31.0);
     if macros::is_excute(fighter) {
@@ -82,7 +67,7 @@ unsafe fn ssbuexo_ness_forward_smash_effect(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 20.0);
     if macros::is_excute(fighter) {
-        if FULL_SMASH_ATTACK[entry_id] == true {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
             macros::EFFECT(fighter, Hash40::new("ness_psi_atk"), Hash40::new("haver"), 0, 0, 0, 0, -90, 0, 0.6, 0, 0, 0, 0, 0, 360, true);
             macros::EFFECT(fighter, Hash40::new("ness_psi_atk"), Hash40::new("haver"), 0, 0, 6, 0, -90, 0, 0.6, 0, 0, 0, 0, 0, 360, true);
             macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("ness_smash_arc"), Hash40::new("ness_smash_arc"), Hash40::new("top"), 2, 4, 2, 0, 0, 13, 1, true, *EF_FLIP_YZ);

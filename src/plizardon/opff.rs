@@ -1,16 +1,5 @@
 //The reason all the opffs are in this file instead of their respective fighters is because for some reason, the game won't allow the auras to work if I put them in there
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_PLIZARDON )]
 fn charizard_frame(fighter: &mut L2CFighterCommon) {

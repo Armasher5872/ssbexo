@@ -1,17 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            sv_animcmd::*,
-            lua_bind::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Dancing Blade 1 ACMD
 #[acmd_script( agent = "marth", script = "game_specials1", category = ACMD_GAME)]

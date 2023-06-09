@@ -1,14 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-    },
-    smashline::*,
-};
-
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_MIIFIGHTER )]
 fn mii_brawler_frame(fighter: &mut L2CFighterCommon) {

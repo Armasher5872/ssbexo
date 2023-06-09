@@ -1,17 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lua2cpp::L2CAgentBase,
-        lib::lua_const::*,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Dash Attack ACMD
 #[acmd_script( agent = "pikachu", script = "game_attackdash", category = ACMD_GAME)]

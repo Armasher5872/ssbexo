@@ -1,45 +1,23 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_information
-        },
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_MEWTWO )]
 fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let motion_kind = MotionModule::motion_kind(module_accessor);
-        let status_kind = StatusModule::status_kind(module_accessor);
-        let frame = MotionModule::frame(module_accessor);
-        let point_offset_x = PostureModule::lr(fighter.module_accessor) * (FUTURESIGHT_X[entry_id] - PostureModule::pos_x(fighter.module_accessor));
-        let point_offset_y = FUTURESIGHT_Y[entry_id] - PostureModule::pos_y(fighter.module_accessor);
+        let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let motion_kind = MotionModule::motion_kind(boma);
+        let status_kind = StatusModule::status_kind(boma);
+        let frame = MotionModule::frame(boma);
+        let point_offset_x = PostureModule::lr(boma) * (FUTURESIGHT_X[entry_id] - PostureModule::pos_x(boma));
+        let point_offset_y = FUTURESIGHT_Y[entry_id] - PostureModule::pos_y(boma);
         //Stored Power Addition
-        if !sv_information::is_ready_go()
-        || [*FIGHTER_STATUS_KIND_WIN, *FIGHTER_STATUS_KIND_LOSE, *FIGHTER_STATUS_KIND_DEAD].contains(&status_kind) {
-            STORED_POWER_ENABLED[entry_id] = 0;
-            STORED_POWER_POINT[entry_id] = 0;
-            HAS_FUTURESIGHT[entry_id] = false;
-            CAN_ADD[entry_id] = false;
-        }
         if frame < 2.0 { 
-			CAN_ADD[entry_id] = true;
+            WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
 		};
-        if CAN_ADD[entry_id] == true 
-        && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)
+        if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD)
+        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)
         && STORED_POWER_ENABLED[entry_id] == 0 {
-			CAN_ADD[entry_id] = false;
+			WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
 			STORED_POWER_POINT[entry_id] += 7;
 		};
         if STORED_POWER_POINT[entry_id] >= 100 {
@@ -50,20 +28,20 @@ fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
         }
         //Dodge Cancels
         if [*FIGHTER_STATUS_KIND_ESCAPE, *FIGHTER_STATUS_KIND_ESCAPE_B, *FIGHTER_STATUS_KIND_ESCAPE_F, *FIGHTER_STATUS_KIND_ESCAPE_AIR].contains(&status_kind) {
-            if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_HI, true);
+            if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_HI) != 0 {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, true);
             }
         }
         //Ghost Dash
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
             if (6.0..=8.0).contains(&frame) {
-                if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) == true {
+                if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) == true {
                     GHOST_DASH_ENABLED[entry_id] = true;
                 }
             }
             if (9.0..21.0).contains(&frame) {
                 if GHOST_DASH_ENABLED[entry_id] == true {
-                    ModelModule::set_visibility(module_accessor, false);
+                    ModelModule::set_visibility(boma, false);
                 }
             }
             if frame > 21.0 {
@@ -74,15 +52,15 @@ fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
             GHOST_DASH_ENABLED[entry_id] = false;
         }
         if GHOST_DASH_ENABLED[entry_id] == false {
-            ModelModule::set_visibility(module_accessor, true);
+            ModelModule::set_visibility(boma, true);
         }
         //Shield Special
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL
-        && SHIELD_SPECIAL[entry_id] == true {
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
+        && WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL) {
+            MotionModule::change_motion(boma, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
         }
         if motion_kind == hash40("special_shield") {
-            SHIELD_SPECIAL[entry_id] = false;
+            WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
             STORED_POWER_ENABLED[entry_id] = 1;
         };
         STORED_POWER_TIMER[entry_id] -= 1;
@@ -126,18 +104,18 @@ fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
                 STORED_POWER_POINT[entry_id] -= 2;
                 STORED_POWER_TIMER[entry_id] = 60;
             }
-            if DAMAGED[entry_id] == true {
+            if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
                 STORED_POWER_POINT[entry_id] -= 10;
-                DAMAGED_PREVENT[entry_id] = true;
+                WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
             }
             //Neutral Special
             if status_kind == *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_N_CANCEL {
                 if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-                    if WorkModule::get_int(module_accessor, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-                        WorkModule::set_int(module_accessor, *STATUS_KIND_NONE, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
+                    if WorkModule::get_int(boma, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS) == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+                        WorkModule::set_int(boma, *STATUS_KIND_NONE, *FIGHTER_MEWTWO_SPECIAL_N_STATUS_WORK_ID_INT_CANCEL_STATUS);
                     }
-                    if MotionModule::is_end(module_accessor) {
-                        StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL_AERIAL, false);
+                    if MotionModule::is_end(boma) {
+                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL_AERIAL, false);
                     }
                 }
             }
@@ -193,7 +171,7 @@ fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
                     macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_explosion_sign"), false, false);
                     macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_metamon_aura"), false, false);
                     macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_explosion_flash"), false, false);
-                    AttackModule::clear(module_accessor, 7, false);
+                    AttackModule::clear(boma, 7, false);
                 }
             }
             //Up Special
@@ -207,9 +185,9 @@ fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
                 if STORED_POWER_ENABLED[entry_id] == 1
                 && frame >= 4.0 {
-                    CancelModule::enable_cancel(fighter.module_accessor);
+                    CancelModule::enable_cancel(boma);
                 }
-                if CancelModule::is_enable_cancel(fighter.module_accessor) {
+                if CancelModule::is_enable_cancel(boma) {
                     fighter.sub_wait_ground_check_common(false.into());
                     SPEED_ADD[entry_id] = true;
                 }
@@ -217,27 +195,27 @@ fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
             if SPEED_ADD[entry_id] == true
             && fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR
             && ![*FIGHTER_STATUS_KIND_FALL_SPECIAL, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_WAIT].contains(&status_kind) {
-                WorkModule::on_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
+                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
                 macros::SET_SPEED_EX(fighter, 7.5, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-                StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
-                WorkModule::off_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
+                WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
                 STORED_POWER_POINT[entry_id] -= 20;
                 SPEED_ADD[entry_id] = false;
             }
             //Up Special Facing Direction
-            if status_kind == *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_2 && MotionModule::is_end(module_accessor) {
-                if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                    PostureModule::set_stick_lr(module_accessor, 0.0);
-                    PostureModule::update_rot_y_lr(module_accessor);
+            if status_kind == *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_2 && MotionModule::is_end(boma) {
+                if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+                    PostureModule::set_stick_lr(boma, 0.0);
+                    PostureModule::update_rot_y_lr(boma);
                 }
             }
             //Actionable Teleport
             if status_kind == *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3 && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR && frame > 8.0 {
-                if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+                if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
                     UP_SPECIAL_CANCEL[entry_id] = true;
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(boma);
                     if GROUNDED_TELEPORT[entry_id] != true {
-                        WorkModule::inc_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+                        WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
                     }
                 }
             }
@@ -250,9 +228,9 @@ fn mewtwo_frame(fighter: &mut L2CFighterCommon) {
                     UP_SPECIAL_JUMP_REFRESH[entry_id] = false;
                 }
             }
-            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_STATUS_KIND_JUMP_AERIAL) && UP_SPECIAL_JUMP_REFRESH[entry_id] {
-                if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) == WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                    WorkModule::dec_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && (StatusModule::prev_status_kind(boma, 0) == *FIGHTER_STATUS_KIND_JUMP_AERIAL) && UP_SPECIAL_JUMP_REFRESH[entry_id] {
+                if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) == WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+                    WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
                 }
                 UP_SPECIAL_JUMP_REFRESH[entry_id] = false;
             }

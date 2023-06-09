@@ -1,17 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lua2cpp::L2CAgentBase,
-        lib::lua_const::*,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Taunt Effect
 #[acmd_script( agent = "ganon", scripts = ["effect_appealhir", "effect_appealhil", "effect_appealsr", "effect_appealsl", "effect_appeallwr", "effect_appeallwl"], category = ACMD_EFFECT)]
@@ -67,7 +54,7 @@ unsafe fn ssbuexo_armstrong_down_taunt_sound(_fighter: &mut L2CAgentBase)
 {}
 
 //Ledge Attack Effect
-#[acmd_script( agent = "ganon", script = "effect_cliffattack", category = ACMD_EFFECT, low_priority )]
+#[acmd_script( agent = "ganon", script = "effect_cliffattack", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_armstrong_ledge_attack_effect(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 17.0);
     if macros::is_excute(fighter) {
@@ -92,7 +79,7 @@ unsafe fn ssbuexo_armstrong_jab_acmd(fighter: &mut L2CAgentBase)
     MotionModule::set_rate(fighter.module_accessor, 1.75);
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 1.2);
-        DamageModule::set_reaction_mul(fighter.module_accessor, 0.65);
+        DamageModule::set_reaction_mul(fighter.module_accessor, 0.35);
     }
     frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
@@ -130,7 +117,7 @@ unsafe fn ssbuexo_armstrong_jab_effect(fighter: &mut L2CAgentBase)
 unsafe fn ssbuexo_armstrong_dash_attack_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 6.0);
-        DamageModule::set_reaction_mul(fighter.module_accessor, 0.65);
+        DamageModule::set_reaction_mul(fighter.module_accessor, 0.35);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {

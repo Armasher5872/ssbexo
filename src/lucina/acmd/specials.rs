@@ -1,19 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        lua2cpp::L2CAgentBase, 
-        phx::Hash40,
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Grounded Neutral Special Max ACMD
 #[acmd_script( agent = "lucina", script = "game_specialnendmax", category = ACMD_GAME)]

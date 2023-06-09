@@ -1,13 +1,4 @@
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterBase
-    },
-    smashline::*,
-};
+use super::*;
 
 #[weapon_frame( agent = WEAPON_KIND_ROSETTA_TICO )]
 fn luma_functions(fighter: &mut L2CFighterBase) {

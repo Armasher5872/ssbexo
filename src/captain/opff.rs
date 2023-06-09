@@ -1,29 +1,16 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lua2cpp::L2CFighterCommon,
-        lib::lua_const::*,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_CAPTAIN )]
 fn captain_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let motion_kind = MotionModule::motion_kind(module_accessor);
-        let status_kind = StatusModule::status_kind(module_accessor);
-        let frame = MotionModule::frame(module_accessor);
-        let stick_y = ControlModule::get_stick_y(module_accessor);
+        let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let motion_kind = MotionModule::motion_kind(boma);
+        let status_kind = StatusModule::status_kind(boma);
+        let frame = MotionModule::frame(boma);
+        let stick_y = ControlModule::get_stick_y(boma);
+        let parry_timer = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
+        let parried = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
         //Parry Voice
         if FighterUtil::get_shield_type_of_guard(fighter.global_table[FIGHTER_KIND].get_i32()) as i32 == *SHIELD_TYPE_JUST_SHIELD {
             macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
@@ -31,41 +18,41 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         }
         if [hash40("just_shield_off"), hash40("just_shield")].contains(&motion_kind) {
             if (0.0..5.0).contains(&frame) {
-                PARRIED[entry_id] = 1;
-                PARRY_TIMER[entry_id] = 60;
+                WorkModule::set_int(boma, 1, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
+                WorkModule::set_int(boma, 60, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
             }
         }
-        if PARRY_TIMER[entry_id] > 0 {
-            PARRY_TIMER[entry_id] -= 1;
+        if parry_timer > 0 {
+            WorkModule::dec_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
         }
-        if PARRY_TIMER[entry_id] == 30 {
+        if parry_timer == 30 {
             macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal02"));
         }
-        if PARRY_TIMER[entry_id] <= 0
-        && PARRIED[entry_id] == 1 {
-            PARRIED[entry_id] = 0;
+        if parry_timer <= 0
+        && parried == 1 {
+            WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
         }
         //Jab Cancels
         if [hash40("attack_11"), hash40("attack_12")].contains(&motion_kind)
-        && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) {
-            if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_S3, true);
+        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+            if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3) != 0 {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, true);
             } 
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
+            else if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
             } 
-            else if (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3) != 0 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_ATTACK_LW3, true);
+            else if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3) != 0 {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, true);
             };
         };
         //Fair
         if motion_kind == hash40("attack_air_f") {
             if (0.0..14.0).contains(&frame) {
-                if AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) && LAST_ATTACK_HITBOX_ID == 0 {
+                if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD) && LAST_ATTACK_HITBOX_ID == 0 {
                     macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
                     macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
-                    if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true 
-                    && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) != true {
+                    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true 
+                    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) != true {
                         HYPE_HIT[entry_id] = true;
                     };
                 }
@@ -88,11 +75,11 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         }
         //Shield Special
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL
-        && SHIELD_SPECIAL[entry_id] == true {
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
+        && WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL) {
+            MotionModule::change_motion(boma, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
         }
         if motion_kind == hash40("special_shield") {
-            SHIELD_SPECIAL[entry_id] = false;
+            WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
             if HYPE_HIT[entry_id] == true {
                 BOOST_INSTALL_ACTIVE[entry_id] = true;
                 BOOST_INSTALL_TIMER[entry_id] = 650;
@@ -101,9 +88,9 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         //Boost Install
         if BOOST_INSTALL_ACTIVE[entry_id] == true {
             HYPE_HIT[entry_id] = false;
-            if DAMAGED[entry_id] == true {
+            if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
                 BOOST_INSTALL_TIMER[entry_id] -= 120;
-                DAMAGED_PREVENT[entry_id] = true;
+                WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
             }
             if BOOST_INSTALL_TIMER[entry_id] > 0 {
                 BOOST_INSTALL_TIMER[entry_id] -= 1;
@@ -121,49 +108,49 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
                 BOOST_INSTALL_GFX_COUNTER[entry_id] = 0;
             }
             //Damage Increase
-            DamageModule::set_damage_mul(module_accessor, 1.25);
-            DamageModule::set_reaction_mul(module_accessor, 1.25);
+            DamageModule::set_damage_mul(boma, 1.25);
+            DamageModule::set_reaction_mul(boma, 1.25);
             //Snowballing Hitflow
             if frame < 2.0 { // resets at the start of a move the inability to add further motion rate
-                CAN_ADD[entry_id] = true;
+                WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
             };
-            if CAN_ADD[entry_id] == true 
-            && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) {
-                CAN_ADD[entry_id] = false;
+            if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD)
+            && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
                 BOOST_INSTALL_MOTION_RATE[entry_id] += 0.05;
             };
             if BOOST_INSTALL_MOTION_RATE[entry_id] > 1.3 {
                 BOOST_INSTALL_MOTION_RATE[entry_id] = 1.3;
             }
-            if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)
-            && !AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-                HITFLOW[entry_id] = true;
+            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)
+            && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
+                WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
             };
-            if HITFLOW[entry_id] == true {
-                MotionModule::set_rate(fighter.module_accessor, BOOST_INSTALL_MOTION_RATE[entry_id]);
+            if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW) {
+                MotionModule::set_rate(boma, BOOST_INSTALL_MOTION_RATE[entry_id]);
             }
-            if MotionModule::end_frame(module_accessor) - frame <= 2.0
-            || CancelModule::is_enable_cancel(module_accessor) {
-                HITFLOW[entry_id] = false;
-                MotionModule::set_rate(module_accessor, 1.0);
+            if MotionModule::end_frame(boma) - frame <= 2.0
+            || CancelModule::is_enable_cancel(boma) {
+                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
+                MotionModule::set_rate(boma, 1.0);
             };
             //Hitfalling Aerials
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR
-            && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT)
-            && (ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0
+            && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)
+            && (ControlModule::get_command_flag_cat(boma, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0
             && stick_y < -0.66
-            && KineticModule::get_sum_speed_y(module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) <= 0.0 {
-                WorkModule::set_flag(module_accessor, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+            && KineticModule::get_sum_speed_y(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) <= 0.0 {
+                WorkModule::set_flag(boma, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
             };
             //Change Up Tilt
             if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_S_END, true);
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_S_END, true);
             }
             //Aerial Down Special Return Double Jump
             if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR
             && [*FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_WALL_END].contains(&status_kind)
-            && WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) == WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                WorkModule::dec_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+            && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) == WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
+                WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
             }
         }
         //Reset Boost Install
@@ -173,18 +160,18 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         if BOOST_INSTALL_ACTIVE[entry_id] == false {
             BOOST_INSTALL_TIMER[entry_id] = 0;
             BOOST_INSTALL_MOTION_RATE[entry_id] = 1.0;
-            DamageModule::set_damage_mul(module_accessor, 1.0);
-            DamageModule::set_reaction_mul(module_accessor, 1.0);
+            DamageModule::set_damage_mul(boma, 1.0);
+            DamageModule::set_reaction_mul(boma, 1.0);
         }
         //Neutral Special
         if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind)
-        && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0
-        && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
+        && (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0
+        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, true);
         };
         if [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_TURN].contains(&status_kind) {
-            if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true
-            && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_SHIELD) != true {
+            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true
+            && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) != true {
                 HYPE_HIT[entry_id] = true;
                 FALCON_PUNCH_HIT[entry_id] = true;
             };
@@ -196,24 +183,24 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
         && FALCON_PUNCH_HIT[entry_id] == true
         && frame > 70.0 {
-            CancelModule::enable_cancel(module_accessor);
+            CancelModule::enable_cancel(boma);
         }
         if status_kind == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_TURN
         && FALCON_PUNCH_HIT[entry_id] == true
         && frame > 104.0 {
-            CancelModule::enable_cancel(module_accessor);
+            CancelModule::enable_cancel(boma);
         }
         if status_kind == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_TURN 
         && (frame > 25.0 && frame < 40.0) 
-        && (ControlModule::get_stick_x(module_accessor)*PostureModule::lr(module_accessor)) < -0.5
+        && (ControlModule::get_stick_x(boma)*PostureModule::lr(boma)) < -0.5
         && FALCON_PUNCH_TURN_COUNT[entry_id] <= 15.0 {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_TURN, true);
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_TURN, true);
         };
         if status_kind != *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_TURN {
             FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
         };
         if FALCON_PUNCH_TURN_COUNT[entry_id] == 0.0 {
-            AttackModule::set_power_up(module_accessor, 1.0);
+            AttackModule::set_power_up(boma, 1.0);
         };
         if ![*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_TURN].contains(&status_kind) {
             FALCON_PUNCH_HIT[entry_id] = false;
@@ -225,8 +212,8 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
         //Down Special
         if motion_kind == hash40("special_air_lw") {
             let cat = fighter.global_table[CMD_CAT1].get_int() as i32;
-            if ((cat & *FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_LEFT) != 0 && GroundModule::get_touch_flag(module_accessor) == *GROUND_TOUCH_FLAG_LEFT as u64) || ((cat & *FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_RIGHT) != 0 && GroundModule::get_touch_flag(module_accessor) == *GROUND_TOUCH_FLAG_RIGHT as u64) {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WALL_JUMP, true);
+            if ((cat & *FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_LEFT) != 0 && GroundModule::get_touch_flag(boma) == *GROUND_TOUCH_FLAG_LEFT as u64) || ((cat & *FIGHTER_PAD_CMD_CAT1_FLAG_WALL_JUMP_RIGHT) != 0 && GroundModule::get_touch_flag(boma) == *GROUND_TOUCH_FLAG_RIGHT as u64) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WALL_JUMP, true);
             }
         }
     }
@@ -235,18 +222,18 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
 #[fighter_frame( agent = FIGHTER_KIND_KIRBY )]
 fn kirby_captain_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let status_kind = StatusModule::status_kind(module_accessor);
-        let frame = MotionModule::frame(module_accessor);
-        if (WorkModule::get_int(module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == *FIGHTER_KIND_CAPTAIN)
+        let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let status_kind = StatusModule::status_kind(boma);
+        let frame = MotionModule::frame(boma);
+        if (WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == *FIGHTER_KIND_CAPTAIN)
         && [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind)
-        && (ControlModule::get_command_flag_cat(module_accessor, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0
-        && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, true);
+        && (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0
+        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, true);
         };
         if [*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
-            if AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) == true {
+            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true {
                 FALCON_PUNCH_HIT[entry_id] = true;
             };
             if FALCON_PUNCH_HIT[entry_id] == true
@@ -257,27 +244,27 @@ fn kirby_captain_frame(fighter: &mut L2CFighterCommon) {
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N
         && FALCON_PUNCH_HIT[entry_id] == true
         && frame > 70.0 {
-            CancelModule::enable_cancel(module_accessor);
+            CancelModule::enable_cancel(boma);
         }
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN
         && FALCON_PUNCH_HIT[entry_id] == true
         && frame > 104.0 {
-            CancelModule::enable_cancel(module_accessor);
+            CancelModule::enable_cancel(boma);
         }
         if ![*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
             FALCON_PUNCH_HIT[entry_id] = false;
         }
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN 
         && (frame > 25.0 && frame < 40.0) 
-        && (ControlModule::get_stick_x(module_accessor)*PostureModule::lr(module_accessor)) < -0.5
+        && (ControlModule::get_stick_x(boma)*PostureModule::lr(boma)) < -0.5
         && KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] <= 15.0 {
-            StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN, true);
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN, true);
         };
         if status_kind != *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN {
             KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
         }
         if KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] == 0.0 {
-            AttackModule::set_power_up(module_accessor, 1.0);
+            AttackModule::set_power_up(boma, 1.0);
         }
     }
 }

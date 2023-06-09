@@ -1,22 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::{
-            Hash40,
-            Vector3f
-        }
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Up Special Wall Bounce Forward ACMD
 #[acmd_script( agent = "ridley", script = "game_specialairhiwallf", category = ACMD_GAME )]
@@ -73,15 +55,15 @@ unsafe fn ssbuexo_ridley_up_special_wall_bounce_up_acmd(fighter : &mut L2CAgentB
 //Grounded Down Special Stab
 #[acmd_script( agent = "ridley", script = "game_speciallwstab", category = ACMD_GAME )]
 unsafe fn ssbuexo_ridley_grounded_down_special_stab_acmd(fighter : &mut L2CAgentBase) {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     frame(fighter.lua_state_agent, 30.0);
     if macros::is_excute(fighter) {
         if WorkModule::get_int(fighter.module_accessor, *FIGHTER_RIDLEY_INSTANCE_WORK_ID_INT_DISABLE_SPECIAL_LW_FINISH_COUNT) == 0 {
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 45.0, 25, 10, 0, 70, 2.5, 0.0, 8.0, 28.5, Some(0.0), Some(7.0), Some(35.5), 0.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_BODY_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_TAIL);
             AttackModule::set_no_dead_all(fighter.module_accessor, true, false);
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                SPECIAL_ZOOM_GFX[entry_id] += 1;
-                if SPECIAL_ZOOM_GFX[entry_id] < 2 {
+                WorkModule::inc_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+                if special_zoom_gfx < 2 {
                     SlowModule::set_whole(fighter.module_accessor, 8, 80);
                     macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
                     EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.0, false, 0, 0, 0, 0, 0, false, false);
@@ -89,7 +71,7 @@ unsafe fn ssbuexo_ridley_grounded_down_special_stab_acmd(fighter : &mut L2CAgent
                     macros::PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
                     macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
                 }
-                if SPECIAL_ZOOM_GFX[entry_id] >= 4 {
+                if special_zoom_gfx >= 4 {
                     SlowModule::clear_whole(fighter.module_accessor);
                     CameraModule::reset_all(fighter.module_accessor);
                     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), false, false);
@@ -100,8 +82,8 @@ unsafe fn ssbuexo_ridley_grounded_down_special_stab_acmd(fighter : &mut L2CAgent
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_RIDLEY_INSTANCE_WORK_ID_FLAG_DISABLE_CRITICAL_SPECIAL_LW) == false {
             macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 45.0, 25, 10, 0, 70, 2.5, 0.0, 8.0, 28.5, Some(0.0), Some(7.0), Some(35.5), 0.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_TAIL);
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                SPECIAL_ZOOM_GFX[entry_id] += 1;
-                if SPECIAL_ZOOM_GFX[entry_id] < 2 {
+                WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+                if special_zoom_gfx < 2 {
                     SlowModule::set_whole(fighter.module_accessor, 8, 80);
                     macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
                     EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.0, false, 0, 0, 0, 0, 0, false, false);
@@ -109,7 +91,7 @@ unsafe fn ssbuexo_ridley_grounded_down_special_stab_acmd(fighter : &mut L2CAgent
                     macros::PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
                     macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
                 }
-                if SPECIAL_ZOOM_GFX[entry_id] >= 4 {
+                if special_zoom_gfx >= 4 {
                     SlowModule::clear_whole(fighter.module_accessor);
                     CameraModule::reset_all(fighter.module_accessor);
                     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), false, false);

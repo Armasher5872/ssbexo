@@ -1,16 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        lua2cpp::L2CAgentBase,
-        lib::lua_const::*,
-        phx::Hash40,
-    },
-    smash_script::*,
-};
+use super::*;
 
 pub unsafe fn inkling_generate_squid_helper(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_EXIST_SQUID) {
@@ -32,7 +20,4 @@ pub unsafe fn inkling_generate_squid_helper(fighter: &mut L2CAgentBase) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FORCE_LOUPE);
         }
     }
-}
-
-pub fn install() {
 }

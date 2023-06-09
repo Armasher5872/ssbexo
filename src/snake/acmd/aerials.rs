@@ -1,20 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::{
-            Hash40,
-            Vector3f
-        }
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Nair ACMD
 #[acmd_script( agent = "snake", script = "game_attackairn", category = ACMD_GAME)]

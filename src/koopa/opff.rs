@@ -1,39 +1,17 @@
 //Credit to Ultimate S
-use {
-    crate::functions::{
-        ext::*,
-        variables::*,
-    },
-    smash::{
-        lua2cpp::{
-            L2CFighterBase,
-            L2CFighterCommon
-        },
-        hash40,
-        phx::{
-            Hash40,
-            Vector3f
-        },
-        app::{
-            lua_bind::*,
-            *
-        },
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_KOOPA )]
 fn koopa_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let status_kind = StatusModule::status_kind(module_accessor);
-        let motion_kind = MotionModule::motion_kind(module_accessor);
-        let frame = MotionModule::frame(module_accessor);
-        let end_frame = MotionModule::end_frame(module_accessor);
-        let lr = PostureModule::lr(module_accessor);
+        let boma = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let status_kind = StatusModule::status_kind(boma);
+        let motion_kind = MotionModule::motion_kind(boma);
+        let frame = MotionModule::frame(boma);
+        let end_frame = MotionModule::end_frame(boma);
+        let lr = PostureModule::lr(boma);
+        let special_zoom_gfx = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         if ![*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4_START].contains(&status_kind) {
             KOOPA_OK_SMASH[entry_id] = false;
             KOOPA_OK_SMASH_GFX[entry_id] = 0;
@@ -43,25 +21,21 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
             KOOPA_GREAT_SMASH_GFX[entry_id] = 0;
             KOOPA_EXCELLENT_SMASH[entry_id] = false;
             KOOPA_EXCELLENT_SMASH_GFX[entry_id] = 0;
-            SPECIAL_ZOOM_GFX[entry_id] = 0;
+            WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         }
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD {
-            if frame >= 0.0
-            && frame < 19.0 {
+            if (0.0..=19.0).contains(&frame) {
                 KOOPA_OK_SMASH[entry_id] = true;
             }
-            else if frame >= 19.0
-            && frame < 37.0 {
+            else if (19.0..=37.0).contains(&frame) {
                 KOOPA_GOOD_SMASH[entry_id] = true;
                 KOOPA_OK_SMASH[entry_id] = false;
             }
-            else if frame >= 37.0
-            && frame < 54.0 {
+            else if (37.0..=54.0).contains(&frame) {
                 KOOPA_GREAT_SMASH[entry_id] = true;
                 KOOPA_GOOD_SMASH[entry_id] = false;
             }
-            else if frame >= 54.0
-            && frame < 58.0 {
+            else if (54.0..=58.0).contains(&frame) {
                 KOOPA_EXCELLENT_SMASH[entry_id] = true;
                 KOOPA_GREAT_SMASH[entry_id] = false;
             }
@@ -74,19 +48,19 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         }
         if [*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_S4].contains(&status_kind) {
             if KOOPA_EXCELLENT_SMASH[entry_id] == true {
-                if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    SPECIAL_ZOOM_GFX[entry_id] += 1;
-                    if SPECIAL_ZOOM_GFX[entry_id] < 2 {
-                        SlowModule::set_whole(module_accessor, 8, 80);
+                if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+                    WorkModule::inc_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+                    if special_zoom_gfx < 2 {
+                        SlowModule::set_whole(boma, 8, 80);
                         macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
-                        EffectModule::req_follow(module_accessor, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.0, false, 0, 0, 0, 0, 0, false, false);
+                        EffectModule::req_follow(boma, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.0, false, 0, 0, 0, 0, 0, false, false);
                         macros::PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
                         macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
                     }
-                    if SPECIAL_ZOOM_GFX[entry_id] >= 4 {
-                        SlowModule::clear_whole(module_accessor);
-                        CameraModule::reset_all(module_accessor);
-                        EffectModule::kill_kind(module_accessor, Hash40::new("sys_bg_criticalhit"), false, false);
+                    if special_zoom_gfx >= 4 {
+                        SlowModule::clear_whole(boma);
+                        CameraModule::reset_all(boma);
+                        EffectModule::kill_kind(boma, Hash40::new("sys_bg_criticalhit"), false, false);
                         macros::CAM_ZOOM_OUT(fighter);
                     }
                 }
@@ -169,13 +143,13 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         };
         if motion_kind == hash40("attack_air_lw") {
             if lr <= 0.0 {
-                PostureModule::set_lr(module_accessor, 1.0);
-                PostureModule::update_rot_y_lr(module_accessor);
+                PostureModule::set_lr(boma, 1.0);
+                PostureModule::update_rot_y_lr(boma);
             }
         }
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
         && [hash40("special_n_start"), hash40("special_air_n_start")].contains(&motion_kind) {
-            if ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL)
             || FIREBALL_TIMER[entry_id] > 0 {
                 CAN_FIREBALL[entry_id] = false;
             }
@@ -187,17 +161,17 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
             if CAN_FIREBALL[entry_id] == true {
                 if end_frame - frame < 5.0 {
                     FIREBALL_TIMER[entry_id] = 180;
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
                 };
                 if frame >= 19.0 {
                     FIREBALL_TIMER[entry_id] = 180;
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(boma);
                 };
-                MotionModule::set_rate(module_accessor, 0.775);
+                MotionModule::set_rate(boma, 0.775);
             }
             else {
-                if ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_end"), 1.0, 1.0, false, 0.0, false, false);
+                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    MotionModule::change_motion(boma, Hash40::new("special_n_end"), 1.0, 1.0, false, 0.0, false, false);
                 }
             }
         }
@@ -205,45 +179,45 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
             if CAN_FIREBALL[entry_id] == true {
                 if end_frame-frame < 5.0 {
                     FIREBALL_TIMER[entry_id] = 180;
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
                 };
                 if frame >= 19.0 {
                     FIREBALL_TIMER[entry_id] = 180;
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(boma);
                 };
-                MotionModule::set_rate(module_accessor, 0.775);
+                MotionModule::set_rate(boma, 0.775);
             }
             else {
-                if ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_end"), 1.0, 1.0, false, 0.0, false, false);
+                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    MotionModule::change_motion(boma, Hash40::new("special_air_n_end"), 1.0, 1.0, false, 0.0, false, false);
                 }
             }
         }
         if motion_kind == hash40("special_n_end") {
             if CAN_FIREBALL[entry_id] == true {
                 FIREBALL_TIMER[entry_id] = 180;
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
             }
             else {
                 if end_frame - frame < 5.0 {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
                 };
             }
         }
 		if motion_kind == hash40("special_air_n_end") {
             if CAN_FIREBALL[entry_id] == true {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
             }
             else {
                 if end_frame-frame < 5.0 {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
                 };
             }
         }
         if FIREBALL_TIMER[entry_id] > 0 {
             FIREBALL_TIMER[entry_id] -= 1;
         }
-        if ArticleModule::is_exist(module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
+        if ArticleModule::is_exist(boma, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
             if CAN_FIREBALL[entry_id] == true {
                 FIREBALL_GFX[entry_id] += 1;
             }
@@ -254,7 +228,7 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
         if CAN_FIREBALL[entry_id] == true {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, true);
         }
-        if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A].contains(&status_kind) && (StatusModule::prev_status_kind(module_accessor, 0) == *FIGHTER_STATUS_KIND_SPECIAL_HI | *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G) {
+        if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A].contains(&status_kind) && (StatusModule::prev_status_kind(boma, 0) == *FIGHTER_STATUS_KIND_SPECIAL_HI | *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G) {
             fighter.sub_transition_group_check_air_cliff();
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
             fighter.set_back_cliff_hangdata(20.0, 10.0);
@@ -266,70 +240,70 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
 #[fighter_frame( agent = FIGHTER_KIND_KIRBY )]
 fn kirby_koopa_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let module_accessor = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let motion_kind = MotionModule::motion_kind(module_accessor);
-        let frame = MotionModule::frame(module_accessor);
-        let end_frame = MotionModule::end_frame(module_accessor);
+        let boma = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let motion_kind = MotionModule::motion_kind(boma);
+        let frame = MotionModule::frame(boma);
+        let end_frame = MotionModule::end_frame(boma);
         if motion_kind == hash40("koopa_special_n") {
             if CAN_FIREBALL[entry_id] == true {
                 if end_frame - frame < 5.0 {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
                 };
                 if frame >= 19.0 {
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(boma);
                 };
-                MotionModule::set_rate(module_accessor, 0.775);
+                MotionModule::set_rate(boma, 0.775);
             }
             else {
-                if ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("koopa_special_n_end"), 1.0, 1.0, false, 0.0, false, false);
+                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    MotionModule::change_motion(boma, Hash40::new("koopa_special_n_end"), 1.0, 1.0, false, 0.0, false, false);
                 }
             }
         }
 		if motion_kind == hash40("koopa_special_air_n") {
             if CAN_FIREBALL[entry_id] == true {
                 if end_frame-frame < 5.0 {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
                 };
                 if frame >= 19.0 {
-                    CancelModule::enable_cancel(module_accessor);
+                    CancelModule::enable_cancel(boma);
                 };
-                MotionModule::set_rate(module_accessor, 0.775);
+                MotionModule::set_rate(boma, 0.775);
             }
             else {
-                if ControlModule::check_button_off(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new("koopa_special_air_n_end"), 1.0, 1.0, false, 0.0, false, false);
+                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    MotionModule::change_motion(boma, Hash40::new("koopa_special_air_n_end"), 1.0, 1.0, false, 0.0, false, false);
                 }
             }
         }
         if motion_kind == hash40("koopa_special_n_end") {
             if CAN_FIREBALL[entry_id] == true {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
             }
             else {
                 if end_frame - frame < 5.0 {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
                 };
             }
         }
 		if motion_kind == hash40("koopa_special_air_n_end") {
             if CAN_FIREBALL[entry_id] == true {
-                StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
             }
             else {
                 if end_frame-frame < 5.0 {
-                    StatusModule::change_status_request_from_script(module_accessor, *FIGHTER_STATUS_KIND_FALL, true);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
                 };
             }
         }
-        if ArticleModule::is_exist(module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
+        if ArticleModule::is_exist(boma, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
             if CAN_FIREBALL[entry_id] == true {
-                AttackModule::set_power_up(module_accessor, 0.2);
+                AttackModule::set_power_up(boma, 0.2);
                 FIREBALL_GFX[entry_id] += 1;
             }
             else {
-                AttackModule::set_power_up(module_accessor, 1.0);
+                AttackModule::set_power_up(boma, 1.0);
                 FIREBALL_GFX[entry_id] = 0;
             };
         }

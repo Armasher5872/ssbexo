@@ -1,18 +1,4 @@
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_SONIC )]
 fn sonic_frame(fighter: &mut L2CFighterCommon) {
@@ -25,12 +11,8 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
         let rand_num_8 = sv_math::rand(hash40("fighter"), 8);
         let rand_num_10 = sv_math::rand(hash40("fighter"), 10);
         let sonic_new_animation_hash = Hash40::new(match rand_num_8 {1|2 => "special_n_hit", 3..=4 => "special_n_hit_1", 5..=6 => "special_n_hit_2", _ => "special_n_hit_3"});
-        //Reset
-        if !sv_information::is_ready_go() {
-			SONIC_BOOST[entry_id] = 0.0;
-			CAN_ADD[entry_id] = false;
-            BOUNCE_BRACELET_POWER[entry_id] = 0.0;
-		};
+        let parried = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
+        let parry_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
         //Effect Clearing 
         if ![*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD_OFF, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_END, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_TURN, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_REBOUND, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD_JUMP, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING_START, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
             EffectModule::kill_kind(module_accessor, Hash40::new("sonic_spintrace_homing"), false, true);
@@ -45,12 +27,12 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
         //Boost Attack Addition Check
         if frame < 2.0
         && ![*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) { // resets at the start of a move the inability to add further boost charge
-			CAN_ADD[entry_id] = true;
+			WorkModule::set_flag(module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
 		};
-		if CAN_ADD[entry_id] == true 
+		if WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD)
         && AttackModule::is_infliction_status(module_accessor, *COLLISION_KIND_MASK_HIT) 
         && ![*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
-			CAN_ADD[entry_id] = false;
+			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
 			SONIC_BOOST[entry_id] += 1.0;
 		};
         //Boost Tally Removal/Prevention
@@ -104,17 +86,17 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
         //Parry Timer 
         if [hash40("just_shield_off"), hash40("just_shield")].contains(&motion_kind)
         && (0.0..5.0).contains(&frame)
-        && PARRIED[entry_id] != 1 {
-            PARRIED[entry_id] = 1;
-            PARRY_TIMER[entry_id] = 180;
+        && parried != 1 {
+            WorkModule::set_int(module_accessor, 1, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
+            WorkModule::set_int(module_accessor, 180, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
             SONIC_BOOST[entry_id] += 5.0;
         }
-        if PARRY_TIMER[entry_id] > 0 {
-            PARRY_TIMER[entry_id] -= 1;
+        if parry_timer > 0 {
+            WorkModule::dec_int(module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
         }
-        if PARRY_TIMER[entry_id] <= 0
-        && PARRIED[entry_id] == 1 {
-            PARRIED[entry_id] = 0;
+        if parry_timer <= 0
+        && parried == 1 {
+            WorkModule::set_int(module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
         }
         //Jab Cancel
         if [*FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK].contains(&status_kind)
@@ -194,7 +176,7 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
         && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
         && frame >= 30.0
         && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) != true
-        && PARRIED[entry_id] == 0 {
+        && parried == 0 {
             StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
         }
         //Fair

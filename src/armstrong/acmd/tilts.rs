@@ -1,17 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-        },
-        lua2cpp::L2CAgentBase,
-        lib::lua_const::*,
-        phx::Hash40,
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Forward Tilt ACMD
 #[acmd_script( agent = "ganon", script = "game_attacks3", category = ACMD_GAME)]
@@ -19,7 +6,7 @@ unsafe fn ssbuexo_armstrong_forward_tilt_acmd(fighter: &mut L2CAgentBase)
 {
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 6.0);
-        DamageModule::set_reaction_mul(fighter.module_accessor, 0.65);
+        DamageModule::set_reaction_mul(fighter.module_accessor, 0.35);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
@@ -44,7 +31,7 @@ unsafe fn ssbuexo_armstrong_forward_tilt_hi_acmd(fighter: &mut L2CAgentBase)
 {
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 6.0);
-        DamageModule::set_reaction_mul(fighter.module_accessor, 0.65);
+        DamageModule::set_reaction_mul(fighter.module_accessor, 0.35);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
@@ -69,7 +56,7 @@ unsafe fn ssbuexo_armstrong_forward_tilt_lw_acmd(fighter: &mut L2CAgentBase)
 {
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 6.0);
-        DamageModule::set_reaction_mul(fighter.module_accessor, 0.65);
+        DamageModule::set_reaction_mul(fighter.module_accessor, 0.35);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
@@ -172,7 +159,7 @@ unsafe fn ssbuexo_armstrong_up_tilt_acmd(fighter: &mut L2CAgentBase)
 {
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 5.0);
-        DamageModule::set_reaction_mul(fighter.module_accessor, 0.65);
+        DamageModule::set_reaction_mul(fighter.module_accessor, 0.35);
     }
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
@@ -240,7 +227,7 @@ unsafe fn ssbuexo_armstrong_down_tilt_acmd(fighter: &mut L2CAgentBase)
 {
     if macros::is_excute(fighter) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 4.5);
-        DamageModule::set_reaction_mul(fighter.module_accessor, 0.65);
+        DamageModule::set_reaction_mul(fighter.module_accessor, 0.35);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {

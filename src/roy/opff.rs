@@ -1,15 +1,4 @@
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        hash40,
-        lua2cpp::L2CFighterCommon,
-        lib::lua_const::*,
-        phx::Hash40
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_ROY )]
 fn roy_frame(fighter: &mut L2CFighterCommon) {
@@ -260,10 +249,6 @@ fn roy_frame(fighter: &mut L2CFighterCommon) {
         else {
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("roy_fire"), false, false);
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("roy_attack_fire"), false, false);
-        }
-        if [*FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD].contains(&status_kind)
-        && frame > 59.0 {
-            FULL_SMASH_ATTACK[entry_id] = true;
         }
         if motion_kind == hash40("special_s1")
         && (12.0..=32.0).contains(&frame)

@@ -1,18 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Wait 2 Expression
 #[acmd_script( agent = "koopa", script = "expression_wait2", category = ACMD_EXPRESSION )]

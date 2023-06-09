@@ -1,19 +1,4 @@
-#![allow(unused_macros)]
-use {
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //Neutral Special Spin ACMD
 #[acmd_script( agent = "metaknight", script = "game_specialnspin", category = ACMD_GAME)]

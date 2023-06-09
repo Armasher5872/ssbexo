@@ -1,15 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_PFUSHIGISOU )]
 fn ivysaur_frame(fighter: &mut L2CFighterCommon) {

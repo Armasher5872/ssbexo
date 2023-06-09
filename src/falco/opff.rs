@@ -1,12 +1,4 @@
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        lua2cpp::L2CFighterCommon,
-        lib::lua_const::*,
-    },
-    smashline::*,
-};
+use super::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_FALCO )]
 fn falco_frame(fighter: &mut L2CFighterCommon) {

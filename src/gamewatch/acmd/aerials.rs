@@ -1,22 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::{
-        ext::*,
-        variables::*,
-    },
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40,
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Nair ACMD
 #[acmd_script( agent = "gamewatch", script = "game_attackairn", category = ACMD_GAME)]

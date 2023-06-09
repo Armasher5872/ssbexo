@@ -1,25 +1,9 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::Hash40
-    },
-    smash_script::*,
-    smashline::*,
-};
+use super::*;
 
 //Forward Smash ACMD
 #[acmd_script( agent = "roy", script = "game_attacks4", category = ACMD_GAME)]
 unsafe fn ssbuexo_roy_forward_smash_acmd(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
@@ -28,7 +12,7 @@ unsafe fn ssbuexo_roy_forward_smash_acmd(fighter: &mut L2CAgentBase)
     MotionModule::set_rate(fighter.module_accessor, 2.0);
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {
-        if FULL_SMASH_ATTACK[entry_id] == true {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 16.0, 361, 75, 0, 60, 3.3, 0.0, 7.7, 9.1, Some(0.0), Some(7.7), Some(7.0), 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
             macros::ATTACK(fighter, 1, 0, Hash40::new("sword1"), 14.0, 361, 75, 0, 60, 4.0, 2.0, 1.0, 1.5, Some(9.5), Some(1.0), Some(1.5), 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
@@ -46,7 +30,7 @@ unsafe fn ssbuexo_roy_forward_smash_acmd(fighter: &mut L2CAgentBase)
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        FULL_SMASH_ATTACK[entry_id] = false;
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     }
 }
 
@@ -54,7 +38,6 @@ unsafe fn ssbuexo_roy_forward_smash_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "roy", script = "effect_attacks4", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_roy_forward_smash_effect(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     frame(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 4, 16, 8, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -65,7 +48,7 @@ unsafe fn ssbuexo_roy_forward_smash_effect(fighter: &mut L2CAgentBase)
     }
     frame(fighter.lua_state_agent, 12.0);
     if macros::is_excute(fighter) {
-        if FULL_SMASH_ATTACK[entry_id] == true {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
             macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
             fighter.clear_lua_stack();
             lua_args!(fighter, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
@@ -96,7 +79,6 @@ unsafe fn ssbuexo_roy_forward_smash_effect(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "roy", script = "game_attackhi4", category = ACMD_GAME)]
 unsafe fn ssbuexo_roy_up_smash_acmd(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
@@ -114,7 +96,7 @@ unsafe fn ssbuexo_roy_up_smash_acmd(fighter: &mut L2CAgentBase)
     frame(fighter.lua_state_agent, 13.0);
     for _ in 0..4 {
         if macros::is_excute(fighter) {
-            if FULL_SMASH_ATTACK[entry_id] == true {
+            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 2.0, 98, 100, 85, 0, 5.4, 0.0, 0.0, 0.0, None, None, None, 1.5, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, -1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("sword1"), 2.0, 260, 100, 55, 0, 4.9, 0.0, 0.0, 5.8, Some(0.0), Some(0.0), Some(18.8), 0.5, 0.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, -1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
                 AttackModule::set_no_damage_fly_smoke_all(fighter.module_accessor, true, false); 
@@ -133,7 +115,7 @@ unsafe fn ssbuexo_roy_up_smash_acmd(fighter: &mut L2CAgentBase)
     }
     wait(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
-        if FULL_SMASH_ATTACK[entry_id] == true {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 10.0, 90, 70, 0, 70, 5.2, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, -1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
             macros::ATTACK(fighter, 1, 0, Hash40::new("sword1"), 10.0, 90, 70, 0, 70, 6.9, 0.0, 0.0, 6.2, Some(0.0), Some(0.0), Some(19.2), 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, -1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
         }
@@ -146,7 +128,7 @@ unsafe fn ssbuexo_roy_up_smash_acmd(fighter: &mut L2CAgentBase)
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
         HitModule::set_status_all(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
-        FULL_SMASH_ATTACK[entry_id] = false;
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     }
 }
 
@@ -154,14 +136,13 @@ unsafe fn ssbuexo_roy_up_smash_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "roy", script = "effect_attackhi4", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_roy_up_smash_effect(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     frame(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 4, 16, 8, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
     frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
-        if FULL_SMASH_ATTACK[entry_id] == true {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
             macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
             fighter.clear_lua_stack();
             lua_args!(fighter, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
@@ -199,14 +180,13 @@ unsafe fn ssbuexo_roy_up_smash_effect(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "roy", script = "game_attacklw4", category = ACMD_GAME)]
 unsafe fn ssbuexo_roy_down_smash_acmd(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
     frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
-        if FULL_SMASH_ATTACK[entry_id] == true {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("sword1"), 14.0, 30, 60, 0, 40, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
             macros::ATTACK(fighter, 1, 0, Hash40::new("sword1"), 12.5, 30, 60, 0, 40, 3.5, 0.0, 0.0, 3.5, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
             macros::ATTACK(fighter, 2, 0, Hash40::new("sword1"), 11.2, 30, 60, 0, 40, 3.5, 0.0, 0.0, 7.2, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_SWORD);
@@ -225,7 +205,7 @@ unsafe fn ssbuexo_roy_down_smash_acmd(fighter: &mut L2CAgentBase)
     frame(fighter.lua_state_agent, 17.0);
     if macros::is_excute(fighter) {
         AttackModule::clear_all(fighter.module_accessor);
-        FULL_SMASH_ATTACK[entry_id] = false;
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     }
 }
 
@@ -233,14 +213,13 @@ unsafe fn ssbuexo_roy_down_smash_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "roy", script = "effect_attacklw4", category = ACMD_EFFECT)]
 unsafe fn ssbuexo_roy_down_smash_effect(fighter: &mut L2CAgentBase) 
 {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     frame(fighter.lua_state_agent, 2.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("top"), 4, 16, 8, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
     frame(fighter.lua_state_agent, 4.0);
     if macros::is_excute(fighter) {
-        if FULL_SMASH_ATTACK[entry_id] == true {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
             macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
             fighter.clear_lua_stack();
             lua_args!(fighter, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);

@@ -1,23 +1,4 @@
-#![allow(unused_macros)]
-use {
-    crate::functions::variables::*,
-    smash::{
-        app::{
-            lua_bind::*,
-            sv_animcmd::*,
-            *
-        },
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CAgentBase,
-        phx::{
-            Hash40,
-            Vector3f
-        }
-    },
-    smashline::*,
-    smash_script::*,
-};
+use super::*;
 
 //PSI Offense Up ACMD
 #[acmd_script( agent = "ness", script = "game_specialshield", category = ACMD_GAME)]
