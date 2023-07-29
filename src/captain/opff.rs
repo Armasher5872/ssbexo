@@ -219,59 +219,8 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
     }
 }
 
-#[fighter_frame( agent = FIGHTER_KIND_KIRBY )]
-fn kirby_captain_frame(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let status_kind = StatusModule::status_kind(boma);
-        let frame = MotionModule::frame(boma);
-        if (WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA) == *FIGHTER_KIND_CAPTAIN)
-        && [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind)
-        && (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0
-        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, true);
-        };
-        if [*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
-            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true {
-                FALCON_PUNCH_HIT[entry_id] = true;
-            };
-            if FALCON_PUNCH_HIT[entry_id] == true
-            && (54.0..57.0).contains(&frame) {
-                macros::PLAY_SE(fighter, Hash40::new("vc_kirby_cheer"));
-            }
-        };
-        if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N
-        && FALCON_PUNCH_HIT[entry_id] == true
-        && frame > 70.0 {
-            CancelModule::enable_cancel(boma);
-        }
-        if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN
-        && FALCON_PUNCH_HIT[entry_id] == true
-        && frame > 104.0 {
-            CancelModule::enable_cancel(boma);
-        }
-        if ![*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
-            FALCON_PUNCH_HIT[entry_id] = false;
-        }
-        if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN 
-        && (frame > 25.0 && frame < 40.0) 
-        && (ControlModule::get_stick_x(boma)*PostureModule::lr(boma)) < -0.5
-        && KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] <= 15.0 {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN, true);
-        };
-        if status_kind != *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN {
-            KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
-        }
-        if KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] == 0.0 {
-            AttackModule::set_power_up(boma, 1.0);
-        }
-    }
-}
-
 pub fn install() {
     install_agent_frames!(
-        captain_frame,
-        kirby_captain_frame
+        captain_frame
     );
 }
