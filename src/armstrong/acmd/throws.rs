@@ -3,7 +3,6 @@ use super::*;
 //Standing Grab ACMD
 #[acmd_script( agent = "ganon", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_armstrong_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -23,7 +22,6 @@ unsafe fn ssbuexo_armstrong_grab_acmd(fighter: &mut L2CAgentBase) {
 //Dash Grab ACMD
 #[acmd_script( agent = "ganon", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_armstrong_dash_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -43,7 +41,6 @@ unsafe fn ssbuexo_armstrong_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 //Pivot Grab ACMD
 #[acmd_script( agent = "ganon", script = "game_catchturn", category = ACMD_GAME )]
 unsafe fn ssbuexo_armstrong_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 11.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }

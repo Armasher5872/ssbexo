@@ -4,12 +4,9 @@ use super::*;
 #[acmd_script( agent = "lucas", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_lucas_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LUCAS_GENERATE_ARTICLE_HIMOHEBI, false, 0);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUCAS_GENERATE_ARTICLE_HIMOHEBI, Hash40::new("catch"), false, -1.0);
-    }
-    frame(fighter.lua_state_agent, 11.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 12.0);
     if macros::is_excute(fighter) {
@@ -36,12 +33,9 @@ unsafe fn ssbuexo_lucas_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "lucas", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_lucas_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LUCAS_GENERATE_ARTICLE_HIMOHEBI, false, 0);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUCAS_GENERATE_ARTICLE_HIMOHEBI, Hash40::new("catch_dash"), false, -1.0);
-    }
-    frame(fighter.lua_state_agent, 13.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {
@@ -68,12 +62,9 @@ unsafe fn ssbuexo_lucas_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "lucas", script = "game_catchturn", category = ACMD_GAME )]
 unsafe fn ssbuexo_lucas_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LUCAS_GENERATE_ARTICLE_HIMOHEBI, false, 0);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUCAS_GENERATE_ARTICLE_HIMOHEBI, Hash40::new("catch_turn"), false, -1.0);
-    }
-    frame(fighter.lua_state_agent, 13.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {

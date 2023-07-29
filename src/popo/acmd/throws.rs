@@ -3,12 +3,11 @@ use super::*;
 //Standing Grab ACMD
 #[acmd_script( agent = "popo", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_popo_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 1.0);
-    macros::FT_MOTION_RATE(fighter, 1.4);
-    frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
+    frame(fighter.lua_state_agent, 1.0);
+    macros::FT_MOTION_RATE(fighter, 1.4);
     frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         macros::FT_MOTION_RATE(fighter, 1.0);
@@ -27,12 +26,11 @@ unsafe fn ssbuexo_popo_grab_acmd(fighter: &mut L2CAgentBase) {
 //Dash Grab ACMD
 #[acmd_script( agent = "popo", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_popo_dash_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 1.0);
-    macros::FT_MOTION_RATE(fighter, 1.285);
-    frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
+    frame(fighter.lua_state_agent, 1.0);
+    macros::FT_MOTION_RATE(fighter, 1.285);
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         macros::FT_MOTION_RATE(fighter, 1.0);
@@ -51,12 +49,11 @@ unsafe fn ssbuexo_popo_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 //Pivot Grab ACMD
 #[acmd_script( agent = "popo", script = "game_catchturn", category = ACMD_GAME )]
 unsafe fn ssbuexo_popo_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 1.0);
-    macros::FT_MOTION_RATE(fighter, 1.125);
-    frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
+    frame(fighter.lua_state_agent, 1.0);
+    macros::FT_MOTION_RATE(fighter, 1.125);
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         macros::FT_MOTION_RATE(fighter, 1.0);

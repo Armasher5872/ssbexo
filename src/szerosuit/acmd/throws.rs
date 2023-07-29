@@ -5,12 +5,9 @@ use super::*;
 unsafe fn ssbuexo_szerosuit_grab_acmd(fighter: &mut L2CAgentBase) 
 {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SZEROSUIT_GENERATE_ARTICLE_WHIP, false, 0);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_SZEROSUIT_GENERATE_ARTICLE_WHIP, Hash40::new("catch"), false, -1.0);
-    }
-    frame(fighter.lua_state_agent, 14.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 15.0);
     if macros::is_excute(fighter) {
@@ -39,12 +36,9 @@ unsafe fn ssbuexo_szerosuit_grab_acmd(fighter: &mut L2CAgentBase)
 unsafe fn ssbuexo_szerosuit_dash_grab_acmd(fighter: &mut L2CAgentBase) 
 {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SZEROSUIT_GENERATE_ARTICLE_WHIP, false, 0);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_SZEROSUIT_GENERATE_ARTICLE_WHIP, Hash40::new("catch"), false, -1.0);
-    }
-    frame(fighter.lua_state_agent, 16.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 17.0);
     if macros::is_excute(fighter) {
@@ -73,12 +67,9 @@ unsafe fn ssbuexo_szerosuit_dash_grab_acmd(fighter: &mut L2CAgentBase)
 unsafe fn ssbuexo_szerosuit_pivot_grab_acmd(fighter: &mut L2CAgentBase) 
 {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SZEROSUIT_GENERATE_ARTICLE_WHIP, false, 0);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_SZEROSUIT_GENERATE_ARTICLE_WHIP, Hash40::new("catch"), false, -1.0);
-    }
-    frame(fighter.lua_state_agent, 17.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 18.0);
     if macros::is_excute(fighter) {

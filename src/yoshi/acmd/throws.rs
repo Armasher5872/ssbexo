@@ -4,7 +4,6 @@ use super::*;
 #[acmd_script( agent = "yoshi", script = "game_catch", category = ACMD_GAME)]
 unsafe fn ssbuexo_yoshi_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -33,7 +32,6 @@ unsafe fn ssbuexo_yoshi_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "yoshi", script = "game_catchdash", category = ACMD_GAME)]
 unsafe fn ssbuexo_yoshi_dash_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 15.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -62,7 +60,6 @@ unsafe fn ssbuexo_yoshi_dash_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "yoshi", script = "game_catchturn", category = ACMD_GAME)]
 unsafe fn ssbuexo_yoshi_pivot_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }

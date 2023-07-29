@@ -4,7 +4,6 @@ use super::*;
 #[acmd_script( agent = "wiifit", script = "game_catch", category = ACMD_GAME)]
 unsafe fn ssbuexo_wiifit_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 5.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -25,7 +24,6 @@ unsafe fn ssbuexo_wiifit_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "wiifit", script = "game_catchdash", category = ACMD_GAME)]
 unsafe fn ssbuexo_wiifit_dash_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -46,7 +44,6 @@ unsafe fn ssbuexo_wiifit_dash_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "wiifit", script = "game_catchturn", category = ACMD_GAME)]
 unsafe fn ssbuexo_wiifit_pivot_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }

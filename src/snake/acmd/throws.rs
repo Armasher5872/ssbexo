@@ -4,7 +4,6 @@ use super::*;
 #[acmd_script( agent = "snake", script = "game_catch", category = ACMD_GAME)]
 unsafe fn ssbuexo_snake_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -26,7 +25,6 @@ unsafe fn ssbuexo_snake_grab_acmd(fighter: &mut L2CAgentBase)
 unsafe fn ssbuexo_snake_dash_grab_acmd(fighter: &mut L2CAgentBase) 
 {
     macros::FT_MOTION_RATE(fighter, 1.222);
-    frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -51,7 +49,6 @@ unsafe fn ssbuexo_snake_dash_grab_acmd(fighter: &mut L2CAgentBase)
 unsafe fn ssbuexo_snake_pivot_grab_acmd(fighter: &mut L2CAgentBase) 
 {
     macros::FT_MOTION_RATE(fighter, 1.125);
-    frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }

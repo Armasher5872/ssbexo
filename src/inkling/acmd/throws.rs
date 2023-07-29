@@ -6,7 +6,6 @@ use {
 //Standing Grab ACMD
 #[acmd_script( agent = "inkling", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_inkling_grab_acmd(fighter: &mut L2CAgentBase) {
-    frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -27,6 +26,7 @@ unsafe fn ssbuexo_inkling_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "inkling", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_inkling_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
         inkling_generate_squid_helper(fighter);
     }
@@ -34,10 +34,6 @@ unsafe fn ssbuexo_inkling_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         VisibilityModule::set_whole(fighter.module_accessor, true);
         ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    }
-    frame(fighter.lua_state_agent, 8.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
@@ -58,15 +54,12 @@ unsafe fn ssbuexo_inkling_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
         inkling_generate_squid_helper(fighter);
+        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter) {
         VisibilityModule::set_whole(fighter.module_accessor, true);
         ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    }
-    frame(fighter.lua_state_agent, 9.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {

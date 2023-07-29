@@ -4,11 +4,8 @@ use super::*;
 #[acmd_script( agent = "richter", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_richter_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
-        FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 4.0, 6.0);
-    }
-    frame(fighter.lua_state_agent, 9.0);
-    if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
+        FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 4.0, 6.0);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
@@ -27,11 +24,8 @@ unsafe fn ssbuexo_richter_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "richter", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_richter_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
-        FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 6.0, 4.0);
-    }
-    frame(fighter.lua_state_agent, 12.0);
-    if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
+        FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 6.0, 4.0);
     }
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
@@ -50,11 +44,8 @@ unsafe fn ssbuexo_richter_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "richter", script = "game_catchturn", category = ACMD_GAME )]
 unsafe fn ssbuexo_richter_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
-        FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 6.5, 6.0);
-    }
-    frame(fighter.lua_state_agent, 13.0);
-    if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
+        FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 6.5, 6.0);
     }
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {

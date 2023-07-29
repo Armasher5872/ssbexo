@@ -4,14 +4,13 @@ use super::*;
 #[acmd_script( agent = "toonlink", script = "game_catch", category = ACMD_GAME)]
 unsafe fn ssbuexo_toonlink_grab_acmd(fighter: &mut L2CAgentBase) 
 {
+    if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
+    }
     frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TOONLINK_GENERATE_ARTICLE_HOOKSHOT, false, 0);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TOONLINK_GENERATE_ARTICLE_HOOKSHOT_HAND, false, 0);
-    }
-    frame(fighter.lua_state_agent, 11.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 12.0);
     if macros::is_excute(fighter) {
@@ -50,14 +49,13 @@ unsafe fn ssbuexo_toonlink_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "toonlink", script = "game_catchdash", category = ACMD_GAME)]
 unsafe fn ssbuexo_toonlink_dash_grab_acmd(fighter: &mut L2CAgentBase) 
 {
+    if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
+    }
     frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TOONLINK_GENERATE_ARTICLE_HOOKSHOT, false, 0);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TOONLINK_GENERATE_ARTICLE_HOOKSHOT_HAND, false, 0);
-    }
-    frame(fighter.lua_state_agent, 13.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 14.0);
     if macros::is_excute(fighter) {
@@ -96,14 +94,13 @@ unsafe fn ssbuexo_toonlink_dash_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "toonlink", script = "game_catchturn", category = ACMD_GAME)]
 unsafe fn ssbuexo_toonlink_pivot_grab_acmd(fighter: &mut L2CAgentBase) 
 {
+    if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
+    }
     frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TOONLINK_GENERATE_ARTICLE_HOOKSHOT, false, 0);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_TOONLINK_GENERATE_ARTICLE_HOOKSHOT_HAND, false, 0);
-    }
-    frame(fighter.lua_state_agent, 14.0);
-    if macros::is_excute(fighter) {
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 15.0);
     if macros::is_excute(fighter) {

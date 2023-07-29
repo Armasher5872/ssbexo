@@ -4,10 +4,12 @@ use super::*;
 #[acmd_script( agent = "ness", script = "game_catch", category = ACMD_GAME )]
 unsafe fn ssbuexo_ness_grab_acmd(fighter: &mut L2CAgentBase) {
     MotionModule::set_rate(fighter.module_accessor, 0.6);
+    if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
+    }
     frame(fighter.lua_state_agent, 6.0);
     if macros::is_excute(fighter) {
         MotionModule::set_rate(fighter.module_accessor, 1.0);
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
@@ -26,10 +28,12 @@ unsafe fn ssbuexo_ness_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "ness", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_ness_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     MotionModule::set_rate(fighter.module_accessor, 0.72);
+    if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
+    }
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         MotionModule::set_rate(fighter.module_accessor, 1.0);
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
@@ -48,10 +52,12 @@ unsafe fn ssbuexo_ness_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "ness", script = "game_catchturn", category = ACMD_GAME )]
 unsafe fn ssbuexo_ness_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     MotionModule::set_rate(fighter.module_accessor, 0.75);
+    if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
+    }
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         MotionModule::set_rate(fighter.module_accessor, 1.0);
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
