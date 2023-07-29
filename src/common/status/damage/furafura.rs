@@ -28,7 +28,9 @@ unsafe extern "C" fn status_furafurastand_main(fighter: &mut L2CFighterCommon) -
     EffectModule::kill_kind(boma, Hash40::new("sys_bg_criticalhit"), false, false);
     macros::CAM_ZOOM_OUT(fighter);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_GFX_TIMER);
+    WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+    WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+    WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
     /* END OF NEW ADDITIONS */
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
         if MotionModule::is_end(fighter.module_accessor) {

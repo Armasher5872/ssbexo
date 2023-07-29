@@ -32,12 +32,6 @@ unsafe fn status_escapeair(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let escape_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_INT_FRAME);
-    let escape_throw_item_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("escape_throw_item_frame"));
-    let agt_window = {escape_frame <= escape_throw_item_frame};
-    let throwable = !fighter.pop_lua_stack(1).get_bool();
-    let lasso_type = WorkModule::get_param_int(fighter.module_accessor, hash40("air_lasso_type"), 0);
     if !fighter.sub_escape_air_common_main().get_bool() {
         fighter.sub_escape_check_rumble();
     }
@@ -52,40 +46,6 @@ unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2
         fighter.sub_transition_group_check_air_cliff();
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
     }
-    //Aerial Glide Tossing
-    if ![hash40("special_n"), hash40("special_air_n")].contains(&motion_kind) {
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW) 
-        && fighter.global_table[PAD_FLAG].get_i32() & *FIGHTER_PAD_FLAG_ATTACK_TRIGGER != 0
-        && ItemModule::is_have_item(fighter.module_accessor, 0)
-        && agt_window {
-            fighter.clear_lua_stack(); 
-            lua_args!(fighter, MA_MSC_ITEM_CHECK_HAVE_ITEM_TRAIT, ITEM_TRAIT_FLAG_NO_THROW); 
-            sv_module_access::item(fighter.lua_state_agent); 
-            if throwable {
-                let stick_x = fighter.global_table[STICK_X].get_f32();
-                let stick_y = fighter.global_table[STICK_Y].get_f32();
-                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 5.0*stick_x.abs());
-                sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 5.0*stick_y.abs());
-                fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), false.into());
-                return 1.into();
-            }
-        }
-    }
-    //Airdodge Canceled Zair
-    if agt_window {
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO);
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO)
-        && lasso_type != *FIGHTER_AIR_LASSO_TYPE_NONE
-        && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD)
-        && fighter.global_table[PAD_FLAG].get_i32() & *FIGHTER_PAD_FLAG_ATTACK_TRIGGER != 0
-        && !LinkModule::is_link(fighter.module_accessor, *FIGHTER_LINK_NO_CONSTRAINT) {
-            fighter.change_status(FIGHTER_STATUS_KIND_AIR_LASSO.into(), false.into());
-            return 1.into();
-        }
-    }
-    else {
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO);
-    }
     /* END OF NEW ADDITION */
     0.into()
 }
@@ -96,8 +56,8 @@ unsafe fn sub_escape_air_common(fighter: &mut L2CFighterCommon) {
     ControlModule::reset_trigger(fighter.module_accessor);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ESCAPE_WORK_INT_FRAME);
     WorkModule::unable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
-    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
     let transition_term = [
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW,
         *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB,
         *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE,
         *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_WALL_JUMP_BUTTON,
@@ -138,14 +98,11 @@ pub unsafe fn sub_escape_air_uniq(fighter: &mut L2CFighterCommon, param_1: L2CVa
             }
             if 0 < WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_ADD_XLU_START_FRAME) {
                 if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_FLAG_HIT_XLU) {
-                    let stale_motion_rate = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_FLOAT_MOTION_RATE_PENALTY);
-                    MotionModule::set_rate(fighter.module_accessor, stale_motion_rate);
                     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ESCAPE_AIR_ADD_XLU_START_FRAME);
                 }
             }
             if StatusModule::is_changing(fighter.module_accessor) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_STIFF) {
-                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_END_STIFF)
-                    && CancelModule::is_enable_cancel(fighter.module_accessor) {
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_END_STIFF) && CancelModule::is_enable_cancel(fighter.module_accessor) {
                     MotionModule::set_rate(fighter.module_accessor, 1.0);
                     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_END_STIFF);
                 }
@@ -189,11 +146,91 @@ pub unsafe fn sub_escape_air_uniq(fighter: &mut L2CFighterCommon, param_1: L2CVa
     0.into()
 }
 
+//Sub Escape Air Common Strans Main
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_escape_air_common_strans_main)]
+pub unsafe fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    //Aerial Glide Tossing
+    let air_escape_passive_trigger_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common") as u64, hash40("air_escape_passive_trigger_frame") as u64) as f32;
+    let passive_trigger_frame_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("passive_trigger_frame_mul") as u64, 0);
+    air_escape_passive_trigger_frame*passive_trigger_frame_mul;
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let escape_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_INT_FRAME);
+    let escape_throw_item_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("escape_throw_item_frame"));
+    let lasso_type = WorkModule::get_param_int(fighter.module_accessor, hash40("air_lasso_type"), 0);
+    if ![hash40("special_n"), hash40("special_air_n")].contains(&motion_kind) {
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW)
+        && fighter.global_table[PAD_FLAG].get_i32() & *FIGHTER_PAD_FLAG_ATTACK_TRIGGER != 0
+        && ItemModule::is_have_item(fighter.module_accessor, 0)
+        && escape_frame <= escape_throw_item_frame {
+            fighter.clear_lua_stack(); 
+            lua_args!(fighter, MA_MSC_ITEM_CHECK_HAVE_ITEM_TRAIT, ITEM_TRAIT_FLAG_NO_THROW); 
+            sv_module_access::item(fighter.lua_state_agent); 
+            let throwable = !fighter.pop_lua_stack(1).get_bool();
+            if throwable {
+                if !fighter.can_entry_cliff_air_lasso().get_bool() {
+                    fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), false.into());
+                    let speed = Vector3f{x: 1.0, y: 1.0, z: 1.0};
+                    KineticModule::mul_speed(fighter.module_accessor, &speed, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+                    return 1.into();
+                }
+            }
+        }
+    }
+    //Airdodge Canceled Zair
+    if escape_frame <= escape_throw_item_frame {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO);
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO)
+        && lasso_type != *FIGHTER_AIR_LASSO_TYPE_NONE
+        && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD)
+        && fighter.global_table[PAD_FLAG].get_i32() & *FIGHTER_PAD_FLAG_ATTACK_TRIGGER != 0
+        && !LinkModule::is_link(fighter.module_accessor, *FIGHTER_LINK_NO_CONSTRAINT) {
+            fighter.change_status(FIGHTER_STATUS_KIND_AIR_LASSO.into(), true.into());
+            return 1.into();
+        }
+    }
+    else {
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_AIR_LASSO);
+    }
+    //Vanilla Stuff regarding Walls
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_PREV_STATUS_PASSIVE_AIR) {
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_WALL_JUMP_BUTTON)
+        && smash::app::FighterUtil::is_touch_passive_ground(fighter.module_accessor, (*GROUND_TOUCH_FLAG_RIGHT | *GROUND_TOUCH_FLAG_LEFT) as u32)
+        && (ControlModule::get_trigger_count(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP as u8) as f32) < air_escape_passive_trigger_frame
+        && (escape_frame as f32) < air_escape_passive_trigger_frame {
+            fighter.change_status(FIGHTER_STATUS_KIND_PASSIVE_WALL_JUMP.into(), false.into());
+            return 1.into();
+        }
+        let jump_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("jump_stick_y"));
+        let stick_y = fighter.global_table[STICK_Y].get_f32();
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_WALL_JUMP)
+        && smash::app::FighterUtil::is_touch_passive_ground(fighter.module_accessor, (*GROUND_TOUCH_FLAG_RIGHT | *GROUND_TOUCH_FLAG_LEFT) as u32)
+        && jump_stick_y <= stick_y
+        && (escape_frame as f32) < air_escape_passive_trigger_frame {
+            fighter.change_status(FIGHTER_STATUS_KIND_PASSIVE_WALL_JUMP.into(), true.into());
+            return 1.into();
+        }
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_WALL)
+        && smash::app::FighterUtil::is_touch_passive_ground(fighter.module_accessor, (*GROUND_TOUCH_FLAG_RIGHT | *GROUND_TOUCH_FLAG_LEFT) as u32)
+        && (escape_frame as f32) < air_escape_passive_trigger_frame {
+            fighter.change_status(FIGHTER_STATUS_KIND_PASSIVE_WALL.into(), false.into());
+            return 1.into();
+        }
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_CEIL)
+        && smash::app::FighterUtil::is_touch_passive_ground(fighter.module_accessor, *GROUND_TOUCH_FLAG_UP as u32)
+        && (escape_frame as f32) < air_escape_passive_trigger_frame {
+            fighter.change_status(FIGHTER_STATUS_KIND_PASSIVE_CEIL.into(), false.into());
+            return 1.into();
+        }
+    }
+    0.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
             sub_escape_air_common,
-            sub_escape_air_uniq
+            sub_escape_air_uniq,
+            sub_escape_air_common_strans_main
         );
     }
 }

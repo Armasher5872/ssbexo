@@ -44,22 +44,7 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let lr = PostureModule::lr(fighter.module_accessor);
     let stick_x = const_stick_x * lr;
     let turn_run_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("turn_run_stick_x"));
-    let f5 = [*FIGHTER_KIND_FOX, *FIGHTER_KIND_SONIC, *FIGHTER_KIND_LUIGI];
-    let f6 = [*FIGHTER_KIND_PURIN, *FIGHTER_KIND_SHEIK, *FIGHTER_KIND_WARIO];
-    let f7 = [*FIGHTER_KIND_DAISY, *FIGHTER_KIND_MARIOD, *FIGHTER_KIND_JACK, *FIGHTER_KIND_MARIO, *FIGHTER_KIND_MIIFIGHTER, *FIGHTER_KIND_GAMEWATCH, *FIGHTER_KIND_PALUTENA, *FIGHTER_KIND_PEACH, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PICHU, *FIGHTER_KIND_PIKACHU, *FIGHTER_KIND_ROSETTA, *FIGHTER_KIND_SNAKE, *FIGHTER_KIND_WIIFIT, *FIGHTER_KIND_ZELDA];
-    let f8 = [*FIGHTER_KIND_CAPTAIN, *FIGHTER_KIND_PITB, *FIGHTER_KIND_GEKKOUGA, *FIGHTER_KIND_SHIZUE, *FIGHTER_KIND_KEN, *FIGHTER_KIND_KROOL, *FIGHTER_KIND_LITTLEMAC, *FIGHTER_KIND_LUCARIO, *FIGHTER_KIND_ROCKMAN, *FIGHTER_KIND_METAKNIGHT, *FIGHTER_KIND_TANTAN, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_PIT, *FIGHTER_KIND_ROBOT, *FIGHTER_KIND_RYU, *FIGHTER_KIND_TRAIL, *FIGHTER_KIND_TOONLINK, *FIGHTER_KIND_SZEROSUIT];
-    let f9 = [*FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_SAMUSD, *FIGHTER_KIND_DIDDY, *FIGHTER_KIND_FALCO, *FIGHTER_KIND_GAOGAEN, *FIGHTER_KIND_INKLING, *FIGHTER_KIND_NESS, *FIGHTER_KIND_PIKMIN, *FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_REFLET, *FIGHTER_KIND_PICKEL, *FIGHTER_KIND_YOUNGLINK];
-    let f10 = [*FIGHTER_KIND_BUDDY, *FIGHTER_KIND_MASTER, *FIGHTER_KIND_CLOUD, *FIGHTER_KIND_DONKEY, *FIGHTER_KIND_POPO, *FIGHTER_KIND_NANA, *FIGHTER_KIND_KIRBY, *FIGHTER_KIND_MIISWORDSMAN, *FIGHTER_KIND_ELIGHT, *FIGHTER_KIND_MURABITO];
-    let f11 = [*FIGHTER_KIND_DUCKHUNT, *FIGHTER_KIND_GANON, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_PACMAN, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_RICHTER, *FIGHTER_KIND_SIMON, *FIGHTER_KIND_DOLLY, *FIGHTER_KIND_YOSHI];
-    let f12 = [*FIGHTER_KIND_KOOPA, *FIGHTER_KIND_WOLF];
-    let f13 = [*FIGHTER_KIND_KAMUI, *FIGHTER_KIND_RIDLEY, *FIGHTER_KIND_SHULK];
-    let f14 = [*FIGHTER_KIND_CHROM, *FIGHTER_KIND_LUCAS, *FIGHTER_KIND_LUCINA, *FIGHTER_KIND_MARTH, *FIGHTER_KIND_ROY];
-    let f15 = [*FIGHTER_KIND_EDGE];
-    let f16 = [*FIGHTER_KIND_BAYONETTA, *FIGHTER_KIND_IKE, *FIGHTER_KIND_DEMON];
-    let f18 = [*FIGHTER_KIND_EFLAME];
-    let f21 = [*FIGHTER_KIND_LINK];
-    let f22 = [*FIGHTER_KIND_BRAVE];
-    let f23 = [*FIGHTER_KIND_DEDEDE];
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
         return 0.into();
     }
@@ -100,33 +85,82 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     /* START OF NEW ADDITIONS */
     //DACUS/DACDS
-    if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) != true
-    && ((f5.contains(&fighter_kind) && frame <= 5.0) 
-    || (f6.contains(&fighter_kind) && frame <= 6.0)
-    || (f7.contains(&fighter_kind) && frame <= 7.0) 
-    || (f8.contains(&fighter_kind) && frame <= 8.0) 
-    || (f9.contains(&fighter_kind) && frame <= 9.0) 
-    || (f10.contains(&fighter_kind) && frame <= 10.0)
-    || (f11.contains(&fighter_kind) && frame <= 11.0)
-    || (f12.contains(&fighter_kind) && frame <= 12.0)
-    || (f13.contains(&fighter_kind) && frame <= 13.0)
-    || (f14.contains(&fighter_kind) && frame <= 14.0)
-    || (f15.contains(&fighter_kind) && frame <= 15.0)
-    || (f16.contains(&fighter_kind) && frame <= 16.0)
-    || (f18.contains(&fighter_kind) && frame <= 18.0)
-    || (f21.contains(&fighter_kind) && frame <= 21.0)
-    || (f22.contains(&fighter_kind) && frame <= 22.0)
-    || (f23.contains(&fighter_kind) && frame <= 23.0)) {
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START);
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START) || WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START) {
-            if fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 != 0 || (fighter.global_table[STICK_Y].get_f32() > 0.7 && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK)) {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI4_START.into(), true.into());
-                return 1.into();
+    if fighter.dacsa_check() == 1 {
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI4_START.into(), true.into());
+        return 1.into();
+    }
+    if fighter.dacsa_check() == 2 {
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4_START.into(), true.into());
+        return 1.into();
+    }
+    //Adjusts the ground correct depending on if the Dash Attack edge cancels or goes off ledges.
+    if situation_kind == *SITUATION_KIND_GROUND {
+        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL) {
+            if GroundModule::get_correct(fighter.module_accessor) != *GROUND_CORRECT_KIND_GROUND {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
             }
-            if fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 != 0 || (fighter.down_input() && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK)) {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4_START.into(), true.into());
-                return 1.into();
+        }
+        else {
+            if GroundModule::get_correct(fighter.module_accessor) != *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            }
+        }
+    }
+    //Enables Dash Attack Gravity. Code runs once and only whilst in the air, but enables a second flag that checks when your situation kind changes, and if so, reenable gravity.
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY)
+    && situation_kind != *SITUATION_KIND_GROUND {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY);
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED);
+        let fall_mul = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL);
+        if fall_mul.signum() != -1.0 {
+            let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y * fall_mul);
+        }
+    }
+    //Checks if a Dash Attack should edge cancel or go off ledges. Checked in a 'is_situation_changed' check to prevent the code running every frame.
+    if StatusModule::is_situation_changed(fighter.module_accessor) {
+        if situation_kind != *SITUATION_KIND_GROUND {
+            //Checks if your dash attack should roll off or not.
+            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE) {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+                //Enables gravity
+                sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+                KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+                let fall_mul = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL);
+                if fall_mul.signum() != -1.0 {
+                    let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
+                    sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y * fall_mul);
+                }
+                //Changes to Attack Air Dash if you have the motion kind in your motion_list.bin.
+                if MotionModule::is_anim_resource(fighter.module_accessor, Hash40::new("attack_air_dash")) {
+                    GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("attack_air_dash"), -1.0, 1.0, 0.0, false, false);
+                }
+                //Previously mentioned flag that's only checked when your situation_kind changes
+                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED) {
+                    let fall_mul = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL);
+                    if fall_mul.signum() != -1.0 {
+                        let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
+                        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y * fall_mul);
+                    }
+                }
+            }
+            else {
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+                return 0.into();
+            }
+        }
+        else {
+            //Checks if the Enable Air Landing Flag is enabled, and if so, change into the landing status script, rather than continuing the dash attack.
+            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_LANDING) {
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+                return 0.into();
+            }
+            else {
+                //Otherwise, change to the dash attack animation if you were previously in the Aerial Dash Attack animation.
+                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("attack_dash"), -1.0, 1.0, 0.0, false, false);
+                KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+                KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
             }
         }
     }
@@ -142,8 +176,7 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     //Samus Dash Attack Canceled Up Tilt/DACDS
     if fighter_kind == *FIGHTER_KIND_SAMUS {
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) != true
-        && frame <= 9.0 {
+        if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) && frame <= 9.0 {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3);
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START);
             if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3) {
@@ -160,9 +193,17 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
             }
         }
     }
+    //Kirby Aerial Dash Attack
+    if fighter_kind == *FIGHTER_KIND_KIRBY {
+        if situation_kind == *SITUATION_KIND_AIR {
+            if fighter.jump_cancel() && frame > 25.0 {
+                fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
+            }
+        }
+    }
     /* END OF NEW ADDITIONS */
     if MotionModule::is_end(fighter.module_accessor) {
-        let status = if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+        let status = if situation_kind != *SITUATION_KIND_GROUND {
             FIGHTER_STATUS_KIND_FALL
         }
         else if WorkModule::get_param_int(fighter.module_accessor, 0x17e10662a4, 0) == *FIGHTER_ATTACK_DASH_TYPE_SQUAT_WAIT {

@@ -2,6 +2,7 @@
 use super::*;
 
 /*DASH STATUSES*/
+
 //Dash Common
 #[skyline::hook(replace = L2CFighterCommon_status_DashCommon)]
 unsafe fn status_dash_common(fighter: &mut L2CFighterCommon) {
@@ -435,7 +436,7 @@ unsafe extern "C" fn fgc_dashback_main_loop(fighter: &mut L2CFighterCommon) -> L
         return 1.into();
     }
     /* START OF NEW ADDITION */
-    //Allows crouch out of initial dash
+    //Allows crouch out of back dash
     if fighter.down_input() && fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR && stick_x < 0.75 {
         WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
         if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT) && fighter.sub_check_command_squat().get_bool() {
@@ -443,14 +444,14 @@ unsafe extern "C" fn fgc_dashback_main_loop(fighter: &mut L2CFighterCommon) -> L
             return 1.into();
         }
     }
-    //Allows platform drops out of initial dash
+    //Allows platform drops out of back dash
     let pass_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_stick_y"));
     let pass_flick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_flick_y")) as i32;
     if GroundModule::is_passable_ground(fighter.module_accessor) && fighter.global_table[STICK_Y].get_f32() < pass_stick_y && fighter.global_table[FLICK_Y].get_i32() < pass_flick_y {
         fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
         return 1.into();
     }
-    //Allows taunts out of initial dash
+    //Allows taunts out of back dash
     let notify_taunt_hash = {fighter.clear_lua_stack(); fighter.push_lua_stack(&mut L2CValue::new_int(0x1daca540be)); smash::app::sv_battle_object::notify_event_msc_cmd(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_bool()};
     if (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U) && fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0) 
     || (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW) && fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0) 
@@ -509,5 +510,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    //skyline::nro::add_hook(nro_hook);
+    skyline::nro::add_hook(nro_hook);
 }

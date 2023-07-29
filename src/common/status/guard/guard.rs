@@ -2,6 +2,7 @@
 use super::*;
 
 /*SHIELD STATUSES*/
+
 //Sub Guard Cont Pre
 #[skyline::hook(replace = L2CFighterCommon_sub_guard_cont_pre)]
 unsafe fn sub_guard_cont_pre(fighter: &mut L2CFighterCommon) {
@@ -130,63 +131,69 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 }
 
-//Status Guard Main Common, Yandere Dev Ass Coding in order to make variable color effects
+//Status Guard Main Common, declares a variable that sets the color
 #[skyline::hook(replace = L2CFighterCommon_status_guard_main_common)]
 unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent); 
+    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let shield = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     let color = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
-    let sgt = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_GFX_TIMER);
     if shield < 0.0 {
         fighter.change_status(FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY.into(), false.into());
         true.into()
     } 
     else {
-        WorkModule::inc_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_GFX_TIMER);
-        if sgt > 10 {
-            WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_GFX_TIMER);
-        }
-        if sgt == 1 {
-            macros::EFFECT_OFF_KIND(fighter, Hash40::new_raw(0xafae75f05), false, false);
-            fighter.clear_lua_stack(); 
-            lua_args!(fighter, Hash40::new_raw(0xafae75f05), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, 0, *FT_VAR_INT_TEAM_COLOR); 
-            smash::app::sv_animcmd::EFFECT_FOLLOW_arg12(fighter.lua_state_agent);
+        if fighter_kind != *FIGHTER_KIND_YOSHI {
             if color == 0 {
                 //Red
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0222*shield, 0.0, 0.0);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
             else if color == 1 {
                 //Blue
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0, 0.0222*shield);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
             else if color == 2 {
                 //Green
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0112*shield, 0.0);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0112*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
             else if color == 3 {
                 //Yellow
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0222*shield, 0.0222*shield, 0.0);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
             else if color == 4 {
                 //Orange
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0222*shield, 0.0144*shield, 0.0);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0144*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
             else if color == 5 {
                 //Cyan
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0, 0.0222*shield, 0.0222*shield);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
             else if color == 6 {
                 //Pink
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0222*shield, 0.0167*shield, 0.0177*shield);
+                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0167*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0177*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
             else {
                 //Purple
-                macros::LAST_EFFECT_SET_COLOR(fighter, 0.0112*shield, 0.0, 0.0112*shield);
+                WorkModule::set_float(boma, 0.0112*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+                WorkModule::set_float(boma, 0.0112*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
             }
         }
-        if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_GUARD) 
-        && WorkModule::get_int(boma, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME) <= 0 
-        && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
+        if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_GUARD) && WorkModule::get_int(boma, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME) <= 0 && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), true.into());
             true.into()
         } 
@@ -199,10 +206,40 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
 //Effect GuardOnCommon
 #[skyline::hook(replace = L2CFighterAnimcmdEffectCommon_effect_GuardOnCommon)]
 unsafe fn effect_guardoncommon(fighter: &mut L2CAgentBase) -> L2CValue {
-    fighter.clear_lua_stack();
-    lua_args!(fighter, Hash40::new("sys_shield_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, false);
-    smash::app::sv_animcmd::EFFECT_FLW_POS(fighter.lua_state_agent);
+    let red = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+    let green = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+    let blue = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
+    if smash::app::sv_animcmd::is_excute(fighter.lua_state_agent) {
+        fighter.clear_lua_stack();
+        lua_args!(fighter, Hash40::new("sys_shield_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, false);
+        smash::app::sv_animcmd::EFFECT_FLW_POS(fighter.lua_state_agent);
+        fighter.clear_lua_stack();
+        lua_args!(fighter, Hash40::new_raw(0xafae75f05), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, red, green, blue);
+        smash::app::sv_animcmd::EFFECT_FOLLOW_COLOR(fighter.lua_state_agent);
+    }
     0.into()
+}
+
+//Effect GuardDamageCommon
+#[skyline::hook(replace = L2CFighterAnimcmdEffectCommon_effect_GuardDamageCommon)]
+unsafe fn effect_guarddamagecommon(fighter: &mut L2CAgentBase) -> L2CValue {
+    let red = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
+    let green = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
+    let blue = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
+    if smash::app::sv_animcmd::is_excute(fighter.lua_state_agent) {
+        fighter.clear_lua_stack();
+        lua_args!(fighter, Hash40::new_raw(0x113434cb66), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, red, green, blue);
+        smash::app::sv_animcmd::EFFECT_FOLLOW_COLOR(fighter.lua_state_agent);
+    }
+    0.into()
+}
+
+//Sub ftStatusUniqProcessGuardFunc_updateShield. Removes shield tilting
+#[skyline::hook(replace = L2CFighterCommon_sub_ftStatusUniqProcessGuardFunc_updateShield)]
+unsafe fn sub_ftstatusuniqprocessguardfunc_updateshield(fighter: &mut L2CFighterCommon, _param_1: L2CValue) {
+    let shield_hp = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
+    let scale = fighter.FighterStatusGuard__calc_shield_scale(shield_hp.into()).get_f32();
+    ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: scale, y: scale, z: scale});
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
@@ -211,7 +248,9 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             sub_guard_cont_pre,
             sub_guard_cont,
             status_guard_main_common,
-            effect_guardoncommon
+            effect_guardoncommon,
+            effect_guarddamagecommon,
+            sub_ftstatusuniqprocessguardfunc_updateshield
         );
     }
 }

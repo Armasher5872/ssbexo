@@ -6,8 +6,11 @@ pub static mut ALREADY_BOUNCED: bool = false; //Tracks if the ball has bounced a
 pub static mut BALL_BOUNCED: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 9999.0}; //Tracks stats about the volleyball to determine who to KO
 pub static mut BALL_ID: u32 = 0; //The battle object ID of the ball itself
 pub static mut BALL_OWNER: i32 = 9; //Which player will start with the ball
-pub static mut BALL_VICTIMS: [i32;4] = [9;4]; //Which players are to be KOd
+pub static mut BALL_VICTIMS: [i32; 4] = [9; 4]; //Which players are to be KOd
+pub static mut COUNTERHIT_CHECK: [bool; 8] = [false; 8]; //Checks if a fighter is in the startup of an attack. Used for GGST COUNTER!
+pub static mut COUNTERHIT_SUCCESS: [bool; 8] = [false; 8]; //Checks if a fighter has landed a successful counterhit. Used for GGST COUNTER!
 pub static mut DASH_GRAB_SPEED: [f32; 8] = [0.0; 8];
+pub static mut FEATURES: bool = false;
 pub static mut FIGHTER_BOOL_1: [bool; 8] = [false; 8];
 pub static mut FIGHTER_BOOL_2: [bool; 8] = [false; 8];
 pub static mut FIGHTER_CUTIN_MANAGER_ADDR: usize = 0;
@@ -20,6 +23,7 @@ pub static mut LAST_ATTACK_HITBOX_ID: i32 = 0;
 pub static mut LAST_ATTACK_HITBOX_LOCATION_X: f32 = 0.0;
 pub static mut LAST_ATTACK_HITBOX_LOCATION_Y: f32 = 0.0;
 pub static mut LAST_ATTACK_HITBOX_LOCATION_Z: f32 = 0.0;
+pub static mut LAST_DAMAGE: [f32; 8] = [0.0; 8];
 pub static mut LAST_TO_HIT_BALL: usize = 9; //The last player to have hit the ball
 pub static mut LOW_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the left net
 pub static mut READY_GO_TIMER: i32 = 0; //Determines how many frames to suspend all players while respawning in Tennis and One-Hit modes
@@ -76,6 +80,9 @@ pub static mut PFUSHIGISOU_IS_SPECIAL_N: [bool; 8] = [false; 8];
 //King K Rool Variables
 pub static mut KROOL_HAS_UAIR: [bool; 8] = [false; 8];
 pub static mut KROOL_UP_SPECIAL_CANCEL: [bool; 8] = [false; 8];
+
+//Little Mac Variables
+pub static mut MAC_HITSTUN: [i32; 8] = [0; 8];
 
 //Lucario Variables
 pub static mut MEGA_EVOLVE: [bool; 8] = [false; 8];

@@ -14,7 +14,7 @@ unsafe fn ivysaur_neutral_special_status_pre(fighter: &mut L2CFighterCommon) -> 
 unsafe fn ivysaur_light_item_throw_status_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if PFUSHIGISOU_IS_SPECIAL_N[entry_id] {
-        if fighter.global_table[0x16].get_i32() == *SITUATION_KIND_GROUND {
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
             KineticModule::clear_speed_all(fighter.module_accessor);
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_start"), 0.0, 1.0, false, 0.0, false, false);

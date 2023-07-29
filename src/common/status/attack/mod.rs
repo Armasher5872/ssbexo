@@ -13,7 +13,8 @@ use {
             lua_bind::{
                 PostureModule,
                 *
-            }
+            },
+            *
         },
         hash40,
         lib::{
@@ -39,6 +40,7 @@ pub mod attackair;
 mod attackdash;
 mod attackhi3;
 mod attackhi4;
+mod attacklw3;
 mod attacklw4;
 mod attacks4;
 
@@ -48,6 +50,7 @@ pub fn install() {
     attackdash::install();
     attackhi3::install();
     attackhi4::install();
+    attacklw3::install();
     attacklw4::install();
     attacks4::install();
 }

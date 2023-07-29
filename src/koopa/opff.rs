@@ -237,82 +237,6 @@ fn koopa_frame(fighter: &mut L2CFighterCommon) {
     }
 }
 
-#[fighter_frame( agent = FIGHTER_KIND_KIRBY )]
-fn kirby_koopa_frame(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        let boma = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let motion_kind = MotionModule::motion_kind(boma);
-        let frame = MotionModule::frame(boma);
-        let end_frame = MotionModule::end_frame(boma);
-        if motion_kind == hash40("koopa_special_n") {
-            if CAN_FIREBALL[entry_id] == true {
-                if end_frame - frame < 5.0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
-                };
-                if frame >= 19.0 {
-                    CancelModule::enable_cancel(boma);
-                };
-                MotionModule::set_rate(boma, 0.775);
-            }
-            else {
-                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    MotionModule::change_motion(boma, Hash40::new("koopa_special_n_end"), 1.0, 1.0, false, 0.0, false, false);
-                }
-            }
-        }
-		if motion_kind == hash40("koopa_special_air_n") {
-            if CAN_FIREBALL[entry_id] == true {
-                if end_frame-frame < 5.0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
-                };
-                if frame >= 19.0 {
-                    CancelModule::enable_cancel(boma);
-                };
-                MotionModule::set_rate(boma, 0.775);
-            }
-            else {
-                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    MotionModule::change_motion(boma, Hash40::new("koopa_special_air_n_end"), 1.0, 1.0, false, 0.0, false, false);
-                }
-            }
-        }
-        if motion_kind == hash40("koopa_special_n_end") {
-            if CAN_FIREBALL[entry_id] == true {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
-            }
-            else {
-                if end_frame - frame < 5.0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
-                };
-            }
-        }
-		if motion_kind == hash40("koopa_special_air_n_end") {
-            if CAN_FIREBALL[entry_id] == true {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
-            }
-            else {
-                if end_frame-frame < 5.0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
-                };
-            }
-        }
-        if ArticleModule::is_exist(boma, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
-            if CAN_FIREBALL[entry_id] == true {
-                AttackModule::set_power_up(boma, 0.2);
-                FIREBALL_GFX[entry_id] += 1;
-            }
-            else {
-                AttackModule::set_power_up(boma, 1.0);
-                FIREBALL_GFX[entry_id] = 0;
-            };
-        }
-        if CAN_FIREBALL[entry_id] == true {
-            macros::EFFECT_OFF_KIND(fighter, Hash40::new("koopa_breath_m_fire"), false, true);
-        }
-	}
-}		
-
 #[weapon_frame( agent = WEAPON_KIND_KOOPA_BREATH )]
 pub fn fireball_gfx_frame(weapon : &mut L2CFighterBase) {
     unsafe {
@@ -352,7 +276,6 @@ pub fn fireball_gfx_frame(weapon : &mut L2CFighterBase) {
 pub fn install() {
     install_agent_frames!(
         fireball_gfx_frame,
-        kirby_koopa_frame,
         koopa_frame
     );
 }

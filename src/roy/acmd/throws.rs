@@ -27,6 +27,7 @@ unsafe fn ssbuexo_roy_dash_grab_acmd(fighter: &mut L2CAgentBase)
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
+    frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 4.0, 4.0);
     }

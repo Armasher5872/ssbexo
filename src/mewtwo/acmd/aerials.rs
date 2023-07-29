@@ -11,7 +11,7 @@ unsafe fn ssbuexo_mewtwo_nair_acmd(fighter: &mut L2CAgentBase)
     for _ in 0..6 {
         if macros::is_excute(fighter) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("waist"), 1.6, 367, 60, 80, 0, 11.0, 0.0, 0.0, 0.0, None, None, None, 0.6, 1.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
-            AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, -10.0, false);
+            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 0, -10.0, false);
         }
         wait(fighter.lua_state_agent, 2.0);
         if macros::is_excute(fighter) {

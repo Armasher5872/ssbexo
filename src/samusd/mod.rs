@@ -2,22 +2,19 @@ use {
     crate::functions::{
         ext::*,
         var::{
+            consts::*,
             globals::*,
             samusd::*,
         }
     },
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::lua_bind::*,
         hash40,
         lib::{
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40
+        lua2cpp::L2CFighterCommon
     },
     smash_script::*,
     smashline::*,

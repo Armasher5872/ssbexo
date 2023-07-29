@@ -10,14 +10,9 @@ fn samusd_frame(fighter: &mut L2CFighterCommon) {
         let frame = MotionModule::frame(boma);
         let end_frame = MotionModule::end_frame(boma);
         let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-        //Damage Update
-        if situation_kind == *SITUATION_KIND_GROUND
-        || [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FALL].contains(&status_kind) {
-            SAMUSD_HAS_FLOAT[entry_id] = false;
-        }
         if motion_kind == hash40("damage_n_2") {
             if StatusModule::is_situation_changed(boma) {
-                if fighter.global_table[SITUATION_KIND].get_i32() != SITUATION_KIND_AIR {
+                if situation_kind != SITUATION_KIND_AIR {
                     StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
                 }
                 else {

@@ -1,8 +1,10 @@
 use {
+    crate::functions::var::pikachu::*,
     smash::{
         app::{
             lua_bind::*,
             sv_animcmd::*,
+            *
         },
         lib::lua_const::*,
         lua2cpp::*,
@@ -12,14 +14,18 @@ use {
     smashline::*,
 };
 
+mod aerials;
 mod grounded;
 mod smashes;
-mod aerials;
+mod specials;
 mod throws;
+mod tilts;
 
 pub fn install() {
-  grounded::install();
-  smashes::install();
-  aerials::install();
-  throws::install();
+    aerials::install();
+    grounded::install();
+    smashes::install();
+    specials::install();
+    throws::install();
+    tilts::install();
 }

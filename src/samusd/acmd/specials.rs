@@ -11,8 +11,21 @@ unsafe fn ssbuexo_samusd_neutral_special_start_acmd(fighter: &mut L2CAgentBase)
             MotionModule::set_rate(fighter.module_accessor, 0.6);
         }
     }
+    if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
+        if HAS_FIRE_CHARGE_SHOT[entry_id] == false
+        && CHARGE_SHOT_TIMER[entry_id] <= 0 {
+            MotionModule::set_rate(fighter.module_accessor, 0.6);
+        }
+    }
     frame(fighter.lua_state_agent, 13.0);
     if macros::is_excute(fighter) {
+        if HAS_FIRE_CHARGE_SHOT[entry_id] == true
+        && CHARGE_SHOT_TIMER[entry_id] > 0 {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("damage_n_2"), 1.0, 1.0, false, 0.0, false, false);
+        }
+    }
+    if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
         if HAS_FIRE_CHARGE_SHOT[entry_id] == true
         && CHARGE_SHOT_TIMER[entry_id] > 0 {
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
@@ -34,6 +47,15 @@ unsafe fn ssbuexo_samusd_neutral_special_fire_acmd(fighter: &mut L2CAgentBase)
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
+        ArticleModule::shoot_exist(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_CSHOT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_FLAG_SHOOT);
+        if HAS_FIRE_CHARGE_SHOT[entry_id] == false
+        && CHARGE_SHOT_TIMER[entry_id] <= 0 {
+            HAS_FIRE_CHARGE_SHOT[entry_id] = true;
+            CHARGE_SHOT_TIMER[entry_id] = 180;
+        }
+    }
+    if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
         ArticleModule::shoot_exist(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_CSHOT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_FLAG_SHOOT);
         if HAS_FIRE_CHARGE_SHOT[entry_id] == false

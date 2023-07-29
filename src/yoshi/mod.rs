@@ -2,8 +2,10 @@ use {
     crate::{
         common::status::attack::attackair::*,
         functions::{
-            ext::*,
-            var::globals::*,
+            var::{
+                consts::*,
+                globals::*,
+            }
         }
     },
     smash::{
@@ -13,12 +15,9 @@ use {
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::L2CFighterCommon,
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        lua2cpp::L2CFighterCommon
     },
+    smash_script::*,
     smashline::*,
 };
 

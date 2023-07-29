@@ -26,7 +26,7 @@ unsafe fn status_attackhi3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     /* START OF NEW ADDITIONS */
     if fighter_kind == *FIGHTER_KIND_SAMUS && fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_ATTACK_DASH && frame == 1.0 {
-        macros::SET_SPEED_EX(fighter, 0.5, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        KineticModule::add_speed(fighter.module_accessor, &Vector3f{x: 0.5, y: 0.0, z: 0.0});
     }
     /* END OF NEW ADDITIONS */
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {

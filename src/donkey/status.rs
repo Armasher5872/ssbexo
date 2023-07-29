@@ -128,28 +128,10 @@ unsafe extern "C" fn donkey_catch_pull_main_loop(fighter: &mut L2CFighterCommon)
     }
 }
 
-//Link Events. Enables proper transition into grabs
-#[skyline::hook(offset = 0x993ec0)]
-pub unsafe extern "C" fn donkey_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
-    if event.link_event_kind.0 == hash40("capture") {
-        let capture_event : &mut smash2::app::LinkEventCapture = std::mem::transmute(event);
-        let module_accessor = fighter.battle_object.module_accessor;
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            capture_event.result = true;
-            capture_event.node = smash2::phx::Hash40::new("throw");
-            StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_CATCH_PULL, false);
-            return 0;
-        }
-        return 1;
-    }
-    original!()(vtable, fighter, event)
-}
-
 pub fn install() {
     install_status_scripts!(
         donkey_special_s_status_main,
         donkey_special_lw_main,
         donkey_catch_pull_main
     );
-    skyline::install_hooks!(donkey_link_event);
 }

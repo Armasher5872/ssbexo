@@ -26,9 +26,11 @@ unsafe fn ssbuexo_yoshi_forward_tilt_f_effect(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 9, 6, -3.255, -12.797, 37.054, 0.85, true, *EF_FLIP_YZ);
         macros::LAST_EFFECT_SET_RATE(fighter, 1.5);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail1"), 0, 0, 0, 0, 0, 0, 1, false);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail2"), 0, 0, 0, 0, 0, 0, 1, false);
         macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 1, false);
+    }
+    frame(fighter.lua_state_agent, 12.0);
+    if macros::is_excute(fighter) {
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("yoshi_tamago_line"), false, true);
     }
 }
 
@@ -40,9 +42,11 @@ unsafe fn ssbuexo_yoshi_forward_tilt_hi_effect(fighter: &mut L2CAgentBase) {
         macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 11, 6, -7.79, -24, 49.865, 0.85, true, *EF_FLIP_YZ);
         macros::LAST_EFFECT_SET_RATE(fighter, 1.7);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail1"), 0, 0, 0, 0, 0, 0, 1, false);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail2"), 0, 0, 0, 0, 0, 0, 1, false);
         macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 1, false);
+    }
+    frame(fighter.lua_state_agent, 12.0);
+    if macros::is_excute(fighter) {
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("yoshi_tamago_line"), false, true);
     }
 }
 
@@ -57,9 +61,11 @@ unsafe fn ssbuexo_yoshi_forward_tilt_lw_effect(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 5.5, 6, 1.53, -13.258, 23.277, 0.85, true, *EF_FLIP_YZ);
         macros::LAST_EFFECT_SET_RATE(fighter, 1.5);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail1"), 0, 0, 0, 0, 0, 0, 1, false);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail2"), 0, 0, 0, 0, 0, 0, 1, false);
         macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 1, false);
+    }
+    frame(fighter.lua_state_agent, 12.0);
+    if macros::is_excute(fighter) {
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("yoshi_tamago_line"), false, true);
     }
 }
 
@@ -97,9 +103,11 @@ unsafe fn ssbuexo_yoshi_up_tilt_effect(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 13, -1, 0, 52, 88, 1.15, true, *EF_FLIP_YZ);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail1"), 0, 0, 0, 0, 0, 0, 1, false);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail2"), 0, 0, 0, 0, 0, 0, 1, false);
         macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 1, false);
+    }
+    frame(fighter.lua_state_agent, 15.0);
+    if macros::is_excute(fighter) {
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("yoshi_tamago_line"), false, true);
     }
 }
 
@@ -134,13 +142,12 @@ unsafe fn ssbuexo_yoshi_down_tilt_effect(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 7.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 4, 4, 0, 35, 180, 1.2, true, *EF_FLIP_YZ);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail1"), 0, 0, 0, 0, 0, 0, 1, false);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail2"), 0, 0, 0, 0, 0, 0, 1, false);
-        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 1, false);
-    }
-    frame(fighter.lua_state_agent, 7.0);
-    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW(fighter, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 0.5, false);
         macros::LANDING_EFFECT_FLIP(fighter, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, -2.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_YZ);
+    }
+    frame(fighter.lua_state_agent, 12.0);
+    if macros::is_excute(fighter) {
+        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("yoshi_tamago_line"), false, true);
     }
 }
 

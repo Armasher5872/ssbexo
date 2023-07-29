@@ -22,6 +22,7 @@
     clippy::redundant_field_names,
     clippy::suspicious_else_formatting,
     clippy::transmute_ptr_to_ref,
+    clippy::unit_arg,
     clippy::unnecessary_cast,
     clippy::unnecessary_operation,
     clippy::useless_conversion,

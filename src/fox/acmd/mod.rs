@@ -1,4 +1,5 @@
 use {
+    crate::functions::var::consts::*,
     smash::{
         app::{
             lua_bind::*,
@@ -7,13 +8,15 @@ use {
         },
         lib::lua_const::*,
         lua2cpp::*,
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector3f
+        }
     },
     smash_script::*,
     smashline::*,
 };
 
-mod grounded;
 mod tilts;
 mod smashes;
 mod aerials;
@@ -21,7 +24,6 @@ mod throws;
 mod specials;
 
 pub fn install() {
-  grounded::install();
   tilts::install();
   smashes::install();
   aerials::install();

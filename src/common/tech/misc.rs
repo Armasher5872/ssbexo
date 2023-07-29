@@ -11,6 +11,8 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         let lr = PostureModule::lr(boma);
         let stick_x = ControlModule::get_stick_x(boma) * lr;
         let stick_y = ControlModule::get_stick_y(boma);
+        let frame = MotionModule::frame(boma);
+        let cancel_frame = FighterMotionModuleImpl::get_cancel_frame(boma, Hash40::new_raw(MotionModule::motion_kind(boma)), false) as f32; //Cancel frame
         let cbm_vec1 = Vector4f{/* Red */ x: 1.0, /* Green */ y: 1.0, /* Blue */ z: 1.0, /* Alpha */ w: 0.2};
         let cbm_vec2 = Vector4f{/* Red */ x: 0.0, /* Green */ y: 0.0, /* Blue */ z: 0.0, /* Alpha */w: 0.8};
         let mut pos = Vector3f {x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma), z: PostureModule::pos_z(boma)}; // get current pos
@@ -128,7 +130,7 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FURAFURA_STAND, true);
         }
         //DJC (For Lucas and Kazuya cause they don't wanna work)
-        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if [*FIGHTER_KIND_LUCAS, *FIGHTER_KIND_DEMON].contains(&fighter_kind) {
             if [*FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL].contains(&KineticModule::get_kinetic_type(boma)) {
                 if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_JUMP) && [*FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_AIR_LASSO].contains(&status_kind) {
@@ -152,9 +154,97 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
             ModelModule::set_joint_scale(boma, Hash40::new("haver"), &long_sword_scale);
         }
         if fighter_kind == *FIGHTER_KIND_CHROM {
-            let long_sword_scale = Vector3f{x: 1.25, y: 1.15, z: 1.25};
+            let long_sword_scale = Vector3f{x: 1.5, y: 1.5, z: 1.25};
             ModelModule::set_joint_scale(boma, Hash40::new("havel"), &long_sword_scale);
             ModelModule::set_joint_scale(boma, Hash40::new("haver"), &long_sword_scale);
+        }
+        //Guilty Gear Strive COUNTER!
+        if [
+            *FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, 
+            *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_DASH, 
+            *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F, *FIGHTER_RYU_STATUS_KIND_ATTACK_NEAR, 
+            *FIGHTER_SIMON_STATUS_KIND_ATTACK_HOLD_START, *FIGHTER_SIMON_STATUS_KIND_ATTACK_HOLD, *FIGHTER_SIMON_STATUS_KIND_ATTACK_LW32, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_FALL, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_FALL_AERIAL, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_JUMP, 
+            *FIGHTER_PICKEL_STATUS_KIND_ATTACK_WAIT, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_WALK, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_LANDING, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_WALK_BACK, *FIGHTER_RYU_STATUS_KIND_ATTACK_COMMAND1, *FIGHTER_RYU_STATUS_KIND_ATTACK_COMMAND2, 
+            *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WAIT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WALK, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_RV, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LANDING, 
+            *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LADDER, *FIGHTER_METAKNIGHT_STATUS_KIND_ATTACK_S3, *FIGHTER_METAKNIGHT_STATUS_KIND_ATTACK_LW3
+        ].contains(&status_kind) {
+            if estimate_frame(boma, 0.0) {
+                COUNTERHIT_CHECK[get_player_number(boma)] = true;
+            }
+            if AttackModule::is_attack(boma, 0, false) {
+                COUNTERHIT_CHECK[get_player_number(boma)] = false;
+            }
+        }
+        else {
+            COUNTERHIT_SUCCESS[get_player_number(boma)] = false;
+        }
+        if COUNTERHIT_SUCCESS[get_player_number(boma)] {
+            if special_zoom_gfx < 10 {
+                WorkModule::inc_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+            }
+            if special_zoom_gfx < 1 {
+                let counter_sound = SoundModule::play_se(boma, Hash40::new("se_common_counter"), true, false, false, false, app::enSEType(0));
+                SoundModule::set_se_pitch_ratio(boma, Hash40::new("se_common_counter"), 1.17);
+                SoundModule::set_se_vol(boma, counter_sound as i32, 2.75, 0);
+                SlowModule::set_whole(boma, 4, 40);
+                macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 1.0,/*no*/ 0.0,/*zoom*/ 1.5,/*yrot*/ 0.0,/*xrot*/ 0.0);
+            }
+            if special_zoom_gfx >= 10 {
+                SlowModule::clear_whole(boma);
+                CameraModule::reset_all(boma);
+                macros::CAM_ZOOM_OUT(fighter);
+                COUNTERHIT_SUCCESS[get_player_number(boma)] = false;
+            }
+        }
+        //Training Mode
+        let faf_status = [
+            *FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, 
+            *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH_TURN, *FIGHTER_STATUS_KIND_THROW, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, 
+            *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL
+        ].contains(&status_kind);
+        if !smash::app::smashball::is_training_mode() {
+            FEATURES = false;
+        } 
+        else {
+            if [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_OFF].contains(&status_kind)
+            && ControlModule::check_button_on_trriger(boma, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+                if FEATURES {
+                    FEATURES = false;
+                } 
+                else {
+                    FEATURES = true;
+                };
+            };
+        };
+        if FEATURES {
+            macros::COL_NORMAL(fighter);
+            if WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME) > 0.0 && (*FIGHTER_STATUS_KIND_DAMAGE..*FIGHTER_STATUS_KIND_DAMAGE_FALL).contains(&status_kind) {
+                //Glows Red during Hitstun
+                macros::FLASH(fighter, 2.55, 0.0, 0.0, 0.7);
+            }
+            else if ((cancel_frame > 0.0 && frame >= cancel_frame) || (CancelModule::is_enable_cancel(boma))) && !(*FIGHTER_STATUS_KIND_DAMAGE..*FIGHTER_STATUS_KIND_DAMAGE_FALL).contains(&status_kind) && faf_status {
+                //Glows Green during Cancel Frames
+                macros::FLASH(fighter, 0.0, 2.55, 0.0, 0.7);
+            }
+            else if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH
+            && (fighter.dacsa_check() == 1 || fighter.dacsa_check() == 2) {
+                //Glows Yellow during DACUS/DACDS Frames
+                macros::FLASH(fighter, 2.55, 2.55, 0.0, 0.7);
+            }
+        }
+        //Held Buffer
+        let control_pad = [
+            *CONTROL_PAD_BUTTON_APPEAL_HI, *CONTROL_PAD_BUTTON_APPEAL_LW, *CONTROL_PAD_BUTTON_APPEAL_S_L, *CONTROL_PAD_BUTTON_APPEAL_S_R, *CONTROL_PAD_BUTTON_ATTACK, *CONTROL_PAD_BUTTON_ATTACK_RAW, *CONTROL_PAD_BUTTON_CATCH, *CONTROL_PAD_BUTTON_CSTICK_ON,
+            *CONTROL_PAD_BUTTON_FLICK_JUMP, *CONTROL_PAD_BUTTON_GUARD, *CONTROL_PAD_BUTTON_GUARD_HOLD, *CONTROL_PAD_BUTTON_INVALID, *CONTROL_PAD_BUTTON_JUMP, *CONTROL_PAD_BUTTON_JUMP_MINI, *CONTROL_PAD_BUTTON_SMASH, *CONTROL_PAD_BUTTON_SPECIAL, 
+            *CONTROL_PAD_BUTTON_SPECIAL_RAW, *CONTROL_PAD_BUTTON_SPECIAL_RAW2, *CONTROL_PAD_BUTTON_STOCK_SHARE, *CONTROL_PAD_BUTTON_TERM, *CONTROL_PAD_CLATTER_CAUSE_NONE, *CONTROL_PAD_CLATTER_FLOWER, *CONTROL_PAD_CLATTER_MAIN, *CONTROL_PAD_CLATTER_NONE,
+            *CONTROL_PAD_CLATTER_TERM, *CONTROL_PAD_STICK_REVERSE_ALL, *CONTROL_PAD_STICK_REVERSE_NONE, *CONTROL_PAD_STICK_REVERSE_X, *CONTROL_PAD_STICK_REVERSE_Y
+        ];
+        for i in control_pad {
+            if ControlModule::get_trigger_count(boma, i as u8) > 15 && ControlModule::check_button_on(boma, i)
+            && ![*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_OFF].contains(&status_kind) {
+                ControlModule::reset_trigger(boma);
+                ControlModule::clear_command(boma, true);
+            }
         }
     };
 }

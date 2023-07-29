@@ -25,7 +25,10 @@ use {
             L2CFighterCommon,
             *
         },
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector3f
+        }
     },
     smash_script::*,
     smashline::*,

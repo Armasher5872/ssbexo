@@ -9,36 +9,29 @@ unsafe fn samusd_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CVal
 
 #[status_script(agent = "samusd", status = FIGHTER_STATUS_KIND_SPECIAL_HI, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn samusd_special_hi_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if SAMUSD_HAS_FLOAT[entry_id] != true {
-        fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_hi"), L2CValue::Hash40s("special_air_hi"), false.into());
-        if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        }
-        else {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-            StatusModule::set_situation_kind(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), true);
-        }
-        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-        sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-        fighter.sub_shift_status_main(L2CValue::Ptr(samusd_special_hi_loop as *const () as _));
+    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_hi"), L2CValue::Hash40s("special_air_hi"), false.into());
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     }
     else {
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+        fighter.set_situation(SITUATION_KIND_AIR.into());
     }
-    0.into()
+    sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+    sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+    sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+    fighter.sub_shift_status_main(L2CValue::Ptr(samusd_special_hi_loop as *const () as _))
 }
 
 pub unsafe fn samusd_special_hi_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-	let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_air_check_fall_common().get_bool() {
@@ -49,66 +42,63 @@ pub unsafe fn samusd_special_hi_loop(fighter: &mut L2CFighterCommon) -> L2CValue
         return 1.into();
     }
     if situation_kind == *SITUATION_KIND_GROUND {
-        if prev_situation_kind == *SITUATION_KIND_AIR {
-            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
-            WorkModule::set_float(fighter.module_accessor, 24.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-            return 0.into();
-        }
+        fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+        WorkModule::set_float(fighter.module_accessor, 24.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
+        return 0.into();
     }
     if (22.0..=94.0).contains(&frame) && situation_kind == *SITUATION_KIND_AIR {
-        let mut y_add = 0.0;
         let mut x_add = 0.0;
+        let mut y_add = 0.0;
         if stick_x > 0.2 {
-            x_add = ((stick_x-0.2)*SAMUSD_X_ACCEL_MUL) + SAMUSD_X_ACCEL_ADD;
-            if speed_x > SAMUSD_X_MAX || speed_x < -SAMUSD_X_MAX {
+            x_add = ((stick_x-0.2)*0.02/*X Accel Mul*/)+0.01/*X Accel Add*/;
+            if speed_x > 0.25/*X Max*/ || speed_x < -0.25/*X Max*/ {
                 x_add = 0.0;
             };
         };
         if stick_x < -0.2 {
-            x_add = ((stick_x+0.2)*SAMUSD_X_ACCEL_MUL) + SAMUSD_X_ACCEL_ADD;
-            if speed_x > SAMUSD_X_MAX || speed_x < -SAMUSD_X_MAX {
+            x_add = ((stick_x+0.2)*0.02/*X Accel Mul*/)+0.01/*X Accel Add*/;
+            if speed_x > 0.25/*X Max*/ || speed_x < -0.25/*X Max*/ {
                 x_add = 0.0;
             };
         };
         if stick_y > 0.2 {
-            y_add = ((stick_y-0.2)*SAMUSD_Y_ACCEL_MUL) + SAMUSD_Y_ACCEL_ADD;
-            if speed_y > SAMUSD_Y_MAX || speed_y < -SAMUSD_Y_MAX {
+            y_add = ((stick_y-0.2)*0.04/*Y Accel Mul*/)+0.02/*Y Accel Add*/;
+            if speed_y > 0.5/*Y Max*/ || speed_y < -0.5/*Y Max*/ {
                 y_add = 0.0;
             };
         };
         if stick_y < -0.2 {
-            y_add = ((stick_y+0.2)*SAMUSD_Y_ACCEL_MUL) + SAMUSD_Y_ACCEL_ADD;
-            if speed_y > SAMUSD_Y_MAX || speed_y < -SAMUSD_Y_MAX {
+            y_add = ((stick_y+0.2)*0.04/*Y Accel Mul*/)+0.02/*Y Accel Add*/;
+            if speed_y > 0.5/*Y Max*/ || speed_y < -0.5/*Y Max*/ {
                 y_add = 0.0;
             };
         };
         if stick_x > -0.2 && stick_x < 0.2 && stick_y > -0.2 && stick_y < 0.2 {
             if speed_y > 0.0 {
-                y_add = -SAMUSD_Y_ACCEL_MUL - SAMUSD_Y_ACCEL_ADD;
+                y_add = -0.04/*Y Accel Mul*/-0.02/*Y Accel Add*/;
             } 
             else if speed_y < 0.0 {
-                y_add = SAMUSD_Y_ACCEL_MUL + SAMUSD_Y_ACCEL_ADD;
+                y_add = 0.04/*Y Accel Mul*/+0.02/*Y Accel Add*/;
             };
-            let mut x_add = 0.0;
             if speed_x > 0.0 {
-                x_add = -SAMUSD_X_ACCEL_MUL - SAMUSD_X_ACCEL_ADD;
+                x_add = -0.02/*X Accel Mul*/-0.01/*X Accel Add*/;
             } 
             else if speed_x < 0.0 {
-                x_add = SAMUSD_X_ACCEL_MUL + SAMUSD_X_ACCEL_ADD;
+                x_add = 0.02/*X Accel Mul*/+0.01/*X Accel Add*/;
             };
         };
-        x_add = (stick_x)*SAMUSD_X_ACCEL_MUL;
-        y_add = (stick_y)*SAMUSD_Y_ACCEL_MUL;
-        if x_add > 0.0 && SAMUSD_X[entry_id] > SAMUSD_X_MAX {
+        x_add = (stick_x)*0.02/*X Accel Mul*/;
+        y_add = (stick_y)*0.04/*Y Accel Mul*/;
+        if x_add > 0.0 && SAMUSD_X[entry_id] > 0.25/*X Max*/ {
             x_add = 0.0;
         };
-        if x_add < 0.0 && SAMUSD_X[entry_id] < SAMUSD_X_MAX*-1.0 {
+        if x_add < 0.0 && SAMUSD_X[entry_id] < 0.25*-1.0/*X Max*/ {
             x_add = 0.0;
         };
-        if y_add > 0.0 && SAMUSD_Y[entry_id] > SAMUSD_Y_MAX {
+        if y_add > 0.0 && SAMUSD_Y[entry_id] > 0.5/*Y Max*/ {
             y_add = 0.0;
         };
-        if y_add < 0.0 && SAMUSD_Y[entry_id] < SAMUSD_Y_MAX*-1.0 {
+        if y_add < 0.0 && SAMUSD_Y[entry_id] < 0.5*-1.0/*Y Max*/ {
             y_add = 0.0;
         };
         let speed = smash::phx::Vector3f{ x: x_add, y: y_add, z: 0.0 };
@@ -121,15 +111,7 @@ pub unsafe fn samusd_special_hi_loop(fighter: &mut L2CFighterCommon) -> L2CValue
         SAMUSD_Y[entry_id] = 0.0;
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if situation_kind == *SITUATION_KIND_GROUND {
-            if prev_situation_kind != *SITUATION_KIND_AIR {
-                MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi"), 22.0, 1.0, false, 0.0, false, false);
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            }
-        }
-        else {
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-        }
+        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     0.into()
 }
@@ -146,8 +128,6 @@ unsafe fn samusd_special_hi_exec_status(_fighter: &mut L2CFighterCommon) -> L2CV
 
 #[status_script(agent = "samusd", status = FIGHTER_STATUS_KIND_SPECIAL_HI, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
 unsafe fn samusd_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    SAMUSD_HAS_FLOAT[entry_id] = true;
     0.into()
 }
 

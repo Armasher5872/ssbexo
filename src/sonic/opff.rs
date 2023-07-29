@@ -406,30 +406,8 @@ fn sonic_frame(fighter: &mut L2CFighterCommon) {
     }
 }
 
-#[fighter_frame( agent = FIGHTER_KIND_KIRBY )]
-fn kirby_sonic_frame(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let motion_kind = MotionModule::motion_kind(module_accessor);
-        let rand_num_8 = smash::app::sv_math::rand(hash40("fighter"), 8);
-        let kirby_new_animation_hash = Hash40::new(match rand_num_8 {1|2 => "sonic_special_n_hit", 3..=4 => "sonic_special_n_hit_1", 5..=6 => "sonic_special_n_hit_2", _ => "sonic_special_n_hit_3"});
-        if motion_kind == hash40("sonic_special_n_homing") 
-        && AttackModule::is_infliction(module_accessor, *COLLISION_KIND_MASK_ALL) {
-            HOMING_ATTACK_HIT[entry_id] = true;
-        }
-        if HOMING_ATTACK_HIT[entry_id] {
-			if [hash40("sonic_special_n_hit"), hash40("sonic_special_n_hit_1"), hash40("sonic_special_n_hit_2"), hash40("sonic_special_n_hit_3")].contains(&motion_kind) {
-				HOMING_ATTACK_HIT[entry_id] = false;
-			};
-            MotionModule::change_motion(module_accessor, kirby_new_animation_hash, 1.0, 1.0, false, 0.0, false, false);
-        };
-    }
-}
-
 pub fn install() {
     install_agent_frames!(
-        sonic_frame,
-        kirby_sonic_frame
+        sonic_frame
     );
 }

@@ -4,8 +4,12 @@ use {
         ext::*,
         var::{
             consts::*,
+            diddy::*,
             donkey::*,
             globals::*,
+            kirby::*,
+            luigi::*,
+            pikachu::*,
             samusd::*,
         },
         variables::*,

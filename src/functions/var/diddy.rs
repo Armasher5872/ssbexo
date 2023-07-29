@@ -1,0 +1,1 @@
+pub static mut BANANA_EXIST: [bool; 8] = [false; 8];

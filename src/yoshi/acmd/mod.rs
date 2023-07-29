@@ -5,6 +5,7 @@ use {
             sv_animcmd::*,
             *
         },
+        hash40,
         lib::lua_const::*,
         lua2cpp::*,
         phx::Hash40
@@ -13,12 +14,16 @@ use {
     smashline::*,
 };
 
+mod aerials;
 mod grounded;
+mod specials;
 mod throws;
 mod tilts;
 
 pub fn install() {
+    aerials::install();
     grounded::install();
+    specials::install();
     throws::install();
     tilts::install();
 }

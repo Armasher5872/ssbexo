@@ -59,10 +59,10 @@ unsafe fn ssbuexo_pickel_grab_acmd(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "pickel", script = "game_catchdash", category = ACMD_GAME )]
 unsafe fn ssbuexo_pickel_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
+        GrabModule::set_rebound(fighter.module_accessor, true);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PICKEL_INSTANCE_WORK_ID_FLAG_REQUEST_REMOVE_HAVE_CRAFT_WEAPON);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PICKEL_GENERATE_ARTICLE_FISHINGROD, false, 0);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_PICKEL_GENERATE_ARTICLE_FISHINGROD, Hash40::new("catch_dash"), false, -1.0);
-        GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 15.0);
     if macros::is_excute(fighter) {

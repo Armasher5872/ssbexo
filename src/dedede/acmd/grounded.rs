@@ -1,5 +1,67 @@
 use super::*;
 
+//Down Taunt Expression
+#[acmd_script( agent = "dedede", scripts = ["expression_appeallwl", "expression_appeallwr"], category = ACMD_EXPRESSION)]
+unsafe fn ssbuexo_dedede_down_taunt_expression(fighter: &mut L2CAgentBase) 
+{
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(fighter.lua_state_agent, 9.0);
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_L, 4);
+    }
+    frame(fighter.lua_state_agent, 10.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_lands_hv"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 19.0);
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_R, 4);
+    }
+    frame(fighter.lua_state_agent, 24.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_lands_hv"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 37.0);
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_L, 4);
+    }
+    frame(fighter.lua_state_agent, 40.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_lands_hv"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 50.0);
+    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_MASK) {
+        if macros::is_excute(fighter) {
+            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_MASK, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_R, 4);
+        }
+    }
+    else {
+        if macros::is_excute(fighter) {
+            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_MASK, false, -1);
+            slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_R, 4);
+        }
+    }
+    frame(fighter.lua_state_agent, 55.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_lands_hv"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 70.0);
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_L, 4);
+    }
+    frame(fighter.lua_state_agent, 73.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_landl_hv"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 95.0);
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 4);
+    }
+}
+
 //Jab 1 ACMD
 #[acmd_script( agent = "dedede", script = "game_attack11", category = ACMD_GAME)]
 unsafe fn ssbuexo_dedede_jab_1_acmd(fighter: &mut L2CAgentBase) 
@@ -104,6 +166,7 @@ unsafe fn ssbuexo_dedede_dash_attack_acmd(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     install_acmd_scripts!(
+        ssbuexo_dedede_down_taunt_expression,
         ssbuexo_dedede_jab_1_acmd,
         ssbuexo_dedede_jab_2_acmd,
         ssbuexo_dedede_dash_attack_acmd

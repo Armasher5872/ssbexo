@@ -138,6 +138,7 @@ unsafe fn check_100_count_button(fighter: &mut L2CFighterCommon, param_1: L2CVal
 //Status Attack Main Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
 #[skyline::hook(replace = L2CFighterCommon_status_Attack_Main_button)]
 unsafe fn status_attack_main_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     fighter.check_100_count_button(param_1.clone());
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
@@ -189,7 +190,7 @@ unsafe fn status_attack_main_button(fighter: &mut L2CFighterCommon, param_1: L2C
     let attack_combo_type = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_combo_type"), 0);
     if attack_combo_type != *FIGHTER_COMBO_TYPE_NONE {
         if attack_combo_type == *FIGHTER_COMBO_TYPE_HIT && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART) {
-            if fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_SAMUS {
+            if fighter_kind == *FIGHTER_KIND_SAMUS {
                 fighter.change_status(FIGHTER_STATUS_KIND_ATTACK.into(), false.into());
                 MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_12"), 0.0, 1.0, false, 0.0, false, false);
             }

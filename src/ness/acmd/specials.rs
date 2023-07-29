@@ -199,47 +199,33 @@ unsafe fn ssbuexo_ness_pk_flash_acmd(fighter: &mut L2CAgentBase)
 {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let rand_num = sv_math::rand(hash40("fighter"), 100);
+    let mut offense_hash_check = if (60..100).contains(&rand_num) {Hash40::new("collision_attr_death")} else if (25..59).contains(&rand_num) {Hash40::new_raw(0x1C655B0AE7)} else if (14..24).contains(&rand_num) {Hash40::new("collision_attr_paralyze")} else {Hash40::new("collision_attr_curse_poison")};
+    let mut normal_hash_check = if (53..100).contains(&rand_num) {Hash40::new("collision_attr_paralyze")} else if (18..52).contains(&rand_num) {Hash40::new_raw(0x1C655B0AE7)} else if (3..17).contains(&rand_num) {Hash40::new("collision_attr_curse_poison")} else {Hash40::new("collision_attr_death")};
     if PK_FLASH_TIMER[entry_id] >= 120 {
         if OFFENSE_UP_ACTIVE[entry_id] == true {
-            if (60..100).contains(&rand_num) {
+            if (0..13).contains(&rand_num) {
                 if macros::is_excute(fighter) {
-                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_death"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
+                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, offense_hash_check, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
+                    AttackModule::set_poison_param(fighter.module_accessor, 0, 600, 20, 0.2, false);
                 }
             }
-            else if (25..59).contains(&rand_num) {
+            else {
                 if macros::is_excute(fighter) {
-                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new_raw(0x1C655B0AE7), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);   
+                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, offense_hash_check, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);   
                 }
-            }
-            else if (14..24).contains(&rand_num) {
-                if macros::is_excute(fighter) {
-                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
-                }
-            }
-            else if macros::is_excute(fighter) {
-                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
-                AttackModule::set_poison_param(fighter.module_accessor, 0, 600, 20, 0.2, false);  
             }
         }
         else {
-            if (53..100).contains(&rand_num) {
+            if (3..17).contains(&rand_num) {
                 if macros::is_excute(fighter) {
-                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
+                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, normal_hash_check, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
+                    AttackModule::set_poison_param(fighter.module_accessor, 0, 600, 20, 0.2, false);
                 }
             }
-            else if (18..52).contains(&rand_num) {
+            else {
                 if macros::is_excute(fighter) {
-                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new_raw(0x1C655B0AE7), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);   
+                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, normal_hash_check, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);   
                 }
-            }
-            else if (3..17).contains(&rand_num) {
-                if macros::is_excute(fighter) {
-                    macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_curse_poison"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
-                    AttackModule::set_poison_param(fighter.module_accessor, 0, 600, 20, 0.2, false);  
-                }
-            }
-            else if macros::is_excute(fighter) {
-                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_death"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);
             }
         }
     }

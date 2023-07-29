@@ -96,7 +96,7 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 		}
 		AttackModule::set_no_dead_all(module_accessor, true, false);
 		WorkModule::on_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_DEAD);
-		//Invisible wall preventing fighters from entering each others' territory
+		//Invisible wall preventing fighters from entering each others territory
 		if SPAWN_SIDE[get_player_number(module_accessor)] 
         && PostureModule::pos_x(module_accessor) < 3.0 {
 			let new_vec = Vector3f{x: 3.0, y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
@@ -170,7 +170,7 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 		if READY_GO_TIMER != 0 { 
 			//Lock everyone in place while waiting
 			if READY_GO_TIMER == 180 { 
-				//Give each player a temporary spawn position that matches one of the previously used spawn positions, and doesn't match any of the other players' temporary spawn positions
+				//Give each player a temporary spawn position that matches one of the previously used spawn positions, and doesn't match any of the other players temporary spawn positions
 				let mut new_pos = SPAWN_POS[smash::app::sv_math::rand(hash40("fighter"), TOTAL_FIGHTER) as usize];
 				let mut pos_shuffle = false;
 				while pos_shuffle == false {
@@ -206,7 +206,7 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 			PostureModule::update_rot_y_lr(module_accessor);
 			LAST_TO_HIT_BALL = 9;
 			if READY_GO_TIMER == 1 { 
-				//After everyone has respawned, randomly choose a player who was just KOd and give them the ball
+				//After everyone has respawned, randomly choose a player who was just KO'd and give them the ball
 				if get_player_number(module_accessor) == 0 {
 					BALL_OWNER = 9;
 					while BALL_OWNER == 9 {
@@ -251,7 +251,7 @@ unsafe fn fun_di_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 unsafe fn smash4_parry(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon, globals: &mut L2CValue) {
 	if let L2CValueType::Void = globals["perfect_shield"].val_type {
 		globals["perfect_shield"] = false.into();
-		globals["shield_health"] = 45.0.into();
+		globals["shield_health"] = 50.0.into();
 	}
 	if status_kind == *FIGHTER_STATUS_KIND_GUARD_DAMAGE 
     && StatusModule::prev_status_kind(module_accessor, 0) != *FIGHTER_STATUS_KIND_GUARD {
@@ -334,6 +334,7 @@ unsafe fn status_kind_damage(fighter: &mut L2CFighterCommon, module_accessor: &m
 			if SPECIAL_SMASH_HEAD == 2 {
 				CancelModule::enable_cancel(module_accessor);
 			}
+			//Smashketball
 			if SPECIAL_SMASH_BODY == 6 {
 				if (SPAWN_SIDE[get_player_number(module_accessor)] && PostureModule::pos_x(module_accessor) > LOW_SPAWN_POS.x - 15.0 && PostureModule::pos_x(module_accessor) < LOW_SPAWN_POS.x + 15.0 && PostureModule::pos_y(module_accessor) > LOW_SPAWN_POS.y - 15.0 && PostureModule::pos_y(module_accessor) < LOW_SPAWN_POS.y + 15.0) 
 				|| (!SPAWN_SIDE[get_player_number(module_accessor)] && PostureModule::pos_x(module_accessor) > HIGH_SPAWN_POS.x - 15.0 && PostureModule::pos_x(module_accessor) < HIGH_SPAWN_POS.x + 15.0 && PostureModule::pos_y(module_accessor) > HIGH_SPAWN_POS.y - 15.0 && PostureModule::pos_y(module_accessor) < HIGH_SPAWN_POS.y + 15.0) {
@@ -479,9 +480,7 @@ unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 			AttackModule::set_attack_power_mul_scale(module_accessor, 1.0);
 			PostureModule::set_scale(module_accessor, 1.0, true);
 		}
-		if SPECIAL_SMASH_HEAD != 0 
-        || SPECIAL_SMASH_BODY != 0 
-        || SPECIAL_SMASH_STATUS != 0 {
+		if SPECIAL_SMASH_HEAD != 0 || SPECIAL_SMASH_BODY != 0 || SPECIAL_SMASH_STATUS != 0 {
 			WorkModule::off_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_GEKIKARA);
 			EffectModule::kill_kind(module_accessor, Hash40::new("sys_curry_shot"), true, true);
 			if StatusModule::prev_status_kind(module_accessor, 1) == *FIGHTER_STATUS_KIND_DEAD {

@@ -24,8 +24,8 @@ unsafe fn ssbuexo_snake_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "snake", script = "game_catchdash", category = ACMD_GAME)]
 unsafe fn ssbuexo_snake_dash_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    macros::FT_MOTION_RATE(fighter, 1.222);
     if macros::is_excute(fighter) {
+        macros::FT_MOTION_RATE(fighter, 1.222);
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 11.0);
@@ -48,8 +48,8 @@ unsafe fn ssbuexo_snake_dash_grab_acmd(fighter: &mut L2CAgentBase)
 #[acmd_script( agent = "snake", script = "game_catchturn", category = ACMD_GAME)]
 unsafe fn ssbuexo_snake_pivot_grab_acmd(fighter: &mut L2CAgentBase) 
 {
-    macros::FT_MOTION_RATE(fighter, 1.125);
     if macros::is_excute(fighter) {
+        macros::FT_MOTION_RATE(fighter, 1.125);
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
     frame(fighter.lua_state_agent, 8.0);
