@@ -21,7 +21,6 @@ use {
         },
         hash40,
         lib::{
-            L2CAgent,
             L2CValue,
             L2CValueType,
             lua_const::*,

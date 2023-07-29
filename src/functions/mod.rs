@@ -38,6 +38,7 @@ use {
         hash40,
         lib::{
             L2CAgent,
+            L2CValue,
             lua_const::*,
         },
         lua2cpp::L2CFighterCommon,

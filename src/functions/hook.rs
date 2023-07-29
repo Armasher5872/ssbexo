@@ -350,7 +350,7 @@ pub unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_obje
 
 #[skyline::hook(replace=smash::app::lua_bind::WorkModule::get_int)]
 pub unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
-	let fighter_kind = app::utility::get_kind(module_accessor);
+	let fighter_kind = smash::app::utility::get_kind(module_accessor);
 	if SPECIAL_SMASH_BODY == 3 
     && fighter_kind == *ITEM_KIND_SOCCERBALL {
 		let mut pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
