@@ -129,9 +129,9 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
             }
             StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FURAFURA_STAND, true);
         }
-        //DJC (For Lucas and Kazuya cause they don't wanna work)
+        //DJC (For Lucas cause they don't wanna work)
         let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        if [*FIGHTER_KIND_LUCAS, *FIGHTER_KIND_DEMON].contains(&fighter_kind) {
+        if fighter_kind == *FIGHTER_KIND_LUCAS {
             if [*FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL].contains(&KineticModule::get_kinetic_type(boma)) {
                 if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_JUMP) && [*FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_AIR_LASSO].contains(&status_kind) {
                     KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
@@ -246,6 +246,21 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
                 ControlModule::clear_command(boma, true);
             }
         }
+        //Fullhop
+        if FULL_HOP_ENABLE_DELAY[entry_id] > 0 {
+			FULL_HOP_ENABLE_DELAY[entry_id] -= 1;
+		};
+        //This checks if the Full Hop button is pressed
+		let triggered_buttons: Buttons = unsafe {
+			Buttons::from_bits_unchecked(ControlModule::get_button(boma) & !ControlModule::get_button_prev(boma))
+		};
+		if triggered_buttons.intersects(Buttons::FullHop) {
+			FULL_HOP_ENABLE_DELAY[entry_id] = 14;
+		};
+		if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) { 
+            //Removes possibility of FH coming out of a SH. Shorthop button has priority over Fullhop
+			FULL_HOP_ENABLE_DELAY[entry_id] = 0;
+		};
     };
 }
 

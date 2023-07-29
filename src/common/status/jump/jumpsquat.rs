@@ -6,10 +6,15 @@ use super::*;
 unsafe fn status_jumpsquat_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let fighter_kind = smash::app::utility::get_kind(boma);
+    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_bool() && {let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_ptr()); callable(fighter).get_bool()} {
         return 1.into();
     }
     /* START OF NEW ADDITIONS */
+    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
+        FULL_HOP_ENABLE_DELAY[entry_id] = 0;
+        WorkModule::set_flag(boma, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+    }
     if fighter_kind == *FIGHTER_KIND_DONKEY {
         if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_ATTACK_DASH {
             MotionModule::set_rate(boma, 0.8);

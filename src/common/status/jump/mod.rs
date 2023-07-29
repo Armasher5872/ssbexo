@@ -1,7 +1,11 @@
 use {
-    crate::functions::var::globals::*,
+    crate::functions::{
+        var::globals::*,
+        variables::*,
+    },
     smash::{
         app::lua_bind::*,
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,
@@ -16,7 +20,9 @@ use {
 };
 
 mod jumpsquat;
+mod treadjump;
 
 pub fn install() {
     jumpsquat::install();
+    treadjump::install();
 }
