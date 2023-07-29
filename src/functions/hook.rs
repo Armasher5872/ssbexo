@@ -261,11 +261,160 @@ unsafe fn get_ground_correct_kind_air_trans_hook(_boma: &mut smash::app::BattleO
     return *GROUND_CORRECT_KIND_AIR;
 }
 
+//Reverse Knockback
+#[skyline::hook(replace = sv_animcmd::ATTACK)]
+unsafe fn attack_replace(lua_state: u64) {
+    let mut l2c_agent = L2CAgent::new(lua_state);
+    let hitbox_params: Vec<L2CValue> = (0..36).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
+	l2c_agent.clear_lua_stack();
+	for i in 0..36 {
+		if i == 4
+		&& SPECIAL_SMASH_STATUS == 1 {
+			if i < 362 {
+				let positive_angle = i+(180 as u64);
+				let negative_angle = i-(180 as u64);
+				if i < 180 {
+					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle));
+				}
+				else {
+					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle));
+				}
+			}
+		}
+		else {
+			l2c_agent.push_lua_stack(&mut hitbox_params[i as usize].clone());
+		}
+	}
+	original!()(lua_state);
+}
+
+#[skyline::hook(replace = sv_animcmd::ATTACK_ABS)]
+unsafe fn attack_abs_replace(lua_state: u64) {
+    let mut l2c_agent = L2CAgent::new(lua_state);
+    let hitbox_params: Vec<L2CValue> = (0..15).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
+	l2c_agent.clear_lua_stack();
+	for i in 0..15 {
+		if i == 3
+		&& SPECIAL_SMASH_STATUS == 1 {
+			if i < 362 {
+				let positive_angle = i+(180 as u64);
+				let negative_angle = i-(180 as u64);
+				if i < 180 {
+					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle));
+				}
+				else {
+					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle));
+				}
+			}
+		}
+		else {
+			l2c_agent.push_lua_stack(&mut hitbox_params[i as usize].clone());
+		}
+	}
+    original!()(lua_state);
+}
+
+#[skyline::hook(replace=smash::app::lua_bind::FighterInformation::gravity)]
+unsafe fn gravity_replace(fighter_information: &mut smash::app::FighterInformation) -> f32 {
+	let ret = original!()(fighter_information);
+	if ret == 1.33 {
+		SPECIAL_SMASH_GRAVITY = 1;
+	}
+	else if ret == 0.66 {
+		SPECIAL_SMASH_GRAVITY = 2;
+	}
+	else {
+		SPECIAL_SMASH_GRAVITY = 0;
+	}
+	return 1.0;
+}
+
+//Notify Log Event Collision Hit
+#[skyline::hook(offset=0x67a790)]
+pub unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
+	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
+	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
+	let attacker_kind = smash::app::utility::get_kind(attacker_boma);
+	let defender_kind = smash::app::utility::get_kind(defender_boma);
+	//Ball
+	if attacker_kind == *ITEM_KIND_SOCCERBALL {
+		//If the ball hits someone and then goes out of bounds, the team that got hit loses the stock
+		LAST_TO_HIT_BALL = get_player_number(defender_boma);
+	}
+	if defender_kind == *ITEM_KIND_SOCCERBALL {
+		LAST_TO_HIT_BALL = get_player_number(attacker_boma);
+		ALREADY_BOUNCED = false;
+	}
+	original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
+}
+
+#[skyline::hook(replace=smash::app::lua_bind::WorkModule::get_int)]
+pub unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
+	let fighter_kind = app::utility::get_kind(module_accessor);
+	if SPECIAL_SMASH_BODY == 3 
+    && fighter_kind == *ITEM_KIND_SOCCERBALL {
+		let mut pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
+		if pos.x < camera_range().x + 10.0 
+        || pos.x > camera_range().y - 10.0 
+        || pos.y < camera_range().w + 10.0 { 
+			//If we do know who it was, trigger the ball KO sequence
+			if ALREADY_BOUNCED {
+				BALL_BOUNCED = Vector3f{x: pos.x, y: 0.0, z: 0.0};
+			}
+			else {
+				BALL_BOUNCED = Vector3f{x: pos.x, y: 1.0, z: 0.0};
+			}
+		}
+		if GroundModule::get_touch_flag(module_accessor) == *GROUND_TOUCH_FLAG_DOWN as u64 {
+			if ALREADY_BOUNCED 
+            || (FIRST_BOUNCE && ((SPAWN_SIDE[LAST_TO_HIT_BALL] && pos.x > 3.0) 
+            || (!SPAWN_SIDE[LAST_TO_HIT_BALL] && pos.x < -3.0))) { 
+				//If either we already bounced, or we hit the ball but it was still on our side, KO
+				BALL_BOUNCED = Vector3f{x: pos.x, y: 0.0, z: 0.0};
+				ALREADY_BOUNCED = false;
+			}
+			else { 
+				//Otherwise, just record that we already bounced
+				ALREADY_BOUNCED = true;
+			}	
+			FIRST_BOUNCE = true;
+		}
+	}
+	original!()(module_accessor, int)
+}
+
+#[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term)]
+pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
+	let situation_kind = StatusModule::situation_kind(module_accessor);
+	let ret = original!()(module_accessor, term);
+	if smash::app::utility::get_category(module_accessor) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+		if READY_GO_TIMER != 0 {
+			return false;
+		}
+		if SPECIAL_SMASH_BODY == 3 {
+			if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW 
+			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_DASH
+			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_GUARD
+			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE
+			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE_DASH {
+				return ret && situation_kind == *SITUATION_KIND_AIR;
+			}
+		}
+		return ret;
+	}
+	return ret;
+}
+
 //Installation
 pub fn install() {
 	skyline::install_hook!(change_status_hook);
 	skyline::install_hook!(is_valid_just_shield_reflector);
     skyline::install_hook!(is_valid_just_shield_replace);
+    skyline::install_hook!(attack_replace);
+	skyline::install_hook!(attack_abs_replace);
+	skyline::install_hook!(get_int_replace);
+	skyline::install_hook!(is_enable_transition_term_replace);
+	skyline::install_hook!(notify_log_event_collision_hit);
 	skyline::install_hooks!(
         hit_module_handle_attack_event,
         shield_module_send_shield_attack_collision_event,

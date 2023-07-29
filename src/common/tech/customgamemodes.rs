@@ -14,12 +14,14 @@ unsafe fn one_hit_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 	else {
 		WorkModule::set_int(module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
 	}
-	if got_hit == 2 { //If the timer reaches 2, check to see if anyone else has been hit
+	if got_hit == 2 { 
+		//If the timer reaches 2, check to see if anyone else has been hit
 		for i in 0..TOTAL_FIGHTER + 1 {
 			if got_hit != 0 {
 				if i as usize != get_player_number(module_accessor) {
 					WorkModule::set_int(module_accessor, 3, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
-					break; //If anyone has, don't do anything
+					//If anyone has, don't do anything
+					break;
 				}
 			}
             //If no one has been hit, kill the one player who has and tell everyone else to reset their positions
@@ -71,16 +73,20 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
         || pos.x > dead_range(lua_state).y 
         || pos.y > dead_range(lua_state).z 
         || pos.y < dead_range(lua_state).w {
-			if pos.x < dead_range(lua_state).x { //Right
+			if pos.x < dead_range(lua_state).x { 
+				//Right
 				pos.x = dead_range(lua_state).y;
 			}
-			if pos.x > dead_range(lua_state).y { //Left
+			if pos.x > dead_range(lua_state).y { 
+				//Left
 				pos.x = dead_range(lua_state).x;
 			}
-			if pos.y > dead_range(lua_state).z { //Up
+			if pos.y > dead_range(lua_state).z { 
+				//Up
 				pos.y = dead_range(lua_state).w;
 			}
-			if pos.y < dead_range(lua_state).w { //Down
+			if pos.y < dead_range(lua_state).w { 
+				//Down
 				pos.y = dead_range(lua_state).z;
 			} 
 			let correct_kind = smash::app::GroundCorrectKind(GroundModule::get_correct(module_accessor));
@@ -103,7 +109,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 		}
 		//The process of KOing an opponent
 		if BALL_BOUNCED.z != 9999.0 {
-			if BALL_BOUNCED.y == 0.0 { //If the ball bounced on the ground, KO everyone who was on the same side as the ball
+			if BALL_BOUNCED.y == 0.0 { 
+				//If the ball bounced on the ground, KO everyone who was on the same side as the ball
 				if (BALL_BOUNCED.x > 3.0 
                     && SPAWN_SIDE[get_player_number(module_accessor)]) 
                     || (BALL_BOUNCED.x < -3.0 
@@ -116,7 +123,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 					}
 				}	
 			}
-			else { //If the ball went out of bounds, KO everyone who was on the same side as whoever last hit the ball
+			else { 
+				//If the ball went out of bounds, KO everyone who was on the same side as whoever last hit the ball
 				if SPAWN_SIDE[get_player_number(module_accessor)] == SPAWN_SIDE[LAST_TO_HIT_BALL] {
 					for i in 0..3 {
 						if BALL_VICTIMS[i] == 9 {
@@ -126,7 +134,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 					}
 				}
 			}
-			if get_player_number(module_accessor) as i32 == TOTAL_FIGHTER - 1 { //Once all victims have gotten a chance to be put on the list, KO them
+			if get_player_number(module_accessor) as i32 == TOTAL_FIGHTER - 1 { 
+				//Once all victims have gotten a chance to be put on the list, KO them
 				for i in 0..3 {
 					if BALL_VICTIMS[i] != 9 {
 						StatusModule::change_status_request_from_script(&mut *get_boma(BALL_VICTIMS[i]), *FIGHTER_STATUS_KIND_DEAD, true);
@@ -139,11 +148,13 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 						.as_ptr(),
 				);
 				let item_manager = *(ITEM_MANAGER_ADDR as *mut *mut smash::app::ItemManager);
-				smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, BALL_ID); //Then get rid of the soccerball and reset these values so multiple stocks aren't taken
+				//Then get rid of the soccerball and reset these values so multiple stocks aren't taken
+				smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, BALL_ID);
 				BALL_BOUNCED = Vector3f{x: 0.0, y: 0.0, z: 9999.0};
 			}
 		}
-		if !WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO) { //The frame the game starts, randomly pick a player to give the ball
+		if !WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO) { 
+			//The frame the game starts, randomly pick a player to give the ball
 			READY_GO_TIMER = 0;
 			if get_player_number(module_accessor) == 0 {
 				BALL_OWNER = smash::app::sv_math::rand(hash40("fighter"), TOTAL_FIGHTER);
@@ -156,13 +167,15 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 			ALREADY_BOUNCED = false;
 			FIRST_BOUNCE = false;
 		}
-		if READY_GO_TIMER != 0 { //Lock everyone in place while waiting
+		if READY_GO_TIMER != 0 { 
+			//Lock everyone in place while waiting
 			if READY_GO_TIMER == 180 { 
-				let mut new_pos = SPAWN_POS[smash::app::sv_math::rand(hash40("fighter"), TOTAL_FIGHTER) as usize]; //Give each player a temporary spawn position that matches one of the previously used spawn positions, and doesn't match
-				//any of the other players' temporary spawn positions
+				//Give each player a temporary spawn position that matches one of the previously used spawn positions, and doesn't match any of the other players' temporary spawn positions
+				let mut new_pos = SPAWN_POS[smash::app::sv_math::rand(hash40("fighter"), TOTAL_FIGHTER) as usize];
 				let mut pos_shuffle = false;
 				while pos_shuffle == false {
-					pos_shuffle = true; //Allow the loop to end, then compare new_pos with the randomly selected positions of all previous fighters. If there's a match, pick a new position and force the loop to restart
+					//Allow the loop to end, then compare new_pos with the randomly selected positions of all previous fighters. If there's a match, pick a new position and force the loop to restart
+					pos_shuffle = true;
 					for i in 0..TOTAL_FIGHTER {
 						if new_pos.x == TEMP_SPAWN_POS[i as usize].x 
                         && new_pos.y == TEMP_SPAWN_POS[i as usize].y 
@@ -192,7 +205,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 			GroundModule::set_correct(module_accessor, correct_kind);
 			PostureModule::update_rot_y_lr(module_accessor);
 			LAST_TO_HIT_BALL = 9;
-			if READY_GO_TIMER == 1 { //After everyone has respawned, randomly choose a player who was just KOd and give them the ball
+			if READY_GO_TIMER == 1 { 
+				//After everyone has respawned, randomly choose a player who was just KOd and give them the ball
 				if get_player_number(module_accessor) == 0 {
 					BALL_OWNER = 9;
 					while BALL_OWNER == 9 {
@@ -237,7 +251,7 @@ unsafe fn fun_di_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 unsafe fn smash4_parry(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon, globals: &mut L2CValue) {
 	if let L2CValueType::Void = globals["perfect_shield"].val_type {
 		globals["perfect_shield"] = false.into();
-		globals["shield_health"] = 50.0.into();
+		globals["shield_health"] = 45.0.into();
 	}
 	if status_kind == *FIGHTER_STATUS_KIND_GUARD_DAMAGE 
     && StatusModule::prev_status_kind(module_accessor, 0) != *FIGHTER_STATUS_KIND_GUARD {
@@ -262,75 +276,27 @@ unsafe fn smash4_parry(module_accessor: &mut smash::app::BattleObjectModuleAcces
 	}
 }
 
-//Reverse Knockback
-#[skyline::hook(replace = sv_animcmd::ATTACK)]
-unsafe fn attack_replace(lua_state: u64) {
-    let mut l2c_agent = L2CAgent::new(lua_state);
-    let hitbox_params: Vec<L2CValue> = (0..36).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
-	l2c_agent.clear_lua_stack();
-	for i in 0..36 {
-		if i == 4
-		&& SPECIAL_SMASH_STATUS == 1 {
-			if i < 362 {
-				let positive_angle = i+(180 as u64);
-				let negative_angle = i-(180 as u64);
-				if i < 180 {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle));
-				}
-				else {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle));
-				}
-			}
-		}
-		else {
-			l2c_agent.push_lua_stack(&mut hitbox_params[i as usize].clone());
-		}
-	}
-	original!()(lua_state);
-}
-
-#[skyline::hook(replace = sv_animcmd::ATTACK_ABS)]
-unsafe fn attack_abs_replace(lua_state: u64) {
-    let mut l2c_agent = L2CAgent::new(lua_state);
-    let hitbox_params: Vec<L2CValue> = (0..15).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
-	l2c_agent.clear_lua_stack();
-	for i in 0..15 {
-		if i == 3
-		&& SPECIAL_SMASH_STATUS == 1 {
-			if i < 362 {
-				let positive_angle = i+(180 as u64);
-				let negative_angle = i-(180 as u64);
-				if i < 180 {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle));
-				}
-				else {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle));
-				}
-			}
-		}
-		else {
-			l2c_agent.push_lua_stack(&mut hitbox_params[i as usize].clone());
-		}
-	}
-    original!()(lua_state);
-}
-
 unsafe fn basketball_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, lua_state: u64, fighter: &mut L2CFighterCommon) {
+	//Disables Blastzones
 	let mut pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
 	if pos.x < dead_range(lua_state).x 
     || pos.x > dead_range(lua_state).y 
     || pos.y > dead_range(lua_state).z 
     || pos.y < dead_range(lua_state).w {
-		if pos.x < dead_range(lua_state).x { //Right
+		if pos.x < dead_range(lua_state).x { 
+			//Right
 			pos.x = dead_range(lua_state).y;
 		}
-		if pos.x > dead_range(lua_state).y { //Left
+		if pos.x > dead_range(lua_state).y { 
+			//Left
 			pos.x = dead_range(lua_state).x;
 		}
-		if pos.y > dead_range(lua_state).z { //Up
+		if pos.y > dead_range(lua_state).z { 
+			//Up
 			pos.y = dead_range(lua_state).w;
 		}
-		if pos.y < dead_range(lua_state).w { //Down
+		if pos.y < dead_range(lua_state).w { 
+			//Down
 			pos.y = dead_range(lua_state).z;
 		} 
 		let correct_kind = smash::app::GroundCorrectKind(GroundModule::get_correct(module_accessor));
@@ -364,7 +330,7 @@ unsafe fn status_kind_damage(fighter: &mut L2CFighterCommon, module_accessor: &m
 					}
 				}
 			}
-			//Turbo
+			//Hitstunless
 			if SPECIAL_SMASH_HEAD == 2 {
 				CancelModule::enable_cancel(module_accessor);
 			}
@@ -525,94 +491,6 @@ unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 	}
 }
 
-#[skyline::hook(replace=smash::app::lua_bind::FighterInformation::gravity)]
-unsafe fn gravity_replace(fighter_information: &mut smash::app::FighterInformation) -> f32 {
-	let ret = original!()(fighter_information);
-	if ret == 1.33 {
-		SPECIAL_SMASH_GRAVITY = 1;
-	}
-	else if ret == 0.66 {
-		SPECIAL_SMASH_GRAVITY = 2;
-	}
-	else {
-		SPECIAL_SMASH_GRAVITY = 0;
-	}
-	return 1.0;
-}
-
-
-#[skyline::hook(offset=0x67a790)]
-pub unsafe fn notify_log_event_collision_hit_replace(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
-	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
-	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
-	let attacker_kind = smash::app::utility::get_kind(attacker_boma);
-	let defender_kind = smash::app::utility::get_kind(defender_boma);
-	//Ball
-	if attacker_kind == *ITEM_KIND_SOCCERBALL {
-		LAST_TO_HIT_BALL = get_player_number(defender_boma); //If the ball hits someone and then goes out of bounds, the team that got hit loses the stock
-	}
-	if defender_kind == *ITEM_KIND_SOCCERBALL {
-		LAST_TO_HIT_BALL = get_player_number(attacker_boma);
-		ALREADY_BOUNCED = false;
-	}
-	original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
-}
-
-#[skyline::hook(replace=smash::app::lua_bind::WorkModule::get_int)]
-pub unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
-	let fighter_kind = app::utility::get_kind(module_accessor);
-	if SPECIAL_SMASH_BODY == 3 
-    && fighter_kind == *ITEM_KIND_SOCCERBALL {
-		let mut pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
-		if pos.x < camera_range().x + 10.0 
-        || pos.x > camera_range().y - 10.0 
-        || pos.y < camera_range().w + 10.0 { 
-			//If we do know who it was, trigger the ball KO sequence
-			if ALREADY_BOUNCED {
-				BALL_BOUNCED = Vector3f{x: pos.x, y: 0.0, z: 0.0};
-			}
-			else {
-				BALL_BOUNCED = Vector3f{x: pos.x, y: 1.0, z: 0.0};
-			}
-		}
-		if GroundModule::get_touch_flag(module_accessor) == *GROUND_TOUCH_FLAG_DOWN as u64 {
-			if ALREADY_BOUNCED 
-            || (FIRST_BOUNCE && ((SPAWN_SIDE[LAST_TO_HIT_BALL] && pos.x > 3.0) 
-            || (!SPAWN_SIDE[LAST_TO_HIT_BALL] && pos.x < -3.0))) { //If either we already bounced, or we hit the ball but it was still on our side, KO
-				BALL_BOUNCED = Vector3f{x: pos.x, y: 0.0, z: 0.0};
-				ALREADY_BOUNCED = false;
-			}
-			else { //Otherwise, just record that we already bounced
-				ALREADY_BOUNCED = true;
-			}	
-			FIRST_BOUNCE = true;
-		}
-	}
-	original!()(module_accessor, int)
-}
-
-#[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term)]
-pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
-	let situation_kind = StatusModule::situation_kind(module_accessor);
-	let ret = original!()(module_accessor, term);
-	if smash::app::utility::get_category(module_accessor) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-		if READY_GO_TIMER != 0 {
-			return false;
-		}
-		if SPECIAL_SMASH_BODY == 3 {
-			if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW 
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_DASH
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_GUARD
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE_DASH {
-				return ret && situation_kind == *SITUATION_KIND_AIR;
-			}
-		}
-		return ret;
-	}
-	return ret;
-}
-
 #[smashline::fighter_frame_callback]
 fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
 	unsafe {
@@ -669,10 +547,5 @@ fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install() {
-	smashline::install_agent_frame_callbacks!(custom_fighter_functions);
-	skyline::install_hook!(get_int_replace);
-	skyline::install_hook!(is_enable_transition_term_replace);
-	skyline::install_hook!(notify_log_event_collision_hit_replace);
-	skyline::install_hook!(attack_replace);
-	skyline::install_hook!(attack_abs_replace);
+	install_agent_frame_callbacks!(custom_fighter_functions);
 }
