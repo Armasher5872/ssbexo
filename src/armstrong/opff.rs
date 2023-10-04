@@ -21,13 +21,6 @@ fn armstrong_frame(fighter: &mut L2CFighterCommon) {
             AttackModule::clear_all(boma);
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_mach_stomp"), false, false);
         }
-        //Crouch Cancel
-        if status_kind == *FIGHTER_STATUS_KIND_SQUAT_WAIT {
-            DamageModule::set_reaction_mul(boma, 0.6);
-        }
-        if status_kind == *FIGHTER_STATUS_KIND_SQUAT_RV {
-            DamageModule::set_reaction_mul(boma, 1.0);
-        }
         //Neutral Special
         if [hash40("special_n"), hash40("special_air_n")].contains(&motion_kind) {
             if motion_kind == hash40("special_air_n") {

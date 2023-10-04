@@ -6,8 +6,8 @@ use {
       globals::*,
       kirby::*,
       samusd::*,
+      variables::*,
     },
-    variables::*,
   },
   smash::{
     app::{

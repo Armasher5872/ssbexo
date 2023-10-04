@@ -4,8 +4,8 @@ use {
         var::{
             consts::*,
             globals::*,
-        },
-        variables::*,
+            variables::*,
+        }
     },
     smash::{
         app::{

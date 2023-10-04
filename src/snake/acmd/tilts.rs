@@ -1,7 +1,7 @@
 use super::*;
 
 //Forward Tilt 1 ACMD
-#[acmd_script( agent = "snake", script = "game_attacks3", category = ACMD_GAME, low_priority )]
+#[acmd_script( agent = "snake", script = "game_attacks3", category = ACMD_GAME )]
 unsafe fn ssbuexo_snake_forward_tilt_1_acmd(fighter: &mut L2CAgentBase) {
     MotionModule::set_rate(fighter.module_accessor, 0.667);
     frame(fighter.lua_state_agent, 4.0);

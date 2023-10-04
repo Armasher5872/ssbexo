@@ -1,7 +1,10 @@
 use {
     crate::functions::{
         ext::*,
-        var::globals::*,
+        var::{
+            consts::*,
+            globals::*,
+        }
     },
     smash::{
         app::{
@@ -22,10 +25,12 @@ use {
     smash_script::*,
 };
 
+mod appeal;
 pub mod dash;
 mod run;
 
 pub fn install() {
-  dash::install();
-  run::install();
+    appeal::install();
+    dash::install();
+    run::install();
 }

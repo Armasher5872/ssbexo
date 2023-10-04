@@ -6,7 +6,6 @@ fn samusd_frame(fighter: &mut L2CFighterCommon) {
         let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
         let motion_kind = MotionModule::motion_kind(boma);
-        let status_kind = StatusModule::status_kind(boma);
         let frame = MotionModule::frame(boma);
         let end_frame = MotionModule::end_frame(boma);
         let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();

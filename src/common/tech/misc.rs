@@ -90,10 +90,12 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
             WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
         };
         //Mashing
-        if [*FIGHTER_STATUS_KIND_CAPTURE_BEETLE, *FIGHTER_STATUS_KIND_CAPTURE_BEITCRANE, *FIGHTER_STATUS_KIND_CAPTURE_BOSSGALAGA, *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE, *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE_YOSHI, *FIGHTER_STATUS_KIND_CAPTURE_MIMIKKYU, *FIGHTER_STATUS_KIND_CAPTURE_NABBIT, *FIGHTER_STATUS_KIND_CAPTURE_WAIT, *FIGHTER_STATUS_KIND_CAPTURE_WAIT_OCTOPUS, *FIGHTER_STATUS_KIND_CAPTURE_WAIT_YOSHI, *FIGHTER_STATUS_KIND_CAPTURE_YOSHI, *FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT, *FIGHTER_STATUS_KIND_FURAFURA_STAND, *FIGHTER_STATUS_KIND_ICE, *FIGHTER_STATUS_KIND_SLEEP_START, *FIGHTER_STATUS_KIND_SLEEP, *FIGHTER_STATUS_KIND_SLEEP_FALL, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_START, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY, *FIGHTER_STATUS_KIND_YOSHI_EGG, *FIGHTER_STATUS_KIND_SWALLOWED_CAPTURE, *FIGHTER_STATUS_KIND_SWALLOWED_THROWN_STAR, *FIGHTER_STATUS_KIND_BITTEN_WARIO_START, *FIGHTER_STATUS_KIND_BITTEN_WARIO, *FIGHTER_STATUS_KIND_CLUNG_DAMAGE_DIDDY, *FIGHTER_STATUS_KIND_CATCHED_RIDLEY].contains(&status_kind) {
+        if [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT, *FIGHTER_STATUS_KIND_ICE].contains(&status_kind) {
             WorkModule::inc_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
-            if mashing >= 5 && (ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL)) {
-                ControlModule::add_clatter_time(boma, -15.0, 0);
+            if mashing >= 5 {
+                if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    ControlModule::add_clatter_time(boma, -15.0, 0);
+                }
                 WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
             }
         }
@@ -103,44 +105,6 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
         }
         if status_kind == *FIGHTER_STATUS_KIND_BURY_JUMP || (WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) && (fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_BURY || fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_BURY_WAIT)) {
             DamageModule::set_reaction_mul(boma, 1.0);
-        }
-        //Shield Breaks
-        if status_kind == *FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY
-        && fighter_kind != *FIGHTER_KIND_PURIN {
-            GroundModule::set_attach_ground(boma, true);
-            StatusModule::set_situation_kind(boma, SituationKind(*SITUATION_KIND_GROUND), true);
-            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-            MotionModule::change_motion(boma, Hash40::new("furafura_start_u"), 0.0, 1.0, false, 0.0, false, false);
-            if special_zoom_gfx < 4 {
-                WorkModule::inc_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-            }
-            if special_zoom_gfx < 2 {
-                SlowModule::set_whole(boma, 8, 80);
-                macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
-                EffectModule::req_follow(boma, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.0, false, 0, 0, 0, 0, 0, false, false);
-                macros::PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
-                macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
-            }
-            if special_zoom_gfx >= 3 {
-                SlowModule::clear_whole(boma);
-                CameraModule::reset_all(boma);
-                EffectModule::kill_kind(boma, Hash40::new("sys_bg_criticalhit"), false, false);
-                macros::CAM_ZOOM_OUT(fighter);
-            }
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FURAFURA_STAND, true);
-        }
-        //DJC (For Lucas cause they don't wanna work)
-        let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        if fighter_kind == *FIGHTER_KIND_LUCAS {
-            if [*FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL].contains(&KineticModule::get_kinetic_type(boma)) {
-                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_JUMP) && [*FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_AIR_LASSO].contains(&status_kind) {
-                    KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-                    macros::SET_SPEED_EX(fighter, speed_x*lr, -0.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-                };
-                if KineticModule::get_kinetic_type(boma) == *FIGHTER_KINETIC_TYPE_JUMP_AERIAL {
-                    KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION);
-                };
-            };
         }
         //Sword Scaling
         if fighter_kind == *FIGHTER_KIND_MARTH {
@@ -194,6 +158,7 @@ pub fn all_frame(fighter: &mut L2CFighterCommon) {
                 CameraModule::reset_all(boma);
                 macros::CAM_ZOOM_OUT(fighter);
                 COUNTERHIT_SUCCESS[get_player_number(boma)] = false;
+                WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
             }
         }
         //Training Mode

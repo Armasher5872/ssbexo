@@ -1,5 +1,3 @@
-#![allow(unused_macros)]
-
 use {
     crate::functions::var::{
         consts::*,
@@ -16,16 +14,22 @@ use {
             L2CFighterCommon,
             *
         },
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector3f
+        }
     },
     smash_script::*,
-    smashline::*,
 };
 
+mod damagelanding;
 mod furafura;
 mod saving;
+mod shieldbreakfly;
 
 pub fn install() {
+    damagelanding::install();
     furafura::install();
     saving::install();
+    shieldbreakfly::install();
 }

@@ -202,81 +202,70 @@ fn kirby_frame(fighter: &mut L2CFighterCommon) {
         if copy_chara == *FIGHTER_KIND_RYU {
             WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N_COMMAND);
             WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N2_COMMAND);
-            if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&status_kind) {
-                if fighter.special_cancel() == 1 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_RYU_SPECIAL_N2_COMMAND, false);
-                }
-                else if fighter.special_cancel() == 2 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_RYU_SPECIAL_N_COMMAND, false);
+            if [8, 30, 52, 74, 156, 179, 202, 225, 248, 271].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_RYU_SPECIAL_N2_COMMAND, false);
+            }
+            if [9, 31, 53, 75, 157, 180, 203, 226, 249, 272].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_RYU_SPECIAL_N_COMMAND, false);
+            }
+            if [23, 45, 67, 89, 171, 194, 217, 240, 263, 286].contains(&fighter.magic_series()) {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_AVAILABLE) {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FINAL, false);
                 }
                 else {
-                    if fighter.special_cancel() == 4 {
-                        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_AVAILABLE) {
-                            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FINAL, false);
-                        }
-                        else {
-                            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
-                        }
-                    }
-                    if fighter.special_cancel() == 5 {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
-                    }
-                    if fighter.special_cancel() == 6 {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
-                    }
-                    if fighter.special_cancel() == 7 {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-                    }
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
                 }
+            }
+            if [24, 46, 68, 90, 172, 195, 218, 241, 264, 287].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
+            }
+            if [25, 47, 69, 91, 173, 196, 219, 242, 265, 288].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
+            }
+            if [26, 48, 70, 92, 174, 197, 220, 243, 266, 289].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
             }
         }
         if copy_chara == *FIGHTER_KIND_KEN {
             WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N_COMMAND);
-            if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&status_kind) {
-                if fighter.special_cancel() == 3 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_RYU_SPECIAL_N_COMMAND, false);
+            if [9, 31, 53, 75, 157, 180, 203, 226, 249, 272].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_RYU_SPECIAL_N_COMMAND, false);
+            }
+            if [23, 45, 67, 89, 171, 194, 217, 240, 263, 286].contains(&fighter.magic_series()) {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_AVAILABLE) {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FINAL, false);
                 }
                 else {
-                    if fighter.special_cancel() == 4 {
-                        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_AVAILABLE) {
-                            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FINAL, false);
-                        }
-                        else {
-                            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
-                        }
-                    }
-                    if fighter.special_cancel() == 5 {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
-                    }
-                    if fighter.special_cancel() == 6 {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
-                    }
-                    if fighter.special_cancel() == 7 {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-                    }
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
                 }
+            }
+            if [24, 46, 68, 90, 172, 195, 218, 241, 264, 287].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
+            }
+            if [25, 47, 69, 91, 173, 196, 219, 242, 265, 288].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
+            }
+            if [26, 48, 70, 92, 174, 197, 220, 243, 266, 289].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
             }
         }
         if copy_chara == *FIGHTER_KIND_DOLLY {
-            if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3].contains(&status_kind)
-            || [hash40("attack_air_n"), hash40("attack_air_hi"), hash40("attack_air_lw")].contains(&motion_kind) {
-                if fighter.special_cancel() == 4 {
-                    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_AVAILABLE) {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FINAL, false);
-                    }
-                    else {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
-                    }
+            if [23, 45, 67, 89, 194, 263, 286].contains(&fighter.magic_series()) {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_AVAILABLE) {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FINAL, false);
                 }
-                if fighter.special_cancel() == 5 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
+                else {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
                 }
-                if fighter.special_cancel() == 6 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
-                }
-                if fighter.special_cancel() == 7 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-                }
+            }
+            if [24, 46, 68, 90, 195, 264, 287].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
+            }
+            if [25, 47, 69, 91, 196, 265, 288].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
+            }
+            if [26, 48, 70, 92, 197, 266, 289].contains(&fighter.magic_series()) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
             }
         }
     }

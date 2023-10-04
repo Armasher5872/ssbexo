@@ -4,7 +4,6 @@ use super::*;
 fn pikachu_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let motion_kind = MotionModule::motion_kind(boma);
         let status_kind = StatusModule::status_kind(boma);
         let frame = MotionModule::frame(boma);
 		if status_kind == *FIGHTER_STATUS_KIND_ATTACK {

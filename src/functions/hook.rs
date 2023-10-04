@@ -34,30 +34,10 @@ struct ControlModuleInternal {
     clamped_rstick_y: f32,
 }
 
-//Prevention of Moves in Air/Wavedash Logic (Credit to Chrispo)
+//Prevention of Moves in Air (Credit to Chrispo)
 #[skyline::hook(replace = StatusModule::change_status_request_from_script)]
 pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
-	let next_status = status_kind;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-	if get_kind(boma) == *FIGHTER_KIND_ALL {
-		if [*FIGHTER_STATUS_KIND_ESCAPE, *FIGHTER_STATUS_KIND_ESCAPE_F, *FIGHTER_STATUS_KIND_ESCAPE_B].contains(&next_status) {
-			if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) {
-				original!()(boma, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
-			} 
-			else {
-				original!()(boma, status_kind, unk);
-			}
-		}
-		else if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&next_status) {
-			if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_WAVEDASH) {
-				StatusModule::set_situation_kind(boma, smash::app::SituationKind(*SITUATION_KIND_GROUND), true);
-			}
-			original!()(boma, status_kind, unk);
-		}
-		else {
-			original!()(boma, status_kind, unk);
-		}
-	}
 	if get_kind(boma) == *FIGHTER_KIND_PICHU
 	&& [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind)
 	&& !USE_TACKLE[entry_id as usize] {
@@ -89,7 +69,7 @@ pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccess
 //On Flag Hook (Credit to Chrispo)
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::on_flag)]
 pub unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c_int) -> () {
-	if smash::app::utility::get_category(boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER { 
+	if boma.is_fighter() { 
 		if int == *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI {
 			let entry_id =  WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 			//Removal of SH macro via hooking on_flag. FULL_HOP_ENABLE_DELAY allows fullhop button to not give shorthops. 
@@ -109,32 +89,25 @@ pub unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, in
 	}
 }
 
-//Changes your situation kind if you're wavedashing
+//Deals with DK's Barrels and CC
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::change_status_request)]
 pub unsafe fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
-	let next_status = status_kind;
-	if smash::app::utility::get_category(boma) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-		if [*FIGHTER_STATUS_KIND_ESCAPE, *FIGHTER_STATUS_KIND_ESCAPE_F, *FIGHTER_STATUS_KIND_ESCAPE_B].contains(&next_status) {
-			if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) {
-				original!()(boma, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false)
-			} 
-			else {
-				original!()(boma, status_kind, arg3)
-			}
-		} 
-		else if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&next_status) {
-			if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_WAVEDASH) {
-				StatusModule::set_situation_kind(boma, smash::app::SituationKind(*SITUATION_KIND_GROUND), true);
-			}
-			original!()(boma, status_kind, arg3)
-		}
-		else {
-			original!()(boma, status_kind, arg3)
-		}
-	} 
-	else {
-		original!()(boma, status_kind, arg3)
-	}
+	let mut next_status = status_kind;
+    let frame = MotionModule::frame(boma);
+    if (boma.is_fighter() && boma.is_status(*FIGHTER_STATUS_KIND_DAMAGE_AIR) && next_status == *FIGHTER_STATUS_KIND_LANDING && frame < 1.0) {
+        WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
+    }
+	else if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
+        if next_status == *ITEM_STATUS_KIND_BORN || next_status == *ITEM_STATUS_KIND_LOST {
+            let bounce_mul = Vector3f { x: -0.25, y: -0.25, z: -0.25 };
+            KineticModule::mul_speed(boma, &bounce_mul, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            PostureModule::reverse_lr(boma);
+            AttackModule::clear_all(boma);
+            next_status = *ITEM_STATUS_KIND_FALL;
+            TeamModule::set_hit_team(boma, *TEAM_NONE);
+        }
+    }
+	original!()(boma, next_status, arg3)
 }
 
 //Hit Module Handle Attack Event, determines where you hit and with what hitbox id
@@ -161,9 +134,12 @@ unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx) {
 #[skyline::hook(offset = 0x4c7060)]
 unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u64, opp_attack_module: *mut u64, collision: *mut u8, group_index: i32, raw_power: f32, real_power: f32, pos_x: f32, lr: f32) {
     call_original!(shield_module, opp_attack_module, collision, group_index, raw_power, real_power, pos_x, lr);
+    let boma = *(shield_module as *mut *mut BattleObjectModuleAccessor).add(1);
+    let status_kind = StatusModule::status_kind(boma);
     let attacker_id = *(collision.add(0x24) as *const u32);
-	let battle_object = &mut *get_battle_object_from_id(attacker_id);
-    if !battle_object.is_fighter() && !battle_object.is_weapon() {
+	let attacker_battle_object = &mut *get_battle_object_from_id(attacker_id);
+    let shield_damage = WorkModule::get_int(attacker_battle_object.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
+    if !attacker_battle_object.is_fighter() && !attacker_battle_object.is_weapon() {
         return;
     }
     let hitbox_id = *(collision.add(0x33) as *const u8);
@@ -174,6 +150,10 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
     LAST_ATTACK_HITBOX_LOCATION_X = loc_x;
     LAST_ATTACK_HITBOX_LOCATION_Y = loc_y;
     LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
+    if (real_power+shield_damage) >= 30.0 && [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD].contains(&status_kind) {
+        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FURAFURA, false);
+    }
+    println!("Real Power: {}", real_power);
 }
 
 //Attack Module Set Attack, makes it so random tripping doesn't happen if the move doesn't have a 100% trip chance (Credit to HDR)
@@ -183,6 +163,7 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
     if data.slip < 1.0 {
         data.slip = -1.0;
     }
+    WorkModule::set_int(boma, data.sub_shield as i32, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     call_original!(module, id, group, data)
 }
 
@@ -195,12 +176,6 @@ unsafe fn is_valid_just_shield_replace(boma: &mut BattleObjectModuleAccessor) ->
 	else {
 		original!()(boma)
 	}
-}
-
-//Parry Reflects
-#[skyline::hook(replace=smash::app::FighterUtil::is_valid_just_shield_reflector)]
-unsafe fn is_valid_just_shield_reflector(_boma: &mut BattleObjectModuleAccessor) -> bool {
-	return true;
 }
 
 //Changes the title screen version
@@ -222,8 +197,7 @@ pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, situati
     let mut fix = arg4;
     let fighter_kind = boma.kind();
     let status_kind = StatusModule::status_kind(boma);
-	if boma.is_fighter()
-	&& boma.is_situation(*SITUATION_KIND_GROUND) {
+	if boma.is_fighter() && boma.is_situation(*SITUATION_KIND_GROUND) {
 		if [
 			*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_APPEAL, *FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_STATUS_KIND_SQUAT, *FIGHTER_STATUS_KIND_SQUAT_WAIT, *FIGHTER_STATUS_KIND_SQUAT_F, 
 			*FIGHTER_STATUS_KIND_SQUAT_B, *FIGHTER_STATUS_KIND_SQUAT_RV, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, 
@@ -231,15 +205,16 @@ pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, situati
 		].contains(&status_kind) {
 			fix = *GROUND_CORRECT_KIND_GROUND as u32;
 		}
-		if (fighter_kind == FIGHTER_KIND_YOSHI && [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_N_1, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_LW_LANDING].contains(&status_kind))
+		if (fighter_kind == *FIGHTER_KIND_YOSHI && [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_N_1, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_LW_LANDING].contains(&status_kind))
 		|| (fighter_kind == *FIGHTER_KIND_FOX && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH_END].contains(&status_kind))
-		|| ([*FIGHTER_KIND_PIKACHU, *FIGHTER_KIND_PICHU].contains(&fighter_kind) && [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind))
-		|| (fighter_kind == *FIGHTER_KIND_LUIGI && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_END, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_HI_LANDING_FALL].contains(&status_kind))
+		|| (fighter_kind == *FIGHTER_KIND_PIKACHU && [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind))
+		|| (fighter_kind == *FIGHTER_KIND_LUIGI && boma.is_status(*FIGHTER_LUIGI_STATUS_KIND_SPECIAL_HI_LANDING_FALL))
 		|| (fighter_kind == *FIGHTER_KIND_NESS && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_ATTACK, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_AGAIN, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_REFLECT, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_END, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HOLD, *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HIT, *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind))
 		|| (fighter_kind == *FIGHTER_KIND_CAPTAIN && boma.is_status(*FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END))
 		|| (fighter_kind == *FIGHTER_KIND_SHEIK && [*FIGHTER_SHEIK_STATUS_KIND_SPECIAL_HI_MOVE, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_HI_END, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_ATTACK, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_RETURN, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_LANDING].contains(&status_kind))
 		|| (fighter_kind == *FIGHTER_KIND_ZELDA && [*FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3].contains(&status_kind))
-		|| (fighter_kind == *FIGHTER_KIND_FALCO && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_FALCO_STATUS_KIND_SPECIAL_S_FALL_LANDING, *FIGHTER_FALCO_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_FALCO_STATUS_KIND_SPECIAL_HI_RUSH_END].contains(&status_kind))
+		|| (fighter_kind == *FIGHTER_KIND_PICHU && [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind))
+        || (fighter_kind == *FIGHTER_KIND_FALCO && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_FALCO_STATUS_KIND_SPECIAL_S_FALL_LANDING, *FIGHTER_FALCO_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_FALCO_STATUS_KIND_SPECIAL_HI_RUSH_END].contains(&status_kind))
 		|| (fighter_kind == *FIGHTER_KIND_YOUNGLINK && boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI))
 		|| (fighter_kind == *FIGHTER_KIND_MEWTWO && [*FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_2, *FIGHTER_MEWTWO_STATUS_KIND_SPECIAL_HI_3].contains(&status_kind))
 		|| ([*FIGHTER_KIND_PIT, *FIGHTER_KIND_PITB].contains(&fighter_kind) && boma.is_status(*FIGHTER_PIT_STATUS_KIND_SPECIAL_S_LANDING))
@@ -295,7 +270,6 @@ unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, situation: s
 #[skyline::hook(replace=GroundModule::correct)]
 unsafe fn correct_hook(boma: &mut BattleObjectModuleAccessor, kind: GroundCorrectKind) -> u64 {
     let status_kind = StatusModule::status_kind(boma);
-    let situation_kind = StatusModule::situation_kind(boma);
     let fighter_kind = boma.kind();
 	//All statuses seem to count as "landing" for some reason
     if boma.is_fighter()
@@ -304,15 +278,15 @@ unsafe fn correct_hook(boma: &mut BattleObjectModuleAccessor, kind: GroundCorrec
             return original!()(boma, GroundCorrectKind(1));
         }
         if (fighter_kind == *FIGHTER_KIND_YOSHI && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
-		|| (([*FIGHTER_KIND_PIKACHU, *FIGHTER_KIND_PICHU].contains(&fighter_kind)) && [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind))
 		|| (fighter_kind == *FIGHTER_KIND_LUIGI && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N)
         || (fighter_kind == *FIGHTER_KIND_CAPTAIN && status_kind == *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END)
 		|| (([*FIGHTER_KIND_PEACH, *FIGHTER_KIND_DAISY].contains(&fighter_kind)) && status_kind == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END)
 		|| (fighter_kind == *FIGHTER_KIND_KOOPA && status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G)
+        || (fighter_kind == *FIGHTER_KIND_PICHU && [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind))
         || (fighter_kind == *FIGHTER_KIND_GANON && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S)
 		|| (fighter_kind == *FIGHTER_KIND_GAOGAEN && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N)
-        || (fighter_kind == *FIGHTER_KIND_MIISWORDSMAN && ([*FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_LW3_END].contains(&status_kind) || (WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO) == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 && boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW))))
-        || (fighter_kind == *FIGHTER_KIND_EDGE && status_kind == *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH) {
+        || (fighter_kind == *FIGHTER_KIND_EDGE && status_kind == *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH)
+        || (fighter_kind == *FIGHTER_KIND_MIISWORDSMAN && ([*FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_LW3_END].contains(&status_kind) || (WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO) == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 && boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_LW)))) {
             return original!()(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         }
     }
@@ -330,23 +304,22 @@ unsafe fn get_ground_correct_kind_air_trans_hook(_boma: &mut smash::app::BattleO
     return *GROUND_CORRECT_KIND_AIR;
 }
 
-//Reverse Knockback, used in Custom Gamemodes
+//Used for reverse knockback
 #[skyline::hook(replace = sv_animcmd::ATTACK)]
 unsafe fn attack_replace(lua_state: u64) {
     let mut l2c_agent = L2CAgent::new(lua_state);
     let hitbox_params: Vec<L2CValue> = (0..36).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
 	l2c_agent.clear_lua_stack();
 	for i in 0..36 {
-		if i == 4
-		&& SPECIAL_SMASH_STATUS == 1 {
+		if i == 4 && SPECIAL_SMASH_STATUS == 1 {
 			if i < 362 {
-				let positive_angle = i+(180 as u64);
-				let negative_angle = i-(180 as u64);
+				let positive_angle = i+180;
+				let negative_angle = i-180;
 				if i < 180 {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle));
+					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle as u64));
 				}
 				else {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle));
+					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle as u64));
 				}
 			}
 		}
@@ -363,8 +336,7 @@ unsafe fn attack_abs_replace(lua_state: u64) {
     let hitbox_params: Vec<L2CValue> = (0..15).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
 	l2c_agent.clear_lua_stack();
 	for i in 0..15 {
-		if i == 3
-		&& SPECIAL_SMASH_STATUS == 1 {
+		if i == 3 && SPECIAL_SMASH_STATUS == 1 {
 			if i < 362 {
 				let positive_angle = i+(180 as u64);
 				let negative_angle = i-(180 as u64);
@@ -399,7 +371,7 @@ unsafe fn gravity_replace(fighter_information: &mut smash::app::FighterInformati
 	return 1.0;
 }
 
-//Notify Log Event Collision Hit Replace, dictates several things when you've hit the opponent
+//Notify Log Event Collision Hit, dictates several things when you've hit the opponent
 #[skyline::hook(offset=0x67a790)]
 pub unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
 	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
@@ -427,14 +399,6 @@ pub unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_obje
 			//Counterhit Detection
 			COUNTERHIT_SUCCESS[get_player_number(attacker_boma)] = true;
 			COUNTERHIT_CHECK[get_player_number(defender_boma)] = false;
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 0, 10.0, false);
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 1, 10.0, false);
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 2, 10.0, false);
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 3, 10.0, false);
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 4, 10.0, false);
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 5, 10.0, false);
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 6, 10.0, false);
-			AttackModule::set_add_reaction_frame_revised(attacker_boma, 7, 10.0, false);
 		}
 	}
 	LAST_DAMAGE[get_player_number(defender_boma)] = DamageModule::damage(defender_boma, 0);
@@ -494,23 +458,6 @@ pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app
 		return ret;
 	}
 	return ret;
-}
-
-//Link Events. Enables proper transition into grabs
-#[skyline::hook(offset = 0x993ec0)]
-pub unsafe extern "C" fn donkey_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
-    if event.link_event_kind.0 == hash40("capture") {
-        let capture_event : &mut smash2::app::LinkEventCapture = std::mem::transmute(event);
-        let module_accessor = fighter.battle_object.module_accessor;
-        if StatusModule::status_kind(module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            capture_event.result = true;
-            capture_event.node = smash2::phx::Hash40::new("throw");
-            StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_CATCH_PULL, false);
-            return 0;
-        }
-        return 1;
-    }
-    original!()(vtable, fighter, event)
 }
 
 #[skyline::hook(offset = 0x1d39500)]
@@ -998,7 +945,7 @@ unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
     *ctx.registers[13].x.as_mut() = std::mem::transmute(inputs);
 }
 
-/// fix throws not respecting the cstick, especially dk cargo throw
+//Fix throws not respecting the cstick, especially dk cargo throw
 #[skyline::hook(replace = L2CFighterCommon_IsThrowStick)]
 unsafe extern "C" fn is_throw_stick(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut out = fighter.local_func__fighter_status_catch_1();
@@ -1017,6 +964,72 @@ unsafe extern "C" fn is_throw_stick(fighter: &mut L2CFighterCommon) -> L2CValue 
     out
 }
 
+//The following hooks are used to ignore setting the barrel's team, which resolves the issue of the Barrel Item being able to hit the item thrower for 1 frame. This is here since item status scripts aren't currently editable
+
+#[skyline::hook(replace=TeamModule::set_hit_team)]
+unsafe fn set_hit_team_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
+    original!()(boma, arg2);
+    if (boma.kind() == *ITEM_KIND_BARREL) {
+        return;
+    }
+}
+
+#[skyline::hook(replace=TeamModule::set_hit_team_second)]
+unsafe fn set_hit_team_second_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
+    original!()(boma, arg2);
+    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
+        return;
+    }
+}
+
+#[skyline::hook(replace=TeamModule::set_team)]
+unsafe fn set_team_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32, arg3: bool) {
+    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {} 
+    else {
+        original!()(boma, arg2, arg3);
+    }
+}
+
+#[skyline::hook(replace=TeamModule::set_team_second)]
+unsafe fn set_team_second_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
+    original!()(boma, arg2);
+    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
+        return;
+    }
+}
+
+#[skyline::hook(replace=TeamModule::set_team_owner_id)]
+unsafe fn set_team_owner_id_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
+    original!()(boma, arg2);
+    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
+        return;
+    }
+}
+
+//A hook regarding the generation/visiblity of articles. Used to allow entry articles to generate
+#[skyline::hook(offset = 0x3a6650)]
+unsafe fn get_article_use_type_mask(weapon_kind: i32, entry_id: i32) -> u8 {
+    let barrel_kind = *WEAPON_KIND_DONKEY_DKBARREL;
+    let waddledee_kind = *WEAPON_KIND_DEDEDE_WADDLEDEE;
+    if weapon_kind == barrel_kind {
+        return 1;
+    }
+    if weapon_kind == waddledee_kind {
+        return 2;
+    }
+    println!("Weapon: {weapon_kind} Entry: {entry_id} Barrels: {barrel_kind}");
+    call_original!(weapon_kind, entry_id)
+}
+
+//Removes the death swap from PT
+#[skyline::hook(offset = 0xf96310)]
+unsafe fn ptrainer_death_swap() {}
+
+#[skyline::hook(replace=FighterUtil::is_valid_just_shield_reflector)]
+unsafe fn is_valid_just_shield_reflector_hook(boma: &mut BattleObjectModuleAccessor) -> bool {
+    true.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hook!(is_throw_stick);
@@ -1027,9 +1040,13 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 pub fn install() {
 	unsafe {
         skyline::patching::Patch::in_text(0x1d34e4c).nop();
+        //Removes phantoms
+        skyline::patching::Patch::in_text(0x3e6ce8).data(0x14000012u32);
+        //Resets projectile lifetime on parry, rather than using remaining lifetime
+        skyline::patching::Patch::in_text(0x33bd358).nop();
+        skyline::patching::Patch::in_text(0x33bd35c).data(0x2a0a03e1);
     }
     skyline::install_hook!(change_status_hook);
-	skyline::install_hook!(is_valid_just_shield_reflector);
     skyline::install_hook!(is_valid_just_shield_replace);
     skyline::install_hook!(attack_replace);
 	skyline::install_hook!(attack_abs_replace);
@@ -1037,6 +1054,7 @@ pub fn install() {
 	skyline::install_hook!(is_enable_transition_term_replace);
 	skyline::install_hook!(notify_log_event_collision_hit);
 	skyline::install_hook!(on_flag_hook);
+    skyline::install_hook!(ptrainer_death_swap);
 	skyline::install_hooks!(
         hit_module_handle_attack_event,
         shield_module_send_shield_attack_collision_event,
@@ -1046,7 +1064,6 @@ pub fn install() {
         correct_hook,
         get_ground_correct_kind_air_trans_hook,
         attack_module_set_attack,
-        donkey_link_event,
 		get_button_label_by_operation_kind,
         add_footstool_to_gc,
         add_footstool_to_fk,
@@ -1059,7 +1076,242 @@ pub fn install() {
         write_packet,
         parse_inputs,
         handle_incoming_packet,
-        after_exec
+        after_exec,
+        set_hit_team_hook,
+        set_hit_team_second_hook,
+        set_team_second_hook,
+        set_team_hook,
+        set_team_owner_id_hook,
+        get_article_use_type_mask,
+        is_valid_just_shield_reflector_hook
     );
 	skyline::nro::add_hook(nro_hook);
 }
+
+/*
+GDB Testing (0x068cd80):
+
+When booting into a match with Mac:
+    
+pc: main -> 0x68cd80
+lr: main -> 0xc44908
+offset: main -> 0x623620
+offset: main -> 0x60fc4c
+offset: unknown -> 0x800345c
+offset: main -> 0x656118
+offset: main -> 0x14de890
+offset: main -> 0x135dd54
+offset: main -> 0x3549800
+offset: main -> 0x353c538
+offset: main -> 0x37cb4ac
+offset: nnSdk -> 0x337f28
+
+All of the following cases happen just before Little Mac hits the opponent
+
+Jab 1:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Jab 2:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Rapid Jab Hit 1:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Rapid Jab Hit 2:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Rapid Jab Finisher:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Forward Tilt 1:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Forward Tilt 2:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Fully Charged Down Angled Forward Smash:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+
+Fully Charged Neutral B:
+
+pc: main -> 0x68cd80
+lr: main -> 0xc457f0
+offset: main -> 0x627cd8
+offset: main -> 0x3df67c
+offset: main -> 0x3a893c
+offset: unknown -> 0x8003204
+offset: main -> 0x137b588
+offset: main -> 0x135cbfc
+offset: main -> 0x135f74c
+offset: main -> 0x1850484
+offset: main -> 0x1850378
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x22de570
+offset: main -> 0x3723d14
+offset: main -> 0x374b5a8
+offset: main -> 0x2c5cf0
+offset: nnSdk -> 0x29da2c
+offset: nnrtld -> 0xc0
+*/

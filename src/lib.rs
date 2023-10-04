@@ -4,41 +4,7 @@
     repr_simd, 
     simd_ffi
 )]
-#![allow(
-    clippy::absurd_extreme_comparisons,
-    clippy::bool_comparison,
-    clippy::borrow_interior_mutable_const,
-    clippy::collapsible_else_if,
-    clippy::collapsible_if,
-    clippy::excessive_precision,
-    clippy::from_over_into,
-    clippy::if_same_then_else,
-    clippy::let_and_return,
-    clippy::module_inception,
-    clippy::needless_lifetimes,
-    clippy::needless_range_loop,
-    clippy::needless_return,
-    clippy::ptr_offset_with_cast,
-    clippy::redundant_field_names,
-    clippy::suspicious_else_formatting,
-    clippy::transmute_ptr_to_ref,
-    clippy::unit_arg,
-    clippy::unnecessary_cast,
-    clippy::unnecessary_operation,
-    clippy::useless_conversion,
-    clippy::useless_transmute,
-    dead_code,
-    illegal_floating_point_literal_pattern,
-    improper_ctypes_definitions,
-    non_upper_case_globals,
-    unused_assignments,
-    unused_macros,
-    unused_must_use,
-    unused_mut,
-    unused_parens,
-    unused_unsafe,
-    unused_variables
-)]
+#![allow(dead_code, non_snake_case, non_upper_case_globals, unused_assignments, unused_macros, unused_must_use, unused_mut, unused_parens, unused_unsafe, unused_variables)]
 
 mod armstrong;
 mod bayonetta;
@@ -121,6 +87,7 @@ mod simon;
 mod snake;
 mod sonic;
 mod szerosuit;
+mod tantan;
 mod toonlink;
 mod trail;
 mod wario;
@@ -213,6 +180,7 @@ pub fn main() {
     snake::install();
     sonic::install();
     szerosuit::install();
+    tantan::install();
     toonlink::install();
     trail::install();
     wario::install();

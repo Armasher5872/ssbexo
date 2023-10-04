@@ -1,8 +1,10 @@
 use {
     crate::functions::{
         ext::*,
-        var::consts::*,
-        variables::*,
+        var::{
+            consts::*,
+            variables::*,
+        }
     },
     smash::{
         app::{

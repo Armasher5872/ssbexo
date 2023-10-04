@@ -1,4 +1,3 @@
-pub static mut DOWN_B_CATCH: [bool; 8] = [false; 8];
 pub static mut LUIGI_CYCLONE_RNG: [i32; 8] = [9; 8];
 pub const FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_TYPHOON_ACTIVE: i32 = 0x200000E6;
 pub const FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_SHOOT: i32 = 0x1D3;

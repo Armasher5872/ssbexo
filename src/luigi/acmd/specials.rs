@@ -618,6 +618,7 @@ unsafe fn ssbuexo_luigi_down_special_end_acmd(fighter: &mut L2CAgentBase) {
         }
     }
     else {
+        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
         AttackModule::clear_all(fighter.module_accessor);
     }
 }

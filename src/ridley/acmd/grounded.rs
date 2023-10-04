@@ -11,7 +11,7 @@ unsafe fn ssbuexo_ridley_heavy_landing_expression(fighter : &mut L2CAgentBase) {
 }
 
 //Up Taunt ACMD
-#[acmd_script( agent = "ridley", scripts = ["game_appealhil", "game_appealhir"], category = ACMD_GAME, low_priority )]
+#[acmd_script( agent = "ridley", scripts = ["game_appealhil", "game_appealhir"], category = ACMD_GAME )]
 unsafe fn ssbuexo_ridley_up_taunt_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {

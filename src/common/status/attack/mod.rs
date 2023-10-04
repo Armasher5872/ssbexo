@@ -4,7 +4,6 @@ use {
         ext::*,
         var::{
             consts::*,
-            donkey::*,
             globals::*,
         }
     },
@@ -27,18 +26,15 @@ use {
         },
         phx::{
             Hash40,
-            Vector3f,
-            Vector4f
+            Vector3f
         }
     },
     smash_script::*,
-    smashline::*,
 };
 
 mod attack;
 pub mod attackair;
 mod attackdash;
-mod attackhi3;
 mod attackhi4;
 mod attacklw3;
 mod attacklw4;
@@ -48,7 +44,6 @@ pub fn install() {
     attack::install();
     attackair::install();
     attackdash::install();
-    attackhi3::install();
     attackhi4::install();
     attacklw3::install();
     attacklw4::install();

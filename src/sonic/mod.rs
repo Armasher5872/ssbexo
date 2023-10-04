@@ -1,9 +1,7 @@
 use {
-    crate::functions::{
-        var::{
-            consts::*,
-            globals::*,
-        },
+    crate::functions::var::{
+        consts::*,
+        globals::*,
         variables::*,
     },
     smash::{

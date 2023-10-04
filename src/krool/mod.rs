@@ -1,6 +1,6 @@
 use {
-    crate::functions::{
-        var::globals::*,
+    crate::functions::var::{
+        globals::*,
         variables::*,
     },
     smash::{

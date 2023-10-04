@@ -1,6 +1,5 @@
 use {
     crate::{
-        common::status::attack::attackair::*,
         functions::{
             var::{
                 consts::*,

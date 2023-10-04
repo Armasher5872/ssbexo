@@ -3,13 +3,11 @@ use {
     ext::*,
     var::{
       consts::*,
-      globals::*,
-    },
-    variables::*,
+      variables::*,
+    }
   },
   smash::{
     app::lua_bind::*,
-    hash40,
     lib::lua_const::*,
     lua2cpp::*,
   },

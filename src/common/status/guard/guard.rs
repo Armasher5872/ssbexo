@@ -37,7 +37,6 @@ unsafe fn sub_guard_cont_pre(fighter: &mut L2CFighterCommon) {
 //Sub Guard Cont
 #[skyline::hook(replace = L2CFighterCommon_sub_guard_cont)]
 unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let cont_stick_x = fighter.global_table[STICK_X].get_f32();
     let lr = PostureModule::lr(fighter.module_accessor);
     let stick_x = cont_stick_x * lr;
@@ -131,107 +130,19 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 }
 
-//Status Guard Main Common, declares a variable that sets the color
+//Status Guard Main Common, makes it to where shield breaks now put you into the Dizzy End animation
 #[skyline::hook(replace = L2CFighterCommon_status_guard_main_common)]
 unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    let shield = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
-    let color = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
-    if shield < 0.0 {
-        fighter.change_status(FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY.into(), false.into());
-        true.into()
-    } 
-    else {
-        if fighter_kind != *FIGHTER_KIND_YOSHI {
-            if color == 0 {
-                //Red
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-            }
-            else if color == 1 {
-                //Blue
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-            }
-            else if color == 2 {
-                //Green
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0112*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-            }
-            else if color == 3 {
-                //Yellow
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-            }
-            else if color == 4 {
-                //Orange
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0144*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-            }
-            else if color == 5 {
-                //Cyan
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-            }
-            else if color == 6 {
-                //Pink
-                WorkModule::set_float(boma, 0.0222*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0167*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0177*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-            }
-            else {
-                //Purple
-                WorkModule::set_float(boma, 0.0112*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-                WorkModule::set_float(boma, 0.0, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-                WorkModule::set_float(boma, 0.0112*shield, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
+    if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+        let min_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME);
+        if min_frame <= 0 {
+            if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+                fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), true.into());
+                return true.into();
             }
         }
-        if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_GUARD) && WorkModule::get_int(boma, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME) <= 0 && fighter.global_table[SITUATION_KIND] == SITUATION_KIND_GROUND {
-            fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), true.into());
-            true.into()
-        } 
-        else {
-            false.into()
-        }
     }
-}
-
-//Effect GuardOnCommon
-#[skyline::hook(replace = L2CFighterAnimcmdEffectCommon_effect_GuardOnCommon)]
-unsafe fn effect_guardoncommon(fighter: &mut L2CAgentBase) -> L2CValue {
-    let red = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-    let green = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-    let blue = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-    if smash::app::sv_animcmd::is_excute(fighter.lua_state_agent) {
-        fighter.clear_lua_stack();
-        lua_args!(fighter, Hash40::new("sys_shield_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, false);
-        smash::app::sv_animcmd::EFFECT_FLW_POS(fighter.lua_state_agent);
-        fighter.clear_lua_stack();
-        lua_args!(fighter, Hash40::new_raw(0xafae75f05), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, red, green, blue);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_COLOR(fighter.lua_state_agent);
-    }
-    0.into()
-}
-
-//Effect GuardDamageCommon
-#[skyline::hook(replace = L2CFighterAnimcmdEffectCommon_effect_GuardDamageCommon)]
-unsafe fn effect_guarddamagecommon(fighter: &mut L2CAgentBase) -> L2CValue {
-    let red = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_R);
-    let green = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_G);
-    let blue = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_SHIELD_COLOR_B);
-    if smash::app::sv_animcmd::is_excute(fighter.lua_state_agent) {
-        fighter.clear_lua_stack();
-        lua_args!(fighter, Hash40::new_raw(0x113434cb66), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, red, green, blue);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_COLOR(fighter.lua_state_agent);
-    }
-    0.into()
+    false.into()
 }
 
 //Sub ftStatusUniqProcessGuardFunc_updateShield. Removes shield tilting
@@ -242,15 +153,55 @@ unsafe fn sub_ftstatusuniqprocessguardfunc_updateshield(fighter: &mut L2CFighter
     ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: scale, y: scale, z: scale});
 }
 
+//FighterStatusGuard set_shield_scale. Removes shield tilting, and makes shields no longer decrease in size
+#[skyline::hook(replace = L2CFighterCommon_FighterStatusGuard__set_shield_scale)]
+unsafe fn fighterstatusguard_set_shield_scale(fighter: &mut L2CFighterCommon, _param_1: L2CValue) -> L2CValue {
+    ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: 1.0, y: 1.0, z: 1.0});
+    0.into()
+}
+
+//Effect Guard On Common, deals with Shield Effects
+#[skyline::hook(replace = L2CFighterAnimcmdEffectCommon_effect_GuardOnCommon)]
+unsafe fn effect_guardoncommon(fighter: &mut L2CFighterAnimcmdEffectCommon) -> L2CValue {
+    let agent = &mut fighter.agent;
+    agent.clear_lua_stack();
+    is_excute(agent.lua_state_agent);
+    let excute = agent.pop_lua_stack(1).get_bool();
+    if excute {
+        //Shield Smoke
+        agent.clear_lua_stack();
+        lua_args!(agent, Hash40::new("sys_shield_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, false);
+        EFFECT_FLW_POS(agent.lua_state_agent);
+        //Internal Shield, demonstrates shield health
+        let color = {agent.clear_lua_stack(); lua_args!(agent, FT_VAR_INT_TEAM_COLOR); get_value_int(agent.lua_state_agent, *FT_VAR_INT_TEAM_COLOR)};
+        let shield_hp = WorkModule::get_float(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
+        let shield_max = WorkModule::get_float(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD_MAX);
+        let ratio = (shield_hp/shield_max).clamp(0.1, 1.0);
+        agent.clear_lua_stack();
+        lua_args!(agent, Hash40::new("sys_shield"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1*ratio, false, 0, color);
+        EFFECT_FOLLOW_arg12(agent.lua_state_agent);
+        lua_args!(agent, 0.6);
+        LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
+        //External Shield, prevents shield poking
+        agent.clear_lua_stack();
+        lua_args!(agent, Hash40::new("sys_shield"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, 0, color);
+        EFFECT_FOLLOW_arg12(agent.lua_state_agent);
+        agent.clear_lua_stack();
+        lua_args!(agent, 0.2);
+        LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
+    }
+    0.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
             sub_guard_cont_pre,
             sub_guard_cont,
             status_guard_main_common,
-            effect_guardoncommon,
-            effect_guarddamagecommon,
-            sub_ftstatusuniqprocessguardfunc_updateshield
+            sub_ftstatusuniqprocessguardfunc_updateshield,
+            fighterstatusguard_set_shield_scale,
+            effect_guardoncommon
         );
     }
 }

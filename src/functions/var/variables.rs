@@ -17,6 +17,7 @@ pub static mut FIGHTER_CUTIN_MANAGER_ADDR: usize = 0;
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 pub static mut FIRST_BOUNCE: bool = false; //Allows the throwing player to bounce the ball on their own side once
 pub static mut FULL_HOP_ENABLE_DELAY: [i32; 8] = [0; 8];
+pub static mut HAS_CATCH: [bool; 8] = [false; 8]; //Used for Command Grabs
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
 pub static mut HIT_PLAYER: i32 = -1; //Tracks which players need to be respawned
 pub static mut ITEM_MANAGER_ADDR: usize = 0;

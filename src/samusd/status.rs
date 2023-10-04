@@ -27,7 +27,6 @@ unsafe fn samusd_special_hi_main_status(fighter: &mut L2CFighterCommon) -> L2CVa
 pub unsafe fn samusd_special_hi_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -47,8 +46,8 @@ pub unsafe fn samusd_special_hi_loop(fighter: &mut L2CFighterCommon) -> L2CValue
         return 0.into();
     }
     if (22.0..=94.0).contains(&frame) && situation_kind == *SITUATION_KIND_AIR {
-        let mut x_add = 0.0;
-        let mut y_add = 0.0;
+        let mut x_add;
+        let mut y_add;
         if stick_x > 0.2 {
             x_add = ((stick_x-0.2)*0.02/*X Accel Mul*/)+0.01/*X Accel Add*/;
             if speed_x > 0.25/*X Max*/ || speed_x < -0.25/*X Max*/ {
@@ -127,12 +126,12 @@ unsafe fn samusd_special_hi_exec_status(_fighter: &mut L2CFighterCommon) -> L2CV
 }
 
 #[status_script(agent = "samusd", status = FIGHTER_STATUS_KIND_SPECIAL_HI, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn samusd_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe fn samusd_special_hi_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 #[status_script(agent = "samusd", status = FIGHTER_STATUS_KIND_SPECIAL_HI, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn samusd_special_hi_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe fn samusd_special_hi_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

@@ -32,6 +32,13 @@ pub unsafe fn get_boma(entry_id: i32) -> *mut smash::app::BattleObjectModuleAcce
 	return boma;
 }
 
+//Gets Article Boma
+pub unsafe fn get_article_boma(boma: *mut BattleObjectModuleAccessor, article_type: skyline::libc::c_int) -> *mut BattleObjectModuleAccessor {
+    let article = ArticleModule::get_article(boma, article_type);
+    let object_id = smash::app::lua_bind::Article::get_battle_object_id(article) as u32;
+    return sv_battle_object::module_accessor(object_id);
+}
+
 //Used for Blastzone Looping
 extern "C" {
 	#[link_name = "\u{1}_ZN3app17sv_camera_manager10dead_rangeEP9lua_State"]
@@ -66,6 +73,10 @@ extern "C" {
 	pub fn change_version_string(arg: u64, string: *const c_char);
 }
 
+//Updates Little Mac's UI
+#[skyline::from_offset(0x068cd80)]
+pub unsafe fn update_ui(fighter_data: *const u64, param_2: u32);
+
 //Full Smash Attack Check
 pub unsafe fn attack_4_hold(fighter: &mut L2CFighterCommon) {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
@@ -75,7 +86,8 @@ pub unsafe fn attack_4_hold(fighter: &mut L2CFighterCommon) {
     if frame > 59.0 {
         WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     }
-    if fighter_kind == *FIGHTER_KIND_NESS {
+    if fighter_kind == *FIGHTER_KIND_NESS
+    && WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("ness_catch"), false);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("ness_eye"), false);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("ness_head"), false);
@@ -101,18 +113,125 @@ pub unsafe fn estimate_frame(module_accessor: &mut smash::app::BattleObjectModul
 
 bitflags! {
     pub struct Cat1: i32 {
-        const SpecialN = 0x1000;
-        const SpecialS = 0x2000;
-        const SpecialHi = 0x4000;
-        const SpecialLw = 0x8000;
-        const TurnDash = 0x80000;
-        const Jump = 0x100000;
-        const JumpButton = 0x200000;
+        const AttackN       = 0x1;
+        const AttackS3      = 0x2;
+        const AttackHi3     = 0x4;
+        const AttackLw3     = 0x8;
+        const AttackS4      = 0x10;
+        const AttackHi4     = 0x20;
+        const AttackLw4     = 0x40;
+        const AttackAirN    = 0x80;
+        const AttackAirF    = 0x100;
+        const AttackAirB    = 0x200;
+        const AttackAirHi   = 0x400;
+        const AttackAirLw   = 0x800;
+        const SpecialN      = 0x1000;
+        const SpecialS      = 0x2000;
+        const SpecialHi     = 0x4000;
+        const SpecialLw     = 0x8000;
+        const SpecialAny    = 0xF000;
+        const Walk          = 0x10000;
+        const Dash          = 0x20000;
+        const Turn          = 0x40000;
+        const TurnDash      = 0x80000;
+        const Jump          = 0x100000;
+        const JumpButton    = 0x200000;
+        const AirEscape     = 0x400000;
+        const Squat         = 0x800000;
+        const Escape        = 0x1000000;
+        const EscapeF       = 0x2000000;
+        const EscapeB       = 0x4000000;
+        const WallJumpLeft  = 0x8000000;
+        const WallJumpRight = 0x10000000;
+        const Catch         = 0x20000000;
+        const NoCmd         = 0x40000000;
+    }
+    pub struct Cat2: i32 {
+        const AppealSL            = 0x1;
+        const AppealSR            = 0x2;
+        const AppealHi            = 0x4;
+        const AppealLw            = 0x8;
+        const AppealSmash         = 0x10;
+        const AppealAll           = 0x1F;
+        const AttackDashAttackHi4 = 0x20;
+        const FallJump            = 0x40;
+        const DashAttackS4        = 0x80;
+        const DamageFallToFall    = 0x100;
+        const DownToDownStandFB   = 0x200;
+        const DownToDownStand     = 0x400;
+        const GuardToPass         = 0x800;
+        const SquatToSquatF       = 0x1000;
+        const SquatToSquatB       = 0x2000;
+        const TurnToEscapeF       = 0x4000;
+        const TurnToEscapeB       = 0x8000;
+        const StickEscapeF        = 0x10000;
+        const StickEscapeB        = 0x20000;
+        const StickEscape         = 0x40000;
+        const SpecialNReverseLR   = 0x80000;
+        const ThrowF              = 0x100000;
+        const ThrowB              = 0x200000;
+        const ThrowHi             = 0x400000;
+        const ThrowLw             = 0x800000;
+        const CommonGuard         = 0x1000000;
+        const AirLasso            = 0x2000000;
+        const AttackN2            = 0x4000000;
+        const FinalReverseLR      = 0x8000000;
+    }
+    pub struct Cat3: i32 {
+        const ItemLightThrowFB4    = 0x1;
+        const ItemLightThrowHi4    = 0x2;
+        const ItemLightThrowLw4    = 0x4;
+        const ItemLightThrowHi     = 0x8;
+        const ItemLightThrowLw     = 0x10;
+        const ItemLightDrop        = 0x20;
+        const ItemLightThrowFB     = 0x40;
+        const ItemLightThrowAirFB  = 0x80;
+        const ItemLightThrowAirFB4 = 0x100;
+        const ItemLightThrowAirHi  = 0x200;
+        const ItemLightThrowAirHi4 = 0x400;
+        const ItemLightThrowAirLw  = 0x800;
+        const ItemLightThrowAirLw4 = 0x1000;
+        const ItemLightDropAir     = 0x2000;
+        const ItemHeavyThrowFB     = 0x4000;
+        const ItemGetAir           = 0x8000;
+        const SpecialSSmash        = 0x10000;
+        const SpecialSSmashDash    = 0x20000;
+
+        const ItemLightThrow       = 0x58;
+        const ItemLightThrowAir    = 0xA80;
+        const ItemLightThrow4      = 0x7;
+        const ItemLightThrow4Air   = 0x1500;
+        const ItemLightThrowAll    = 0x5F;
+        const ItemLightThrowAirAll = 0x1F80;
     }
     pub struct Cat4: i32 {
-        const SpecialNCommand = 0x1;
-        const SpecialN2Command = 0x2;
-        const AttackCommand1 = 0x40;
+        const SpecialNCommand       = 0x1;
+        const SpecialN2Command      = 0x2;
+        const SpecialSCommand       = 0x4;
+        const SpecialHiCommand      = 0x8;
+        const Command6N6            = 0x10;
+        const Command4N4            = 0x20;
+        const AttackCommand1        = 0x40;
+        const SpecialHi2Command     = 0x80;
+        const SuperSpecialCommand   = 0x100;
+        const SuperSpecialRCommand  = 0x200;
+        const SuperSpecial2Command  = 0x400;
+        const SuperSpecial2RCommand = 0x800;
+        const Command623NB          = 0x1000;
+        const Command623Strict      = 0x2000;
+        const Command623ALong       = 0x4000;
+        const Command623BLong       = 0x8000;
+        const Command623A           = 0x10000;
+        const Command2              = 0x20000;
+        const Command3              = 0x40000;
+        const Command1              = 0x80000;
+        const Command6              = 0x100000;
+        const Command4              = 0x200000;
+        const Command8              = 0x400000;
+        const Command9              = 0x800000;
+        const Command7              = 0x1000000;
+        const Command6N6AB          = 0x2000000;
+        const Command323Catch       = 0x4000000;
     }
     pub struct Buttons: i32 {
         const Attack      = 0x1;
@@ -192,12 +311,14 @@ pub trait BomaExt {
     unsafe fn down_input(&mut self) -> bool;
     unsafe fn jump_cancel(&mut self) -> bool;
     unsafe fn gimmick_flash(&mut self);
-    unsafe fn special_cancel(&mut self) -> i32;
     unsafe fn is_status(&mut self, kind: i32) -> bool;
     unsafe fn dacsa_check(&mut self) -> i32;
     unsafe fn stick_x(&mut self) -> f32;
     unsafe fn stick_y(&mut self) -> f32;
     unsafe fn get_param_float(&mut self, obj: &str, field: &str) -> f32;
+    unsafe fn is_item(&mut self) -> bool;
+    unsafe fn status(&mut self) -> i32;
+    unsafe fn magic_series(&mut self) -> i32;
 }
 
 impl BomaExt for BattleObjectModuleAccessor {
@@ -321,36 +442,6 @@ impl BomaExt for BattleObjectModuleAccessor {
         }
         macros::LAST_EFFECT_SET_COLOR(fighter, 0.831, 0.686, 0.216);
     }
-    unsafe fn special_cancel(&mut self) -> i32 {
-        let fighter = crate::functions::util::get_fighter_common_from_accessor(self);
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-            if fighter.is_cat_flag(Cat4::SpecialN2Command) {
-                return 1;
-            }
-            else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
-                return 2;
-            }
-            else if fighter.is_cat_flag(Cat4::AttackCommand1) {
-                return 3;
-            }
-            else if fighter.is_cat_flag(Cat1::SpecialN) {
-                return 4;
-            }
-            else if fighter.is_cat_flag(Cat1::SpecialS) {
-                return 5;
-            }
-            else if fighter.is_cat_flag(Cat1::SpecialHi) {
-                return 6;
-            }
-            else if fighter.is_cat_flag(Cat1::SpecialLw) {
-                return 7;
-            }
-            else {
-                return 0;
-            }
-        }
-        return 0;
-    }
     unsafe fn is_status(&mut self, kind: i32) -> bool {
         return StatusModule::status_kind(self) == kind;
     }
@@ -414,6 +505,1161 @@ impl BomaExt for BattleObjectModuleAccessor {
         let obj = obj.into();
         let field = field.into();
         WorkModule::get_param_float(self, Hash40::new(obj).hash, Hash40::new(field).hash)
+    }
+    unsafe fn is_item(&mut self) -> bool {
+        return smash::app::utility::get_category(self) == *BATTLE_OBJECT_CATEGORY_ITEM;
+    }
+    //Gets the current status kind for the fighter
+    unsafe fn status(&mut self) -> i32 {
+        return StatusModule::status_kind(self);
+    }
+    unsafe fn magic_series(&mut self) -> i32 {
+        let fighter = crate::functions::util::get_fighter_common_from_accessor(self);
+        let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+        let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            //Jab Cancels
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK
+            && [hash40("attack_11"), hash40("attack_12")].contains(&motion_kind) {
+                if fighter.is_cat_flag(Cat1::AttackS3) {
+                    return 1;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackHi3) {
+                    return 2;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackLw3) {
+                    return 3;
+                }
+                else if fighter.is_cat_flag(Cat1::Dash) && fighter.is_cat_flag(Cat1::AttackN) {
+                    return 4;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackS4) {
+                    return 5;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackHi4) {
+                    return 6;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackLw4) {
+                    return 7;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 8;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 9;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 10;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 11;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 12;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 13;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 14;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 15;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 16;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 17;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 18;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 19;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 20;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 21;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 22;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 23;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 24;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 25;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 26;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3 {
+                if fighter.is_cat_flag(Cat1::AttackS4) {
+                    return 27;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackHi4) {
+                    return 28;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackLw4) {
+                    return 29;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 30;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 31;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 32;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 33;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 34;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 35;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 36;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 37;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 38;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 39;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 40;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 41;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 42;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 43;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 44;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 45;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 46;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 47;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 48;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI3 {
+                if fighter.is_cat_flag(Cat1::AttackS4) {
+                    return 49;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackHi4) {
+                    return 50;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackLw4) {
+                    return 51;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 52;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 53;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 54;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 55;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 56;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 57;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 58;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 59;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 60;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 61;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 62;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 63;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 64;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 65;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 66;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 67;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 68;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 69;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 70;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW3 {
+                if fighter.is_cat_flag(Cat1::AttackS4) {
+                    return 71;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackHi4) {
+                    return 72;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackLw4) {
+                    return 73;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 74;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 75;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 76;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 77;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 78;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 79;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 80;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 81;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 82;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 83;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 84;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 85;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 86;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 87;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 88;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 89;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 90;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 91;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 92;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
+                if fighter.is_cat_flag(Cat1::AttackS3) {
+                    return 93;
+                }
+                if fighter.is_cat_flag(Cat1::AttackHi3) {
+                    return 94;
+                }
+                if fighter.is_cat_flag(Cat1::AttackLw3) {
+                    return 95;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackS4) {
+                    return 96;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackHi4) {
+                    return 97;
+                }
+                else if fighter.is_cat_flag(Cat1::AttackLw4) {
+                    return 98;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 99;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 100;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 101;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 102;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 103;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 104;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 105;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 106;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 107;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 108;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 109;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 110;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 111;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 112;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 113;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 114;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 115;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 116;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 117;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4 {
+                if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 118;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 119;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 120;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 121;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 122;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 123;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 124;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 125;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 126;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 127;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 128;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 129;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 130;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 131;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 132;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 133;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 134;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 135;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 136;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_HI4 {
+                if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 137;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 138;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 139;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 140;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 141;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 142;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 143;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 144;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 145;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 146;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 147;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 148;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 149;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 150;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 151;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 152;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 153;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 154;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 155;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 {
+                if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 156;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 157;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 158;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 159;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 160;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 161;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 162;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 163;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 164;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 165;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 166;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 167;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 168;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 169;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 170;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialN) {
+                    return 171;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialS) {
+                    return 172;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                    return 173;
+                }
+                else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                    return 174;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR {
+                let attack_air_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_WORK_INT_MOTION_KIND);
+                if (attack_air_kind == hash40("attack_air_n") || motion_kind == hash40("attack_air_n")) {
+                    if fighter.is_cat_flag(Cat1::AttackAirF) {
+                        return 175;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirB) {
+                        return 176;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirHi) {
+                        return 177;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirLw) {
+                        return 178;
+                    }
+                    if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                        return 179;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                        return 180;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                        return 181;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                        return 182;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                        return 183;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                        return 184;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                        return 185;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                        return 186;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                        return 187;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623NB) {
+                        return 188;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                        return 189;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                        return 190;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623A) {
+                        return 191;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                        return 192;
+                    }
+                    else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                        return 193;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialN) {
+                        return 194;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialS) {
+                        return 195;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                        return 196;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                        return 197;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+                else if (attack_air_kind == hash40("attack_air_f") || motion_kind == hash40("attack_air_f")) {
+                    if fighter.is_cat_flag(Cat1::AttackAirN) {
+                        return 198;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirB) {
+                        return 199;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirHi) {
+                        return 200;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirLw) {
+                        return 201;
+                    }
+                    if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                        return 202;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                        return 203;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                        return 204;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                        return 205;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                        return 206;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                        return 207;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                        return 208;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                        return 209;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                        return 210;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623NB) {
+                        return 211;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                        return 212;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                        return 213;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623A) {
+                        return 214;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                        return 215;
+                    }
+                    else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                        return 216;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialN) {
+                        return 217;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialS) {
+                        return 218;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                        return 219;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                        return 220;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+                else if (attack_air_kind == hash40("attack_air_b") || motion_kind == hash40("attack_air_b")) {
+                    if fighter.is_cat_flag(Cat1::AttackAirN) {
+                        return 221;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirF) {
+                        return 222;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirHi) {
+                        return 223;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirLw) {
+                        return 224;
+                    }
+                    if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                        return 225;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                        return 226;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                        return 227;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                        return 228;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                        return 229;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                        return 230;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                        return 231;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                        return 232;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                        return 233;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623NB) {
+                        return 234;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                        return 235;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                        return 236;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623A) {
+                        return 237;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                        return 238;
+                    }
+                    else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                        return 239;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialN) {
+                        return 240;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialS) {
+                        return 241;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                        return 242;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                        return 243;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+                else if (attack_air_kind == hash40("attack_air_hi") || motion_kind == hash40("attack_air_hi")) {
+                    if fighter.is_cat_flag(Cat1::AttackAirN) {
+                        return 244;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirF) {
+                        return 245;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirB) {
+                        return 246;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirLw) {
+                        return 247;
+                    }
+                    if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                        return 248;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                        return 249;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                        return 250;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                        return 251;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                        return 252;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                        return 253;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                        return 254;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                        return 255;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                        return 256;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623NB) {
+                        return 257;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                        return 258;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                        return 259;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623A) {
+                        return 260;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                        return 261;
+                    }
+                    else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                        return 262;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialN) {
+                        return 263;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialS) {
+                        return 264;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                        return 265;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                        return 266;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+                else if (attack_air_kind == hash40("attack_air_lw") || motion_kind == hash40("attack_air_lw")) {
+                    if fighter.is_cat_flag(Cat1::AttackAirN) {
+                        return 267;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirF) {
+                        return 268;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirB) {
+                        return 269;
+                    }
+                    else if fighter.is_cat_flag(Cat1::AttackAirHi) {
+                        return 270;
+                    }
+                    if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                        return 271;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                        return 272;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                        return 273;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                        return 274;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                        return 275;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                        return 276;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                        return 277;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                        return 278;
+                    }
+                    else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                        return 279;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623NB) {
+                        return 280;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                        return 281;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                        return 282;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623A) {
+                        return 283;
+                    }
+                    else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                        return 284;
+                    }
+                    else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                        return 285;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialN) {
+                        return 286;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialS) {
+                        return 287;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialHi) {
+                        return 288;
+                    }
+                    else if fighter.is_cat_flag(Cat1::SpecialLw) {
+                        return 289;
+                    }
+                    else {
+                        return 0;
+                    }
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
+                if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 290;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 291;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 292;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 293;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 294;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 295;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 296;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 297;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 298;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 299;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 300;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 301;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 302;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 303;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 304;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
+                if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 305;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 306;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 307;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 308;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 309;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 310;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 311;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 312;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 313;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 314;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 315;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 316;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 317;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 318;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 319;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+                if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 320;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 321;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 322;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 323;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 324;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 325;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 326;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 327;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 328;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 329;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 330;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 331;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 332;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 333;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 334;
+                }
+                else {
+                    return 0;
+                }
+            }
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                if fighter.is_cat_flag(Cat4::SpecialN2Command) {
+                    return 335;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialNCommand) {
+                    return 336;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialSCommand) {
+                    return 337;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHiCommand) {
+                    return 338;
+                }
+                else if fighter.is_cat_flag(Cat4::SpecialHi2Command) {
+                    return 339;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialCommand) {
+                    return 340;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecialRCommand) {
+                    return 341;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2Command) {
+                    return 342;
+                }
+                else if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand) {
+                    return 343;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623NB) {
+                    return 344;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623BLong) {
+                    return 345;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623ALong) {
+                    return 346;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623A) {
+                    return 347;
+                }
+                else if fighter.is_cat_flag(Cat4::Command623Strict) {
+                    return 348;
+                }
+                else if fighter.is_cat_flag(Cat4::AttackCommand1) {
+                    return 349;
+                }
+                else {
+                    return 0;
+                }
+            }
+        }
+        return 0;
     }
 }
 
@@ -756,4 +2002,14 @@ pub struct MappedInputs {
     pub lstick_y: i8,
     pub rstick_x: i8,
     pub rstick_y: i8
+}
+
+pub unsafe extern "C" fn donkey_barrel_bool(boma: *mut BattleObjectModuleAccessor) -> bool {
+    let itemmanager = smash2::app::ItemManager::instance().unwrap();
+    let barrel_count = smash2::app::ItemManager::get_num_of_ownered_item(itemmanager, (*boma).battle_object_id, smash2::app::ItemKind::Barrel);
+    let timer = WorkModule::get_int(boma, FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
+    if barrel_count == 0 && !WorkModule::is_flag(boma, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE) && timer <= 0 {
+        return true;
+    }
+    return false;
 }

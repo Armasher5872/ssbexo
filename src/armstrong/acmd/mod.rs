@@ -1,7 +1,7 @@
 use {
     crate::functions::{
         ext::*,
-        variables::*,
+        var::variables::*,
     },
     smash::{
         app::{

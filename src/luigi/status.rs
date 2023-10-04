@@ -6,7 +6,7 @@ use super::*;
 unsafe fn luigi_catch_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[PREV_STATUS_KIND].get_i32() == FIGHTER_STATUS_KIND_SPECIAL_LW {
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        DOWN_B_CATCH[entry_id] = true;
+        HAS_CATCH[entry_id] = true;
         StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
         FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
         0.into()
@@ -19,7 +19,7 @@ unsafe fn luigi_catch_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[status_script(agent = "luigi", status = FIGHTER_STATUS_KIND_CATCH, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn luigi_catch_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if DOWN_B_CATCH[entry_id] {
+    if HAS_CATCH[entry_id] {
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("catch"), false, -1.0);
         ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 12.0);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
@@ -33,7 +33,6 @@ unsafe fn luigi_catch_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
 pub unsafe fn luigi_catch_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 12.0);
     if situation_kind == *SITUATION_KIND_GROUND
     && prev_situation_kind == *SITUATION_KIND_AIR {
@@ -59,7 +58,7 @@ pub unsafe fn luigi_catch_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[status_script(agent = "luigi", status = FIGHTER_STATUS_KIND_CATCH, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
 unsafe fn luigi_catch_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if DOWN_B_CATCH[entry_id] {
+    if HAS_CATCH[entry_id] {
         let mut condition = false;
         if fighter.global_table[STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_CATCH_PULL {
             condition = false;
@@ -86,35 +85,22 @@ unsafe fn luigi_catch_pull_main_status(fighter: &mut L2CFighterCommon) -> L2CVal
 #[status_script(agent = "luigi", status = FIGHTER_STATUS_KIND_CATCH_PULL, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
 unsafe fn luigi_catch_pull_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if DOWN_B_CATCH[entry_id] {
+    let mut condition = false;
+    if HAS_CATCH[entry_id] {
         let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-        let mut condition = true;
-        if status_kind != *FIGHTER_STATUS_KIND_THROW {
-            if status_kind != *FIGHTER_STATUS_KIND_CATCH_WAIT {
-                if status_kind != *FIGHTER_STATUS_KIND_CATCH_ATTACK {
-                    if status_kind != *FIGHTER_STATUS_KIND_CATCH_CUT {
-                        if condition {
-                            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(0));
-                        }
-                        ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(0));
-                    }
-                    condition = false;
-                }
-                else {
-                    condition = false;
-                }
+        if ![*FIGHTER_STATUS_KIND_THROW, *FIGHTER_STATUS_KIND_CATCH_WAIT, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_STATUS_KIND_CATCH_CUT].contains(&status_kind) {
+            if condition {
+                ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(0));
             }
-            else {
-                condition = false;
-            }
+            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(0));
         }
         else {
             let catch_motion_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_CATCH_WAIT_WORK_INT_MOTION_KIND);
             if ![hash40("throw_f"), hash40("throw_b"), hash40("throw_hi"), hash40("throw_lw"), hash40("catch_attack")].contains(&catch_motion_kind) {
                 return 0.into();
             }
-            condition = false;
         }
+        condition = false;
     }
     else {
         fighter.status_end_CatchPull();
@@ -143,7 +129,7 @@ unsafe fn luigi_catch_wait_main_status(fighter: &mut L2CFighterCommon) -> L2CVal
 #[status_script(agent = "luigi", status = FIGHTER_STATUS_KIND_THROW, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
 unsafe fn luigi_throw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if DOWN_B_CATCH[entry_id] {
+    if HAS_CATCH[entry_id] {
         StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
         FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
         0.into()
@@ -156,7 +142,7 @@ unsafe fn luigi_throw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[status_script(agent = "luigi", status = FIGHTER_STATUS_KIND_THROW, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn luigi_throw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if DOWN_B_CATCH[entry_id] {
+    if HAS_CATCH[entry_id] {
         fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw_throw"), L2CValue::Hash40s("special_air_lw_throw"), false.into());
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("throw_f"), false, -1.0);
         fighter.sub_shift_status_main(L2CValue::Ptr(luigi_throw_loop as *const () as _))
@@ -212,7 +198,7 @@ unsafe fn luigi_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     delete_plunger(instance, false);
-    DOWN_B_CATCH[entry_id] = false;
+    HAS_CATCH[entry_id] = false;
     if LUIGI_CYCLONE_RNG[entry_id] > 1 {
         LUIGI_CYCLONE_RNG[entry_id] -= 2;
     }
@@ -332,7 +318,7 @@ unsafe fn luigi_special_s_exec_status(fighter: &mut L2CFighterCommon) -> L2CValu
         let mut sum_limit_x_dec = float_limit_x_dec+param_limit_x_dec;
         WorkModule::set_float(fighter.module_accessor, sum_limit_x_dec, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLOAT_LIMIT_X_DEC);
         let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-        let mut alstack128 = 0.0; //not sure why this is initialized with a value never used
+        let mut alstack128; //not sure why this is initialized with a value never used
         let kinetic_type = KineticModule::get_kinetic_type(fighter.module_accessor);
         if kinetic_type != *FIGHTER_KINETIC_TYPE_LUIGI_SPECIAL_LW {
             let air_limit_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw") as u64, hash40("air_limit_x") as u64);
@@ -629,7 +615,7 @@ unsafe fn luigi_special_lw_exit_status(_fighter: &mut L2CFighterCommon) -> L2CVa
 #[status_script(agent = "luigi", status = 0x1D3, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
 unsafe fn luigi_special_lw_shoot_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    DOWN_B_CATCH[entry_id] = false;
+    HAS_CATCH[entry_id] = false;
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
     0.into()
@@ -689,7 +675,7 @@ unsafe fn luigi_special_lw_shoot_end_status(fighter: &mut L2CFighterCommon) -> L
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     delete_plunger(instance, false);
-    DOWN_B_CATCH[entry_id] = false;
+    HAS_CATCH[entry_id] = false;
     0.into()
 }
 
@@ -698,7 +684,7 @@ unsafe fn luigi_special_lw_shoot_end_status(fighter: &mut L2CFighterCommon) -> L
 #[status_script(agent = "luigi", status = 0x1D4, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
 unsafe fn luigi_special_lw_end_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    DOWN_B_CATCH[entry_id] = false;
+    HAS_CATCH[entry_id] = false;
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
     0.into()
@@ -721,14 +707,6 @@ pub unsafe fn luigi_special_lw_end_loop(fighter: &mut L2CFighterCommon) -> L2CVa
     }
     if fighter.sub_air_check_fall_common().get_bool() {
         return 1.into();
-    }
-    if fighter.jump_cancel() {
-        if fighter.global_table[SITUATION_KIND] == *SITUATION_KIND_GROUND {
-            fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), true.into());
-        }
-        else {
-            fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
-        }
     }
     if situation_kind == *SITUATION_KIND_GROUND
     && prev_situation_kind == *SITUATION_KIND_AIR {
@@ -764,7 +742,7 @@ unsafe fn luigi_special_lw_end_end_status(fighter: &mut L2CFighterCommon) -> L2C
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     delete_plunger(instance, false);
-    DOWN_B_CATCH[entry_id] = false;
+    HAS_CATCH[entry_id] = false;
     0.into()
 }
 

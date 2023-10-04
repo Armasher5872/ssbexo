@@ -225,6 +225,7 @@ pub fn install() {
         ssbuexo_fox_fair_acmd,
         ssbuexo_fox_fair_landing_acmd,
         ssbuexo_fox_bair_acmd,
+        ssbuexo_fox_uair_acmd,
         ssbuexo_fox_dair_acmd,
         ssbuexo_fox_dair_landing_acmd
     );

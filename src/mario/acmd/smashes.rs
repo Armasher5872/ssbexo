@@ -2,7 +2,7 @@ use super::*;
 
 //Up Smash ACMD
 #[acmd_script( agent = "mario", script = "game_attackhi4", category = ACMD_GAME)]
-unsafe fn ssbuexo_mario_up_smash_acmd(fighter: &mut L2CAgentBase) 
+unsafe fn ssbexo_mario_up_smash_acmd(fighter: &mut L2CAgentBase) 
 {
     MotionModule::set_rate(fighter.module_accessor, 0.8);
     frame(fighter.lua_state_agent, 7.0);
@@ -36,6 +36,6 @@ unsafe fn ssbuexo_mario_up_smash_acmd(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     install_acmd_scripts!(
-        ssbuexo_mario_up_smash_acmd
+        ssbexo_mario_up_smash_acmd
     );
 }

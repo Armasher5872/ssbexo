@@ -20,8 +20,8 @@ unsafe fn status_run_sub(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_COMMAND1, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND, 
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_LIGHT_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_HEAVY_DASH, 
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_COMMAND_623NB, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_STAND, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_RUN, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_SQUAT, 
-        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT, 
-        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U, 
+        *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW
     ];
     for term in transition_terms.iter() {
         WorkModule::enable_transition_term(fighter.module_accessor, *term);
@@ -34,7 +34,6 @@ unsafe fn status_run_sub(fighter: &mut L2CFighterCommon) {
 //Run Main
 #[skyline::hook(replace = L2CFighterCommon_status_Run_Main)]
 unsafe fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let const_stick_x = fighter.global_table[STICK_X].get_f32();
     let lr = PostureModule::lr(fighter.module_accessor);
     let stick_x = const_stick_x * lr;
@@ -158,14 +157,6 @@ unsafe fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
     }
     /* START OF NEW ADDITION */
-    //Allows crouch out of run
-    if fighter.down_input() && fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR && stick_x < 0.75 {
-        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
-        if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT) && fighter.sub_check_command_squat().get_bool() {
-            fighter.change_status(FIGHTER_STATUS_KIND_SQUAT.into(), true.into());
-            return 0.into();
-        }
-    }
     //Allows platform drops out of run
     let pass_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_stick_y"));
     let pass_flick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_flick_y")) as i32;
@@ -191,7 +182,6 @@ unsafe fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 //Run Brake
 #[skyline::hook(replace = L2CFighterCommon_status_RunBrake_Main)]
 unsafe fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let const_stick_x = fighter.global_table[STICK_X].get_f32();
     let lr = PostureModule::lr(fighter.module_accessor);
     let stick_x = const_stick_x * lr;
@@ -324,14 +314,6 @@ unsafe fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
     }
     /* START OF NEW ADDITION */
-    //Allows crouch out of run brake
-    if fighter.down_input() && fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR && stick_x < 0.75 {
-        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
-        if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT) && fighter.sub_check_command_squat().get_bool() {
-            fighter.change_status(FIGHTER_STATUS_KIND_SQUAT.into(), true.into());
-            return 0.into();
-        }
-    }
     //Allows platform drops out of run brake
     let pass_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_stick_y"));
     let pass_flick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_flick_y")) as i32;

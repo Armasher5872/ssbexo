@@ -1,8 +1,3 @@
-#![allow(
-    unused_macros,
-    unused_variables
-)]
-
 use {
     crate::functions::{
         ext::*,
@@ -14,6 +9,7 @@ use {
     smash::{
         app::{
             lua_bind::*,
+            sv_animcmd::*,
             *
         },
         hash40,
@@ -31,13 +27,12 @@ use {
         }
     },
     smash_script::*,
-    smashline::*,
 };
 
 mod guard;
-mod guardoff;
+mod guarddamage;
 
 pub fn install() {
-  guard::install();
-  guardoff::install();
+    guard::install();
+    guarddamage::install();
 }

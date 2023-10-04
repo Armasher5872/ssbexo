@@ -4,8 +4,8 @@ use {
         var::{
             consts::*,
             globals::*,
-        },
-        variables::*,
+            variables::*,
+        }
     },
     smash::{
         app::{
@@ -15,9 +15,7 @@ use {
                 *
             },
             self,
-            sv_information,
-            utility::*,
-            *
+            sv_information
         },
         hash40,
         lib::{
@@ -42,14 +40,12 @@ mod airturn;
 mod breverse;
 mod customgamemodes;
 mod misc;
-mod roawavedash;
 mod specialafterinfliction;
 
 pub fn install() {
-  airturn::install();
-  breverse::install();
-  customgamemodes::install();
-  misc::install();
-  roawavedash::install();
-  specialafterinfliction::install();
+    airturn::install();
+    breverse::install();
+    customgamemodes::install();
+    misc::install();
+    specialafterinfliction::install();
 }

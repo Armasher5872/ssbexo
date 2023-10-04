@@ -42,10 +42,9 @@ fn ridley_frame(fighter: &mut L2CFighterCommon) {
             && POGO_OPPONENT_BOUNCE[entry_id] != true {
                 POGO_OPPONENT_BOUNCE[entry_id] = true;
             }
-            else if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x:pos_x_prev+pos_x_global, y: pos_y_prev+pos_y_global}, &Vector2f{x: (v3f_tail_pos.x -(pos_x_prev+pos_x_global))+(8.0*lr), y: v3f_tail_pos.y -(pos_y_prev+pos_y_global) -8.0}, ground_hit_pos, true) == 1
+            else if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x:pos_x_prev+pos_x_global, y: pos_y_prev+pos_y_global}, &Vector2f{x: (v3f_tail_pos.x -(pos_x_prev+pos_x_global))+(8.0*lr), y: v3f_tail_pos.y -(pos_y_prev+pos_y_global) -8.0}, ground_hit_pos, true)
             && POGO_GROUND_BOUNCE[entry_id] != true
-            && frame > 21.0
-            && frame < 35.0 {
+            && (21.0..35.0).contains(&frame) {
                 POGO_GROUND_BOUNCE[entry_id] = true;
             }
         }
@@ -57,7 +56,7 @@ fn ridley_frame(fighter: &mut L2CFighterCommon) {
         if POGO_GROUND_BOUNCE[entry_id] == true {
             let mut slope_angle = 0.0;
             let slope_check_pos = &mut Vector2f{x: 0.0, y: 0.0};
-            if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x:ground_hit_pos.x+(5.0*lr), y:ground_hit_pos.y+5.0}, &Vector2f{x:0.0, y:-10.0}, slope_check_pos, true) == 1 {
+            if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x:ground_hit_pos.x+(5.0*lr), y:ground_hit_pos.y+5.0}, &Vector2f{x:0.0, y:-10.0}, slope_check_pos, true) {
                 let pos_diff_y = ground_hit_pos.y-slope_check_pos.y;
                 if pos_diff_y > 0.0 {
                     slope_angle = (pos_diff_y / 5.0).atan().to_degrees();

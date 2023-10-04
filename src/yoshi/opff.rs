@@ -4,11 +4,8 @@ use super::*;
 fn yoshi_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let status_kind = StatusModule::status_kind(boma);
         let motion_kind = MotionModule::motion_kind(boma);
         let frame = MotionModule::frame(boma);
-        let lr = PostureModule::lr(boma);
-        let mut touch_wall = false;
         if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
             WorkModule::set_int(boma, 1, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
             WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);

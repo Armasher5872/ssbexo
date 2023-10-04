@@ -2,7 +2,7 @@ use super::*;
 
 //Fire Fox ACMD
 #[acmd_script( agent = "fox", script = "game_specialhi", category = ACMD_GAME)]
-unsafe fn game_specialhi(fighter: &mut L2CAgentBase) {
+unsafe fn ssbuexo_fox_firefox_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         JostleModule::set_status(fighter.module_accessor, false);
     }
@@ -36,6 +36,7 @@ unsafe fn ssbuexo_fox_reflector_acmd(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     install_acmd_scripts!(
+        ssbuexo_fox_firefox_acmd,
         ssbuexo_fox_reflector_acmd
     );
 }

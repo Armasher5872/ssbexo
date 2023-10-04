@@ -105,11 +105,118 @@ unsafe fn ssbuexo_kirby_dash_attack_acmd(fighter: &mut L2CAgentBase) {
     }
 }
 
+//Aerial Dash Attack ACMD
+#[acmd_script( agent = "kirby", script = "game_attackairdash", category = ACMD_GAME)]
+unsafe fn ssbuexo_kirby_aerial_dash_attack_acmd(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 9.0);
+    for _ in 0..5 {
+        if macros::is_excute(fighter) {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 0.5, 0, 80, 50, 0, 5.0, 0.0, 5.0, 3.0, Some(0.0), Some(5.0), Some(0.0), 0.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
+        }
+        wait(fighter.lua_state_agent, 3.0);
+        if macros::is_excute(fighter) {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+        wait(fighter.lua_state_agent, 1.0);
+    }
+    frame(fighter.lua_state_agent, 30.0);
+    if macros::is_excute(fighter) {
+        macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.5, 46, 80, 0, 60, 6.0, 0.0, 5.0, 3.0, Some(0.0), Some(5.0), Some(0.0), 0.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
+    }
+    frame(fighter.lua_state_agent, 35.0);
+    if macros::is_excute(fighter) {
+        AttackModule::clear_all(fighter.module_accessor);
+        JostleModule::set_status(fighter.module_accessor, true);
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL);
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE);
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY);
+    }
+}
+
+//Aerial Dash Attack Effect
+#[acmd_script( agent = "kirby", script = "effect_attackairdash", category = ACMD_EFFECT)]
+unsafe fn ssbuexo_kirby_aerial_dash_attack_effect(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 6.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("kirby_dash"), Hash40::new("top"), 0, 6, 5, -90, 0, 160, 0.7, true);
+        EffectModule::enable_sync_init_pos_last(fighter.module_accessor);
+    }
+    frame(fighter.lua_state_agent, 9.0);
+    if macros::is_excute(fighter) {
+        macros::BURN_COLOR(fighter, 2, 0.059, 0.008, 0);
+        macros::BURN_COLOR_FRAME(fighter, 4, 2, 0.059, 0.008, 0.9);
+    }
+    frame(fighter.lua_state_agent, 30.0);
+    if macros::is_excute(fighter) {
+        macros::BURN_COLOR(fighter, 2, 0.059, 0.008, 0.9);
+        macros::BURN_COLOR_FRAME(fighter, 12, 2, 0.059, 0.008, 0);
+        macros::EFFECT_OFF_KIND(fighter, Hash40::new("kirby_dash"), false, true);
+    }
+    frame(fighter.lua_state_agent, 42.0);
+    if macros::is_excute(fighter) {
+        macros::BURN_COLOR_NORMAL(fighter);
+    }
+}
+
+//Aerial Dash Attack Sound
+#[acmd_script( agent = "kirby", script = "sound_attackairdash", category = ACMD_SOUND)]
+unsafe fn ssbuexo_kirby_aerial_dash_attack_sound(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 9.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_kirby_rnd_attack"));
+        macros::PLAY_SE(fighter, Hash40::new("se_kirby_attackdash"));
+    }
+}
+
+//Aerial Dash Attack Expression
+#[acmd_script( agent = "kirby", script = "expression_attackairdash", category = ACMD_EXPRESSION)]
+unsafe fn ssbuexo_kirby_aerial_dash_attack_expression(fighter: &mut L2CAgentBase) {
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 4, true);
+    }
+    frame(fighter.lua_state_agent, 8.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_elecattack"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 9.0);
+    if macros::is_excute(fighter) {
+        macros::RUMBLE_HIT(fighter, Hash40::new("rbkind_attackm"), 0);
+    }
+    frame(fighter.lua_state_agent, 14.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_elecattack"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 20.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_elecattack"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 26.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_elecattack"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 32.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_elecattack"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 36.0);
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 15);
+    }
+    frame(fighter.lua_state_agent, 37.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 pub fn install() {
     install_acmd_scripts!(
         ssbuexo_kirby_jab_1_acmd,
         ssbuexo_kirby_jab_2_acmd,
         ssbuexo_kirby_rapid_jab_finisher_effect,
-        ssbuexo_kirby_dash_attack_acmd
+        ssbuexo_kirby_dash_attack_acmd,
+        ssbuexo_kirby_aerial_dash_attack_acmd,
+        ssbuexo_kirby_aerial_dash_attack_effect,
+        ssbuexo_kirby_aerial_dash_attack_sound,
+        ssbuexo_kirby_aerial_dash_attack_expression
     );
 }

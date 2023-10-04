@@ -153,7 +153,6 @@ unsafe fn ssbuexo_kirby_side_special_hold_acmd(fighter: &mut L2CAgentBase) {
 //Side Special Turn ACMD
 #[acmd_script( agent = "kirby", script = "game_specialsturn", category = ACMD_GAME)]
 unsafe fn ssbuexo_kirby_side_special_turn_acmd(fighter: &mut L2CAgentBase) {
-    let wheel_power_up = WorkModule::get_float(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
     if macros::is_excute(fighter) {
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), false);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), false);
@@ -187,7 +186,6 @@ unsafe fn ssbuexo_kirby_side_special_turn_sound(fighter: &mut L2CAgentBase) {
 //Side Special Jump ACMD
 #[acmd_script( agent = "kirby", script = "game_specialsjump", category = ACMD_GAME)]
 unsafe fn ssbuexo_kirby_side_special_jump_acmd(fighter: &mut L2CAgentBase) {
-    let wheel_power_up = WorkModule::get_float(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
     if macros::is_excute(fighter) {
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, false, 0);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), false);

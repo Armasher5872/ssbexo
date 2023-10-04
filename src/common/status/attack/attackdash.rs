@@ -41,9 +41,9 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = smash::app::utility::get_kind(boma);
     let frame = MotionModule::frame(boma);
     let const_stick_x = fighter.global_table[STICK_X].get_f32(); 
-    let lr = PostureModule::lr(fighter.module_accessor);
+    let lr = PostureModule::lr(boma);
     let stick_x = const_stick_x * lr;
-    let turn_run_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("turn_run_stick_x"));
+    let turn_run_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("turn_run_stick_x"));
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
         return 0.into();
@@ -164,16 +164,6 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
             }
         }
     }
-    //Donkey Kong Dash Attack Jump Cancel
-    if fighter_kind == *FIGHTER_KIND_DONKEY {
-        if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-            macros::SET_SPEED_EX(fighter, 1.0, 0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        }
-        if fighter.jump_cancel() && frame >= 9.0 && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), true.into());
-            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_POWER_DOWN);
-        }
-    }
     //Samus Dash Attack Canceled Up Tilt/DACDS
     if fighter_kind == *FIGHTER_KIND_SAMUS {
         if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) && frame <= 9.0 {
@@ -194,12 +184,11 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
     }
     //Kirby Aerial Dash Attack
-    if fighter_kind == *FIGHTER_KIND_KIRBY {
-        if situation_kind == *SITUATION_KIND_AIR {
-            if fighter.jump_cancel() && frame > 25.0 {
-                fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
-            }
-        }
+    if fighter_kind == *FIGHTER_KIND_KIRBY
+    && situation_kind == *SITUATION_KIND_AIR
+    && fighter.jump_cancel() 
+    && frame > 25.0 {
+        fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
     }
     /* END OF NEW ADDITIONS */
     if MotionModule::is_end(fighter.module_accessor) {

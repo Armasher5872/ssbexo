@@ -9,42 +9,16 @@ fn fox_frame(fighter: &mut L2CFighterCommon) {
         let frame = MotionModule::frame(boma);
         let status_kind = fighter.global_table[STATUS_KIND].get_i32();
         let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-        let parry_timer = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
-        let parried = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
-        if [hash40("just_shield_off"), hash40("just_shield")].contains(&motion_kind) {
-            if (0.0..5.0).contains(&frame) {
-                WorkModule::set_int(boma, 1, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
-                WorkModule::set_int(boma, 180, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
-            }
-        }
-        if parry_timer > 0 {
-            WorkModule::dec_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER);
-        }
-        if parry_timer <= 0
-        && parried == 1 {
-            WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
-        }
-        //Up Taunt Fire Fox Cancel
-        if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind) {
-            if (41.0..=44.0).contains(&frame) {
-                if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH, false);
-                }
-            }
-        }
         //Jab Cancels
-        if [hash40("attack_11"), hash40("attack_12")].contains(&motion_kind)
-        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3) != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, true);
-            } 
-            else if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3) != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
-            } 
-            else if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3) != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, true);
-            };
-        };
+        if fighter.magic_series() == 1 {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, false);
+        }
+        if fighter.magic_series() == 2 {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, false);
+        }
+        if fighter.magic_series() == 3 {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
+        }
         //Fast Fall Blaster/Land Cancel Blaster (Not doing it in statuses yet)
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
             if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR 

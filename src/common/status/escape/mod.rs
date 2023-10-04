@@ -25,7 +25,6 @@ use {
         }
     },
     smash_script::*,
-    smashline::*,
 };
 
 mod escapeair;

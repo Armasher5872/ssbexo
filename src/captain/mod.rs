@@ -1,16 +1,14 @@
 use {
     crate::functions::{
+        ext::*,
         var::{
             consts::*,
             globals::*,
-        },
-        variables::*,
+            variables::*,
+        }
     },
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::lua_bind::*,
         hash40,
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon,
@@ -24,6 +22,6 @@ mod acmd;
 mod opff;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
+    acmd::install();
+    opff::install();
 }

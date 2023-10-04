@@ -34,13 +34,16 @@ unsafe fn ssbuexo_dedede_down_taunt_expression(fighter: &mut L2CAgentBase)
     frame(fighter.lua_state_agent, 50.0);
     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_MASK) {
         if macros::is_excute(fighter) {
-            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_MASK, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_WADDLEDEE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_WADDLEDEE, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
             slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_R, 4);
         }
     }
     else {
         if macros::is_excute(fighter) {
-            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_MASK, false, -1);
+            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_WADDLEDEE, false, -1);
+            ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_WADDLEDEE, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            //ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_MASK, false, -1);
             slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_R, 4);
         }
     }

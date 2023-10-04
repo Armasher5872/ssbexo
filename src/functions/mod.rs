@@ -4,15 +4,10 @@ use {
         ext::*,
         var::{
             consts::*,
-            diddy::*,
             donkey::*,
             globals::*,
-            kirby::*,
-            luigi::*,
-            pikachu::*,
-            samusd::*,
+            variables::*,
         },
-        variables::*,
         util::*,
     },
     modular_bitfield::{
@@ -27,21 +22,26 @@ use {
             BattleObjectManager,
             BattleObjectModuleAccessor,
             BossManager,
+            Fighter,
             FighterBayonettaFinalModule,
             FighterCutInManager,
+            FighterManager,
             FighterParamAccessor2,
             FighterPitBFinalModule,
+            FighterUtil,
             GimmickEventPresenter,
+            GroundCorrectKind,
             ItemManager,
             ItemParamAccessor,
             lua_bind::{
                 PostureModule,
                 *
             },
-            FighterManager,
             StageManager,
+            sv_animcmd,
+            sv_battle_object,
+            sv_information,
             utility::*,
-            *
         },
         hash40,
         lib::{
@@ -55,7 +55,6 @@ use {
         },
         phx::{
             Hash40,
-            Vector2f,
             Vector3f,
             Vector4f
         }
@@ -65,11 +64,7 @@ use {
     skyline::{
         c_str,
         from_c_str,
-        hooks::{
-            getRegionAddress,
-            InlineCtx,
-            Region
-        },
+        hooks::InlineCtx,
         nn::ro::LookupSymbol
     },
     std::{
@@ -89,7 +84,6 @@ pub mod reset;
 pub mod singletons;
 pub mod util;
 pub mod var;
-pub mod variables;
 
 pub fn install() {
 	hook::install();

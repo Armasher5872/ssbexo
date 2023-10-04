@@ -317,7 +317,7 @@ unsafe fn basketball_mode(module_accessor: &mut smash::app::BattleObjectModuleAc
 	}
 }
 
-unsafe fn status_kind_damage(fighter: &mut L2CFighterCommon, module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, globals: &mut L2CValue) {
+unsafe fn status_kind_damage(_fighter: &mut L2CFighterCommon, module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, _globals: &mut L2CValue) {
 	if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FALL, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_TREAD_DAMAGE].contains(&status_kind) {
 		if status_kind != *FIGHTER_STATUS_KIND_TREAD_DAMAGE {
             //Fast Fall during Tumble
@@ -540,7 +540,6 @@ fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
 			}
 			special_mode(module_accessor, fighter_kind, status_kind, fighter, fighter_information);
 			status_kind_damage(fighter, module_accessor, status_kind, &mut globals);
-			WorkModule::set_flag(module_accessor, sv_information::is_ready_go(), FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO);
 		}
 	}
 }

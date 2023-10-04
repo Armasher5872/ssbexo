@@ -45,7 +45,6 @@ unsafe fn fox_special_lw_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue
 
 #[status_script(agent = "fox", status = FIGHTER_FOX_STATUS_KIND_SPECIAL_LW_LOOP, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
 unsafe fn fox_special_lw_loop_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     //Checks if the current frame in the status is greater than or equal to 4.0 (Effectively 8 frames into Shine)
     if fighter.global_table[CURRENT_FRAME].get_f32() >= 4.0 {
         //If you can, transition into the appropriate status kind

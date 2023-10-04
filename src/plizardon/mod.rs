@@ -1,6 +1,6 @@
 use {
-    crate::functions::{
-        var::consts::*,
+    crate::functions::var::{
+        consts::*,
         variables::*,
     },
     smash::{

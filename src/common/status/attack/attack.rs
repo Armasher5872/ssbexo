@@ -5,12 +5,13 @@ use super::*;
 //Sub Status Attack Common, removes the combo check
 #[skyline::hook(replace = L2CFighterCommon_sub_status_AttackCommon)]
 unsafe fn sub_status_attackcommon(fighter: &mut L2CFighterCommon) {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     if fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_ATTACK {
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ATTACK_WORK_INT_100_HIT_NEAR_COUNT);
     }
     ComboModule::reset(fighter.module_accessor);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_100);
-    if fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_SAMUS {
+    if fighter_kind == *FIGHTER_KIND_SAMUS {
         WorkModule::set_int64(fighter.module_accessor, hash40("attack_12") as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_ATTACK11_MOTION);
     }
     else {
@@ -32,8 +33,7 @@ unsafe fn attack_combo_none_uniq_chk_button(fighter: &mut L2CFighterCommon, para
     }
     else {
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
-            let countdown = WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0);
-            if countdown & 1 == 0 {
+            if !WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0) {
                 return;
             }
         }
@@ -95,8 +95,7 @@ unsafe fn attack_combo_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: 
     }
     else {
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
-            let something = WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0);
-            if something & 1 == 0 {
+            if !WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0) {
                 return;
             }
         }
@@ -190,10 +189,13 @@ unsafe fn status_attack_main_button(fighter: &mut L2CFighterCommon, param_1: L2C
     let attack_combo_type = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_combo_type"), 0);
     if attack_combo_type != *FIGHTER_COMBO_TYPE_NONE {
         if attack_combo_type == *FIGHTER_COMBO_TYPE_HIT && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART) {
+            /*   START OF NEW ADDITIONS   */
+            //Forces Samus to only have 1 Jab
             if fighter_kind == *FIGHTER_KIND_SAMUS {
                 fighter.change_status(FIGHTER_STATUS_KIND_ATTACK.into(), false.into());
                 MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_12"), 0.0, 1.0, false, 0.0, false, false);
             }
+            /*   END OF NEW ADDITIONS   */
             else {
                 fighter.change_status(FIGHTER_STATUS_KIND_ATTACK.into(), false.into());
             }

@@ -5,6 +5,7 @@ use {
             sv_animcmd::*,
             *
         },
+        hash40,
         lib::lua_const::*,
         lua2cpp::*,
         phx::Hash40
@@ -21,10 +22,10 @@ mod throws;
 mod specials;
 
 pub fn install() {
-  grounded::install();
-  tilts::install();
-  smashes::install();
-  aerials::install();
-  throws::install();
-  specials::install();
+    grounded::install();
+    tilts::install();
+    smashes::install();
+    aerials::install();
+    throws::install();
+    specials::install();
 }

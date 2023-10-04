@@ -1,11 +1,11 @@
 use {
-    crate::functions::variables::*,
-    smash::{
-        app::lua_bind::*,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon
-    },
-    smashline::*,
+  crate::functions::var::variables::*,
+  smash::{
+    app::lua_bind::*,
+    lib::lua_const::*,
+    lua2cpp::L2CFighterCommon
+  },
+  smashline::*,
 };
 
 mod acmd;

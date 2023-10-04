@@ -16,35 +16,8 @@ pub unsafe fn yoshi_jump_aerial_main_status(fighter: &mut L2CFighterCommon) -> L
     0.into()
 }
 
-#[status_script(agent = "yoshi", status = FIGHTER_STATUS_KIND_ATTACK_AIR, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-pub unsafe fn yoshi_attack_air_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_attack_air_inherit_jump_aerial_motion_uniq_process_init();
-    0.into()
-}
-
-#[status_script(agent = "yoshi", status = FIGHTER_STATUS_KIND_ATTACK_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-pub unsafe fn yoshi_attack_air_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    attack_air_main_status(fighter)
-}
-
-#[status_script(agent = "yoshi", status = FIGHTER_STATUS_KIND_ATTACK_AIR, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-pub unsafe fn yoshi_attack_air_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec();
-    0.into()
-}
-
-#[status_script(agent = "yoshi", status = FIGHTER_STATUS_KIND_ATTACK_AIR, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-pub unsafe fn yoshi_attack_air_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_attack_air_inherit_jump_aerial_motion_uniq_process_exit();
-    0.into()
-}
-
 pub fn install() {
     install_status_scripts!(
-        yoshi_jump_aerial_main_status,
-        yoshi_attack_air_init_status,
-        yoshi_attack_air_main_status,
-        yoshi_attack_air_exec_status,
-        yoshi_attack_air_exit_status
+        yoshi_jump_aerial_main_status
     );
 }

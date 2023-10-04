@@ -57,7 +57,6 @@ unsafe fn status_dash_common(fighter: &mut L2CFighterCommon) {
 #[skyline::hook(replace = L2CFighterCommon_status_Dash_Main_common)]
 unsafe fn status_dash_main_common(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
     /* Any new additions to this hook will be denoted by: "New Addition", otherwise it's the vanilla script */
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let const_stick_x = fighter.global_table[STICK_X].get_f32(); 
     let lr = PostureModule::lr(fighter.module_accessor);
     let stick_x = const_stick_x * lr;
@@ -133,10 +132,6 @@ unsafe fn status_dash_main_common(fighter: &mut L2CFighterCommon, param_1: L2CVa
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH) && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_CATCH != 0 && !ItemModule::is_have_item(fighter.module_accessor, 0) {
         fighter.change_status(FIGHTER_STATUS_KIND_CATCH_DASH.into(), true.into());
         return 1.into();
-    }
-    //Allows transition into shield
-    if fighter.sub_transition_group_check_ground_guard().get_bool() {
-        return true.into();
     }
     //Allows transition into command input specials
     if fighter.sub_transition_group_check_special_command().get_bool() {
@@ -266,8 +261,8 @@ unsafe fn status_dash_main_common(fighter: &mut L2CFighterCommon, param_1: L2CVa
     /* START OF NEW ADDITION */
     //Allows crouch out of initial dash
     if fighter.down_input() && fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR && stick_x < 0.75 {
-        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
-        if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT) && fighter.sub_check_command_squat().get_bool() {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT) && fighter.sub_check_command_squat().get_bool() {
             fighter.change_status(FIGHTER_STATUS_KIND_SQUAT.into(), true.into());
             return 1.into();
         }
@@ -307,7 +302,6 @@ pub unsafe fn fgc_dashback_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 //Dash Back Loop
 unsafe extern "C" fn fgc_dashback_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     /* Any new additions to this hook will be denoted by: "New Addition", otherwise it's the vanilla script */
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let const_stick_x = fighter.global_table[STICK_X].get_f32(); 
     let lr = PostureModule::lr(fighter.module_accessor);
     let stick_x = const_stick_x * lr;
@@ -438,8 +432,8 @@ unsafe extern "C" fn fgc_dashback_main_loop(fighter: &mut L2CFighterCommon) -> L
     /* START OF NEW ADDITION */
     //Allows crouch out of back dash
     if fighter.down_input() && fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR && stick_x < 0.75 {
-        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
-        if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT) && fighter.sub_check_command_squat().get_bool() {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT);
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SQUAT) && fighter.sub_check_command_squat().get_bool() {
             fighter.change_status(FIGHTER_STATUS_KIND_SQUAT.into(), true.into());
             return 1.into();
         }
