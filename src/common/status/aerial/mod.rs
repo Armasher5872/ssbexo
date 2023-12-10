@@ -10,8 +10,10 @@ use {
             lua_bind::{
                 PostureModule,
                 *
-            }
+            },
+            *
         },
+        hash40,
         lib::{
             L2CAgent,
             lua_const::*,

@@ -1,7 +1,17 @@
 use {
-    crate::functions::var::globals::*,
+    crate::functions::{
+        ext::*,
+        var::{
+            globals::*,
+            metaknight::*,
+        }
+    },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,
@@ -25,7 +35,9 @@ mod opff;
 mod status;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
-  status::install();
+    acmd::install();
+    opff::install();
+    status::install();
+    clone_weapon("koopajr", "cannonball", "metaknight", "galaxiabeam", false);
+    add_param_object("metaknight", "param_glide");
 }

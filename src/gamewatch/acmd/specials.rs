@@ -1,9 +1,7 @@
 use super::*;
 
 //Judge One ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials1", "game_specialairs1"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_one_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_one_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -19,9 +17,7 @@ unsafe fn ssbuexo_gamewatch_judge_one_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Two ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials2", "game_specialairs2"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_two_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_two_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -36,9 +32,7 @@ unsafe fn ssbuexo_gamewatch_judge_two_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Three ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials3", "game_specialairs3"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_three_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_three_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -55,9 +49,7 @@ unsafe fn ssbuexo_gamewatch_judge_three_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Four ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials4", "game_specialairs4"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_four_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_four_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -72,9 +64,7 @@ unsafe fn ssbuexo_gamewatch_judge_four_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Five ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials5", "game_specialairs5"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_five_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_five_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     for _ in 0..3 {
         if macros::is_excute(fighter) {
@@ -99,9 +89,7 @@ unsafe fn ssbuexo_gamewatch_judge_five_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Six ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials6", "game_specialairs6"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_six_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_six_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -116,9 +104,7 @@ unsafe fn ssbuexo_gamewatch_judge_six_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Seven ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials7", "game_specialairs7"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_seven_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_seven_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -136,9 +122,7 @@ unsafe fn ssbuexo_gamewatch_judge_seven_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Eight ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials8", "game_specialairs8"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_eight_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_eight_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -153,9 +137,7 @@ unsafe fn ssbuexo_gamewatch_judge_eight_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Judge Nine ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specials9", "game_specialairs9"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_judge_nine_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_judge_nine_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 16.0);
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAMEWATCH_STATUS_SPECIAL_S_FLAG_FIX_PANEL);
@@ -170,9 +152,7 @@ unsafe fn ssbuexo_gamewatch_judge_nine_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Up Special ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_specialhi", "game_specialairhi"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_special_hi_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_special_hi_acmd(fighter: &mut L2CAgentBase) {
     MotionModule::set_rate(fighter.module_accessor, 0.6);
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
@@ -214,16 +194,27 @@ unsafe fn ssbuexo_gamewatch_special_hi_acmd(fighter: &mut L2CAgentBase)
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_gamewatch_judge_one_acmd,
-        ssbuexo_gamewatch_judge_two_acmd,
-        ssbuexo_gamewatch_judge_three_acmd,
-        ssbuexo_gamewatch_judge_four_acmd,
-        ssbuexo_gamewatch_judge_five_acmd,
-        ssbuexo_gamewatch_judge_six_acmd,
-        ssbuexo_gamewatch_judge_seven_acmd,
-        ssbuexo_gamewatch_judge_eight_acmd,
-        ssbuexo_gamewatch_judge_nine_acmd,
-        ssbuexo_gamewatch_special_hi_acmd
-    );
+    Agent::new("gamewatch")
+    .game_acmd("game_specials1", ssbexo_gamewatch_judge_one_acmd)
+    .game_acmd("game_specialairs1", ssbexo_gamewatch_judge_one_acmd)
+    .game_acmd("game_specials2", ssbexo_gamewatch_judge_two_acmd)
+    .game_acmd("game_specialairs2", ssbexo_gamewatch_judge_two_acmd)
+    .game_acmd("game_specials3", ssbexo_gamewatch_judge_three_acmd)
+    .game_acmd("game_specialairs3", ssbexo_gamewatch_judge_three_acmd)
+    .game_acmd("game_specials4", ssbexo_gamewatch_judge_four_acmd)
+    .game_acmd("game_specialairs4", ssbexo_gamewatch_judge_four_acmd)
+    .game_acmd("game_specials5", ssbexo_gamewatch_judge_five_acmd)
+    .game_acmd("game_specialairs5", ssbexo_gamewatch_judge_five_acmd)
+    .game_acmd("game_specials6", ssbexo_gamewatch_judge_six_acmd)
+    .game_acmd("game_specialairs6", ssbexo_gamewatch_judge_six_acmd)
+    .game_acmd("game_specials7", ssbexo_gamewatch_judge_seven_acmd)
+    .game_acmd("game_specialairs7", ssbexo_gamewatch_judge_seven_acmd)
+    .game_acmd("game_specials8", ssbexo_gamewatch_judge_eight_acmd)
+    .game_acmd("game_specialairs8", ssbexo_gamewatch_judge_eight_acmd)
+    .game_acmd("game_specials9", ssbexo_gamewatch_judge_nine_acmd)
+    .game_acmd("game_specialairs9", ssbexo_gamewatch_judge_nine_acmd)
+    .game_acmd("game_specialhi", ssbexo_gamewatch_special_hi_acmd)
+    .game_acmd("game_specialairhi", ssbexo_gamewatch_special_hi_acmd)
+    .install()
+    ;
 }

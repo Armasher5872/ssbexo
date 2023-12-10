@@ -1,9 +1,7 @@
 use super::*;
 
 //Side Special ACMD
-#[acmd_script( agent = "mario", scripts = ["game_specials", "game_specialairs"], category = ACMD_GAME)]
-unsafe fn ssbexo_mario_side_special_acmd(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_side_special_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         ArticleModule::generate_article(agent.module_accessor, *FIGHTER_MARIO_GENERATE_ARTICLE_MANTLE, false, -1);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
@@ -47,7 +45,9 @@ unsafe fn ssbexo_mario_side_special_acmd(agent: &mut L2CAgentBase)
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbexo_mario_side_special_acmd
-    );
+    Agent::new("mario")
+    .game_acmd("game_specials", ssbexo_mario_side_special_acmd)
+    .game_acmd("game_specialairs", ssbexo_mario_side_special_acmd)
+    .install()
+    ;
 }

@@ -1,9 +1,7 @@
 use super::*;
 
 //Nair ACMD
-#[acmd_script( agent = "mario", script = "game_attackairn", category = ACMD_GAME)]
-unsafe fn ssbexo_mario_nair_acmd(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_nair_acmd(agent: &mut L2CAgentBase) {
     WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
@@ -24,9 +22,7 @@ unsafe fn ssbexo_mario_nair_acmd(agent: &mut L2CAgentBase)
 }
 
 //Nair Effect
-#[acmd_script( agent = "mario", script = "effect_attackairn", category = ACMD_EFFECT)]
-unsafe fn ssbexo_mario_nair_effect(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_nair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 8.5, 0, 0, 0, 0, 0.9, true, *EF_FLIP_YZ);
@@ -38,9 +34,7 @@ unsafe fn ssbexo_mario_nair_effect(agent: &mut L2CAgentBase)
 }
 
 //Fair ACMD
-#[acmd_script( agent = "mario", script = "game_attackairf", category = ACMD_GAME)]
-unsafe fn ssbexo_mario_fair_acmd(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_fair_acmd(agent: &mut L2CAgentBase) {
     MotionModule::set_rate(agent.module_accessor, 1.333);
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
@@ -68,8 +62,7 @@ unsafe fn ssbexo_mario_fair_acmd(agent: &mut L2CAgentBase)
 }
 
 //Fair Effect
-#[acmd_script( agent = "mario", script = "effect_attackairf", category = ACMD_EFFECT)]
-unsafe fn ssbexo_mario_fair_effect(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_mario_fair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
         macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -95,9 +88,7 @@ unsafe fn ssbexo_mario_fair_effect(agent: &mut L2CAgentBase) {
 }
 
 //Bair ACMD
-#[acmd_script( agent = "mario", script = "game_attackairb", category = ACMD_GAME)]
-unsafe fn ssbexo_mario_bair_acmd(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_bair_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
@@ -120,9 +111,7 @@ unsafe fn ssbexo_mario_bair_acmd(agent: &mut L2CAgentBase)
 }
 
 //Uair ACMD
-#[acmd_script( agent = "mario", script = "game_attackairhi", category = ACMD_GAME)]
-unsafe fn ssbexo_mario_uair_acmd(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_uair_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 1.0);
     macros::FT_MOTION_RATE(agent, 0.75);
     frame(agent.lua_state_agent, 2.0);
@@ -146,9 +135,7 @@ unsafe fn ssbexo_mario_uair_acmd(agent: &mut L2CAgentBase)
 }
 
 //Dair ACMD
-#[acmd_script( agent = "mario", script = "game_attackairlw", category = ACMD_GAME)]
-unsafe fn ssbexo_mario_dair_acmd(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_dair_acmd(agent: &mut L2CAgentBase) {
     WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
@@ -193,9 +180,7 @@ unsafe fn ssbexo_mario_dair_acmd(agent: &mut L2CAgentBase)
 }
 
 //Dair Effect
-#[acmd_script( agent = "mario", script = "effect_attackairlw", category = ACMD_EFFECT)]
-unsafe fn ssbexo_mario_dair_effect(agent: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_mario_dair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
         macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -232,8 +217,7 @@ unsafe fn ssbexo_mario_dair_effect(agent: &mut L2CAgentBase)
 }
 
 //Dair Sound
-#[acmd_script( agent = "mario", script = "sound_attackairlw", category = ACMD_SOUND)]
-unsafe fn ssbexo_mario_dair_sound(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_mario_dair_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("vc_mario_002"));
@@ -246,8 +230,7 @@ unsafe fn ssbexo_mario_dair_sound(agent: &mut L2CAgentBase) {
 }
 
 //Dair Expression
-#[acmd_script( agent = "mario", script = "expression_attackairlw", category = ACMD_EXPRESSION)]
-unsafe fn ssbexo_mario_dair_expression(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_mario_dair_expression(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 9, false, *BATTLE_OBJECT_ID_INVALID as u32);
@@ -268,25 +251,25 @@ unsafe fn ssbexo_mario_dair_expression(agent: &mut L2CAgentBase) {
 }
 
 //Dair Landing ACMD
-#[acmd_script( agent = "mario", script = "game_landingairlw", category = ACMD_GAME)]
-unsafe fn ssbexo_mario_dair_landing_acmd(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_mario_dair_landing_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbexo_mario_nair_acmd,
-        ssbexo_mario_nair_effect,
-        ssbexo_mario_fair_acmd,
-        ssbexo_mario_fair_effect,
-        ssbexo_mario_bair_acmd,
-        ssbexo_mario_uair_acmd,
-        ssbexo_mario_dair_acmd,
-        ssbexo_mario_dair_effect,
-        ssbexo_mario_dair_sound,
-        ssbexo_mario_dair_expression,
-        ssbexo_mario_dair_landing_acmd
-    );
+    Agent::new("mario")
+    .game_acmd("game_attackairn", ssbexo_mario_nair_acmd)
+    .effect_acmd("effect_attackairn", ssbexo_mario_nair_effect)
+    .game_acmd("game_attackairf", ssbexo_mario_fair_acmd)
+    .effect_acmd("effect_attackairf", ssbexo_mario_fair_effect)
+    .game_acmd("game_attackairb", ssbexo_mario_bair_acmd)
+    .game_acmd("game_attackairhi", ssbexo_mario_uair_acmd)
+    .game_acmd("game_attackairlw", ssbexo_mario_dair_acmd)
+    .effect_acmd("effect_attackairlw", ssbexo_mario_dair_effect)
+    .sound_acmd("sound_attackairlw", ssbexo_mario_dair_sound)
+    .expression_acmd("expression_attackairlw", ssbexo_mario_dair_expression)
+    .game_acmd("game_landingairlw", ssbexo_mario_dair_landing_acmd)
+    .install()
+    ;
 }

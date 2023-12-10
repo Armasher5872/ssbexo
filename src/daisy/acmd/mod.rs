@@ -15,5 +15,5 @@ use {
 mod throws;
 
 pub fn install() {
-  throws::install();
+    throws::install();
 }

@@ -1,7 +1,6 @@
 use super::*;
 
-#[status_script(agent = "ridley", status = FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_STOP_WALL, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn up_special_wall_status_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn ridley_up_special_wall_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     RIDLEY_INT_SPECIAL_HI_REBOUNCE_COUNT[entry_id] += 1;
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_RIDLEY_STATUS_SPECIAL_HI_FLAG_ENABLE_CONTROL);
@@ -25,10 +24,10 @@ unsafe fn up_special_wall_status_main(fighter: &mut L2CFighterCommon) -> L2CValu
     fighter.clear_lua_stack();
     lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
     sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-    fighter.sub_shift_status_main(L2CValue::Ptr(up_special_wall_main_loop as *const () as _))
+    fighter.sub_shift_status_main(L2CValue::Ptr(ridley_up_special_wall_main_loop as *const () as _))
 }
 
-pub unsafe fn up_special_wall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+pub unsafe extern "C" fn ridley_up_special_wall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_RIDLEY_STATUS_SPECIAL_HI_FLAG_ENABLE_CONTROL) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_RIDLEY_STATUS_SPECIAL_HI_FLAG_ENABLE_CONTROL);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
@@ -50,7 +49,8 @@ pub unsafe fn up_special_wall_main_loop(fighter: &mut L2CFighterCommon) -> L2CVa
 }
 
 pub fn install() {
-    install_status_scripts!(
-        up_special_wall_status_main
-    );
+    Agent::new("ridley")
+    .status(Main, *FIGHTER_RIDLEY_STATUS_KIND_SPECIAL_HI_STOP_WALL, ridley_up_special_wall_main_status)
+    .install()
+    ;
 }

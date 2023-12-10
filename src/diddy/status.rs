@@ -1,7 +1,6 @@
 use super::*;
 
-#[status_script(agent = "diddy", status = FIGHTER_DIDDY_STATUS_KIND_SPECIAL_LW_LAUGH, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn diddy_special_lw_laugh_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn diddy_special_lw_laugh_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         fighter.set_situation(SITUATION_KIND_AIR.into());
@@ -17,7 +16,7 @@ unsafe fn diddy_special_lw_laugh_main_status(fighter: &mut L2CFighterCommon) -> 
     fighter.sub_shift_status_main(L2CValue::Ptr(diddy_special_lw_laugh_loop as *const () as _))
 }
 
-pub unsafe fn diddy_special_lw_laugh_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn diddy_special_lw_laugh_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
@@ -52,7 +51,8 @@ pub unsafe fn diddy_special_lw_laugh_loop(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 pub fn install() {
-    install_status_scripts!(
-        diddy_special_lw_laugh_main_status
-    );
+    Agent::new("diddy")
+    .status(Main, *FIGHTER_DIDDY_STATUS_KIND_SPECIAL_LW_LAUGH, diddy_special_lw_laugh_main_status)
+    .install()
+    ;
 }

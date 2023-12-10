@@ -1,9 +1,7 @@
 use super::*;
 
 //Nair ACMD
-#[acmd_script( agent = "gamewatch", script = "game_attackairn", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_nair_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_nair_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         WorkModule::set_int(fighter.module_accessor, *WEAPON_GAMEWATCH_NORMAL_WEAPON_KIND_TROPICALFISH, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_NORMAL_WEAPON_KIND);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_GAMEWATCH_GENERATE_ARTICLE_NORMAL_WEAPON, false, 0);
@@ -64,9 +62,7 @@ unsafe fn ssbuexo_gamewatch_nair_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Fair ACMD
-#[acmd_script( agent = "gamewatch_bomb", script = "game_burst", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_fair_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_fair_acmd(fighter: &mut L2CAgentBase) {
 	let owner_module_accessor = sv_battle_object::module_accessor((WorkModule::get_int(fighter.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 	let bomb_explosion = &mut FIGHTER_BOOL_2[get_player_number(&mut *owner_module_accessor)];
 	if macros::is_excute(fighter) {
@@ -87,14 +83,11 @@ unsafe fn ssbuexo_gamewatch_fair_acmd(fighter: &mut L2CAgentBase)
 	wait(fighter.lua_state_agent, 2.0);
 	if macros::is_excute(fighter) {
 		notify_event_msc_cmd!(fighter, Hash40::new_raw(0x199c462b5du64));
-		macros::AREA_WIND_2ND_RAD(fighter, 0, 1, 0.02, 1000, 1, 0, 0, 25);
 	}
 }
 
 //Uair ACMD
-#[acmd_script( agent = "gamewatch_breath", script = "game_attackairhi", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_uair_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_uair_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.8, 367, 100, 80, 0, 3.8, 0.0, 2.4, 0.3, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
         macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 1.8, 367, 50, 30, 0, 3.8, 0.0, 2.4, 0.3, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
@@ -127,9 +120,7 @@ unsafe fn ssbuexo_gamewatch_uair_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Dair ACMD
-#[acmd_script( agent = "gamewatch", script = "game_attackairlw", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_dair_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_dair_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
         macros::SET_SPEED_EX(fighter, 0, 1, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -163,10 +154,17 @@ unsafe fn ssbuexo_gamewatch_dair_acmd(fighter: &mut L2CAgentBase)
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_gamewatch_nair_acmd,
-        ssbuexo_gamewatch_fair_acmd,
-        ssbuexo_gamewatch_uair_acmd,
-        ssbuexo_gamewatch_dair_acmd
-    );
+    Agent::new("gamewatch")
+    .game_acmd("game_attackairn", ssbexo_gamewatch_nair_acmd)
+    .game_acmd("game_attackairlw", ssbexo_gamewatch_dair_acmd)
+    .install()
+    ;
+    Agent::new("gamewatch_breath")
+    .game_acmd("game_attackairhi", ssbexo_gamewatch_uair_acmd)
+    .install()
+    ;
+    Agent::new("gamewatch_bomb")
+    .game_acmd("game_burst", ssbexo_gamewatch_fair_acmd)
+    .install()
+    ;
 }

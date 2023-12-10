@@ -164,8 +164,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 				BALL_ID = ItemModule::get_have_item_id(module_accessor, 0) as u32;
 			}
 			LAST_TO_HIT_BALL = 9;
-			ALREADY_BOUNCED = false;
-			FIRST_BOUNCE = false;
+			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
+			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
 		}
 		if READY_GO_TIMER != 0 { 
 			//Lock everyone in place while waiting
@@ -222,8 +222,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 					BALL_ID = ItemModule::get_have_item_id(module_accessor, 0) as u32;
 				}
 			}
-			ALREADY_BOUNCED = false;
-			FIRST_BOUNCE = false;
+			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
+			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
 		}
 		if get_player_number(module_accessor) as i32 == BALL_OWNER {
 			if ItemModule::is_have_item(module_accessor, 0) {
@@ -347,6 +347,9 @@ unsafe fn status_kind_damage(_fighter: &mut L2CFighterCommon, module_accessor: &
 }
 
 unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon, fighter_information: &mut app::FighterInformation) {
+	let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+	let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut smash::app::FighterManager);
+	let fighter_information = FighterManager::get_fighter_information(fighter_manager, app::FighterEntryID(entry_id));
 	if is_preview_mode() {
 		if fighter_kind == *FIGHTER_KIND_MARIO {
 			VisibilityModule::set_whole(module_accessor, false);
@@ -419,7 +422,7 @@ unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 			WorkModule::off_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPYCLOAK);
 		}
 		ItemModule::remove_all(module_accessor);
-		smash::app::lua_bind::FighterInformation::gravity(fighter_information);
+		FighterInformation::gravity(fighter_information);
 		if HIGH_SPAWN_POS.z == 1.0 
         || LOW_SPAWN_POS.z == 1.0 {
 			HIGH_SPAWN_POS = Vector3f{x: 30.0, y: 0.0, z: 0.0};
@@ -444,8 +447,8 @@ unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 			|| (WorkModule::is_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SUPERLEAF) && SPECIAL_SMASH_BODY == 3)
 			|| (WorkModule::is_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_ROCKETBELT) && SPECIAL_SMASH_BODY == 4)
 			|| (WorkModule::is_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SCREW) && SPECIAL_SMASH_BODY == 5)
-			|| (ItemModule::is_attach_item(module_accessor, smash::app::ItemKind(*ITEM_KIND_BACKSHIELD)) && SPECIAL_SMASH_BODY == 6)
-			|| (ItemModule::is_attach_item(module_accessor, smash::app::ItemKind(*ITEM_KIND_BADGE)) && SPECIAL_SMASH_STATUS == 2) {
+			|| (ItemModule::is_attach_item(module_accessor, app::ItemKind(*ITEM_KIND_BACKSHIELD)) && SPECIAL_SMASH_BODY == 6)
+			|| (ItemModule::is_attach_item(module_accessor, app::ItemKind(*ITEM_KIND_BADGE)) && SPECIAL_SMASH_STATUS == 2) {
 				for i in 0..TOTAL_FIGHTER {
 					ItemModule::remove_all(&mut *get_boma(i));
 				}
@@ -490,60 +493,137 @@ unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 	}
 }
 
-#[smashline::fighter_frame_callback]
-fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
-	unsafe {
-		let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-		let status_kind = fighter.global_table[STATUS_KIND].get_int() as i32;
-		let fighter_kind = smash::app::utility::get_kind(module_accessor) as i32;
-        WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-		let mut globals = fighter.globals_mut().clone();
-		LookupSymbol(
-			&mut FIGHTER_MANAGER_ADDR,
-			"_ZN3lib9SingletonIN3app14FighterManagerEE9instance_E\u{0}"
-				.as_bytes()
-				.as_ptr(),
-		);
-		LookupSymbol(
-			&mut FIGHTER_CUTIN_MANAGER_ADDR,
-			"_ZN3lib9SingletonIN3app19FighterCutInManagerEE9instance_E\u{0}"
-				.as_bytes()
-				.as_ptr(),
-		);
-		let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut smash::app::FighterManager);
-		let fighter_information = &mut *smash::app::lua_bind::FighterManager::get_fighter_information(fighter_manager, smash::app::FighterEntryID(get_player_number(module_accessor) as i32));
-		STOCK_COUNT[get_player_number(module_accessor)] = smash::app::lua_bind::FighterInformation::stock_count(fighter_information);
-		if smash::app::utility::get_category(module_accessor) == BATTLE_OBJECT_CATEGORY_FIGHTER {
-			if sv_information::is_ready_go() == false {
-				if get_player_number(module_accessor) as i32 == 0 {
-					TOTAL_FIGHTER = 1;
-				}
-				else {
-					if fighter_kind != *FIGHTER_KIND_NANA {
-						TOTAL_FIGHTER += 1;
-					}
-				}
-			}
-			else if is_preview_mode() {
+unsafe extern "C" fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
+	let module_accessor = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+	let status_kind = fighter.global_table[STATUS_KIND].get_int() as i32;
+	let fighter_kind = smash::app::utility::get_kind(module_accessor) as i32;
+	let mut globals = fighter.globals_mut().clone();
+	LookupSymbol(
+		&mut FIGHTER_MANAGER_ADDR,
+		"_ZN3lib9SingletonIN3app14FighterManagerEE9instance_E\u{0}"
+			.as_bytes()
+			.as_ptr(),
+	);
+	let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut smash::app::FighterManager);
+	let fighter_information = &mut *smash::app::lua_bind::FighterManager::get_fighter_information(fighter_manager, smash::app::FighterEntryID(get_player_number(module_accessor) as i32));
+	STOCK_COUNT[get_player_number(module_accessor)] = smash::app::lua_bind::FighterInformation::stock_count(fighter_information);
+	if smash::app::utility::get_category(module_accessor) == BATTLE_OBJECT_CATEGORY_FIGHTER {
+		if !sv_information::is_ready_go() {
+			if get_player_number(module_accessor) as i32 == 0 {
 				TOTAL_FIGHTER = 1;
 			}
 			else {
-				for i in 0..TOTAL_FIGHTER {
-					if STOCK_COUNT[i as usize] > 1 {
-						ALL_FIGHTERS_LAST_STOCK = false;
-						break;
-					}
-					else {
-						ALL_FIGHTERS_LAST_STOCK = true;
-					}
+				if fighter_kind != *FIGHTER_KIND_NANA {
+					TOTAL_FIGHTER += 1;
 				}
 			}
-			special_mode(module_accessor, fighter_kind, status_kind, fighter, fighter_information);
-			status_kind_damage(fighter, module_accessor, status_kind, &mut globals);
 		}
+		else if is_preview_mode() {
+			TOTAL_FIGHTER = 1;
+		}
+		else {
+			for i in 0..TOTAL_FIGHTER {
+				if STOCK_COUNT[i as usize] > 1 {
+					WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
+					break;
+				}
+			}
+		}
+		special_mode(module_accessor, fighter_kind, status_kind, fighter, fighter_information);
+		status_kind_damage(fighter, module_accessor, status_kind, &mut globals);
 	}
 }
 
 pub fn install() {
-	install_agent_frame_callbacks!(custom_fighter_functions);
+	Agent::new("mario").on_line(Main, custom_fighter_functions).install();
+	Agent::new("donkey").on_line(Main, custom_fighter_functions).install();
+	Agent::new("link").on_line(Main, custom_fighter_functions).install();
+	Agent::new("samus").on_line(Main, custom_fighter_functions).install();
+	Agent::new("samusd").on_line(Main, custom_fighter_functions).install();
+	Agent::new("yoshi").on_line(Main, custom_fighter_functions).install();
+	Agent::new("kirby").on_line(Main, custom_fighter_functions).install();
+	Agent::new("fox").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pikachu").on_line(Main, custom_fighter_functions).install();
+	Agent::new("luigi").on_line(Main, custom_fighter_functions).install();
+	Agent::new("ness").on_line(Main, custom_fighter_functions).install();
+	Agent::new("captain").on_line(Main, custom_fighter_functions).install();
+	Agent::new("purin").on_line(Main, custom_fighter_functions).install();
+	Agent::new("peach").on_line(Main, custom_fighter_functions).install();
+	Agent::new("daisy").on_line(Main, custom_fighter_functions).install();
+	Agent::new("koopa").on_line(Main, custom_fighter_functions).install();
+	Agent::new("popo").on_line(Main, custom_fighter_functions).install();
+	Agent::new("nana").on_line(Main, custom_fighter_functions).install();
+	Agent::new("sheik").on_line(Main, custom_fighter_functions).install();
+	Agent::new("zelda").on_line(Main, custom_fighter_functions).install();
+	Agent::new("mariod").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pichu").on_line(Main, custom_fighter_functions).install();
+	Agent::new("falco").on_line(Main, custom_fighter_functions).install();
+	Agent::new("marth").on_line(Main, custom_fighter_functions).install();
+	Agent::new("lucina").on_line(Main, custom_fighter_functions).install();
+	Agent::new("younglink").on_line(Main, custom_fighter_functions).install();
+	Agent::new("ganon").on_line(Main, custom_fighter_functions).install();
+	Agent::new("mewtwo").on_line(Main, custom_fighter_functions).install();
+	Agent::new("roy").on_line(Main, custom_fighter_functions).install();
+	Agent::new("chrom").on_line(Main, custom_fighter_functions).install();
+	Agent::new("gamewatch").on_line(Main, custom_fighter_functions).install();
+	Agent::new("metaknight").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pit").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pitb").on_line(Main, custom_fighter_functions).install();
+	Agent::new("szerosuit").on_line(Main, custom_fighter_functions).install();
+	Agent::new("wario").on_line(Main, custom_fighter_functions).install();
+	Agent::new("snake").on_line(Main, custom_fighter_functions).install();
+	Agent::new("ike").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pzenigame").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pfushigisou").on_line(Main, custom_fighter_functions).install();
+	Agent::new("plizardon").on_line(Main, custom_fighter_functions).install();
+	Agent::new("diddy").on_line(Main, custom_fighter_functions).install();
+	Agent::new("lucas").on_line(Main, custom_fighter_functions).install();
+	Agent::new("sonic").on_line(Main, custom_fighter_functions).install();
+	Agent::new("dedede").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pikmin").on_line(Main, custom_fighter_functions).install();
+	Agent::new("lucario").on_line(Main, custom_fighter_functions).install();
+	Agent::new("robot").on_line(Main, custom_fighter_functions).install();
+	Agent::new("toonlink").on_line(Main, custom_fighter_functions).install();
+	Agent::new("wolf").on_line(Main, custom_fighter_functions).install();
+	Agent::new("murabito").on_line(Main, custom_fighter_functions).install();
+	Agent::new("rockman").on_line(Main, custom_fighter_functions).install();
+	Agent::new("wiifit").on_line(Main, custom_fighter_functions).install();
+	Agent::new("rosetta").on_line(Main, custom_fighter_functions).install();
+	Agent::new("littlemac").on_line(Main, custom_fighter_functions).install();
+	Agent::new("gekkouga").on_line(Main, custom_fighter_functions).install();
+	Agent::new("miifighter").on_line(Main, custom_fighter_functions).install();
+	Agent::new("miiswordsman").on_line(Main, custom_fighter_functions).install();
+	Agent::new("miigunner").on_line(Main, custom_fighter_functions).install();
+	Agent::new("palutena").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pacman").on_line(Main, custom_fighter_functions).install();
+	Agent::new("reflet").on_line(Main, custom_fighter_functions).install();
+	Agent::new("shulk").on_line(Main, custom_fighter_functions).install();
+	Agent::new("koopajr").on_line(Main, custom_fighter_functions).install();
+	Agent::new("duckhunt").on_line(Main, custom_fighter_functions).install();
+	Agent::new("ryu").on_line(Main, custom_fighter_functions).install();
+	Agent::new("ken").on_line(Main, custom_fighter_functions).install();
+	Agent::new("cloud").on_line(Main, custom_fighter_functions).install();
+	Agent::new("kamui").on_line(Main, custom_fighter_functions).install();
+	Agent::new("bayonetta").on_line(Main, custom_fighter_functions).install();
+	Agent::new("inkling").on_line(Main, custom_fighter_functions).install();
+	Agent::new("ridley").on_line(Main, custom_fighter_functions).install();
+	Agent::new("simon").on_line(Main, custom_fighter_functions).install();
+	Agent::new("richter").on_line(Main, custom_fighter_functions).install();
+	Agent::new("krool").on_line(Main, custom_fighter_functions).install();
+	Agent::new("shizue").on_line(Main, custom_fighter_functions).install();
+	Agent::new("gaogaen").on_line(Main, custom_fighter_functions).install();
+	Agent::new("packun").on_line(Main, custom_fighter_functions).install();
+	Agent::new("jack").on_line(Main, custom_fighter_functions).install();
+	Agent::new("brave").on_line(Main, custom_fighter_functions).install();
+	Agent::new("buddy").on_line(Main, custom_fighter_functions).install();
+	Agent::new("dolly").on_line(Main, custom_fighter_functions).install();
+	Agent::new("master").on_line(Main, custom_fighter_functions).install();
+	Agent::new("tantan").on_line(Main, custom_fighter_functions).install();
+	Agent::new("pickel").on_line(Main, custom_fighter_functions).install();
+	Agent::new("edge").on_line(Main, custom_fighter_functions).install();
+	Agent::new("elight").on_line(Main, custom_fighter_functions).install();
+	Agent::new("eflame").on_line(Main, custom_fighter_functions).install();
+	Agent::new("demon").on_line(Main, custom_fighter_functions).install();
+	Agent::new("trail").on_line(Main, custom_fighter_functions).install();
+	Agent::new("koopag").on_line(Main, custom_fighter_functions).install();
 }

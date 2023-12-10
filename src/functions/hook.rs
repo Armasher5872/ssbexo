@@ -53,11 +53,6 @@ pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccess
 			return 0;
 		}
 	}
-	if get_kind(boma) == *FIGHTER_KIND_GANON
-	&& status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
-	&& !USE_DROPKICK[entry_id as usize] {
-		return 0;
-	}
 	if get_kind(boma) == *FIGHTER_KIND_MIIFIGHTER
 	&& status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S
 	&& !USE_ONSLAUGHT[entry_id as usize] {
@@ -96,6 +91,11 @@ pub unsafe fn change_status_request_hook(boma: &mut smash::app::BattleObjectModu
     let frame = MotionModule::frame(boma);
     if (boma.is_fighter() && boma.is_status(*FIGHTER_STATUS_KIND_DAMAGE_AIR) && next_status == *FIGHTER_STATUS_KIND_LANDING && frame < 1.0) {
         WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
+    }
+    else if (boma.is_weapon() && boma.kind() == *WEAPON_KIND_DEDEDE_GORDO) {
+        if next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_ATTACK || next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_HOP {
+            HitModule::set_no_team(boma, true);
+        }
     }
 	else if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
         if next_status == *ITEM_STATUS_KIND_BORN || next_status == *ITEM_STATUS_KIND_LOST {
@@ -389,7 +389,7 @@ pub unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_obje
 	}
 	if defender_kind == *ITEM_KIND_SOCCERBALL {
 		LAST_TO_HIT_BALL = get_player_number(attacker_boma);
-		ALREADY_BOUNCED = false;
+        WorkModule::set_flag(attacker_boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
 	}
 	//GGST COUNTER!/Little Mac Star Punch Counterhit Detection
 	if COUNTERHIT_CHECK[get_player_number(defender_boma)]
@@ -415,7 +415,7 @@ pub unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModu
         || pos.x > camera_range().y - 10.0 
         || pos.y < camera_range().w + 10.0 { 
 			//If we do know who it was, trigger the ball KO sequence
-			if ALREADY_BOUNCED {
+			if WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED) {
 				BALL_BOUNCED = Vector3f{x: pos.x, y: 0.0, z: 0.0};
 			}
 			else {
@@ -423,16 +423,17 @@ pub unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModu
 			}
 		}
 		if GroundModule::get_touch_flag(module_accessor) == *GROUND_TOUCH_FLAG_DOWN as u64 {
-			if ALREADY_BOUNCED 
-            || (FIRST_BOUNCE && ((SPAWN_SIDE[LAST_TO_HIT_BALL] && pos.x > 3.0) 
+			if WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED)
+            || (WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE) && ((SPAWN_SIDE[LAST_TO_HIT_BALL] && pos.x > 3.0) 
             || (!SPAWN_SIDE[LAST_TO_HIT_BALL] && pos.x < -3.0))) { //If either we already bounced, or we hit the ball but it was still on our side, KO
 				BALL_BOUNCED = Vector3f{x: pos.x, y: 0.0, z: 0.0};
-				ALREADY_BOUNCED = false;
+                WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
 			}
-			else { //Otherwise, just record that we already bounced
-				ALREADY_BOUNCED = true;
-			}	
-			FIRST_BOUNCE = true;
+			else { 
+                //Otherwise, just record that we already bounced
+				WorkModule::set_flag(module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
+			}
+            WorkModule::set_flag(module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
 		}
 	}
 	original!()(module_accessor, int)
@@ -1087,231 +1088,3 @@ pub fn install() {
     );
 	skyline::nro::add_hook(nro_hook);
 }
-
-/*
-GDB Testing (0x068cd80):
-
-When booting into a match with Mac:
-    
-pc: main -> 0x68cd80
-lr: main -> 0xc44908
-offset: main -> 0x623620
-offset: main -> 0x60fc4c
-offset: unknown -> 0x800345c
-offset: main -> 0x656118
-offset: main -> 0x14de890
-offset: main -> 0x135dd54
-offset: main -> 0x3549800
-offset: main -> 0x353c538
-offset: main -> 0x37cb4ac
-offset: nnSdk -> 0x337f28
-
-All of the following cases happen just before Little Mac hits the opponent
-
-Jab 1:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Jab 2:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Rapid Jab Hit 1:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Rapid Jab Hit 2:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Rapid Jab Finisher:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Forward Tilt 1:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Forward Tilt 2:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Fully Charged Down Angled Forward Smash:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-
-Fully Charged Neutral B:
-
-pc: main -> 0x68cd80
-lr: main -> 0xc457f0
-offset: main -> 0x627cd8
-offset: main -> 0x3df67c
-offset: main -> 0x3a893c
-offset: unknown -> 0x8003204
-offset: main -> 0x137b588
-offset: main -> 0x135cbfc
-offset: main -> 0x135f74c
-offset: main -> 0x1850484
-offset: main -> 0x1850378
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x22de570
-offset: main -> 0x3723d14
-offset: main -> 0x374b5a8
-offset: main -> 0x2c5cf0
-offset: nnSdk -> 0x29da2c
-offset: nnrtld -> 0xc0
-*/

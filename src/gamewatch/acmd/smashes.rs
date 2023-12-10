@@ -1,8 +1,7 @@
 use super::*;
 
 //Up Smash ACMD
-#[acmd_script( agent = "gamewatch", script = "game_attackhi4", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_up_smash_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_up_smash_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 4.0);
     if macros::is_excute(fighter) {
         macros::HIT_NODE(fighter, Hash40::new("neck"), *HIT_STATUS_XLU);
@@ -36,9 +35,7 @@ unsafe fn ssbuexo_gamewatch_up_smash_acmd(fighter: &mut L2CAgentBase) {
 }
 
 //Down Smash ACMD
-#[acmd_script( agent = "gamewatch", script = "game_attacklw4", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_down_smash_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_down_smash_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 1.0);
     macros::FT_MOTION_RATE(fighter, 0.785);
     frame(fighter.lua_state_agent, 8.0);
@@ -62,8 +59,9 @@ unsafe fn ssbuexo_gamewatch_down_smash_acmd(fighter: &mut L2CAgentBase)
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_gamewatch_up_smash_acmd,
-        ssbuexo_gamewatch_down_smash_acmd
-    );
+    Agent::new("gamewatch")
+    .game_acmd("game_attackhi4", ssbexo_gamewatch_up_smash_acmd)
+    .game_acmd("game_attacklw4", ssbexo_gamewatch_down_smash_acmd)
+    .install()
+    ;
 }

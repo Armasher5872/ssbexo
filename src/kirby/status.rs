@@ -2,27 +2,24 @@ use super::*;
 
 /*   WHEEL START STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_s_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn kirby_special_s_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
     PostureModule::update_rot_y_lr(fighter.module_accessor);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s_start"), L2CValue::Hash40s("special_air_s_start"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_s_loop as *const () as _))
 }
 
-pub unsafe fn kirby_special_s_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
@@ -54,37 +51,31 @@ pub unsafe fn kirby_special_s_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn kirby_special_s_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn kirby_special_s_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn kirby_special_s_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 /*   GROUNDED WHEEL HOLD STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_s_wait_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_wait_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_GROUND as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT as i32, *FS_SUCCEEDS_KEEP_EFFECT);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn kirby_special_s_wait_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_wait_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_s_wait_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_wait_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_SPECIAL_S_FLAG_HOLD_MAX);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_SPECIAL_S_FLAG_CONTINUE_MOT1);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_SPECIAL_S_FLAG_CONTINUE_MOT2);
@@ -99,7 +90,7 @@ unsafe fn kirby_special_s_wait_main_status(fighter: &mut L2CFighterCommon) -> L2
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_s_wait_loop as *const () as _))
 }
 
-pub unsafe fn kirby_special_s_wait_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_wait_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let wheel_hold_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
@@ -119,37 +110,31 @@ pub unsafe fn kirby_special_s_wait_loop(fighter: &mut L2CFighterCommon) -> L2CVa
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn kirby_special_s_wait_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_wait_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn kirby_special_s_wait_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_wait_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn kirby_special_s_wait_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_wait_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 /*   AERIAL WHEEL HOLD STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_s_fall_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_fall_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_AIR as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, *FS_SUCCEEDS_KEEP_EFFECT);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn kirby_special_s_fall_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_fall_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_s_fall_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_fall_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_SPECIAL_S_FLAG_HOLD_MAX);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_SPECIAL_S_FLAG_CONTINUE_MOT1);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_SPECIAL_S_FLAG_CONTINUE_MOT2);
@@ -164,7 +149,7 @@ unsafe fn kirby_special_s_fall_main_status(fighter: &mut L2CFighterCommon) -> L2
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_s_fall_loop as *const () as _))
 }
 
-pub unsafe fn kirby_special_s_fall_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_fall_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let wheel_hold_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
@@ -184,37 +169,31 @@ pub unsafe fn kirby_special_s_fall_loop(fighter: &mut L2CFighterCommon) -> L2CVa
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn kirby_special_s_fall_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_fall_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn kirby_special_s_fall_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_fall_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn kirby_special_s_fall_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_fall_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 /*   WHEEL TURN STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_s_turn_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_turn_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn kirby_special_s_turn_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_turn_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_s_turn_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_turn_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if situation_kind == *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -230,7 +209,7 @@ unsafe fn kirby_special_s_turn_main_status(fighter: &mut L2CFighterCommon) -> L2
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_s_turn_loop as *const () as _))
 }
 
-pub unsafe fn kirby_special_s_turn_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_turn_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_AIR {
@@ -245,37 +224,31 @@ pub unsafe fn kirby_special_s_turn_loop(fighter: &mut L2CFighterCommon) -> L2CVa
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn kirby_special_s_turn_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_turn_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn kirby_special_s_turn_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_turn_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn kirby_special_s_turn_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_turn_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 /*   WHEEL DASH STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_s_attack_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_attack_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn kirby_special_s_attack_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_attack_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_s_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
@@ -295,7 +268,7 @@ unsafe fn kirby_special_s_attack_main_status(fighter: &mut L2CFighterCommon) -> 
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_s_attack_loop as *const () as _))
 }
 
-pub unsafe fn kirby_special_s_attack_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_attack_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
@@ -367,13 +340,11 @@ pub unsafe fn kirby_special_s_attack_loop(fighter: &mut L2CFighterCommon) -> L2C
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn kirby_special_s_attack_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_attack_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn kirby_special_s_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let turn_count = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     if turn_count > 48 {
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
@@ -383,27 +354,23 @@ unsafe fn kirby_special_s_attack_end_status(fighter: &mut L2CFighterCommon) -> L
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn kirby_special_s_attack_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_attack_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 /*   WHEEL JUMP STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_s_jump_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_jump_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_GROUND as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT as i32, *FS_SUCCEEDS_KEEP_EFFECT);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn kirby_special_s_jump_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_jump_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_s_jump_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_jump_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::inc_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -415,7 +382,7 @@ unsafe fn kirby_special_s_jump_main_status(fighter: &mut L2CFighterCommon) -> L2
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_s_jump_loop as *const () as _))
 }
 
-pub unsafe fn kirby_special_s_jump_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_jump_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if StatusModule::is_situation_changed(fighter.module_accessor) {
         if situation_kind == *SITUATION_KIND_GROUND {
@@ -445,25 +412,21 @@ pub unsafe fn kirby_special_s_jump_loop(fighter: &mut L2CFighterCommon) -> L2CVa
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn kirby_special_s_jump_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_jump_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn kirby_special_s_jump_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_jump_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn kirby_special_s_jump_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_s_jump_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 /*   FINAL CUTTER 1 STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_HI, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
@@ -471,15 +434,13 @@ unsafe fn kirby_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValu
 
 /*   FINAL CUTTER 2 STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn kirby_special_hi_2_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_hi_2_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_AIR as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_KIRBY_FINALCUTTER_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_KIRBY_FINALCUTTER_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_KIRBY_FINALCUTTER_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
 }
 
-#[status_script(agent = "kirby", status = FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_hi_2_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_hi_2_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Vanilla
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_STATUS_WORK_ID_INT_FINALCUTTER_METEOR_HIT_NUM);
     fun_71001a6740(fighter);
@@ -495,14 +456,14 @@ unsafe fn kirby_special_hi_2_main_status(fighter: &mut L2CFighterCommon) -> L2CV
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_hi_2_loop as *const () as _))
 }
 
-pub unsafe fn fun_71001a6740(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn fun_71001a6740(fighter: &mut L2CFighterCommon) {
     //Vanilla
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_AIR);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_GROUND);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_MOTION_END);
 }
 
-pub unsafe fn fun_710022ad50(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn fun_710022ad50(fighter: &mut L2CFighterCommon) {
     //Vanilla (to the best of my knowledge)
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if situation_kind != *SITUATION_KIND_GROUND {
@@ -523,7 +484,7 @@ pub unsafe fn fun_710022ad50(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn kirby_special_hi_2_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_hi_2_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Dictates Up Special Option Select
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let frame = MotionModule::frame(fighter.module_accessor);
@@ -578,8 +539,7 @@ pub unsafe fn kirby_special_hi_2_loop(fighter: &mut L2CFighterCommon) -> L2CValu
 
 /*   STONE STATUS SCRIPTS   */
 
-#[status_script(agent = "kirby", status = FIGHTER_STATUS_KIND_SPECIAL_LW, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn kirby_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Makes it so Kirby retains his previous momentum before he activated Stone
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FORCE_LOUPE);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MOT_FRAME_INHERIT);
@@ -602,7 +562,7 @@ unsafe fn kirby_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CVal
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_lw_loop as *const () as _))
 }
 
-pub unsafe fn kirby_special_lw_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn kirby_special_lw_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Vanilla (to the best of my knowledge) (╯°□°)╯︵ ┻━┻
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let effect_handle = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_WORK_ID_INT_STONE_EFFECT_HANDLE);
@@ -649,7 +609,7 @@ pub unsafe fn kirby_special_lw_loop(fighter: &mut L2CFighterCommon) -> L2CValue 
     0.into()
 }
 
-pub unsafe fn fun_7100229ec0(fighter: &mut L2CFighterCommon) -> bool {
+unsafe extern "C" fn fun_7100229ec0(fighter: &mut L2CFighterCommon) -> bool {
     //Vanilla (to the best of my knowledge)
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_AIR) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_GROUND) {
@@ -665,7 +625,7 @@ pub unsafe fn fun_7100229ec0(fighter: &mut L2CFighterCommon) -> bool {
     false.into()
 }
 
-pub unsafe fn fun_7100229610(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn fun_7100229610(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Vanilla (to the best of my knowledge)
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let ground_mot = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_GROUND_MOT);
@@ -690,7 +650,7 @@ pub unsafe fn fun_7100229610(fighter: &mut L2CFighterCommon) -> L2CValue {
     return (*FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MOT_FRAME_INHERIT).into()
 }
 
-pub unsafe fn fun_710022a090(fighter: &mut L2CFighterCommon) -> bool {
+unsafe extern "C" fn fun_710022a090(fighter: &mut L2CFighterCommon) -> bool {
     //Vanilla (to the best of my knowledge)
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_MTRANS_SMPL_AIR) {
@@ -715,46 +675,47 @@ pub unsafe fn fun_710022a090(fighter: &mut L2CFighterCommon) -> bool {
 }
 
 pub fn install() {
-    install_status_scripts!(
-        kirby_special_s_pre_status,
-        kirby_special_s_init_status,
-        kirby_special_s_main_status,
-        kirby_special_s_exec_status,
-        kirby_special_s_end_status,
-        kirby_special_s_exit_status,
-        kirby_special_s_wait_pre_status,
-        kirby_special_s_wait_init_status,
-        kirby_special_s_wait_main_status,
-        kirby_special_s_wait_exec_status,
-        kirby_special_s_wait_end_status,
-        kirby_special_s_wait_exit_status,
-        kirby_special_s_fall_pre_status,
-        kirby_special_s_fall_init_status,
-        kirby_special_s_fall_main_status,
-        kirby_special_s_fall_exec_status,
-        kirby_special_s_fall_end_status,
-        kirby_special_s_fall_exit_status,
-        kirby_special_s_turn_pre_status,
-        kirby_special_s_turn_init_status,
-        kirby_special_s_turn_main_status,
-        kirby_special_s_turn_exec_status,
-        kirby_special_s_turn_end_status,
-        kirby_special_s_turn_exit_status,
-        kirby_special_s_attack_pre_status,
-        kirby_special_s_attack_init_status,
-        kirby_special_s_attack_main_status,
-        kirby_special_s_attack_exec_status,
-        kirby_special_s_attack_end_status,
-        kirby_special_s_attack_exit_status,
-        kirby_special_s_jump_pre_status,
-        kirby_special_s_jump_init_status,
-        kirby_special_s_jump_main_status,
-        kirby_special_s_jump_exec_status,
-        kirby_special_s_jump_end_status,
-        kirby_special_s_jump_exit_status,
-        kirby_special_hi_pre_status,
-        kirby_special_hi_2_pre_status,
-        kirby_special_hi_2_main_status,
-        kirby_special_lw_main_status
-    );
+    Agent::new("kirby")
+    .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, kirby_special_s_pre_status)
+    .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_S, kirby_special_s_init_status)
+    .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, kirby_special_s_main_status)
+    .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_S, kirby_special_s_exec_status)
+    .status(End, *FIGHTER_STATUS_KIND_SPECIAL_S, kirby_special_s_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_S, kirby_special_s_exit_status)
+    .status(Pre, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, kirby_special_s_wait_pre_status)
+    .status(Init, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, kirby_special_s_wait_init_status)
+    .status(Main, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, kirby_special_s_wait_main_status)
+    .status(Exec, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, kirby_special_s_wait_exec_status)
+    .status(End, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, kirby_special_s_wait_end_status)
+    .status(Exit, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT, kirby_special_s_wait_exit_status)
+    .status(Pre, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, kirby_special_s_fall_pre_status)
+    .status(Init, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, kirby_special_s_fall_init_status)
+    .status(Main, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, kirby_special_s_fall_main_status)
+    .status(Exec, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, kirby_special_s_fall_exec_status)
+    .status(End, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, kirby_special_s_fall_end_status)
+    .status(Exit, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL, kirby_special_s_fall_exit_status)
+    .status(Pre, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, kirby_special_s_turn_pre_status)
+    .status(Init, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, kirby_special_s_turn_init_status)
+    .status(Main, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, kirby_special_s_turn_main_status)
+    .status(Exec, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, kirby_special_s_turn_exec_status)
+    .status(End, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, kirby_special_s_turn_end_status)
+    .status(Exit, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, kirby_special_s_turn_exit_status)
+    .status(Pre, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, kirby_special_s_attack_pre_status)
+    .status(Init, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, kirby_special_s_attack_init_status)
+    .status(Main, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, kirby_special_s_attack_main_status)
+    .status(Exec, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, kirby_special_s_attack_exec_status)
+    .status(End, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, kirby_special_s_attack_end_status)
+    .status(Exit, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK, kirby_special_s_attack_exit_status)
+    .status(Pre, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, kirby_special_s_jump_pre_status)
+    .status(Init, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, kirby_special_s_jump_init_status)
+    .status(Main, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, kirby_special_s_jump_main_status)
+    .status(Exec, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, kirby_special_s_jump_exec_status)
+    .status(End, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, kirby_special_s_jump_end_status)
+    .status(Exit, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP, kirby_special_s_jump_exit_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, kirby_special_hi_pre_status)
+    .status(Pre, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, kirby_special_hi_2_pre_status)
+    .status(Main, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, kirby_special_hi_2_main_status)
+    .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, kirby_special_lw_main_status)
+    .install()
+    ;
 }

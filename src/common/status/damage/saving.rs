@@ -4,7 +4,6 @@ use super::*;
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_status_SavingDamage_Main_common)]
 unsafe fn sub_status_savingdamage_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_piyopiyo"), false, false);
     if situation_kind != *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FALL.into(), false.into());
     }

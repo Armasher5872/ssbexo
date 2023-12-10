@@ -1,9 +1,7 @@
 use super::*;
 
 //Down Taunt ACMD
-#[acmd_script( agent = "gamewatch", scripts = ["game_appeallwl", "game_appeallwr"], category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_appeal_lw_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_appeal_lw_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GAMEWATCH_GENERATE_ARTICLE_NORMAL_WEAPON, ArticleOperationTarget(0));
         WorkModule::set_int(fighter.module_accessor, *WEAPON_GAMEWATCH_NORMAL_WEAPON_KIND_SPRAY, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_NORMAL_WEAPON_KIND);
@@ -21,8 +19,7 @@ unsafe fn ssbuexo_gamewatch_appeal_lw_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Dash Attack
-#[acmd_script( agent = "gamewatch", script = "game_attackdash", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_dash_attack_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_dash_attack_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 9.0, 4.0);
     }
@@ -50,8 +47,10 @@ unsafe fn ssbuexo_gamewatch_dash_attack_acmd(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_gamewatch_appeal_lw_acmd,
-        ssbuexo_gamewatch_dash_attack_acmd
-    );
+    Agent::new("gamewatch")
+    .game_acmd("game_appeallwl", ssbexo_gamewatch_appeal_lw_acmd)
+    .game_acmd("game_appeallwr", ssbexo_gamewatch_appeal_lw_acmd)
+    .game_acmd("game_attackdash", ssbexo_gamewatch_dash_attack_acmd)
+    .install()
+    ;
 }

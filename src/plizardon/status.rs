@@ -1,42 +1,27 @@
 //Credit to C# and WuBoy
 use super::*;
 
-#[status_script(agent = "plizardon", status = FIGHTER_STATUS_KIND_THROW, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn plizardon_throw_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn plizardon_throw_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_THROW_KIRBY_GROUND);
     return false.into();
 }
 
-#[status_script(agent = "plizardon", status = FIGHTER_STATUS_KIND_THROW_KIRBY, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn plizardon_throw_kirby_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn plizardon_throw_kirby_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     return fighter.status_pre_ThrowKirby();
 }
 
-#[status_script(agent = "plizardon", status = FIGHTER_STATUS_KIND_THROW_KIRBY, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn plizardon_throw_kirby_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn plizardon_throw_kirby_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_uniq_process_ThrowKirby_initStatus();
     let hit_stop = 8;
     WorkModule::set_int(fighter.module_accessor, hit_stop, *FIGHTER_STATUS_THROW_WORK_INT_STOP_FRAME);
     return false.into();
 }
 
-#[status_script(agent = "plizardon", status = FIGHTER_STATUS_KIND_THROW_KIRBY, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn plizardon_throw_kirby_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn plizardon_throw_kirby_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     return fighter.status_ThrowKirby();
 }
 
-#[status_script(agent = "plizardon", status = FIGHTER_STATUS_KIND_THROW_KIRBY, condition = LUA_SCRIPT_STATUS_FUNC_EXIT_STATUS)]
-unsafe fn plizardon_throw_kirby_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
-    return fighter.sub_status_uniq_process_ThrowKirby_exitStatus();
-}
-
-#[status_script(agent = "plizardon", status = FIGHTER_STATUS_KIND_THROW_KIRBY, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn plizardon_throw_kirby_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-    return fighter.status_end_ThrowKirby();
-}
-
-#[status_script(agent = "plizardon", status = FIGHTER_STATUS_KIND_THROW_KIRBY, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn plizardon_throw_kirby_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn plizardon_throw_kirby_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE) as u32;
     let capture_boma = smash::app::sv_battle_object::module_accessor(capture_id);
@@ -89,14 +74,23 @@ unsafe fn plizardon_throw_kirby_exec(fighter: &mut L2CFighterCommon) -> L2CValue
     return false.into();
 }
 
+unsafe extern "C" fn plizardon_throw_kirby_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    return fighter.status_end_ThrowKirby();
+}
+
+unsafe extern "C" fn plizardon_throw_kirby_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    return fighter.sub_status_uniq_process_ThrowKirby_exitStatus();
+}
+
 pub fn install() {
-    install_status_scripts!(
-        plizardon_throw_exec,
-        plizardon_throw_kirby_pre,
-        plizardon_throw_kirby_init,
-        plizardon_throw_kirby_main,
-        plizardon_throw_kirby_exit,
-        plizardon_throw_kirby_end,
-        plizardon_throw_kirby_exec
-    );
+    Agent::new("plizardon")
+    .status(Exec, *FIGHTER_STATUS_KIND_THROW, plizardon_throw_exec_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_THROW_KIRBY, plizardon_throw_kirby_pre_status)
+    .status(Init, *FIGHTER_STATUS_KIND_THROW_KIRBY, plizardon_throw_kirby_init_status)
+    .status(Main, *FIGHTER_STATUS_KIND_THROW_KIRBY, plizardon_throw_kirby_main_status)
+    .status(Exec, *FIGHTER_STATUS_KIND_THROW_KIRBY, plizardon_throw_kirby_exec_status)
+    .status(End, *FIGHTER_STATUS_KIND_THROW_KIRBY, plizardon_throw_kirby_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_THROW_KIRBY, plizardon_throw_kirby_exit_status)
+    .install()
+    ;
 }

@@ -1,8 +1,7 @@
 use super::*;
 
 //Standing Grab ACMD
-#[acmd_script( agent = "gamewatch", script = "game_catch", category = ACMD_GAME )]
-unsafe fn ssbuexo_gamewatch_grab_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -21,8 +20,7 @@ unsafe fn ssbuexo_gamewatch_grab_acmd(fighter: &mut L2CAgentBase) {
 }
 
 //Dash Grab ACMD
-#[acmd_script( agent = "gamewatch", script = "game_catchdash", category = ACMD_GAME )]
-unsafe fn ssbuexo_gamewatch_dash_grab_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_dash_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -41,8 +39,7 @@ unsafe fn ssbuexo_gamewatch_dash_grab_acmd(fighter: &mut L2CAgentBase) {
 }
 
 //Pivot Grab ACMD
-#[acmd_script( agent = "gamewatch", script = "game_catchturn", category = ACMD_GAME )]
-unsafe fn ssbuexo_gamewatch_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         GrabModule::set_rebound(fighter.module_accessor, true);
     }
@@ -61,8 +58,7 @@ unsafe fn ssbuexo_gamewatch_pivot_grab_acmd(fighter: &mut L2CAgentBase) {
 }
 
 //Forward Throw ACMD
-#[acmd_script( agent = "gamewatch", script = "game_throwf", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_forward_throw_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_forward_throw_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 30, 40, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -101,8 +97,7 @@ unsafe fn ssbuexo_gamewatch_forward_throw_acmd(fighter: &mut L2CAgentBase) {
 }
 
 //Back Throw ACMD
-#[acmd_script( agent = "gamewatch", script = "game_throwb", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_back_throw_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_back_throw_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 30, 40, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -141,8 +136,7 @@ unsafe fn ssbuexo_gamewatch_back_throw_acmd(fighter: &mut L2CAgentBase) {
 }
 
 //Up Throw ACMD
-#[acmd_script( agent = "gamewatch", script = "game_throwhi", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_up_throw_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_up_throw_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 90, 40, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -181,8 +175,7 @@ unsafe fn ssbuexo_gamewatch_up_throw_acmd(fighter: &mut L2CAgentBase) {
 }
 
 //Down Throw ACMD
-#[acmd_script( agent = "gamewatch", script = "game_throwlw", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_down_throw_acmd(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_gamewatch_down_throw_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
         macros::FT_LEAVE_NEAR_OTTOTTO(fighter, -2.5, 2.5);
         macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 4.0, 270, 120, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_lay"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -223,13 +216,14 @@ unsafe fn ssbuexo_gamewatch_down_throw_acmd(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_gamewatch_grab_acmd,
-        ssbuexo_gamewatch_dash_grab_acmd,
-        ssbuexo_gamewatch_pivot_grab_acmd,
-        ssbuexo_gamewatch_forward_throw_acmd,
-        ssbuexo_gamewatch_back_throw_acmd,
-        ssbuexo_gamewatch_up_throw_acmd,
-        ssbuexo_gamewatch_down_throw_acmd
-    );
+    Agent::new("gamewatch")
+    .game_acmd("game_catch", ssbexo_gamewatch_grab_acmd)
+    .game_acmd("game_catchdash", ssbexo_gamewatch_dash_grab_acmd)
+    .game_acmd("game_catchturn", ssbexo_gamewatch_pivot_grab_acmd)
+    .game_acmd("game_throwf", ssbexo_gamewatch_forward_throw_acmd)
+    .game_acmd("game_throwb", ssbexo_gamewatch_back_throw_acmd)
+    .game_acmd("game_throwhi", ssbexo_gamewatch_up_throw_acmd)
+    .game_acmd("game_throwlw", ssbexo_gamewatch_down_throw_acmd)
+    .install()
+    ;
 }

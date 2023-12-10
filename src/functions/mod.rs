@@ -16,6 +16,7 @@ use {
     },
     smash::{
         app::{
+            ArticleOperationTarget,
             BattleObject,
             BattleObjectWorld,
             BattleObjectSlow,

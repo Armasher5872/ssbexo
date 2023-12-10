@@ -73,10 +73,6 @@ extern "C" {
 	pub fn change_version_string(arg: u64, string: *const c_char);
 }
 
-//Updates Little Mac's UI
-#[skyline::from_offset(0x068cd80)]
-pub unsafe fn update_ui(fighter_data: *const u64, param_2: u32);
-
 //Full Smash Attack Check
 pub unsafe fn attack_4_hold(fighter: &mut L2CFighterCommon) {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
@@ -2004,6 +2000,7 @@ pub struct MappedInputs {
     pub rstick_y: i8
 }
 
+//Used to deal with DK's Barrels
 pub unsafe extern "C" fn donkey_barrel_bool(boma: *mut BattleObjectModuleAccessor) -> bool {
     let itemmanager = smash2::app::ItemManager::instance().unwrap();
     let barrel_count = smash2::app::ItemManager::get_num_of_ownered_item(itemmanager, (*boma).battle_object_id, smash2::app::ItemKind::Barrel);
@@ -2012,4 +2009,59 @@ pub unsafe extern "C" fn donkey_barrel_bool(boma: *mut BattleObjectModuleAccesso
         return true;
     }
     return false;
+}
+
+//Updates Little Mac's UI
+#[skyline::from_offset(0x068cd80)]
+pub unsafe fn update_ui(fighter_data: *const u64, param_2: u32);
+
+//Deals with Inkling's Squid
+pub unsafe extern "C" fn inkling_generate_squid_helper(fighter: &mut L2CAgentBase) {
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_EXIST_SQUID) {
+        if macros::is_excute(fighter) {
+            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, false, -1);
+        }
+    }
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let frame = MotionModule::frame(fighter.module_accessor);
+    let rate = MotionModule::rate(fighter.module_accessor);
+    ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, Hash40::new_raw(motion_kind), false, -1.0);
+    if macros::is_excute(fighter) {
+        ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, frame);
+        ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, rate);
+        ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_EXIST_SQUID);
+        let status_kind = StatusModule::status_kind(fighter.module_accessor);
+        if status_kind != *FIGHTER_STATUS_KIND_REBIRTH {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FORCE_LOUPE);
+        }
+    }
+}
+
+//Metaknight Galaxia Beam Check
+pub unsafe extern "C" fn is_galaxia(object_boma: *mut BattleObjectModuleAccessor) -> bool {
+    if smash::app::utility::get_kind(&mut *object_boma) == *WEAPON_KIND_KOOPAJR_CANNONBALL {
+        let owner_id = WorkModule::get_int(object_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
+        let owner_boma = smash::app::sv_battle_object::module_accessor(owner_id);
+        let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
+        if owner_kind == *FIGHTER_KIND_METAKNIGHT {
+            return true;
+        }
+    }
+    return false;
+}
+
+pub unsafe extern "C" fn galaxia_beam_removal(weapon: &mut L2CWeaponCommon) {
+    let pos = *PostureModule::pos(weapon.module_accessor);
+    EffectModule::req(weapon.module_accessor, Hash40::new("sys_erace_smoke"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
+    macros::STOP_SE(weapon, Hash40::new("se_metaknight_attackair_f03"));
+    weapon.clear_lua_stack();
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+    weapon.pop_lua_stack(1);
+}
+
+//Gets owner boma
+pub unsafe fn get_owner_boma(weapon: &mut L2CAgentBase) -> *mut BattleObjectModuleAccessor {
+    return &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 }

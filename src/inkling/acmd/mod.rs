@@ -1,4 +1,5 @@
 use {
+    crate::functions::ext::*,
     smash::{
         app::{
             lua_bind::*,
@@ -16,5 +17,5 @@ use {
 mod throws;
 
 pub fn install() {
-  throws::install();
+    throws::install();
 }

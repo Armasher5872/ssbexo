@@ -1,7 +1,6 @@
 use super::*;
 
-#[status_script(agent = "lucina", status = FIGHTER_MARTH_STATUS_KIND_SPECIAL_LW_HIT, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn lucina_down_special_attack_status_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn lucina_down_special_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_AUTO_COUNTER) {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
             KineticModule::clear_speed_all(fighter.module_accessor);
@@ -12,16 +11,17 @@ unsafe fn lucina_down_special_attack_status_main(fighter: &mut L2CFighterCommon)
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw_hit"), 0.0, 1.0, false, 0.0, false, false);
         }
-        fighter.sub_shift_status_main(L2CValue::Ptr(lucina_down_special_attack_status_loop as *const () as _))
+        fighter.sub_shift_status_main(L2CValue::Ptr(lucina_down_special_attack_loop as *const () as _))
     }
     else {
-        original!(fighter)
+        original_status(Main, fighter, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_LW_HIT)(fighter)
     }
 }
 
-pub unsafe fn lucina_down_special_attack_status_loop(fighter: &mut L2CFighterCommon) -> bool {
+unsafe extern "C" fn lucina_down_special_attack_loop(fighter: &mut L2CFighterCommon) -> bool {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if StatusModule::is_situation_changed(fighter.module_accessor) {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        if situation_kind == *SITUATION_KIND_GROUND {
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_hit"), -1.0, 1.0, 0.0, false, false);
         }
@@ -32,7 +32,7 @@ pub unsafe fn lucina_down_special_attack_status_loop(fighter: &mut L2CFighterCom
         return true.into();
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        if situation_kind == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), true.into());
         }
         else {
@@ -44,5 +44,8 @@ pub unsafe fn lucina_down_special_attack_status_loop(fighter: &mut L2CFighterCom
 }
 
 pub fn install() {
-    install_status_scripts!(lucina_down_special_attack_status_main);
+    Agent::new("lucina")
+    .status(Main, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_LW_HIT, lucina_down_special_attack_main_status)
+    .install()
+    ;
 }

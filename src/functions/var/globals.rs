@@ -94,4 +94,3 @@ pub const SQUAT_COMMON_UNIQ: i32 = 0x5A;
 //Offsets
 pub static FLOAT_OFFSET: usize = 0x4e53C0; // 12.0.0
 pub static INT_OFFSET: usize = 0x4e5380; // 12.0.0
-pub static REUSED_UI_OFFSET: usize = 0x068cd80;

@@ -1,21 +1,16 @@
 use super::*;
 
 //Universal Variables
-pub static mut ALL_FIGHTERS_LAST_STOCK: bool = false; //Take a wild guess.
-pub static mut ALREADY_BOUNCED: bool = false; //Tracks if the ball has bounced at least once since being thrown
 pub static mut BALL_BOUNCED: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 9999.0}; //Tracks stats about the volleyball to determine who to KO
 pub static mut BALL_ID: u32 = 0; //The battle object ID of the ball itself
 pub static mut BALL_OWNER: i32 = 9; //Which player will start with the ball
 pub static mut BALL_VICTIMS: [i32; 4] = [9; 4]; //Which players are to be KOd
 pub static mut COUNTERHIT_CHECK: [bool; 8] = [false; 8]; //Checks if a fighter is in the startup of an attack. Used for GGST COUNTER!
 pub static mut COUNTERHIT_SUCCESS: [bool; 8] = [false; 8]; //Checks if a fighter has landed a successful counterhit. Used for GGST COUNTER!
-pub static mut DASH_GRAB_SPEED: [f32; 8] = [0.0; 8];
-pub static mut FEATURES: bool = false;
 pub static mut FIGHTER_BOOL_1: [bool; 8] = [false; 8];
 pub static mut FIGHTER_BOOL_2: [bool; 8] = [false; 8];
 pub static mut FIGHTER_CUTIN_MANAGER_ADDR: usize = 0;
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
-pub static mut FIRST_BOUNCE: bool = false; //Allows the throwing player to bounce the ball on their own side once
 pub static mut FULL_HOP_ENABLE_DELAY: [i32; 8] = [0; 8];
 pub static mut HAS_CATCH: [bool; 8] = [false; 8]; //Used for Command Grabs
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
@@ -44,8 +39,8 @@ pub static mut SPECIAL_SMASH_STATUS: i32 = 0; //Etc.
 pub static mut SPECIAL_WALL_JUMP: bool = false;
 pub static mut STOCK_COUNT: [u64;9] = [99;9];
 pub static TAP_MAX: i32 = 25;
-pub static mut TAP_NUM : [i32; 8] = [6; 8];
-pub static mut TAP_WAIT : [i32; 8] = [6; 8];
+pub static mut TAP_NUM : [i32; 65544] = [6; 65544];
+pub static mut TAP_WAIT : [i32; 65544] = [6; 65544];
 pub static mut TEMP_SPAWN_POS: [Vector3f;9] = [Vector3f{x: 0.0, y: 0.0, z: 0.0};9]; //Used to randomize spawn pos in Volleyball mode
 pub static mut TOTAL_FIGHTER: i32 = 1; //Tracks how many fighters are present
 
@@ -141,10 +136,6 @@ pub static mut RIDLEY_VEC2_SPECIAL_LW_BOUNCE_POS_CHECK_PREV : [Vector2f; 8] = [V
 
 //Roy Variables
 pub static mut ROY_GFX_COUNTER: [i32; 8] = [0; 8];
-
-//Senator Armstrong Variables
-pub static mut ARMSTRONG_IS_SPECIAL_HI: [bool; 8] = [false; 8];
-pub static mut USE_DROPKICK: [bool; 8] = [true; 8];
 
 //Snake Variables
 pub static mut GRENADE_HOLD: [bool; 8] = [false; 8];

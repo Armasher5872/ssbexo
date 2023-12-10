@@ -1,18 +1,18 @@
 use super::*;
 
-#[acmd_script( agent = "tantan", script = "game_attackshortstartl1", category = ACMD_GAME)]
-unsafe fn ssbuexo_tantan_attackshortstartl1_acmd(fighter: &mut L2CAgentBase) {
-    if macros::is_excute(fighter) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_ATTACK_COMBO_ENABLE);
+unsafe extern "C" fn ssbexo_tantan_attackshortstartl1_acmd(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_ATTACK_COMBO_ENABLE);
     }
-    frame(fighter.lua_state_agent, 8.0);
-    if macros::is_excute(fighter) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_ATTACK_COMBO_ENABLE);
+    frame(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_TANTAN_INSTANCE_WORK_ID_FLAG_ATTACK_COMBO_ENABLE);
     }
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_tantan_attackshortstartl1_acmd
-    );
+    Agent::new("tantan")
+    .game_acmd("game_attackshortstartl1", ssbexo_tantan_attackshortstartl1_acmd)
+    .install()
+    ;
 }

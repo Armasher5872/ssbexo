@@ -1,10 +1,7 @@
 use {
   crate::functions::{
     ext::*,
-    var::{
-      consts::*,
-      variables::*,
-    }
+    var::variables::*,
   },
   smash::{
     app::lua_bind::*,

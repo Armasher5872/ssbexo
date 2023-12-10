@@ -1,9 +1,7 @@
 use super::*;
 
 //Forward Tilt ACMD
-#[acmd_script( agent = "gamewatch", script = "game_attacks3", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_forward_tilt_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_forward_tilt_acmd(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         WorkModule::set_int(fighter.module_accessor, *WEAPON_GAMEWATCH_NORMAL_WEAPON_KIND_CHAIR, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_NORMAL_WEAPON_KIND);
@@ -28,9 +26,7 @@ unsafe fn ssbuexo_gamewatch_forward_tilt_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Up Tilt ACMD
-#[acmd_script( agent = "gamewatch", script = "game_attackhi3", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_up_tilt_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_up_tilt_acmd(fighter: &mut L2CAgentBase) {
     MotionModule::set_rate(fighter.module_accessor, 1.25);
     frame(fighter.lua_state_agent, 10.0);
     if macros::is_excute(fighter) {
@@ -72,9 +68,7 @@ unsafe fn ssbuexo_gamewatch_up_tilt_acmd(fighter: &mut L2CAgentBase)
 }
 
 //Down Tilt ACMD
-#[acmd_script( agent = "gamewatch", script = "game_attacklw3", category = ACMD_GAME)]
-unsafe fn ssbuexo_gamewatch_down_tilt_acmd(fighter: &mut L2CAgentBase) 
-{
+unsafe extern "C" fn ssbexo_gamewatch_down_tilt_acmd(fighter: &mut L2CAgentBase) {
     MotionModule::set_rate(fighter.module_accessor, 1.2);
     if macros::is_excute(fighter) {
         WorkModule::set_int(fighter.module_accessor, *WEAPON_GAMEWATCH_NORMAL_WEAPON_KIND_MANHOLE, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_NORMAL_WEAPON_KIND);
@@ -100,9 +94,10 @@ unsafe fn ssbuexo_gamewatch_down_tilt_acmd(fighter: &mut L2CAgentBase)
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_gamewatch_forward_tilt_acmd,
-        ssbuexo_gamewatch_up_tilt_acmd,
-        ssbuexo_gamewatch_down_tilt_acmd
-    );
+    Agent::new("gamewatch")
+    .game_acmd("game_attacks3", ssbexo_gamewatch_forward_tilt_acmd)
+    .game_acmd("game_attackhi3", ssbexo_gamewatch_up_tilt_acmd)
+    .game_acmd("game_attacklw3", ssbexo_gamewatch_down_tilt_acmd)
+    .install()
+    ;
 }

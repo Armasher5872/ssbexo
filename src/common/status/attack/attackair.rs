@@ -57,9 +57,12 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
     true.into()
 }
 
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(status_attackair_main_common);
+        skyline::install_hooks!(
+            status_attackair_main_common
+        );
     }
 }
 

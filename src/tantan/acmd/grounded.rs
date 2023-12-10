@@ -1,14 +1,39 @@
 use super::*;
 
-#[acmd_script( agent = "tantan", scripts = [
-    "0x172240c033", "0x1778b4545c", "0x18bc531aa8", "game_aircatchhang", "game_aircatchhit", "game_aircatchhitloop", "game_aircatchpose", "game_attacklongstartl2", "game_attacklongstartl3", "game_attacklongstartlb2", "game_attacklongstartlb3",
-    "game_attacklongstartr2", "game_attacklongstartr3", "game_attacklongstartrb2", "game_attacklongstartrb3", "game_attackshortstartl2", "game_attackshortstartl3", "game_attackshortstartlb1", "game_attackshortstartlb2", "game_attackshortstartlb3",
-    "game_attackshortstartr2", "game_attackshortstartr3", "game_attackshortstartrb1", "game_attackshortstartrb2", "game_attackshortstartrb3", "game_catchpull", "game_damageair2", "game_specialairhi2", "game_specialhilong", "game_specialhishort"
-], category = ACMD_GAME)]
-unsafe fn ssbuexo_tantan_hurtbox_disable_acmd(_fighter: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_tantan_hurtbox_disable_acmd(_agent: &mut L2CAgentBase) {}
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbuexo_tantan_hurtbox_disable_acmd
-    );
+    Agent::new("tantan")
+    .game_acmd("0x172240c033", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("0x1778b4545c", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("0x18bc531aa8", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_aircatchhang", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_aircatchhit", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_aircatchloop", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_aircatchpose", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartl2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartl3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartlb2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartlb3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartr2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartr3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartrb2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attacklongstartrb3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartl2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartl3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartlb1", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartlb2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartlb3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartr2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartr3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartrb1", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartrb2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_attackshortstartrb3", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_catchpull", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_damageair2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_specialairhi2", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_specialhilong", ssbexo_tantan_hurtbox_disable_acmd)
+    .game_acmd("game_specialhishort", ssbexo_tantan_hurtbox_disable_acmd)
+    .install()
+    ;
 }

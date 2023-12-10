@@ -8,52 +8,56 @@ pub unsafe fn get_param_int_impl_hook(module_accessor: u64, param_type: u64, par
 	let fighter_kind = boma_reference.kind();
 	let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 	if boma_reference.is_fighter() {
-		if fighter_kind == *FIGHTER_KIND_PICHU {
-			if param_type == hash40("param_special_hi") {
-				if param_hash == hash40("special_hi_warp2_angle_") {
-					if DISCHARGE_ACTIVE[entry_id] == true {
-						return 35;
-					}
-					else {
-						return 360;
-					}
-				}
+		if fighter_kind == *FIGHTER_KIND_DONKEY
+		&& (param_type == hash40("wall_jump_type") || param_type == hash40("attach_wall_type")) {
+			if boma_reference.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_SPECIAL_S]) {
+				return 0;
+			}
+			else {
+				return 1;
+			}
+		}
+		if fighter_kind == *FIGHTER_KIND_PICHU
+		&& param_type == hash40("param_special_hi")
+		&& param_hash == hash40("special_hi_warp2_angle_") {
+			if DISCHARGE_ACTIVE[entry_id] == true {
+				return 35;
+			}
+			else {
+				return 360;
 			}
 		}
 	}
 	else if boma_reference.is_weapon() {
         let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-		if fighter_kind == *WEAPON_KIND_NESS_PK_FIRE {
-			if param_type == hash40("param_pkfire") {
-				if param_hash == hash40("life") {
-					if OFFENSE_UP_ACTIVE[entry_id] == true {
-						return 60;
-					}
-					else {
-						return 20;
-					}
+		if fighter_kind == *WEAPON_KIND_NESS_PK_FIRE
+		&& param_type == hash40("param_pkfire") {
+			if param_hash == hash40("life") {
+				if OFFENSE_UP_ACTIVE[entry_id] == true {
+					return 60;
 				}
-				if param_hash == hash40("pillar_life") {
-					if OFFENSE_UP_ACTIVE[entry_id] == true {
-						return 0;
-					}
-					else {
-						return 100;
-					}
+				else {
+					return 20;
+				}
+			}
+			if param_hash == hash40("pillar_life") {
+				if OFFENSE_UP_ACTIVE[entry_id] == true {
+					return 0;
+				}
+				else {
+					return 100;
 				}
 			}
 		}
-		if fighter_kind == *WEAPON_KIND_MEWTWO_SHADOWBALL {
-			if param_type == hash40("param_shadowball") {
-				if param_hash == hash40("life") {
-					if STORED_POWER_ENABLED[entry_id] == 1 {
-						return 120;
-					}
-					else {
-						return 80;
-					}
-				}
+		if fighter_kind == *WEAPON_KIND_MEWTWO_SHADOWBALL
+		&& param_type == hash40("param_shadowball")
+		&& param_hash == hash40("life") {
+			if STORED_POWER_ENABLED[entry_id] == 1 {
+				return 120;
+			}
+			else {
+				return 80;
 			}
 		}
 	}
@@ -204,6 +208,9 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 				if MAC_HITSTUN[get_player_number(boma_reference)] == 0 {
 					let taken_damage = DamageModule::damage(boma, 0)-LAST_DAMAGE[get_player_number(boma_reference)];
 					return -34.0/taken_damage;
+				}
+				if status_kind == *FIGHTER_STATUS_KIND_CAPTURE_PULLED {
+					return -34.0;
 				}
 				return 0.0;
 			}

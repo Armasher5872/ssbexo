@@ -1,8 +1,7 @@
 use super::*;
 
 //Standing Grab ACMD
-#[acmd_script( agent = "mario", script = "game_catch", category = ACMD_GAME )]
-unsafe fn ssbexo_mario_grab_acmd(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_mario_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         GrabModule::set_rebound(agent.module_accessor, true);
     }
@@ -20,8 +19,7 @@ unsafe fn ssbexo_mario_grab_acmd(agent: &mut L2CAgentBase) {
 }
 
 //Dash Grab ACMD
-#[acmd_script( agent = "mario", script = "game_catchdash", category = ACMD_GAME )]
-unsafe fn ssbexo_mario_dash_grab_acmd(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_mario_dash_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         GrabModule::set_rebound(agent.module_accessor, true);
     }
@@ -39,8 +37,7 @@ unsafe fn ssbexo_mario_dash_grab_acmd(agent: &mut L2CAgentBase) {
 }
 
 //Pivot Grab ACMD
-#[acmd_script( agent = "mario", script = "game_catchturn", category = ACMD_GAME )]
-unsafe fn ssbexo_mario_pivot_grab_acmd(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_mario_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         GrabModule::set_rebound(agent.module_accessor, true);
     }
@@ -58,9 +55,10 @@ unsafe fn ssbexo_mario_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    install_acmd_scripts!(
-        ssbexo_mario_grab_acmd,
-        ssbexo_mario_dash_grab_acmd,
-        ssbexo_mario_pivot_grab_acmd
-    );
+    Agent::new("mario")
+    .game_acmd("game_catch", ssbexo_mario_grab_acmd)
+    .game_acmd("game_catchdash", ssbexo_mario_dash_grab_acmd)
+    .game_acmd("game_catchturn", ssbexo_mario_pivot_grab_acmd)
+    .install()
+    ;
 }
