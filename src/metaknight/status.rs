@@ -42,8 +42,7 @@ unsafe extern "C" fn metaknight_special_s_loop(fighter: &mut L2CFighterCommon) -
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s_start"), -1.0, 1.0, 0.0, false, false);
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1f20a9d549), false);
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24772eddef), false);
+        VisibilityModule::set_status_default_int64(fighter.module_accessor, hash40("mantle") as i64, hash40("mantle_normal") as i64);
     }
     if situation_kind == *SITUATION_KIND_AIR
     && prev_situation_kind == *SITUATION_KIND_GROUND {
@@ -51,8 +50,7 @@ unsafe extern "C" fn metaknight_special_s_loop(fighter: &mut L2CFighterCommon) -
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_start"), -1.0, 1.0, 0.0, false, false);
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1f20a9d549), true);
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24772eddef), true);
+        VisibilityModule::set_status_default_int64(fighter.module_accessor, hash40("mantle") as i64, hash40("mantle_wing") as i64);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -79,50 +77,61 @@ unsafe extern "C" fn metaknight_special_s_exit_status(_fighter: &mut L2CFighterC
 }
 
 unsafe extern "C" fn metaknight_galaxia_beam_shoot_pre_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    StatusModule::init_settings(weapon.module_accessor, SituationKind(*SITUATION_KIND_NONE), *WEAPON_KINETIC_TYPE_NONE, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
+    StatusModule::init_settings(weapon.module_accessor, SituationKind(*SITUATION_KIND_AIR), *WEAPON_KINETIC_TYPE_NORMAL, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
     0.into()
 }
 
 unsafe extern "C" fn metaknight_galaxia_beam_shoot_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_galaxiabeam"), hash40("life"));
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    PostureModule::set_lr(weapon.module_accessor, PostureModule::lr(weapon.module_accessor));
     ModelModule::set_scale(weapon.module_accessor, 0.001);
+    let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_galaxiabeam"), hash40("speed_max"));
+    let angle: f32 = 45.0;
+    let lr = PostureModule::lr(weapon.module_accessor);
+    let speed_x = angle.to_radians().sin()*speed_max*lr;
+    let speed_y = angle.to_radians().cos()*speed_max;
+    weapon.clear_lua_stack();
+    sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, -speed_y);
+    sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, -speed_y);
+    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     0.into()
 }
 
 unsafe extern "C" fn metaknight_galaxia_beam_shoot_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_boma = get_owner_boma(weapon);
+    let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_galaxiabeam"), hash40("speed_max"));
+    let angle: f32 = 45.0;
     let lr = PostureModule::lr(weapon.module_accessor);
-    if WorkModule::is_flag(owner_boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S)
-    || weapon.is_situation(*SITUATION_KIND_AIR) {
-        sv_kinetic_energy!(set_limit_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, -speed_max);
-        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, -speed_max);
-    }
-    if !WorkModule::is_flag(owner_boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S)
-    || weapon.is_situation(*SITUATION_KIND_GROUND) {
-        sv_kinetic_energy!(set_limit_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, 0.0);
-        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, 0.0);
-    }
-    KineticModule::change_kinetic(weapon.module_accessor, *WEAPON_KINETIC_TYPE_NORMAL);
+    let speed_x = angle.to_radians().sin()*speed_max*lr;
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("shoot"), 0.0, 1.0, false, 0.0, false, false);
-    if StopModule::is_stop(weapon.module_accessor) {
-        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
+    if GroundModule::is_floor_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
+        weapon.set_situation(SITUATION_KIND_GROUND.into());
+        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, 0.0);
+        sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, 0.0);
+        sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
+    }
+    if should_remove_galaxia(weapon) {
         galaxia_beam_removal(weapon);
+    }
+    if should_remove_galaxia_on_hit(weapon) {
+        galaxia_beam_hit_removal(weapon);
     }
     weapon.fastshift(L2CValue::Ptr(metaknight_galaxia_beam_shoot_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn metaknight_galaxia_beam_shoot_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT)
-    || GroundModule::is_wall_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32)
-    || WorkModule::is_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_HIT_WALL)
-    || WorkModule::is_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_ATTACK)
-    || WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE) <= 0 {
+    let owner_boma = get_owner_boma(weapon);
+    let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
+    let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
+    if should_remove_galaxia(weapon)
+    || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S)) {
         galaxia_beam_removal(weapon);
+    }
+    if should_remove_galaxia_on_hit(weapon) {
+        galaxia_beam_hit_removal(weapon);
     }
     0.into()
 }
@@ -137,101 +146,6 @@ unsafe extern "C" fn metaknight_galaxia_beam_shoot_end_status(weapon: &mut L2CWe
     0.into()
 }
 
-/*
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-void __thiscall
-L2CWeaponElightExprosiveshot::status::Fly_main(L2CWeaponElightExprosiveshot *this,L2CValue *return_value) {
-    lib::L2CValue::L2CValue(&LStack_e0,0x13c69415a9);
-    lib::L2CValue::L2CValue(&LStack_80,0x419cd3efe);
-    uVar4 = lib::L2CValue::as_integer(&LStack_e0);
-    uVar5 = lib::L2CValue::as_integer(&LStack_80);
-    iVar2 = app::lua_bind::WorkModule__get_param_int_impl(this->moduleAccessor,uVar4,uVar5);
-    lib::L2CValue::L2CValue(&LStack_70,iVar2);
-    lib::L2CValue::~L2CValue(&LStack_80);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::L2CValue(&LStack_e0,_WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
-    iVar2 = lib::L2CValue::as_integer(&LStack_70);
-    iVar3 = lib::L2CValue::as_integer(&LStack_e0);
-    app::lua_bind::WorkModule__set_int_impl(this->moduleAccessor,iVar2,iVar3);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::L2CValue(&LStack_e0,_WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    iVar2 = lib::L2CValue::as_integer(&LStack_70);
-    iVar3 = lib::L2CValue::as_integer(&LStack_e0);
-    app::lua_bind::WorkModule__set_int_impl(this->moduleAccessor,iVar2,iVar3);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::L2CValue(&LStack_e0,0x3538a83b3);
-    lib::L2CValue::L2CValue(&LStack_80,0.0);
-    lib::L2CValue::L2CValue(&LStack_90,1.0);
-    lib::L2CValue::L2CValue(&LStack_a0,false);
-    HVar6 = lib::L2CValue::as_hash(&LStack_e0);
-    fVar10 = (float)lib::L2CValue::as_number(&LStack_80);
-    fVar11 = (float)lib::L2CValue::as_number(&LStack_90);
-    bVar1 = lib::L2CValue::as_bool(&LStack_a0);
-    app::lua_bind::MotionModule__change_motion_impl
-              (this->moduleAccessor,HVar6,fVar10,fVar11,(bool)(bVar1 & 1),0.0,false,false);
-    lib::L2CValue::~L2CValue(&LStack_a0);
-    lib::L2CValue::~L2CValue(&LStack_90);
-    lib::L2CValue::~L2CValue(&LStack_80);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::L2CValue(&LStack_e0,0x13c69415a9);
-    lib::L2CValue::L2CValue(&LStack_90,0x50f26fef6);
-    uVar4 = lib::L2CValue::as_integer(&LStack_e0);
-    uVar5 = lib::L2CValue::as_integer(&LStack_90);
-    fVar10 = (float)app::lua_bind::WorkModule__get_param_float_impl(this->moduleAccessor,uVar4,uVar5);
-    lib::L2CValue::L2CValue(&LStack_80,fVar10);
-    lib::L2CValue::~L2CValue(&LStack_90);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::L2CValue(&LStack_e0,0x13c69415a9);
-    lib::L2CValue::L2CValue(&LStack_a0,0x500814509);
-    uVar4 = lib::L2CValue::as_integer(&LStack_e0);
-    uVar5 = lib::L2CValue::as_integer(&LStack_a0);
-    fVar10 = (float)app::lua_bind::WorkModule__get_param_float_impl(this->moduleAccessor,uVar4,uVar5);
-    lib::L2CValue::L2CValue(&LStack_90,fVar10);
-    lib::L2CValue::~L2CValue(&LStack_a0);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::L2CValue(&LStack_b0,(L2CValue *)&LStack_80);
-    lib::L2CValue::L2CValue(&LStack_c0,0);
-    lua2cpp::L2CFighterBase::Vector2__create(this,SUB81(&LStack_b0,0),SUB81(&LStack_c0,0));
-    lib::L2CValue::~L2CValue(&LStack_c0);
-    lib::L2CValue::~L2CValue(&LStack_b0);
-    pLVar7 = (L2CValue *)lib::L2CValue::operator[](&LStack_a0,0x18cdc1683);
-    this_00 = (L2CValue *)lib::L2CValue::operator[](&LStack_a0,0x1fbdb2615);
-    this_01 = (L2CValue *)lib::L2CValue::operator[](&LStack_a0,0x18cdc1683);
-    auVar14 = lib::L2CValue::operator[](&LStack_a0,0x1fbdb2615);
-    lib::L2CAgent::math_rad((L2CAgent *)&LStack_90,SUB168(auVar14 >> 0x40,0));
-    fVar10 = (float)lib::L2CValue::as_number(this_01);
-    fVar11 = (float)lib::L2CValue::as_number(SUB168(auVar14,0));
-    fVar12 = (float)lib::L2CValue::as_number(&LStack_f0);
-    uVar13 = app::sv_math::vec2_rot(fVar10,fVar11,fVar12);
-    lib::L2CValue::L2CValue(&LStack_e0,(float)uVar13);
-    lib::L2CValue::L2CValue(&LStack_d0,(float)((ulong)uVar13 >> 0x20));
-    lib::L2CValue::operator=(pLVar7,(L2CValue *)&LStack_e0);
-    lib::L2CValue::operator=(this_00,(L2CValue *)&LStack_d0);
-    lib::L2CValue::~L2CValue(&LStack_d0);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::~L2CValue(&LStack_f0);
-    pLVar7 = (L2CValue *)lib::L2CValue::operator[](&LStack_a0,0x18cdc1683);
-    fVar10 = (float)app::lua_bind::PostureModule__lr_impl(this->moduleAccessor);
-    lib::L2CValue::L2CValue(&LStack_f0,fVar10);
-    lib::L2CValue::operator*(pLVar7,(L2CValue *)&LStack_f0);
-    pLVar7 = (L2CValue *)lib::L2CValue::operator[](&LStack_a0,0x18cdc1683);
-    lib::L2CValue::operator=(pLVar7,(L2CValue *)&LStack_e0);
-    lib::L2CValue::~L2CValue(&LStack_e0);
-    lib::L2CValue::~L2CValue(&LStack_f0);
-    lib::L2CValue::L2CValue(&LStack_e0,_WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
-    pLVar8 = (L2CValue *)lib::L2CValue::operator[](&LStack_a0,0x18cdc1683);
-    pLVar9 = (L2CValue *)lib::L2CValue::operator[](&LStack_a0,0x1fbdb2615);
-    lib::L2CAgent::clear_lua_stack((L2CAgent *)this);
-    lib::L2CAgent::push_lua_stack((L2CAgent *)this,(L2CValue *)&LStack_e0);
-    lib::L2CAgent::push_lua_stack((L2CAgent *)this,pLVar8);
-    lib::L2CAgent::push_lua_stack((L2CAgent *)this,pLVar9);
-    app::sv_kinetic_energy::set_speed(this->luaStateAgent);
-    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, vec.x)
-    weapon.fastshift(L2CValue::Ptr(metaknight_galaxia_beam_air_fly_main_loop as *const () as _))
-}
-*/
-
 unsafe extern "C" fn metaknight_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let kinetic;
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
@@ -245,19 +159,137 @@ unsafe extern "C" fn metaknight_special_hi_pre_status(fighter: &mut L2CFighterCo
     0.into()
 }
 
-//Special Hi Main, resets your jump count
+//Special Hi Main, goes into Glide
 unsafe extern "C" fn metaknight_special_hi_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let ret = original_status(Main, fighter, *FIGHTER_STATUS_KIND_SPECIAL_HI)(fighter);
+    let landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame"));
+    let lr_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("lr_stick_x"));
+    let dir_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("dir_mul"));
+    let dir_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("dir_stick_x"));
+    let pass_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("pass_mul"));
+    let air_pass_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("air_pass_mul"));
+    let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("air_start_x_mul"));
+    let air_start_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("air_accel_y"));
+    let fall_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("fall_x_mul"));
+    let trans_move_end_speed_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("trans_move_end_speed_x_mul"));
+    let trans_move_end_speed_y_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("trans_move_end_speed_y_mul"));
+    WorkModule::set_int64(fighter.module_accessor, hash40("special_hi") as i64, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_MOTION_KIND);
+    WorkModule::set_float(fighter.module_accessor, lr_stick_x, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_LR_STICK_X);
+    WorkModule::set_float(fighter.module_accessor, dir_stick_x, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_DIR_STICK_X);
+    WorkModule::set_float(fighter.module_accessor, dir_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_DIR_MUL);
+    WorkModule::set_float(fighter.module_accessor, pass_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_PASS_MUL);
+    WorkModule::set_float(fighter.module_accessor, air_pass_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_AIR_PASS_MUL);
+    WorkModule::set_float(fighter.module_accessor, air_accel_y, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_AIR_ACCEL_Y);
+    WorkModule::set_float(fighter.module_accessor, air_start_x_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_AIR_START_X_MUL);
+    WorkModule::set_float(fighter.module_accessor, fall_x_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_FALL_X_MUL);
+    WorkModule::set_int(fighter.module_accessor, landing_frame, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_CONST_LANDING_FRAME);
+    WorkModule::set_float(fighter.module_accessor, trans_move_end_speed_x_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_X_MUL);
+    WorkModule::set_float(fighter.module_accessor, trans_move_end_speed_y_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_Y_MUL);
     WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_GLIDE, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
-    ret
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_GLIDE);
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+        WorkModule::set_int64(fighter.module_accessor, hash40("special_hi") as i64, *FIGHTER_METAKNIGHT_STATUS_WORK_INT_MOT_KIND);
+        WorkModule::set_int64(fighter.module_accessor, hash40("special_air_hi_start") as i64, *FIGHTER_METAKNIGHT_STATUS_WORK_INT_MOT_AIR_KIND);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_METAKNIGHT_STATUS_SPECIAL_HI_FLAG_CONTINUE_MOT);
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        let metaknight_aerial_motion_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_METAKNIGHT_STATUS_WORK_INT_MOT_AIR_KIND);
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_METAKNIGHT_STATUS_SPECIAL_HI_FLAG_CONTINUE_MOT) {
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new_raw(metaknight_aerial_motion_kind), -1.0, 1.0, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(metaknight_aerial_motion_kind), 0.0, 1.0, false, 0.0, false, false);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_METAKNIGHT_STATUS_SPECIAL_HI_FLAG_CONTINUE_MOT);
+        }
+        fighter.sub_shift_status_main(L2CValue::Ptr(metaknight_special_hi_main_loop_2 as *const () as _))
+    }
+    else {
+        fighter.super_jump_punch(L2CValue::Void());
+        fighter.sub_shift_status_main(L2CValue::Ptr(metaknight_special_hi_main_loop as *const () as _))
+    }
 }
 
-//Special Hi Loop, resets your jump count
-unsafe extern "C" fn metaknight_special_hi_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let ret = original_status(Main, fighter, *FIGHTER_METAKNIGHT_STATUS_KIND_SPECIAL_HI_LOOP)(fighter);
-    WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_GLIDE, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
-    ret
+unsafe extern "C" fn metaknight_special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = MotionModule::frame(fighter.module_accessor);
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    KineticModule::clear_speed_energy_id(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_ENV_WIND);
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            return 1.into();
+        }
+    }
+    if fighter.sub_air_check_fall_common().get_bool() {
+        return 1.into();
+    }
+    if frame > 23.0 {
+        if situation_kind == *SITUATION_KIND_GROUND {
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+        }
+    }
+    if !fighter.sub_transition_group_check_air_cliff().get_bool() {
+        if MotionModule::is_end(fighter.module_accessor) {
+            let super_jump_punch_end_status = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
+            fighter.change_status(super_jump_punch_end_status.into(), false.into());
+        }
+    }
+    0.into()
 }
+
+unsafe extern "C" fn metaknight_special_hi_main_loop_2(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = MotionModule::frame(fighter.module_accessor);
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    fighter.super_jump_punch_main();
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            return 1.into();
+        }
+    }
+    if fighter.sub_air_check_fall_common().get_bool() {
+        return 1.into();
+    }
+    if frame > 23.0 {
+        WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
+        if situation_kind == *SITUATION_KIND_GROUND {
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), true.into());
+        }
+    }
+    if !fighter.sub_transition_group_check_air_cliff().get_bool() {
+        if MotionModule::is_end(fighter.module_accessor) {
+            fighter.change_status(FIGHTER_METAKNIGHT_STATUS_KIND_SPECIAL_HI_LOOP.into(), true.into());
+        }
+    }
+    0.into()
+}
+
+//Special Hi Loop Main
+unsafe extern "C" fn metaknight_special_hi_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let landing_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame"));
+    let lr_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("lr_stick_x"));
+    let dir_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("dir_mul"));
+    let dir_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("dir_stick_x"));
+    let pass_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("pass_mul"));
+    let air_pass_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("air_pass_mul"));
+    let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("air_start_x_mul"));
+    let air_start_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("air_accel_y"));
+    let fall_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("fall_x_mul"));
+    let trans_move_end_speed_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("trans_move_end_speed_x_mul"));
+    let trans_move_end_speed_y_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("trans_move_end_speed_y_mul"));
+    WorkModule::set_int64(fighter.module_accessor, hash40("special_hi_loop") as i64, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_MOTION_KIND_AIR);
+    WorkModule::set_float(fighter.module_accessor, lr_stick_x, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_LR_STICK_X);
+    WorkModule::set_float(fighter.module_accessor, dir_stick_x, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_DIR_STICK_X);
+    WorkModule::set_float(fighter.module_accessor, dir_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_DIR_MUL);
+    WorkModule::set_float(fighter.module_accessor, pass_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_PASS_MUL);
+    WorkModule::set_float(fighter.module_accessor, air_accel_y, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_AIR_ACCEL_Y);
+    WorkModule::set_float(fighter.module_accessor, air_start_x_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_AIR_START_X_MUL);
+    WorkModule::set_float(fighter.module_accessor, air_pass_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_AIR_PASS_MUL);
+    WorkModule::set_float(fighter.module_accessor, fall_x_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_CONST_FALL_X_MUL);
+    WorkModule::set_int(fighter.module_accessor, landing_frame, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_CONST_LANDING_FRAME);
+    WorkModule::set_float(fighter.module_accessor, trans_move_end_speed_x_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_X_MUL);
+    WorkModule::set_float(fighter.module_accessor, trans_move_end_speed_y_mul, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_FLOAT_MOVE_TRANS_END_SPEED_Y_MUL);
+    WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_GLIDE, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_GLIDE);
+    fighter.super_jump_punch(L2CValue::Void());
+    fighter.sub_shift_status_main(L2CValue::Ptr(metaknight_special_hi_main_loop as *const () as _))
+}
+
 //Glide Start Main
 unsafe extern "C" fn metaknight_glide_start_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_GLIDE);
@@ -266,7 +298,6 @@ unsafe extern "C" fn metaknight_glide_start_main_status(fighter: &mut L2CFighter
 
 //Glide End Main
 unsafe extern "C" fn metaknight_glide_end_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("glide_end"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(fighter.module_accessor) {
         fighter.sub_fall_common_uniq(false.into());
@@ -276,6 +307,7 @@ unsafe extern "C" fn metaknight_glide_end_main_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn metaknight_glide_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_FALL_SPECIAL);
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -290,7 +322,6 @@ unsafe extern "C" fn metaknight_glide_end_main_loop(fighter: &mut L2CFighterComm
 
 //Glide Attack Main
 unsafe extern "C" fn metaknight_glide_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("glide_attack"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(fighter.module_accessor) {
         fighter.sub_fall_common_uniq(false.into());
@@ -300,6 +331,7 @@ unsafe extern "C" fn metaknight_glide_attack_main_status(fighter: &mut L2CFighte
 }
 
 unsafe extern "C" fn metaknight_glide_attack_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_FALL_SPECIAL);
     if fighter.sub_transition_group_check_air_landing().get_bool() {
         return 0.into();
     }
@@ -331,14 +363,6 @@ pub fn install() {
     .status(Main, WEAPON_METAKNIGHT_GALAXIA_BEAM_STATUS_KIND_SHOOT, metaknight_galaxia_beam_shoot_main_status)
     .status(Exec, WEAPON_METAKNIGHT_GALAXIA_BEAM_STATUS_KIND_SHOOT, metaknight_galaxia_beam_shoot_exec_status)
     .status(End, WEAPON_METAKNIGHT_GALAXIA_BEAM_STATUS_KIND_SHOOT, metaknight_galaxia_beam_shoot_end_status)
-    .install()
-    ;
-    Agent::new("metaknight_galaxiabeamair")
-    .status(Pre, WEAPON_METAKNIGHT_GALAXIA_BEAM_AIR_STATUS_KIND_FLY, metaknight_galaxia_beam_air_fly_pre_status)
-    .status(Init, WEAPON_METAKNIGHT_GALAXIA_BEAM_AIR_STATUS_KIND_FLY, metaknight_galaxia_beam_air_fly_init_status)
-    .status(Main, WEAPON_METAKNIGHT_GALAXIA_BEAM_AIR_STATUS_KIND_FLY, metaknight_galaxia_beam_air_fly_main_status)
-    .status(Exec, WEAPON_METAKNIGHT_GALAXIA_BEAM_AIR_STATUS_KIND_FLY, metaknight_galaxia_beam_air_fly_exec_status)
-    .status(End, WEAPON_METAKNIGHT_GALAXIA_BEAM_AIR_STATUS_KIND_FLY, metaknight_galaxia_beam_air_fly_end_status)
     .install()
     ;
 }

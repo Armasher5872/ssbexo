@@ -6,6 +6,7 @@ use {
             consts::*,
             donkey::*,
             globals::*,
+            metaknight::*,
             variables::*,
         },
         util::*,

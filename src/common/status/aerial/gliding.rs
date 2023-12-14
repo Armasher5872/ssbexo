@@ -113,10 +113,6 @@ unsafe extern "C" fn glide_main_sub(fighter: &mut L2CFighterCommon) -> L2CValue 
             fighter.change_status(FIGHTER_STATUS_KIND_GLIDE_ATTACK.into(), true.into());
             return 0.into();
         }
-        if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-            fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE_AIR.into(), true.into());
-            return 0.into();
-        }
     }
     0.into()
 }
