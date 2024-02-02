@@ -72,18 +72,6 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 	let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 	let sticky = ControlModule::get_stick_y(boma);
 	let status_kind = StatusModule::status_kind(boma);
-	let status_checks = [
-		*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, 
-		*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, 
-		*FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F, 
-		*FIGHTER_RYU_STATUS_KIND_ATTACK_NEAR, *FIGHTER_SIMON_STATUS_KIND_ATTACK_HOLD_START, *FIGHTER_SIMON_STATUS_KIND_ATTACK_HOLD, *FIGHTER_SIMON_STATUS_KIND_ATTACK_LW32, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_FALL, 
-		*FIGHTER_PICKEL_STATUS_KIND_ATTACK_FALL_AERIAL, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_JUMP, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_WAIT, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_WALK, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_LANDING, 
-		*FIGHTER_PICKEL_STATUS_KIND_ATTACK_WALK_BACK, *FIGHTER_RYU_STATUS_KIND_ATTACK_COMMAND1, *FIGHTER_RYU_STATUS_KIND_ATTACK_COMMAND2, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WAIT, 
-		*FIGHTER_TANTAN_STATUS_KIND_ATTACK_WALK, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_RV, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LANDING, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LADDER, 
-		*FIGHTER_METAKNIGHT_STATUS_KIND_ATTACK_S3, *FIGHTER_METAKNIGHT_STATUS_KIND_ATTACK_LW3
-	];
-	let smashes = [*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4];
-	let mut power = ((*AttackModule::attack_data(boma, 0, false)).power)*AttackModule::get_attack_power_mul_pattern(boma);
 	if boma_reference.is_fighter() {
         if fighter_kind == *FIGHTER_KIND_DONKEY
 		&& param_type == hash40("damage_level3") {
@@ -202,29 +190,13 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 				return 0.0715;
 			}
 		}
-		if fighter_kind == FIGHTER_KIND_LITTLEMAC 
-		&& param_type == hash40("param_special_n") {
-			if param_hash == hash40("special_n_hit_damage_mul_") {
-				if MAC_HITSTUN[get_player_number(boma_reference)] == 0 {
-					let taken_damage = DamageModule::damage(boma, 0)-LAST_DAMAGE[get_player_number(boma_reference)];
-					return -34.0/taken_damage;
-				}
-				if status_kind == *FIGHTER_STATUS_KIND_CAPTURE_PULLED {
-					return -34.0;
-				}
-				return 0.0;
+		if fighter_kind == *FIGHTER_KIND_SONIC
+		&& param_type == hash40("ground_brake") {
+			if status_kind == *FIGHTER_STATUS_KIND_TURN_RUN {
+				return 1.0;
 			}
-			if param_hash == hash40("special_n_atk_damage_mul_") {
-				for i in 0..TOTAL_FIGHTER {
-					if COUNTERHIT_CHECK[get_player_number(&mut *get_boma(i))] && get_attacker_number(&mut *get_boma(i)) == get_player_number(boma_reference) && status_checks.contains(&status_kind) {
-						if smashes.contains(&status_kind) {
-							COUNTERHIT_SUCCESS[get_player_number(boma_reference)] = true;
-						}
-						COUNTERHIT_CHECK[get_player_number(&mut *get_boma(i))] = false;
-						return 34.0/power;
-					}
-				}
-				return 0.0;
+			else {
+				return 0.0655;
 			}
 		}
 	}

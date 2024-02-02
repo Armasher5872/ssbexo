@@ -27,7 +27,7 @@ unsafe extern "C" fn ridley_up_special_wall_main_status(fighter: &mut L2CFighter
     fighter.sub_shift_status_main(L2CValue::Ptr(ridley_up_special_wall_main_loop as *const () as _))
 }
 
-pub unsafe extern "C" fn ridley_up_special_wall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn ridley_up_special_wall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_RIDLEY_STATUS_SPECIAL_HI_FLAG_ENABLE_CONTROL) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_RIDLEY_STATUS_SPECIAL_HI_FLAG_ENABLE_CONTROL);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);

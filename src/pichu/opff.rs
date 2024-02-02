@@ -414,8 +414,13 @@ unsafe extern "C" fn pichu_dengekidama_functions(fighter: &mut L2CFighterBase) {
     }
 }
 
+unsafe extern "C" fn pichu_init(fighter: &mut L2CFighterCommon) {
+    fighter.global_table[GUARD_CONT_UNIQ].assign(&L2CValue::Ptr(if_shield_special as *const () as _));
+}
+
 pub fn install() {
     Agent::new("pichu")
+    .on_start(pichu_init)
     .on_line(Main, pichu_frame)
     .install()
     ;

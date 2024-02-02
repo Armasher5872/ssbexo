@@ -6,9 +6,9 @@ use super::*;
 //Pre Item Throw
 #[skyline::hook(replace = L2CFighterCommon_status_pre_ItemThrow)]
 unsafe fn status_pre_itemthrow(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let mut kinetic_condition: i32 = 0;
-    let mut arg_6_check: bool = false;
-    let mut treaded_kind: i32 = 0;
+    let kinetic_condition;
+    let arg_6_check;
+    let treaded_kind;
     if !fighter.sub_pre_ItemThrow().get_bool() {
         if [*FIGHTER_STATUS_KIND_ESCAPE_F, *FIGHTER_STATUS_KIND_ESCAPE_B].contains(&fighter.global_table[PREV_STATUS_KIND].get_i32()) {
             kinetic_condition = *FIGHTER_KINETIC_TYPE_MOTION;

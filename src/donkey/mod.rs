@@ -2,6 +2,7 @@ use {
     crate::functions::{
         ext::*,
         var::{
+            consts::*,
             donkey::*,
             globals::*,
             variables::*,
@@ -25,11 +26,13 @@ use {
 };
 
 mod acmd;
+mod hook;
 mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
+    hook::install();
     opff::install();
     status::install();
 }

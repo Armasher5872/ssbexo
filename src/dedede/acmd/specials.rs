@@ -45,10 +45,10 @@ unsafe extern "C" fn ssbexo_dedede_gordo_side_special_attack_acmd(agent: &mut L2
                 let opponent_boma = sv_battle_object::module_accessor(Fighter::get_id_from_entry_id(i));
                 if AttackModule::is_infliction(agent.module_accessor, *COLLISION_KIND_MASK_HIT) {
                     let data = AttackModule::attack_data(opponent_boma, 0, false);
-                    let mut damage: f32 = (*data).power;
+                    let damage: f32 = (*data).power;
                     let mut angle: i32 = (*data).vector;
-                    let mut kbg: i32 = (*data).r_eff;
-                    let mut bkb: i32 = (*data).r_add;
+                    let kbg: i32 = (*data).r_eff;
+                    let bkb: i32 = (*data).r_add;
                     if angle > 360 {
                         angle = 32;
                     }
@@ -76,8 +76,8 @@ unsafe extern "C" fn ssbexo_dedede_gordo_side_special_attack_acmd(agent: &mut L2
             speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).abs();
             speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).abs();
         }
-        let mut speed: f32 = speed_x.max(speed_y);
-        let mut gordo_damage: f32 = (14.0*(speed*0.6)).clamp(8.4, 30.0);
+        let speed: f32 = speed_x.max(speed_y);
+        let gordo_damage: f32 = (14.0*(speed*0.6)).clamp(8.4, 30.0);
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("hip"), gordo_damage, 60, 66, 0, 60, 0.9, 3.8, 3.8, 0.0, Some(-3.8), Some(-3.8), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -7, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
             macros::ATTACK(agent, 1, 0, Hash40::new("hip"), gordo_damage, 60, 66, 0, 60, 0.9, 3.8, -3.8, 0.0, Some(-3.8), Some(3.8), Some(0.0), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, -7, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);

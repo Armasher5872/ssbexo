@@ -1,69 +1,67 @@
 use super::*;
 
-//switch status before anything happens in LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN
 unsafe extern "C" fn pfushigisou_special_n_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    PFUSHIGISOU_IS_SPECIAL_N[entry_id] = true;
-    fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), true.into());
+    fighter.sub_status_pre_SpecialNCommon();
+    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_N | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_N as u32, 0);
     0.into()
 }
 
-//new neutral-special script in light item throw status
-unsafe extern "C" fn pfushigisou_light_item_throw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if PFUSHIGISOU_IS_SPECIAL_N[entry_id] {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-            KineticModule::clear_speed_all(fighter.module_accessor);
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_start"), 0.0, 1.0, false, 0.0, false, false);
-        }
-        else {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_start"), 0.0, 1.0, false, 0.0, false, false);
-        }
-        fighter.sub_shift_status_main(L2CValue::Ptr(pfushigisou_light_item_throw_status_loop as *const () as _))
+unsafe extern "C" fn pfushigisou_special_n_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
     }
     else {
-        original_status(Main, fighter, *FIGHTER_STATUS_KIND_ITEM_THROW)(fighter)
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     }
+    fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n_start"), L2CValue::Hash40s("special_air_n_start"), false.into());
+    fighter.sub_shift_status_main(L2CValue::Ptr(pfushigisou_special_n_main_loop as *const () as _))
 }
 
-unsafe extern "C" fn pfushigisou_light_item_throw_status_loop(fighter: &mut L2CFighterCommon) -> bool {
-    if StatusModule::is_situation_changed(fighter.module_accessor) {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_n_start"), -1.0, 1.0, 0.0, false, false);
+unsafe extern "C" fn pfushigisou_special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            return 1.into();
         }
-        else {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
+    }
+    if fighter.sub_air_check_fall_common().get_bool() {
+        return 1.into();
+    }
+    if situation_kind == *SITUATION_KIND_GROUND
+    && prev_situation_kind == *SITUATION_KIND_AIR {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        if ItemModule::get_have_item_kind(fighter.module_accessor, 0) == *ITEM_KIND_DEKU {
+            ItemModule::remove_item(fighter.module_accessor, *ITEM_KIND_DEKU);
         }
-        return true.into();
+        fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+    }
+    if situation_kind == *SITUATION_KIND_AIR
+    && prev_situation_kind == *SITUATION_KIND_GROUND {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_n_start"), -1.0, 1.0, 0.0, false, false);
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-            fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), true.into());
+        if situation_kind != *SITUATION_KIND_GROUND {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
         else {
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
-        return true.into();
+        return 1.into();
     }
-    return false.into()
-}
-
-//resets flag when status ends
-unsafe extern "C" fn pfushigisou_light_item_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    PFUSHIGISOU_IS_SPECIAL_N[entry_id] = false;
-    original_status(End, fighter, *FIGHTER_STATUS_KIND_ITEM_THROW)(fighter)
+    0.into()
 }
 
 pub fn install() {
     Agent::new("pfushigisou")
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, pfushigisou_special_n_pre_status)
-    .status(Main, *FIGHTER_STATUS_KIND_ITEM_THROW, pfushigisou_light_item_throw_main_status)
-    .status(End, *FIGHTER_STATUS_KIND_ITEM_THROW, pfushigisou_light_item_throw_end_status)
+    .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, pfushigisou_special_n_main_status)
     .install()
     ;
 }

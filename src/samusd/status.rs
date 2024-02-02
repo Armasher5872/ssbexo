@@ -1,5 +1,17 @@
 use super::*;
 
+unsafe extern "C" fn samusd_special_s1a_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON | *FIGHTER_LOG_MASK_FLAG_SHOOT) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
+    0.into()
+}
+
+unsafe extern "C" fn samusd_special_s2a_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON | *FIGHTER_LOG_MASK_FLAG_SHOOT | *FIGHTER_LOG_MASK_FLAG_HAJIKI) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, 0);
+    0.into()
+}
+
 unsafe extern "C" fn samusd_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_AIR as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
@@ -27,6 +39,8 @@ unsafe extern "C" fn samusd_special_hi_main_status(fighter: &mut L2CFighterCommo
 }
 
 unsafe extern "C" fn samusd_special_hi_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let mut x_add;
+    let mut y_add;
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
@@ -48,8 +62,6 @@ unsafe extern "C" fn samusd_special_hi_loop(fighter: &mut L2CFighterCommon) -> L
         return 0.into();
     }
     if (22.0..=94.0).contains(&frame) && situation_kind == *SITUATION_KIND_AIR {
-        let mut x_add;
-        let mut y_add;
         if stick_x > 0.2 {
             x_add = ((stick_x-0.2)*0.02/*X Accel Mul*/)+0.01/*X Accel Add*/;
             if speed_x > 0.25/*X Max*/ || speed_x < -0.25/*X Max*/ {
@@ -131,6 +143,8 @@ unsafe extern "C" fn samusd_special_hi_exit_status(_fighter: &mut L2CFighterComm
 
 pub fn install() {
     Agent::new("samusd")
+    .status(Pre, *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S1A, samusd_special_s1a_pre_status)
+    .status(Pre, *FIGHTER_SAMUS_STATUS_KIND_SPECIAL_S2A, samusd_special_s2a_pre_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, samusd_special_hi_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, samusd_special_hi_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, samusd_special_hi_main_status)

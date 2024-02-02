@@ -1,5 +1,12 @@
 use super::*;
 
+#[skyline::hook(replace = L2CFighterCommon_status_pre_Appeal_common)]
+unsafe fn status_pre_appeal_common(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
+    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_MOTION, *GROUND_CORRECT_KIND_GROUND as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_APPEAL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_APPEAL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_APPEAL_FLOAT, param_1.get_i32());
+    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_ENABLE, false, false, false, 0, 0, 0, 0);
+    0.into()
+}
+
 #[skyline::hook(replace = L2CFighterCommon_status_Appeal_Main)]
 unsafe fn status_appeal_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
@@ -51,6 +58,7 @@ unsafe fn status_appeal_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
+            status_pre_appeal_common,
             status_appeal_main
         );
     }

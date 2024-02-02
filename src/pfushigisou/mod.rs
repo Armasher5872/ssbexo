@@ -1,10 +1,15 @@
 use {
     crate::functions::var::{
+        consts::*,
         globals::*,
+        pfushigisou::*,
         variables::*,
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         lib::{
             L2CValue,
             lua_const::*,
@@ -21,7 +26,7 @@ mod opff;
 mod status;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
-  status::install();
+    acmd::install();
+    opff::install();
+    status::install();
 }

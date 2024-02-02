@@ -1,13 +1,11 @@
 use {
-    crate::functions::{
-        ext::*,
-        var::{
-            consts::*,
-            globals::*,
-        }
+    crate::functions::var::{
+        consts::*,
+        globals::*,
     },
     smash::{
         app::lua_bind::*,
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,

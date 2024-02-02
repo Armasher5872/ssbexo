@@ -1,6 +1,6 @@
 use super::*;
 
-unsafe extern "C" fn tantan_frame(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn tantan_frame(_fighter: &mut L2CFighterCommon) {
     /*
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     //let status_kind = fighter.global_table[STATUS_KIND].get_i32();

@@ -1,6 +1,6 @@
 [package]
-name = "plugin"
-version = "0.3.5"
+name = "ssbexo"
+version = "0.3.6"
 authors = ["phazoganon"]
 edition = "2018"
 

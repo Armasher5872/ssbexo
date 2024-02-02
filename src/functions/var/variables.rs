@@ -12,7 +12,6 @@ pub static mut FIGHTER_BOOL_2: [bool; 8] = [false; 8];
 pub static mut FIGHTER_CUTIN_MANAGER_ADDR: usize = 0;
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 pub static mut FULL_HOP_ENABLE_DELAY: [i32; 8] = [0; 8];
-pub static mut HAS_CATCH: [bool; 8] = [false; 8]; //Used for Command Grabs
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
 pub static mut HIT_PLAYER: i32 = -1; //Tracks which players need to be respawned
 pub static mut ITEM_MANAGER_ADDR: usize = 0;
@@ -71,15 +70,9 @@ pub static mut KIRBY_FALCON_PUNCH_TURN_COUNT: [f32; 8] = [0.0; 8];
 pub static mut REFLECTOR_KNOCKBACK: [i32; 8] = [100; 8];
 pub static mut REFLECTOR_ANGLE: [u64; 8] = [60; 8];
 
-//Ivysaur Variables
-pub static mut PFUSHIGISOU_IS_SPECIAL_N: [bool; 8] = [false; 8];
-
 //King K Rool Variables
 pub static mut KROOL_HAS_UAIR: [bool; 8] = [false; 8];
 pub static mut KROOL_UP_SPECIAL_CANCEL: [bool; 8] = [false; 8];
-
-//Little Mac Variables
-pub static mut MAC_HITSTUN: [i32; 8] = [0; 8];
 
 //Lucario Variables
 pub static mut MEGA_EVOLVE: [bool; 8] = [false; 8];
@@ -142,14 +135,6 @@ pub static mut GRENADE_HOLD: [bool; 8] = [false; 8];
 pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_ENABLE: [bool; 8] = [false; 8];
 pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_IS_BUFFERED: [bool; 8] = [false; 8];
 pub static mut SNAKE_INT_ATTACK_S4_COMBO_COUNT: [i32; 8] = [0; 8];
-
-//Sonic Variables
-pub static mut BOUNCE_BRACELET_POWER: [f32; 8] = [3.0; 8];
-pub static mut FAIR_HIT: [bool; 8] = [false; 8];
-pub static mut HOMING_ATTACK_HIT: [bool; 8] = [false; 8];
-pub static mut SONIC_BOOST: [f32; 8] = [0.0; 8];
-pub static mut SONIC_BOOST_GFX_COUNTER: [i32; 8] = [0; 8];
-pub static mut SONIC_BOOST_SPEED: [f32; 8] = [0.0; 8];
 
 //Squirtle Variables
 pub static mut IN_RAIN_DANCE: [bool; 8] = [false; 8];

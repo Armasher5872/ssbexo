@@ -65,7 +65,7 @@ extern "C" {
 //Luigi FighterSpecializer
 extern "C" {
 	#[link_name = "\u{1}_ZN3app24FighterSpecializer_Luigi14delete_plungerERNS_7FighterEb"]
-	pub fn delete_plunger(instance: &mut smash::app::Fighter, param: bool) -> u64;
+	pub fn delete_plunger(fighter: *mut smash::app::Fighter, param: bool) -> u64;
 }
 
 //Checks the version string
@@ -305,6 +305,7 @@ pub trait BomaExt {
     unsafe fn is_situation(&mut self, kind: i32) -> bool;
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn down_input(&mut self) -> bool;
+    unsafe fn up_input(&mut self) -> bool;
     unsafe fn jump_cancel(&mut self) -> bool;
     unsafe fn gimmick_flash(&mut self);
     unsafe fn is_status(&mut self, kind: i32) -> bool;
@@ -380,6 +381,18 @@ impl BomaExt for BattleObjectModuleAccessor {
         }
         //Checks if you flick the stick down more than 3 times but less than 20 times, or your stick is less than or equal to -1.0
         if ((ControlModule::get_flick_y(self) >= 3 && ControlModule::get_flick_y(self) < 20) || stick_y <= -1.0) {
+            return true;
+        };
+        return false;
+    }
+    unsafe fn up_input(&mut self) -> bool {
+        let stick_y = ControlModule::get_stick_y(self);
+        //Checks if you're holding down the control stick more than the tap jump threshold
+        if stick_y >= 0.7 {
+            return true;
+        }
+        //Checks if you flick the stick down more than 3 times but less than 20 times, or your stick is greater than or equal to 1.0
+        if ((ControlModule::get_flick_y(self) >= 3 && ControlModule::get_flick_y(self) < 20) || stick_y >= 1.0) {
             return true;
         };
         return false;
@@ -2011,10 +2024,6 @@ pub unsafe extern "C" fn donkey_barrel_bool(boma: *mut BattleObjectModuleAccesso
     return false;
 }
 
-//Updates Little Mac's UI
-#[skyline::from_offset(0x068cd80)]
-pub unsafe fn update_ui(fighter_data: *const u64, param_2: u32);
-
 //Deals with Inkling's Squid
 pub unsafe extern "C" fn inkling_generate_squid_helper(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_EXIST_SQUID) {
@@ -2087,7 +2096,55 @@ pub unsafe extern "C" fn galaxia_beam_hit_removal(weapon: &mut L2CWeaponCommon) 
     weapon.pop_lua_stack(1);
 }
 
-//Gets owner boma
+//Gets the article owner boma
 pub unsafe fn get_owner_boma(weapon: &mut L2CAgentBase) -> *mut BattleObjectModuleAccessor {
     return &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+}
+
+pub unsafe extern "C" fn empty_waza_customize() -> L2CValue {
+    0.into()
+}
+
+//Shield Specials
+pub unsafe extern "C" fn if_shield_special(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let kind = smash::app::utility::get_kind(&mut *fighter.module_accessor);
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+    && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
+        if kind == *FIGHTER_KIND_NESS {
+            fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_N.into(),true.into());
+            return true.into();
+        }
+        if [*FIGHTER_KIND_CAPTAIN, *FIGHTER_KIND_PICHU, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_PZENIGAME].contains(&kind) {
+            fighter.change_status(FIGHTER_STATUS_KIND_APPEAL.into(),true.into());
+            return true.into();
+        }
+    }
+    return false.into();
+}
+
+//ASDI Check
+pub unsafe extern "C" fn asdi_check(fighter: &mut L2CFighterCommon) {
+    if fighter.global_table[IS_STOP].get_bool() {
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
+    };
+}
+
+//ASDI Function
+pub unsafe extern "C" fn asdi_function(fighter: &mut L2CFighterCommon) {
+    let mut pos = Vector3f {x: PostureModule::pos_x(fighter.module_accessor), y: PostureModule::pos_y(fighter.module_accessor), z: PostureModule::pos_z(fighter.module_accessor)}; // get current pos
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let stick_x = ControlModule::get_stick_x(fighter.module_accessor) * lr;
+    let stick_y = ControlModule::get_stick_y(fighter.module_accessor);
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START) && !StopModule::is_damage(fighter.module_accessor) {
+        let asdi_stick_x = if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) {ControlModule::get_sub_stick_x(fighter.module_accessor)} else {stick_x}; // get stick x length, uses cstick's value if cstick is on (for Double Stick ASDI)
+        let asdi_stick_y = if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) {ControlModule::get_sub_stick_y(fighter.module_accessor)} else {stick_y}; // get stick y length, uses cstick's value if cstick is on (for Double Stick ASDI)
+        let asdi = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("hit_stop_delay_auto_mul")); // get base asdi distance
+        let asdi_x = asdi * asdi_stick_x*lr; // mul asdi stick_x by total asdi
+        let asdi_y = asdi * asdi_stick_y; // mul asdi stick_y by total asdi
+        pos.x += asdi_x; //add asdi_x to pos_x
+        pos.y += asdi_y; //add asdi_y to pos_y
+        PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
+    };
 }

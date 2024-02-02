@@ -1,8 +1,12 @@
 use {
-  crate::functions::var::{
-    consts::*,
-    globals::*,
-    pikachu::*,
+  crate::functions::{
+    ext::*,
+    var::{
+      consts::*,
+      globals::*,
+      pikachu::*,
+      variables::*,
+    }
   },
   smash::{
     app::{

@@ -22,7 +22,7 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
             }
         }
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_LAG_REDUCTION);
+            WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
         }
         //Angleable Dair
         if fighter_kind == *FIGHTER_KIND_METAKNIGHT && motion_kind == hash40("attack_air_lw") && frame < 7.0 {
@@ -36,7 +36,7 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
         /* END OF NEW ADDITIONS */
         if !CancelModule::is_enable_cancel(fighter.module_accessor) {
             if MotionModule::is_end(fighter.module_accessor) {
-                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_LAG_REDUCTION);
+                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
             return false.into();
@@ -49,7 +49,7 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
                 if !MotionModule::is_end(fighter.module_accessor) {
                     return false.into();
                 }
-                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_LAG_REDUCTION);
+                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
         }

@@ -1,5 +1,3 @@
-#![allow(unused_macros)]
-
 use {
     crate::functions::var::{
         consts::*,

@@ -2,8 +2,8 @@ use super::*;
 
 unsafe extern "C" fn armstrong_special_n_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let mut ground_check;
-    let mut kinetic_type;
+    let ground_check;
+    let kinetic_type;
     if situation_kind == *SITUATION_KIND_AIR {
         kinetic_type = *FIGHTER_KINETIC_TYPE_NONE;
         ground_check = *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES;
@@ -75,7 +75,7 @@ unsafe extern "C" fn armstrong_special_n_exec_status(_fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn armstrong_special_s_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let mut kinetic;
+    let kinetic;
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
         kinetic = *FIGHTER_KINETIC_TYPE_GROUND_STOP;
     }
@@ -167,13 +167,18 @@ unsafe extern "C" fn armstrong_special_air_s_catch_loop(fighter: &mut L2CFighter
     let vector = fighter.Vector2__create(speed_x.into(), speed_y.into());
     let vec_x = vector["x"].get_f32();
     let vec_y = vector["y"].get_f32();
-    let mut ret_val = 0.0;
+    let mut ret_val: i32;
+    let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);
+    let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
     if frame == 1.0 {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_catch"), 0.0, 1.0, false, 0.0, false, false);
         fun_7100010bc0(fighter);
         KineticModule::clear_speed_attr(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, vec_y);
-        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, (vec_x.clamp(0.0, 3.0))*lr, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, vec_x*lr);
+        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 3.0);
+        sv_kinetic_energy!(set_accel_x_add, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_accel_x_add);
+        sv_kinetic_energy!(set_accel_x_mul, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_accel_x_mul);
     }
     if frame <= 1.0 {
         ret_val = 0.into();
@@ -214,14 +219,23 @@ unsafe extern "C" fn armstrong_special_air_s_fall_main_status(fighter: &mut L2CF
 
 unsafe extern "C" fn armstrong_special_air_s_fall_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let lr = PostureModule::lr(fighter.module_accessor);
-    let stick_x = ControlModule::get_stick_x(fighter.module_accessor)*lr;
-    let mut speed_x = WorkModule::get_float(fighter.module_accessor, *FIGHTER_GANON_STATUS_WORK_ID_FLOAT_EXPLOSION_AIR_SPEED_X);
-    let accel = if stick_x.abs() < 0.2 {0.0} else {0.2*stick_x.abs()};
-    let influence = if stick_x.abs() < 0.2 {speed_x} else {3.0*stick_x.abs()};
-    WorkModule::set_float(fighter.module_accessor, influence, *FIGHTER_GANON_STATUS_WORK_ID_FLOAT_EXPLOSION_AIR_SPEED_X);
+    let stick_x = fighter.global_table[STICK_X].get_f32();
+    let speed_x = WorkModule::get_float(fighter.module_accessor, *FIGHTER_GANON_STATUS_WORK_ID_FLOAT_EXPLOSION_AIR_SPEED_X);
+    let speed_y = WorkModule::get_float(fighter.module_accessor, *FIGHTER_GANON_STATUS_WORK_ID_FLOAT_EXPLOSION_AIR_SPEED_Y);
+    let vector = fighter.Vector2__create(speed_x.into(), speed_y.into());
+    let vec_x = vector["x"].get_f32();
+    let air_accel_x_add = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_add"), 0);
+    let air_accel_x_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_x_mul"), 0);
+    if stick_x.abs() < 0.2 {
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0);
+    }
+    else {
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, (vec_x*stick_x)*lr);
+    }
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -5.0);
-    sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, accel);
-    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, influence, 0.0);
+    sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 3.0);
+    sv_kinetic_energy!(set_accel_x_add, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_accel_x_add);
+    sv_kinetic_energy!(set_accel_x_mul, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_accel_x_mul);
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_GANON_STATUS_KIND_SPECIAL_AIR_S_END.into(), false.into());
     }
@@ -303,7 +317,7 @@ unsafe extern "C" fn armstrong_special_hi_end_status(fighter: &mut L2CFighterCom
 }
 
 unsafe extern "C" fn armstrong_special_lw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let mut kinetic;
+    let kinetic;
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
         kinetic = *FIGHTER_KINETIC_TYPE_FALL;
     }

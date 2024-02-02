@@ -33,6 +33,26 @@ unsafe extern "C" fn ssbexo_mario_nair_effect(agent: &mut L2CAgentBase) {
     }
 }
 
+//Nair Sound
+unsafe extern "C" fn ssbexo_mario_nair_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_mario_rnd_attack"));
+    }
+}
+
+//Nair Expression
+unsafe extern "C" fn ssbexo_mario_nair_expression(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 3.0);
+    if macros::is_excute(agent) {
+        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+    }
+}
+
 //Fair ACMD
 unsafe extern "C" fn ssbexo_mario_fair_acmd(agent: &mut L2CAgentBase) {
     MotionModule::set_rate(agent.module_accessor, 1.333);
@@ -233,15 +253,15 @@ unsafe extern "C" fn ssbexo_mario_dair_sound(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_mario_dair_expression(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 9, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 6, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
-        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackss"), 7);
+        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackss"), 6);
     }
     frame(agent.lua_state_agent, 17.0);
     if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 8, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 5, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
     frame(agent.lua_state_agent, 28.0);
     if macros::is_excute(agent) {
@@ -261,6 +281,8 @@ pub fn install() {
     Agent::new("mario")
     .game_acmd("game_attackairn", ssbexo_mario_nair_acmd)
     .effect_acmd("effect_attackairn", ssbexo_mario_nair_effect)
+    .sound_acmd("sound_attackairn", ssbexo_mario_nair_sound)
+    .expression_acmd("expression_attackairn", ssbexo_mario_nair_expression)
     .game_acmd("game_attackairf", ssbexo_mario_fair_acmd)
     .effect_acmd("effect_attackairf", ssbexo_mario_fair_effect)
     .game_acmd("game_attackairb", ssbexo_mario_bair_acmd)

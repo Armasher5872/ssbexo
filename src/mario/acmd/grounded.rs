@@ -60,11 +60,43 @@ unsafe extern "C" fn ssbexo_mario_dash_attack_effect(agent: &mut L2CAgentBase) {
     }
 }
 
+//Dash Attack Sound
+unsafe extern "C" fn ssbexo_mario_dash_attack_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 3.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_mario_rnd_attack"));
+    }
+    frame(agent.lua_state_agent, 6.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_mario_attackdash"));
+    }
+}
+
+//Dash Attack Expression
+unsafe extern "C" fn ssbexo_mario_dash_attack_expression(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 6.0);
+    if macros::is_excute(agent) {
+        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 6, true);
+    }
+    frame(agent.lua_state_agent, 12.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_lands"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 40.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_lands"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 pub fn install() {
     Agent::new("mario")
     .game_acmd("game_attack11", ssbexo_mario_jab_1_acmd)
     .game_acmd("game_attackdash", ssbexo_mario_dash_attack_acmd)
     .effect_acmd("effect_attackdash", ssbexo_mario_dash_attack_effect)
+    .sound_acmd("sound_attackdash", ssbexo_mario_dash_attack_sound)
+    .expression_acmd("expression_attackdash", ssbexo_mario_dash_attack_expression)
     .install()
     ;
 }

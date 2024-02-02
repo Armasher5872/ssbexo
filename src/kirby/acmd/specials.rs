@@ -636,7 +636,7 @@ pub fn install() {
     .effect_acmd("effect_specialhi", ssbexo_kirby_grounded_up_special_1_effect)
     .effect_acmd("effect_specialairhi", ssbexo_kirby_aerial_up_special_1_effect)
     .game_acmd("game_specialhi2", ssbexo_kirby_grounded_up_special_2_acmd)
-    .game_acmd("game_specialairhi2", ssbexo_kirby_grounded_up_special_2_acmd)
+    .game_acmd("game_specialairhi2", ssbexo_kirby_aerial_up_special_2_acmd)
     .effect_acmd("effect_specialhi2", ssbexo_kirby_up_special_2_effect)
     .effect_acmd("effect_specialairhi2", ssbexo_kirby_up_special_2_effect)
     .game_acmd("game_specialhi3", ssbexo_kirby_up_special_3_acmd)

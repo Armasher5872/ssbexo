@@ -1,8 +1,12 @@
 use {
-    crate::functions::var::{
-        consts::*,
-        globals::*,
-        variables::*,
+    crate::functions::{
+        ext::*,
+        var::{
+            consts::*,
+            globals::*,
+            sonic::*,
+            variables::*,
+        },
     },
     smash::{
         app::{
@@ -20,8 +24,10 @@ use {
 
 mod acmd;
 mod opff;
+mod status;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
+    acmd::install();
+    opff::install();
+    status::install();
 }

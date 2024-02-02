@@ -92,5 +92,6 @@ pub const CHECK_ATTACK_LW4_UNIQ: i32 = 0x59;
 pub const SQUAT_COMMON_UNIQ: i32 = 0x5A;
 
 //Offsets
+pub static mut CONSTANT_OFFSET : usize = 0x3727390; //13.0.1
 pub static FLOAT_OFFSET: usize = 0x4e53C0; // 12.0.0
 pub static INT_OFFSET: usize = 0x4e5380; // 12.0.0

@@ -1,0 +1,1 @@
+pub static mut PFUSHIGISOU_IS_ACTIVE_BOMB: [bool; 8] = [false; 8];

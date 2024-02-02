@@ -36,7 +36,7 @@ struct ControlModuleInternal {
 
 //Prevention of Moves in Air (Credit to Chrispo)
 #[skyline::hook(replace = StatusModule::change_status_request_from_script)]
-pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
+unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 	if get_kind(boma) == *FIGHTER_KIND_PICHU
 	&& [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind)
@@ -63,7 +63,7 @@ pub unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccess
 
 //On Flag Hook (Credit to Chrispo)
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::on_flag)]
-pub unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c_int) -> () {
+unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c_int) -> () {
 	if boma.is_fighter() { 
 		if int == *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI {
 			let entry_id =  WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -84,15 +84,12 @@ pub unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, in
 	}
 }
 
-//Deals with DK's Barrels and CC
+//Deals with DK's Barrels, Gordo, and CC
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::change_status_request)]
-pub unsafe fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
+unsafe fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
 	let mut next_status = status_kind;
     let frame = MotionModule::frame(boma);
-    if (boma.is_fighter() && boma.is_status(*FIGHTER_STATUS_KIND_DAMAGE_AIR) && next_status == *FIGHTER_STATUS_KIND_LANDING && frame < 1.0) {
-        WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
-    }
-    else if (boma.is_weapon() && boma.kind() == *WEAPON_KIND_DEDEDE_GORDO) {
+    if (boma.is_weapon() && boma.kind() == *WEAPON_KIND_DEDEDE_GORDO) {
         if next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_ATTACK || next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_HOP {
             HitModule::set_no_team(boma, true);
         }
@@ -130,15 +127,16 @@ unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx) {
     LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
 }
 
-//Shield Module Send Shield Attack Collision Event, basically does the same thing as 0x46ae64, but on shield
+//Shield Module Send Shield Attack Collision Event, basically does the same thing as 0x46ae64, but on shield. Also dictates hard shield breaks
 #[skyline::hook(offset = 0x4c7060)]
 unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u64, opp_attack_module: *mut u64, collision: *mut u8, group_index: i32, raw_power: f32, real_power: f32, pos_x: f32, lr: f32) {
-    call_original!(shield_module, opp_attack_module, collision, group_index, raw_power, real_power, pos_x, lr);
-    let boma = *(shield_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let status_kind = StatusModule::status_kind(boma);
+    let defender_boma = *(shield_module as *mut *mut BattleObjectModuleAccessor).add(1);
+    let defender_status_kind = StatusModule::status_kind(defender_boma);
     let attacker_id = *(collision.add(0x24) as *const u32);
 	let attacker_battle_object = &mut *get_battle_object_from_id(attacker_id);
-    let shield_damage = WorkModule::get_int(attacker_battle_object.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
+    let attacker_boma = attacker_battle_object.module_accessor;
+    let shield_damage = WorkModule::get_int(attacker_boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
+    let motion_rate: f32;
     if !attacker_battle_object.is_fighter() && !attacker_battle_object.is_weapon() {
         return;
     }
@@ -150,21 +148,52 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
     LAST_ATTACK_HITBOX_LOCATION_X = loc_x;
     LAST_ATTACK_HITBOX_LOCATION_Y = loc_y;
     LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
-    if (real_power+shield_damage) >= 30.0 && [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD].contains(&status_kind) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FURAFURA, false);
+    if (real_power+shield_damage) >= 30.0 && [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD].contains(&defender_status_kind) {
+        StatusModule::change_status_request_from_script(defender_boma, *FIGHTER_STATUS_KIND_FURAFURA, false);
     }
-    println!("Real Power: {}", real_power);
+    if real_power == 0.0 {
+        motion_rate = 1.0;
+    } 
+    else {
+        motion_rate = (1.0-(0.02*real_power)).clamp(0.5, 1.0);
+    };
+    if defender_status_kind == *FIGHTER_STATUS_KIND_GUARD_OFF
+    && FighterUtil::is_valid_just_shield(defender_boma) {
+        WorkModule::set_float(attacker_boma, motion_rate, *FIGHTER_STATUS_WORK_ID_FLOAT_REBOUND_MOTION_RATE);
+        if attacker_battle_object.is_situation(*SITUATION_KIND_AIR) {
+            StatusModule::change_status_request_from_script(attacker_boma, *FIGHTER_STATUS_KIND_REBOUND_JUMP, false);
+        }
+        else {
+            StatusModule::change_status_request_from_script(attacker_boma, *FIGHTER_STATUS_KIND_REBOUND, false);
+        }
+    }
+    call_original!(shield_module, opp_attack_module, collision, group_index, raw_power, real_power, pos_x, lr);
 }
 
 //Attack Module Set Attack, makes it so random tripping doesn't happen if the move doesn't have a 100% trip chance (Credit to HDR)
 #[skyline::hook(offset = 0x3dc160)]
 unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut smash2::app::AttackData) {
     let boma = *(module as *mut *mut BattleObjectModuleAccessor).add(1);
+    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if data.slip < 1.0 {
         data.slip = -1.0;
     }
-    WorkModule::set_int(boma, data.sub_shield as i32, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
-    call_original!(module, id, group, data)
+    if (data.sub_shield as f32) < 0.0 || (data.sub_shield as f32) > 50.0 {
+        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
+    }
+    else {
+        WorkModule::set_int(boma, data.sub_shield as i32, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
+    }
+    if (*boma).is_item() && (*boma).kind() == *ITEM_KIND_DEKU && PFUSHIGISOU_IS_ACTIVE_BOMB[entry_id] {
+        data.power = 8.0;
+        data.r_eff = 100;
+        data.r_add = 20;
+        data.size = 8.0;
+        data.no_reaction_search = 0;
+        data.r_fix = 0;
+        data.attr = smash2::phx::Hash40::new("collision_attr_normal");
+    }
+    call_original!(module, id, group, data);
 }
 
 //Special Smash
@@ -183,7 +212,7 @@ unsafe fn is_valid_just_shield_replace(boma: &mut BattleObjectModuleAccessor) ->
 fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 	let original_string = unsafe {from_c_str(string)};
 	if original_string.contains("Ver.") {
-		let version_string = format!("{} | SSB:EXO (Beta) | Ver. 0.3.5 \0", original_string);
+		let version_string = format!("{} | SSB:EXO (Beta) | Ver. 0.3.6 \0", original_string);
 		call_original!(arg, c_str(&version_string));
 	}
 	else {
@@ -192,16 +221,15 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 }
 
 //(Credit to HDR)
-pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, situation: smash::app::SituationKind, arg3: i32, arg4: u32, ground_cliff_check_kind: smash::app::GroundCliffCheckKind, arg6: bool, arg7: i32, arg8: i32, arg9: i32, arg10: i32) -> u32 {
+pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, _situation: smash::app::SituationKind, _arg3: i32, arg4: u32, _ground_cliff_check_kind: smash::app::GroundCliffCheckKind, _arg6: bool, _arg7: i32, _arg8: i32, _arg9: i32, _arg10: i32) -> u32 {
 	/* "fix" forces GroundModule::correct to be called for the statuses we need */
     let mut fix = arg4;
     let fighter_kind = boma.kind();
     let status_kind = StatusModule::status_kind(boma);
 	if boma.is_fighter() && boma.is_situation(*SITUATION_KIND_GROUND) {
 		if [
-			*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_APPEAL, *FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_STATUS_KIND_SQUAT, *FIGHTER_STATUS_KIND_SQUAT_WAIT, *FIGHTER_STATUS_KIND_SQUAT_F, 
-			*FIGHTER_STATUS_KIND_SQUAT_B, *FIGHTER_STATUS_KIND_SQUAT_RV, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, 
-			*FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE, *FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_AIR_LASSO_LANDING
+			*FIGHTER_STATUS_KIND_SQUAT_WAIT, *FIGHTER_STATUS_KIND_SQUAT_F, *FIGHTER_STATUS_KIND_SQUAT_B, *FIGHTER_STATUS_KIND_SQUAT_RV, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, 
+            *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_LANDING_DAMAGE_LIGHT, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_AIR_LASSO_LANDING
 		].contains(&status_kind) {
 			fix = *GROUND_CORRECT_KIND_GROUND as u32;
 		}
@@ -373,7 +401,7 @@ unsafe fn gravity_replace(fighter_information: &mut smash::app::FighterInformati
 
 //Notify Log Event Collision Hit, dictates several things when you've hit the opponent
 #[skyline::hook(offset=0x67a790)]
-pub unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
+unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
 	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
 	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
 	let attacker_kind = smash::app::utility::get_kind(attacker_boma);
@@ -406,11 +434,11 @@ pub unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_obje
 }
 
 #[skyline::hook(replace=smash::app::lua_bind::WorkModule::get_int)]
-pub unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
+unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
 	let fighter_kind = smash::app::utility::get_kind(module_accessor);
 	if SPECIAL_SMASH_BODY == 3 
     && fighter_kind == *ITEM_KIND_SOCCERBALL {
-		let mut pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
+		let pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
 		if pos.x < camera_range().x + 10.0 
         || pos.x > camera_range().y - 10.0 
         || pos.y < camera_range().w + 10.0 { 
@@ -440,7 +468,7 @@ pub unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModu
 }
 
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term)]
-pub unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
+unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
 	let situation_kind = StatusModule::situation_kind(module_accessor);
 	let ret = original!()(module_accessor, term);
 	if smash::app::utility::get_category(module_accessor) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
@@ -1026,9 +1054,46 @@ unsafe fn get_article_use_type_mask(weapon_kind: i32, entry_id: i32) -> u8 {
 #[skyline::hook(offset = 0xf96310)]
 unsafe fn ptrainer_death_swap() {}
 
+//Permits parry reflecting
 #[skyline::hook(replace=FighterUtil::is_valid_just_shield_reflector)]
-unsafe fn is_valid_just_shield_reflector_hook(boma: &mut BattleObjectModuleAccessor) -> bool {
+unsafe fn is_valid_just_shield_reflector_hook(_boma: &mut BattleObjectModuleAccessor) -> bool {
     true.into()
+}
+
+//Disables Training Mode Reset from resetting music (Credit to HDR)
+#[skyline::from_offset(0x23ecb70)]
+unsafe fn music_function1(arg: u64);
+
+#[skyline::from_offset(0x23ed420)]
+unsafe fn music_function2(arg: u64, arg2: u64);
+
+#[skyline::hook(offset = 0x1509dc4, inline)]
+unsafe fn training_reset_music1(ctx: &skyline::hooks::InlineCtx) {
+    if !smash::app::smashball::is_training_mode() {
+        music_function1(*ctx.registers[0].x.as_ref());
+    }
+}
+
+#[skyline::hook(offset = 0x14f97bc, inline)]
+unsafe fn training_reset_music2(ctx: &skyline::hooks::InlineCtx) {
+    if !smash::app::smashball::is_training_mode() {
+        music_function2(*ctx.registers[0].x.as_ref(), *ctx.registers[1].x.as_ref());
+    }
+}
+
+//Credit to Claude
+#[skyline::hook(offset = CONSTANT_OFFSET)]
+unsafe fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u32) {
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_LUIGI_STATUS_KIND_NUM") {
+        value = 0x1F2;
+    }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIISWORDSMAN_STATUS_KIND_NUM") {
+        value = 0x1FF;
+    }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_SONIC_STATUS_KIND_NUM") {
+        value = 0x1F9;
+    }
+    original!()(unk,constant,value)
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
@@ -1046,6 +1111,9 @@ pub fn install() {
         //Resets projectile lifetime on parry, rather than using remaining lifetime
         skyline::patching::Patch::in_text(0x33bd358).nop();
         skyline::patching::Patch::in_text(0x33bd35c).data(0x2a0a03e1);
+        //Assists with training mode music reset change
+        skyline::patching::Patch::in_text(0x14f97bc).nop().unwrap();
+        skyline::patching::Patch::in_text(0x1509dc4).nop().unwrap();
     }
     skyline::install_hook!(change_status_hook);
     skyline::install_hook!(is_valid_just_shield_replace);
@@ -1056,6 +1124,7 @@ pub fn install() {
 	skyline::install_hook!(notify_log_event_collision_hit);
 	skyline::install_hook!(on_flag_hook);
     skyline::install_hook!(ptrainer_death_swap);
+    skyline::install_hook!(const_allot_hook);
 	skyline::install_hooks!(
         hit_module_handle_attack_event,
         shield_module_send_shield_attack_collision_event,
@@ -1084,7 +1153,9 @@ pub fn install() {
         set_team_hook,
         set_team_owner_id_hook,
         get_article_use_type_mask,
-        is_valid_just_shield_reflector_hook
+        is_valid_just_shield_reflector_hook,
+        training_reset_music1,
+        training_reset_music2
     );
 	skyline::nro::add_hook(nro_hook);
 }

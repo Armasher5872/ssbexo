@@ -1,138 +1,133 @@
 use super::*;
 
-/*   GRAB STATUS SCRIPTS   */
+/*   CATCH STATUS SCRIPTS   */
 
-unsafe extern "C" fn luigi_catch_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[PREV_STATUS_KIND].get_i32() == FIGHTER_STATUS_KIND_SPECIAL_LW {
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        HAS_CATCH[entry_id] = true;
-        StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-        FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
+unsafe extern "C" fn luigi_catch_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_end_Catch()
+}
+
+unsafe extern "C" fn luigi_catch_dash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_end_CatchDash()
+}
+
+unsafe extern "C" fn luigi_catch_turn_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_end_CatchTurn()
+}
+
+unsafe extern "C" fn luigi_catch_pull_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() == FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP {
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+        StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_MOTION, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, *FS_SUCCEEDS_KEEP_ATTACK_ABSOLUTE);
+        FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_ENABLE, false, true, false, 0, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE | 0) as u32, 0, 0);
         0.into()
     }
     else {
-        original_status(Pre, fighter, *FIGHTER_STATUS_KIND_CATCH)(fighter)
+        StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_MOTION, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, *FS_SUCCEEDS_KEEP_ATTACK_ABSOLUTE);
+        FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_ENABLE, false, true, false, 0, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE | 0) as u32, 0, 0);
+        0.into()
     }
-}
-
-unsafe extern "C" fn luigi_catch_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if HAS_CATCH[entry_id] {
-        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("catch"), false, -1.0);
-        ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 12.0);
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
-        fighter.sub_shift_status_main(L2CValue::Ptr(luigi_catch_loop as *const () as _))
-    }
-    else {
-        fighter.status_Catch()
-    }
-}
-
-unsafe extern "C" fn luigi_catch_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 12.0);
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_loop"), -1.0, 1.0, 0.0, false, false);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_loop"), -1.0, 1.0, 0.0, false, false);
-    }
-    if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
-    }
-    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_SHOOT.into(), false.into());
-    }
-    0.into()
-}
-
-unsafe extern "C" fn luigi_catch_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if HAS_CATCH[entry_id] {
-        let mut condition = false;
-        if fighter.global_table[STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_CATCH_PULL {
-            condition = false;
-        }
-        if condition {
-            let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-            ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
-            let battle_object = smash::app::sv_system::battle_object(fighter.lua_state_agent);
-            let instance = std::mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(battle_object);
-            delete_plunger(instance, false);
-        }
-    }
-    else {
-        fighter.status_end_Catch();
-    }
-    0.into()
 }
 
 unsafe extern "C" fn luigi_catch_pull_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_status_CatchPull as *const () as _))
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() == FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP {
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("catch_pull"), 0.0, 0.0, false, 0.0, false, false);
+        ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, *WEAPON_LUIGI_PLUNGER_STATUS_KIND_PULL, ArticleOperationTarget(0));
+        MotionAnimcmdModule::call_script_single(fighter.module_accessor, *FIGHTER_ANIMCMD_EFFECT, Hash40::new("effect_catchcommon"), -1);
+        fighter.status_CatchPull_common(hash40("catch_wait").into());
+        fighter.sub_shift_status_main(L2CValue::Ptr(luigi_catch_pull_loop as *const () as _))
+    }
+    else {
+        fighter.status_CatchPull()
+    }
+}
+
+unsafe extern "C" fn luigi_catch_pull_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() == FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP
+    && CancelModule::is_enable_cancel(fighter.module_accessor) {
+        let throw_f_status_kind = fighter.global_table[THROW_F_STATUS_KIND].get_i32();
+        fighter.change_status(throw_f_status_kind.into(), false.into());
+        return 1.into();
+    }
+    0.into()
 }
 
 unsafe extern "C" fn luigi_catch_pull_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let mut condition = false;
-    if HAS_CATCH[entry_id] {
-        let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-        if ![*FIGHTER_STATUS_KIND_THROW, *FIGHTER_STATUS_KIND_CATCH_WAIT, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_STATUS_KIND_CATCH_CUT].contains(&status_kind) {
-            if condition {
-                ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(0));
+    /*
+    let mut condition: bool = true;
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    let catch_motion_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_CATCH_WAIT_WORK_INT_MOTION_KIND);
+    */
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() == FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP {
+        /*
+        fighter.status_end_CatchPull();
+        if status_kind != *FIGHTER_STATUS_KIND_THROW {
+            if ![*FIGHTER_STATUS_KIND_CATCH_WAIT, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_STATUS_KIND_CATCH_CUT].contains(&status_kind) {
+                if condition {
+                    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(0));
+                }
+                ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(0));
             }
-            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(0));
+            else {
+                condition = false;
+            }
         }
         else {
-            let catch_motion_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_CATCH_WAIT_WORK_INT_MOTION_KIND);
             if ![hash40("throw_f"), hash40("throw_b"), hash40("throw_hi"), hash40("throw_lw"), hash40("catch_attack")].contains(&catch_motion_kind) {
                 return 0.into();
             }
+            condition = false;
         }
-        condition = false;
+        */
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+        0.into()
     }
     else {
-        fighter.status_end_CatchPull();
+        fighter.status_end_CatchPull()
     }
-    0.into()
+    //fighter.status_end_CatchPull()
 }
 
 unsafe extern "C" fn luigi_catch_dash_pull_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_status_CatchDashPull as *const () as _))
+    fighter.status_CatchDashPull()
 }
 
 unsafe extern "C" fn luigi_catch_dash_pull_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_CatchDashPull();
-    0.into()
+    fighter.status_end_CatchDashPull()
 }
 
 unsafe extern "C" fn luigi_catch_wait_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_CatchWait_common(L2CValue::Hash40(Hash40::new("catch_wait")))
+    fighter.status_CatchWait()
+}
+
+unsafe extern "C" fn luigi_catch_wait_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_end_CatchWait()
+}
+
+unsafe extern "C" fn luigi_catch_cut_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_end_CatchCut()
+}
+
+unsafe extern "C" fn luigi_catch_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_end_CatchAttack()
 }
 
 /*   THROW STATUS SCRIPTS   */
 
 unsafe extern "C" fn luigi_throw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if HAS_CATCH[entry_id] {
-        StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-        FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
+        StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_MOTION, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
+        FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, (*FIGHTER_LOG_MASK_FLAG_THROW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP) as u64, *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE as u32, *FIGHTER_POWER_UP_ATTACK_BIT_THROW as u32, 0);
         0.into()
     }
     else {
-        fighter.status_pre_Throw()
+        StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_MOTION, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLOAT, 0);
+        FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, (*FIGHTER_LOG_MASK_FLAG_THROW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP) as u64, *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE as u32, *FIGHTER_POWER_UP_ATTACK_BIT_THROW as u32, 0);
+        0.into()
     }
 }
 
 unsafe extern "C" fn luigi_throw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if HAS_CATCH[entry_id] {
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
         fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw_throw"), L2CValue::Hash40s("special_air_lw_throw"), false.into());
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("throw_f"), false, -1.0);
         fighter.sub_shift_status_main(L2CValue::Ptr(luigi_throw_loop as *const () as _))
@@ -178,16 +173,15 @@ unsafe extern "C" fn luigi_throw_loop(fighter: &mut L2CFighterCommon) -> L2CValu
 }
 
 unsafe extern "C" fn luigi_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_Throw();
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let battle_object = smash::app::sv_system::battle_object(fighter.lua_state_agent);
-    let instance = std::mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(battle_object);
+    let global_fighter = fighter.global_table[FIGHTER].get_ptr() as *mut Fighter;
     let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
+    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    fighter.status_end_Throw();
     ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    delete_plunger(instance, false);
-    HAS_CATCH[entry_id] = false;
+    delete_plunger(global_fighter, false);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     if LUIGI_CYCLONE_RNG[entry_id] > 1 {
         LUIGI_CYCLONE_RNG[entry_id] -= 2;
     }
@@ -538,7 +532,7 @@ unsafe extern "C" fn luigi_special_lw_loop(fighter: &mut L2CFighterCommon) -> L2
             fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_SHOOT.into(), false.into());
         }
         else {
-            fighter.change_status(FIGHTER_STATUS_KIND_CATCH.into(), false.into());
+            fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP.into(), false.into());
         }
         return 1.into();
     }
@@ -557,11 +551,72 @@ unsafe extern "C" fn luigi_special_lw_exit_status(_fighter: &mut L2CFighterCommo
     0.into()
 }
 
+//New Down B Status Kind, deals with the looping portion
+
+unsafe extern "C" fn luigi_special_lw_loop_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_CATCH as u64, 0, 0, 0);
+    0.into()
+}
+
+unsafe extern "C" fn luigi_special_lw_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("catch"), false, -1.0);
+    ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 12.0);
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
+    fighter.sub_shift_status_main(L2CValue::Ptr(luigi_special_lw_loop_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn luigi_special_lw_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 12.0);
+    if situation_kind == *SITUATION_KIND_GROUND
+    && prev_situation_kind == *SITUATION_KIND_AIR {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_loop"), -1.0, 1.0, 0.0, false, false);
+    }
+    if situation_kind == *SITUATION_KIND_AIR
+    && prev_situation_kind == *SITUATION_KIND_GROUND {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_loop"), -1.0, 1.0, 0.0, false, false);
+    }
+    if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
+    }
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_SHOOT.into(), false.into());
+    }
+    0.into()
+}
+
+unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    /*
+    let mut deleter_status_check: bool = true;
+    let mut remover_status_check: bool = true;
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    fighter.status_end_Catch();
+    if status_kind == *FIGHTER_STATUS_KIND_CATCH_PULL {
+        remover_status_check = false;
+        deleter_status_check = false;
+    }
+    if remover_status_check {
+        let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
+        ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
+    }
+    if deleter_status_check {
+        let global_fighter = fighter.global_table[FIGHTER].get_ptr() as *mut Fighter;
+        delete_plunger(global_fighter, false);
+    }
+    */
+    0.into()
+}
+
 //New Down B Status Kind, deals with the projectile
 
 unsafe extern "C" fn luigi_special_lw_shoot_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    HAS_CATCH[entry_id] = false;
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
     0.into()
@@ -611,23 +666,20 @@ unsafe extern "C" fn luigi_special_lw_shoot_loop(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn luigi_special_lw_shoot_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let battle_object = smash::app::sv_system::battle_object(fighter.lua_state_agent);
-    let instance = std::mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(battle_object);
+    let global_fighter = fighter.global_table[FIGHTER].get_ptr() as *mut Fighter;
     let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
     ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    delete_plunger(instance, false);
-    HAS_CATCH[entry_id] = false;
+    delete_plunger(global_fighter, false);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     0.into()
 }
 
 //New Down B Status Kind, deals with the end of the move
 
 unsafe extern "C" fn luigi_special_lw_end_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    HAS_CATCH[entry_id] = false;
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
     0.into()
@@ -675,28 +727,30 @@ unsafe extern "C" fn luigi_special_lw_end_loop(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn luigi_special_lw_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let battle_object = smash::app::sv_system::battle_object(fighter.lua_state_agent);
-    let instance = std::mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(battle_object);
+    let global_fighter = fighter.global_table[FIGHTER].get_ptr() as *mut Fighter;
     let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
     ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    delete_plunger(instance, false);
-    HAS_CATCH[entry_id] = false;
+    delete_plunger(global_fighter, false);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     0.into()
 }
 
 pub fn install() {
     Agent::new("luigi")
-    .status(Pre, *FIGHTER_STATUS_KIND_CATCH, luigi_catch_pre_status)
-    .status(Main, *FIGHTER_STATUS_KIND_CATCH, luigi_catch_main_status)
     .status(End, *FIGHTER_STATUS_KIND_CATCH, luigi_catch_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_CATCH_DASH, luigi_catch_dash_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_CATCH_TURN, luigi_catch_turn_end_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_CATCH_PULL, luigi_catch_pull_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_CATCH_PULL, luigi_catch_pull_main_status)
     .status(End, *FIGHTER_STATUS_KIND_CATCH_PULL, luigi_catch_pull_end_status)
-    .status(Main, *FIGHTER_STATUS_KIND_CATCH_DASH_PULL, luigi_catch_pull_main_status)
-    .status(End, *FIGHTER_STATUS_KIND_CATCH_DASH_PULL, luigi_catch_pull_end_status)
+    .status(Main, *FIGHTER_STATUS_KIND_CATCH_DASH_PULL, luigi_catch_dash_pull_main_status)
+    .status(End, *FIGHTER_STATUS_KIND_CATCH_DASH_PULL, luigi_catch_dash_pull_end_status)
     .status(Main, *FIGHTER_STATUS_KIND_CATCH_WAIT, luigi_catch_wait_main_status)
+    .status(End, *FIGHTER_STATUS_KIND_CATCH_WAIT, luigi_catch_wait_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_CATCH_CUT, luigi_catch_cut_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_CATCH_ATTACK, luigi_catch_attack_end_status)
     .status(Pre, *FIGHTER_STATUS_KIND_THROW, luigi_throw_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_THROW, luigi_throw_main_status)
     .status(End, *FIGHTER_STATUS_KIND_THROW, luigi_throw_end_status)
@@ -736,11 +790,15 @@ pub fn install() {
     .status(Exec, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_WALL, luigi_special_s_wall_exec_status)
     .status(End, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_WALL, luigi_special_s_wall_end_status)
     .status(Exit, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_WALL, luigi_special_s_wall_exit_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, luigi_special_lw_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_LW, luigi_special_lw_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, luigi_special_lw_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_LW, luigi_special_lw_exec_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_LW, luigi_special_lw_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_LW, luigi_special_lw_exit_status)
+    .status(Pre, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_pre_status)
+    .status(Main, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_main_status)
+    .status(End, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_end_status)
     .status(Pre, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_SHOOT, luigi_special_lw_shoot_pre_status)
     .status(Main, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_SHOOT, luigi_special_lw_shoot_main_status)
     .status(End, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_SHOOT, luigi_special_lw_shoot_end_status)

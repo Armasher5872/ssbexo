@@ -1,5 +1,6 @@
 pub mod aerial;
 pub mod attack;
+mod capture;
 mod catch;
 mod damage;
 mod escape;
@@ -9,10 +10,12 @@ mod item;
 mod jump;
 mod landing;
 mod special;
+//mod squat;
 
 pub fn install() {
     aerial::install();
     attack::install();
+    capture::install();
     catch::install();
     damage::install();
     escape::install();
@@ -22,4 +25,5 @@ pub fn install() {
     jump::install();
     landing::install();
     special::install();
+    //squat::install();
 }

@@ -5,10 +5,14 @@ use {
             consts::*,
             globals::*,
             samusd::*,
+            variables::*,
         }
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            sv_information
+        },
         hash40,
         lib::{
             L2CValue,

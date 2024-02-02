@@ -4,6 +4,7 @@ use {
         var::{
             consts::*,
             globals::*,
+            sonic::*,
         }
     },
     smash::{

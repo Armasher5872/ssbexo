@@ -28,9 +28,13 @@ use {
 mod appeal;
 pub mod dash;
 mod run;
+mod turn;
+mod wait;
 
 pub fn install() {
     appeal::install();
     dash::install();
     run::install();
+    turn::install();
+    wait::install();
 }

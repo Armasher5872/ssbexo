@@ -40,12 +40,10 @@ mod airturn;
 mod breverse;
 mod customgamemodes;
 mod misc;
-mod specialafterinfliction;
 
 pub fn install() {
     airturn::install();
     breverse::install();
     customgamemodes::install();
     misc::install();
-    specialafterinfliction::install();
 }

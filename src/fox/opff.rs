@@ -2,7 +2,6 @@ use super::*;
 
 unsafe extern "C" fn fox_frame(fighter: &mut L2CFighterCommon) {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    let motion_kind = MotionModule::motion_kind(boma);
     let stick_y = ControlModule::get_stick_y(boma);
     let frame = MotionModule::frame(boma);
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();

@@ -104,6 +104,21 @@ unsafe extern "C" fn ssbexo_sonic_win_2_effect(agent: &mut L2CAgentBase) {
 //Win 2 Wait Effect
 unsafe extern "C" fn ssbexo_sonic_win_2_wait_effect(_agent: &mut L2CAgentBase) {}
 
+//Jab 1 Effect
+unsafe extern "C" fn ssbexo_sonic_jab_1_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        macros::FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_line"), Hash40::new("sys_attack_line"), Hash40::new("top"), 1, 7.8, -2, 0, 0, 0, 0.9, true, *EF_FLIP_YZ);
+        macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.05, 0.07);
+    }
+    frame(agent.lua_state_agent, 3.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 13, 7.5, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 360, false);
+        macros::LAST_EFFECT_SET_ALPHA(agent, 0.7);
+    }
+}
+
 //Jab 2 ACMD
 unsafe extern "C" fn ssbexo_sonic_jab_2_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
@@ -120,14 +135,24 @@ unsafe extern "C" fn ssbexo_sonic_jab_2_acmd(agent: &mut L2CAgentBase) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
         AttackModule::clear_all(agent.module_accessor);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
     }
-    frame(agent.lua_state_agent, 10.0);
+}
+
+//Jab 2 Effect
+unsafe extern "C" fn ssbexo_sonic_jab_2_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+        macros::FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_line"), Hash40::new("sys_attack_line"), Hash40::new("top"), 1, 7.5, 0, 0, 0, 0, 0.9, true, *EF_FLIP_YZ);
+        macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.05, 0.07);
+    }
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 13, 7.5, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 360, false);
+        macros::LAST_EFFECT_SET_ALPHA(agent, 0.7);
     }
 }
 
@@ -141,6 +166,7 @@ unsafe extern "C" fn ssbexo_sonic_rapid_jab_acmd(agent: &mut L2CAgentBase) {
         wait(agent.lua_state_agent, 1.0);
         if macros::is_excute(agent) {
             AttackModule::clear_all(agent.module_accessor);
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK);
         }
         wait(agent.lua_state_agent, 1.0);
     }
@@ -158,8 +184,34 @@ unsafe extern "C" fn ssbexo_sonic_rapid_jab_effect(agent: &mut L2CAgentBase) {
     }
 }
 
-//Rapid Jab Sound
-unsafe extern "C" fn ssbexo_sonic_rapid_jab_sound(agent: &mut L2CAgentBase) {}
+//Rapid Jab Finisher
+unsafe extern "C" fn ssbexo_sonic_rapid_jab_finisher_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 4.0);
+    if macros::is_excute(agent) {
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 361, 110, 0, 50, 2.6, 0.0, 7.2, 2.2, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 4.0, 361, 110, 0, 50, 2.6, 0.0, 8.0, 6.8, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 2, 0, Hash40::new("top"), 4.0, 361, 110, 0, 50, 3.6, 0.0, 8.5, 13.0, Some(0.0), Some(7.5), Some(13.0), 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+    }
+    wait(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        AttackModule::clear_all(agent.module_accessor);
+    }
+}
+
+//Jab 3 Effect
+unsafe extern "C" fn ssbexo_sonic_jab_3_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 3.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_line"), Hash40::new("sys_attack_line"), Hash40::new("top"), -1.7, 6.5, -2, -10, 7, 0, 1, true, *EF_FLIP_YZ);
+        macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.05, 0.07);
+    }
+    frame(agent.lua_state_agent, 4.0);
+    if macros::is_excute(agent) {
+        macros::FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 13, 8.5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 360, false);
+        macros::LAST_EFFECT_SET_ALPHA(agent, 0.7);
+    }
+}
 
 //Dash Attack ACMD
 unsafe extern "C" fn ssbexo_sonic_dash_attack_acmd(agent: &mut L2CAgentBase) {
@@ -217,10 +269,13 @@ pub fn install() {
     Agent::new("sonic")
     .effect_acmd("effect_win2", ssbexo_sonic_win_2_effect)
     .effect_acmd("effect_win2wait", ssbexo_sonic_win_2_wait_effect)
+    .effect_acmd("effect_attack11", ssbexo_sonic_jab_1_effect)
     .game_acmd("game_attack12", ssbexo_sonic_jab_2_acmd)
+    .effect_acmd("effect_attack12", ssbexo_sonic_jab_2_effect)
     .game_acmd("game_attack100", ssbexo_sonic_rapid_jab_acmd)
     .effect_acmd("effect_attack100", ssbexo_sonic_rapid_jab_effect)
-    .sound_acmd("sound_attack100", ssbexo_sonic_rapid_jab_sound)
+    .game_acmd("game_attack100end", ssbexo_sonic_rapid_jab_finisher_acmd)
+    .effect_acmd("effect_attack13", ssbexo_sonic_jab_3_effect)
     .game_acmd("game_attackdash", ssbexo_sonic_dash_attack_acmd)
     .effect_acmd("effect_attackdash", ssbexo_sonic_dash_attack_effect)
     .install()

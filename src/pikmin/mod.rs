@@ -9,7 +9,9 @@ use {
 };
 
 mod opff;
+mod status;
 
 pub fn install() {
   opff::install();
+  status::install();
 }

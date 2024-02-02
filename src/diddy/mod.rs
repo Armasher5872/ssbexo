@@ -1,7 +1,9 @@
 use {
   crate::functions::var::{
+    consts::*,
     globals::*,
     diddy::*,
+    variables::*,
   },
   smash::{
     app::{

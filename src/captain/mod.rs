@@ -8,7 +8,10 @@ use {
         }
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            sv_information
+        },
         hash40,
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon,
@@ -20,8 +23,10 @@ use {
 
 mod acmd;
 mod opff;
+mod status;
 
 pub fn install() {
     acmd::install();
     opff::install();
+    status::install();
 }

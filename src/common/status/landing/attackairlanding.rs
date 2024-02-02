@@ -5,9 +5,8 @@ unsafe fn sub_landing_attack_air_init(fighter: &mut L2CFighterCommon, aerial_mot
     let mot = aerial_motion_kind.get_int();
     let mut motion_rate: f32 = 1.0;
     let mut landing_lag = WorkModule::get_param_float(fighter.module_accessor, aerial_landing_lag.get_int(), 0)+kind.get_f32();
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_LAG_REDUCTION) {
-        landing_lag -= 3.0;
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_LAG_REDUCTION);
+    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE) {
+        landing_lag = landing_lag*1.5;
     }
     if landing_lag != 0.0 {
         motion_rate = fighter.sub_get_landing_motion_rate(mot.into(), landing_lag.into()).get_f32();

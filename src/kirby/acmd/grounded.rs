@@ -205,6 +205,7 @@ pub fn install() {
     .game_acmd("game_attack11", ssbexo_kirby_jab_1_acmd)
     .game_acmd("game_attack12", ssbexo_kirby_jab_2_acmd)
     .effect_acmd("effect_attack100end", ssbexo_kirby_rapid_jab_finisher_effect)
+    .game_acmd("game_attackdash", ssbexo_kirby_dash_attack_acmd)
     .game_acmd("game_attackairdash", ssbexo_kirby_aerial_dash_attack_acmd)
     .effect_acmd("effect_attackairdash", ssbexo_kirby_aerial_dash_attack_effect)
     .sound_acmd("sound_attackairdash", ssbexo_kirby_aerial_dash_attack_sound)

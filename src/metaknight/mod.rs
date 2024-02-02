@@ -5,6 +5,7 @@ use {
             consts::*,
             globals::*,
             metaknight::*,
+            variables::*,
         }
     },
     smash::{
@@ -21,11 +22,7 @@ use {
             L2CFighterCommon,
             *
         },
-        phx::{
-            Hash40,
-            Vector2f,
-            Vector3f
-        }
+        phx::Hash40
     },
     smash_script::*,
     smashline::*,

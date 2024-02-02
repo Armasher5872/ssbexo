@@ -4,7 +4,7 @@
     repr_simd, 
     simd_ffi
 )]
-#![allow(dead_code, non_snake_case, non_upper_case_globals, unused_assignments, unused_macros, unused_must_use, unused_mut, unused_parens, unused_unsafe, unused_variables)]
+#![allow(dead_code, non_snake_case, non_upper_case_globals, unused_assignments, unused_must_use, unused_mut, unused_parens, unused_variables, unused_unsafe)]
 
 mod armstrong;
 mod bayonetta;
@@ -54,6 +54,7 @@ mod mewtwo;
 mod miifighter;
 mod miigunner;
 mod miiswordsman;
+mod murabito;
 mod nana;
 mod ness;
 mod packun;
@@ -82,6 +83,7 @@ mod ryu;
 mod samus;
 mod samusd;
 mod sheik;
+mod shizue;
 mod shulk;
 mod simon;
 mod snake;
@@ -97,7 +99,7 @@ mod yoshi;
 mod younglink;
 mod zelda;
 
-#[skyline::main(name = "plugin")]
+#[skyline::main(name = "ssbexo")]
 pub fn main() {
     armstrong::install();
     bayonetta::install();
@@ -147,6 +149,7 @@ pub fn main() {
     miifighter::install();
     miigunner::install();
     miiswordsman::install();
+    murabito::install();
     nana::install();
     ness::install();
     packun::install();
@@ -175,6 +178,7 @@ pub fn main() {
     samus::install();
     samusd::install();
     sheik::install();
+    shizue::install();
     shulk::install();
     simon::install();
     snake::install();

@@ -1,8 +1,5 @@
 use {
-    crate::functions::var::{
-        globals::*,
-        variables::*,
-    },
+    crate::functions::var::globals::*,
     smash::{
         app::{
             lua_bind::{
@@ -27,12 +24,10 @@ use {
 
 mod catch;
 mod catchdash;
-mod catchpull;
 mod catchturn;
 
 pub fn install() {
     catch::install();
     catchdash::install();
-    catchpull::install();
     catchturn::install();
 }

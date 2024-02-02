@@ -1,10 +1,17 @@
 use {
-    crate::functions::var::{
-        consts::*,
-        globals::*,
+    crate::functions::{
+        ext::*,
+        var::{
+            consts::*,
+            globals::*,
+            littlemac::*,
+        }
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         hash40,
         lib::{
             L2CValue,
@@ -22,13 +29,25 @@ use {
     smash_script::*,
 };
 
+mod damage;
+mod damageair;
+mod damagefly;
 mod damagelanding;
+mod damagesleep;
+mod damagesleepfall;
+mod damagesong;
 mod furafura;
 mod saving;
 mod shieldbreakfly;
 
 pub fn install() {
+    damage::install();
+    damageair::install();
+    damagefly::install();
     damagelanding::install();
+    damagesleep::install();
+    damagesleepfall::install();
+    damagesong::install();
     furafura::install();
     saving::install();
     shieldbreakfly::install();

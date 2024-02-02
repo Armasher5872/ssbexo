@@ -48,7 +48,7 @@ unsafe extern "C" fn glidestart_main_sub(fighter: &mut L2CFighterCommon) -> L2CV
     0.into()
 }
 
-pub unsafe extern "C" fn status_glidestart_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+pub unsafe extern "C" fn status_glidestart_end(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -119,7 +119,6 @@ unsafe extern "C" fn glide_main_sub(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 unsafe extern "C" fn status_glide_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     let lr = PostureModule::lr(fighter.module_accessor);
-    let energy_stop = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
     let mut angle = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_GLIDE_WORK_FLOAT_ANGLE);
     let mut angle_speed = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_GLIDE_WORK_FLOAT_ANGLE_SPEED);
     let mut stick_angle = ControlModule::get_stick_angle(fighter.module_accessor);
@@ -242,8 +241,8 @@ unsafe extern "C" fn status_glide_exec(fighter: &mut L2CFighterCommon) -> L2CVal
         fighter.clear_lua_stack();
         lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
         let limit = sv_kinetic_energy::get_limit_speed_x(fighter.pop_lua_stack(0).into());
-        let mut brake_speed = Vector2f {x: brake * lr, y: brake};
-        let mut limit_speed = Vector2f {x: limit * lr, y: limit};
+        let brake_speed = Vector2f {x: brake * lr, y: brake};
+        let limit_speed = Vector2f {x: limit * lr, y: limit};
         sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, brake_speed.x, brake_speed.y);
         sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, limit_speed.x, limit_speed.y);
         let end_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("param_glide"), hash40("end_speed"));
@@ -271,7 +270,7 @@ unsafe fn bind_address_call_status_end_glide(fighter: &mut L2CFighterCommon, _ag
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_end_Glide)]
-unsafe fn status_glide_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe fn status_glide_end(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

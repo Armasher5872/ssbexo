@@ -3,10 +3,18 @@ use {
     crate::functions::{
         ext::*,
         var::{
+            armstrong::*,
             consts::*,
             donkey::*,
             globals::*,
+            kirby::*,
+            luigi::*,
             metaknight::*,
+            miiswordsman::*,
+            pfushigisou::*,
+            pikachu::*,
+            samusd::*,
+            sonic::*,
             variables::*,
         },
         util::*,
@@ -42,7 +50,6 @@ use {
             StageManager,
             sv_animcmd,
             sv_battle_object,
-            sv_information,
             utility::*,
         },
         hash40,
@@ -70,6 +77,7 @@ use {
         nn::ro::LookupSymbol
     },
     std::{
+        ffi::CStr,
         os::raw::{
             c_char,
             c_int

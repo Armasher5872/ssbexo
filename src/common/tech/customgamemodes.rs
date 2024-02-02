@@ -321,7 +321,7 @@ unsafe fn status_kind_damage(_fighter: &mut L2CFighterCommon, module_accessor: &
 	if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FALL, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_TREAD_DAMAGE].contains(&status_kind) {
 		if status_kind != *FIGHTER_STATUS_KIND_TREAD_DAMAGE {
             //Fast Fall during Tumble
-			if [*FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FALL].contains(&status_kind) {
+			if [*FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FALL].contains(&status_kind) {
 				if WorkModule::is_enable_transition_term(module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR) {
 					if (ControlModule::get_command_flag_cat(module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0
                     && (ControlModule::get_stick_y(module_accessor) < -0.66) 
@@ -346,7 +346,7 @@ unsafe fn status_kind_damage(_fighter: &mut L2CFighterCommon, module_accessor: &
 	}
 }
 
-unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon, fighter_information: &mut app::FighterInformation) {
+unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon) {
 	let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
 	let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut smash::app::FighterManager);
 	let fighter_information = FighterManager::get_fighter_information(fighter_manager, app::FighterEntryID(entry_id));
@@ -529,7 +529,7 @@ unsafe extern "C" fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
 				}
 			}
 		}
-		special_mode(module_accessor, fighter_kind, status_kind, fighter, fighter_information);
+		special_mode(module_accessor, fighter_kind, status_kind, fighter);
 		status_kind_damage(fighter, module_accessor, status_kind, &mut globals);
 	}
 }

@@ -188,7 +188,6 @@ unsafe extern "C" fn ssbexo_armstrong_up_tilt_expression(agent: &mut L2CAgentBas
 
 //Down Tilt ACMD
 unsafe extern "C" fn ssbexo_armstrong_down_tilt_acmd(agent: &mut L2CAgentBase) {
-    let armor_multiplier = WorkModule::get_float(agent.module_accessor, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
     if macros::is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 4.5);
         DamageModule::set_reaction_mul(agent.module_accessor, 0.85);
