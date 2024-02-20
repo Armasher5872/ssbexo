@@ -18,6 +18,32 @@ unsafe extern "C" fn ssbexo_luigi_grab_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
+//Standing Grab Effect
+unsafe extern "C" fn ssbexo_luigi_grab_effect(_agent: &mut L2CAgentBase) {}
+
+//Standing Grab Sound
+unsafe extern "C" fn ssbexo_luigi_grab_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 6.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_swing_05"));
+    }
+    wait(agent.lua_state_agent, 4.0);
+    if macros::is_excute(agent) {
+        macros::STOP_SE(agent, Hash40::new("se_common_swing_05"));
+    }
+}
+
+//Standing Grab Expression
+unsafe extern "C" fn ssbexo_luigi_grab_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(agent.lua_state_agent, 5.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 //Dash Grab ACMD
 unsafe extern "C" fn ssbexo_luigi_dash_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
@@ -36,6 +62,34 @@ unsafe extern "C" fn ssbexo_luigi_dash_grab_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
+//Dash Grab Sound
+unsafe extern "C" fn ssbexo_luigi_dash_grab_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 7.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_swing_05"));
+    }
+    frame(agent.lua_state_agent, 11.0);
+    if macros::is_excute(agent) {
+        macros::STOP_SE(agent, Hash40::new("se_common_swing_05"));
+        macros::PLAY_SE(agent, Hash40::new("se_luigi_step_right_m"));
+    }
+    frame(agent.lua_state_agent, 18.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_luigi_step_left_m"));
+    }
+}
+
+//Dash Grab Expression
+unsafe extern "C" fn ssbexo_luigi_dash_grab_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(agent.lua_state_agent, 7.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 //Pivot Grab ACMD
 unsafe extern "C" fn ssbexo_luigi_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
@@ -51,6 +105,29 @@ unsafe extern "C" fn ssbexo_luigi_pivot_grab_acmd(agent: &mut L2CAgentBase) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(agent.module_accessor, false);
+    }
+}
+
+//Pivot Grab Sound
+unsafe extern "C" fn ssbexo_luigi_pivot_grab_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_swing_05"));
+    }
+    wait(agent.lua_state_agent, 4.0);
+    if macros::is_excute(agent) {
+        macros::STOP_SE(agent, Hash40::new("se_common_swing_05"));
+    }
+}
+
+//Pivot Grab Expression
+unsafe extern "C" fn ssbexo_luigi_pivot_grab_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
@@ -233,7 +310,7 @@ unsafe extern "C" fn ssbexo_luigi_back_throw_sound(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_luigi_special_l01"));
     }
-    wait(agent.lua_state_agent, 35.0);
+    wait(agent.lua_state_agent, 25.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_luigi_special_l02"));
         macros::PLAY_SE(agent, Hash40::new("vc_luigi_006"));
@@ -352,8 +429,15 @@ unsafe extern "C" fn ssbexo_luigi_down_throw_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("luigi")
     .game_acmd("game_catch", ssbexo_luigi_grab_acmd)
+    .effect_acmd("effect_catch", ssbexo_luigi_grab_effect)
+    .sound_acmd("sound_catch", ssbexo_luigi_grab_sound)
+    .expression_acmd("expression_catch", ssbexo_luigi_grab_expression)
     .game_acmd("game_catchdash", ssbexo_luigi_dash_grab_acmd)
+    .sound_acmd("sound_catchdash", ssbexo_luigi_dash_grab_sound)
+    .expression_acmd("expression_catchdash", ssbexo_luigi_dash_grab_expression)
     .game_acmd("game_catchturn", ssbexo_luigi_pivot_grab_acmd)
+    .sound_acmd("sound_catchturn", ssbexo_luigi_pivot_grab_sound)
+    .expression_acmd("expression_catchturn", ssbexo_luigi_pivot_grab_expression)
     .game_acmd("game_catchattack", ssbexo_luigi_pummel_acmd)
     .effect_acmd("effect_catchattack", ssbexo_luigi_pummel_effect)
     .expression_acmd("expression_catchattack", ssbexo_luigi_pummel_expression)

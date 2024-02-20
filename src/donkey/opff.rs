@@ -41,6 +41,7 @@ unsafe extern "C" fn donkey_frame(fighter: &mut L2CFighterCommon) {
         WorkModule::set_flag(boma, false, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
         fighter.gimmick_flash();
     }
+    println!("Has Catch: {}", WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH));
 }
 
 unsafe extern "C" fn donkey_init(fighter: &mut L2CFighterCommon) {

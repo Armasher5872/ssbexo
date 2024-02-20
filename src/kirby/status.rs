@@ -674,6 +674,24 @@ unsafe extern "C" fn fun_710022a090(fighter: &mut L2CFighterCommon) -> bool {
     false.into()
 }
 
+unsafe extern "C" fn kirby_link_special_n_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let bow_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_BOW_ARTICLE_ID);
+    ArticleModule::change_status_exist(fighter.module_accessor, bow_id, *WN_LINK_BOW_STATUS_KIND_BACK);
+    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
+        if ArticleModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+            let item_id = ArticleModule::get_int(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+            let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
+            LinkModule::remove_model_constraint(item_boma, true);
+            if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
+                LinkModule::unlink_all(item_boma);
+                StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
+            }
+        }
+    }
+    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, ArticleOperationTarget(0));
+    0.into()
+}
+
 pub fn install() {
     Agent::new("kirby")
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, kirby_special_s_pre_status)
@@ -716,6 +734,7 @@ pub fn install() {
     .status(Pre, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, kirby_special_hi_2_pre_status)
     .status(Main, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_HI2, kirby_special_hi_2_main_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, kirby_special_lw_main_status)
+    .status(Exit, *FIGHTER_KIRBY_STATUS_KIND_LINK_SPECIAL_N, kirby_link_special_n_exit_status)
     .install()
     ;
 }

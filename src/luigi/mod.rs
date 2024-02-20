@@ -3,7 +3,6 @@ use {
     ext::*,
     var::{
       consts::*,
-      globals::*,
       luigi::*,
       variables::*,
     }
@@ -14,15 +13,9 @@ use {
       *
     },
     hash40,
-    lib::{
-      L2CValue,
-      lua_const::*,
-    },
+    lib::lua_const::*,
     lua2cpp::*,
-    phx::{
-      Hash40,
-      Vector2f
-    }
+    phx::Hash40
   },
   smashline::*,
 };

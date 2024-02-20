@@ -1,9 +1,5 @@
 use super::*;
 
-unsafe extern "C" fn luigi_frame(fighter: &mut L2CFighterCommon) {
-    println!("Has Catch: {}", WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH));
-}
-
 unsafe extern "C" fn luigi_init(fighter: &mut L2CFighterCommon) {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -65,7 +61,6 @@ unsafe extern "C" fn luigi_init(fighter: &mut L2CFighterCommon) {
 pub fn install() {
     Agent::new("luigi")
     .on_start(luigi_init)
-    .on_line(Main, luigi_frame)
     .install()
     ;
 }

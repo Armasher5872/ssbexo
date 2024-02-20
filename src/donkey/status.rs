@@ -30,11 +30,9 @@ unsafe extern "C" fn donkey_air_lasso_loop(fighter: &mut L2CFighterCommon) -> L2
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         WorkModule::set_float(fighter.module_accessor, 15.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         return 1.into();
     }
@@ -60,28 +58,19 @@ unsafe extern "C" fn donkey_catch_pull_pre_status(fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn donkey_catch_pull_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_AIR_LASSO {
-        sv_kinetic_energy!(clear_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION);
-        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, ENERGY_MOTION_RESET_TYPE_AIR_TRANS, 0.0, 0.0, 0.0, 0.0, 0.0);
-    }
     fighter.status_CatchPull_common(hash40("catch_wait").into());
     fighter.sub_shift_status_main(L2CValue::Ptr(donkey_catch_pull_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn donkey_catch_pull_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_AIR_LASSO {
-        fighter.change_status(FIGHTER_DONKEY_STATUS_KIND_SHOULDER_START.into(), false.into());
+        let throw_hi_status_kind = fighter.global_table[THROW_HI_STATUS_KIND].get_i32();
+        fighter.change_status(throw_hi_status_kind.into(), false.into());
         1.into()
     }
     else {
         fighter.status_CatchPull_Main()
     }
-}
-
-unsafe extern "C" fn donkey_catch_wait_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_MOTION, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, *FS_SUCCEEDS_KEEP_ATTACK_ABSOLUTE);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, 0, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, 0, 0);
-    0.into()
 }
 
 /*   CARGO THROW STATUS SCRIPTS   */
@@ -382,7 +371,6 @@ pub fn install() {
     .status(End, *FIGHTER_STATUS_KIND_AIR_LASSO, donkey_air_lasso_end_status)
     .status(Pre, *FIGHTER_STATUS_KIND_CATCH_PULL, donkey_catch_pull_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_CATCH_PULL, donkey_catch_pull_main_status)
-    .status(Pre, *FIGHTER_STATUS_KIND_CATCH_WAIT, donkey_catch_wait_pre_status)
     .status(Pre, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_START, donkey_shoulder_start_pre_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, donkey_special_n_pre_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, donkey_special_s_pre_status)

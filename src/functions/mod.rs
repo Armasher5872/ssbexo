@@ -2,15 +2,18 @@ use {
     bitflags::bitflags,
     crate::functions::{
         ext::*,
+        hook::*,
         var::{
             armstrong::*,
             consts::*,
             donkey::*,
             globals::*,
             kirby::*,
+            link::*,
             luigi::*,
             metaknight::*,
             miiswordsman::*,
+            murabito::*,
             pfushigisou::*,
             pikachu::*,
             samusd::*,

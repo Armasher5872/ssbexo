@@ -284,7 +284,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    Agent::new("common")
+    Agent::new("fighter")
     .status(Pre, *FIGHTER_STATUS_KIND_GLIDE_START, status_glidestart_pre)
     .status(Init, *FIGHTER_STATUS_KIND_GLIDE_START, status_glidestart_init)
     .status(Main, *FIGHTER_STATUS_KIND_GLIDE_START, status_glidestart_main)

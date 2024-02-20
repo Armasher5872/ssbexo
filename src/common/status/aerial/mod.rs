@@ -1,8 +1,3 @@
-#![allow(
-    non_snake_case,
-    unused_macros
-)]
-
 use {
     crate::functions::var::globals::*,
     smash::{
@@ -34,8 +29,10 @@ use {
     std::f32::consts::PI
 };
 
+mod airlasso;
 pub mod gliding;
 
 pub fn install() {
+    airlasso::install();
     gliding::install();
 }

@@ -5,6 +5,7 @@ use {
       consts::*,
       globals::*,
       kirby::*,
+      link::*,
       samusd::*,
       variables::*,
     },

@@ -41,7 +41,7 @@ pub unsafe extern "C" fn ko_meter_update(vtable: u64, battle_object: *mut Battle
 	let smashes = [*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4];
     //Removes critical zoom if meter isn't full
     if boma.is_status(*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2)
-    && meter != 100.0 {
+    && meter < 100.0 {
         EffectModule::req_on_joint(boma, Hash40::new("sys_hit_normal_l"), Hash40::new("handr"), &NONE_VECTOR, &NONE_VECTOR, 0.8, &NONE_VECTOR, &NONE_VECTOR, false, 0, 0, 0);
         return 1;
     }

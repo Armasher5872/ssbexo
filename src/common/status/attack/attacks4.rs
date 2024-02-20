@@ -12,17 +12,8 @@ unsafe fn status_attacks4hold_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[skyline::hook(replace = L2CFighterCommon_status_end_AttackS4)]
 unsafe fn status_end_attacks4(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    let fighter_kind = smash::app::utility::get_kind(boma);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
-    if fighter_kind == *FIGHTER_KIND_NESS {
-        ModelModule::set_mesh_visibility(boma, Hash40::new("ness_eye"), true);
-        ModelModule::set_mesh_visibility(boma, Hash40::new("ness_facen"), true);
-        ModelModule::set_mesh_visibility(boma, Hash40::new("ness_head"), true);
-        ModelModule::set_mesh_visibility(boma, Hash40::new("ness_patterna"), false);
-        macros::EFFECT_OFF_KIND(fighter, Hash40::new("ness_black_face"), false, false);
-        ColorBlendModule::cancel_main_color(boma, 0);
-    }
     0.into()
 }
 

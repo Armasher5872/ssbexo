@@ -212,7 +212,7 @@ unsafe fn is_valid_just_shield_replace(boma: &mut BattleObjectModuleAccessor) ->
 fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 	let original_string = unsafe {from_c_str(string)};
 	if original_string.contains("Ver.") {
-		let version_string = format!("{} | SSB:EXO (Beta) | Ver. 0.3.6 \0", original_string);
+		let version_string = format!("{} / SSB:EXO (Beta) | Ver. 0.3.6 \0", original_string);
 		call_original!(arg, c_str(&version_string));
 	}
 	else {
@@ -336,50 +336,54 @@ unsafe fn get_ground_correct_kind_air_trans_hook(_boma: &mut smash::app::BattleO
 #[skyline::hook(replace = sv_animcmd::ATTACK)]
 unsafe fn attack_replace(lua_state: u64) {
     let mut l2c_agent = L2CAgent::new(lua_state);
-    let hitbox_params: Vec<L2CValue> = (0..36).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
-	l2c_agent.clear_lua_stack();
-	for i in 0..36 {
-		if i == 4 && SPECIAL_SMASH_STATUS == 1 {
-			if i < 362 {
-				let positive_angle = i+180;
-				let negative_angle = i-180;
-				if i < 180 {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle as u64));
-				}
-				else {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle as u64));
-				}
-			}
-		}
-		else {
-			l2c_agent.push_lua_stack(&mut hitbox_params[i as usize].clone());
-		}
-	}
+    if SPECIAL_SMASH_STATUS == 1 {
+        let mut hitbox_params: Vec<L2CValue> = (0..36).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
+        l2c_agent.clear_lua_stack();
+        for (i, x) in hitbox_params.iter_mut().enumerate().take(36) {
+            if i == 4 {
+                if i < 362 {
+                    let positive_angle = (i+180) as f32;
+                    let negative_angle = (i-180) as f32;
+                    if i < 180 {
+                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(positive_angle));
+                    }
+                    else {
+                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(negative_angle));
+                    }
+                }
+            }
+            else {
+                l2c_agent.push_lua_stack(x);
+            }
+        }
+    }
 	original!()(lua_state);
 }
 
 #[skyline::hook(replace = sv_animcmd::ATTACK_ABS)]
 unsafe fn attack_abs_replace(lua_state: u64) {
     let mut l2c_agent = L2CAgent::new(lua_state);
-    let hitbox_params: Vec<L2CValue> = (0..15).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
-	l2c_agent.clear_lua_stack();
-	for i in 0..15 {
-		if i == 3 && SPECIAL_SMASH_STATUS == 1 {
-			if i < 362 {
-				let positive_angle = i+(180 as u64);
-				let negative_angle = i-(180 as u64);
-				if i < 180 {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(positive_angle));
-				}
-				else {
-					l2c_agent.push_lua_stack(&mut L2CValue::new_int(negative_angle));
-				}
-			}
-		}
-		else {
-			l2c_agent.push_lua_stack(&mut hitbox_params[i as usize].clone());
-		}
-	}
+    if SPECIAL_SMASH_STATUS == 1 {
+        let mut hitbox_params: Vec<L2CValue> = (0..15).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
+        l2c_agent.clear_lua_stack();
+        for (i, x) in hitbox_params.iter_mut().enumerate().take(15) {
+            if i == 3 {
+                if i < 362 {
+                    let positive_angle = (i+180) as f32;
+                    let negative_angle = (i-180) as f32;
+                    if i < 180 {
+                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(positive_angle));
+                    }
+                    else {
+                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(negative_angle));
+                    }
+                }
+            }
+            else {
+                l2c_agent.push_lua_stack(x);
+            }
+        }
+    }
     original!()(lua_state);
 }
 
@@ -1085,7 +1089,7 @@ unsafe fn training_reset_music2(ctx: &skyline::hooks::InlineCtx) {
 #[skyline::hook(offset = CONSTANT_OFFSET)]
 unsafe fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u32) {
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_LUIGI_STATUS_KIND_NUM") {
-        value = 0x1F2;
+        value = 0x1F3;
     }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIISWORDSMAN_STATUS_KIND_NUM") {
         value = 0x1FF;
@@ -1094,6 +1098,30 @@ unsafe fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u
         value = 0x1F9;
     }
     original!()(unk,constant,value)
+}
+
+#[skyline::hook(offset = 0x15daea0)]
+pub unsafe fn create_item(item_manager: *mut smash::app::ItemManager, create_item_param: *mut CreateItemParam, unk: bool, unk2: bool, unk3: bool) -> *mut BattleObject {
+    if (*create_item_param).variation_kind > 7 {
+        (*create_item_param).variation_kind = 0;
+    }
+    original!()(item_manager, create_item_param, unk, unk2, unk3)
+}
+
+#[skyline::hook(replace=FighterUtil::is_valid_auto_catch_item)]
+pub unsafe fn is_valid_auto_catch_item_hook(module_accessor: &mut BattleObjectModuleAccessor, is_possible: bool) -> bool {
+    let fighter_kind = smash::app::utility::get_kind(module_accessor);
+    if fighter_kind == *FIGHTER_KIND_LINK {
+        if WorkModule::is_flag(module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM) {
+            return true;
+        }
+        else {
+            original!()(module_accessor, is_possible)
+        }
+    }
+    else {
+        original!()(module_accessor, is_possible)
+    }
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
@@ -1155,7 +1183,9 @@ pub fn install() {
         get_article_use_type_mask,
         is_valid_just_shield_reflector_hook,
         training_reset_music1,
-        training_reset_music2
+        training_reset_music2,
+        create_item,
+        is_valid_auto_catch_item_hook
     );
-	skyline::nro::add_hook(nro_hook);
+	skyline::nro::add_hook(nro_hook).unwrap();
 }

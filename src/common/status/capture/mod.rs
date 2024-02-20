@@ -4,7 +4,10 @@ use {
         littlemac::*,
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         lib::{
             L2CValue,
             lua_const::*,

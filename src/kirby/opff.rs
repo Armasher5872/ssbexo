@@ -30,6 +30,22 @@ unsafe extern "C" fn kirby_frame(fighter: &mut L2CFighterCommon) {
     if ![*FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK].contains(&status_kind) {
         macros::STOP_SE(fighter, Hash40::new("se_kirby_attack100"));
     }
+    if status_kind == *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_LOOP {
+        let obj_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_STATUS_SPECIAL_N_WORK_INT_INHALE_OBJECT_ID) as u32;
+        let obj_boma = smash::app::sv_battle_object::module_accessor(obj_id);
+        let obj_kind = smash::app::utility::get_kind(&mut *obj_boma);
+        let item_id = if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
+            WorkModule::get_int64(obj_boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
+        }
+        else if obj_kind == *WEAPON_KIND_LINK_BOOMERANG {
+            WorkModule::get_int64(obj_boma, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
+        }
+        else {
+            *BATTLE_OBJECT_ID_INVALID as u32
+        };
+        let item_manager = *(singletons::ItemManager() as *mut *mut smash::app::ItemManager);
+        smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, item_id);
+    }
     if ![*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK].contains(&status_kind) {
         WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
         WorkModule::set_flag(boma, false, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
@@ -264,7 +280,8 @@ unsafe extern "C" fn kirby_frame(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn kirby_init(fighter: &mut L2CFighterCommon) {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let team_no = TeamModule::team_no(boma) as i32;
     //Universal
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -322,6 +339,7 @@ unsafe extern "C" fn kirby_init(fighter: &mut L2CFighterCommon) {
     WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
     WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+    WorkModule::set_int(boma, team_no, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_TEAM_NO);
 }
 
 pub fn install() {

@@ -5,6 +5,7 @@ use {
         var::{
             consts::*,
             globals::*,
+            link::*,
         }
     },
     smash::{

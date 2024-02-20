@@ -164,6 +164,12 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
             }
         }
     }
+    //Link Dash Attack Bound
+    if fighter_kind == *FIGHTER_KIND_LINK {
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+            fighter.change_status(FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND.into(), false.into());
+        }
+    }
     //Samus Dash Attack Canceled Up Tilt/DACDS
     if fighter_kind == *FIGHTER_KIND_SAMUS {
         if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) && frame <= 9.0 {
