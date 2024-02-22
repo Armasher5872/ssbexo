@@ -129,6 +129,7 @@ https://sites.google.com/view/super-smash-bros-exo-data/home
 Credits to:
 
 Chrispo, for many code edits
+Claude, for the TOTK Fusion Ability
 Ayerbe, for certain things from Championship Edition
 WuBoy, for various code tips
 Stabb, for a few balance tweaks
