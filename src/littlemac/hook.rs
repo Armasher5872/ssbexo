@@ -18,10 +18,12 @@ pub struct CollisionLog {
 }
 
 //Updates Battle UI
+//13.0.2 Offset: Currently Unknown
 #[skyline::from_offset(0x068cd80)]
 pub unsafe fn update_battle_ui(fighter_data: *const u64, param_2: u32);
 
 //Little Mac KO Meter Update
+//13.0.2 Offset: 0xc456a0
 #[skyline::hook(offset = 0xc45680)]
 pub unsafe extern "C" fn ko_meter_update(vtable: u64, battle_object: *mut BattleObject, collision_log: CollisionLog, damage: f32) -> u64 {
     let boma = (&mut *(battle_object)).boma();

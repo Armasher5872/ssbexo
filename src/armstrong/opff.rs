@@ -7,7 +7,7 @@ unsafe extern "C" fn armstrong_frame(fighter: &mut L2CFighterCommon) {
     //Charge Mechanics
     if [
         hash40("attack_s3_s"), hash40("attack_s3_hi"), hash40("attack_s3_lw"), hash40("attack_hi3"), hash40("attack_lw3"), hash40("attack_air_f"), hash40("attack_air_b"), hash40("attack_air_hi"), 
-        hash40("attack_air_lw"), hash40("special_s_start"), hash40("special_air_s_start"), hash40("special_hi_catch"), hash40("special_hi_throw")
+        hash40("attack_air_lw"), hash40("special_s_start"), hash40("special_air_s_start"), hash40("special_hi_catch"), hash40("special_hi_throw"), hash40("special_lw"), hash40("special_air_lw")
     ].contains(&motion_kind) {
         let armor_multiplier = WorkModule::get_float(boma, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
         let damage_multiplier = WorkModule::get_float(boma, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
@@ -17,6 +17,7 @@ unsafe extern "C" fn armstrong_frame(fighter: &mut L2CFighterCommon) {
         let charge_start = WorkModule::get_float(boma, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
         let charge_end = WorkModule::get_float(boma, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
         let max_charge: f32 = 20.0;
+        println!("Charge Frame: {}", charge_frames);
         match motion_kind {
             _ if [hash40("attack_s3_s"), hash40("attack_s3_hi"), hash40("attack_s3_lw"), hash40("attack_lw3")].contains(&motion_kind) => {
                 WorkModule::set_float(boma, 3.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
@@ -26,7 +27,7 @@ unsafe extern "C" fn armstrong_frame(fighter: &mut L2CFighterCommon) {
                 WorkModule::set_float(boma, 12.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
                 WorkModule::set_float(boma, 20.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
             }
-            _ if motion_kind == hash40("attack_air_f") => {
+            _ if [hash40("attack_air_f"), hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind) => {
                 WorkModule::set_float(boma, 5.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
                 WorkModule::set_float(boma, 12.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
             }
@@ -87,12 +88,15 @@ unsafe extern "C" fn armstrong_frame(fighter: &mut L2CFighterCommon) {
                     _ if motion_kind == hash40("special_hi_throw") => {
                         motion_rate = 1.0;
                     }
+                    _ if [hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind) => {
+                        motion_rate = 0.045*(charge_frames as f32);
+                    }
                     _ => {}
                 }
                 MotionModule::set_rate(boma, motion_rate);
                 WorkModule::set_float(boma, 1.0+((1.0/14.0)*(charge_frames as f32)), FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
                 WorkModule::set_float(boma, 1.0+(0.02*(charge_frames as f32)), FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
-                if motion_kind == hash40("special_s_start") {
+                if [hash40("special_s_start"), hash40("special_lw")].contains(&motion_kind) {
                     DamageModule::set_reaction_mul(boma, 0.85/armor_multiplier);
                     fighter.clear_lua_stack();
                     lua_args!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, (9.0*armor_multiplier));
@@ -107,16 +111,12 @@ unsafe extern "C" fn armstrong_frame(fighter: &mut L2CFighterCommon) {
             }
             MotionModule::set_rate(boma, 1.0);
         }
-        println!("Damage Multiplier: {}", damage_multiplier);
     }
     else {
         WorkModule::set_int(boma, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
         WorkModule::set_float(boma, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
         WorkModule::set_float(boma, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     }
-    println!("Charge Frame: {}", WorkModule::get_int(boma, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME));
-    println!("Chokehold X: {}", WorkModule::get_float(boma, *FIGHTER_GANON_STATUS_WORK_ID_FLOAT_EXPLOSION_AIR_SPEED_X));
-    println!("Chokehold Y: {}", WorkModule::get_float(boma, *FIGHTER_GANON_STATUS_WORK_ID_FLOAT_EXPLOSION_AIR_SPEED_Y));
 }
 
 unsafe extern "C" fn armstrong_init(fighter: &mut L2CFighterCommon) {

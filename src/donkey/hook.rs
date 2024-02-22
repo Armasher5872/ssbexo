@@ -1,6 +1,7 @@
 use super::*;
 
 //Link Event for Donkey Kong
+//13.0.2 Offset: 0x993ee0
 #[skyline::hook(offset = 0x993ec0)]
 unsafe extern "C" fn donkey_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
     let boma = fighter.battle_object.module_accessor;
