@@ -20,5 +20,6 @@ pub mod pfushigisou;
 pub mod pikachu;
 pub mod rosetta;
 pub mod samusd;
+pub mod sheik;
 pub mod sonic;
 pub mod variables;

@@ -289,7 +289,7 @@ pub trait BomaExt {
     unsafe fn is_item(&mut self) -> bool;
     unsafe fn status(&mut self) -> i32;
     unsafe fn magic_series(&mut self) -> i32;
-    unsafe fn get_grabbed_opponent_boma(&mut self) -> &mut BattleObjectModuleAccessor;
+    unsafe fn get_grabber_boma(&mut self) -> &mut BattleObjectModuleAccessor;
 }
 
 impl BomaExt for BattleObjectModuleAccessor {
@@ -1644,8 +1644,8 @@ impl BomaExt for BattleObjectModuleAccessor {
         }
         return 0;
     }
-    unsafe fn get_grabbed_opponent_boma(&mut self) -> &mut BattleObjectModuleAccessor {
-        let opponent_id = LinkModule::get_node_object_id(self, *LINK_NO_CAPTURE) as u32;
+    unsafe fn get_grabber_boma(&mut self) -> &mut BattleObjectModuleAccessor {
+        let opponent_id = LinkModule::get_parent_object_id(self, *LINK_NO_CAPTURE) as u32;
         let opponent_object = super::util::get_battle_object_from_id(opponent_id);
         &mut *(*opponent_object).module_accessor
     }
@@ -2382,7 +2382,9 @@ pub unsafe extern "C" fn ac_common(fighter: &mut L2CFighterCommon) {
                 WorkModule::get_int(owner_boma, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE)
             };
             WorkModule::set_int(fighter.module_accessor, fused_item, FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
-            smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, item_id);
+            if sv_battle_object::is_active(item_id) {
+                smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, item_id);
+            }
         }
         else if obj_kind == *WEAPON_KIND_LINK_BOOMERANG {
             let item_id = WorkModule::get_int(obj_boma, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
@@ -2397,7 +2399,9 @@ pub unsafe extern "C" fn ac_common(fighter: &mut L2CFighterCommon) {
                 WorkModule::get_int(owner_boma, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE)
             };
             WorkModule::set_int(fighter.module_accessor, fused_item, FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
-            smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager,item_id);
+            if sv_battle_object::is_active(item_id) {
+                smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, item_id);
+            }
         }
     }
     if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOOMERANG) {
@@ -2406,5 +2410,18 @@ pub unsafe extern "C" fn ac_common(fighter: &mut L2CFighterCommon) {
         if smash::app::sv_battle_object::is_active(boomerang_fuse_item_id) && StatusModule::status_kind(item_boma) == *ITEM_STATUS_KIND_HAVE {
             smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, boomerang_fuse_item_id);
         }
+    }
+}
+
+pub unsafe extern "C" fn find_ascendable_ground(boma: *mut BattleObjectModuleAccessor, pos_x: f32, min_pos_y: f32, pos_y: f32, height: f32) -> f32 {
+    let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
+    if GroundModule::ray_check_hit_pos(boma, &smash::phx::Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: -100.0}, ground_hit_pos, true) {
+        if ground_hit_pos.y < min_pos_y {
+            return pos_y;
+        }
+        return find_ascendable_ground(boma, pos_x, min_pos_y, ground_hit_pos.y-height, height);
+    }
+    else {
+        return pos_y;
     }
 }

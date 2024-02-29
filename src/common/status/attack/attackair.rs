@@ -10,7 +10,8 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
         let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
         let frame = fighter.global_table[CURRENT_FRAME].get_f32();
         let motion_kind = MotionModule::motion_kind(boma);
-        let stick_x = fighter.global_table[STICK_X].get_f32() * PostureModule::lr(boma);
+        let lr = PostureModule::lr(boma);
+        let stick_x = fighter.global_table[STICK_X].get_f32()*lr;
         let mut pos = Vector3f {x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma), z: PostureModule::pos_z(boma)}; // get current pos
         if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_PASS {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) != true {
@@ -21,21 +22,35 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
                 PostureModule::set_pos(boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
             }
         }
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) 
+        && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
             WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
         }
-        //Angleable Dair
-        if fighter_kind == *FIGHTER_KIND_METAKNIGHT && motion_kind == hash40("attack_air_lw") && frame < 7.0 {
+        //Sheik Dair Bounce
+        if fighter_kind == *FIGHTER_KIND_SHEIK 
+        && motion_kind == hash40("attack_air_lw")
+        && (AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD))
+        && WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE) {
+            let get_sum_speed_x = PostureModule::lr(boma)*KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            fighter.clear_lua_stack();
+            lua_args!(fighter, get_sum_speed_x, 2.35, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            sv_animcmd::SET_SPEED_EX(fighter.lua_state_agent);
+            WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        }
+        //Angleable Metaknight Dair
+        if fighter_kind == *FIGHTER_KIND_METAKNIGHT 
+        && motion_kind == hash40("attack_air_lw") 
+        && frame < 7.0 {
             if stick_x > 0.5 {
-                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("attack_air_lw_diagonal_r"), -1.0, 1.0, 0.0, false, false);
+                MotionModule::change_motion_inherit_frame(boma, Hash40::new("attack_air_lw_diagonal_r"), -1.0, 1.0, 0.0, false, false);
             }
             if stick_x < -0.5 {
-                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("attack_air_lw_diagonal_l"), -1.0, 1.0, 0.0, false, false);
+                MotionModule::change_motion_inherit_frame(boma, Hash40::new("attack_air_lw_diagonal_l"), -1.0, 1.0, 0.0, false, false);
             }
         }
         /* END OF NEW ADDITIONS */
-        if !CancelModule::is_enable_cancel(fighter.module_accessor) {
-            if MotionModule::is_end(fighter.module_accessor) {
+        if !CancelModule::is_enable_cancel(boma) {
+            if MotionModule::is_end(boma) {
                 WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
@@ -46,7 +61,7 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
                 if fighter.sub_air_check_fall_common().get_bool() {
                     return true.into();
                 }
-                if !MotionModule::is_end(fighter.module_accessor) {
+                if !MotionModule::is_end(boma) {
                     return false.into();
                 }
                 WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);

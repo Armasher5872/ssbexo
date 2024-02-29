@@ -18,13 +18,11 @@ pub struct CollisionLog {
 }
 
 //Updates Battle UI
-//13.0.2 Offset: Currently Unknown
-#[skyline::from_offset(0x068cd80)]
+#[skyline::from_offset(0x068cda0)]
 pub unsafe fn update_battle_ui(fighter_data: *const u64, param_2: u32);
 
 //Little Mac KO Meter Update
-//13.0.2 Offset: 0xc456a0
-#[skyline::hook(offset = 0xc45680)]
+#[skyline::hook(offset = 0xc456a0)]
 pub unsafe extern "C" fn ko_meter_update(vtable: u64, battle_object: *mut BattleObject, collision_log: CollisionLog, damage: f32) -> u64 {
     let boma = (&mut *(battle_object)).boma();
     let opponent_boma = &mut *(sv_battle_object::module_accessor(collision_log.opponent_battle_object_id));
@@ -43,7 +41,7 @@ pub unsafe extern "C" fn ko_meter_update(vtable: u64, battle_object: *mut Battle
 	let smashes = [*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4];
     //Removes critical zoom if meter isn't full
     if boma.is_status(*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2)
-    && meter < 100.0 {
+    && meter != 100.0 {
         EffectModule::req_on_joint(boma, Hash40::new("sys_hit_normal_l"), Hash40::new("handr"), &NONE_VECTOR, &NONE_VECTOR, 0.8, &NONE_VECTOR, &NONE_VECTOR, false, 0, 0, 0);
         return 1;
     }

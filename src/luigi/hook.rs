@@ -1,13 +1,11 @@
 use super::*;
 
 //Fixes issues regarding Grab
-//13.0.2 Offset: 0xca1510
-#[skyline::hook(offset = 0xca14f0)]
+#[skyline::hook(offset = 0xca1510)]
 unsafe extern "C" fn luigi_change_motion_callback(_vtable: u64, _fighter: &mut Fighter, _some_struct: u64) {}
 
 //Link Event for Luigi
-//13.0.2 Offset: 0xca0e70
-#[skyline::hook(offset = 0xca0e50)]
+#[skyline::hook(offset = 0xca0e70)]
 unsafe extern "C" fn luigi_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if event.link_event_kind.0 == hash40("capture") {

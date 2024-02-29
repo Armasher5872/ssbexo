@@ -88,5 +88,8 @@ pub unsafe extern "C" fn flip_air(fighter : &mut L2CFighterCommon) {
 }
 
 pub fn install() {
-	smashline::api::install_line_callback(None, StatusLine::Main, flip_air as _);
+	Agent::new("fighter")
+	.on_line(Main, flip_air)
+	.install()
+	;
 }

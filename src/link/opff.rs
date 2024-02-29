@@ -1,11 +1,6 @@
 use super::*;
 
 unsafe extern "C" fn link_frame(fighter: &mut L2CFighterCommon) {
-    //Demo
-    let fighter_manager = *(singletons::FighterManager() as *mut *mut smash::app::FighterManager);
-    if smash::app::lua_bind::FighterManager::is_result_mode(fighter_manager) {
-        ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("link_ken"), true);
-    }
     //Boomerang
     if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOOMERANG) {
         if WorkModule::is_flag(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM) {
@@ -29,14 +24,14 @@ unsafe extern "C" fn link_frame(fighter: &mut L2CFighterCommon) {
                 }
             }
         }
-        if ItemModule::is_have_item(fighter.module_accessor,0) {
+        if ItemModule::is_have_item(fighter.module_accessor, 0) {
             WorkModule::off_flag(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM);
         }
     }
     //Bomb
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_BOMB_FUSED) {
         let item_id = WorkModule::get_int(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-        if !smash::app::sv_battle_object::is_active(item_id) {
+        if !sv_battle_object::is_active(item_id) {
             ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("link_ken"), true);
             WorkModule::off_flag(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_BOMB_FUSED);
         }
@@ -147,7 +142,37 @@ unsafe extern "C" fn link_init(fighter: &mut L2CFighterCommon) {
     //Link
     WorkModule::set_flag(boma, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
     WorkModule::set_flag(boma, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL);
+    WorkModule::set_flag(boma, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM);
+    WorkModule::set_flag(boma, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_BOMB_FUSED);
+    WorkModule::set_flag(boma, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
+    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, FIGHTER_LINK_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
     WorkModule::set_int(boma, team_no, FIGHTER_LINK_INSTANCE_WORK_ID_INT_TEAM_NO);
+    WorkModule::set_int(boma, *ITEM_KIND_NONE, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
+    WorkModule::set_int(boma, *ITEM_KIND_NONE, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
+    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE_ID);
+    WorkModule::set_int(boma, 0, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
+    WorkModule::set_float(boma, 0.0, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_START_Y);
+    WorkModule::set_float(boma, 0.0, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+}
+
+unsafe extern "C" fn link_bowarrow_init(weapon: &mut L2CFighterBase) {
+    let boma = smash::app::sv_system::battle_object_module_accessor(weapon.lua_state_agent);
+    WorkModule::set_int(boma, *ITEM_KIND_NONE, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
+    WorkModule::set_int(boma, 0, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
+    WorkModule::set_int(boma, 0, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+    WorkModule::set_flag(boma, false, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
+    WorkModule::set_flag(boma, false, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT);
+    WorkModule::set_flag(boma, false, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_DEDEDE_SWALLOW);
+}
+
+unsafe extern "C" fn link_boomerang_init(weapon: &mut L2CFighterBase) {
+    let boma = smash::app::sv_system::battle_object_module_accessor(weapon.lua_state_agent);
+    WorkModule::set_int(boma, *ITEM_KIND_NONE, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
+    WorkModule::set_int(boma, 0, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+    WorkModule::set_flag(boma, false, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
+    WorkModule::set_flag(boma, false, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT);
 }
 
 pub fn install() {
@@ -157,10 +182,12 @@ pub fn install() {
     .install()
     ;
     Agent::new("link_bowarrow")
+    .on_start(link_bowarrow_init)
     .on_line(Main, link_bowarrow_frame)
     .install()
     ;
     Agent::new("link_boomerang")
+    .on_start(link_boomerang_init)
     .on_line(Main, link_boomerang_frame)
     .install()
     ;

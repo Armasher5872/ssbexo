@@ -12,7 +12,12 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::*,
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector2f,
+            Vector3f,
+            Vector4f
+        }
     },
     smash_script::*,
     smashline::*,
@@ -20,6 +25,7 @@ use {
 
 mod aerials;
 mod grounded;
+mod misc;
 mod smashes;
 mod specials;
 mod throws;
@@ -28,6 +34,7 @@ mod tilts;
 pub fn install() {
     aerials::install();
     grounded::install();
+    misc::install();
     smashes::install();
     specials::install();
     throws::install();

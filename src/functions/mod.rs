@@ -6,17 +6,21 @@ use {
         var::{
             armstrong::*,
             consts::*,
+            dedede::*,
             donkey::*,
             globals::*,
             kirby::*,
             link::*,
+            littlemac::*,
             luigi::*,
             metaknight::*,
             miiswordsman::*,
             murabito::*,
             pfushigisou::*,
             pikachu::*,
+            rosetta::*,
             samusd::*,
+            sheik::*,
             sonic::*,
             variables::*,
         },
@@ -67,6 +71,7 @@ use {
         },
         phx::{
             Hash40,
+            Vector2f,
             Vector3f,
             Vector4f
         }

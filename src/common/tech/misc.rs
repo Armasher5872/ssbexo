@@ -125,5 +125,8 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install() {
-    smashline::api::install_line_callback(None, StatusLine::Main, all_frame as _);
+    Agent::new("fighter")
+	.on_line(Main, all_frame)
+	.install()
+	;
 }

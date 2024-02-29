@@ -24,7 +24,11 @@ use {
       L2CFighterCommon,
       *
     },
-    phx::Vector3f
+    phx::{
+      Vector2f,
+      Vector3f,
+      Vector4f
+    }
   },
   smash_script::*,
   smashline::*,

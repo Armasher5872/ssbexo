@@ -108,8 +108,7 @@ unsafe fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAc
 }
 
 //Hit Module Handle Attack Event, determines where you hit and with what hitbox id
-//13.0.2 Offset: 0x46ae84
-#[skyline::hook(offset = 0x46ae64, inline)]
+#[skyline::hook(offset = 0x46ae84, inline)]
 unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx) {
     let data = *ctx.registers[1].x.as_ref() as *mut u32;
     let attacker_id = *data;
@@ -129,8 +128,7 @@ unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx) {
 }
 
 //Shield Module Send Shield Attack Collision Event, basically does the same thing as 0x46ae64, but on shield. Also dictates hard shield breaks
-//13.0.2 Offset: 0x4c7080
-#[skyline::hook(offset = 0x4c7060)]
+#[skyline::hook(offset = 0x4c7080)]
 unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u64, opp_attack_module: *mut u64, collision: *mut u8, group_index: i32, raw_power: f32, real_power: f32, pos_x: f32, lr: f32) {
     let defender_boma = *(shield_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let defender_status_kind = StatusModule::status_kind(defender_boma);
@@ -173,8 +171,7 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
 }
 
 //Attack Module Set Attack, makes it so random tripping doesn't happen if the move doesn't have a 100% trip chance (Credit to HDR)
-//13.0.2 Offset: 0x3dc180
-#[skyline::hook(offset = 0x3dc160)]
+#[skyline::hook(offset = 0x3dc180)]
 unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut smash2::app::AttackData) {
     let boma = *(module as *mut *mut BattleObjectModuleAccessor).add(1);
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -407,8 +404,7 @@ unsafe fn gravity_replace(fighter_information: &mut smash::app::FighterInformati
 }
 
 //Notify Log Event Collision Hit, dictates several things when you've hit the opponent
-//13.0.2 Offset: 0x67a7b0
-#[skyline::hook(offset=0x67a790)]
+#[skyline::hook(offset=0x67a7b0)]
 unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
 	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
 	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
@@ -497,8 +493,7 @@ unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app::Ba
 	return ret;
 }
 
-//13.0.2 Offset: 0x1D39FE0
-#[skyline::hook(offset = 0x1d39500)]
+#[skyline::hook(offset = 0x1D39FE0)]
 unsafe fn get_button_label_by_operation_kind(hashed_string: &mut HashedString, operation: u8, arg: bool) {
     if operation == crate::functions::ext::InputKind::JumpMini as u8 {
         for (index, byte) in "mnu_opt_btn_key_short_hop\0".as_bytes().iter().enumerate() {
@@ -515,8 +510,7 @@ unsafe fn get_button_label_by_operation_kind(hashed_string: &mut HashedString, o
     }
 }
 
-//13.0.2 Offset: 0x1d334c8
-#[skyline::hook(offset = 0x1d329e8, inline)]
+#[skyline::hook(offset = 0x1d334c8, inline)]
 unsafe fn add_footstool_to_gc(ctx: &skyline::hooks::InlineCtx) {
     let button = *ctx.registers[25].w.as_ref();
     if ![0x3, 0x4, 0x5, 0x8].contains(&button) {
@@ -531,8 +525,7 @@ unsafe fn add_footstool_to_gc(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
-//13.0.2 Offset: 0x1D331D8
-#[skyline::hook(offset = 0x1d326f8, inline)]
+#[skyline::hook(offset = 0x1D331D8, inline)]
 unsafe fn add_footstool_to_fk(ctx: &skyline::hooks::InlineCtx) {
     let button = *ctx.registers[25].w.as_ref();
     if [0x4, 0x5, 0x6, 0x9].contains(&button) {
@@ -548,8 +541,7 @@ unsafe fn add_footstool_to_fk(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
-//13.0.2 Offset: 0x1D33CB8
-#[skyline::hook(offset = 0x1d3395c, inline)]
+#[skyline::hook(offset = 0x1D33CB8, inline)]
 unsafe fn add_footstool_to_jc(ctx: &skyline::hooks::InlineCtx) {
     let input_list_vector = &mut *((*ctx.registers[24].x.as_ref() + 0x148) as *mut CppVector<u8>);
 
@@ -561,22 +553,19 @@ unsafe fn add_footstool_to_jc(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
-//13.0.2 Offset: 0x1D3592C
-#[skyline::hook(offset = 0x1d34e4c, inline)]
+#[skyline::hook(offset = 0x1D3592C, inline)]
 unsafe fn add_more_buttons(ctx: &mut skyline::hooks::InlineCtx) {
     let input_list_vector = &mut *((*ctx.registers[24].x.as_ref() + 0x148) as *mut CppVector<u8>);
     // panic!("{}", input_list_vector.len());
     *ctx.registers[25].x.as_mut() = input_list_vector.len() as u64;
 }
 
-//13.0.2 Offset: 0x16d85dc
-#[skyline::hook(offset = 0x16d948c, inline)]
+#[skyline::hook(offset = 0x16d85dc, inline)]
 unsafe fn packed_packet_creation(ctx: &mut skyline::hooks::InlineCtx) {
     *ctx.registers[22].x.as_mut() = 0x2;
 }
 
-//13.0.2 Offset: 0x16d8610
-#[skyline::hook(offset = 0x16d94c0, inline)]
+#[skyline::hook(offset = 0x16d8610, inline)]
 unsafe fn write_packet(ctx: &mut skyline::hooks::InlineCtx) {
     let raw = *ctx.registers[19].x.as_ref();
 
@@ -917,44 +906,24 @@ unsafe fn analog_trigger_r(ctx: &mut skyline::hooks::InlineCtx) {
     }
 }
 
-static mut LAST_ALT_STICK: [f32; 2] = [0.0, 0.0];
-
-//13.0.2 Offset: 0x3f7240
-#[skyline::hook(offset = 0x3f7220)]
+#[skyline::hook(offset = 0x3f7240)]
 unsafe fn parse_inputs(this: &mut ControlModuleInternal) {
     const NEUTRAL: f32 = 0.2;
     const CLAMP_MAX: f32 = 120.0;
-
-    // println!("this: {:#x}", this as *mut ControlModuleInternal as u64);
-
     if this.controller_index == -1 {
         return call_original!(this);
     }
-
-    //println!("this.controller_index: {}", this.controller_index);
-    // assert!(this.controller_index <= 7);
-
-    let inputs = get_mapped_controller_inputs(this.controller_index as usize);
-
+    let inputs = get_mapped_controller_inputs_from_id(this.controller_index as usize);
     let clamp_mul = 1.0 / CLAMP_MAX;
-
-    // let raw_lstick_x = ((inputs.lstick_x as f32) * clamp_mul).clamp(-1.0, 1.0);
-    // let raw_lstick_y = ((inputs.lstick_y as f32) * clamp_mul).clamp(-1.0, 1.0);
-
-    // let raw_lstick_x = if raw_lstick_x.abs() >= NEUTRAL { raw_lstick_x } else { 0.0 };
-    // let raw_lstick_y = if raw_lstick_y.abs() >= NEUTRAL { raw_lstick_y } else { 0.0 };
-
     let raw_rstick_x = ((inputs.rstick_x as f32) * clamp_mul).clamp(-1.0, 1.0);
     let raw_rstick_y = ((inputs.rstick_y as f32) * clamp_mul).clamp(-1.0, 1.0);
-
     LAST_ALT_STICK[0] = if raw_rstick_x.abs() >= NEUTRAL { raw_rstick_x } else { 0.0 };
     LAST_ALT_STICK[1] = if raw_rstick_y.abs() >= NEUTRAL { raw_rstick_y } else { 0.0 };
-
+    LAST_ANALOG = ((inputs.buttons.bits() >> 22) & 1023) as f32 / 1023.0;
     call_original!(this)
 }
 
-//13.0.2 Offset: 0x6b9c7c
-#[skyline::hook(offset = 0x6b9c5c, inline)]
+#[skyline::hook(offset = 0x6b9c7c, inline)]
 unsafe fn after_exec(ctx: &skyline::hooks::InlineCtx) {
     let module = *ctx.registers[19].x.as_ref();
     let internal_class = *(module as *const u64).add(0x110 / 0x8);
@@ -962,8 +931,7 @@ unsafe fn after_exec(ctx: &skyline::hooks::InlineCtx) {
     *(internal_class as *mut f32).add(0x44 / 0x4) = LAST_ALT_STICK[1];
 }
 
-//13.0.2 Offset: 0x16d7034
-#[skyline::hook(offset = 0x16d7ee4, inline)]
+#[skyline::hook(offset = 0x16d7034, inline)]
 unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
     let packet = *ctx.registers[15].x.as_ref();
 
@@ -1052,24 +1020,20 @@ unsafe fn set_team_owner_id_hook(boma: &mut BattleObjectModuleAccessor, arg2: i3
 }
 
 //A hook regarding the generation/visiblity of articles. Used to allow entry articles to generate
-//13.0.2 Offset: 0x3a6670
-#[skyline::hook(offset = 0x3a6650)]
+#[skyline::hook(offset = 0x3a6670)]
 unsafe fn get_article_use_type_mask(weapon_kind: i32, entry_id: i32) -> u8 {
-    let barrel_kind = *WEAPON_KIND_DONKEY_DKBARREL;
     let waddledee_kind = *WEAPON_KIND_DEDEDE_WADDLEDEE;
-    if weapon_kind == barrel_kind {
+    if [*WEAPON_KIND_DONKEY_DKBARREL, *WEAPON_KIND_LINK_PARASAIL].contains(&weapon_kind) {
         return 1;
     }
     if weapon_kind == waddledee_kind {
         return 2;
     }
-    println!("Weapon: {weapon_kind} Entry: {entry_id} Barrels: {barrel_kind}");
     call_original!(weapon_kind, entry_id)
 }
 
 //Removes the death swap from PT
-//13.0.2 Offset: 0xf96330
-#[skyline::hook(offset = 0xf96310)]
+#[skyline::hook(offset = 0xf96330)]
 unsafe fn ptrainer_death_swap() {}
 
 //Permits parry reflecting
@@ -1079,24 +1043,20 @@ unsafe fn is_valid_just_shield_reflector_hook(_boma: &mut BattleObjectModuleAcce
 }
 
 //Disables Training Mode Reset from resetting music (Credit to HDR)
-//13.0.2 Offset: 0x23ed7f0
-#[skyline::from_offset(0x23ecb70)]
+#[skyline::from_offset(0x23ed7f0)]
 unsafe fn music_function1(arg: u64);
 
-//13.0.2 Offset: 0x23ee0a0
-#[skyline::from_offset(0x23ed420)]
+#[skyline::from_offset(0x23ee0a0)]
 unsafe fn music_function2(arg: u64, arg2: u64);
 
-//13.0.2 Offset: 0x1509fd4
-#[skyline::hook(offset = 0x1509dc4, inline)]
+#[skyline::hook(offset = 0x1509fd4, inline)]
 unsafe fn training_reset_music1(ctx: &skyline::hooks::InlineCtx) {
     if !smash::app::smashball::is_training_mode() {
         music_function1(*ctx.registers[0].x.as_ref());
     }
 }
 
-//13.0.2 Offset: 0x14f99cc
-#[skyline::hook(offset = 0x14f97bc, inline)]
+#[skyline::hook(offset = 0x14f99cc, inline)]
 unsafe fn training_reset_music2(ctx: &skyline::hooks::InlineCtx) {
     if !smash::app::smashball::is_training_mode() {
         music_function2(*ctx.registers[0].x.as_ref(), *ctx.registers[1].x.as_ref());
@@ -1106,20 +1066,25 @@ unsafe fn training_reset_music2(ctx: &skyline::hooks::InlineCtx) {
 //Credit to Claude
 #[skyline::hook(offset = CONSTANT_OFFSET)]
 unsafe fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u32) {
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_LINK_STATUS_KIND_NUM") {
+        value = 0x1F1;
+    }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_LUIGI_STATUS_KIND_NUM") {
         value = 0x1F3;
     }
-    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIISWORDSMAN_STATUS_KIND_NUM") {
-        value = 0x1FF;
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_SHEIK_STATUS_KIND_NUM") {
+        value = 0x1F7;
     }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_SONIC_STATUS_KIND_NUM") {
         value = 0x1F9;
     }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIISWORDSMAN_STATUS_KIND_NUM") {
+        value = 0x1FF;
+    }
     original!()(unk,constant,value)
 }
 
-//13.0.2 Offset: 0x15db0b0
-#[skyline::hook(offset = 0x15daea0)]
+#[skyline::hook(offset = 0x15db0b0)]
 pub unsafe fn create_item(item_manager: *mut smash::app::ItemManager, create_item_param: *mut CreateItemParam, unk: bool, unk2: bool, unk3: bool) -> *mut BattleObject {
     if (*create_item_param).variation_kind > 7 {
         (*create_item_param).variation_kind = 0;
@@ -1152,16 +1117,15 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 //Installation
 pub fn install() {
 	unsafe {
-        //13.0.2 Version: skyline::patching::Patch::in_text(0x1D3592C).nop();
-        skyline::patching::Patch::in_text(0x1d34e4c).nop();
-        //Removes phantoms, 13.0.2 Version: skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32);
-        skyline::patching::Patch::in_text(0x3e6ce8).data(0x14000012u32);
-        //Resets projectile lifetime on parry, rather than using remaining lifetime, 13.0.2 Version skyline::patching::Patch::in_text(0x33bdfd8).nop(); skyline::patching::Patch::in_text(0x33bdfdc).data(0x2a0a03e1);
-        skyline::patching::Patch::in_text(0x33bd358).nop();
-        skyline::patching::Patch::in_text(0x33bd35c).data(0x2a0a03e1);
-        //Assists with training mode music reset change, 13.0.2 Version skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap(); skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
-        skyline::patching::Patch::in_text(0x14f97bc).nop().unwrap();
-        skyline::patching::Patch::in_text(0x1509dc4).nop().unwrap();
+        skyline::patching::Patch::in_text(0x1D3592C).nop();
+        //Removes phantoms
+        skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32);
+        //Resets projectile lifetime on parry, rather than using remaining lifetime
+        skyline::patching::Patch::in_text(0x33bdfd8).nop();
+        skyline::patching::Patch::in_text(0x33bdfdc).data(0x2a0a03e1);
+        //Assists with training mode music reset change
+        skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
+        skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
     }
     skyline::install_hook!(change_status_hook);
     skyline::install_hook!(is_valid_just_shield_replace);

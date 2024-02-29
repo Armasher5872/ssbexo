@@ -149,7 +149,9 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 				);
 				let item_manager = *(ITEM_MANAGER_ADDR as *mut *mut smash::app::ItemManager);
 				//Then get rid of the soccerball and reset these values so multiple stocks aren't taken
-				smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, BALL_ID);
+				if smash::app::sv_battle_object::is_active(BALL_ID) {
+					smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, BALL_ID);
+				}
 				BALL_BOUNCED = Vector3f{x: 0.0, y: 0.0, z: 9999.0};
 			}
 		}
@@ -535,5 +537,8 @@ unsafe extern "C" fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install() {
-	smashline::api::install_line_callback(None, StatusLine::Main, custom_fighter_functions as _);
+	Agent::new("fighter")
+	.on_line(Main, custom_fighter_functions)
+	.install()
+	;
 }
