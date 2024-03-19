@@ -38,7 +38,6 @@ unsafe extern "C" fn littlemac_frame(fighter: &mut L2CFighterCommon) {
     }
     //Constantly updates the battle ui for the meter
     littlemac_battle_ui_update(0, (ko_gauge as u32));
-    println!("Is KO Gauge Tumble Reduction: {}", WorkModule::is_flag(boma, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION));
 }
 
 unsafe extern "C" fn littlemac_init(fighter: &mut L2CFighterCommon) {

@@ -166,8 +166,10 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     //Link Dash Attack Bound
     if fighter_kind == *FIGHTER_KIND_LINK {
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            fighter.change_status(FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND.into(), false.into());
+        if (14.0..24.0).contains(&frame) {
+            if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) {
+                fighter.change_status(FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND.into(), false.into());
+            }
         }
     }
     //Samus Dash Attack Canceled Up Tilt/DACDS
@@ -192,7 +194,7 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Kirby Aerial Dash Attack
     if fighter_kind == *FIGHTER_KIND_KIRBY
     && situation_kind == *SITUATION_KIND_AIR
-    && fighter.jump_cancel() 
+    && fighter.check_jump_cancel(false, false) 
     && frame > 25.0 {
         fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
     }

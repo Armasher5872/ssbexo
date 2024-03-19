@@ -9,6 +9,7 @@ unsafe extern "C" fn kirby_frame(fighter: &mut L2CFighterCommon) {
     let frame = MotionModule::frame(boma);
     let end_frame = MotionModule::end_frame(boma);
     let copy_chara = WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA);
+    let kirby_falcon_punch_turn_count = WorkModule::get_int(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     //Kirby Stuff
     if [*FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_CATCH].contains(&status_kind) {
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
@@ -81,44 +82,39 @@ unsafe extern "C" fn kirby_frame(fighter: &mut L2CFighterCommon) {
     }
     //Captain Falcon
     if copy_chara == *FIGHTER_KIND_CAPTAIN {
-        if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind)
-        && (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N) != 0
-        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true {
+        if [23, 45, 67, 89, 114, 133, 152, 171, 194, 217, 240, 263, 286].contains(&fighter.magic_series()) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, true);
         };
         if [*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
-            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) == true {
-                FALCON_PUNCH_HIT[entry_id] = true;
+            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+                WorkModule::set_flag(boma, true, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
             };
-            if FALCON_PUNCH_HIT[entry_id] == true
+            if WorkModule::is_flag(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
             && (54.0..57.0).contains(&frame) {
                 macros::PLAY_SE(fighter, Hash40::new("vc_kirby_cheer"));
             }
         };
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N
-        && FALCON_PUNCH_HIT[entry_id] == true
+        && WorkModule::is_flag(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
         && frame > 70.0 {
             CancelModule::enable_cancel(boma);
         }
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN
-        && FALCON_PUNCH_HIT[entry_id] == true
+        && WorkModule::is_flag(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
         && frame > 104.0 {
             CancelModule::enable_cancel(boma);
         }
         if ![*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
-            FALCON_PUNCH_HIT[entry_id] = false;
+            WorkModule::set_flag(boma, false, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
         }
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN 
         && (25.0..40.0).contains(&frame)
         && (ControlModule::get_stick_x(boma)*PostureModule::lr(boma)) < -0.5
-        && KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] <= 15.0 {
+        && kirby_falcon_punch_turn_count <= 15 {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN, true);
         };
         if status_kind != *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN {
-            KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] = 0.0;
-        }
-        if KIRBY_FALCON_PUNCH_TURN_COUNT[entry_id] == 0.0 {
-            AttackModule::set_power_up(boma, 1.0);
+            WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
         }
     }
     //Bowser

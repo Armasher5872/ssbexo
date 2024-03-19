@@ -8,7 +8,7 @@ unsafe extern "C" fn link_attack_dash_bound_pre_status(fighter: &mut L2CFighterC
 
 unsafe extern "C" fn link_attack_dash_bound_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
-    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.2);
+    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.7);
     sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     0.into()
@@ -42,6 +42,34 @@ unsafe extern "C" fn link_attack_dash_bound_main_loop(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn link_attack_dash_bound_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+    0.into()
+}
+
+unsafe extern "C" fn link_attack_s_4_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    attack_4_hold(fighter);
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    }
+    0.into()
+}
+
+unsafe extern "C" fn link_attack_s_4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    0.into()
+}
+
+unsafe extern "C" fn link_attack_hi_4_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    attack_4_hold(fighter);
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    }
+    0.into()
+}
+
+unsafe extern "C" fn link_attack_hi_4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 
@@ -1033,6 +1061,10 @@ pub fn install() {
     .status(Init, FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_init_status)
     .status(Main, FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_main_status)
     .status(End, FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, link_attack_s_4_hold_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_S4, link_attack_s_4_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, link_attack_hi_4_hold_end_status)
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_HI4, link_attack_hi_4_end_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_end_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4, link_attack_lw_4_main_status)

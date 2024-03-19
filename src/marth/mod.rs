@@ -1,12 +1,16 @@
 use {
-    crate::functions::{
-        var::{
-            consts::*,
-            globals::*,
-        }
+    crate::functions::var::{
+        globals::*,
+        marth::*,
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::{
+                KineticEnergy,
+                *
+            },
+            *
+        },
         hash40,
         lib::{
             L2CValue,
@@ -15,6 +19,7 @@ use {
         lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
+            Vector2f,
             Vector3f
         }
     },
@@ -26,7 +31,7 @@ mod opff;
 mod status;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
-  status::install();
+    acmd::install();
+    opff::install();
+    status::install();
 }

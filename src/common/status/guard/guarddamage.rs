@@ -8,7 +8,11 @@ unsafe fn sub_ftstatusuniqprocessguarddamage_initstatus(fighter: &mut L2CFighter
         fighter.FighterStatusGuard__set_just_shield_scale();
     }
     else {
-        ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: 1.0, y: 1.0, z: 1.0});
+        let prev_shield_scale_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_DAMAGE_WORK_INT_PREV_SHIELD_SCALE_FRAME);
+        let shield_hp_const = if 0 < prev_shield_scale_frame {*FIGHTER_STATUS_GUARD_DAMAGE_WORK_FLOAT_PREV_SHIELD} else {*FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD};
+        let shield_hp = WorkModule::get_float(fighter.module_accessor, shield_hp_const);
+        let scale = fighter.FighterStatusGuard__calc_shield_scale(shield_hp.into()).get_f32();
+        ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: scale, y: scale, z: scale});
     }
     0.into()
 }

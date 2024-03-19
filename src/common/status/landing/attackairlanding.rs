@@ -15,9 +15,20 @@ unsafe fn sub_landing_attack_air_init(fighter: &mut L2CFighterCommon, aerial_mot
     MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(mot), 0.0, motion_rate, false, 0.0, false, false);
 }
 
+//Status End Landing Attack Air
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_LandingAttackAir)]
+unsafe fn status_end_landingattackair(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+    fighter.sub_landing_cancel_damage_face();
+    0.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(sub_landing_attack_air_init);
+        skyline::install_hooks!(
+            sub_landing_attack_air_init,
+            status_end_landingattackair
+        );
     }
 }
 

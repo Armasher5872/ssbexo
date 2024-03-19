@@ -26,6 +26,15 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
         && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
             WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
         }
+        //Captain Falcon Voice Exclamation
+        if fighter_kind == *FIGHTER_KIND_CAPTAIN
+        && motion_kind == hash40("attack_air_f")
+        && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
+        && frame == 14.0
+        && LAST_ATTACK_HITBOX_ID == 0 {
+            macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_captain_special_h03"));
+            macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
+        }
         //Sheik Dair Bounce
         if fighter_kind == *FIGHTER_KIND_SHEIK 
         && motion_kind == hash40("attack_air_lw")
@@ -72,11 +81,27 @@ unsafe fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CVal
     true.into()
 }
 
+//Status End Attack Air, clears flags
+#[skyline::hook(replace = L2CFighterCommon_status_end_AttackAir)]
+unsafe fn status_end_attackair(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
+    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    if fighter_kind == *FIGHTER_KIND_GANON {
+        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
+        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
+        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
+        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
+        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CURRENT_DAMAGE);
+        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);	
+    }
+    0.into()
+}
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
-            status_attackair_main_common
+            status_attackair_main_common,
+            status_end_attackair
         );
     }
 }

@@ -4,6 +4,7 @@ use {
       ext::*,
       var::{
         consts::*,
+        globals::*,
         littlemac::*,
         variables::*,
       },
@@ -16,10 +17,12 @@ use {
       lua_bind::*,
       *
     },
+    hash40,
     lib::lua_const::*,
     lua2cpp::*,
     phx::Vector3f
   },
+  smash_script::*,
   smashline::*,
 };
 

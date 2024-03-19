@@ -147,6 +147,9 @@ unsafe extern "C" fn armstrong_special_s_loop(fighter: &mut L2CFighterCommon) ->
 }
 
 unsafe extern "C" fn armstrong_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_SPECIAL_HI {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_IS_SPECIAL_HI);
+    }
     WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_IS_SPECIAL_S);
     0.into()
@@ -312,6 +315,9 @@ unsafe extern "C" fn armstrong_special_hi_loop(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn armstrong_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_SPECIAL_S {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_IS_SPECIAL_S);
+    }
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_IS_SPECIAL_HI);
     0.into()
 }

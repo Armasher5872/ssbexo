@@ -54,19 +54,23 @@ unsafe extern "C" fn ssbexo_marth_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
-//Up Throw ACMD
-unsafe extern "C" fn ssbexo_marth_up_throw_acmd(agent: &mut L2CAgentBase) {
+//Forward Throw ACMD
+unsafe extern "C" fn ssbexo_marth_forward_throw_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 5.0, 93, 120, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 4.0, 30, 65, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        macros::CHECK_FINISH_CAMERA(agent, 1.0, 21.0);
+        macros::FT_CATCH_STOP(agent, 4, 1);
+        macros::CHECK_FINISH_CAMERA(agent, 15, 2);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+        let target = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     }
 }
 
@@ -75,7 +79,7 @@ pub fn install() {
     .game_acmd("game_catch", ssbexo_marth_grab_acmd)
     .game_acmd("game_catchdash", ssbexo_marth_dash_grab_acmd)
     .game_acmd("game_catchturn", ssbexo_marth_pivot_grab_acmd)
-    .game_acmd("game_throwhi", ssbexo_marth_up_throw_acmd)
+    .game_acmd("game_throwf", ssbexo_marth_forward_throw_acmd)
     .install()
     ;
 }

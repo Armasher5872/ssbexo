@@ -293,7 +293,7 @@ unsafe extern "C" fn kirby_special_s_attack_loop(fighter: &mut L2CFighterCommon)
         && turn_count < 6 {
             fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN.into(), false.into());
         }
-        if fighter.jump_cancel()
+        if fighter.check_jump_cancel(false, false)
         && situation_kind == *SITUATION_KIND_GROUND
         && jump_count < 2 {
             fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_JUMP.into(), false.into());

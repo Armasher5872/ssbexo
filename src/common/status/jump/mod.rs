@@ -20,12 +20,10 @@ use {
     smash_script::*,
 };
 
-mod jump;
 mod jumpsquat;
 mod treadjump;
 
 pub fn install() {
-    jump::install();
     jumpsquat::install();
     treadjump::install();
 }

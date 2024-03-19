@@ -1,5 +1,6 @@
 use {
-    crate::functions::var::globals::*,
+    //crate::functions::var::globals::*,
+    /*
     smash::{
         app::{
             lua_bind::*,
@@ -9,6 +10,7 @@ use {
         lua2cpp::L2CFighterCommon,
         phx::Hash40
     },
+    */
     smashline::*,
 };
 

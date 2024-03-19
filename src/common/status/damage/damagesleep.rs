@@ -2,6 +2,7 @@ use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageSleep_Main)]
 unsafe fn status_damagesleep_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
@@ -19,6 +20,12 @@ unsafe fn status_damagesleep_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     asdi_check(fighter);
     asdi_function(fighter);
+    if fighter_kind == *FIGHTER_KIND_PICKEL {
+        if fighter.global_table[IS_STOP].get_bool() {
+            macros::COL_NORMAL(fighter);
+            macros::FLASH(fighter, 2.55, 0.0, 0.0, 0.25);
+        }
+    }
     if situation_kind != *SITUATION_KIND_AIR {
         if ControlModule::get_clatter_time(fighter.module_accessor, 0) <= 0.0 {
             if situation_kind == *SITUATION_KIND_GROUND {
@@ -33,10 +40,10 @@ unsafe fn status_damagesleep_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         if MotionModule::is_end(fighter.module_accessor) {
             if motion_kind != hash40("down_bound_u")
             || motion_kind == hash_2.hash as u64 {
-                MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0xbff07713b), 0.0, 1.0, false, 0.0, false, false);
+                MotionModule::change_motion(fighter.module_accessor, hash_5, 0.0, 1.0, false, 0.0, false, false);
             }
             else {
-                MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0xb95b751c9), 0.0, 1.0, false, 0.0, false, false);
+                MotionModule::change_motion(fighter.module_accessor, hash_4, 0.0, 1.0, false, 0.0, false, false);
             }
             if MotionModule::is_anim_resource(fighter.module_accessor, Hash40::new("fill_blank_sleep")) {
                 FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SLEEP), Hash40::new("invalid"));

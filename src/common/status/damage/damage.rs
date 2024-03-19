@@ -2,6 +2,7 @@ use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Damage_Main)]
 unsafe fn status_damage_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let is_end = MotionModule::is_end(fighter.module_accessor);
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
@@ -22,6 +23,12 @@ unsafe fn status_damage_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     asdi_function(fighter);
     if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT) {
         WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
+    }
+    if fighter_kind == *FIGHTER_KIND_PICKEL {
+        if fighter.global_table[IS_STOP].get_bool() {
+            macros::COL_NORMAL(fighter);
+            macros::FLASH(fighter, 2.55, 0.0, 0.0, 0.25);
+        }
     }
     if situation_kind != *SITUATION_KIND_AIR {
         if !WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) {

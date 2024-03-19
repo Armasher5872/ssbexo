@@ -29,7 +29,6 @@ pub unsafe fn status_landinglight_main(fighter: &mut L2CFighterCommon) -> L2CVal
             }
             ret = 0.into();
         }
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
         if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
@@ -48,9 +47,20 @@ pub unsafe fn status_landinglight_main(fighter: &mut L2CFighterCommon) -> L2CVal
     ret.into()
 }
 
+//Status End Landing
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_LandingLight)]
+unsafe fn status_end_landinglight(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
+    fighter.sub_landing_cancel_damage_face();
+    0.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(status_landinglight_main);
+        skyline::install_hooks!(
+            status_landinglight_main,
+            status_end_landinglight
+        );
     }
 }
 

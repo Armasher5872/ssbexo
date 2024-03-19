@@ -66,10 +66,20 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 			WorkModule::set_float(boma, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CURRENT_DAMAGE);
 			WorkModule::set_float(boma, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);	
 		}
+		//Captain
+		if fighter_kind == *FIGHTER_KIND_CAPTAIN {
+			WorkModule::set_flag(boma, false, FIGHTER_FALCON_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
+			WorkModule::set_int(boma, 0, FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+		}
 		//Dedede
 		if fighter_kind == *FIGHTER_KIND_DEDEDE {
 			WorkModule::set_flag(boma, false, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
 			WorkModule::set_int(boma, *ITEM_KIND_NONE, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+		}
+		//Edge
+		if fighter_kind == *FIGHTER_KIND_EDGE {
+			WorkModule::set_flag(boma, false, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
+			WorkModule::set_int(boma, 0, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
 		}
 		//Kirby
 		if fighter_kind == *FIGHTER_KIND_KIRBY {
@@ -107,6 +117,10 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 		if fighter_kind == *FIGHTER_KIND_LUIGI {
 			WorkModule::set_flag(boma, false, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_TYPHOON_ACTIVE);
 			LUIGI_CYCLONE_RNG[entry_id] = 9;
+		}
+		//Marth
+		if fighter_kind == *FIGHTER_KIND_MARTH {
+			WorkModule::set_flag(boma, false, FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
 		}
 		//Meta Knight
 		if fighter_kind == *FIGHTER_KIND_METAKNIGHT {
@@ -157,6 +171,7 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 			ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_openblink"), true);
 			WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
 			WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+			WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
 			WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
 			WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
 		}

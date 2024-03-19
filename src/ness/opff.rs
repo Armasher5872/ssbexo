@@ -13,7 +13,7 @@ unsafe extern "C" fn ness_frame(fighter: &mut L2CFighterCommon) {
     if status_kind == *FIGHTER_STATUS_KIND_THROW
     && motion_kind == hash40("throw_lw")
     && (39.0..=45.0).contains(&frame)
-    && fighter.jump_cancel()
+    && fighter.check_jump_cancel(false, false)
     && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
     };

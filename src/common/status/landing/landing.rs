@@ -4,7 +4,7 @@ use super::*;
 /*   LANDING STATUSES   */
 //Landing Main Sub
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Landing_MainSub)]
-pub unsafe fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut ret: i32 = 0;
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let pass_stick_y = WorkModule::get_param_float(boma, hash40("common"), hash40("pass_stick_y"));
@@ -28,8 +28,8 @@ pub unsafe fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> L2CValu
             }
             ret = 0.into();
         }
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
         if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
+            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
@@ -47,9 +47,20 @@ pub unsafe fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> L2CValu
     ret.into()
 }
 
+//Status End Landing
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_Landing)]
+unsafe fn status_end_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
+    fighter.sub_landing_cancel_damage_face();
+    0.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(status_landing_main_sub);
+        skyline::install_hooks!(
+            status_landing_main_sub,
+            status_end_landing
+        );
     }
 }
 

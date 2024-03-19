@@ -177,6 +177,7 @@ unsafe extern "C" fn sheik_init(fighter: &mut L2CFighterCommon) {
     //Sheik
     WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
     WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+    WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
     WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
     ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("gamemodel"), true);

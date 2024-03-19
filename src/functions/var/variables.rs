@@ -58,23 +58,9 @@ pub static mut KOOPA_GREAT_SMASH_GFX: [i32; 8] = [0; 8];
 pub static mut KOOPA_OK_SMASH: [bool; 8] = [false; 8];
 pub static mut KOOPA_OK_SMASH_GFX: [i32; 8] = [0; 8];
 
-//Captain Falcon Variables
-pub static mut BOOST_INSTALL_ACTIVE: [bool; 8] = [false; 8];
-pub static mut BOOST_INSTALL_GFX_COUNTER: [i32; 8] = [0; 8];
-pub static mut BOOST_INSTALL_MOTION_RATE: [f32; 8] = [1.0; 8];
-pub static mut BOOST_INSTALL_TIMER: [i32; 8] = [0; 8];
-pub static mut FALCON_PUNCH_HIT: [bool; 8] = [false; 8];
-pub static mut FALCON_PUNCH_TURN_COUNT: [f32; 8] = [0.0; 8];
-pub static mut HYPE_HIT: [bool; 8] = [false; 8];
-pub static mut KIRBY_FALCON_PUNCH_TURN_COUNT: [f32; 8] = [0.0; 8];
-
 //Falco Variables
 pub static mut REFLECTOR_KNOCKBACK: [i32; 8] = [100; 8];
 pub static mut REFLECTOR_ANGLE: [u64; 8] = [60; 8];
-
-//King K Rool Variables
-pub static mut KROOL_HAS_UAIR: [bool; 8] = [false; 8];
-pub static mut KROOL_UP_SPECIAL_CANCEL: [bool; 8] = [false; 8];
 
 //Lucario Variables
 pub static mut MEGA_EVOLVE: [bool; 8] = [false; 8];

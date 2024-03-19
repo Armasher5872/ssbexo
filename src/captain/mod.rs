@@ -2,6 +2,7 @@ use {
     crate::functions::{
         ext::*,
         var::{
+            captain::*,
             consts::*,
             globals::*,
             variables::*,

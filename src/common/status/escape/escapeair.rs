@@ -4,7 +4,9 @@ use super::*;
 //Status Pre EscapeAir, used for instant wavedashes
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_pre_EscapeAir)]
 pub unsafe fn status_pre_escapeair(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_DAMAGE_FALL && WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH) {
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_DAMAGE_FALL 
+    && fighter.global_table[PREV_SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR
+    && WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH) {
         GroundModule::attach_ground(fighter.module_accessor, true);
         fighter.set_situation(SITUATION_KIND_GROUND.into());
         fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(*SITUATION_KIND_GROUND));
@@ -189,6 +191,7 @@ pub unsafe fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterCommon) 
             let throwable = !fighter.pop_lua_stack(1).get_bool();
             if throwable {
                 if !fighter.can_entry_cliff_air_lasso().get_bool() {
+                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
                     KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: 1.0, y: 1.0, z: 1.0}, *FIGHTER_KINETIC_ENERGY_ID_STOP);
                     fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), false.into());
                     return 1.into();

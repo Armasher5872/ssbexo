@@ -3,9 +3,11 @@ use {
     crate::functions::{
         ext::*,
         var::{
+            armstrong::*,
             consts::*,
             globals::*,
             link::*,
+            variables::*,
         }
     },
     smash::{

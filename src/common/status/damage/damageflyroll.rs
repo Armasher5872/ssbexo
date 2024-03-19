@@ -2,6 +2,7 @@ use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageFlyRoll_Main)]
 unsafe fn status_damageflyroll_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     asdi_check(fighter);
     asdi_function(fighter);
     if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT) {
@@ -11,6 +12,12 @@ unsafe fn status_damageflyroll_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION) {
         WorkModule::dec_float(fighter.module_accessor, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
         WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
+    }
+    if fighter_kind == *FIGHTER_KIND_PICKEL {
+        if fighter.global_table[IS_STOP].get_bool() {
+            macros::COL_NORMAL(fighter);
+            macros::FLASH(fighter, 2.55, 0.0, 0.0, 0.25);
+        }
     }
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR) {
         if (ControlModule::get_command_flag_cat(fighter.module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0

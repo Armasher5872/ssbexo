@@ -31,11 +31,12 @@ Smash 64
 
 Mario with Odyssey Roll and Cape Twirl
 Donkey Kong with an Airgrab, Barrel Cannon, and Barrel Toss
-Link with Shield Surf, Urbosa's Fury, Clawshot, and Fuse
+Link with Shield Surf, Urbosa's Fury, Revali's Gale/Ascension, and Fuse
 Samus with Melee Counter and Ice Smash Attacks
 Fully Decloned Dark Samus based around Trapping and Poison
 Yoshi with Egg Roll Nair
-Kirby with Wheel Copy and overhauled Final Cutter
+Kirby with more copy abilities, like Umbrella, Hammer, Wheel, and Final Cutter, and Rainbow Trails
+Fox with Jump Cancelable Shine
 Pikachu with Iron Tail
 Luigi with Thunderhand and Poltercharge
 Ness with PSI Offense Up
@@ -95,11 +96,11 @@ Reworked Ridley to be larger, fixed up Forward Tilt, (Planned) reworked Up Smash
 EXO Newcomers
 
 Senator Armstrong over Ganondorf
-Akuma
 Knuckles
-Parappa the Rapper (Undecided)
+Parappa the Rapper
 Kazuma Kiryu
 Undefined Rougelike Character
+Seth
 Sol Badguy
 Bandana Dee
 Shadow
@@ -130,8 +131,10 @@ Credits to:
 
 Chrispo, for many code edits
 Claude, for the TOTK Fusion Ability
+StephenJPlant for the COUNTER! Voice
 Ayerbe, for certain things from Championship Edition
-WuBoy, for various code tips
+WuBoy, for various code tips and status edits
+HDR Development Team, for various status edits and code implementations, like hitbox ids
 Stabb, for a few balance tweaks
 Members of the SSBEXO server, for various balance suggestions
 SMN8 for multiple animations
@@ -172,9 +175,10 @@ Xecho88 for the Shiny Lucario Skin
 LuckyJero for the E.M.M.I R.O.B. Skin, Ash Greninja Skin, and the Professor Pac-Man Skin
 SeanHicksArt for the Deluxe Geno Mii Gunner Hat
 Erroneous-Saiko for the Crazy Otto Pac-Man Skin
+LilyLambda for the Dynamic Monado Art Trails for Shulk
+Silent/Mokl for the Monado Rage/Enchant/Armor Monado Art UI/Voices
 AlexChase191 for the Donkey Kong Country Cartoon King K Rool Voice
 Joby1Kenobi for the English Cloud and Sephiroth Voices
-StephenJPlant for the COUNTER! Voice
 
 ## Legal Disclaimer
 Super Smash Bros: EXO and its creators do not condone any forms of piracy or other illegal actions that may damage Nintendo or other relevant copyright holders.

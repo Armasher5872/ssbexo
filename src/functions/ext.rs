@@ -279,7 +279,7 @@ pub trait BomaExt {
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn down_input(&mut self) -> bool;
     unsafe fn up_input(&mut self) -> bool;
-    unsafe fn jump_cancel(&mut self) -> bool;
+    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool;
     unsafe fn gimmick_flash(&mut self);
     unsafe fn is_status(&mut self, kind: i32) -> bool;
     unsafe fn dacsa_check(&mut self) -> i32;
@@ -371,43 +371,35 @@ impl BomaExt for BattleObjectModuleAccessor {
         };
         return false;
     }
-    unsafe fn jump_cancel(&mut self) -> bool {
+    unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool {
         let fighter = crate::functions::util::get_fighter_common_from_accessor(self);
-        if ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
-        || (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_FLICK_JUMP) && ControlModule::get_flick_y(fighter.module_accessor) >= 3 && ControlModule::get_stick_y(fighter.module_accessor) >= 0.7)
-        || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI)
-        || fighter.is_cat_flag(Cat1::Jump)
-        || fighter.is_cat_flag(Cat1::JumpButton)
-        || (fighter.is_situation(*SITUATION_KIND_GROUND) && fighter.sub_transition_group_check_ground_jump().get_bool())
-        || fighter.sub_transition_group_check_air_jump_aerial().get_bool() {
-            //Checks situation kind
-            if fighter.is_situation(*SITUATION_KIND_GROUND) {
-                //Enables transition terms
-                let transition = [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT];
-                for x in 0..transition.len() {
-                    WorkModule::enable_transition_term(self, transition[x]);
-                    //If transition terms are enabled, return true
-                    if WorkModule::is_enable_transition_term(self, transition[x]) == true {
-                        return true;
-                    }
-                }
+        if fighter.is_situation(*SITUATION_KIND_GROUND) {
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+            if !skip_other_checks {
+                WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
             }
-            else {
-                //Enables transition terms
-                let transition = [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_BUTTON, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_NEXT];
-                for x in 0..transition.len() {
-                    WorkModule::enable_transition_term(self, transition[x]);
-                    //If transition terms are enabled (And your jump count is less than your max), return true
-                    if WorkModule::get_int(self, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(self, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                        if WorkModule::is_enable_transition_term(self, transition[x]) == true {
-                            return true;
-                        }
-                    }
+            if fighter.sub_transition_group_check_ground_jump_mini_attack().get_bool()
+            || (!skip_other_checks && fighter.sub_transition_group_check_ground_attack().get_bool())
+            || fighter.sub_transition_group_check_ground_jump().get_bool() {
+                if update_lr {
+                    PostureModule::set_stick_lr(self, 0.0);
+                    PostureModule::update_rot_y_lr(self);
                 }
-            }    
+                return true;
+            }
+        } 
+        else {
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_BUTTON);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_FLY_NEXT);
+            if fighter.sub_transition_group_check_air_jump_aerial().get_bool() {
+                return true;
+            }
         }
-        //If all conditions fail, return false
-        return false;
+        false
     }
     unsafe fn gimmick_flash(&mut self) {
         let fighter = crate::functions::util::get_fighter_common_from_accessor(self);
@@ -1787,20 +1779,6 @@ pub unsafe extern "C" fn should_use_special_lw_callback(fighter: &mut L2CFighter
     1.into()
 }
 
-pub unsafe extern "C" fn change_status_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if [*SITUATION_KIND_GROUND, *SITUATION_KIND_CLIFF].contains(&situation_kind)
-    || [*FIGHTER_STATUS_KIND_REBIRTH, *FIGHTER_STATUS_KIND_DEAD].contains(&status_kind)
-    || WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
-    }
-    true.into()
-}
-
 /// Enum for the kinds of controls that are mapped
 /// Can map any of these over any button
 #[repr(u8)]
@@ -2094,7 +2072,7 @@ pub unsafe extern "C" fn if_shield_special(fighter: &mut L2CFighterCommon) -> L2
             fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_N.into(),true.into());
             return true.into();
         }
-        if [*FIGHTER_KIND_CAPTAIN, *FIGHTER_KIND_PICHU, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_PZENIGAME].contains(&kind) {
+        if [*FIGHTER_KIND_PICHU, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_PZENIGAME].contains(&kind) {
             fighter.change_status(FIGHTER_STATUS_KIND_APPEAL.into(),true.into());
             return true.into();
         }

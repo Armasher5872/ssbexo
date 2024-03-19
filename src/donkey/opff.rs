@@ -6,15 +6,15 @@ unsafe extern "C" fn donkey_frame(fighter: &mut L2CFighterCommon) {
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let timer = WorkModule::get_int(boma, FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
-    //Taunts
+    //DK Taunt Holding
     if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
-        if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind) && frame >= 48.0 {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL)
-            || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                MotionModule::set_frame_sync_anim_cmd(boma, 32.0, true, true, false);
-            };
+        if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind)
+        && frame >= 48.0 {
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 32.0, true, true, false);
+            }
         }
-    };
+    }
     //Cargo
     if status_kind == *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_START {
         if motion_kind == hash40("throw_f") {

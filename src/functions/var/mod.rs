@@ -4,15 +4,18 @@ use smash::phx::{
 };
 
 pub mod armstrong;
+pub mod captain;
 pub mod consts;
 pub mod dedede;
 pub mod diddy;
 pub mod donkey;
+pub mod edge;
 pub mod globals;
 pub mod kirby;
 pub mod link;
 pub mod littlemac;
 pub mod luigi;
+pub mod marth;
 pub mod metaknight;
 pub mod miiswordsman;
 pub mod murabito;

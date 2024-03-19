@@ -434,6 +434,19 @@ unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_i
 		}
 	}
 	LAST_DAMAGE[get_player_number(defender_boma)] = DamageModule::damage(defender_boma, 0);
+    //Sheik Vanish Back Hit Detection
+    if attacker_boma.is_fighter()
+    && attacker_kind == *FIGHTER_KIND_SHEIK
+    && attacker_status_kind == FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK {
+        let attacker_lr = PostureModule::lr(attacker_boma);
+        let defender_lr = PostureModule::lr(defender_boma);
+        if attacker_lr == defender_lr {
+            WorkModule::set_flag(attacker_boma, true, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+        }
+        else {
+            WorkModule::set_flag(attacker_boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+        }
+    }
 	original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
 
@@ -1066,20 +1079,40 @@ unsafe fn training_reset_music2(ctx: &skyline::hooks::InlineCtx) {
 //Credit to Claude
 #[skyline::hook(offset = CONSTANT_OFFSET)]
 unsafe fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u32) {
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_TERM")
+    || CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_TERM") {
+        value = 0x200000E4;
+    }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_TERM") {
+        value = 0x100000C4;
+    }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_TERM") {
+        value = 0x52;
+    }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_GANON_INSTANCE_WORK_ID_INT_TERM")
+    || CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_TERM") {
+        value = 0x100000C1;
+    }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_LINK_STATUS_KIND_NUM") {
         value = 0x1F1;
     }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_LUIGI_STATUS_KIND_NUM") {
         value = 0x1F3;
     }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIISWORDSMAN_STATUS_KIND_NUM") {
+        value = 0x203;
+    }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_SHEIK_STATUS_KIND_NUM") {
         value = 0x1F7;
     }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_TERM") {
+        value = 0x200000EB;
+    }
+    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_TERM") {
+        value = 0x100000CA;
+    }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_SONIC_STATUS_KIND_NUM") {
         value = 0x1F9;
-    }
-    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIISWORDSMAN_STATUS_KIND_NUM") {
-        value = 0x1FF;
     }
     original!()(unk,constant,value)
 }
@@ -1106,6 +1139,86 @@ pub unsafe fn is_valid_auto_catch_item_hook(module_accessor: &mut BattleObjectMo
     else {
         original!()(module_accessor, is_possible)
     }
+}
+
+//Credit to Lily Lambda
+#[skyline::hook(replace = sv_animcmd::AFTER_IMAGE4_ON_arg29)]
+unsafe fn after_image4_on_arg29_replace(lua_state: u64) {
+	let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
+	let fighter_kind = smash::app::utility::get_kind(boma);
+	if fighter_kind == FIGHTER_KIND_SHULK 
+    && WorkModule::is_flag(boma, *FIGHTER_SHULK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_ACTIVE) {
+		let mut l2c_agent = L2CAgent::new(lua_state);
+		let hitbox_params: Vec<L2CValue> = (0..29).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
+		l2c_agent.clear_lua_stack();
+		let mut new_sword_hash: u64 = hitbox_params[0].get_int();
+		let monado_type = WorkModule::get_int(boma, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE);
+		for current_tex in ["1", "3", "5", "pink1", "red1"] {
+			if hitbox_params[0].get_int() == L2CValue::new_int(hash40(format!("tex_shulk_sword{}", current_tex).as_str())).get_int() { 
+				for (i, art) in (0i32..).zip(["jump", "speed", "shield", "buster", "smash"]) {
+					if monado_type == i {
+						new_sword_hash = hash40(format!("tex_shulk_sword{}_{}", current_tex, art).as_str());
+					}
+				}
+			}
+		}
+		l2c_agent.push_lua_stack(&mut L2CValue::new_int(new_sword_hash)); 
+		for i in 1..29 {
+			l2c_agent.push_lua_stack(&mut hitbox_params[i].clone());
+		}
+    }
+    original!()(lua_state);
+}
+
+#[skyline::hook(replace = sv_animcmd::EFFECT_FOLLOW)]
+unsafe fn effect_follow_replace(lua_state: u64) {
+	let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
+	let fighter_kind = smash::app::utility::get_kind(boma);
+	if fighter_kind == FIGHTER_KIND_SHULK 
+    && WorkModule::is_flag(boma, *FIGHTER_SHULK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_ACTIVE) {
+		let mut l2c_agent = L2CAgent::new(lua_state);
+		let mut hitbox_params: Vec<L2CValue> = (0..10).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
+		if [
+            hash40("shulk_airslash"), hash40("shulk_backslash_trace"), hash40("shulk_counter_success"), hash40("shulk_counter"), hash40("shulk_monad_circle_red"), hash40("shulk_monad_circle"), hash40("shulk_monad_sword"), hash40("shulk_monad_sword2_arc_2"),
+            hash40("shulk_monad_sword2_arc"), hash40("shulk_monad_sword2_end"), hash40("shulk_monad_sword2_lightning"), hash40("shulk_monad_sword2"), hash40("shulk_monad_sword3_2"), hash40("shulk_monad_sword3_3"), hash40("shulk_monad_sword3_4"),
+            hash40("shulk_monad_sword3_end"), hash40("shulk_monad_sword3_pink_end"), hash40("shulk_monad_sword3_pink"), hash40("shulk_monad_sword3_red_end"), hash40("shulk_monad_sword3_red"), hash40("shulk_monad_sword3"), hash40("shulk_vision_attack")
+        ].contains(&hitbox_params[0].get_int()) {
+			let monado_type = WorkModule::get_int(boma, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE);
+			let (mut r, mut g, mut b) = (1.0, 1.0, 1.0);
+            match monado_type {
+                0 => {
+                    r = 0.1; g = 1.0; b = 0.1; // Jump
+                }
+                1 => {
+                    r = 0.0; g = 0.62; b = 1.0; // Speed
+                }
+                2 => {
+                    r = 1.0; g = 0.9; b = 0.0; // Shield
+                }
+                3 => {
+                    r = 0.4; g = 0.0; b = 1.0; // Buster
+                }
+                4 => {
+                    r = 1.0; g = 0.0; b = 0.0; // Smash
+                }
+                _ => {}
+            }
+            l2c_agent.clear_lua_stack();
+			for i in 0..10 {
+				l2c_agent.push_lua_stack(&mut hitbox_params[i]); 
+			}
+			l2c_agent.push_lua_stack(&mut L2CValue::new_num(r)); 
+			l2c_agent.push_lua_stack(&mut L2CValue::new_num(g)); 
+			l2c_agent.push_lua_stack(&mut L2CValue::new_num(b)); 
+			sv_animcmd::EFFECT_FOLLOW_COLOR(lua_state);	
+		} 
+        else {
+		    original!()(lua_state);
+	    }
+    } 
+    else {
+		original!()(lua_state);
+	}
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
@@ -1169,7 +1282,9 @@ pub fn install() {
         training_reset_music1,
         training_reset_music2,
         create_item,
-        is_valid_auto_catch_item_hook
+        is_valid_auto_catch_item_hook,
+        after_image4_on_arg29_replace,
+		effect_follow_replace
     );
 	skyline::nro::add_hook(nro_hook).unwrap();
 }

@@ -2,6 +2,7 @@ use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageSleepFall_Main)]
 unsafe fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let damage_song_fall_effect_interval = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("damage_song_fall_effect_interval"));
@@ -12,6 +13,12 @@ unsafe fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValu
     }
     asdi_check(fighter);
     asdi_function(fighter);
+    if fighter_kind == *FIGHTER_KIND_PICKEL {
+        if fighter.global_table[IS_STOP].get_bool() {
+            macros::COL_NORMAL(fighter);
+            macros::FLASH(fighter, 2.55, 0.0, 0.0, 0.25);
+        }
+    }
     if situation_kind != *SITUATION_KIND_GROUND {
         if ControlModule::get_clatter_time(fighter.module_accessor, 0) > 0.0 {
             if fighter.global_table[IS_STOP].get_bool() {

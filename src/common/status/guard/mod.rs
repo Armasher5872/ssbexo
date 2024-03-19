@@ -1,11 +1,8 @@
 use {
-    crate::functions::{
-        ext::*,
-        var::{
-            consts::*,
-            globals::*,
-            sonic::*,
-        }
+    crate::functions::var::{
+        consts::*,
+        globals::*,
+        sonic::*,
     },
     smash::{
         app::{

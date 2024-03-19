@@ -42,6 +42,4 @@ pub fn install() {
   acmd::install();
   opff::install();
   status::install();
-  clone_weapon("koopajr", "cannonball", "link", "clawshot", false);
-  clone_weapon("koopajr", "cannonball", "link", "clawshot_hand", false);
 }

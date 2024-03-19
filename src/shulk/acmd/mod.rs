@@ -12,8 +12,10 @@ use {
     smashline::*,
 };
 
+mod aerials;
 mod throws;
 
 pub fn install() {
-  throws::install();
+    aerials::install();
+    throws::install();
 }
