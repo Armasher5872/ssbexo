@@ -50,16 +50,6 @@ pub unsafe fn get_param_int_impl_hook(module_accessor: u64, param_type: u64, par
 				}
 			}
 		}
-		if fighter_kind == *WEAPON_KIND_MEWTWO_SHADOWBALL
-		&& param_type == hash40("param_shadowball")
-		&& param_hash == hash40("life") {
-			if STORED_POWER_ENABLED[entry_id] == 1 {
-				return 120;
-			}
-			else {
-				return 80;
-			}
-		}
 	}
 	original!()(module_accessor, param_type, param_hash)
 }
@@ -95,72 +85,6 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 			}
 			else {
 				return 9.0;
-			}
-		}
-		if fighter_kind == *FIGHTER_KIND_MEWTWO {
-			if param_type == hash40("ground_brake") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 0.04;
-				}
-				else {
-					return 0.0754;
-				}
-			}
-			if param_type == hash40("dash_speed") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 1.4;
-				}
-				else {
-					return 1.65;
-				}
-			}
-			if param_type == hash40("run_speed_max") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 1.6;
-				}
-				else {
-					return 1.95;
-				}
-			}
-			if param_type == hash40("jump_initial_y") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 20.0;
-				}
-				else {
-					return 14.0;
-				}
-			}
-			if param_type == hash40("air_accel_y") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 0.2;
-				}
-				else {
-					return 0.08;
-				}
-			}
-			if param_type == hash40("air_speed_y_stable") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 2.0;
-				}
-				else {
-					return 1.5;
-				}
-			}
-			if param_type == hash40("dive_speed_y") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 3.0;
-				}
-				else {
-					return 2.4;
-				}
-			}
-			if param_type == hash40("weight") {
-				if STORED_POWER_ENABLED[entry_id] == 1 {
-					return 115.0;
-				}
-				else {
-					return 79.0;
-				}
 			}
 		}
 		if fighter_kind == *FIGHTER_KIND_PZENIGAME
@@ -337,21 +261,6 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 				else {
 					return 1.7;
 				}
-			}
-		}
-		if fighter_kind == *WEAPON_KIND_MEWTWO_SHADOWBALL
-		&& param_type == hash40("param_shadowball")
-		&& param_hash == hash40("angle") {
-			if STORED_POWER_ENABLED[entry_id] == 1 {
-				if sticky > 0.5 {
-					return 45.0;
-				}
-				else if sticky < -0.5 {
-					return -45.0;
-				}
-			}
-			else {
-				return 0.0;
 			}
 		}
 		if fighter_kind == *WEAPON_KIND_SNAKE_TRENCHMORTAR_BULLET

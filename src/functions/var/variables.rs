@@ -73,26 +73,6 @@ pub static mut LUCINA_GFX_COUNTER: [i32; 8] = [0; 8];
 pub static mut USE_SWORDSMAN_DASH: [bool; 8] = [true; 8];
 pub static mut USE_UP_SPECIAL: [bool; 8] = [true; 8];
 
-//Mewtwo Variables
-pub static mut FUTURESIGHT_CURRENT_FRAME: [i32; 8] = [0; 8];
-pub static FUTURESIGHT_EXPLOSION_TIME: i32 = 20;
-pub static FUTURESIGHT_FUSE_TIME: i32 = 300;
-pub static mut FUTURESIGHT_HIT_COOLDOWN_FRAME: [i32; 8] = [0; 8];
-pub static FUTURESIGHT_HIT_COOLDOWN_TIME: i32 = 3;
-pub static mut FUTURESIGHT_LAST_STATUS: [i32; 8] = [0; 8];
-pub static mut FUTURESIGHT_X: [f32; 8] = [0.0; 8];
-pub static mut FUTURESIGHT_Y: [f32; 8] = [0.0; 8];
-pub static mut GHOST_DASH_ENABLED: [bool; 8] = [false; 8];
-pub static mut GROUNDED_TELEPORT: [bool; 8] = [false; 8];
-pub static mut HAS_FUTURESIGHT: [bool; 8] = [false; 8];
-pub static mut SPEED_ADD: [bool; 8] = [false; 8];
-pub static mut STORED_POWER_ENABLED: [i32; 8] = [0; 8];
-pub static mut STORED_POWER_GFX_TIMER: [i32; 8] = [0; 8];
-pub static mut STORED_POWER_POINT: [i32; 8] = [0; 8];
-pub static mut STORED_POWER_TIMER: [i32; 8] = [0; 8];
-pub static mut UP_SPECIAL_CANCEL: [bool; 8] = [false; 8];
-pub static mut UP_SPECIAL_JUMP_REFRESH: [bool; 8] = [false; 8];
-
 //Mii Brawler Variables
 pub static mut USE_ONSLAUGHT: [bool; 8] = [true; 8];
 

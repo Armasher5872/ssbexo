@@ -1,18 +1,11 @@
 use super::*;
 
-unsafe extern "C" fn littlemac_battle_ui_update(player_id: u8, meter_gain: u32) {
-    //Credit to CSK and Scythe for figuring this out
-    let player_id = player_id as u64;
-    let offset = **(offset_to_addr(0x52b74f8) as *const *const u64);
-    let ptr = (offset + (player_id*8) + 0x20) as *const u64;
-    let res = (*ptr + 0x41e4) as *const u64;
-    update_battle_ui(res, meter_gain);
-}
-
 unsafe extern "C" fn littlemac_frame(fighter: &mut L2CFighterCommon) {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let status_kind = StatusModule::status_kind(boma);
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let ko_gauge = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+    let strength = WorkModule::get_int(boma, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
     //Resets the meter to 0 if the values are invalid
     if ko_gauge < 0.0 || ko_gauge == f32::NAN {
         WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
@@ -30,14 +23,56 @@ unsafe extern "C" fn littlemac_frame(fighter: &mut L2CFighterCommon) {
     if ko_gauge > 100.0 {
         WorkModule::set_float(boma, 100.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
     }
+    //Different Cancel Frames for Star Punch
+    if status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2 {
+        if frame < 1.0 {
+            match ko_gauge {
+                _ if ko_gauge == 0.0 => {
+                    WorkModule::set_int(boma, 0, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+                _ if ko_gauge == 34.0 => {
+                    WorkModule::set_int(boma, 1, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+                _ if ko_gauge == 68.0 => {
+                    WorkModule::set_int(boma, 2, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+                _ => {
+                    WorkModule::set_int(boma, 3, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+            }
+        }
+        match strength {
+            _ if strength == 0 => {
+                if frame > 40.0 {
+                    CancelModule::enable_cancel(boma);
+                    WorkModule::set_int(boma, 0, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+            }
+            _ if strength == 1 => {
+                if frame > 55.0 {
+                    CancelModule::enable_cancel(boma);
+                    WorkModule::set_int(boma, 0, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+            }
+            _ if strength == 2 => {
+                if frame > 65.0 {
+                    CancelModule::enable_cancel(boma);
+                    WorkModule::set_int(boma, 0, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+            }
+            _ => {
+                if CancelModule::is_enable_cancel(boma) {
+                    WorkModule::set_int(boma, 0, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+                }
+            }
+        }
+    }
     //Allows Little Mac to do Side Special multiple times if he's hit
     if WorkModule::is_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_S)
     && WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
         WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_S);
     }
-    //Constantly updates the battle ui for the meter
-    littlemac_battle_ui_update(0, (ko_gauge as u32));
 }
 
 unsafe extern "C" fn littlemac_init(fighter: &mut L2CFighterCommon) {
@@ -95,6 +130,7 @@ unsafe extern "C" fn littlemac_init(fighter: &mut L2CFighterCommon) {
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     //Little Mac
     WorkModule::set_flag(boma, false, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
+    WorkModule::set_int(boma, 0, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
 }
 
 pub fn install() {

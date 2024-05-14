@@ -55,6 +55,7 @@ unsafe fn status_furafuraend(fighter: &mut L2CFighterCommon) -> L2CValue {
     if [*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON].contains(&fighter.global_table[PREV_STATUS_KIND].get_i32()) {
         macros::EFFECT(fighter, Hash40::new("sys_piyo"), Hash40::new("head"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
     }
+    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_piyopiyo"), false, false);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0xcacd460a4), 0.0, 1.0, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_FuraFuraEnd_Main as *const () as _))

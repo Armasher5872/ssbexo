@@ -73,12 +73,71 @@ unsafe extern "C" fn ssbexo_mewtwo_down_throw_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
+//Down Throw Effect
+unsafe extern "C" fn ssbexo_mewtwo_down_throw_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 22.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_deathscythe_trace"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.0, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_deathscythe_aura"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.0, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("mewtwo_shadowball_hold"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(agent.lua_state_agent, 59.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 12, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 12, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 60.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_deathscythe_trace"), false, false);
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_deathscythe_aura"), false, false);
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("mewtwo_shadowball_hold"), false, false);
+    }
+}
+
+//Down Throw Sound
+unsafe extern "C" fn ssbexo_mewtwo_down_throw_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_STATUS(agent, Hash40::new("se_mewtwo_throw_l"));
+    }
+    frame(agent.lua_state_agent, 36.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_mewtwo_rnd_attack"));
+    }
+    frame(agent.lua_state_agent, 57.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_mewtwo_throw_l02"));
+    }
+}
+
+//Down Throw Expression
+unsafe extern "C" fn ssbexo_mewtwo_down_throw_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        agent.clear_lua_stack();
+        lua_args!(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, *CAMERA_QUAKE_KIND_NONE);
+        smash::app::sv_animcmd::FT_ATTACK_ABS_CAMERA_QUAKE(agent.lua_state_agent);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 10);
+    }
+    frame(agent.lua_state_agent, 58.0);
+    if macros::is_excute(agent) {
+        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+        macros::QUAKE(agent, *CAMERA_QUAKE_KIND_M);
+    }
+    frame(agent.lua_state_agent, 59.0);
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 16);
+    }
+}
+
 pub fn install() {
     Agent::new("mewtwo")
     .game_acmd("game_catch", ssbexo_mewtwo_grab_acmd)
     .game_acmd("game_catchdash", ssbexo_mewtwo_dash_grab_acmd)
     .game_acmd("game_catchturn", ssbexo_mewtwo_pivot_grab_acmd)
     .game_acmd("game_throwlw", ssbexo_mewtwo_down_throw_acmd)
+    .effect_acmd("effect_throwlw", ssbexo_mewtwo_down_throw_effect)
+    .sound_acmd("sound_throwlw", ssbexo_mewtwo_down_throw_sound)
+    .expression_acmd("expression_throwlw", ssbexo_mewtwo_down_throw_expression)
     .install()
     ;
 }

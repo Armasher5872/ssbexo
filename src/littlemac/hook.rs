@@ -17,9 +17,15 @@ pub struct CollisionLog {
     padding_3: [u8;10]
 }
 
-//Updates Battle UI
-#[skyline::from_offset(0x068cda0)]
-pub unsafe fn update_battle_ui(fighter_data: *const u64, param_2: u32);
+#[skyline::from_offset(0x68cda0)]
+fn update_littlemac_ui_internal(manager_offset: *mut u32, total_gauge: i32);
+
+//Updates Battle UI, credit to HDR
+pub unsafe extern "C" fn update_littlemac_ui(entry_id: i32, total_gauge: f32) {
+    let manager = singletons::FighterManager() as *mut u64;
+    let offset = (*manager + (entry_id as u64 * 8) + 0x20) as *mut u64;
+    update_littlemac_ui_internal((*offset + 0x41e4) as *mut u32, total_gauge as i32);
+}
 
 //Little Mac KO Meter Update
 #[skyline::hook(offset = 0xc456a0)]

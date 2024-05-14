@@ -174,9 +174,9 @@ bitflags! {
         const ItemLightThrowAirAll = 0x1F80;
     }
     pub struct Cat4: i32 {
-        const SpecialNCommand       = 0x1;
-        const SpecialN2Command      = 0x2;
-        const SpecialSCommand       = 0x4;
+        const SpecialNCommand       = 0x1; //236
+        const SpecialN2Command      = 0x2; //41246
+        const SpecialSCommand       = 0x4; //214
         const SpecialHiCommand      = 0x8;
         const Command6N6            = 0x10;
         const Command4N4            = 0x20;
@@ -235,12 +235,26 @@ bitflags! {
 #[derive(Copy, Clone)]
 pub enum CommandCat {
     Cat1(Cat1),
+    Cat2(Cat2),
+    Cat3(Cat3),
     Cat4(Cat4)
 }
 
 impl Into<CommandCat> for Cat1 {
     fn into(self) -> CommandCat {
         CommandCat::Cat1(self)
+    }
+}
+
+impl Into<CommandCat> for Cat2 {
+    fn into(self) -> CommandCat {
+        CommandCat::Cat2(self)
+    }
+}
+
+impl Into<CommandCat> for Cat3 {
+    fn into(self) -> CommandCat {
+        CommandCat::Cat3(self)
     }
 }
 
@@ -254,6 +268,22 @@ impl Cat1 {
     pub fn new(boma: *mut BattleObjectModuleAccessor) -> Self {
         unsafe {
             Cat1::from_bits_unchecked(ControlModule::get_command_flag_cat(boma, 0))
+        }
+    }
+}
+
+impl Cat2 {
+    pub fn new(boma: *mut BattleObjectModuleAccessor) -> Self {
+        unsafe { 
+            Cat2::from_bits_unchecked(ControlModule::get_command_flag_cat(boma, 1)) 
+        }
+    }
+}
+
+impl Cat3 {
+    pub fn new(boma: *mut BattleObjectModuleAccessor) -> Self {
+        unsafe { 
+            Cat3::from_bits_unchecked(ControlModule::get_command_flag_cat(boma, 2)) 
         }
     }
 }
@@ -341,6 +371,8 @@ impl BomaExt for BattleObjectModuleAccessor {
         let cat = fighter_pad_cmd_flag.into();
         match cat {
             CommandCat::Cat1(cat) => Cat1::new(self).intersects(cat),
+            CommandCat::Cat2(cat) => Cat2::new(self).intersects(cat),
+            CommandCat::Cat3(cat) => Cat3::new(self).intersects(cat),
             CommandCat::Cat4(cat) => Cat4::new(self).intersects(cat)
         }
     }
@@ -426,10 +458,10 @@ impl BomaExt for BattleObjectModuleAccessor {
         let f5 = [*FIGHTER_KIND_FOX, *FIGHTER_KIND_SONIC, *FIGHTER_KIND_LUIGI];
         let f6 = [*FIGHTER_KIND_PURIN, *FIGHTER_KIND_SHEIK, *FIGHTER_KIND_WARIO];
         let f7 = [*FIGHTER_KIND_DAISY, *FIGHTER_KIND_MARIOD, *FIGHTER_KIND_JACK, *FIGHTER_KIND_MARIO, *FIGHTER_KIND_MIIFIGHTER, *FIGHTER_KIND_GAMEWATCH, *FIGHTER_KIND_PALUTENA, *FIGHTER_KIND_PEACH, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PICHU, *FIGHTER_KIND_PIKACHU, *FIGHTER_KIND_ROSETTA, *FIGHTER_KIND_SNAKE, *FIGHTER_KIND_WIIFIT, *FIGHTER_KIND_ZELDA];
-        let f8 = [*FIGHTER_KIND_CAPTAIN, *FIGHTER_KIND_PITB, *FIGHTER_KIND_GEKKOUGA, *FIGHTER_KIND_SHIZUE, *FIGHTER_KIND_KEN, *FIGHTER_KIND_KROOL, *FIGHTER_KIND_LITTLEMAC, *FIGHTER_KIND_LUCARIO, *FIGHTER_KIND_ROCKMAN, *FIGHTER_KIND_METAKNIGHT, *FIGHTER_KIND_TANTAN, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_PIT, *FIGHTER_KIND_ROBOT, *FIGHTER_KIND_RYU, *FIGHTER_KIND_TRAIL, *FIGHTER_KIND_TOONLINK, *FIGHTER_KIND_SZEROSUIT];
+        let f8 = [*FIGHTER_KIND_CAPTAIN, *FIGHTER_KIND_PITB, *FIGHTER_KIND_GEKKOUGA, *FIGHTER_KIND_SHIZUE, *FIGHTER_KIND_KEN, *FIGHTER_KIND_KROOL, *FIGHTER_KIND_LITTLEMAC, *FIGHTER_KIND_LUCARIO, *FIGHTER_KIND_ROCKMAN, *FIGHTER_KIND_METAKNIGHT, *FIGHTER_KIND_TANTAN, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_PIT, *FIGHTER_KIND_ROBOT, *FIGHTER_KIND_TRAIL, *FIGHTER_KIND_TOONLINK, *FIGHTER_KIND_SZEROSUIT];
         let f9 = [*FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_SAMUSD, *FIGHTER_KIND_DIDDY, *FIGHTER_KIND_FALCO, *FIGHTER_KIND_GAOGAEN, *FIGHTER_KIND_INKLING, *FIGHTER_KIND_NESS, *FIGHTER_KIND_PIKMIN, *FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_REFLET, *FIGHTER_KIND_PICKEL, *FIGHTER_KIND_YOUNGLINK];
         let f10 = [*FIGHTER_KIND_BUDDY, *FIGHTER_KIND_MASTER, *FIGHTER_KIND_CLOUD, *FIGHTER_KIND_DONKEY, *FIGHTER_KIND_POPO, *FIGHTER_KIND_NANA, *FIGHTER_KIND_KIRBY, *FIGHTER_KIND_MIISWORDSMAN, *FIGHTER_KIND_ELIGHT, *FIGHTER_KIND_MURABITO];
-        let f11 = [*FIGHTER_KIND_DUCKHUNT, *FIGHTER_KIND_GANON, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_PACMAN, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_RICHTER, *FIGHTER_KIND_SIMON, *FIGHTER_KIND_DOLLY, *FIGHTER_KIND_YOSHI];
+        let f11 = [*FIGHTER_KIND_DUCKHUNT, *FIGHTER_KIND_GANON, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_PACMAN, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_RICHTER, *FIGHTER_KIND_SIMON, *FIGHTER_KIND_DOLLY, *FIGHTER_KIND_YOSHI, *FIGHTER_KIND_RYU];
         let f12 = [*FIGHTER_KIND_KOOPA, *FIGHTER_KIND_WOLF];
         let f13 = [*FIGHTER_KIND_KAMUI, *FIGHTER_KIND_RIDLEY, *FIGHTER_KIND_SHULK];
         let f14 = [*FIGHTER_KIND_CHROM, *FIGHTER_KIND_LUCAS, *FIGHTER_KIND_LUCINA, *FIGHTER_KIND_MARTH, *FIGHTER_KIND_ROY];

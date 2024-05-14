@@ -1,16 +1,12 @@
 use {
-  crate::{
-    functions::{
-      ext::*,
-      var::{
-        consts::*,
-        globals::*,
-        littlemac::*,
-        variables::*,
-      },
-      util::*,
-    },
-    littlemac::hook::*,
+  crate::functions::{
+    ext::*,
+    var::{
+      consts::*,
+      globals::*,
+      littlemac::*,
+      variables::*,
+    }
   },
   smash::{
     app::{
@@ -27,7 +23,7 @@ use {
 };
 
 mod acmd;
-pub mod hook;
+mod hook;
 mod opff;
 mod status;
 

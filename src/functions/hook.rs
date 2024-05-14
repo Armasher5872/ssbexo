@@ -135,8 +135,10 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
     let attacker_id = *(collision.add(0x24) as *const u32);
 	let attacker_battle_object = &mut *get_battle_object_from_id(attacker_id);
     let attacker_boma = attacker_battle_object.module_accessor;
-    let shield_damage = WorkModule::get_int(attacker_boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
+    let attacker_shield_damage = WorkModule::get_int(attacker_boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
+    let defender_shield_hp = WorkModule::get_float(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     let motion_rate: f32;
+    let damage: f32;
     if !attacker_battle_object.is_fighter() && !attacker_battle_object.is_weapon() {
         return;
     }
@@ -148,7 +150,8 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
     LAST_ATTACK_HITBOX_LOCATION_X = loc_x;
     LAST_ATTACK_HITBOX_LOCATION_Y = loc_y;
     LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
-    if (real_power+shield_damage) >= 30.0 && [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD].contains(&defender_status_kind) {
+    damage = ((30.0/(defender_shield_hp*1.4))+(defender_shield_hp*1.65)).clamp(15.0, 30.0);
+    if (real_power+attacker_shield_damage) >= damage && [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD].contains(&defender_status_kind) {
         StatusModule::change_status_request_from_script(defender_boma, *FIGHTER_STATUS_KIND_FURAFURA, false);
     }
     if real_power == 0.0 {

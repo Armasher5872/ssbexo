@@ -5,6 +5,7 @@ use {
             lua_bind::*,
             *
         },
+        hash40,
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon
     },

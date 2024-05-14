@@ -1,6 +1,7 @@
 use {
     crate::functions::var::{
         consts::*,
+        globals::*,
         variables::*,
     },
     smash::{
@@ -29,7 +30,7 @@ mod opff;
 mod status;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
-  status::install();
+    acmd::install();
+    opff::install();
+    status::install();
 }
