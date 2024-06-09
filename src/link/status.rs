@@ -873,7 +873,7 @@ unsafe extern "C" fn link_special_hi_glide_init_status(fighter: &mut L2CFighterC
     let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
     let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
     let lr = PostureModule::lr(fighter.module_accessor);
-    let limit_y_mul = 0.35;
+    let limit_y_mul = 0.15;
     let combined_y_speed = air_speed_y_stable*limit_y_mul;
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, combined_y_speed);
@@ -932,7 +932,7 @@ unsafe extern "C" fn link_special_hi_glide_turn_init_status(fighter: &mut L2CFig
     let air_speed_y_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_y_stable"), 0);
     let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("air_speed_x_stable"), 0);
     let lr = PostureModule::lr(fighter.module_accessor);
-    let limit_y_mul = 0.35;
+    let limit_y_mul = 0.15;
     let combined_y_speed = air_speed_y_stable*limit_y_mul;
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     PostureModule::reverse_lr(fighter.module_accessor);

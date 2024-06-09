@@ -56,6 +56,9 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app24FighterSpecializer_Luigi14delete_plungerERNS_7FighterEb"]
 	pub fn delete_plunger(fighter: *mut smash::app::Fighter, param: bool) -> u64;
 
+    #[link_name = "\u{1}_ZN3app25FighterSpecializer_Dedede29end_special_n_shot_object_hitERNS_7FighterE"]
+	pub fn end_special_n_shot_object_hit(fighter: *mut smash::app::Fighter) -> u64;
+
     pub fn change_version_string(arg: u64, string: *const c_char);
 }
 
@@ -2037,19 +2040,8 @@ pub unsafe extern "C" fn inkling_generate_squid_helper(fighter: &mut L2CAgentBas
 }
 
 //Metaknight Galaxia Beam Functions
-pub unsafe extern "C" fn is_galaxia(object_boma: *mut BattleObjectModuleAccessor) -> bool {
-    if smash::app::utility::get_kind(&mut *object_boma) == *WEAPON_KIND_KOOPAJR_CANNONBALL {
-        let owner_id = WorkModule::get_int(object_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
-        let owner_boma = smash::app::sv_battle_object::module_accessor(owner_id);
-        let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
-        if owner_kind == *FIGHTER_KIND_METAKNIGHT {
-            return true;
-        }
-    }
-    return false;
-}
 
-pub unsafe extern "C" fn should_remove_galaxia(weapon: &mut L2CWeaponCommon) -> bool {
+pub unsafe extern "C" fn should_remove_projectile(weapon: &mut L2CWeaponCommon) -> bool {
     let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     if GroundModule::is_wall_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_SIDE as u32)
     || WorkModule::is_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_HIT_WALL)
@@ -2137,7 +2129,6 @@ pub unsafe extern "C" fn asdi_function(fighter: &mut L2CFighterCommon) {
         WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
     };
 }
-
 #[repr(C)]
 pub struct CreateItemParam {
     pub founder_pos: Vector4f,
@@ -2434,4 +2425,74 @@ pub unsafe extern "C" fn find_ascendable_ground(boma: *mut BattleObjectModuleAcc
     else {
         return pos_y;
     }
+}
+
+//Purin Disarming Voice Functions
+
+pub unsafe extern "C" fn should_remove_disarming_voice_on_hit(weapon: &mut L2CWeaponCommon) -> bool {
+    if AttackModule::is_infliction_status(weapon.module_accessor, WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT)
+    || StopModule::is_stop(weapon.module_accessor)
+    || WorkModule::is_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_ATTACK) {
+        return true;
+    }
+    return false;
+}
+
+pub unsafe extern "C" fn disarming_voice_removal(weapon: &mut L2CWeaponCommon) {
+    let pos = *PostureModule::pos(weapon.module_accessor);
+    EffectModule::req(weapon.module_accessor, Hash40::new("sys_erace_smoke"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("poke_meloetta_bullet"), false, false);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("rosetta_ring_erase"), false, false);
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+    weapon.pop_lua_stack(1);
+}
+
+pub unsafe extern "C" fn disarming_voice_hit_removal(weapon: &mut L2CWeaponCommon) {
+    let pos = *PostureModule::pos(weapon.module_accessor);
+    EffectModule::req(weapon.module_accessor, Hash40::new("sys_flash"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("poke_meloetta_bullet"), false, false);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("rosetta_ring_erase"), false, false);
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+    weapon.pop_lua_stack(1);
+}
+
+//Related to CheckAttack
+pub unsafe fn get_table_value(table: *mut smash2::lib::L2CTable, key: &str) -> smash2::lib::L2CValue {
+    let hash = if key.starts_with("0x") {
+        smash2::phx::Hash40::from_hex_str(key).unwrap()
+    } 
+    else {
+        smash2::phx::hash40(key)
+    };
+    (*table).get_map(hash).unwrap().clone()
+}
+
+//Ike Slash Functions
+
+pub unsafe extern "C" fn should_remove_slash_on_hit(weapon: &mut L2CWeaponCommon) -> bool {
+    if AttackModule::is_infliction_status(weapon.module_accessor, WEAPON_IKE_SLASH_STATUS_KIND_SHOOT)
+    || StopModule::is_stop(weapon.module_accessor)
+    || WorkModule::is_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_ATTACK) {
+        return true;
+    }
+    return false;
+}
+
+pub unsafe extern "C" fn slash_removal(weapon: &mut L2CWeaponCommon) {
+    let pos = *PostureModule::pos(weapon.module_accessor);
+    EffectModule::req(weapon.module_accessor, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+    weapon.pop_lua_stack(1);
+}
+
+pub unsafe extern "C" fn slash_hit_removal(weapon: &mut L2CWeaponCommon) {
+    let pos = *PostureModule::pos(weapon.module_accessor);
+    EffectModule::req(weapon.module_accessor, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
+    notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+    weapon.pop_lua_stack(1);
 }

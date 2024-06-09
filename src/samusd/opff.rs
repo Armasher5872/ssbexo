@@ -102,8 +102,6 @@ unsafe extern "C" fn samusd_init(fighter: &mut L2CFighterCommon) {
     //Dark Samus
     HAS_FIRE_CHARGE_SHOT[entry_id] = false;
     CHARGE_SHOT_TIMER[entry_id] = 0;
-    SAMUSD_X[entry_id] = 0.0;
-    SAMUSD_Y[entry_id] = 0.0;
 }
 
 pub fn install() {

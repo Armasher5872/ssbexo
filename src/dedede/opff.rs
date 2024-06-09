@@ -1,7 +1,27 @@
 use super::*;
 
 unsafe extern "C" fn dedede_frame(fighter: &mut L2CFighterCommon) {
-    if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_N_SHOT_OBJECT_HIT {
+    let status_kind = StatusModule::status_kind(fighter.module_accessor);
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    /*
+    if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3 {
+        if (15.0..26.0).contains(&frame)
+        && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_s3_s2"), 26.0, 1.0, false, 0.0, false, false);
+        }
+    }
+    */
+    if [
+        *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4,
+        *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4
+    ].contains(&status_kind)
+    && fighter.global_table[CURRENT_FRAME].get_f32() < 1.0
+    && WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+        ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_NEWDEDEDEHAMMER, true, -1);
+        ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_DEDEDE_GENERATE_ARTICLE_NEWDEDEDEHAMMER, true, ArticleOperationTarget(0));
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("hammer") as i64, hash40("hammer_disp_off") as i64);
+    }
+    if status_kind == *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_N_SHOT_OBJECT_HIT {
         let obj_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_SPECIAL_N_WORK_INT_SHOT_OBJECT_ID) as u32;
         let obj_boma = smash::app::sv_battle_object::module_accessor(obj_id);
         let obj_kind = smash::app::utility::get_kind(&mut *obj_boma);
@@ -117,7 +137,9 @@ unsafe extern "C" fn dedede_init(fighter: &mut L2CFighterCommon) {
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     //Dedede
     WorkModule::set_flag(boma, false, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
+    WorkModule::set_flag(boma, false, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
     WorkModule::set_int(boma, *ITEM_KIND_NONE, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+    WorkModule::set_int(boma, 0, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
 }
 
 pub fn install() {

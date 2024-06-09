@@ -598,12 +598,7 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_acmd(agent: &mut L2C
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
         shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("top"), 13.5, 0.0, 9.0, 6.0, 0.0, 7.0, 0.0, damage_charge_multiplier, damage_charge_multiplier, 80, false, 1.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
-        if charge_frame >= 19 {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 100, 0, 60, 13.5, 6.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-        }
-        else {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 361, 100, 0, 100, 13.5, 6.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-        }
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 361, 100, 0, 60, 13.5, 6.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
     }
     frame(agent.lua_state_agent, 26.0);
     if macros::is_excute(agent) {
@@ -652,12 +647,7 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_acmd(agent: &mut L2CAg
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
         shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("top"), 13.5, 0.0, 9.0, 6.0, 0.0, 7.0, 0.0, damage_charge_multiplier, damage_charge_multiplier, 80, false, 1.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
-        if charge_frame >= 19 {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 100, 0, 60, 13.5, 6.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-        }
-        else {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 361, 100, 0, 100, 13.5, 6.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-        }
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 361, 100, 0, 60, 13.5, 6.0, 9.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
     }
     frame(agent.lua_state_agent, 26.0);
     if macros::is_excute(agent) {

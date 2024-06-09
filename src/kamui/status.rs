@@ -1,5 +1,31 @@
 use super::*;
 
+unsafe extern "C" fn kamui_attack_lw4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK_LW4)(fighter);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_mask"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_rspearfoot"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_lspearfoot"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_wing"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_fronthair"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_hair"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_rfoot"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_lfoot"), true);
+    ret
+}
+
+unsafe extern "C" fn kamui_attack_lw4_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let ret = original_status(Exit, fighter, *FIGHTER_STATUS_KIND_ATTACK_LW4)(fighter);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_mask"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_rspearfoot"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_lspearfoot"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_wing"), false);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_fronthair"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_hair"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_rfoot"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kamui_lfoot"), true);
+    ret
+}
+
 unsafe extern "C" fn kamui_special_s_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KAMUI_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_START);
@@ -27,6 +53,8 @@ unsafe extern "C" fn kamui_special_s_attack_pre_status(fighter: &mut L2CFighterC
 
 pub fn install() {
     Agent::new("kamui")
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_LW4, kamui_attack_lw4_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_ATTACK_LW4, kamui_attack_lw4_exit_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, kamui_special_s_pre_status)
     .status(Pre, *FIGHTER_KAMUI_STATUS_KIND_SPECIAL_S_ATTACK, kamui_special_s_attack_pre_status)
     .install()

@@ -117,7 +117,7 @@ unsafe extern "C" fn metaknight_galaxia_beam_shoot_main_status(weapon: &mut L2CW
         sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, 0.0);
         sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     }
-    if should_remove_galaxia(weapon) {
+    if should_remove_projectile(weapon) {
         galaxia_beam_removal(weapon);
     }
     if should_remove_galaxia_on_hit(weapon) {
@@ -130,7 +130,7 @@ unsafe extern "C" fn metaknight_galaxia_beam_shoot_main_loop(weapon: &mut L2CWea
     let owner_boma = get_owner_boma(weapon);
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
-    if should_remove_galaxia(weapon)
+    if should_remove_projectile(weapon)
     || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S)) {
         galaxia_beam_removal(weapon);
     }

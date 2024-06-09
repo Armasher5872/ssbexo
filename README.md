@@ -39,86 +39,120 @@ Kirby with more copy abilities, like Umbrella, Hammer, Wheel, and Final Cutter, 
 Fox with Jump Cancelable Shine
 Pikachu with Iron Tail
 Luigi with Thunderhand and Poltercharge
-Ness with PSI Offense Up
+(Planned) Ness with PSI Offense Up
 Captain Falcon is now cooler
+Jigglypuff with Fairy Moves and Disarming Voice
 
 Melee
 
+(Planned) Peach Changes
 (Planned) Fully Decloned Daisy focused around rushdown item play
 Bowser with BIS Punch and Fireball/Fire Breath
+(Planned) Ice Climber Changes
+Sheik with Kick Bounce and Nocturne of Shadow
+(Planned) Zelda Changes
 (Planned) Fully Decloned Dr. Mario based around high skill testing gameplay
-Pichu with Discharge Mechanic
-(Planned) Marth changes focused around a "build a combo" type moveset
-Fully Decloned Lucina with an Eletrical Sword, a reworked moveset, and a weapon swap
+(Planned) Pichu with Discharge Mechanic
+(Planned) Falco with a "back and forth" combo game
+Marth changes with new Dair and Crescent Slash
+Fully Decloned Lucina with an Electrical Sword, a reworked moveset, and a weapon swap
 (Planned) Young Link with reworked specials based on the Majora's Mask Masks
 (Planned) Fully Decloned Ganondorf based around strong moves, heavy neutral emphasis, and deception
-(Planned) Reworked Mewtwo focused around a stance swap with Hidden Power
+(Planned) Reworked Mewtwo with Psychic Normals, Float, Future Sight, and general high skill testing gameplay
+(Planned) Roy Changes
 (Planned) Reworked Chrom based around a greatsword and wind elements
+(Planned) Mr. Game & Watch Changes
 
 Brawl
 
-Meta Knight with Drill Rush Dash Attack, Sword Dive Dair, and Galaxia Beam
+Meta Knight with Drill Rush Dash Attack, Sword Dive Dair, Galaxia Beam Side Special, and Brawl Up Special
+Pit with automatic attack Upperdash Arm and more ground centric gameplay
 (Planned) Dark Pit focused around Weapons
 (Planned) Reworked Zero Suit Samus based around stance change akin to PM Samus
 (Planned) Wario with reworked Dash Attack, Ground Pound, and Fire Wario
 Snake with a Knife
-(Planned) Ike with Blade Beam and Execution
+Ike with Brawl Fair, Ragnallian Slash, and Eruption Down Special
 (Planned) Pokemon Trainer with Area of Effects
 (Planned) Squirtle with Bubble
 Ivysaur with Seed Bomb (Planned to become Sludge Bomb)
 Charizard with Dragon Rush, Flame Pledge, and Brawl Fair
+(Planned) Diddy Kong Changes
+(Planned) Lucas Changes
 Reworked Sonic focused around rushdown, with moves like Sonic Updraft, Star Shattering Kick, Sonic Flare, Instashield, Humming Top Trick, Stomp, Boost, and Bounce Bracelet/Drop Dash
-King Dedede with Reworked Gordo
+King Dedede with inspiration from Loxodont in Rivals 2, like King's Scepter, Brawl Fair, Reworked Gordo, and Storable Jet Hammer
+(Planned) Olimar Changes
 Lucario with Hitflow (Planned to be changed later on into a Mega Evolution gimmick)
+(Planned) ROB Changes
 (Planned) Toon Link with Skull Hammer and Great Hurricane Slash
+Wolf with new Up Tilt and Jump Cancelable Wolf Flash
 
 Smash 4
 
 (Planned) Villager with Pole Dash Attack
+(Planned) Mega Man Changes
+(Planned) Rosalina and Luma Changes
 Little Mac with better aerials and Star Punch
 (Planned) Greninja with reworked Substitute
 (Planned) Mii Brawler with overhauled specials over the sub par ones
 Mii Swordfighter with reworked aerials, and specials, made to be more akin to other swordfighters on the roster
+(Planned) Mii Gunner Changes
 (Planned) Palutena with Super Speed
+(Planned) Pac-Man Changes
+(Planned) Robin Changes
+(Planned) Shulk with Smash 4 Bair and updated Aesthetics on Monado Arts
+(Planned) Bowser Jr Changes
+(Planned) Duck Hunt Changes
+Ryu with Drive Rush Dash Attack, Hasogeki, and Projectile Invincible Tatsumaki
 (Planned) Ken with Dragonlash Dance
 (Planned) Cloud with Meteor Rain
-(Planned) Corrin with multihit sword
+Corrin with more multihits and Draconic Surge Down Smash
+(Planned) Bayonetta Changes
 
 Ultimate
 
+(Planned) Inkling Changes
 Reworked Ridley to be larger, fixed up Forward Tilt, (Planned) reworked Up Smash, Claw Slash Fair, Wing Bash Bair, Tail Sweep Dair, (Planned) Aerial Command Grab Zair, (Planned) Reworked Skewer, and (Planned) Finisher Blows
 (Planned) Simon with unique moves in place of the moves Richter originally had
 (Planned) Richter with unique moves in place of the moves Simon originally had
+King K Rool with Platform Drop Down Smash
+(Planned) Isabelle Changes
+(Planned) Incineroar Changes
+Overall better Piranha Plant
 (Planned) Joker with reworked Arsene
-(Planned) Terry with Feint Moves
+(Planned) Hero Changes
+(Planned) Banjo & Kazooie Changes
+Terry with Feint Moves
+(Planned) Byleth Changes
 (Planned) Reworked Min Min to utilize fully extended ARMs less often
+Steve nerfs and cosmetic changes
+Sephiroth with less polarizing One Winged Angel and more unique One Winged Angel abilities like Charge Cancel Shadow Flare, Manual Detonation Shadow Flare, Hit Cancel Blade Dash, and Manual Detonation Scintilla
+(Planned) Aegis Changes
+(Planned) Kazuya Changes
+(Planned) Sora Changes
 
 EXO Newcomers
 
 Senator Armstrong over Ganondorf
-Knuckles
-Parappa the Rapper
-Kazuma Kiryu
-Undefined Rougelike Character
-Seth
-Sol Badguy
-Bandana Dee
-Shadow
-Kratos
-Doomslayer
-Skull Kid
-Ghirahim
-Demoman
-Tarnished
-Dr. Eggman
-Serperior
-Sukapon
-Reimu
-Rayman
-Gordon Freeman
 Paper Mario
 Waluigi
+Ghirahim
 Dark Matter
+Serperior
+Sukapon
+Knuckles
+Shadow
+Dr. Eggman
+Kazuma Kiryu
+Seth
+Parappa the Rapper
+Sol Badguy
+Reimu
+The Knight
+Tarnished
+Rayman
+Doomslayer
+Kratos
+Demoman
 
 - Make Custom Smash better
 

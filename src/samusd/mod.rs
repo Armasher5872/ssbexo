@@ -18,7 +18,11 @@ use {
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::L2CFighterCommon
+        lua2cpp::L2CFighterCommon,
+        phx::{
+            Vector2f,
+            Vector3f
+        }
     },
     smash_script::*,
     smashline::*,

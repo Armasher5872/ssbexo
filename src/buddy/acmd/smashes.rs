@@ -2,6 +2,10 @@ use super::*;
 
 //Down Smash ACMD
 unsafe extern "C" fn ssbexo_buddy_down_smash_acmd(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PIECE, true, -1);
+        ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_BUDDY_GENERATE_ARTICLE_PIECE, true, ArticleOperationTarget(0));
+    }
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);

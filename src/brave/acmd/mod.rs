@@ -12,8 +12,10 @@ use {
     smashline::*,
 };
 
+mod specials;
 mod throws;
 
 pub fn install() {
-  throws::install();
+    specials::install();
+    throws::install();
 }

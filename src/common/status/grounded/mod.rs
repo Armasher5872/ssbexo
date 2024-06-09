@@ -4,6 +4,7 @@ use {
         var::{
             consts::*,
             globals::*,
+            robot::*,
         }
     },
     smash::{
@@ -29,6 +30,7 @@ mod appeal;
 pub mod dash;
 mod run;
 mod turndash;
+mod turnrun;
 mod wait;
 
 pub fn install() {
@@ -36,5 +38,6 @@ pub fn install() {
     dash::install();
     run::install();
     turndash::install();
+    turnrun::install();
     wait::install();
 }

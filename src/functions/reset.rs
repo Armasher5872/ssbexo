@@ -66,6 +66,10 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 			WorkModule::set_float(boma, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CURRENT_DAMAGE);
 			WorkModule::set_float(boma, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);	
 		}
+		//Bayonetta
+		if fighter_kind == *FIGHTER_KIND_BAYONETTA {
+			WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+		}
 		//Captain
 		if fighter_kind == *FIGHTER_KIND_CAPTAIN {
 			WorkModule::set_flag(boma, false, FIGHTER_FALCON_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
@@ -74,7 +78,9 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 		//Dedede
 		if fighter_kind == *FIGHTER_KIND_DEDEDE {
 			WorkModule::set_flag(boma, false, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
+			WorkModule::set_flag(boma, false, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
 			WorkModule::set_int(boma, *ITEM_KIND_NONE, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+			WorkModule::set_int(boma, 0, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
 		}
 		//Dolly
 		if fighter_kind == *FIGHTER_KIND_DOLLY {
@@ -84,6 +90,14 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 		if fighter_kind == *FIGHTER_KIND_EDGE {
 			WorkModule::set_flag(boma, false, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
 			WorkModule::set_int(boma, 0, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+		}
+		//Ike
+		if fighter_kind == *FIGHTER_KIND_IKE {
+			WorkModule::set_flag(boma, false, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND);
+			WorkModule::set_flag(boma, false, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
+			WorkModule::set_float(boma, 0.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_BOUND_ANGLE);
+			WorkModule::set_float(boma, 0.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
+			WorkModule::set_float(boma, 0.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_Y_CHECK);
 		}
 		//Kirby
 		if fighter_kind == *FIGHTER_KIND_KIRBY {
@@ -131,6 +145,10 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 		if fighter_kind == *FIGHTER_KIND_METAKNIGHT {
 			WorkModule::set_flag(boma, false, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
 		}
+		//Mewtwo
+		if fighter_kind == *FIGHTER_KIND_MEWTWO {
+			WorkModule::set_float(boma, 1.0, FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLOAT_PSYCHIC_GLARE_POWER);
+		}
 		//Miiswordsman
 		if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
 			WorkModule::set_flag(boma, false, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
@@ -156,6 +174,17 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 			WorkModule::set_flag(boma, false, FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
 			WorkModule::set_int(boma, 0, FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
 		}
+		//Purin
+		if fighter_kind == *FIGHTER_KIND_PURIN {
+			WorkModule::set_flag(boma, false, FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
+		}
+		if fighter_kind == *FIGHTER_KIND_ROBOT {
+			WorkModule::set_float(boma, 0.0, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_SNAKE_SPEED_VALUE);
+			WorkModule::set_flag(boma, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+			WorkModule::set_flag(boma, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
+			WorkModule::set_flag(boma, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+			WorkModule::set_flag(boma, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+		}
 		//Rosetta
 		if fighter_kind == *FIGHTER_KIND_ROSETTA {
 			WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, FIGHTER_ROSETTA_STATUS_SPECIAL_LW_INT_CAPTURE_OBJECT_ID);
@@ -168,8 +197,6 @@ unsafe extern "C" fn reset_frame(fighter: &mut L2CFighterCommon) {
 		if fighter_kind == *FIGHTER_KIND_SAMUSD {
 			HAS_FIRE_CHARGE_SHOT[entry_id] = false;
 			CHARGE_SHOT_TIMER[entry_id] = 0;
-			SAMUSD_X[entry_id] = 0.0;
-			SAMUSD_Y[entry_id] = 0.0;
 		}
 		//Sheik
 		if fighter_kind == *FIGHTER_KIND_SHEIK {

@@ -69,9 +69,10 @@ unsafe extern "C" fn ssbexo_dedede_gordo_side_special_attack_acmd(agent: &mut L2
                     KineticModule::mul_speed(agent.module_accessor, &Vector3f{x: 0.4+0.05*(damage-5.0), y: 1.0, z: 1.0}, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
                 }
             }
+            WorkModule::set_int(agent.module_accessor, 180, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
         }
     }
-    for _ in 0..9999 {
+    for _ in 0..181 {
         if !StopModule::is_stop(agent.module_accessor) {
             speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).abs();
             speed_y = KineticModule::get_sum_speed_y(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).abs();
@@ -87,41 +88,10 @@ unsafe extern "C" fn ssbexo_dedede_gordo_side_special_attack_acmd(agent: &mut L2
     }
 }
 
-//Uncharged Aerial Down Special ACMD
-unsafe extern "C" fn ssbexo_dedede_uncharged_aerial_down_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 10.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("hammer1"), 12.0, 361, 100, 0, 30, 9.0, 16.0, 0.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 12.0, 361, 100, 0, 30, 5.0, 0.0, 7.0, 2.0, Some(0.0), Some(7.0), Some(6.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
-    }
-    wait(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-    }
-}
-
-//Charged Aerial Down Special ACMD
-unsafe extern "C" fn ssbexo_dedede_charged_aerial_down_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 9.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("hammer1"), 40.0, 361, 46, 0, 60, 9.0, 16.0, 0.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_LL, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 30.0, 361, 46, 0, 60, 5.0, 0.0, 7.0, 2.0, Some(0.0), Some(7.0), Some(6.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
-    }
-    wait(agent.lua_state_agent, 3.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-    }
-}
-
 pub fn install() {
     Agent::new("dedede_gordo")
     .game_acmd("game_specialsthrow", ssbexo_dedede_gordo_side_special_throw_acmd)
     .game_acmd("game_specialsattack", ssbexo_dedede_gordo_side_special_attack_acmd)
-    .install()
-    ;
-    Agent::new("dedede")
-    .game_acmd("game_specialairlw", ssbexo_dedede_uncharged_aerial_down_special_acmd)
-    .game_acmd("game_specialairlwmax", ssbexo_dedede_charged_aerial_down_special_acmd)
     .install()
     ;
 }

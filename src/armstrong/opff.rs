@@ -17,7 +17,6 @@ unsafe extern "C" fn armstrong_frame(fighter: &mut L2CFighterCommon) {
         let charge_start = WorkModule::get_float(boma, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
         let charge_end = WorkModule::get_float(boma, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
         let max_charge: f32 = 20.0;
-        println!("Charge Frame: {}", charge_frames);
         match motion_kind {
             _ if [hash40("attack_s3_s"), hash40("attack_s3_hi"), hash40("attack_s3_lw"), hash40("attack_lw3")].contains(&motion_kind) => {
                 WorkModule::set_float(boma, 3.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
@@ -27,13 +26,17 @@ unsafe extern "C" fn armstrong_frame(fighter: &mut L2CFighterCommon) {
                 WorkModule::set_float(boma, 12.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
                 WorkModule::set_float(boma, 20.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
             }
-            _ if [hash40("attack_air_f"), hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind) => {
-                WorkModule::set_float(boma, 5.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
+            _ if [hash40("attack_air_f")].contains(&motion_kind) => {
+                WorkModule::set_float(boma, 4.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
                 WorkModule::set_float(boma, 12.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
+            }
+            _ if [hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind) => {
+                WorkModule::set_float(boma, 5.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
+                WorkModule::set_float(boma, 14.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
             }
             _ if [hash40("attack_air_b"), hash40("attack_air_hi")].contains(&motion_kind) => {
                 WorkModule::set_float(boma, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
-                WorkModule::set_float(boma, 6.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
+                WorkModule::set_float(boma, 5.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_END);
             }
             _ if [hash40("attack_air_lw"), hash40("special_s_start"), hash40("special_air_s_start")].contains(&motion_kind) => {
                 WorkModule::set_float(boma, 3.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);

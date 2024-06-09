@@ -6,7 +6,9 @@ use {
             armstrong::*,
             consts::*,
             globals::*,
+            ike::*,
             link::*,
+            robot::*,
             variables::*,
         }
     },
@@ -29,6 +31,7 @@ use {
         },
         phx::{
             Hash40,
+            Vector2f,
             Vector3f
         }
     },

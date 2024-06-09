@@ -4,6 +4,7 @@ use {
     var::{
       consts::*,
       dedede::*,
+      globals::*,
       kirby::*,
       link::*,
       murabito::*,
@@ -11,7 +12,11 @@ use {
     }
   },
   smash::{
-    app::lua_bind::*,
+    app::{
+      lua_bind::*,
+      *
+    },
+    hash40,
     lib::{
       L2CValue,
       lua_const::*,
@@ -19,6 +24,7 @@ use {
     lua2cpp::L2CFighterCommon,
     phx::Vector3f
   },
+  smash_script::*,
   smashline::*,
 };
 

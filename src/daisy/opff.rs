@@ -1,13 +1,11 @@
 use super::*;
 
-unsafe extern "C" fn daisy_frame(fighter: &mut L2CFighterCommon) {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_PEACH_INSTANCE_WORK_ID_FLAG_UNIQ_FLOAT)
-}
-
 unsafe extern "C" fn daisy_init(fighter: &mut L2CFighterCommon) {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     //Universal
+    fighter.global_table[CHECK_AIR_JUMP_UNIQ].assign(&false.into());
+    fighter.global_table[CHECK_AIR_JUMP_AERIAL_UNIQ].assign(&false.into());
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
@@ -62,7 +60,6 @@ unsafe extern "C" fn daisy_init(fighter: &mut L2CFighterCommon) {
 pub fn install() {
     Agent::new("daisy")
     .on_start(daisy_init)
-    //.on_line(Main, daisy_frame)
     .install()
     ;
 }

@@ -61,11 +61,54 @@ unsafe extern "C" fn ssbexo_donkey_aerial_dash_attack_acmd(agent: &mut L2CAgentB
     }
 }
 
+//Aerial Dash Attack Effect
+unsafe extern "C" fn ssbexo_donkey_aerial_dash_attack_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 10.0);
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+//Aerial Dash Attack Sound
+unsafe extern "C" fn ssbexo_donkey_aerial_dash_attack_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 9.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_donkey_rnd_attack"));
+        macros::PLAY_SE(agent, Hash40::new("se_donkey_attackdash"));
+    }
+}
+
+//Aerial Dash Attack Expression
+unsafe extern "C" fn ssbexo_donkey_aerial_dash_attack_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 4, true);
+    }
+    frame(agent.lua_state_agent, 6.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 9.0);
+    if macros::is_excute(agent) {
+        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+    }
+    frame(agent.lua_state_agent, 41.0);
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 8);
+    }
+}
+
 pub fn install() {
     Agent::new("donkey")
     .game_acmd("game_itemheavythrowf", ssbexo_donkey_heavy_throw_forward_acmd)
     .game_acmd("game_attackdash", ssbexo_donkey_dash_attack_acmd)
     .game_acmd("game_attackairdash", ssbexo_donkey_aerial_dash_attack_acmd)
+    .effect_acmd("effect_attackairdash", ssbexo_donkey_aerial_dash_attack_effect)
+    .sound_acmd("sound_attackairdash", ssbexo_donkey_aerial_dash_attack_sound)
+    .expression_acmd("expression_attackairdash", ssbexo_donkey_aerial_dash_attack_expression)
     .install()
     ;
 }

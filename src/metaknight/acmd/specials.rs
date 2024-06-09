@@ -164,7 +164,7 @@ unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_acmd(agent: &mut L2CAgentBas
     }
 }
 
-//Grounded Galaxia Beam Effect
+//Galaxia Beam Effect
 unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_effect(agent: &mut L2CAgentBase) {
     let owner_boma = get_owner_boma(agent);
     frame(agent.lua_state_agent, 1.0);

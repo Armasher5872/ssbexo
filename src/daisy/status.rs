@@ -1,20 +1,5 @@
 use super::*;
 
-unsafe extern "C" fn daisy_jump_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_jump_item_rocketbelt();
-    fighter.status_Jump_sub(Hash40::new("invalid").into(), 0.0.into());
-    fighter.sub_shift_status_main(L2CValue::Ptr(daisy_jump_main_loop as *const () as _))
-}
-
-unsafe extern "C" fn daisy_jump_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_Jump_Main()
-}
-
-unsafe extern "C" fn daisy_jump_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.status_end_Jump();
-    0.into()
-}
-
 unsafe extern "C" fn daisy_attack_s4_hold_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_attack_xx4_uniq_process_init();
     0.into()
@@ -89,8 +74,6 @@ unsafe extern "C" fn daisy_special_lw_pre_status(fighter: &mut L2CFighterCommon)
 
 pub fn install() {
     Agent::new("daisy")
-    .status(Main, *FIGHTER_STATUS_KIND_JUMP, daisy_jump_main_status)
-    .status(End, *FIGHTER_STATUS_KIND_JUMP, daisy_jump_end_status)
     .status(Init, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, daisy_attack_s4_hold_init_status)
     .status(Exec, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, daisy_attack_s4_hold_exec_status)
     .status(Init, *FIGHTER_STATUS_KIND_ATTACK_S4, daisy_attack_s4_init_status)

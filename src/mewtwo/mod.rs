@@ -4,15 +4,23 @@ use {
         var::{
             consts::*,
             globals::*,
+            mewtwo::*,
             variables::*,
         }
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         hash40,
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon,
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector2f,
+            Vector3f
+        }
     },
     smash_script::*,
     smashline::*,

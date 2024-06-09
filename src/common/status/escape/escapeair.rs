@@ -51,17 +51,6 @@ unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     }
-    else {
-        if (15.0..=34.0).contains(&frame) {
-            KineticModule::unable_energy_all(boma);
-            KineticModule::clear_speed_all(boma);
-        }
-        if frame > 34.0 {
-            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
-            fighter.sub_transition_group_check_air_cliff();
-            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-        }
-    }
     /* END OF NEW ADDITION */
     0.into()
 }

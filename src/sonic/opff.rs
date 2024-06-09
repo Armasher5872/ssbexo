@@ -72,6 +72,14 @@ unsafe extern "C" fn sonic_frame(fighter: &mut L2CFighterCommon) {
     if fighter.magic_series() == 3 {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, true);
     }
+    /*
+    //Rapid Jab Detection
+    if motion_kind == hash40("attack_12")
+    && (3.0..12.0).contains(&frame)
+    && ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
+        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_100, false);
+    }
+    */
     //Dash Attack Speed
     if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_SONIC_DASH);

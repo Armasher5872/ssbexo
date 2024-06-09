@@ -128,7 +128,6 @@ unsafe extern "C" fn ssbexo_armstrong_up_smash_effect(agent: &mut L2CAgentBase) 
     }
 }
 
-
 //Down Smash ACMD
 unsafe extern "C" fn ssbexo_armstrong_down_smash_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {

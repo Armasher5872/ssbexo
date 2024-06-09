@@ -91,6 +91,7 @@ unsafe fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAc
     let frame = MotionModule::frame(boma);
     if (boma.is_weapon() && boma.kind() == *WEAPON_KIND_DEDEDE_GORDO) {
         if next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_ATTACK || next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_HOP {
+            HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
             HitModule::set_no_team(boma, true);
         }
     }
@@ -223,7 +224,7 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 	}
 }
 
-//(Credit to HDR)
+//Credit to HDR
 pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, _situation: smash::app::SituationKind, _arg3: i32, arg4: u32, _ground_cliff_check_kind: smash::app::GroundCliffCheckKind, _arg6: bool, _arg7: i32, _arg8: i32, _arg9: i32, _arg10: i32) -> u32 {
 	/* "fix" forces GroundModule::correct to be called for the statuses we need */
     let mut fix = arg4;
@@ -236,8 +237,7 @@ pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, _situat
 		].contains(&status_kind) {
 			fix = *GROUND_CORRECT_KIND_GROUND as u32;
 		}
-		if (fighter_kind == *FIGHTER_KIND_YOSHI && [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_N_1, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_LW_LANDING].contains(&status_kind))
-		|| (fighter_kind == *FIGHTER_KIND_FOX && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH_END].contains(&status_kind))
+		if (fighter_kind == *FIGHTER_KIND_FOX && [*FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH_END].contains(&status_kind))
 		|| (fighter_kind == *FIGHTER_KIND_PIKACHU && [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind))
 		|| (fighter_kind == *FIGHTER_KIND_LUIGI && boma.is_status(*FIGHTER_LUIGI_STATUS_KIND_SPECIAL_HI_LANDING_FALL))
 		|| (fighter_kind == *FIGHTER_KIND_NESS && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_ATTACK, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_AGAIN, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_REFLECT, *FIGHTER_NESS_STATUS_KIND_SPECIAL_HI_END, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HOLD, *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_HIT, *FIGHTER_NESS_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind))
@@ -438,17 +438,21 @@ unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_i
 	}
 	LAST_DAMAGE[get_player_number(defender_boma)] = DamageModule::damage(defender_boma, 0);
     //Sheik Vanish Back Hit Detection
-    if attacker_boma.is_fighter()
-    && attacker_kind == *FIGHTER_KIND_SHEIK
-    && attacker_status_kind == FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK {
-        let attacker_lr = PostureModule::lr(attacker_boma);
-        let defender_lr = PostureModule::lr(defender_boma);
-        if attacker_lr == defender_lr {
-            WorkModule::set_flag(attacker_boma, true, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+    if attacker_boma.is_fighter() {
+        if attacker_kind == *FIGHTER_KIND_SHEIK
+        && attacker_status_kind == FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK {
+            let attacker_lr = PostureModule::lr(attacker_boma);
+            let defender_lr = PostureModule::lr(defender_boma);
+            if attacker_lr == defender_lr {
+                WorkModule::set_flag(attacker_boma, true, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+            }
+            else {
+                WorkModule::set_flag(attacker_boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+            }
         }
-        else {
-            WorkModule::set_flag(attacker_boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
-        }
+    }
+    if attacker_status_kind == WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT {
+        ItemModule::drop_item(defender_boma, 0.0, 0.0, 0);
     }
 	original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
@@ -1038,12 +1042,11 @@ unsafe fn set_team_owner_id_hook(boma: &mut BattleObjectModuleAccessor, arg2: i3
 //A hook regarding the generation/visiblity of articles. Used to allow entry articles to generate
 #[skyline::hook(offset = 0x3a6670)]
 unsafe fn get_article_use_type_mask(weapon_kind: i32, entry_id: i32) -> u8 {
-    let waddledee_kind = *WEAPON_KIND_DEDEDE_WADDLEDEE;
     if [*WEAPON_KIND_DONKEY_DKBARREL, *WEAPON_KIND_LINK_PARASAIL].contains(&weapon_kind) {
         return 1;
     }
-    if weapon_kind == waddledee_kind {
-        return 2;
+    if [*WEAPON_KIND_BUDDY_PIECE].contains(&weapon_kind) {
+        return 0;
     }
     call_original!(weapon_kind, entry_id)
 }
