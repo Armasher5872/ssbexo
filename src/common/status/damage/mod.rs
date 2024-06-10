@@ -1,6 +1,7 @@
+#![allow(unused_must_use, unused_assignments, unused_parens)]
 use {
     crate::functions::{
-        ext::*,
+        ext::status::damage::*,
         var::{
             consts::*,
             globals::*,

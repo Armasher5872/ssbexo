@@ -189,8 +189,8 @@ unsafe extern "C" fn ssbexo_ness_shield_special_expression(agent: &mut L2CAgentB
 unsafe extern "C" fn ssbexo_ness_pk_flash_acmd(agent: &mut L2CAgentBase) {
     let entry_id = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let rand_num = sv_math::rand(hash40("agent"), 100);
-    let mut offense_hash_check = if (60..100).contains(&rand_num) {Hash40::new("collision_attr_death")} else if (25..59).contains(&rand_num) {Hash40::new_raw(0x1C655B0AE7)} else if (14..24).contains(&rand_num) {Hash40::new("collision_attr_paralyze")} else {Hash40::new("collision_attr_curse_poison")};
-    let mut normal_hash_check = if (53..100).contains(&rand_num) {Hash40::new("collision_attr_paralyze")} else if (18..52).contains(&rand_num) {Hash40::new_raw(0x1C655B0AE7)} else if (3..17).contains(&rand_num) {Hash40::new("collision_attr_curse_poison")} else {Hash40::new("collision_attr_death")};
+    let offense_hash_check = if (60..100).contains(&rand_num) {Hash40::new("collision_attr_death")} else if (25..59).contains(&rand_num) {Hash40::new_raw(0x1C655B0AE7)} else if (14..24).contains(&rand_num) {Hash40::new("collision_attr_paralyze")} else {Hash40::new("collision_attr_curse_poison")};
+    let normal_hash_check = if (53..100).contains(&rand_num) {Hash40::new("collision_attr_paralyze")} else if (18..52).contains(&rand_num) {Hash40::new_raw(0x1C655B0AE7)} else if (3..17).contains(&rand_num) {Hash40::new("collision_attr_curse_poison")} else {Hash40::new("collision_attr_death")};
     if PK_FLASH_TIMER[entry_id] >= 120 {
         if OFFENSE_UP_ACTIVE[entry_id] == true {
             if (0..13).contains(&rand_num) {

@@ -389,7 +389,7 @@ unsafe extern "C" fn link_bowarrow_haved_main_status(weapon: &mut L2CFighterBase
     weapon.fastshift(L2CValue::Ptr(link_bowarrow_haved_main_loop as *const () as _))
 }
 
-unsafe extern "C" fn link_bowarrow_haved_main_loop(weapon: &mut L2CFighterBase) -> L2CValue {
+unsafe extern "C" fn link_bowarrow_haved_main_loop(_weapon: &mut L2CFighterBase) -> L2CValue {
     0.into()
 }
 
@@ -627,7 +627,6 @@ unsafe extern "C" fn link_special_hi_main_loop(fighter: &mut L2CFighterCommon) -
         let pos_y = PostureModule::pos_y(fighter.module_accessor);     
         let height = WorkModule::get_param_float(fighter.module_accessor, hash40("height"), 0);  
         let mut min_pos_y = pos_y;
-        let lr = PostureModule::lr(fighter.module_accessor);
         let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
         if GroundModule::ray_check_hit_pos(fighter.module_accessor, &smash::phx::Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: 100.0}, ground_hit_pos, true) {
             min_pos_y = ground_hit_pos.y;
@@ -677,7 +676,6 @@ unsafe extern "C" fn link_special_hi_end_main_status(fighter: &mut L2CFighterCom
 
 unsafe extern "C" fn link_special_hi_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -1065,6 +1063,7 @@ pub fn install() {
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_S4, link_attack_s_4_end_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, link_attack_hi_4_hold_end_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_HI4, link_attack_hi_4_end_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_end_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4, link_attack_lw_4_main_status)

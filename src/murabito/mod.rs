@@ -1,6 +1,7 @@
+#![allow(unused_parens)]
 use {
     crate::functions::{
-        ext::*,
+        ext::fighter::murabito_shizue_common::*,
         var::{
             consts::*,
             murabito::*,

@@ -319,6 +319,8 @@ pub fn install() {
     .effect_acmd("effect_attackairhi", ssbexo_mewtwo_uair_effect)
     .game_acmd("game_attackairlw", ssbexo_mewtwo_dair_acmd)
     .effect_acmd("effect_attackairlw", ssbexo_mewtwo_dair_effect)
+    .sound_acmd("sound_attackairlw", ssbexo_mewtwo_dair_sound)
+    .expression_acmd("expression_attackairlw", ssbexo_mewtwo_dair_expression)
     .install()
     ;
 }

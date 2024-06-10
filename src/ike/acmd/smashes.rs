@@ -287,6 +287,7 @@ pub fn install() {
     .game_acmd("game_attacks4", ssbexo_ike_forward_smash_acmd)
     .effect_acmd("effect_attacks4", ssbexo_ike_forward_smash_effect)
     .sound_acmd("sound_attacks4", ssbexo_ike_forward_smash_sound)
+    .game_acmd("game_attackhi4", ssbexo_ike_up_smash_acmd)
     .effect_acmd("effect_attackhi4", ssbexo_ike_up_smash_effect)
     .sound_acmd("sound_attackhi4", ssbexo_ike_up_smash_sound)
     .game_acmd("game_attacklw4", ssbexo_ike_down_smash_acmd)

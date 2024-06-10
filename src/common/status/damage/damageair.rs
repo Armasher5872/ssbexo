@@ -4,7 +4,7 @@ use super::*;
 unsafe fn status_damageair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let mut fall_check;
+    let fall_check;
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let prev_pos = PostureModule::prev_pos(fighter.module_accessor);
     let prev_pos_y = (*prev_pos).y;

@@ -1,7 +1,7 @@
 use super::*;
 
 //Neutral Special Start ACMD
-unsafe extern "C" fn ssbexo_mewtwo_neutral_special_start_acmd(agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_mewtwo_neutral_special_start_acmd(_agent: &mut L2CAgentBase) {}
 
 //Neutral Special Shoot ACMD
 unsafe extern "C" fn ssbexo_mewtwo_neutral_special_shoot_acmd(agent: &mut L2CAgentBase) {

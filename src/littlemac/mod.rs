@@ -1,12 +1,20 @@
+#![allow(dead_code, improper_ctypes_definitions)]
 use {
-  crate::functions::{
-    ext::*,
-    var::{
-      consts::*,
-      globals::*,
-      littlemac::*,
-      variables::*,
-    }
+  crate::{
+    functions::{
+      ext::utility::{
+        boma_ext::*,
+        get_objects::*,
+        misc::*,
+      },
+      var::{
+        consts::*,
+        globals::*,
+        littlemac::*,
+        variables::*,
+      }
+    },
+    littlemac::hook::*,
   },
   smash::{
     app::{

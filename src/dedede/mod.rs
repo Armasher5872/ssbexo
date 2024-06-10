@@ -1,6 +1,15 @@
 use {
   crate::functions::{
-    ext::*,
+    ext::{
+      fighter::{
+        common::*,
+        link::*,
+      },
+      utility::{
+        boma_ext::*,
+        commandcat::*,
+      }
+    },
     var::{
       consts::*,
       dedede::*,

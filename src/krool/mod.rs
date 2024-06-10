@@ -1,3 +1,4 @@
+#![allow(unused_parens)]
 use {
     crate::functions::var::globals::*,
     smash::{

@@ -1,3 +1,4 @@
+#![allow(unused_variables)]
 use super::*;
 
 //Param Adjustments (mainly used in things like Bowsers Fireballs and Ness's PSIOU PK Fire)

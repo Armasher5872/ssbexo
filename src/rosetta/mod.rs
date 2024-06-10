@@ -1,8 +1,11 @@
+#![allow(unused_parens)]
 use {
   crate::functions::var::{
+    consts::*,
     globals::*,
     link::*,
     rosetta::*,
+    variables::*,
   },
   smash::{
     app::lua_bind::*,

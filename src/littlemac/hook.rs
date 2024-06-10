@@ -29,7 +29,7 @@ pub unsafe extern "C" fn update_littlemac_ui(entry_id: i32, total_gauge: f32) {
 
 //Little Mac KO Meter Update
 #[skyline::hook(offset = 0xc456a0)]
-pub unsafe extern "C" fn ko_meter_update(vtable: u64, battle_object: *mut BattleObject, collision_log: CollisionLog, damage: f32) -> u64 {
+pub unsafe extern "C" fn ko_meter_update(vtable: u64, battle_object: *mut BattleObject, collision_log: CollisionLog, _damage: f32) -> u64 {
     let boma = (&mut *(battle_object)).boma();
     let opponent_boma = &mut *(sv_battle_object::module_accessor(collision_log.opponent_battle_object_id));
     let mut meter_gain = 0.0;

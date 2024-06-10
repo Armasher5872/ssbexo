@@ -1,6 +1,13 @@
+#![allow(unused_must_use)]
 use {
     crate::functions::{
-        ext::*,
+        ext::{
+            fighter::donkey::*,
+            utility::{
+                boma_ext::*,
+                misc::*,
+            }
+        },
         var::{
             consts::*,
             donkey::*,

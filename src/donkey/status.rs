@@ -39,7 +39,7 @@ unsafe extern "C" fn donkey_air_lasso_loop(fighter: &mut L2CFighterCommon) -> L2
     0.into()
 }
 
-unsafe extern "C" fn donkey_air_lasso_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn donkey_air_lasso_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

@@ -5,7 +5,7 @@ unsafe extern "C" fn daisy_attack_s4_hold_init_status(fighter: &mut L2CFighterCo
     0.into()
 }
 
-unsafe extern "C" fn daisy_attack_s4_hold_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn daisy_attack_s4_hold_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -62,7 +62,7 @@ unsafe extern "C" fn daisy_special_hi_main_loop(fighter: &mut L2CFighterCommon) 
     0.into()
 }
 
-unsafe extern "C" fn daisy_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn daisy_special_hi_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

@@ -1,6 +1,9 @@
 use {
     crate::functions::{
-        ext::*,
+        ext::{
+            fighter::common::*,
+            utility::boma_ext::*,
+        },
         var::{
             consts::*,
             globals::*,
@@ -25,6 +28,6 @@ mod acmd;
 mod opff;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
+    acmd::install();
+    opff::install();
 }

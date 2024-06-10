@@ -1,6 +1,6 @@
 use {
   crate::functions::{
-    ext::*,
+    ext::fighter::common::*,
     var::{
       consts::*,
       globals::*,

@@ -104,7 +104,7 @@ unsafe extern "C" fn luigi_special_s_exec_status(fighter: &mut L2CFighterCommon)
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC) {
         let float_limit_x_dec = WorkModule::get_float(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLOAT_LIMIT_X_DEC);
         let param_limit_x_dec = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw") as u64, hash40("limit_x_dec") as u64);
-        let mut sum_limit_x_dec = float_limit_x_dec+param_limit_x_dec;
+        let sum_limit_x_dec = float_limit_x_dec+param_limit_x_dec;
         WorkModule::set_float(fighter.module_accessor, sum_limit_x_dec, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLOAT_LIMIT_X_DEC);
         let control_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         let mut alstack128; //not sure why this is initialized with a value never used
@@ -125,7 +125,7 @@ unsafe extern "C" fn luigi_special_s_exec_status(fighter: &mut L2CFighterCommon)
         }
         smash::app::lua_bind::KineticEnergyNormal::set_limit_speed(control_energy as *mut smash::app::KineticEnergyNormal, &Vector2f{x: alstack128, y: 0.0});
     }
-    let mut float_rise_y: f32;
+    let float_rise_y: f32;
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BUOYANCY) {
         float_rise_y = 0.0;
     }

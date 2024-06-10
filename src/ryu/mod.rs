@@ -2,7 +2,7 @@ use {
     crate::{
         common::status::grounded::dash::fgc_dashback_main,
         functions::{
-            ext::*,
+            ext::utility::misc::*,
             var::{
                 consts::*,
                 globals::*,

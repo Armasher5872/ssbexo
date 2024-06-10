@@ -295,4 +295,5 @@ pub fn install() {
     .status(Exec, *FIGHTER_STATUS_KIND_GLIDE, status_glide_exec)
     .status(Exit, *FIGHTER_STATUS_KIND_GLIDE, status_glide_exit)
     .install();
+	skyline::nro::add_hook(nro_hook).unwrap();
 }

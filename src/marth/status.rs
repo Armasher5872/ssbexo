@@ -131,7 +131,7 @@ unsafe extern "C" fn marth_special_hi_hi_exec_status(fighter: &mut L2CFighterCom
     ret
 }
 
-unsafe extern "C" fn marth_special_hi_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn marth_special_hi_hi_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     /*
     let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame"));
     let fall_x_mul_value = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("fall_x_mul_value"));

@@ -14,7 +14,6 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
         let stick_x = fighter.global_table[STICK_X].get_f32()*lr;
         let mut pos = Vector3f{x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma), z: PostureModule::pos_z(boma)}; // get current pos
         let get_sum_speed_x = lr*KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        let get_sum_speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_PASS {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) != true {
                 GroundModule::set_passable_check(boma, true);

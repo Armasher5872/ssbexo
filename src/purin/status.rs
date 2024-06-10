@@ -130,15 +130,15 @@ unsafe extern "C" fn purin_special_n_main_loop(fighter: &mut L2CFighterCommon) -
     0.into()
 }
 
-unsafe extern "C" fn purin_special_n_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn purin_special_n_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn purin_special_n_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn purin_special_n_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn purin_special_n_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn purin_special_n_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -170,7 +170,6 @@ unsafe extern "C" fn purin_disarming_voice_shoot_init_status(weapon: &mut L2CWea
 }
 
 unsafe extern "C" fn purin_disarming_voice_shoot_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let angle: f32 = 10.0;
     let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_disarmingvoice"), hash40("speed_max"));
     let lr = PostureModule::lr(weapon.module_accessor);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("shoot"), 0.0, 1.0, false, 0.0, false, false);

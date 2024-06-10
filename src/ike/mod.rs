@@ -1,6 +1,12 @@
 use {
   crate::functions::{
-    ext::*,
+    ext::{
+      fighter::{
+        common::*,
+        ike::*,
+      },
+      utility::misc::*,
+    },
     var::{
       consts::*,
       globals::*,

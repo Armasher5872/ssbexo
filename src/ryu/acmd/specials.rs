@@ -354,6 +354,8 @@ pub fn install() {
     .game_acmd("game_specialairs", ssbexo_ryu_tatsumaki_loop_acmd)
     .game_acmd("game_specialsend", ssbexo_ryu_tatsumaki_end_acmd)
     .game_acmd("game_specialairsend", ssbexo_ryu_tatsumaki_end_acmd)
+    .game_acmd("game_specialhi", ssbexo_ryu_shoryuken_acmd)
+    .game_acmd("game_specialairhi", ssbexo_ryu_shoryuken_acmd)
     .install()
     ;
     Agent::new("ryu_hadoken")

@@ -1,6 +1,6 @@
 use {
   crate::functions::{
-    ext::*,
+    ext::utility::boma_ext::*,
     var::{
       consts::*,
       globals::*,
@@ -8,7 +8,7 @@ use {
       link::*,
       samusd::*,
       variables::*,
-    },
+    }
   },
   smash::{
     app::{

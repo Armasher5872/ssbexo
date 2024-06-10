@@ -1,6 +1,6 @@
 use {
     crate::functions::{
-        ext::*,
+        ext::fighter::link::*,
         var::link::*,
     },
     smash::{

@@ -2,15 +2,6 @@ use super::*;
 
 unsafe extern "C" fn dedede_frame(fighter: &mut L2CFighterCommon) {
     let status_kind = StatusModule::status_kind(fighter.module_accessor);
-    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    /*
-    if status_kind == *FIGHTER_STATUS_KIND_ATTACK_S3 {
-        if (15.0..26.0).contains(&frame)
-        && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_s3_s2"), 26.0, 1.0, false, 0.0, false, false);
-        }
-    }
-    */
     if [
         *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4,
         *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4

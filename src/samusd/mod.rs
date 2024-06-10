@@ -1,6 +1,10 @@
+#![allow(unused_parens)]
 use {
     crate::functions::{
-        ext::*,
+        ext::{
+            fighter::common::*,
+            utility::boma_ext::*,
+        },
         var::{
             consts::*,
             globals::*,

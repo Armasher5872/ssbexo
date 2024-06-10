@@ -30,7 +30,7 @@ unsafe extern "C" fn ssbexo_tantan_punch1_attack_long_acmd(agent: &mut L2CAgentB
     }
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        if !WorkModule::is_flag(agent.module_accessor, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_IS_KIRBY) {
+        if !flag_is_kirby {
             wait(agent.lua_state_agent, 1.0);
         }
         if WorkModule::is_flag(agent.module_accessor, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_BOUND) {
@@ -49,8 +49,7 @@ unsafe extern "C" fn ssbexo_tantan_punch1_attack_long_acmd(agent: &mut L2CAgentB
     }
     wait(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        if !WorkModule::is_flag(agent.module_accessor, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_IS_KIRBY)
-        || !WorkModule::is_flag(agent.module_accessor, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_AIR) {
+        if !flag_is_kirby || !flag_air {
             wait(agent.lua_state_agent, 1.0);
         }
         if WorkModule::is_flag(agent.module_accessor, *WEAPON_TANTAN_PUNCH1_INSTANCE_WORK_ID_FLAG_BOUND) {

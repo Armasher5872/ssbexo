@@ -442,7 +442,7 @@ unsafe extern "C" fn ssbexo_luigi_down_special_effect(agent: &mut L2CAgentBase) 
 }
 
 //Down Special Sound
-unsafe extern "C" fn ssbexo_luigi_down_special_sound(agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_luigi_down_special_sound(_agent: &mut L2CAgentBase) {}
 
 //Down Special Expression
 unsafe extern "C" fn ssbexo_luigi_down_special_expression(agent: &mut L2CAgentBase) {
@@ -486,13 +486,13 @@ unsafe extern "C" fn ssbexo_luigi_down_special_loop_expression(agent: &mut L2CAg
 }
 
 //Down Special Catch Pull ACMD
-unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_acmd(agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_acmd(_agent: &mut L2CAgentBase) {}
 
 //Down Special Catch Pull Effect
-unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_effect(agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_effect(_agent: &mut L2CAgentBase) {}
 
 //Down Special Catch Pull Sound
-unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_sound(agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_sound(_agent: &mut L2CAgentBase) {}
 
 //Down Special Catch Pull Expression
 unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_expression(agent: &mut L2CAgentBase) {

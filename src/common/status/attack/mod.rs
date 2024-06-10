@@ -1,7 +1,16 @@
-#![allow(unused_macros)]
+#![allow(unused_comparisons, unused_macros, unused_must_use, unused_parens)]
 use {
     crate::functions::{
-        ext::*,
+        ext::{
+            status::{
+                attack::*,
+                attack_xx4::*,
+            },
+            utility::{
+                boma_ext::*,
+                misc::*,
+            }
+        },
         var::{
             armstrong::*,
             consts::*,

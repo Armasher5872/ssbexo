@@ -1,15 +1,16 @@
+#![allow(dead_code, unused_must_use)]
 use {
-    bitflags::bitflags,
     crate::functions::{
-        ext::*,
-        hook::*,
+        ext::utility::{
+            boma_ext::*,
+            controls::*,
+        },
         var::{
             armstrong::*,
             captain::*,
             consts::*,
             dedede::*,
             dolly::*,
-            donkey::*,
             edge::*,
             globals::*,
             ike::*,
@@ -32,32 +33,22 @@ use {
             sheik::*,
             sonic::*,
             variables::*,
-        },
-        util::*,
-    },
-    modular_bitfield::{
-        bitfield,
-        specifiers::B4
+        }
     },
     smash::{
         app::{
-            ArticleOperationTarget,
             BattleObject,
             BattleObjectWorld,
             BattleObjectSlow,
             BattleObjectManager,
             BattleObjectModuleAccessor,
             BossManager,
-            Fighter,
             FighterBayonettaFinalModule,
             FighterCutInManager,
             FighterManager,
             FighterParamAccessor2,
             FighterPitBFinalModule,
-            FighterUtil,
             GimmickEventPresenter,
-            GroundCorrectKind,
-            HitStatus,
             ItemManager,
             ItemParamAccessor,
             lua_bind::{
@@ -65,43 +56,16 @@ use {
                 *
             },
             StageManager,
-            sv_animcmd,
-            sv_battle_object,
-            utility::*,
+            sv_battle_object
         },
         hash40,
-        lib::{
-            L2CAgent,
-            L2CValue,
-            lua_const::*,
-        },
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        },
-        phx::{
-            Hash40,
-            Vector2f,
-            Vector3f,
-            Vector4f
-        }
+        lib::lua_const::*,
+        lua2cpp::L2CFighterCommon,
+        phx::Hash40
     },
     smashline::*,
-    smash_script::*,
-    skyline::{
-        c_str,
-        from_c_str,
-        hooks::InlineCtx,
-        nn::ro::LookupSymbol
-    },
-    std::{
-        ffi::CStr,
-        os::raw::{
-            c_char,
-            c_int
-        },
-        sync::Once
-    }
+    skyline::nn::ro::LookupSymbol,
+    std::sync::Once
 };
 
 pub mod ext;
@@ -114,7 +78,7 @@ pub mod util;
 pub mod var;
 
 pub fn install() {
-	hook::install();
+    hook::install();
 	params::install();
 	reset::install();
 }

@@ -175,7 +175,7 @@ unsafe extern "C" fn mewtwo_special_hi_pre_status(fighter: &mut L2CFighterCommon
     0.into()
 }
 
-unsafe extern "C" fn mewtwo_special_hi_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn mewtwo_special_hi_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -217,7 +217,7 @@ unsafe extern "C" fn mewtwo_special_hi_main_loop(fighter: &mut L2CFighterCommon)
     0.into()
 }
 
-unsafe extern "C" fn mewtwo_special_hi_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn mewtwo_special_hi_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -226,7 +226,7 @@ unsafe extern "C" fn mewtwo_special_hi_end_status(fighter: &mut L2CFighterCommon
     0.into()
 }
 
-unsafe extern "C" fn mewtwo_special_hi_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn mewtwo_special_hi_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -249,7 +249,7 @@ unsafe extern "C" fn mewtwo_futuresight_ball_shoot_main_status(weapon: &mut L2CW
     weapon.fastshift(L2CValue::Ptr(mewtwo_futuresight_ball_shoot_main_loop as *const () as _))
 }
 
-unsafe extern "C" fn mewtwo_futuresight_ball_shoot_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
+unsafe extern "C" fn mewtwo_futuresight_ball_shoot_main_loop(_weapon: &mut L2CWeaponCommon) -> L2CValue {
     0.into()
 }
 

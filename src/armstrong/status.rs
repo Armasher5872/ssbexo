@@ -1,6 +1,6 @@
 use super::*;
 
-unsafe extern "C" fn armstrong_appeal_check_damage_status(fighter: &mut L2CFighterCommon, param_2: &L2CValue) -> L2CValue {
+unsafe extern "C" fn armstrong_appeal_check_damage_status(_fighter: &mut L2CFighterCommon, _param_2: &L2CValue) -> L2CValue {
     println!("Is Hit");
     0.into()
 }

@@ -1,6 +1,10 @@
+#![allow(unused_must_use)]
 use {
     crate::functions::{
-        ext::*,
+        ext::utility::{
+            boma_ext::*,
+            commandcat::*,
+        },
         var::{
             globals::*,
             variables::*,

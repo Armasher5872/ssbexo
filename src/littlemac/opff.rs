@@ -2,6 +2,7 @@ use super::*;
 
 unsafe extern "C" fn littlemac_frame(fighter: &mut L2CFighterCommon) {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
     let status_kind = StatusModule::status_kind(boma);
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let ko_gauge = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
@@ -23,6 +24,7 @@ unsafe extern "C" fn littlemac_frame(fighter: &mut L2CFighterCommon) {
     if ko_gauge > 100.0 {
         WorkModule::set_float(boma, 100.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
     }
+    update_littlemac_ui(entry_id, ko_gauge);
     //Different Cancel Frames for Star Punch
     if status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2 {
         if frame < 1.0 {

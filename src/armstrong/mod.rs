@@ -1,6 +1,7 @@
+#![allow(unused_assignments)]
 use {
     crate::functions::{
-        ext::*,
+        ext::fighter::common::*,
         var::{
             armstrong::*,
             consts::*,

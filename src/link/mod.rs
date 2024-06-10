@@ -1,6 +1,10 @@
+#![allow(unused_assignments, unused_parens)]
 use {
   crate::functions::{
-    ext::*,
+    ext::{
+      fighter::link::*,
+      status::attack_xx4::*,
+    },
     var::{
       consts::*,
       globals::*,

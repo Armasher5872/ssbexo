@@ -444,7 +444,6 @@ unsafe extern "C" fn ssbexo_bayonetta_fair_f_smash_effect(agent: &mut L2CAgentBa
 //Fair F Smash Sound
 unsafe extern "C" fn ssbexo_bayonetta_fair_f_smash_sound(agent: &mut L2CAgentBase) {
     let hold_rate = WorkModule::get_float(agent.module_accessor, *FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_HOLD_RATE);
-    let get_voice_region = GET_VOICE_REGION(agent.lua_state_agent);
     if WorkModule::get_int(agent.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_COSTUME_KIND) != *FIGHTER_BAYONETTA_COSTUME_KIND_BAYONETTA_1 {
         frame(agent.lua_state_agent, 2.0);
         if macros::is_excute(agent) {

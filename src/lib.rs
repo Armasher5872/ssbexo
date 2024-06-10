@@ -1,5 +1,4 @@
 #![feature(concat_idents, proc_macro_hygiene, repr_simd, simd_ffi)]
-#![allow(dead_code, improper_ctypes_definitions, non_snake_case, non_upper_case_globals, unused_assignments, unused_must_use, unused_mut, unused_parens, unused_variables, unused_unsafe)]
 
 mod armstrong;
 mod bayonetta;

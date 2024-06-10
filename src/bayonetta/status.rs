@@ -58,7 +58,7 @@ unsafe extern "C" fn bayonetta_attack_air_f_dash_main_loop(fighter: &mut L2CFigh
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_dash_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_f_dash_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -130,7 +130,7 @@ unsafe extern "C" fn bayonetta_attack_air_f_smash_main_loop(fighter: &mut L2CFig
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_smash_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_f_smash_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -202,7 +202,7 @@ unsafe extern "C" fn bayonetta_attack_air_hi_smash_main_loop(fighter: &mut L2CFi
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_hi_smash_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_hi_smash_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -274,7 +274,7 @@ unsafe extern "C" fn bayonetta_attack_air_lw_smash_main_loop(fighter: &mut L2CFi
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_lw_smash_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_lw_smash_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

@@ -16,7 +16,7 @@ unsafe extern "C" fn littlemac_special_n2_pre_status(fighter: &mut L2CFighterCom
 /*   DOWN SPECIAL STATUS SCRIPTS   */
 
 unsafe extern "C" fn littlemac_special_lw_hit_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let mut attack_power: f32 = 0.0;
+    let mut attack_power;
     let x = 0.0;
     let y = 0.0;
     let mut vector = fighter.Vector2__create(x.into(), y.into());

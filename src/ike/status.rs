@@ -118,8 +118,6 @@ unsafe extern "C" fn ike_slash_shoot_main_loop(weapon: &mut L2CWeaponCommon) -> 
     let owner_boma = get_owner_boma(weapon);
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
-    let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_slash"), hash40("speed_max"));
-    let lr = PostureModule::lr(weapon.module_accessor);
     if should_remove_projectile(weapon)
     || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
         slash_removal(weapon);
@@ -136,7 +134,6 @@ unsafe extern "C" fn ike_slash_shoot_exec_status(weapon: &mut L2CWeaponCommon) -
 }
 
 unsafe extern "C" fn ike_slash_shoot_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_boma = get_owner_boma(weapon);
     EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
     0.into()
 }
@@ -279,7 +276,7 @@ unsafe extern "C" fn ike_special_lw_exit_status(_fighter: &mut L2CFighterCommon)
     0.into()
 }
 
-unsafe extern "C" fn ike_special_lw_end_max_check_attack_status(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+unsafe extern "C" fn ike_special_lw_end_max_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
     let table = param_3.get_table() as *mut smash2::lib::L2CTable;
     let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
     let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;

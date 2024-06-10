@@ -1,5 +1,5 @@
 use {
-    crate::functions::ext::*,
+    crate::functions::ext::fighter::inkling::*,
     smash::{
         app::{
             lua_bind::*,

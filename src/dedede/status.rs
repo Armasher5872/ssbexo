@@ -401,7 +401,7 @@ unsafe extern "C" fn dedede_special_lw_attack_pre_status(fighter: &mut L2CFighte
     0.into()
 }
 
-unsafe extern "C" fn dedede_special_lw_attack_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn dedede_special_lw_attack_init_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -464,11 +464,11 @@ unsafe extern "C" fn dedede_special_lw_attack_main_loop(fighter: &mut L2CFighter
     0.into()
 }
 
-unsafe extern "C" fn dedede_special_lw_attack_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn dedede_special_lw_attack_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn dedede_special_lw_attack_check_attack_status(fighter: &mut L2CFighterCommon, param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+unsafe extern "C" fn dedede_special_lw_attack_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
     let table = param_3.get_table() as *mut smash2::lib::L2CTable;
     let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
     let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
