@@ -155,16 +155,16 @@ unsafe extern "C" fn ssbexo_gamewatch_dair_acmd(fighter: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("gamewatch")
-    .game_acmd("game_attackairn", ssbexo_gamewatch_nair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_gamewatch_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_gamewatch_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_gamewatch_dair_acmd, Priority::Low)
     .install()
     ;
     Agent::new("gamewatch_breath")
-    .game_acmd("game_attackairhi", ssbexo_gamewatch_uair_acmd)
+    .game_acmd("game_attackairhi", ssbexo_gamewatch_uair_acmd, Priority::Low)
     .install()
     ;
     Agent::new("gamewatch_bomb")
-    .game_acmd("game_burst", ssbexo_gamewatch_fair_acmd)
+    .game_acmd("game_burst", ssbexo_gamewatch_fair_acmd, Priority::Low)
     .install()
     ;
 }

@@ -132,11 +132,11 @@ unsafe extern "C" fn ssbexo_pfushigisou_uair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pfushigisou")
-    .game_acmd("game_attackairn", ssbexo_pfushigisou_nair_acmd)
-    .game_acmd("game_landingairn", ssbexo_pfushigisou_nair_landing_acmd)
-    .game_acmd("game_attackairf", ssbexo_pfushigisou_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_pfushigisou_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_pfushigisou_uair_acmd)
+    .game_acmd("game_attackairn", ssbexo_pfushigisou_nair_acmd, Priority::Low)
+    .game_acmd("game_landingairn", ssbexo_pfushigisou_nair_landing_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_pfushigisou_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_pfushigisou_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_pfushigisou_uair_acmd, Priority::Low)
     .install()
     ;
 }

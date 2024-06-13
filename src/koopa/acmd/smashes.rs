@@ -200,13 +200,13 @@ unsafe extern "C" fn ssbexo_koopa_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("koopa")
-    .effect_acmd("effect_attacks4charge", ssbexo_koopa_forward_smash_charge_effect)
-    .game_acmd("game_attacks4", ssbexo_koopa_forward_smash_acmd)
-    .effect_acmd("effect_attacks4", ssbexo_koopa_forward_smash_effect)
-    .sound_acmd("sound_attacks4", ssbexo_koopa_forward_smash_sound)
-    .expression_acmd("expression_attacks4", ssbexo_koopa_forward_smash_expression)
-    .game_acmd("game_attackhi4", ssbexo_koopa_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_koopa_down_smash_acmd)
+    .effect_acmd("effect_attacks4charge", ssbexo_koopa_forward_smash_charge_effect, Priority::Low)
+    .game_acmd("game_attacks4", ssbexo_koopa_forward_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4", ssbexo_koopa_forward_smash_effect, Priority::Low)
+    .sound_acmd("sound_attacks4", ssbexo_koopa_forward_smash_sound, Priority::Low)
+    .expression_acmd("expression_attacks4", ssbexo_koopa_forward_smash_expression, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_koopa_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_koopa_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

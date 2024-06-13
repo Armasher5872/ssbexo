@@ -184,15 +184,15 @@ unsafe extern "C" fn ssbexo_sonic_down_smash_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sonic")
-    .effect_acmd("effect_attacks4", ssbexo_sonic_forward_smash_effect)
-    .effect_acmd("effect_attacks4hi", ssbexo_sonic_forward_smash_hi_effect)
-    .effect_acmd("effect_attacks4lw", ssbexo_sonic_forward_smash_lw_effect)
-    .game_acmd("game_attackhi4", ssbexo_sonic_up_smash_acmd)
-    .effect_acmd("effect_attackhi4", ssbexo_sonic_up_smash_effect)
-    .sound_acmd("sound_attackhi4", ssbexo_sonic_up_smash_sound)
-    .expression_acmd("expression_attackhi4", ssbexo_sonic_up_smash_expression)
-    .game_acmd("game_attacklw4", ssbexo_sonic_down_smash_acmd)
-    .effect_acmd("effect_attacklw4", ssbexo_sonic_down_smash_effect)
+    .effect_acmd("effect_attacks4", ssbexo_sonic_forward_smash_effect, Priority::Low)
+    .effect_acmd("effect_attacks4hi", ssbexo_sonic_forward_smash_hi_effect, Priority::Low)
+    .effect_acmd("effect_attacks4lw", ssbexo_sonic_forward_smash_lw_effect, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_sonic_up_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_sonic_up_smash_effect, Priority::Low)
+    .sound_acmd("sound_attackhi4", ssbexo_sonic_up_smash_sound, Priority::Low)
+    .expression_acmd("expression_attackhi4", ssbexo_sonic_up_smash_expression, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_sonic_down_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw4", ssbexo_sonic_down_smash_effect, Priority::Low)
     .install()
     ;
 }

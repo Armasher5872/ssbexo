@@ -228,11 +228,11 @@ unsafe extern "C" fn ssbexo_pichu_dair_landing_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pichu")
-    .game_acmd("game_attackairn", ssbexo_pichu_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_pichu_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_pichu_bair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_pichu_dair_acmd)
-    .game_acmd("game_landingairlw", ssbexo_pichu_dair_landing_acmd)
+    .game_acmd("game_attackairn", ssbexo_pichu_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_pichu_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_pichu_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_pichu_dair_acmd, Priority::Low)
+    .game_acmd("game_landingairlw", ssbexo_pichu_dair_landing_acmd, Priority::Low)
     .install()
     ;
 }

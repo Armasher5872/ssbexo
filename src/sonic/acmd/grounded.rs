@@ -267,17 +267,17 @@ unsafe extern "C" fn ssbexo_sonic_dash_attack_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sonic")
-    .effect_acmd("effect_win2", ssbexo_sonic_win_2_effect)
-    .effect_acmd("effect_win2wait", ssbexo_sonic_win_2_wait_effect)
-    .effect_acmd("effect_attack11", ssbexo_sonic_jab_1_effect)
-    .game_acmd("game_attack12", ssbexo_sonic_jab_2_acmd)
-    .effect_acmd("effect_attack12", ssbexo_sonic_jab_2_effect)
-    .game_acmd("game_attack100", ssbexo_sonic_rapid_jab_acmd)
-    .effect_acmd("effect_attack100", ssbexo_sonic_rapid_jab_effect)
-    .game_acmd("game_attack100end", ssbexo_sonic_rapid_jab_finisher_acmd)
-    .effect_acmd("effect_attack13", ssbexo_sonic_jab_3_effect)
-    .game_acmd("game_attackdash", ssbexo_sonic_dash_attack_acmd)
-    .effect_acmd("effect_attackdash", ssbexo_sonic_dash_attack_effect)
+    .effect_acmd("effect_win2", ssbexo_sonic_win_2_effect, Priority::Low)
+    .effect_acmd("effect_win2wait", ssbexo_sonic_win_2_wait_effect, Priority::Low)
+    .effect_acmd("effect_attack11", ssbexo_sonic_jab_1_effect, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_sonic_jab_2_acmd, Priority::Low)
+    .effect_acmd("effect_attack12", ssbexo_sonic_jab_2_effect, Priority::Low)
+    .game_acmd("game_attack100", ssbexo_sonic_rapid_jab_acmd, Priority::Low)
+    .effect_acmd("effect_attack100", ssbexo_sonic_rapid_jab_effect, Priority::Low)
+    .game_acmd("game_attack100end", ssbexo_sonic_rapid_jab_finisher_acmd, Priority::Low)
+    .effect_acmd("effect_attack13", ssbexo_sonic_jab_3_effect, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_sonic_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackdash", ssbexo_sonic_dash_attack_effect, Priority::Low)
     .install()
     ;
 }

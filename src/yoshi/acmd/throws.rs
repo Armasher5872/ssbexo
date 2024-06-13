@@ -80,9 +80,9 @@ unsafe extern "C" fn ssbexo_yoshi_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("yoshi")
-    .game_acmd("game_catch", ssbexo_yoshi_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_yoshi_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_yoshi_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_yoshi_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_yoshi_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_yoshi_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

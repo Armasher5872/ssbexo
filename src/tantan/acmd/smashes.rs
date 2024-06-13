@@ -210,28 +210,28 @@ unsafe extern "C" fn ssbexo_tantan_ring_attack_s4_fly_acmd(agent: &mut L2CAgentB
 
 pub fn install() {
     Agent::new("tantan")
-    .game_acmd("game_attacklongstartl1", ssbexo_tantan_attacklongstart1_acmd)
-    .game_acmd("game_attacklongstartlb1", ssbexo_tantan_attacklongstart1_acmd)
-    .game_acmd("game_attacklongstartlr1", ssbexo_tantan_attacklongstart1_acmd)
-    .game_acmd("game_attacklongstartlrb1", ssbexo_tantan_attacklongstart1_acmd)
+    .game_acmd("game_attacklongstartl1", ssbexo_tantan_attacklongstart1_acmd, Priority::Low)
+    .game_acmd("game_attacklongstartlb1", ssbexo_tantan_attacklongstart1_acmd, Priority::Low)
+    .game_acmd("game_attacklongstartlr1", ssbexo_tantan_attacklongstart1_acmd, Priority::Low)
+    .game_acmd("game_attacklongstartlrb1", ssbexo_tantan_attacklongstart1_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_punch1")
-    .acmd("game_attacklong", ssbexo_tantan_punch1_attack_long_acmd)
+    .acmd("game_attacklong", ssbexo_tantan_punch1_attack_long_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_punch2")
-    .acmd("game_attacklong", ssbexo_tantan_punch2_attack_long_acmd)
-    .acmd("game_attacklonghold", ssbexo_tantan_punch2_attack_long_hold_acmd)
+    .acmd("game_attacklong", ssbexo_tantan_punch2_attack_long_acmd, Priority::Low)
+    .acmd("game_attacklonghold", ssbexo_tantan_punch2_attack_long_hold_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_punch3")
-    .acmd("game_attacklong", ssbexo_tantan_punch3_attack_long_acmd)
-    .acmd("game_attacklonghold", ssbexo_tantan_punch3_attack_long_hold_acmd)
+    .acmd("game_attacklong", ssbexo_tantan_punch3_attack_long_acmd, Priority::Low)
+    .acmd("game_attacklonghold", ssbexo_tantan_punch3_attack_long_hold_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_ring")
-    .game_acmd("game_attacks4fly", ssbexo_tantan_ring_attack_s4_fly_acmd)
+    .game_acmd("game_attacks4fly", ssbexo_tantan_ring_attack_s4_fly_acmd, Priority::Low)
     .install()
     ;
 }

@@ -152,12 +152,12 @@ unsafe extern "C" fn ssbexo_metaknight_dash_attack_expression(agent: &mut L2CAge
 
 pub fn install() {
     Agent::new("metaknight")
-    .game_acmd("game_attack100", ssbexo_metaknight_rapid_jab_acmd)
-    .game_acmd("game_attack100end", ssbexo_metaknight_rapid_jab_finisher_acmd)
-    .game_acmd("game_attackdash", ssbexo_metaknight_dash_attack_acmd)
-    .effect_acmd("effect_attackdash", ssbexo_metaknight_dash_attack_effect)
-    .sound_acmd("sound_attackdash", ssbexo_metaknight_dash_attack_sound)
-    .expression_acmd("expression_attackdash", ssbexo_metaknight_dash_attack_expression)
+    .game_acmd("game_attack100", ssbexo_metaknight_rapid_jab_acmd, Priority::Low)
+    .game_acmd("game_attack100end", ssbexo_metaknight_rapid_jab_finisher_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_metaknight_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackdash", ssbexo_metaknight_dash_attack_effect, Priority::Low)
+    .sound_acmd("sound_attackdash", ssbexo_metaknight_dash_attack_sound, Priority::Low)
+    .expression_acmd("expression_attackdash", ssbexo_metaknight_dash_attack_expression, Priority::Low)
     .install()
     ;
 }

@@ -15,7 +15,7 @@ unsafe extern "C" fn ssbexo_pit_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pit")
-    .game_acmd("game_attackdash", ssbexo_pit_dash_attack_acmd)
+    .game_acmd("game_attackdash", ssbexo_pit_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

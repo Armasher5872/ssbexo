@@ -161,14 +161,14 @@ unsafe extern "C" fn ssbexo_ryu_dash_attack_expression(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("ryu")
-    .game_acmd("game_attack11nears", ssbexo_ryu_close_jab_heavy_acmd)
-    .effect_acmd("effect_attack11nears", ssbexo_ryu_close_jab_heavy_effect)
-    .sound_acmd("sound_attack11nears", ssbexo_ryu_close_jab_heavy_sound)
-    .expression_acmd("expression_attack11nears", ssbexo_ryu_close_jab_heavy_expression)
-    .game_acmd("game_attackdash", ssbexo_ryu_dash_attack_acmd)
-    .effect_acmd("effect_attackdash", ssbexo_ryu_dash_attack_effect)
-    .sound_acmd("sound_attackdash", ssbexo_ryu_dash_attack_sound)
-    .expression_acmd("expression_attackdash", ssbexo_ryu_dash_attack_expression)
+    .game_acmd("game_attack11nears", ssbexo_ryu_close_jab_heavy_acmd, Priority::Low)
+    .effect_acmd("effect_attack11nears", ssbexo_ryu_close_jab_heavy_effect, Priority::Low)
+    .sound_acmd("sound_attack11nears", ssbexo_ryu_close_jab_heavy_sound, Priority::Low)
+    .expression_acmd("expression_attack11nears", ssbexo_ryu_close_jab_heavy_expression, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_ryu_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackdash", ssbexo_ryu_dash_attack_effect, Priority::Low)
+    .sound_acmd("sound_attackdash", ssbexo_ryu_dash_attack_sound, Priority::Low)
+    .expression_acmd("expression_attackdash", ssbexo_ryu_dash_attack_expression, Priority::Low)
     .install()
     ;
 }

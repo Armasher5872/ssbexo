@@ -63,9 +63,9 @@ unsafe extern "C" fn ssbexo_rockman_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("rockman")
-    .game_acmd("game_catch", ssbexo_rockman_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_rockman_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_rockman_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_rockman_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_rockman_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_rockman_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

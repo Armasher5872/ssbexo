@@ -42,8 +42,8 @@ unsafe extern "C" fn ssbexo_pichu_up_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pichu")
-    .game_acmd("game_attacks3", ssbexo_pichu_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_pichu_up_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_pichu_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_pichu_up_tilt_acmd, Priority::Low)
     .install()
     ;
 }

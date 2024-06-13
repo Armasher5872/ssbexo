@@ -119,15 +119,15 @@ unsafe extern "C" fn ssbexo_ike_down_tilt_sound(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ike")
-    .game_acmd("game_attacks3", ssbexo_ike_forward_tilt_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_ike_forward_tilt_hi_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_ike_forward_tilt_lw_acmd)
-    .sound_acmd("sound_attacks3", ssbexo_ike_forward_tilt_sound)
-    .sound_acmd("sound_attacks3hi", ssbexo_ike_forward_tilt_sound)
-    .sound_acmd("sound_attacks3lw", ssbexo_ike_forward_tilt_sound)
-    .sound_acmd("sound_attackhi3", ssbexo_ike_up_tilt_sound)
-    .game_acmd("game_attacklw3", ssbexo_ike_down_tilt_acmd)
-    .sound_acmd("sound_attacklw3", ssbexo_ike_down_tilt_sound)
+    .game_acmd("game_attacks3", ssbexo_ike_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_ike_forward_tilt_hi_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_ike_forward_tilt_lw_acmd, Priority::Low)
+    .sound_acmd("sound_attacks3", ssbexo_ike_forward_tilt_sound, Priority::Low)
+    .sound_acmd("sound_attacks3hi", ssbexo_ike_forward_tilt_sound, Priority::Low)
+    .sound_acmd("sound_attacks3lw", ssbexo_ike_forward_tilt_sound, Priority::Low)
+    .sound_acmd("sound_attackhi3", ssbexo_ike_up_tilt_sound, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_ike_down_tilt_acmd, Priority::Low)
+    .sound_acmd("sound_attacklw3", ssbexo_ike_down_tilt_sound, Priority::Low)
     .install()
     ;
 }

@@ -56,9 +56,9 @@ unsafe extern "C" fn ssbexo_krool_forward_tilt_lw_acmd(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("krool")
-    .game_acmd("game_attacks3", ssbexo_krool_forward_tilt_s_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_krool_forward_tilt_hi_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_krool_forward_tilt_lw_acmd)
+    .game_acmd("game_attacks3", ssbexo_krool_forward_tilt_s_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_krool_forward_tilt_hi_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_krool_forward_tilt_lw_acmd, Priority::Low)
     .install()
     ;
 }

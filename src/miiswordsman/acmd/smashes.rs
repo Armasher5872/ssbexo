@@ -72,8 +72,8 @@ unsafe extern "C" fn ssbexo_miiswordsman_down_smash_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("miiswordsman")
-    .game_acmd("game_attackhi4", ssbexo_miiswordsman_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_miiswordsman_down_smash_acmd)
+    .game_acmd("game_attackhi4", ssbexo_miiswordsman_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_miiswordsman_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

@@ -118,10 +118,10 @@ unsafe extern "C" fn ssbexo_falco_down_smash_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("falco")
-    .game_acmd("game_attacks4", ssbexo_falco_forward_smash_acmd)
-    .game_acmd("game_attackhi4", ssbexo_falco_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_falco_down_smash_acmd)
-    .effect_acmd("effect_attacklw4", ssbexo_falco_down_smash_effect)
+    .game_acmd("game_attacks4", ssbexo_falco_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_falco_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_falco_down_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw4", ssbexo_falco_down_smash_effect, Priority::Low)
     .install()
     ;
 }

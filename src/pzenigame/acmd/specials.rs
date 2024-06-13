@@ -77,10 +77,10 @@ unsafe extern "C" fn ssbexo_pzenigame_up_special_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("pzenigame")
-    .effect_acmd("effect_specialshield", ssbexo_pzenigame_shield_special_effect)
-    .sound_acmd("sound_shieldspecial", ssbexo_pzenigame_shield_special_sound)
-    .game_acmd("game_specialhi", ssbexo_pzenigame_up_special_acmd)
-    .game_acmd("game_specialairhi", ssbexo_pzenigame_up_special_acmd)
+    .effect_acmd("effect_specialshield", ssbexo_pzenigame_shield_special_effect, Priority::Low)
+    .sound_acmd("sound_shieldspecial", ssbexo_pzenigame_shield_special_sound, Priority::Low)
+    .game_acmd("game_specialhi", ssbexo_pzenigame_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_pzenigame_up_special_acmd, Priority::Low)
     .install()
     ;
 }

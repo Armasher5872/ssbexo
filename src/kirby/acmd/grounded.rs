@@ -202,14 +202,14 @@ unsafe extern "C" fn ssbexo_kirby_aerial_dash_attack_expression(agent: &mut L2CA
 
 pub fn install() {
     Agent::new("kirby")
-    .game_acmd("game_attack11", ssbexo_kirby_jab_1_acmd)
-    .game_acmd("game_attack12", ssbexo_kirby_jab_2_acmd)
-    .effect_acmd("effect_attack100end", ssbexo_kirby_rapid_jab_finisher_effect)
-    .game_acmd("game_attackdash", ssbexo_kirby_dash_attack_acmd)
-    .game_acmd("game_attackairdash", ssbexo_kirby_aerial_dash_attack_acmd)
-    .effect_acmd("effect_attackairdash", ssbexo_kirby_aerial_dash_attack_effect)
-    .sound_acmd("sound_attackairdash", ssbexo_kirby_aerial_dash_attack_sound)
-    .expression_acmd("expression_attackairdash", ssbexo_kirby_aerial_dash_attack_expression)
+    .game_acmd("game_attack11", ssbexo_kirby_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_kirby_jab_2_acmd, Priority::Low)
+    .effect_acmd("effect_attack100end", ssbexo_kirby_rapid_jab_finisher_effect, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_kirby_dash_attack_acmd, Priority::Low)
+    .game_acmd("game_attackairdash", ssbexo_kirby_aerial_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackairdash", ssbexo_kirby_aerial_dash_attack_effect, Priority::Low)
+    .sound_acmd("sound_attackairdash", ssbexo_kirby_aerial_dash_attack_sound, Priority::Low)
+    .expression_acmd("expression_attackairdash", ssbexo_kirby_aerial_dash_attack_expression, Priority::Low)
     .install()
     ;
 }

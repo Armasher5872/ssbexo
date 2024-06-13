@@ -110,14 +110,14 @@ unsafe extern "C" fn ssbexo_roy_down_special_hit_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("roy")
-    .game_acmd("game_specials4s", ssbexo_roy_dancing_blade_4_acmd)
-    .game_acmd("game_specialairs4s", ssbexo_roy_dancing_blade_4_acmd)
-    .game_acmd("game_specialhi", ssbexo_roy_up_special_acmd)
-    .game_acmd("game_specialairhi", ssbexo_roy_up_special_acmd)
-    .game_acmd("game_speciallw", ssbexo_roy_down_special_acmd)
-    .game_acmd("game_specialairlw", ssbexo_roy_down_special_acmd)
-    .game_acmd("game_speciallwhit", ssbexo_roy_down_special_hit_acmd)
-    .game_acmd("game_specialairlwhit", ssbexo_roy_down_special_hit_acmd)
+    .game_acmd("game_specials4s", ssbexo_roy_dancing_blade_4_acmd, Priority::Low)
+    .game_acmd("game_specialairs4s", ssbexo_roy_dancing_blade_4_acmd, Priority::Low)
+    .game_acmd("game_specialhi", ssbexo_roy_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_roy_up_special_acmd, Priority::Low)
+    .game_acmd("game_speciallw", ssbexo_roy_down_special_acmd, Priority::Low)
+    .game_acmd("game_specialairlw", ssbexo_roy_down_special_acmd, Priority::Low)
+    .game_acmd("game_speciallwhit", ssbexo_roy_down_special_hit_acmd, Priority::Low)
+    .game_acmd("game_specialairlwhit", ssbexo_roy_down_special_hit_acmd, Priority::Low)
     .install()
     ;
 }

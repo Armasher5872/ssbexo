@@ -299,17 +299,17 @@ unsafe extern "C" fn ssbexo_metaknight_dair_diagonal_right_acmd(agent: &mut L2CA
 
 pub fn install() {
     Agent::new("metaknight")
-    .game_acmd("game_attackairn", ssbexo_metaknight_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_metaknight_nair_effect)
-    .game_acmd("game_attackairf", ssbexo_metaknight_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_metaknight_fair_effect)
-    .sound_acmd("sound_attackairf", ssbexo_metaknight_fair_sound)
-    .game_acmd("game_attackairb", ssbexo_metaknight_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_metaknight_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_metaknight_dair_acmd)
-    .effect_acmd("effect_attackairlw", ssbexo_metaknight_dair_effect)
-    .game_acmd("game_attackairlwdiagonall", ssbexo_metaknight_dair_diagonal_left_acmd)
-    .game_acmd("game_attackairlwdiagonalr", ssbexo_metaknight_dair_diagonal_right_acmd)
+    .game_acmd("game_attackairn", ssbexo_metaknight_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_metaknight_nair_effect, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_metaknight_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_metaknight_fair_effect, Priority::Low)
+    .sound_acmd("sound_attackairf", ssbexo_metaknight_fair_sound, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_metaknight_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_metaknight_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_metaknight_dair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairlw", ssbexo_metaknight_dair_effect, Priority::Low)
+    .game_acmd("game_attackairlwdiagonall", ssbexo_metaknight_dair_diagonal_left_acmd, Priority::Low)
+    .game_acmd("game_attackairlwdiagonalr", ssbexo_metaknight_dair_diagonal_right_acmd, Priority::Low)
     .install()
     ;
 }

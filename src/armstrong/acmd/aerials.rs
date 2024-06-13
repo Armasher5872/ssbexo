@@ -255,17 +255,17 @@ unsafe extern "C" fn ssbexo_armstrong_dair_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ganon")
-    .game_acmd("game_attackairn", ssbexo_armstrong_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_armstrong_nair_effect)
-    .game_acmd("game_attackairf", ssbexo_armstrong_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_armstrong_fair_effect)
-    .game_acmd("game_attackairb", ssbexo_armstrong_bair_acmd)
-    .effect_acmd("effect_attackairb", ssbexo_armstrong_bair_effect)
-    .sound_acmd("sound_attackairb", ssbexo_armstrong_bair_sound)
-    .game_acmd("game_attackairhi", ssbexo_armstrong_uair_acmd)
-    .effect_acmd("effect_attackairhi", ssbexo_armstrong_uair_effect)
-    .game_acmd("game_attackairlw", ssbexo_armstrong_dair_acmd)
-    .effect_acmd("effect_attackairlw", ssbexo_armstrong_dair_effect)
+    .game_acmd("game_attackairn", ssbexo_armstrong_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_armstrong_nair_effect, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_armstrong_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_armstrong_fair_effect, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_armstrong_bair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairb", ssbexo_armstrong_bair_effect, Priority::Low)
+    .sound_acmd("sound_attackairb", ssbexo_armstrong_bair_sound, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_armstrong_uair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairhi", ssbexo_armstrong_uair_effect, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_armstrong_dair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairlw", ssbexo_armstrong_dair_effect, Priority::Low)
     .install()
     ;
 }

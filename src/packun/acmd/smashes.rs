@@ -60,8 +60,8 @@ unsafe extern "C" fn ssbexo_packun_up_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("packun")
-    .game_acmd("game_attacks4", ssbexo_packun_forward_smash_acmd)
-    .game_acmd("game_attackhi4", ssbexo_packun_up_smash_acmd)
+    .game_acmd("game_attacks4", ssbexo_packun_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_packun_up_smash_acmd, Priority::Low)
     .install()
     ;
 }

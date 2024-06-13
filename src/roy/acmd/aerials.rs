@@ -155,14 +155,14 @@ unsafe extern "C" fn ssbexo_roy_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("rosetta")
-    .game_acmd("game_attackairn", ssbexo_roy_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_roy_nair_effect)
-    .sound_acmd("sound_attackairn", ssbexo_roy_nair_sound)
-    .expression_acmd("expression_attackairn", ssbexo_roy_nair_expression)
-    .game_acmd("game_attackairf", ssbexo_roy_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_roy_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_roy_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_roy_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_roy_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_roy_nair_effect, Priority::Low)
+    .sound_acmd("sound_attackairn", ssbexo_roy_nair_sound, Priority::Low)
+    .expression_acmd("expression_attackairn", ssbexo_roy_nair_expression, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_roy_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_roy_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_roy_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_roy_dair_acmd, Priority::Low)
     .install()
     ;
 }

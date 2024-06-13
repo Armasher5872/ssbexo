@@ -95,9 +95,9 @@ unsafe extern "C" fn ssbexo_kamui_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("kamui")
-    .game_acmd("game_attack12", ssbexo_kamui_jab_2_acmd)
-    .game_acmd("game_attack13", ssbexo_kamui_jab_3_acmd)
-    .game_acmd("game_attackdash", ssbexo_kamui_dash_attack_acmd)
+    .game_acmd("game_attack12", ssbexo_kamui_jab_2_acmd, Priority::Low)
+    .game_acmd("game_attack13", ssbexo_kamui_jab_3_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_kamui_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

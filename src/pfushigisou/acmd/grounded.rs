@@ -75,8 +75,8 @@ unsafe extern "C" fn ssbexo_pfushigisou_dash_attack_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("pfushigisou")
-    .game_acmd("game_attack11", ssbexo_pfushigisou_jab_1_acmd)
-    .game_acmd("game_attackdash", ssbexo_pfushigisou_dash_attack_acmd)
+    .game_acmd("game_attack11", ssbexo_pfushigisou_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_pfushigisou_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

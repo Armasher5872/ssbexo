@@ -103,12 +103,12 @@ unsafe extern "C" fn ssbexo_link_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("link")
-    .game_acmd("game_attacks3", ssbexo_link_forward_tilt_acmd)
-    .effect_acmd("effect_attacks3", ssbexo_link_forward_tilt_effect)
-    .sound_acmd("sound_attacks3", ssbexo_link_forward_tilt_sound)
-    .expression_acmd("expression_attacks3", ssbexo_link_forward_tilt_expression)
-    .game_acmd("game_attackhi3", ssbexo_link_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_link_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_link_forward_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacks3", ssbexo_link_forward_tilt_effect, Priority::Low)
+    .sound_acmd("sound_attacks3", ssbexo_link_forward_tilt_sound, Priority::Low)
+    .expression_acmd("expression_attacks3", ssbexo_link_forward_tilt_expression, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_link_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_link_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

@@ -92,10 +92,10 @@ unsafe extern "C" fn ssbexo_sheik_up_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sheik")
-    .game_acmd("game_catch", ssbexo_sheik_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_sheik_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_sheik_pivot_grab_acmd)
-    .game_acmd("game_throwhi", ssbexo_sheik_up_throw_acmd)
+    .game_acmd("game_catch", ssbexo_sheik_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_sheik_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_sheik_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwhi", ssbexo_sheik_up_throw_acmd, Priority::Low)
     .install()
     ;
 }

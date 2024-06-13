@@ -260,12 +260,12 @@ unsafe extern "C" fn ssbexo_sheik_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sheik")
-    .game_acmd("game_attack11", ssbexo_sheik_jab_1_acmd)
-    .game_acmd("game_attack12", ssbexo_sheik_jab_2_acmd)
-    .game_acmd("game_attack100", ssbexo_sheik_rapid_jab_acmd)
-    .game_acmd("game_attack100sub", ssbexo_sheik_rapid_jab_sub_acmd)
-    .game_acmd("game_attack100end", ssbexo_sheik_rapid_jab_finisher_acmd)
-    .game_acmd("game_attackdash", ssbexo_sheik_dash_attack_acmd)
+    .game_acmd("game_attack11", ssbexo_sheik_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_sheik_jab_2_acmd, Priority::Low)
+    .game_acmd("game_attack100", ssbexo_sheik_rapid_jab_acmd, Priority::Low)
+    .game_acmd("game_attack100sub", ssbexo_sheik_rapid_jab_sub_acmd, Priority::Low)
+    .game_acmd("game_attack100end", ssbexo_sheik_rapid_jab_finisher_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_sheik_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

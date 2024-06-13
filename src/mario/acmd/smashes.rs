@@ -34,7 +34,7 @@ unsafe extern "C" fn ssbexo_mario_up_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("mario")
-    .game_acmd("game_attackhi4", ssbexo_mario_up_smash_acmd)
+    .game_acmd("game_attackhi4", ssbexo_mario_up_smash_acmd, Priority::Low)
     .install()
     ;
 }

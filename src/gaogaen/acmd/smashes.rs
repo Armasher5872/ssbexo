@@ -48,7 +48,7 @@ unsafe extern "C" fn ssbexo_gaogaen_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("gaogaen")
-    .game_acmd("game_attacklw4", ssbexo_gaogaen_down_smash_acmd)
+    .game_acmd("game_attacklw4", ssbexo_gaogaen_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

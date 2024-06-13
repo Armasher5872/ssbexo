@@ -76,10 +76,10 @@ unsafe extern "C" fn ssbexo_lucina_forward_throw_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("lucina")
-    .game_acmd("game_catch", ssbexo_lucina_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_lucina_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_lucina_pivot_grab_acmd)
-    .game_acmd("game_throwf", ssbexo_lucina_forward_throw_acmd)
+    .game_acmd("game_catch", ssbexo_lucina_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_lucina_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_lucina_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_lucina_forward_throw_acmd, Priority::Low)
     .install()
     ;
 }

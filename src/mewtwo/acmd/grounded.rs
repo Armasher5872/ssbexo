@@ -61,8 +61,8 @@ unsafe extern "C" fn ssbexo_mewtwo_dash_attack_effect(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("mewtwo")
-    .game_acmd("game_attack11", ssbexo_mewtwo_jab_1_acmd)
-    .effect_acmd("effect_attackdash", ssbexo_mewtwo_dash_attack_effect)
+    .game_acmd("game_attack11", ssbexo_mewtwo_jab_1_acmd, Priority::Low)
+    .effect_acmd("effect_attackdash", ssbexo_mewtwo_dash_attack_effect, Priority::Low)
     .install()
     ;
 }

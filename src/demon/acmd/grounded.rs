@@ -113,7 +113,7 @@ unsafe extern "C" fn ssbexo_demon_sugarcoat_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("demon")
-    .game_acmd("game_attackstep2f", ssbexo_demon_sugarcoat_acmd)
+    .game_acmd("game_attackstep2f", ssbexo_demon_sugarcoat_acmd, Priority::Low)
     .install()
     ;
 }

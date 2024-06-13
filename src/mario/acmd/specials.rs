@@ -46,8 +46,8 @@ unsafe extern "C" fn ssbexo_mario_side_special_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("mario")
-    .game_acmd("game_specials", ssbexo_mario_side_special_acmd)
-    .game_acmd("game_specialairs", ssbexo_mario_side_special_acmd)
+    .game_acmd("game_specials", ssbexo_mario_side_special_acmd, Priority::Low)
+    .game_acmd("game_specialairs", ssbexo_mario_side_special_acmd, Priority::Low)
     .install()
     ;
 }

@@ -131,13 +131,13 @@ unsafe extern "C" fn ssbexo_mewtwo_down_throw_expression(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("mewtwo")
-    .game_acmd("game_catch", ssbexo_mewtwo_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_mewtwo_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_mewtwo_pivot_grab_acmd)
-    .game_acmd("game_throwlw", ssbexo_mewtwo_down_throw_acmd)
-    .effect_acmd("effect_throwlw", ssbexo_mewtwo_down_throw_effect)
-    .sound_acmd("sound_throwlw", ssbexo_mewtwo_down_throw_sound)
-    .expression_acmd("expression_throwlw", ssbexo_mewtwo_down_throw_expression)
+    .game_acmd("game_catch", ssbexo_mewtwo_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_mewtwo_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_mewtwo_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_mewtwo_down_throw_acmd, Priority::Low)
+    .effect_acmd("effect_throwlw", ssbexo_mewtwo_down_throw_effect, Priority::Low)
+    .sound_acmd("sound_throwlw", ssbexo_mewtwo_down_throw_sound, Priority::Low)
+    .expression_acmd("expression_throwlw", ssbexo_mewtwo_down_throw_expression, Priority::Low)
     .install()
     ;
 }

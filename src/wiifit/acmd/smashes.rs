@@ -89,11 +89,11 @@ unsafe extern "C" fn ssbexo_wiifit_down_smash_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("wiifit")
-    .game_acmd("game_attacks4", ssbexo_wiifit_forward_smash_acmd)
-    .effect_acmd("effect_attacks4", ssbexo_wiifit_forward_smash_effect)
-    .effect_acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect)
-    .effect_acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect)
-    .effect_acmd("effect_attacklw4", ssbexo_wiifit_down_smash_effect)
+    .game_acmd("game_attacks4", ssbexo_wiifit_forward_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4", ssbexo_wiifit_forward_smash_effect, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect, Priority::Low)
+    .effect_acmd("effect_attacklw4", ssbexo_wiifit_down_smash_effect, Priority::Low)
     .install()
     ;
 }

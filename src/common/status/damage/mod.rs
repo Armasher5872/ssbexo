@@ -40,6 +40,7 @@ mod damagesleepfall;
 mod furafura;
 mod saving;
 mod shieldbreakfly;
+mod treadfall;
 
 pub fn install() {
     damage::install();
@@ -52,4 +53,5 @@ pub fn install() {
     furafura::install();
     saving::install();
     shieldbreakfly::install();
+    treadfall::install();
 }

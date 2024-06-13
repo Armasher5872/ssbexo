@@ -186,12 +186,12 @@ unsafe extern "C" fn ssbexo_dedede_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("dedede")
-    .expression_acmd("expression_appeallwr", ssbexo_dedede_down_taunt_expression)
-    .expression_acmd("expression_appeallwl", ssbexo_dedede_down_taunt_expression)
-    .game_acmd("game_attack11", ssbexo_dedede_jab_1_acmd)
-    .game_acmd("game_attack12", ssbexo_dedede_jab_2_acmd)
-    .game_acmd("game_attack100end", ssbexo_dedede_rapid_jab_finisher_acmd)
-    .game_acmd("game_attackdash", ssbexo_dedede_dash_attack_acmd)
+    .expression_acmd("expression_appeallwr", ssbexo_dedede_down_taunt_expression, Priority::Low)
+    .expression_acmd("expression_appeallwl", ssbexo_dedede_down_taunt_expression, Priority::Low)
+    .game_acmd("game_attack11", ssbexo_dedede_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_dedede_jab_2_acmd, Priority::Low)
+    .game_acmd("game_attack100end", ssbexo_dedede_rapid_jab_finisher_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_dedede_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

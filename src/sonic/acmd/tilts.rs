@@ -153,13 +153,13 @@ unsafe extern "C" fn ssbexo_sonic_down_tilt_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sonic")
-    .effect_acmd("effect_attacks3", ssbexo_sonic_forward_tilt_effect)
-    .effect_acmd("effect_attacks3hi", ssbexo_sonic_forward_tilt_hi_effect)
-    .effect_acmd("effect_attacks3lw", ssbexo_sonic_forward_tilt_lw_effect)
-    .game_acmd("game_attackhi3", ssbexo_sonic_up_tilt_acmd)
-    .effect_acmd("effect_attackhi3", ssbexo_sonic_up_tilt_effect)
-    .game_acmd("game_attacklw3", ssbexo_sonic_down_tilt_acmd)
-    .effect_acmd("effect_attacklw3", ssbexo_sonic_down_tilt_effect)
+    .effect_acmd("effect_attacks3", ssbexo_sonic_forward_tilt_effect, Priority::Low)
+    .effect_acmd("effect_attacks3hi", ssbexo_sonic_forward_tilt_hi_effect, Priority::Low)
+    .effect_acmd("effect_attacks3lw", ssbexo_sonic_forward_tilt_lw_effect, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_sonic_up_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi3", ssbexo_sonic_up_tilt_effect, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_sonic_down_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw3", ssbexo_sonic_down_tilt_effect, Priority::Low)
     .install()
     ;
 }

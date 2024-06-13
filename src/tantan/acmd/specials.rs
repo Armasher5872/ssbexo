@@ -30,8 +30,8 @@ unsafe extern "C" fn ssbexo_tantan_punch1_specialairhiattackdragon_acmd(agent: &
 
 pub fn install() {
     Agent::new("tantan_punch1")
-    .acmd("game_specialairhiattack", ssbexo_tantan_punch1_specialairhiattack_acmd)
-    .acmd("game_specialairhiattackdragon", ssbexo_tantan_punch1_specialairhiattackdragon_acmd)
+    .acmd("game_specialairhiattack", ssbexo_tantan_punch1_specialairhiattack_acmd, Priority::Low)
+    .acmd("game_specialairhiattackdragon", ssbexo_tantan_punch1_specialairhiattackdragon_acmd, Priority::Low)
     .install()
     ;
 }

@@ -21,8 +21,8 @@ unsafe extern "C" fn ssbexo_kamui_ryusensya_shot_max_acmd(agent: &mut L2CAgentBa
 
 pub fn install() {
     Agent::new("kamui_ryusensya")
-    .game_acmd("game_regular", ssbexo_kamui_ryusensya_regular_acmd)
-    .game_acmd("game_shotmax", ssbexo_kamui_ryusensya_shot_max_acmd)
+    .game_acmd("game_regular", ssbexo_kamui_ryusensya_regular_acmd, Priority::Low)
+    .game_acmd("game_shotmax", ssbexo_kamui_ryusensya_shot_max_acmd, Priority::Low)
     .install()
     ;
 }

@@ -27,7 +27,7 @@ unsafe extern "C" fn ssbexo_captain_uair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("captain")
-    .game_acmd("game_attackairhi", ssbexo_captain_uair_acmd)
+    .game_acmd("game_attackairhi", ssbexo_captain_uair_acmd, Priority::Low)
     .install()
     ;
 }

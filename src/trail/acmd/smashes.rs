@@ -50,7 +50,7 @@ unsafe extern "C" fn ssbexo_trail_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("trail")
-    .game_acmd("game_attacklw4", ssbexo_trail_down_smash_acmd)
+    .game_acmd("game_attacklw4", ssbexo_trail_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

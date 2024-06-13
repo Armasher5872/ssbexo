@@ -266,24 +266,24 @@ unsafe extern "C" fn ssbexo_bayonetta_wickedweaveleg_down_smash_acmd(agent: &mut
 
 pub fn install() {
     Agent::new("bayonetta")
-    .game_acmd("game_shootingarmr_atkon_attacks4", ssbexo_bayonetta_forward_smash_forward_bullet_art_on_acmd)
-    .game_acmd("game_shootingarmr_atkon_attacks4hi", ssbexo_bayonetta_forward_smash_hi_bullet_art_on_acmd)
-    .game_acmd("game_shootingarmr_atkon_attacks4lw", ssbexo_bayonetta_forward_smash_lw_bullet_art_on_acmd)
-    .game_acmd("game_shootingarml_atkon_attackhi4", ssbexo_bayonetta_up_smash_bullet_art_on_left_acmd)
-    .game_acmd("game_shootingarmr_atkon_attackhi4", ssbexo_bayonetta_up_smash_bullet_art_on_right_acmd)
-    .game_acmd("game_shootinglegl_atkon_attacklw4", ssbexo_bayonetta_down_smash_bullet_art_on_left_acmd)
-    .game_acmd("game_shootinglegr_atkon_attacklw4", ssbexo_bayonetta_down_smash_bullet_art_on_right_acmd)
+    .game_acmd("game_shootingarmr_atkon_attacks4", ssbexo_bayonetta_forward_smash_forward_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attacks4hi", ssbexo_bayonetta_forward_smash_hi_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attacks4lw", ssbexo_bayonetta_forward_smash_lw_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootingarml_atkon_attackhi4", ssbexo_bayonetta_up_smash_bullet_art_on_left_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attackhi4", ssbexo_bayonetta_up_smash_bullet_art_on_right_acmd, Priority::Low)
+    .game_acmd("game_shootinglegl_atkon_attacklw4", ssbexo_bayonetta_down_smash_bullet_art_on_left_acmd, Priority::Low)
+    .game_acmd("game_shootinglegr_atkon_attacklw4", ssbexo_bayonetta_down_smash_bullet_art_on_right_acmd, Priority::Low)
     .install()
     ;
     Agent::new("bayonetta_wickedweavearm")
-    .game_acmd("game_attacks4", ssbexo_bayonetta_wickedweavearm_forward_smash_acmd)
-    .game_acmd("game_attacks4hi", ssbexo_bayonetta_wickedweavearm_forward_smash_hi_acmd)
-    .game_acmd("game_attacks4lw", ssbexo_bayonetta_wickedweavearm_forward_smash_lw_acmd)
-    .game_acmd("game_attackhi4", ssbexo_bayonetta_wickedweavearm_up_smash_acmd)
+    .game_acmd("game_attacks4", ssbexo_bayonetta_wickedweavearm_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attacks4hi", ssbexo_bayonetta_wickedweavearm_forward_smash_hi_acmd, Priority::Low)
+    .game_acmd("game_attacks4lw", ssbexo_bayonetta_wickedweavearm_forward_smash_lw_acmd, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_bayonetta_wickedweavearm_up_smash_acmd, Priority::Low)
     .install()
     ;
     Agent::new("bayonetta_wickedweaveleg")
-    .game_acmd("game_attacklw4", ssbexo_bayonetta_wickedweaveleg_down_smash_acmd)
+    .game_acmd("game_attacklw4", ssbexo_bayonetta_wickedweaveleg_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

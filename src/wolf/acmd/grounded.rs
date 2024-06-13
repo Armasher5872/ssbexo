@@ -42,8 +42,8 @@ unsafe extern "C" fn ssbexo_wolf_jab_3_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("wolf")
-    .game_acmd("game_attack11", ssbexo_wolf_jab_1_acmd)
-    .game_acmd("game_attack13", ssbexo_wolf_jab_3_acmd)
+    .game_acmd("game_attack11", ssbexo_wolf_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attack13", ssbexo_wolf_jab_3_acmd, Priority::Low)
     .install()
     ;
 }

@@ -43,8 +43,8 @@ unsafe extern "C" fn ssbexo_yoshi_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("yoshi")
-    .game_acmd("game_attack11", ssbexo_yoshi_jab_1_acmd)
-    .game_acmd("game_attackdash", ssbexo_yoshi_dash_attack_acmd)
+    .game_acmd("game_attack11", ssbexo_yoshi_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_yoshi_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

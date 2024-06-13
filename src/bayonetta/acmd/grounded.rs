@@ -159,15 +159,15 @@ unsafe extern "C" fn ssbexo_bayonetta_dash_attack_bullet_art_on_acmd(agent: &mut
 
 pub fn install() {
     Agent::new("bayonetta")
-    .game_acmd("game_attack11", ssbexo_bayonetta_jab_1_acmd)
-    .game_acmd("game_shootingarml_atkon_attack11", ssbexo_bayonetta_jab_1_bullet_art_on_acmd)
-    .game_acmd("game_shootingarml_atkon_attack12", ssbexo_bayonetta_jab_2_bullet_art_on_acmd)
-    .game_acmd("game_shootingarml_atkon_attack13", ssbexo_bayonetta_jab_3_bullet_art_on_left_acmd)
-    .game_acmd("game_shootingarmr_atkon_attack13", ssbexo_bayonetta_jab_3_bullet_art_on_right_acmd)
-    .game_acmd("game_shootingarml_atkon_attack100", ssbexo_bayonetta_rapid_jab_bullet_art_on_left_acmd)
-    .game_acmd("game_shootingarmr_atkon_attack100", ssbexo_bayonetta_rapid_jab_bullet_art_on_right_acmd)
-    .game_acmd("game_shootingarmr_atkon_attack100end", ssbexo_bayonetta_rapid_jab_finisher_bullet_art_on_acmd)
-    .game_acmd("game_shootingarmr_atkon_attackdash", ssbexo_bayonetta_dash_attack_bullet_art_on_acmd)
+    .game_acmd("game_attack11", ssbexo_bayonetta_jab_1_acmd, Priority::Low)
+    .game_acmd("game_shootingarml_atkon_attack11", ssbexo_bayonetta_jab_1_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootingarml_atkon_attack12", ssbexo_bayonetta_jab_2_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootingarml_atkon_attack13", ssbexo_bayonetta_jab_3_bullet_art_on_left_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attack13", ssbexo_bayonetta_jab_3_bullet_art_on_right_acmd, Priority::Low)
+    .game_acmd("game_shootingarml_atkon_attack100", ssbexo_bayonetta_rapid_jab_bullet_art_on_left_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attack100", ssbexo_bayonetta_rapid_jab_bullet_art_on_right_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attack100end", ssbexo_bayonetta_rapid_jab_finisher_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attackdash", ssbexo_bayonetta_dash_attack_bullet_art_on_acmd, Priority::Low)
     .install()
     ;
 }

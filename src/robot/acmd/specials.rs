@@ -15,7 +15,7 @@ unsafe extern "C" fn ssbexo_robot_aerial_arm_rotor_finisher_acmd(agent: &mut L2C
 
 pub fn install() {
     Agent::new("robot")
-    .game_acmd("game_specialairsend", ssbexo_robot_aerial_arm_rotor_finisher_acmd)
+    .game_acmd("game_specialairsend", ssbexo_robot_aerial_arm_rotor_finisher_acmd, Priority::Low)
     .install()
     ;
 }

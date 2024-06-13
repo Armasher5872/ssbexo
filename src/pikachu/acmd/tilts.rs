@@ -43,11 +43,11 @@ unsafe extern "C" fn ssbexo_pikachu_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pikachu")
-    .game_acmd("game_attacks3", ssbexo_pikachu_forward_tilt_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_pikachu_forward_tilt_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_pikachu_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_pikachu_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_pikachu_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_pikachu_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_pikachu_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_pikachu_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_pikachu_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_pikachu_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

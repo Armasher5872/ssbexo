@@ -40,7 +40,7 @@ unsafe extern "C" fn ssbexo_pacman_up_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pacman")
-    .game_acmd("game_attackhi4", ssbexo_pacman_up_smash_acmd)
+    .game_acmd("game_attackhi4", ssbexo_pacman_up_smash_acmd, Priority::Low)
     .install()
     ;
 }

@@ -86,9 +86,9 @@ unsafe extern "C" fn ssbexo_pacman_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pacman")
-    .game_acmd("game_catch", ssbexo_pacman_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_pacman_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_pacman_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_pacman_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_pacman_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_pacman_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

@@ -35,7 +35,7 @@ unsafe extern "C" fn ssbexo_pacman_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pacman")
-    .game_acmd("game_attackairlw", ssbexo_pacman_dair_acmd)
+    .game_acmd("game_attackairlw", ssbexo_pacman_dair_acmd, Priority::Low)
     .install()
     ;
 }

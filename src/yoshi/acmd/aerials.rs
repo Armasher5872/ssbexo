@@ -284,15 +284,15 @@ unsafe extern "C" fn ssbexo_yoshi_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("yoshi")
-    .game_acmd("game_attackairn", ssbexo_yoshi_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_yoshi_nair_effect)
-    .sound_acmd("sound_attackairn", ssbexo_yoshi_nair_sound)
-    .expression_acmd("expression_attackairn", ssbexo_yoshi_nair_expression)
-    .effect_acmd("effect_landingairn", ssbexo_yoshi_nair_landing_effect)
-    .expression_acmd("expression_landingairn", ssbexo_yoshi_nair_landing_expression)
-    .game_acmd("game_attackairf", ssbexo_yoshi_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_yoshi_bair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_yoshi_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_yoshi_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_yoshi_nair_effect, Priority::Low)
+    .sound_acmd("sound_attackairn", ssbexo_yoshi_nair_sound, Priority::Low)
+    .expression_acmd("expression_attackairn", ssbexo_yoshi_nair_expression, Priority::Low)
+    .effect_acmd("effect_landingairn", ssbexo_yoshi_nair_landing_effect, Priority::Low)
+    .expression_acmd("expression_landingairn", ssbexo_yoshi_nair_landing_expression, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_yoshi_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_yoshi_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_yoshi_dair_acmd, Priority::Low)
     .install()
     ;
 }

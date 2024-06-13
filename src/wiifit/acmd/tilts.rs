@@ -104,11 +104,11 @@ unsafe extern "C" fn ssbexo_wiifit_down_tilt_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("wiifit")
-    .game_acmd("game_attacks3", ssbexo_wiifit_forward_tilt_acmd)
-    .effect_acmd("effect_attacks3", ssbexo_wiifit_forward_tilt_effect)
-    .effect_acmd("effect_attackhi3", ssbexo_wiifit_up_tilt_effect)
-    .game_acmd("game_attacklw3", ssbexo_wiifit_down_tilt_acmd)
-    .effect_acmd("effect_attacklw3", ssbexo_wiifit_down_tilt_effect)
+    .game_acmd("game_attacks3", ssbexo_wiifit_forward_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacks3", ssbexo_wiifit_forward_tilt_effect, Priority::Low)
+    .effect_acmd("effect_attackhi3", ssbexo_wiifit_up_tilt_effect, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_wiifit_down_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw3", ssbexo_wiifit_down_tilt_effect, Priority::Low)
     .install()
     ;
 }

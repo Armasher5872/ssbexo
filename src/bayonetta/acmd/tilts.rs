@@ -212,16 +212,16 @@ unsafe extern "C" fn ssbexo_bayonetta_down_tilt_bullet_art_on_right_leg_acmd(age
 
 pub fn install() {
     Agent::new("bayonetta")
-    .game_acmd("game_attacks3", ssbexo_bayonetta_forward_tilt_1_acmd)
-    .game_acmd("game_shootinglegr_atkon_attacks3", ssbexo_bayonetta_forward_tilt_1_bullet_art_on_acmd)
-    .game_acmd("game_attacks32", ssbexo_bayonetta_forward_tilt_2_acmd)
-    .game_acmd("game_shootinglegl_atkon_attacks32", ssbexo_bayonetta_forward_tilt_2_bullet_art_on_acmd)
-    .game_acmd("game_shootinglegr_atkon_attacks33", ssbexo_bayonetta_forward_tilt_3_bullet_art_on_acmd)
-    .game_acmd("game_attackhi3", ssbexo_bayonetta_up_tilt_acmd)
-    .game_acmd("game_shootingarmr_atkon_attackhi3", ssbexo_bayonetta_up_tilt_bullet_art_on_acmd)
-    .game_acmd("game_shootinglegl_atkon_attacklw3", ssbexo_bayonetta_down_tilt_bullet_art_on_left_leg_acmd)
-    .game_acmd("game_shootingarml_atkon_attacklw3", ssbexo_bayonetta_down_tilt_bullet_art_on_left_arm_acmd)
-    .game_acmd("game_shootinglegr_atkon_attacklw3", ssbexo_bayonetta_down_tilt_bullet_art_on_right_leg_acmd)
+    .game_acmd("game_attacks3", ssbexo_bayonetta_forward_tilt_1_acmd, Priority::Low)
+    .game_acmd("game_shootinglegr_atkon_attacks3", ssbexo_bayonetta_forward_tilt_1_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_attacks32", ssbexo_bayonetta_forward_tilt_2_acmd, Priority::Low)
+    .game_acmd("game_shootinglegl_atkon_attacks32", ssbexo_bayonetta_forward_tilt_2_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootinglegr_atkon_attacks33", ssbexo_bayonetta_forward_tilt_3_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_bayonetta_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_shootingarmr_atkon_attackhi3", ssbexo_bayonetta_up_tilt_bullet_art_on_acmd, Priority::Low)
+    .game_acmd("game_shootinglegl_atkon_attacklw3", ssbexo_bayonetta_down_tilt_bullet_art_on_left_leg_acmd, Priority::Low)
+    .game_acmd("game_shootingarml_atkon_attacklw3", ssbexo_bayonetta_down_tilt_bullet_art_on_left_arm_acmd, Priority::Low)
+    .game_acmd("game_shootinglegr_atkon_attacklw3", ssbexo_bayonetta_down_tilt_bullet_art_on_right_leg_acmd, Priority::Low)
     .install()
     ;
 }

@@ -98,13 +98,13 @@ unsafe extern "C" fn ssbexo_ridley_jab_2_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ridley")
-    .expression_acmd("expression_landingheavy", ssbexo_ridley_heavy_landing_expression)
-    .game_acmd("game_appealhil", ssbexo_ridley_up_taunt_acmd)
-    .game_acmd("game_appealhir", ssbexo_ridley_up_taunt_acmd)
-    .expression_acmd("expression_appealhil", ssbexo_ridley_up_taunt_expression)
-    .expression_acmd("expression_appealhir", ssbexo_ridley_up_taunt_expression)
-    .game_acmd("game_attack11", ssbexo_ridley_jab_1_acmd)
-    .game_acmd("game_attack12", ssbexo_ridley_jab_2_acmd)
+    .expression_acmd("expression_landingheavy", ssbexo_ridley_heavy_landing_expression, Priority::Low)
+    .game_acmd("game_appealhil", ssbexo_ridley_up_taunt_acmd, Priority::Low)
+    .game_acmd("game_appealhir", ssbexo_ridley_up_taunt_acmd, Priority::Low)
+    .expression_acmd("expression_appealhil", ssbexo_ridley_up_taunt_expression, Priority::Low)
+    .expression_acmd("expression_appealhir", ssbexo_ridley_up_taunt_expression, Priority::Low)
+    .game_acmd("game_attack11", ssbexo_ridley_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_ridley_jab_2_acmd, Priority::Low)
     .install()
     ;
 }

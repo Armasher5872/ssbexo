@@ -32,10 +32,10 @@ unsafe extern "C" fn ssbexo_fox_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("fox")
-    .game_acmd("game_attacks3", ssbexo_fox_forward_tilt_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_fox_forward_tilt_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_fox_forward_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_fox_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_fox_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_fox_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_fox_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_fox_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

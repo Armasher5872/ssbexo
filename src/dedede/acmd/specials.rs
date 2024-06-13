@@ -90,8 +90,8 @@ unsafe extern "C" fn ssbexo_dedede_gordo_side_special_attack_acmd(agent: &mut L2
 
 pub fn install() {
     Agent::new("dedede_gordo")
-    .game_acmd("game_specialsthrow", ssbexo_dedede_gordo_side_special_throw_acmd)
-    .game_acmd("game_specialsattack", ssbexo_dedede_gordo_side_special_attack_acmd)
+    .game_acmd("game_specialsthrow", ssbexo_dedede_gordo_side_special_throw_acmd, Priority::Low)
+    .game_acmd("game_specialsattack", ssbexo_dedede_gordo_side_special_attack_acmd, Priority::Low)
     .install()
     ;
 }

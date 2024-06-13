@@ -60,9 +60,9 @@ unsafe extern "C" fn ssbexo_chrom_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("chrom")
-    .game_acmd("game_catch", ssbexo_chrom_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_chrom_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_chrom_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_chrom_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_chrom_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_chrom_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

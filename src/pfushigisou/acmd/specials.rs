@@ -21,8 +21,8 @@ unsafe extern "C" fn ssbexo_pfushigisou_neutral_special_acmd(agent: &mut L2CAgen
 
 pub fn install() {
     Agent::new("pfushigisou")
-    .game_acmd("game_specialnstart", ssbexo_pfushigisou_neutral_special_acmd)
-    .game_acmd("game_specialairnstart", ssbexo_pfushigisou_neutral_special_acmd)
+    .game_acmd("game_specialnstart", ssbexo_pfushigisou_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialairnstart", ssbexo_pfushigisou_neutral_special_acmd, Priority::Low)
     .install()
     ;
 }

@@ -92,11 +92,11 @@ unsafe extern "C" fn ssbexo_mario_dash_attack_expression(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("mario")
-    .game_acmd("game_attack11", ssbexo_mario_jab_1_acmd)
-    .game_acmd("game_attackdash", ssbexo_mario_dash_attack_acmd)
-    .effect_acmd("effect_attackdash", ssbexo_mario_dash_attack_effect)
-    .sound_acmd("sound_attackdash", ssbexo_mario_dash_attack_sound)
-    .expression_acmd("expression_attackdash", ssbexo_mario_dash_attack_expression)
+    .game_acmd("game_attack11", ssbexo_mario_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_mario_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackdash", ssbexo_mario_dash_attack_effect, Priority::Low)
+    .sound_acmd("sound_attackdash", ssbexo_mario_dash_attack_sound, Priority::Low)
+    .expression_acmd("expression_attackdash", ssbexo_mario_dash_attack_expression, Priority::Low)
     .install()
     ;
 }

@@ -184,15 +184,15 @@ unsafe extern "C" fn ssbexo_donkey_zair_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("donkey")
-    .game_acmd("game_attackairn", ssbexo_donkey_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_donkey_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_donkey_fair_effect)
-    .game_acmd("game_attackairhi", ssbexo_donkey_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_donkey_dair_acmd)
-    .game_acmd("game_aircatch", ssbexo_donkey_zair_acmd)
-    .effect_acmd("effect_aircatch", ssbexo_donkey_zair_effect)
-    .sound_acmd("sound_aircatch", ssbexo_donkey_zair_sound)
-    .expression_acmd("expression_aircatch", ssbexo_donkey_zair_expression)
+    .game_acmd("game_attackairn", ssbexo_donkey_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_donkey_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_donkey_fair_effect, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_donkey_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_donkey_dair_acmd, Priority::Low)
+    .game_acmd("game_aircatch", ssbexo_donkey_zair_acmd, Priority::Low)
+    .effect_acmd("effect_aircatch", ssbexo_donkey_zair_effect, Priority::Low)
+    .sound_acmd("sound_aircatch", ssbexo_donkey_zair_sound, Priority::Low)
+    .expression_acmd("expression_aircatch", ssbexo_donkey_zair_expression, Priority::Low)
     .install()
     ;
 }

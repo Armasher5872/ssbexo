@@ -40,8 +40,8 @@ unsafe extern "C" fn ssbexo_littlemac_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("littlemac")
-    .game_acmd("game_attackhi3", ssbexo_littlemac_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_littlemac_down_tilt_acmd)
+    .game_acmd("game_attackhi3", ssbexo_littlemac_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_littlemac_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

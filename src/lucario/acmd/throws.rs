@@ -56,9 +56,9 @@ unsafe extern "C" fn ssbexo_lucario_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("lucario")
-    .game_acmd("game_catch", ssbexo_lucario_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_lucario_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_lucario_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_lucario_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_lucario_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_lucario_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

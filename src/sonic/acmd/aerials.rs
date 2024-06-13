@@ -306,16 +306,16 @@ unsafe extern "C" fn ssbexo_sonic_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sonic")
-    .game_acmd("game_attackairn", ssbexo_sonic_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_sonic_nair_effect)
-    .game_acmd("game_attackairf", ssbexo_sonic_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_sonic_fair_effect)
-    .sound_acmd("sound_attackairf", ssbexo_sonic_fair_sound)
-    .expression_acmd("expression_attackairf", ssbexo_sonic_fair_expression)
-    .effect_acmd("effect_attackairb", ssbexo_sonic_bair_effect)
-    .game_acmd("game_attackairhi", ssbexo_sonic_uair_acmd)
-    .effect_acmd("effect_attackairhi", ssbexo_sonic_uair_effect)
-    .game_acmd("game_attackairlw", ssbexo_sonic_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_sonic_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_sonic_nair_effect, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_sonic_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_sonic_fair_effect, Priority::Low)
+    .sound_acmd("sound_attackairf", ssbexo_sonic_fair_sound, Priority::Low)
+    .expression_acmd("expression_attackairf", ssbexo_sonic_fair_expression, Priority::Low)
+    .effect_acmd("effect_attackairb", ssbexo_sonic_bair_effect, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_sonic_uair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairhi", ssbexo_sonic_uair_effect, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_sonic_dair_acmd, Priority::Low)
     .install()
     ;
 }

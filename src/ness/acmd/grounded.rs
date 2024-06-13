@@ -170,13 +170,13 @@ unsafe extern "C" fn ssbexo_ness_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ness")
-    .game_acmd("game_attack11", ssbexo_ness_jab_1_acmd)
-    .effect_acmd("effect_attack11", ssbexo_ness_jab_1_effect)
-    .game_acmd("game_attack12", ssbexo_ness_jab_2_acmd)
-    .effect_acmd("effect_attack12", ssbexo_ness_jab_2_effect)
-    .game_acmd("game_attack13", ssbexo_ness_jab_3_acmd)
-    .effect_acmd("effect_attack13", ssbexo_ness_jab_3_effect)
-    .game_acmd("game_attackdash", ssbexo_ness_dash_attack_acmd)
+    .game_acmd("game_attack11", ssbexo_ness_jab_1_acmd, Priority::Low)
+    .effect_acmd("effect_attack11", ssbexo_ness_jab_1_effect, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_ness_jab_2_acmd, Priority::Low)
+    .effect_acmd("effect_attack12", ssbexo_ness_jab_2_effect, Priority::Low)
+    .game_acmd("game_attack13", ssbexo_ness_jab_3_acmd, Priority::Low)
+    .effect_acmd("effect_attack13", ssbexo_ness_jab_3_effect, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_ness_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

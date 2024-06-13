@@ -364,14 +364,14 @@ unsafe extern "C" fn ssbexo_robot_dair_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("robot")
-    .game_acmd("game_attackairn", ssbexo_robot_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_robot_nair_effect)
-    .game_acmd("game_attackairf", ssbexo_robot_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_robot_bair_acmd)
-    .effect_acmd("effect_attackairb", ssbexo_robot_bair_effect)
-    .game_acmd("game_attackairhi", ssbexo_robot_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_robot_dair_acmd)
-    .effect_acmd("effect_attackairlw", ssbexo_robot_dair_effect)
+    .game_acmd("game_attackairn", ssbexo_robot_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_robot_nair_effect, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_robot_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_robot_bair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairb", ssbexo_robot_bair_effect, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_robot_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_robot_dair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairlw", ssbexo_robot_dair_effect, Priority::Low)
     .install()
     ;
 }

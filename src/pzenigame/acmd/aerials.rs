@@ -79,9 +79,9 @@ unsafe extern "C" fn ssbexo_pzenigame_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pzenigame")
-    .game_acmd("game_attackairn", ssbexo_pzenigame_nair_acmd)
-    .game_acmd("game_attackairb", ssbexo_pzenigame_bair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_pzenigame_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_pzenigame_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_pzenigame_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_pzenigame_dair_acmd, Priority::Low)
     .install()
     ;
 }

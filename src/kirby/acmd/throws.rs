@@ -122,11 +122,11 @@ unsafe extern "C" fn ssbexo_kirby_down_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("kirby")
-    .game_acmd("game_catch", ssbexo_kirby_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_kirby_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_kirby_pivot_grab_acmd)
-    .game_acmd("game_throwhi", ssbexo_kirby_up_throw_acmd)
-    .game_acmd("game_throwlw", ssbexo_kirby_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_kirby_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_kirby_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_kirby_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwhi", ssbexo_kirby_up_throw_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_kirby_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

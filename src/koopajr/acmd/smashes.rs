@@ -30,7 +30,7 @@ unsafe extern "C" fn ssbexo_koopajr_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("koopajr")
-    .game_acmd("game_attacklw4", ssbexo_koopajr_down_smash_acmd)
+    .game_acmd("game_attacklw4", ssbexo_koopajr_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

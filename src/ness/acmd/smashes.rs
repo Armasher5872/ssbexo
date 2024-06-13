@@ -212,15 +212,15 @@ unsafe extern "C" fn ssbexo_ness_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ness")
-    .game_acmd("game_attacks4", ssbexo_ness_forward_smash_acmd)
-    .effect_acmd("effect_attacks4", ssbexo_ness_forward_smash_effect)
-    .game_acmd("game_attackhi4", ssbexo_ness_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_ness_down_smash_acmd)
+    .game_acmd("game_attacks4", ssbexo_ness_forward_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4", ssbexo_ness_forward_smash_effect, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_ness_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_ness_down_smash_acmd, Priority::Low)
     .install()
     ;
     Agent::new("ness_yoyohead")
-    .game_acmd("game_attackhi4charge", ssbexo_ness_up_smash_charge_acmd)
-    .game_acmd("game_attacklw4charge", ssbexo_ness_down_smash_charge_acmd)
+    .game_acmd("game_attackhi4charge", ssbexo_ness_up_smash_charge_acmd, Priority::Low)
+    .game_acmd("game_attacklw4charge", ssbexo_ness_down_smash_charge_acmd, Priority::Low)
     .install()
     ;
 }

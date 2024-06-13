@@ -75,14 +75,14 @@ unsafe extern "C" fn ssbexo_koopa_down_tilt_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("koopa")
-    .game_acmd("game_attacks3", ssbexo_koopa_forward_tilt_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_koopa_forward_tilt_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_koopa_forward_tilt_acmd)
-    .effect_acmd("effect_attacks3", ssbexo_koopa_forward_tilt_effect)
-    .effect_acmd("effect_attacks3hi", ssbexo_koopa_forward_tilt_effect)
-    .effect_acmd("game_attacks3lw", ssbexo_koopa_forward_tilt_effect)
-    .game_acmd("game_attacklw3", ssbexo_koopa_down_tilt_acmd)
-    .effect_acmd("effect_attacklw3", ssbexo_koopa_down_tilt_effect)
+    .game_acmd("game_attacks3", ssbexo_koopa_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_koopa_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_koopa_forward_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacks3", ssbexo_koopa_forward_tilt_effect, Priority::Low)
+    .effect_acmd("effect_attacks3hi", ssbexo_koopa_forward_tilt_effect, Priority::Low)
+    .effect_acmd("game_attacks3lw", ssbexo_koopa_forward_tilt_effect, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_koopa_down_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw3", ssbexo_koopa_down_tilt_effect, Priority::Low)
     .install()
     ;
 }

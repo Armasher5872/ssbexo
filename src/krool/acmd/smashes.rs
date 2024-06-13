@@ -160,11 +160,11 @@ unsafe extern "C" fn ssbexo_krool_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("krool")
-    .game_acmd("game_attacks4", ssbexo_krool_forward_smash_s_acmd)
-    .game_acmd("game_attacks4hi", ssbexo_krool_forward_smash_hi_acmd)
-    .game_acmd("game_attacks4lw", ssbexo_krool_forward_smash_lw_acmd)
-    .game_acmd("game_attackhi4", ssbexo_krool_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_krool_down_smash_acmd)
+    .game_acmd("game_attacks4", ssbexo_krool_forward_smash_s_acmd, Priority::Low)
+    .game_acmd("game_attacks4hi", ssbexo_krool_forward_smash_hi_acmd, Priority::Low)
+    .game_acmd("game_attacks4lw", ssbexo_krool_forward_smash_lw_acmd, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_krool_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_krool_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

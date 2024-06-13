@@ -36,9 +36,9 @@ unsafe extern "C" fn ssbexo_samus_jab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("samus")
-    .effect_acmd("effect_jumpfrontmini", ssbexo_samus_forward_shorthop_effect)
-    .effect_acmd("effect_jumpbackmini", ssbexo_samus_backward_shorthop_effect)
-    .game_acmd("game_attack11", ssbexo_samus_jab_acmd)
+    .effect_acmd("effect_jumpfrontmini", ssbexo_samus_forward_shorthop_effect, Priority::Low)
+    .effect_acmd("effect_jumpbackmini", ssbexo_samus_backward_shorthop_effect, Priority::Low)
+    .game_acmd("game_attack11", ssbexo_samus_jab_acmd, Priority::Low)
     .install()
     ;
 }

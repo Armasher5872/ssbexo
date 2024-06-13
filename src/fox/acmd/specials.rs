@@ -33,9 +33,9 @@ unsafe extern "C" fn ssbexo_fox_reflector_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("fox")
-    .game_acmd("game_specialhi", ssbexo_fox_grounded_firefox_acmd)
-    .game_acmd("game_speciallwstart", ssbexo_fox_reflector_acmd)
-    .game_acmd("game_specialairlwstart", ssbexo_fox_reflector_acmd)
+    .game_acmd("game_specialhi", ssbexo_fox_grounded_firefox_acmd, Priority::Low)
+    .game_acmd("game_speciallwstart", ssbexo_fox_reflector_acmd, Priority::Low)
+    .game_acmd("game_specialairlwstart", ssbexo_fox_reflector_acmd, Priority::Low)
     .install()
     ;
 }

@@ -68,12 +68,12 @@ unsafe extern "C" fn ssbexo_pzenigame_down_tilt_effect(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("pzenigame")
-    .game_acmd("game_attacks3", ssbexo_pzenigame_forward_tilt_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_pzenigame_forward_tilt_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_pzenigame_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_pzenigame_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_pzenigame_down_tilt_acmd)
-    .effect_acmd("effect_attacklw3", ssbexo_pzenigame_down_tilt_effect)
+    .game_acmd("game_attacks3", ssbexo_pzenigame_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_pzenigame_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_pzenigame_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_pzenigame_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_pzenigame_down_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw3", ssbexo_pzenigame_down_tilt_effect, Priority::Low)
     .install()
     ;
 }

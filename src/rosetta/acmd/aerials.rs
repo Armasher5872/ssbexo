@@ -48,7 +48,7 @@ unsafe extern "C" fn ssbexo_rosetta_fair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("rosetta")
-    .game_acmd("game_attackairf", ssbexo_rosetta_fair_acmd)
+    .game_acmd("game_attackairf", ssbexo_rosetta_fair_acmd, Priority::Low)
     .install()
     ;
 }

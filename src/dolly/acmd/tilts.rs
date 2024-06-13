@@ -37,7 +37,7 @@ unsafe extern "C" fn ssbexo_dolly_forward_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("dolly")
-    .game_acmd("game_attacks3", ssbexo_dolly_forward_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_dolly_forward_tilt_acmd, Priority::Low)
     .install()
     ;
 }

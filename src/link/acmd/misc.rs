@@ -49,10 +49,10 @@ unsafe extern "C" fn ssbexo_link_attachwallclimb_expression(fighter: &mut L2CAge
 
 pub fn install() {
     Agent::new("link")
-    .sound_acmd("sound_attachwall", ssbexo_link_attachwall_sound)
-    .expression_acmd("expression_attachwall", ssbexo_link_attachwall_expression)
-    .sound_acmd("sound_attachwallclimb", ssbexo_link_attachwallclimb_sound)
-    .expression_acmd("expression_attachwallclimb", ssbexo_link_attachwallclimb_expression)
+    .sound_acmd("sound_attachwall", ssbexo_link_attachwall_sound, Priority::Low)
+    .expression_acmd("expression_attachwall", ssbexo_link_attachwall_expression, Priority::Low)
+    .sound_acmd("sound_attachwallclimb", ssbexo_link_attachwallclimb_sound, Priority::Low)
+    .expression_acmd("expression_attachwallclimb", ssbexo_link_attachwallclimb_expression, Priority::Low)
     .install()
     ;
 }

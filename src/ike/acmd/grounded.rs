@@ -115,11 +115,11 @@ unsafe extern "C" fn ssbexo_ike_dash_attack_sound(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ike")
-    .game_acmd("game_appeallwr", ssbexo_ike_down_taunt_acmd)
-    .game_acmd("game_appeallwl", ssbexo_ike_down_taunt_acmd)
-    .sound_acmd("sound_attack13", ssbexo_ike_jab_3_sound)
-    .game_acmd("game_attackdash", ssbexo_ike_dash_attack_acmd)
-    .sound_acmd("sound_attackdash", ssbexo_ike_dash_attack_sound)
+    .game_acmd("game_appeallwr", ssbexo_ike_down_taunt_acmd, Priority::Low)
+    .game_acmd("game_appeallwl", ssbexo_ike_down_taunt_acmd, Priority::Low)
+    .sound_acmd("sound_attack13", ssbexo_ike_jab_3_sound, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_ike_dash_attack_acmd, Priority::Low)
+    .sound_acmd("sound_attackdash", ssbexo_ike_dash_attack_sound, Priority::Low)
     .install()
     ;
 }

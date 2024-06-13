@@ -74,11 +74,11 @@ unsafe extern "C" fn ssbexo_donkey_down_tilt_expression(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("donkey")
-    .game_acmd("game_attackhi3", ssbexo_donkey_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_donkey_down_tilt_acmd)
-    .effect_acmd("effect_attacklw3", ssbexo_donkey_down_tilt_effect)
-    .sound_acmd("sound_attacklw3", ssbexo_donkey_down_tilt_sound)
-    .expression_acmd("expression_attacklw3", ssbexo_donkey_down_tilt_expression)
+    .game_acmd("game_attackhi3", ssbexo_donkey_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_donkey_down_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw3", ssbexo_donkey_down_tilt_effect, Priority::Low)
+    .sound_acmd("sound_attacklw3", ssbexo_donkey_down_tilt_sound, Priority::Low)
+    .expression_acmd("expression_attacklw3", ssbexo_donkey_down_tilt_expression, Priority::Low)
     .install()
     ;
 }

@@ -284,15 +284,15 @@ unsafe extern "C" fn ssbexo_ike_down_smash_sound(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ike")
-    .game_acmd("game_attacks4", ssbexo_ike_forward_smash_acmd)
-    .effect_acmd("effect_attacks4", ssbexo_ike_forward_smash_effect)
-    .sound_acmd("sound_attacks4", ssbexo_ike_forward_smash_sound)
-    .game_acmd("game_attackhi4", ssbexo_ike_up_smash_acmd)
-    .effect_acmd("effect_attackhi4", ssbexo_ike_up_smash_effect)
-    .sound_acmd("sound_attackhi4", ssbexo_ike_up_smash_sound)
-    .game_acmd("game_attacklw4", ssbexo_ike_down_smash_acmd)
-    .effect_acmd("effect_attacklw4", ssbexo_ike_down_smash_effect)
-    .sound_acmd("sound_attacklw4", ssbexo_ike_down_smash_sound)
+    .game_acmd("game_attacks4", ssbexo_ike_forward_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4", ssbexo_ike_forward_smash_effect, Priority::Low)
+    .sound_acmd("sound_attacks4", ssbexo_ike_forward_smash_sound, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_ike_up_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_ike_up_smash_effect, Priority::Low)
+    .sound_acmd("sound_attackhi4", ssbexo_ike_up_smash_sound, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_ike_down_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw4", ssbexo_ike_down_smash_effect, Priority::Low)
+    .sound_acmd("sound_attacklw4", ssbexo_ike_down_smash_sound, Priority::Low)
     .install()
     ;
 }

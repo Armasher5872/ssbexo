@@ -99,10 +99,10 @@ unsafe extern "C" fn ssbexo_pit_aerial_side_special_end_acmd(agent: &mut L2CAgen
 
 pub fn install() {
     Agent::new("pit")
-    .game_acmd("game_specialsstart", ssbexo_pit_grounded_side_special_start_acmd)
-    .game_acmd("game_specialairsstart", ssbexo_pit_aerial_side_special_start_acmd)
-    .game_acmd("game_specialsend", ssbexo_pit_grounded_side_special_end_acmd)
-    .game_acmd("game_specialairsend", ssbexo_pit_aerial_side_special_end_acmd)
+    .game_acmd("game_specialsstart", ssbexo_pit_grounded_side_special_start_acmd, Priority::Low)
+    .game_acmd("game_specialairsstart", ssbexo_pit_aerial_side_special_start_acmd, Priority::Low)
+    .game_acmd("game_specialsend", ssbexo_pit_grounded_side_special_end_acmd, Priority::Low)
+    .game_acmd("game_specialairsend", ssbexo_pit_aerial_side_special_end_acmd, Priority::Low)
     .install()
     ;
 }

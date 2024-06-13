@@ -207,13 +207,13 @@ unsafe extern "C" fn ssbexo_fox_dair_landing_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("fox")
-    .game_acmd("game_attackairn", ssbexo_fox_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_fox_fair_acmd)
-    .game_acmd("game_landingairf", ssbexo_fox_fair_landing_acmd)
-    .game_acmd("game_attackairb", ssbexo_fox_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_fox_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_fox_dair_acmd)
-    .game_acmd("game_landingairlw", ssbexo_fox_dair_landing_acmd)
+    .game_acmd("game_attackairn", ssbexo_fox_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_fox_fair_acmd, Priority::Low)
+    .game_acmd("game_landingairf", ssbexo_fox_fair_landing_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_fox_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_fox_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_fox_dair_acmd, Priority::Low)
+    .game_acmd("game_landingairlw", ssbexo_fox_dair_landing_acmd, Priority::Low)
     .install()
     ;
 }

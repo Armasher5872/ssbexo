@@ -178,14 +178,14 @@ unsafe extern "C" fn ssbexo_samus_up_smash_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("samus")
-    .game_acmd("game_attacks4", ssbexo_samus_forward_smash_acmd)
-    .game_acmd("game_attacks4hi", ssbexo_samus_forward_smash_acmd)
-    .game_acmd("game_attacks4lw", ssbexo_samus_forward_smash_acmd)
-    .effect_acmd("effect_attacks4", ssbexo_samus_forward_smash_effect)
-    .effect_acmd("effect_attacks4hi", ssbexo_samus_forward_smash_hi_effect)
-    .effect_acmd("effect_attacks4lw", ssbexo_samus_forward_smash_lw_effect)
-    .game_acmd("game_attackhi4", ssbexo_samus_up_smash_acmd)
-    .effect_acmd("effect_attackhi4", ssbexo_samus_up_smash_effect)
+    .game_acmd("game_attacks4", ssbexo_samus_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attacks4hi", ssbexo_samus_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attacks4lw", ssbexo_samus_forward_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4", ssbexo_samus_forward_smash_effect, Priority::Low)
+    .effect_acmd("effect_attacks4hi", ssbexo_samus_forward_smash_hi_effect, Priority::Low)
+    .effect_acmd("effect_attacks4lw", ssbexo_samus_forward_smash_lw_effect, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_samus_up_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_samus_up_smash_effect, Priority::Low)
     .install()
     ;
 }

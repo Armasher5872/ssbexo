@@ -155,7 +155,7 @@ unsafe extern "C" fn ssbexo_kamui_up_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("kamui")
-    .game_acmd("game_attackhi3", ssbexo_kamui_up_tilt_acmd)
+    .game_acmd("game_attackhi3", ssbexo_kamui_up_tilt_acmd, Priority::Low)
     .install()
     ;
 }

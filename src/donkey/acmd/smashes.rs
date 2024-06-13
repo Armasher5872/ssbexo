@@ -67,8 +67,8 @@ unsafe extern "C" fn ssbexo_donkey_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("donkey")
-    .game_acmd("game_attackhi4", ssbexo_donkey_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_donkey_down_smash_acmd)
+    .game_acmd("game_attackhi4", ssbexo_donkey_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_donkey_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

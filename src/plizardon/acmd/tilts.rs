@@ -41,8 +41,8 @@ unsafe extern "C" fn ssbexo_plizardon_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("plizardon")
-    .game_acmd("game_attackhi3", ssbexo_plizardon_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_plizardon_down_tilt_acmd)
+    .game_acmd("game_attackhi3", ssbexo_plizardon_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_plizardon_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

@@ -81,10 +81,10 @@ unsafe extern "C" fn ssbexo_demon_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("demon")
-    .game_acmd("game_catch", ssbexo_demon_grab_acmd)
-    .game_acmd("game_catchcommand", ssbexo_demon_gates_of_hell_acmd)
-    .game_acmd("game_catchdash", ssbexo_demon_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_demon_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_demon_grab_acmd, Priority::Low)
+    .game_acmd("game_catchcommand", ssbexo_demon_gates_of_hell_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_demon_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_demon_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

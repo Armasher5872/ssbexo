@@ -122,22 +122,22 @@ unsafe extern "C" fn ssbexo_samus_aerial_up_special_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("samus")
-    .game_acmd("game_specialhi", ssbexo_samus_grounded_up_special_acmd)
-    .game_acmd("game_specialairhi", ssbexo_samus_aerial_up_special_acmd)
+    .game_acmd("game_specialhi", ssbexo_samus_grounded_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_samus_aerial_up_special_acmd, Priority::Low)
     .install()
     ;
     Agent::new("samus_cshot")
-    .game_acmd("game_shoot", ssbexo_samus_charge_shot_shoot_acmd)
+    .game_acmd("game_shoot", ssbexo_samus_charge_shot_shoot_acmd, Priority::Low)
     .install()
     ;
     Agent::new("samus_missile")
-    .game_acmd("game_homing", ssbexo_samus_homing_missile_homing_acmd)
-    .effect_acmd("effect_homing", ssbexo_samus_homing_missile_homing_effect)
+    .game_acmd("game_homing", ssbexo_samus_homing_missile_homing_acmd, Priority::Low)
+    .effect_acmd("effect_homing", ssbexo_samus_homing_missile_homing_effect, Priority::Low)
     .install()
     ;
     Agent::new("samus_supermissile")
-    .game_acmd("game_ready", ssbexo_samus_super_missile_ready_acmd)
-    .game_acmd("game_straight", ssbexo_samus_super_missile_straight_acmd)
+    .game_acmd("game_ready", ssbexo_samus_super_missile_ready_acmd, Priority::Low)
+    .game_acmd("game_straight", ssbexo_samus_super_missile_straight_acmd, Priority::Low)
     .install()
     ;
 }

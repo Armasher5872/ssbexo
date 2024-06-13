@@ -133,14 +133,14 @@ unsafe extern "C" fn ssbexo_wolf_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("wolf")
-    .game_acmd("game_attacks3", ssbexo_wolf_forward_tilt_f_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_wolf_forward_tilt_hi_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_wolf_forward_tilt_lw_acmd)
-    .game_acmd("game_attackhi3", ssbexo_wolf_up_tilt_acmd)
-    .effect_acmd("effect_attackhi3", ssbexo_wolf_up_tilt_effect)
-    .sound_acmd("sound_attackhi3", ssbexo_wolf_up_tilt_sound)
-    .expression_acmd("expression_attackhi3", ssbexo_wolf_up_tilt_expression)
-    .game_acmd("game_attacklw3", ssbexo_wolf_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_wolf_forward_tilt_f_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_wolf_forward_tilt_hi_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_wolf_forward_tilt_lw_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_wolf_up_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi3", ssbexo_wolf_up_tilt_effect, Priority::Low)
+    .sound_acmd("sound_attackhi3", ssbexo_wolf_up_tilt_sound, Priority::Low)
+    .expression_acmd("expression_attackhi3", ssbexo_wolf_up_tilt_expression, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_wolf_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

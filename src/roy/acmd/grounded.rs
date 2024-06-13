@@ -31,8 +31,8 @@ unsafe extern "C" fn ssbexo_roy_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("roy")
-    .game_acmd("game_attack11", ssbexo_roy_jab_acmd)
-    .game_acmd("game_attackdash", ssbexo_roy_dash_attack_acmd)
+    .game_acmd("game_attack11", ssbexo_roy_jab_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_roy_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

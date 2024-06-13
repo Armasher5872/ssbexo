@@ -336,27 +336,27 @@ unsafe extern "C" fn ssbexo_ness_pk_thunder_tackle_acmd(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("ness")
-    .game_acmd("game_specialshield", ssbexo_ness_shield_special_acmd)
-    .effect_acmd("effect_specialshield", ssbexo_ness_shield_special_effect)
-    .sound_acmd("sound_specialshield", ssbexo_ness_shield_special_sound)
-    .expression_acmd("expression_specialshield", ssbexo_ness_shield_special_expression)
-    .game_acmd("game_specialairhi", ssbexo_ness_pk_thunder_tackle_acmd)
+    .game_acmd("game_specialshield", ssbexo_ness_shield_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialshield", ssbexo_ness_shield_special_effect, Priority::Low)
+    .sound_acmd("sound_specialshield", ssbexo_ness_shield_special_sound, Priority::Low)
+    .expression_acmd("expression_specialshield", ssbexo_ness_shield_special_expression, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_ness_pk_thunder_tackle_acmd, Priority::Low)
     .install()
     ;
     Agent::new("ness_pkflash")
-    .game_acmd("game_bang", ssbexo_ness_pk_flash_acmd)
+    .game_acmd("game_bang", ssbexo_ness_pk_flash_acmd, Priority::Low)
     .install()
     ;
     Agent::new("ness_pkfire")
-    .game_acmd("game_shoot", ssbexo_ness_pk_fire_shoot_acmd)
-    .game_acmd("game_shootair", ssbexo_ness_pk_fire_shoot_acmd)
-    .game_acmd("game_pillar", ssbexo_ness_grounded_pk_fire_pillar_acmd)
-    .game_acmd("game_pillarair", ssbexo_ness_aerial_pk_fire_pillar_acmd)
+    .game_acmd("game_shoot", ssbexo_ness_pk_fire_shoot_acmd, Priority::Low)
+    .game_acmd("game_shootair", ssbexo_ness_pk_fire_shoot_acmd, Priority::Low)
+    .game_acmd("game_pillar", ssbexo_ness_grounded_pk_fire_pillar_acmd, Priority::Low)
+    .game_acmd("game_pillarair", ssbexo_ness_aerial_pk_fire_pillar_acmd, Priority::Low)
     .install()
     ;
     Agent::new("ness_pkthunder")
-    .game_acmd("game_move", ssbexo_ness_pk_thunder_ball_acmd)
-    .effect_acmd("effect_move", ssbexo_ness_pk_thunder_ball_effect)
+    .game_acmd("game_move", ssbexo_ness_pk_thunder_ball_acmd, Priority::Low)
+    .effect_acmd("effect_move", ssbexo_ness_pk_thunder_ball_effect, Priority::Low)
     .install()
     ;
 }

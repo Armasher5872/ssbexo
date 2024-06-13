@@ -77,9 +77,9 @@ unsafe extern "C" fn ssbexo_wolf_uair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("wolf")
-    .game_acmd("game_attackairn", ssbexo_wolf_nair_acmd)
-    .game_acmd("game_attackairb", ssbexo_wolf_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_wolf_uair_acmd)
+    .game_acmd("game_attackairn", ssbexo_wolf_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_wolf_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_wolf_uair_acmd, Priority::Low)
     .install()
     ;
 }

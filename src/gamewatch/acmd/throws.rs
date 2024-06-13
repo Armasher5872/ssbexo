@@ -217,13 +217,13 @@ unsafe extern "C" fn ssbexo_gamewatch_down_throw_acmd(fighter: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("gamewatch")
-    .game_acmd("game_catch", ssbexo_gamewatch_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_gamewatch_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_gamewatch_pivot_grab_acmd)
-    .game_acmd("game_throwf", ssbexo_gamewatch_forward_throw_acmd)
-    .game_acmd("game_throwb", ssbexo_gamewatch_back_throw_acmd)
-    .game_acmd("game_throwhi", ssbexo_gamewatch_up_throw_acmd)
-    .game_acmd("game_throwlw", ssbexo_gamewatch_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_gamewatch_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_gamewatch_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_gamewatch_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_gamewatch_forward_throw_acmd, Priority::Low)
+    .game_acmd("game_throwb", ssbexo_gamewatch_back_throw_acmd, Priority::Low)
+    .game_acmd("game_throwhi", ssbexo_gamewatch_up_throw_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_gamewatch_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

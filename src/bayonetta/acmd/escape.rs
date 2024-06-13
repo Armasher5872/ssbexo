@@ -37,11 +37,11 @@ unsafe extern "C" fn ssbexo_bayonetta_directional_airdodge_acmd(agent: &mut L2CA
 
 pub fn install() {
     Agent::new("bayonetta")
-    .game_acmd("game_escapen", ssbexo_bayonetta_spotdodge_acmd)
-    .game_acmd("game_escapef", ssbexo_bayonetta_forward_roll_acmd)
-    .game_acmd("game_escapeb", ssbexo_bayonetta_backward_roll_acmd)
-    .game_acmd("game_escapeair", ssbexo_bayonetta_neutral_airdodge_acmd)
-    .game_acmd("game_escapeairslide", ssbexo_bayonetta_directional_airdodge_acmd)
+    .game_acmd("game_escapen", ssbexo_bayonetta_spotdodge_acmd, Priority::Low)
+    .game_acmd("game_escapef", ssbexo_bayonetta_forward_roll_acmd, Priority::Low)
+    .game_acmd("game_escapeb", ssbexo_bayonetta_backward_roll_acmd, Priority::Low)
+    .game_acmd("game_escapeair", ssbexo_bayonetta_neutral_airdodge_acmd, Priority::Low)
+    .game_acmd("game_escapeairslide", ssbexo_bayonetta_directional_airdodge_acmd, Priority::Low)
     .install()
     ;
 }

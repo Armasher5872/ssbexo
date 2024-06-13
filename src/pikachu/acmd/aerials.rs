@@ -127,10 +127,10 @@ unsafe extern "C" fn ssbexo_pikachu_uair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pikachu")
-    .game_acmd("game_attackairn", ssbexo_pikachu_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_pikachu_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_pikachu_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_pikachu_uair_acmd)
+    .game_acmd("game_attackairn", ssbexo_pikachu_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_pikachu_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_pikachu_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_pikachu_uair_acmd, Priority::Low)
     .install()
     ;
 }

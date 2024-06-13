@@ -48,9 +48,9 @@ unsafe extern "C" fn ssbexo_gamewatch_dash_attack_acmd(fighter: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("gamewatch")
-    .game_acmd("game_appeallwl", ssbexo_gamewatch_appeal_lw_acmd)
-    .game_acmd("game_appeallwr", ssbexo_gamewatch_appeal_lw_acmd)
-    .game_acmd("game_attackdash", ssbexo_gamewatch_dash_attack_acmd)
+    .game_acmd("game_appeallwl", ssbexo_gamewatch_appeal_lw_acmd, Priority::Low)
+    .game_acmd("game_appeallwr", ssbexo_gamewatch_appeal_lw_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_gamewatch_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

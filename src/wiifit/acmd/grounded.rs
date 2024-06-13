@@ -86,10 +86,10 @@ unsafe extern "C" fn ssbexo_wiifit_jab_3_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("wiifit")
-    .game_acmd("game_attack11", ssbexo_wiifit_jab_1_acmd)
-    .effect_acmd("effect_attack11", ssbexo_wiifit_jab_1_effect)
-    .effect_acmd("effect_attack12", ssbexo_wiifit_jab_2_effect)
-    .effect_acmd("effect_attack13", ssbexo_wiifit_jab_3_effect)
+    .game_acmd("game_attack11", ssbexo_wiifit_jab_1_acmd, Priority::Low)
+    .effect_acmd("effect_attack11", ssbexo_wiifit_jab_1_effect, Priority::Low)
+    .effect_acmd("effect_attack12", ssbexo_wiifit_jab_2_effect, Priority::Low)
+    .effect_acmd("effect_attack13", ssbexo_wiifit_jab_3_effect, Priority::Low)
     .install()
     ;
 }

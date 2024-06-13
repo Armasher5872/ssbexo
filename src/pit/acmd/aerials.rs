@@ -131,10 +131,10 @@ unsafe extern "C" fn ssbexo_pit_uair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pit")
-    .game_acmd("game_attackairn", ssbexo_pit_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_pit_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_pit_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_pit_uair_acmd)
+    .game_acmd("game_attackairn", ssbexo_pit_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_pit_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_pit_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_pit_uair_acmd, Priority::Low)
     .install()
     ;
 }

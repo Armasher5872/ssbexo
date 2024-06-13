@@ -60,8 +60,8 @@ unsafe extern "C" fn ssbexo_gamewatch_down_smash_acmd(fighter: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("gamewatch")
-    .game_acmd("game_attackhi4", ssbexo_gamewatch_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_gamewatch_down_smash_acmd)
+    .game_acmd("game_attackhi4", ssbexo_gamewatch_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_gamewatch_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

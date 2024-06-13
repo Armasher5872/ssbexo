@@ -38,7 +38,7 @@ unsafe extern "C" fn ssbexo_pikachu_forward_smash_acmd(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("pikachu")
-    .game_acmd("game_attacks4", ssbexo_pikachu_forward_smash_acmd)
+    .game_acmd("game_attacks4", ssbexo_pikachu_forward_smash_acmd, Priority::Low)
     .install()
     ;
 }

@@ -92,10 +92,10 @@ unsafe extern "C" fn ssbexo_samus_down_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("samus")
-    .game_acmd("game_catch", ssbexo_samus_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_samus_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_samus_pivot_grab_acmd)
-    .game_acmd("game_throwlw", ssbexo_samus_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_samus_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_samus_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_samus_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_samus_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

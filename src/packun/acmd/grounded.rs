@@ -32,7 +32,7 @@ unsafe extern "C" fn ssbexo_packun_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("packun")
-    .game_acmd("game_attackdash", ssbexo_packun_dash_attack_acmd)
+    .game_acmd("game_attackdash", ssbexo_packun_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

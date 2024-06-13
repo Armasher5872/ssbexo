@@ -121,14 +121,14 @@ unsafe extern "C" fn ssbexo_daisy_up_special_expression(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("daisy")
-    .game_acmd("game_specialhistart", ssbexo_daisy_up_special_acmd)
-    .effect_acmd("effect_specialhistart", ssbexo_daisy_up_special_effect)
-    .sound_acmd("sound_specialhistart", ssbexo_daisy_up_special_sound)
-    .expression_acmd("expression_specialhistart", ssbexo_daisy_up_special_expression)
-    .game_acmd("game_specialairhistart", ssbexo_daisy_up_special_acmd)
-    .effect_acmd("effect_specialairhistart", ssbexo_daisy_up_special_effect)
-    .sound_acmd("sound_specialairhistart", ssbexo_daisy_up_special_sound)
-    .expression_acmd("expression_specialairhistart", ssbexo_daisy_up_special_expression)
+    .game_acmd("game_specialhistart", ssbexo_daisy_up_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialhistart", ssbexo_daisy_up_special_effect, Priority::Low)
+    .sound_acmd("sound_specialhistart", ssbexo_daisy_up_special_sound, Priority::Low)
+    .expression_acmd("expression_specialhistart", ssbexo_daisy_up_special_expression, Priority::Low)
+    .game_acmd("game_specialairhistart", ssbexo_daisy_up_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialairhistart", ssbexo_daisy_up_special_effect, Priority::Low)
+    .sound_acmd("sound_specialairhistart", ssbexo_daisy_up_special_sound, Priority::Low)
+    .expression_acmd("expression_specialairhistart", ssbexo_daisy_up_special_expression, Priority::Low)
     .install()
     ;
 }

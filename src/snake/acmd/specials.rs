@@ -52,12 +52,12 @@ unsafe extern "C" fn ssbexo_snake_c4_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("snake")
-    .game_acmd("game_specialnstart", ssbexo_snake_neutral_special_start_acmd)
-    .game_acmd("game_specialairnstart", ssbexo_snake_neutral_special_start_acmd)
+    .game_acmd("game_specialnstart", ssbexo_snake_neutral_special_start_acmd, Priority::Low)
+    .game_acmd("game_specialairnstart", ssbexo_snake_neutral_special_start_acmd, Priority::Low)
     .install()
     ;
     Agent::new("snake_c4")
-    .game_acmd("game_explosion", ssbexo_snake_c4_acmd)
+    .game_acmd("game_explosion", ssbexo_snake_c4_acmd, Priority::Low)
     .install()
     ;
 }

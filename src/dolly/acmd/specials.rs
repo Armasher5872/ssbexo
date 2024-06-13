@@ -62,8 +62,8 @@ unsafe extern "C" fn ssbexo_dolly_buster_wolf_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("dolly")
-    .game_acmd("game_superspecial", ssbexo_dolly_power_geyser_acmd)
-    .game_acmd("game_superspecial2start", ssbexo_dolly_buster_wolf_acmd)
+    .game_acmd("game_superspecial", ssbexo_dolly_power_geyser_acmd, Priority::Low)
+    .game_acmd("game_superspecial2start", ssbexo_dolly_buster_wolf_acmd, Priority::Low)
     .install()
     ;
 }

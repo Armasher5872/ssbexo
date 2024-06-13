@@ -76,10 +76,10 @@ unsafe extern "C" fn ssbexo_edge_down_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("edge")
-    .game_acmd("game_catch", ssbexo_edge_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_edge_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_edge_pivot_grab_acmd)
-    .game_acmd("game_throwlw", ssbexo_edge_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_edge_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_edge_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_edge_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_edge_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

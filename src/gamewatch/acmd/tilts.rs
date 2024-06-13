@@ -95,9 +95,9 @@ unsafe extern "C" fn ssbexo_gamewatch_down_tilt_acmd(fighter: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("gamewatch")
-    .game_acmd("game_attacks3", ssbexo_gamewatch_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_gamewatch_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_gamewatch_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_gamewatch_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_gamewatch_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_gamewatch_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

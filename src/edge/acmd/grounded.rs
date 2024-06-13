@@ -57,8 +57,8 @@ unsafe extern "C" fn ssbexo_edge_jab_2_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("edge")
-    .game_acmd("game_attack11", ssbexo_edge_jab_1_acmd)
-    .game_acmd("game_attack12", ssbexo_edge_jab_2_acmd)
+    .game_acmd("game_attack11", ssbexo_edge_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_edge_jab_2_acmd, Priority::Low)
     .install()
     ;
 }

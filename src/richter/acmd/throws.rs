@@ -59,9 +59,9 @@ unsafe extern "C" fn ssbexo_richter_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("richter")
-    .game_acmd("game_catch", ssbexo_richter_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_richter_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_richter_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_richter_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_richter_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_richter_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

@@ -30,8 +30,8 @@ unsafe extern "C" fn ssbexo_marth_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("marth")
-    .game_acmd("game_attacks3", ssbexo_marth_forward_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_marth_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_marth_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_marth_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

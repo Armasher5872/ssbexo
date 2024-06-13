@@ -60,9 +60,9 @@ unsafe extern "C" fn ssbexo_packun_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("packun")
-    .game_acmd("game_attacks3", ssbexo_packun_forward_tilt_1_acmd)
-    .game_acmd("game_attacks32", ssbexo_packun_forward_tilt_2_acmd)
-    .game_acmd("game_attacklw3", ssbexo_packun_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_packun_forward_tilt_1_acmd, Priority::Low)
+    .game_acmd("game_attacks32", ssbexo_packun_forward_tilt_2_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_packun_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

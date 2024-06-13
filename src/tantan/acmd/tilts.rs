@@ -113,23 +113,23 @@ unsafe extern "C" fn ssbexo_tantan_ring_attack_fly_acmd(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("tantan")
-    .game_acmd("game_attackshortstartl1", ssbexo_tantan_attackshortstartl1_acmd)
+    .game_acmd("game_attackshortstartl1", ssbexo_tantan_attackshortstartl1_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_punch1")
-    .acmd("game_attackshort", ssbexo_tantan_punch1_attack_short_acmd)
+    .acmd("game_attackshort", ssbexo_tantan_punch1_attack_short_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_punch2")
-    .acmd("game_attackshort", ssbexo_tantan_punch2_attack_short_acmd)
+    .acmd("game_attackshort", ssbexo_tantan_punch2_attack_short_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_punch3")
-    .acmd("game_attackshort", ssbexo_tantan_punch3_attack_short_acmd)
+    .acmd("game_attackshort", ssbexo_tantan_punch3_attack_short_acmd, Priority::Low)
     .install()
     ;
     Agent::new("tantan_ring")
-    .game_acmd("game_attackfly", ssbexo_tantan_ring_attack_fly_acmd)
+    .game_acmd("game_attackfly", ssbexo_tantan_ring_attack_fly_acmd, Priority::Low)
     .install()
     ;
 }

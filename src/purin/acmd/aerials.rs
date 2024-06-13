@@ -222,15 +222,15 @@ unsafe extern "C" fn ssbexo_purin_uair_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("purin")
-    .game_acmd("game_attackairn", ssbexo_purin_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_purin_nair_effect)
-    .sound_acmd("sound_attackairn", ssbexo_purin_nair_sound)
-    .expression_acmd("expression_attackairn", ssbexo_purin_nair_expression)
-    .game_acmd("game_attackairb", ssbexo_purin_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_purin_uair_acmd)
-    .effect_acmd("effect_attackairhi", ssbexo_purin_uair_effect)
-    .sound_acmd("sound_attackairhi", ssbexo_purin_uair_sound)
-    .expression_acmd("expression_attackairhi", ssbexo_purin_uair_expression)
+    .game_acmd("game_attackairn", ssbexo_purin_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_purin_nair_effect, Priority::Low)
+    .sound_acmd("sound_attackairn", ssbexo_purin_nair_sound, Priority::Low)
+    .expression_acmd("expression_attackairn", ssbexo_purin_nair_expression, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_purin_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_purin_uair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairhi", ssbexo_purin_uair_effect, Priority::Low)
+    .sound_acmd("sound_attackairhi", ssbexo_purin_uair_sound, Priority::Low)
+    .expression_acmd("expression_attackairhi", ssbexo_purin_uair_expression, Priority::Low)
     .install()
     ;
 }

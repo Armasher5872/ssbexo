@@ -103,12 +103,12 @@ unsafe extern "C" fn ssbexo_donkey_aerial_dash_attack_expression(agent: &mut L2C
 
 pub fn install() {
     Agent::new("donkey")
-    .game_acmd("game_itemheavythrowf", ssbexo_donkey_heavy_throw_forward_acmd)
-    .game_acmd("game_attackdash", ssbexo_donkey_dash_attack_acmd)
-    .game_acmd("game_attackairdash", ssbexo_donkey_aerial_dash_attack_acmd)
-    .effect_acmd("effect_attackairdash", ssbexo_donkey_aerial_dash_attack_effect)
-    .sound_acmd("sound_attackairdash", ssbexo_donkey_aerial_dash_attack_sound)
-    .expression_acmd("expression_attackairdash", ssbexo_donkey_aerial_dash_attack_expression)
+    .game_acmd("game_itemheavythrowf", ssbexo_donkey_heavy_throw_forward_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_donkey_dash_attack_acmd, Priority::Low)
+    .game_acmd("game_attackairdash", ssbexo_donkey_aerial_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackairdash", ssbexo_donkey_aerial_dash_attack_effect, Priority::Low)
+    .sound_acmd("sound_attackairdash", ssbexo_donkey_aerial_dash_attack_sound, Priority::Low)
+    .expression_acmd("expression_attackairdash", ssbexo_donkey_aerial_dash_attack_expression, Priority::Low)
     .install()
     ;
 }

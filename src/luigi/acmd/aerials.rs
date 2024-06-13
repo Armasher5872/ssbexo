@@ -137,14 +137,14 @@ unsafe extern "C" fn ssbexo_luigi_plunger_zair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("luigi")
-    .game_acmd("game_attackairn", ssbexo_luigi_nair_acmd)
-    .effect_acmd("effect_attackairn", ssbexo_luigi_nair_effect)
-    .game_acmd("game_attackairf", ssbexo_luigi_fair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_luigi_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_luigi_nair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairn", ssbexo_luigi_nair_effect, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_luigi_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_luigi_dair_acmd, Priority::Low)
     .install()
     ;
     Agent::new("luigi_plunger")
-    .game_acmd("game_aircatch", ssbexo_luigi_plunger_zair_acmd)
+    .game_acmd("game_aircatch", ssbexo_luigi_plunger_zair_acmd, Priority::Low)
     .install()
     ;
 }

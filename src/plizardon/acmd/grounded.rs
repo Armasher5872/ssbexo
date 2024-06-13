@@ -112,10 +112,10 @@ unsafe extern "C" fn ssbexo_plizardon_dash_attack_effect(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("plizardon")
-    .game_acmd("game_attack11", ssbexo_plizardon_jab_1_acmd)
-    .game_acmd("game_attack12", ssbexo_plizardon_jab_2_acmd)
-    .game_acmd("game_attackdash", ssbexo_plizardon_dash_attack_acmd)
-    .effect_acmd("effect_attackdash", ssbexo_plizardon_dash_attack_effect)
+    .game_acmd("game_attack11", ssbexo_plizardon_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attack12", ssbexo_plizardon_jab_2_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_plizardon_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackdash", ssbexo_plizardon_dash_attack_effect, Priority::Low)
     .install()
     ;
 }

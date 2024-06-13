@@ -61,8 +61,8 @@ unsafe extern "C" fn ssbexo_krool_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("krool")
-    .game_acmd("game_attack13", ssbexo_krool_jab_3_acmd)
-    .game_acmd("game_attackdash", ssbexo_krool_dash_attack_acmd)
+    .game_acmd("game_attack13", ssbexo_krool_jab_3_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_krool_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

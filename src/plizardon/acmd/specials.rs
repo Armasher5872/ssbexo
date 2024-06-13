@@ -43,8 +43,8 @@ unsafe extern "C" fn ssbexo_plizardon_up_special_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("plizardon")
-    .game_acmd("game_specialhi", ssbexo_plizardon_up_special_acmd)
-    .game_acmd("game_specialairhi", ssbexo_plizardon_up_special_acmd)
+    .game_acmd("game_specialhi", ssbexo_plizardon_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_plizardon_up_special_acmd, Priority::Low)
     .install()
     ;
 }

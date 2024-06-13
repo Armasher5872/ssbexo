@@ -113,14 +113,14 @@ unsafe extern "C" fn ssbexo_wolf_side_special_end_acmd(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("wolf")
-    .game_acmd("game_specialn", ssbexo_wolf_grounded_neutral_special_acmd)
-    .game_acmd("game_specialairn", ssbexo_wolf_aerial_neutral_special_acmd)
-    .game_acmd("game_specialsend", ssbexo_wolf_side_special_end_acmd)
-    .game_acmd("game_specialairsend", ssbexo_wolf_side_special_end_acmd)
+    .game_acmd("game_specialn", ssbexo_wolf_grounded_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialairn", ssbexo_wolf_aerial_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialsend", ssbexo_wolf_side_special_end_acmd, Priority::Low)
+    .game_acmd("game_specialairsend", ssbexo_wolf_side_special_end_acmd, Priority::Low)
     .install()
     ;
     Agent::new("wolf_blaster_bullet")
-    .game_acmd("game_fly", ssbexo_wolf_blaster_bullet_fly_acmd)
+    .game_acmd("game_fly", ssbexo_wolf_blaster_bullet_fly_acmd, Priority::Low)
     .install()
     ;
 }

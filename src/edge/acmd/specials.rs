@@ -70,15 +70,15 @@ unsafe extern "C" fn ssbexo_edge_scintilla_attack_acmd(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("edge_fire")
-    .game_acmd("game_bursts", ssbexo_edge_fire_burst_s_acmd)
+    .game_acmd("game_bursts", ssbexo_edge_fire_burst_s_acmd, Priority::Low)
     .install()
     ;
     Agent::new("edge_flare1")
-    .game_acmd("game_fly", ssbexo_edge_shadow_flare_fly_acmd)
+    .game_acmd("game_fly", ssbexo_edge_shadow_flare_fly_acmd, Priority::Low)
     .install()
     ;
     Agent::new("edge_flash")
-    .game_acmd("game_attack", ssbexo_edge_scintilla_attack_acmd)
+    .game_acmd("game_attack", ssbexo_edge_scintilla_attack_acmd, Priority::Low)
     .install()
     ;
 }

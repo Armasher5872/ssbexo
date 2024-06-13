@@ -194,11 +194,11 @@ unsafe extern "C" fn ssbexo_snake_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("snake")
-    .game_acmd("game_attackairn", ssbexo_snake_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_snake_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_snake_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_snake_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_snake_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_snake_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_snake_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_snake_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_snake_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_snake_dair_acmd, Priority::Low)
     .install()
     ;
 }

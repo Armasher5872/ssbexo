@@ -79,12 +79,12 @@ unsafe extern "C" fn ssbexo_pikmin_neutral_special_failure_expression(agent: &mu
 
 pub fn install() {
     Agent::new("pikmin")
-    .game_acmd("game_specialnstart", ssbexo_pikmin_neutral_special_acmd)
-    .effect_acmd("effect_specialnstart", ssbexo_pikmin_neutral_special_effect)
-    .sound_acmd("sound_specialnstart", ssbexo_pikmin_neutral_special_sound)
-    .expression_acmd("expression_specialnstart", ssbexo_pikmin_neutral_special_expression)
-    .sound_acmd("sound_specialnfailure", ssbexo_pikmin_neutral_special_failure_sound)
-    .expression_acmd("expression_specialnfailure", ssbexo_pikmin_neutral_special_failure_expression)
+    .game_acmd("game_specialnstart", ssbexo_pikmin_neutral_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialnstart", ssbexo_pikmin_neutral_special_effect, Priority::Low)
+    .sound_acmd("sound_specialnstart", ssbexo_pikmin_neutral_special_sound, Priority::Low)
+    .expression_acmd("expression_specialnstart", ssbexo_pikmin_neutral_special_expression, Priority::Low)
+    .sound_acmd("sound_specialnfailure", ssbexo_pikmin_neutral_special_failure_sound, Priority::Low)
+    .expression_acmd("expression_specialnfailure", ssbexo_pikmin_neutral_special_failure_expression, Priority::Low)
     .install()
     ;
 }

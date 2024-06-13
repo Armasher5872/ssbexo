@@ -56,9 +56,9 @@ unsafe extern "C" fn ssbexo_metaknight_forward_tilt_3_acmd(agent: &mut L2CAgentB
 
 pub fn install() {
     Agent::new("metaknight")
-    .game_acmd("game_attacks3", ssbexo_metaknight_forward_tilt_1_acmd)
-    .game_acmd("game_attacks3s2", ssbexo_metaknight_forward_tilt_2_acmd)
-    .game_acmd("game_attacks3s3", ssbexo_metaknight_forward_tilt_3_acmd)
+    .game_acmd("game_attacks3", ssbexo_metaknight_forward_tilt_1_acmd, Priority::Low)
+    .game_acmd("game_attacks3s2", ssbexo_metaknight_forward_tilt_2_acmd, Priority::Low)
+    .game_acmd("game_attacks3s3", ssbexo_metaknight_forward_tilt_3_acmd, Priority::Low)
     .install()
     ;
 }

@@ -11,7 +11,7 @@ unsafe extern "C" fn ssbexo_brave_aerial_kaclang_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("brave")
-    .game_acmd("game_specialairlw10", ssbexo_brave_aerial_kaclang_acmd)
+    .game_acmd("game_specialairlw10", ssbexo_brave_aerial_kaclang_acmd, Priority::Low)
     .install()
     ;
 }

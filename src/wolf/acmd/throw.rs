@@ -86,10 +86,10 @@ unsafe extern "C" fn ssbexo_wolf_down_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("wolf")
-    .game_acmd("game_catch", ssbexo_wolf_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_wolf_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_wolf_pivot_grab_acmd)
-    .game_acmd("game_throwlw", ssbexo_wolf_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_wolf_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_wolf_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_wolf_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_wolf_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

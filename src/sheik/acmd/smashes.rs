@@ -115,9 +115,9 @@ unsafe extern "C" fn ssbexo_sheik_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sheik")
-    .game_acmd("game_attacks4", ssbexo_sheik_forward_smash_acmd)
-    .game_acmd("game_attackhi4", ssbexo_sheik_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_sheik_down_smash_acmd)
+    .game_acmd("game_attacks4", ssbexo_sheik_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_sheik_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_sheik_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

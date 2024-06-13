@@ -284,14 +284,14 @@ unsafe extern "C" fn ssbexo_roy_down_smash_expression(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("roy")
-    .game_acmd("game_attacks4", ssbexo_roy_forward_smash_acmd)
-    .effect_acmd("effect_attacks4", ssbexo_roy_forward_smash_effect)
-    .game_acmd("game_attackhi4", ssbexo_roy_up_smash_acmd)
-    .effect_acmd("effect_attackhi4", ssbexo_roy_up_smash_effect)
-    .game_acmd("game_attacklw4", ssbexo_roy_down_smash_acmd)
-    .effect_acmd("effect_attacklw4", ssbexo_roy_down_smash_effect)
-    .sound_acmd("sound_attacklw4", ssbexo_roy_down_smash_sound)
-    .expression_acmd("expression_attacklw4", ssbexo_roy_down_smash_expression)
+    .game_acmd("game_attacks4", ssbexo_roy_forward_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4", ssbexo_roy_forward_smash_effect, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_roy_up_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_roy_up_smash_effect, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_roy_down_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw4", ssbexo_roy_down_smash_effect, Priority::Low)
+    .sound_acmd("sound_attacklw4", ssbexo_roy_down_smash_sound, Priority::Low)
+    .expression_acmd("expression_attacklw4", ssbexo_roy_down_smash_expression, Priority::Low)
     .install()
     ;
 }

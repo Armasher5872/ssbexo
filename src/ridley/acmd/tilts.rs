@@ -125,11 +125,11 @@ unsafe extern "C" fn ssbexo_ridley_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ridley")
-    .game_acmd("game_attacks3", ssbexo_ridley_forward_tilt_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_ridley_forward_tilt_hi_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_ridley_forward_tilt_lw_acmd)
-    .game_acmd("game_attackhi3", ssbexo_ridley_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_ridley_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_ridley_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_ridley_forward_tilt_hi_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_ridley_forward_tilt_lw_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_ridley_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_ridley_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

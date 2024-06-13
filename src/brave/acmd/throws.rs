@@ -56,9 +56,9 @@ unsafe extern "C" fn ssbexo_brave_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("brave")
-    .game_acmd("game_catch", ssbexo_brave_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_brave_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_brave_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_brave_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_brave_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_brave_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

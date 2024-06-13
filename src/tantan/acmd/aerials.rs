@@ -13,7 +13,7 @@ unsafe extern "C" fn ssbexo_tantan_attackshortstartr1_acmd(agent: &mut L2CAgentB
 
 pub fn install() {
     Agent::new("tantan")
-    .game_acmd("game_attackshortstartr1", ssbexo_tantan_attackshortstartr1_acmd)
+    .game_acmd("game_attackshortstartr1", ssbexo_tantan_attackshortstartr1_acmd, Priority::Low)
     .install()
     ;
 }

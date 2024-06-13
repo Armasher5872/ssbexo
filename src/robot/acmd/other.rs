@@ -60,9 +60,9 @@ unsafe extern "C" fn ssbexo_robot_turn_run_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("robot")
-    .game_acmd("game_turndash", ssbexo_robot_turn_dash_acmd)
-    .effect_acmd("effect_turndash", ssbexo_robot_turn_dash_effect)
-    .game_acmd("game_turnrun", ssbexo_robot_turn_run_acmd)
+    .game_acmd("game_turndash", ssbexo_robot_turn_dash_acmd, Priority::Low)
+    .effect_acmd("effect_turndash", ssbexo_robot_turn_dash_effect, Priority::Low)
+    .game_acmd("game_turnrun", ssbexo_robot_turn_run_acmd, Priority::Low)
     .install()
     ;
 }

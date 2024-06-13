@@ -168,10 +168,10 @@ unsafe extern "C" fn ssbexo_miifighter_aerial_down_special_2_kick(agent: &mut L2
 
 pub fn install() {
     Agent::new("miifighter")
-    .game_acmd("game_specialairs1start", ssbexo_miifighter_aerial_side_special_1_start)
-    .game_acmd("game_specialairs1end", ssbexo_miifighter_aerial_side_special_1_end)
-    .game_acmd("game_specialairlw2start", ssbexo_miifighter_aerial_down_special_2_start)
-    .game_acmd("game_specialairlw2kick", ssbexo_miifighter_aerial_down_special_2_kick)
+    .game_acmd("game_specialairs1start", ssbexo_miifighter_aerial_side_special_1_start, Priority::Low)
+    .game_acmd("game_specialairs1end", ssbexo_miifighter_aerial_side_special_1_end, Priority::Low)
+    .game_acmd("game_specialairlw2start", ssbexo_miifighter_aerial_down_special_2_start, Priority::Low)
+    .game_acmd("game_specialairlw2kick", ssbexo_miifighter_aerial_down_special_2_kick, Priority::Low)
     .install()
     ;
 }

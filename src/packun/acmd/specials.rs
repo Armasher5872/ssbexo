@@ -24,8 +24,8 @@ unsafe extern "C" fn ssbexo_packun_breath_shoot_max_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("packun_breath")
-    .game_acmd("game_shoot", ssbexo_packun_breath_shoot_acmd)
-    .game_acmd("game_shootmax", ssbexo_packun_breath_shoot_max_acmd)
+    .game_acmd("game_shoot", ssbexo_packun_breath_shoot_acmd, Priority::Low)
+    .game_acmd("game_shootmax", ssbexo_packun_breath_shoot_max_acmd, Priority::Low)
     .install()
     ;
 }

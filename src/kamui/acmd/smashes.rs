@@ -247,12 +247,12 @@ unsafe extern "C" fn ssbexo_kamui_down_smash_expression(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("kamui")
-    .effect_acmd("effect_attacklw4charge", ssbexo_kamui_down_smash_charge_effect)
-    .expression_acmd("expression_attacklw4charge", ssbexo_kamui_down_smash_charge_expression)
-    .game_acmd("game_attacklw4", ssbexo_kamui_down_smash_acmd)
-    .effect_acmd("effect_attacklw4", ssbexo_kamui_down_smash_effect)
-    .sound_acmd("sound_attacklw4", ssbexo_kamui_down_smash_sound)
-    .expression_acmd("expression_attacklw4", ssbexo_kamui_down_smash_expression)
+    .effect_acmd("effect_attacklw4charge", ssbexo_kamui_down_smash_charge_effect, Priority::Low)
+    .expression_acmd("expression_attacklw4charge", ssbexo_kamui_down_smash_charge_expression, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_kamui_down_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacklw4", ssbexo_kamui_down_smash_effect, Priority::Low)
+    .sound_acmd("sound_attacklw4", ssbexo_kamui_down_smash_sound, Priority::Low)
+    .expression_acmd("expression_attacklw4", ssbexo_kamui_down_smash_expression, Priority::Low)
     .install()
     ;
 }

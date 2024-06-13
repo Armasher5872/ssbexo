@@ -151,16 +151,16 @@ unsafe extern "C" fn ssbexo_dedede_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("dedede")
-    .game_acmd("game_attacks3", ssbexo_dedede_forward_tilt_1_acmd)
-    .effect_acmd("effect_attacks3", ssbexo_dedede_forward_tilt_1_effect)
-    .sound_acmd("sound_attacks3", ssbexo_dedede_forward_tilt_1_sound)
-    .expression_acmd("expression_attacks3", ssbexo_dedede_forward_tilt_1_expression)
-    .game_acmd("game_attacks32", ssbexo_dedede_forward_tilt_2_acmd)
-    .effect_acmd("effect_attacks32", ssbexo_dedede_forward_tilt_2_effect)
-    .sound_acmd("sound_attacks32", ssbexo_dedede_forward_tilt_2_sound)
-    .expression_acmd("expression_attacks32", ssbexo_dedede_forward_tilt_2_expression)
-    .game_acmd("game_attackhi3", ssbexo_dedede_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_dedede_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_dedede_forward_tilt_1_acmd, Priority::Low)
+    .effect_acmd("effect_attacks3", ssbexo_dedede_forward_tilt_1_effect, Priority::Low)
+    .sound_acmd("sound_attacks3", ssbexo_dedede_forward_tilt_1_sound, Priority::Low)
+    .expression_acmd("expression_attacks3", ssbexo_dedede_forward_tilt_1_expression, Priority::Low)
+    .game_acmd("game_attacks32", ssbexo_dedede_forward_tilt_2_acmd, Priority::Low)
+    .effect_acmd("effect_attacks32", ssbexo_dedede_forward_tilt_2_effect, Priority::Low)
+    .sound_acmd("sound_attacks32", ssbexo_dedede_forward_tilt_2_sound, Priority::Low)
+    .expression_acmd("expression_attacks32", ssbexo_dedede_forward_tilt_2_expression, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_dedede_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_dedede_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

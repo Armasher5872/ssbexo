@@ -194,13 +194,13 @@ unsafe extern "C" fn ssbexo_kirby_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("kirby")
-    .game_acmd("game_attackairn", ssbexo_kirby_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_kirby_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_kirby_fair_effect)
-    .game_acmd("game_attackairb", ssbexo_kirby_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_kirby_uair_acmd)
-    .effect_acmd("effect_attackairhi", ssbexo_kirby_uair_effect)
-    .game_acmd("game_attackairlw", ssbexo_kirby_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_kirby_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_kirby_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_kirby_fair_effect, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_kirby_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_kirby_uair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairhi", ssbexo_kirby_uair_effect, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_kirby_dair_acmd, Priority::Low)
     .install()
     ;
 }

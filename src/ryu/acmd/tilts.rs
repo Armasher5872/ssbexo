@@ -42,8 +42,8 @@ unsafe extern "C" fn ssbexo_ryu_close_forward_tilt_effect(agent: &mut L2CAgentBa
 
 pub fn install() {
     Agent::new("ryu")
-    .game_acmd("game_attacknearw", ssbexo_ryu_close_forward_tilt_acmd)
-    .effect_acmd("effect_attacknearw", ssbexo_ryu_close_forward_tilt_effect)
+    .game_acmd("game_attacknearw", ssbexo_ryu_close_forward_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attacknearw", ssbexo_ryu_close_forward_tilt_effect, Priority::Low)
     .install()
     ;
 }

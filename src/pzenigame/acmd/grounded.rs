@@ -16,7 +16,7 @@ unsafe extern "C" fn ssbexo_pzenigame_jab_3_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pzenigame")
-    .game_acmd("game_attack11", ssbexo_pzenigame_jab_3_acmd)
+    .game_acmd("game_attack11", ssbexo_pzenigame_jab_3_acmd, Priority::Low)
     .install()
     ;
 }

@@ -103,11 +103,11 @@ unsafe extern "C" fn ssbexo_pichu_forward_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pichu")
-    .game_acmd("game_catch", ssbexo_pichu_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_pichu_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_pichu_pivot_grab_acmd)
-    .game_acmd("game_catchattack", ssbexo_pichu_pummel_acmd)
-    .game_acmd("game_throwf", ssbexo_pichu_forward_throw_acmd)
+    .game_acmd("game_catch", ssbexo_pichu_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_pichu_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_pichu_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_catchattack", ssbexo_pichu_pummel_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_pichu_forward_throw_acmd, Priority::Low)
     .install()
     ;
 }

@@ -673,66 +673,34 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_effect(agent: &mut L2C
 
 pub fn install() {
     Agent::new("ganon")
-    .game_acmd("game_specialn", ssbexo_armstrong_neutral_special_acmd)
-    .effect_acmd("effect_specialn", ssbexo_armstrong_neutral_special_effect)
-    .sound_acmd("sound_specialn", ssbexo_armstrong_neutral_special_sound)
-    .game_acmd("game_specialairn", ssbexo_armstrong_aerial_neutral_special_acmd)
-    .effect_acmd("effect_specialairn", ssbexo_armstrong_aerial_neutral_special_effect)
-    .sound_acmd("sound_specialairn", ssbexo_armstrong_aerial_neutral_special_sound)
-    .game_acmd("game_specialsstart", ssbexo_armstrong_grounded_side_special_start_acmd)
-    .effect_acmd("effect_specialsstart", ssbexo_armstrong_grounded_side_special_start_effect)
-    .game_acmd("game_specials", ssbexo_armstrong_grounded_chokehold_throw_acmd)
-    .effect_acmd("effect_specials", ssbexo_armstrong_grounded_chokehold_throw_effect)
-    .game_acmd("game_specialairsstart", ssbexo_armstrong_aerial_side_special_start_acmd)
-    .effect_acmd("effect_specialairsstart", ssbexo_armstrong_aerial_side_special_start_effect)
-    .game_acmd("game_specialairscatch", ssbexo_armstrong_aerial_chokehold_grab_acmd)
-    .effect_acmd("effect_specialairscatch", ssbexo_armstrong_aerial_chokehold_grab_effect)
-    .game_acmd("game_specialairsfall", ssbexo_armstrong_aerial_chokehold_fall_acmd)
-    .effect_acmd("effect_specialairsfall", ssbexo_armstrong_aerial_chokehold_fall_effect)
-    .game_acmd("game_specialairs", ssbexo_armstrong_aerial_chokehold_throw_acmd)
-    .effect_acmd("effect_specialairs", ssbexo_armstrong_aerial_chokehold_throw_effect)
-    .game_acmd("game_specialhi", ssbexo_armstrong_grounded_up_special_acmd)
-    .game_acmd("game_specialairhi", ssbexo_armstrong_aerial_up_special_acmd)
-    .effect_acmd("effect_specialhi", ssbexo_armstrong_up_special_effect)
-    .effect_acmd("effect_specialairhi", ssbexo_armstrong_up_special_effect)
-    .game_acmd("game_specialhicatch", ssbexo_armstrong_power_drive_grab_acmd)
-    .game_acmd("game_specialhithrow", ssbexo_armstrong_power_drive_throw_acmd)
-    .game_acmd("game_speciallw", ssbexo_armstrong_grounded_down_special_acmd)
-    .effect_acmd("effect_speciallw", ssbexo_armstrong_grounded_down_special_effect)
-    .game_acmd("game_specialairlw", ssbexo_armstrong_aerial_down_special_acmd)
-    .effect_acmd("effect_specialairlw", ssbexo_armstrong_aerial_down_special_effect)
+    .game_acmd("game_specialn", ssbexo_armstrong_neutral_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialn", ssbexo_armstrong_neutral_special_effect, Priority::Low)
+    .sound_acmd("sound_specialn", ssbexo_armstrong_neutral_special_sound, Priority::Low)
+    .game_acmd("game_specialairn", ssbexo_armstrong_aerial_neutral_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialairn", ssbexo_armstrong_aerial_neutral_special_effect, Priority::Low)
+    .sound_acmd("sound_specialairn", ssbexo_armstrong_aerial_neutral_special_sound, Priority::Low)
+    .game_acmd("game_specialsstart", ssbexo_armstrong_grounded_side_special_start_acmd, Priority::Low)
+    .effect_acmd("effect_specialsstart", ssbexo_armstrong_grounded_side_special_start_effect, Priority::Low)
+    .game_acmd("game_specials", ssbexo_armstrong_grounded_chokehold_throw_acmd, Priority::Low)
+    .effect_acmd("effect_specials", ssbexo_armstrong_grounded_chokehold_throw_effect, Priority::Low)
+    .game_acmd("game_specialairsstart", ssbexo_armstrong_aerial_side_special_start_acmd, Priority::Low)
+    .effect_acmd("effect_specialairsstart", ssbexo_armstrong_aerial_side_special_start_effect, Priority::Low)
+    .game_acmd("game_specialairscatch", ssbexo_armstrong_aerial_chokehold_grab_acmd, Priority::Low)
+    .effect_acmd("effect_specialairscatch", ssbexo_armstrong_aerial_chokehold_grab_effect, Priority::Low)
+    .game_acmd("game_specialairsfall", ssbexo_armstrong_aerial_chokehold_fall_acmd, Priority::Low)
+    .effect_acmd("effect_specialairsfall", ssbexo_armstrong_aerial_chokehold_fall_effect, Priority::Low)
+    .game_acmd("game_specialairs", ssbexo_armstrong_aerial_chokehold_throw_acmd, Priority::Low)
+    .effect_acmd("effect_specialairs", ssbexo_armstrong_aerial_chokehold_throw_effect, Priority::Low)
+    .game_acmd("game_specialhi", ssbexo_armstrong_grounded_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_armstrong_aerial_up_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialhi", ssbexo_armstrong_up_special_effect, Priority::Low)
+    .effect_acmd("effect_specialairhi", ssbexo_armstrong_up_special_effect, Priority::Low)
+    .game_acmd("game_specialhicatch", ssbexo_armstrong_power_drive_grab_acmd, Priority::Low)
+    .game_acmd("game_specialhithrow", ssbexo_armstrong_power_drive_throw_acmd, Priority::Low)
+    .game_acmd("game_speciallw", ssbexo_armstrong_grounded_down_special_acmd, Priority::Low)
+    .effect_acmd("effect_speciallw", ssbexo_armstrong_grounded_down_special_effect, Priority::Low)
+    .game_acmd("game_specialairlw", ssbexo_armstrong_aerial_down_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialairlw", ssbexo_armstrong_aerial_down_special_effect, Priority::Low)
     .install()
     ;
 }
-
-/*
-
-Importing old models
-
-//Blender Steps
-
-1: Import Base Model
-2: Import the new model
-3: Copy the base models armature
-4: Resize and rotate it
-5: Go to Object>Apply>Apply All Transforms
-6: Rename the new models bones
-7: Select the new model and Alt+P in the main window
-8: Select clear and keep transforms
-9: Select mesh of new model and base model armature
-10: Ctrl+P then select armature deform
-11: Drag the new model into the base collection
-12: Go to shading (Dotted Triangle), select the new model, go under color attributes, and remove all of them
-13: Go to materials (The red sphere), then rename the material to a name you'd recognize
-14: Go down and select "Convert to Blender Material"
-15: Make sure it only has one modifier under the wrench menu, and said object is set to the base models bones
-16: Export the model
-
-//SSBH Steps
-
-1: Add the texture files into the respective model folder
-2: Import new model
-3: Click on model.numatb
-4: Import the reference model and look at it's model.numatb
-5: Copy over all the original properties from the base model
-*/

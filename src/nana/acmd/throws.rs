@@ -67,9 +67,9 @@ unsafe extern "C" fn ssbexo_nana_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("nana")
-    .game_acmd("game_catch", ssbexo_nana_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_nana_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_nana_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_nana_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_nana_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_nana_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

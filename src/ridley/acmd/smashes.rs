@@ -79,9 +79,9 @@ unsafe extern "C" fn ssbexo_ridley_down_smash_expression(agent : &mut L2CAgentBa
 
 pub fn install() {
     Agent::new("ridley")
-    .game_acmd("game_attackhi4", ssbexo_ridley_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_ridley_down_smash_acmd)
-    .expression_acmd("expression_attacklw4", ssbexo_ridley_down_smash_expression)
+    .game_acmd("game_attackhi4", ssbexo_ridley_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_ridley_down_smash_acmd, Priority::Low)
+    .expression_acmd("expression_attacklw4", ssbexo_ridley_down_smash_expression, Priority::Low)
     .install()
     ;
 }

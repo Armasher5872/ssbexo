@@ -56,9 +56,9 @@ unsafe extern "C" fn ssbexo_buddy_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("buddy")
-    .game_acmd("game_catch", ssbexo_buddy_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_buddy_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_buddy_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_buddy_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_buddy_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_buddy_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

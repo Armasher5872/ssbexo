@@ -126,8 +126,8 @@ unsafe extern "C" fn ssbexo_edge_down_smash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("edge")
-    .game_acmd("game_attackhi4", ssbexo_edge_up_smash_acmd)
-    .game_acmd("game_attacklw4", ssbexo_edge_down_smash_acmd)
+    .game_acmd("game_attackhi4", ssbexo_edge_up_smash_acmd, Priority::Low)
+    .game_acmd("game_attacklw4", ssbexo_edge_down_smash_acmd, Priority::Low)
     .install()
     ;
 }

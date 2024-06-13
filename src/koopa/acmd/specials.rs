@@ -110,14 +110,14 @@ unsafe extern "C" fn ssbexo_koopa_aerial_up_special_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("koopa")
-    .game_acmd("game_specialn", ssbexo_koopa_neutral_special_acmd)
-    .game_acmd("game_specialairn", ssbexo_koopa_neutral_special_acmd)
-    .game_acmd("game_specialhi", ssbexo_koopa_grounded_up_special_acmd)
-    .game_acmd("game_specialairhi", ssbexo_koopa_aerial_up_special_acmd)
+    .game_acmd("game_specialn", ssbexo_koopa_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialairn", ssbexo_koopa_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialhi", ssbexo_koopa_grounded_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_koopa_aerial_up_special_acmd, Priority::Low)
     .install()
     ;
     Agent::new("koopa_breath")
-    .game_acmd("game_move", ssbexo_koopa_fire_breath_acmd)
+    .game_acmd("game_move", ssbexo_koopa_fire_breath_acmd, Priority::Low)
     .install()
     ;
 }

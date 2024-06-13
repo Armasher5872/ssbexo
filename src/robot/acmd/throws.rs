@@ -70,10 +70,10 @@ unsafe extern "C" fn ssbexo_robot_down_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("robot")
-    .game_acmd("game_catch", ssbexo_robot_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_robot_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_robot_pivot_grab_acmd)
-    .game_acmd("game_throwlw", ssbexo_robot_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_robot_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_robot_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_robot_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_robot_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

@@ -37,14 +37,14 @@ unsafe extern "C" fn ssbexo_falco_reflector_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("falco_blaster_bullet")
-    .game_acmd("game_fly", ssbexo_falco_laser_acmd)
+    .game_acmd("game_fly", ssbexo_falco_laser_acmd, Priority::Low)
     .install()
     ;
     Agent::new("falco")
-    .game_acmd("game_speciallw", ssbexo_falco_reflector_acmd)
-    .game_acmd("game_speciallwr", ssbexo_falco_reflector_acmd)
-    .game_acmd("game_specialairlw", ssbexo_falco_reflector_acmd)
-    .game_acmd("game_specialairlwr", ssbexo_falco_reflector_acmd)
+    .game_acmd("game_speciallw", ssbexo_falco_reflector_acmd, Priority::Low)
+    .game_acmd("game_speciallwr", ssbexo_falco_reflector_acmd, Priority::Low)
+    .game_acmd("game_specialairlw", ssbexo_falco_reflector_acmd, Priority::Low)
+    .game_acmd("game_specialairlwr", ssbexo_falco_reflector_acmd, Priority::Low)
     .install()
     ;
 }

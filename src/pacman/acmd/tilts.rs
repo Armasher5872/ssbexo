@@ -36,8 +36,8 @@ unsafe extern "C" fn ssbexo_pacman_up_tilt_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pacman")
-    .game_acmd("game_attackhi3", ssbexo_pacman_up_tilt_acmd)
-    .effect_acmd("effect_attackhi3", ssbexo_pacman_up_tilt_effect)
+    .game_acmd("game_attackhi3", ssbexo_pacman_up_tilt_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi3", ssbexo_pacman_up_tilt_effect, Priority::Low)
     .install()
     ;
 }

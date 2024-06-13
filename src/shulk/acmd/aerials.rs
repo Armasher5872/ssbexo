@@ -37,7 +37,7 @@ unsafe extern "C" fn ssbexo_shulk_bair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("shulk")
-    .game_acmd("game_attackairb", ssbexo_shulk_bair_acmd)
+    .game_acmd("game_attackairb", ssbexo_shulk_bair_acmd, Priority::Low)
     .install()
     ;
 }

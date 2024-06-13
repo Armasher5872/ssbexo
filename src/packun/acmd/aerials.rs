@@ -126,10 +126,10 @@ unsafe extern "C" fn ssbexo_packun_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("packun")
-    .game_acmd("game_attackairn", ssbexo_packun_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_packun_fair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_packun_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_packun_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_packun_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_packun_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_packun_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_packun_dair_acmd, Priority::Low)
     .install()
     ;
 }

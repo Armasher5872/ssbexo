@@ -142,12 +142,12 @@ unsafe extern "C" fn ssbexo_ness_down_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ness")
-    .game_acmd("game_catch", ssbexo_ness_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_ness_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_ness_pivot_grab_acmd)
-    .game_acmd("game_throwf", ssbexo_ness_forward_throw_acmd)
-    .game_acmd("game_throwhi", ssbexo_ness_up_throw_acmd)
-    .game_acmd("game_throwlw", ssbexo_ness_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_ness_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_ness_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_ness_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_ness_forward_throw_acmd, Priority::Low)
+    .game_acmd("game_throwhi", ssbexo_ness_up_throw_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_ness_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

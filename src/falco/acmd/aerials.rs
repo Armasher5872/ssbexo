@@ -170,12 +170,12 @@ unsafe extern "C" fn ssbexo_falco_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("falco")
-    .game_acmd("game_attackairn", ssbexo_falco_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_falco_fair_acmd)
-    .game_acmd("game_landingairf", ssbexo_falco_fair_landing_acmd)
-    .game_acmd("game_attackairb", ssbexo_falco_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_falco_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_falco_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_falco_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_falco_fair_acmd, Priority::Low)
+    .game_acmd("game_landingairf", ssbexo_falco_fair_landing_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_falco_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_falco_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_falco_dair_acmd, Priority::Low)
     .install()
     ;
 }

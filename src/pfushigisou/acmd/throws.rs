@@ -122,12 +122,12 @@ unsafe extern "C" fn ssbexo_pfushigisou_down_throw_acmd(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("pfushigisou")
-    .game_acmd("game_catch", ssbexo_pfushigisou_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_pfushigisou_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_pfushigisou_pivot_grab_acmd)
-    .game_acmd("game_throwf", ssbexo_pfushigisou_forward_throw_acmd)
-    .game_acmd("game_throwb", ssbexo_pfushigisou_back_throw_acmd)
-    .game_acmd("game_throwlw", ssbexo_pfushigisou_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_pfushigisou_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_pfushigisou_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_pfushigisou_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_pfushigisou_forward_throw_acmd, Priority::Low)
+    .game_acmd("game_throwb", ssbexo_pfushigisou_back_throw_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_pfushigisou_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

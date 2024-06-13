@@ -282,10 +282,10 @@ unsafe extern "C" fn ssbexo_captain_aerial_reverse_neutral_special_acmd(agent: &
 
 pub fn install() {
     Agent::new("captain")
-    .game_acmd("game_specialn", ssbexo_captain_neutral_special_acmd)
-    .game_acmd("game_specialnturn", ssbexo_captain_reverse_neutral_special_acmd)
-    .game_acmd("game_specialairn", ssbexo_captain_aerial_neutral_special_acmd)
-    .game_acmd("game_specialairnturn", ssbexo_captain_aerial_reverse_neutral_special_acmd)
+    .game_acmd("game_specialn", ssbexo_captain_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialnturn", ssbexo_captain_reverse_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialairn", ssbexo_captain_aerial_neutral_special_acmd, Priority::Low)
+    .game_acmd("game_specialairnturn", ssbexo_captain_aerial_reverse_neutral_special_acmd, Priority::Low)
     .install()
     ;
 }

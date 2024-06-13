@@ -79,10 +79,10 @@ unsafe extern "C" fn ssbexo_pit_up_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pit")
-    .game_acmd("game_catch", ssbexo_pit_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_pit_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_pit_pivot_grab_acmd)
-    .game_acmd("game_throwhi", ssbexo_pit_up_throw_acmd)
+    .game_acmd("game_catch", ssbexo_pit_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_pit_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_pit_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwhi", ssbexo_pit_up_throw_acmd, Priority::Low)
     .install()
     ;
 }

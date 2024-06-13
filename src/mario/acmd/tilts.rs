@@ -59,11 +59,11 @@ unsafe extern "C" fn ssbexo_mario_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("mario")
-    .game_acmd("game_attacks3", ssbexo_mario_forward_tilt_acmd)
-    .game_acmd("game_attacks3hi", ssbexo_mario_forward_tilt_acmd)
-    .game_acmd("game_attacks3lw", ssbexo_mario_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_mario_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_mario_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_mario_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3hi", ssbexo_mario_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacks3lw", ssbexo_mario_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_mario_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_mario_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

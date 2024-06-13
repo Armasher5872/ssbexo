@@ -67,9 +67,9 @@ unsafe extern "C" fn ssbexo_snake_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("snake")
-    .game_acmd("game_attacks3", ssbexo_snake_forward_tilt_1_acmd)
-    .game_acmd("game_attackhi3", ssbexo_snake_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_snake_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_snake_forward_tilt_1_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_snake_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_snake_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

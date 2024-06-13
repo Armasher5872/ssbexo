@@ -89,9 +89,9 @@ unsafe extern "C" fn ssbexo_szerosuit_pivot_grab_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("szerosuit")
-    .game_acmd("game_catch", ssbexo_szerosuit_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_szerosuit_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_szerosuit_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_szerosuit_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_szerosuit_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_szerosuit_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

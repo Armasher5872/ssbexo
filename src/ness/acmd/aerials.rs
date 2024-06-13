@@ -100,10 +100,10 @@ unsafe extern "C" fn ssbexo_ness_uair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("ness")
-    .game_acmd("game_attackairn", ssbexo_ness_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_ness_fair_acmd)
-    .game_acmd("game_attackairb", ssbexo_ness_bair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_ness_uair_acmd)
+    .game_acmd("game_attackairn", ssbexo_ness_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_ness_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_ness_bair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_ness_uair_acmd, Priority::Low)
     .install()
     ;
 }

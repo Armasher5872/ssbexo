@@ -38,8 +38,8 @@ unsafe extern "C" fn ssbexo_snake_dash_attack_throw_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("snake")
-    .game_acmd("game_attackdash", ssbexo_snake_dash_attack_acmd)
-    .game_acmd("game_attackdashlightthrow", ssbexo_snake_dash_attack_throw_acmd)
+    .game_acmd("game_attackdash", ssbexo_snake_dash_attack_acmd, Priority::Low)
+    .game_acmd("game_attackdashlightthrow", ssbexo_snake_dash_attack_throw_acmd, Priority::Low)
     .install()
     ;
 }

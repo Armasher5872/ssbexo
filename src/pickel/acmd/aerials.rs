@@ -172,8 +172,8 @@ unsafe extern "C" fn ssbexo_pickel_uair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pickel")
-    .game_acmd("game_attackairn", ssbexo_pickel_nair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_pickel_uair_acmd)
+    .game_acmd("game_attackairn", ssbexo_pickel_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_pickel_uair_acmd, Priority::Low)
     .install()
     ;
 }

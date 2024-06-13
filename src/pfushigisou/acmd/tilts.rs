@@ -81,9 +81,9 @@ unsafe extern "C" fn ssbexo_pfushigisou_down_tilt_acmd(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("pfushigisou")
-    .game_acmd("game_attacks3", ssbexo_pfushigisou_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_pfushigisou_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_pfushigisou_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_pfushigisou_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_pfushigisou_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_pfushigisou_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

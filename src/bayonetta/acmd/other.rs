@@ -23,9 +23,9 @@ unsafe extern "C" fn ssbexo_bayonetta_landing_fall_special_effect(agent: &mut L2
 
 pub fn install() {
     Agent::new("bayonetta")
-    .effect_acmd("effect_landinglight", ssbexo_bayonetta_landing_light_effect)
-    .effect_acmd("effect_landingheavy", ssbexo_bayonetta_landing_heavy_effect)
-    .effect_acmd("effect_landingfallspecial", ssbexo_bayonetta_landing_fall_special_effect)
+    .effect_acmd("effect_landinglight", ssbexo_bayonetta_landing_light_effect, Priority::Low)
+    .effect_acmd("effect_landingheavy", ssbexo_bayonetta_landing_heavy_effect, Priority::Low)
+    .effect_acmd("effect_landingfallspecial", ssbexo_bayonetta_landing_fall_special_effect, Priority::Low)
     .install()
     ;
 }

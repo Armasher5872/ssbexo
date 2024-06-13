@@ -71,8 +71,8 @@ unsafe extern "C" fn ssbexo_dolly_spotdodge_attack_acmd(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("dolly")
-    .game_acmd("game_attack11", ssbexo_dolly_jab_1_acmd)
-    .game_acmd("game_escapeattack", ssbexo_dolly_spotdodge_attack_acmd)
+    .game_acmd("game_attack11", ssbexo_dolly_jab_1_acmd, Priority::Low)
+    .game_acmd("game_escapeattack", ssbexo_dolly_spotdodge_attack_acmd, Priority::Low)
     .install()
     ;
 }

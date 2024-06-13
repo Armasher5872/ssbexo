@@ -150,12 +150,12 @@ unsafe extern "C" fn ssbexo_dedede_down_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("dedede")
-    .game_acmd("game_catch", ssbexo_dedede_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_dedede_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_dedede_pivot_grab_acmd)
-    .game_acmd("game_throwf", ssbexo_dedede_forward_throw_acmd)
-    .game_acmd("game_throwb", ssbexo_dedede_back_throw_acmd)
-    .game_acmd("game_throwlw", ssbexo_dedede_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_dedede_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_dedede_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_dedede_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_dedede_forward_throw_acmd, Priority::Low)
+    .game_acmd("game_throwb", ssbexo_dedede_back_throw_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_dedede_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

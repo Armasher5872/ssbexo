@@ -32,7 +32,7 @@ unsafe extern "C" fn ssbexo_miifighter_fair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("miifighter")
-    .game_acmd("game_attackairf", ssbexo_miifighter_fair_acmd)
+    .game_acmd("game_attackairf", ssbexo_miifighter_fair_acmd, Priority::Low)
     .install()
     ;
 }

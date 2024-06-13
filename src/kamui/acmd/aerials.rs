@@ -291,8 +291,8 @@ unsafe extern "C" fn ssbexo_kamui_fair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("kamui")
-    .game_acmd("game_attackairn", ssbexo_kamui_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_kamui_fair_acmd)
+    .game_acmd("game_attackairn", ssbexo_kamui_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_kamui_fair_acmd, Priority::Low)
     .install()
     ;
 }

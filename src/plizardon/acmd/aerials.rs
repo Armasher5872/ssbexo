@@ -113,10 +113,10 @@ unsafe extern "C" fn ssbexo_plizardon_bair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("plizardon")
-    .game_acmd("game_attackairn", ssbexo_plizardon_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_plizardon_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_plizardon_fair_effect)
-    .game_acmd("game_attackairb", ssbexo_plizardon_bair_acmd)
+    .game_acmd("game_attackairn", ssbexo_plizardon_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_plizardon_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_plizardon_fair_effect, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_plizardon_bair_acmd, Priority::Low)
     .install()
     ;
 }

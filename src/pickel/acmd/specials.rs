@@ -22,8 +22,8 @@ unsafe extern "C" fn ssbexo_pickel_trolley_special_s_drive_empty_partial_acmd(ag
 
 pub fn install() {
     Agent::new("pickel_trolley")
-    .game_acmd("game_specialsdrivepartial", ssbexo_pickel_trolley_special_s_drive_partial_acmd)
-    .game_acmd("game_specialsdriveemptypartial", ssbexo_pickel_trolley_special_s_drive_empty_partial_acmd)
+    .game_acmd("game_specialsdrivepartial", ssbexo_pickel_trolley_special_s_drive_partial_acmd, Priority::Low)
+    .game_acmd("game_specialsdriveemptypartial", ssbexo_pickel_trolley_special_s_drive_empty_partial_acmd, Priority::Low)
     .install()
     ;
 }

@@ -54,12 +54,12 @@ unsafe extern "C" fn ssbexo_tantan_grab_end_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("tantan")
-    .game_acmd("game_catchstart", ssbexo_tantan_grab_start_acmd)
-    .game_acmd("game_catchdashstart", ssbexo_tantan_grab_start_acmd)
-    .game_acmd("game_catchturnstart", ssbexo_tantan_grab_start_acmd)
-    .game_acmd("game_catchend", ssbexo_tantan_grab_end_acmd)
-    .game_acmd("game_catchdashend", ssbexo_tantan_grab_end_acmd)
-    .game_acmd("game_catchturnend", ssbexo_tantan_grab_end_acmd)
+    .game_acmd("game_catchstart", ssbexo_tantan_grab_start_acmd, Priority::Low)
+    .game_acmd("game_catchdashstart", ssbexo_tantan_grab_start_acmd, Priority::Low)
+    .game_acmd("game_catchturnstart", ssbexo_tantan_grab_start_acmd, Priority::Low)
+    .game_acmd("game_catchend", ssbexo_tantan_grab_end_acmd, Priority::Low)
+    .game_acmd("game_catchdashend", ssbexo_tantan_grab_end_acmd, Priority::Low)
+    .game_acmd("game_catchturnend", ssbexo_tantan_grab_end_acmd, Priority::Low)
     .install()
     ;
 }

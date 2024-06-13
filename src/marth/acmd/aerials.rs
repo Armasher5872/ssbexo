@@ -135,13 +135,13 @@ unsafe extern "C" fn ssbexo_marth_dair_expression(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("marth")
-    .game_acmd("game_attackairn", ssbexo_marth_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_marth_fair_acmd)
-    .game_acmd("game_attackairhi", ssbexo_marth_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_marth_dair_acmd)
-    .effect_acmd("effect_attackairlw", ssbexo_marth_dair_effect)
-    .sound_acmd("sound_attackairlw", ssbexo_marth_dair_sound)
-    .expression_acmd("expression_attackairlw", ssbexo_marth_dair_expression)
+    .game_acmd("game_attackairn", ssbexo_marth_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_marth_fair_acmd, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_marth_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_marth_dair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairlw", ssbexo_marth_dair_effect, Priority::Low)
+    .sound_acmd("sound_attackairlw", ssbexo_marth_dair_sound, Priority::Low)
+    .expression_acmd("expression_attackairlw", ssbexo_marth_dair_expression, Priority::Low)
     .install()
     ;
 }

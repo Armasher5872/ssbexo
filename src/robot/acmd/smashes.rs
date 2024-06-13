@@ -277,14 +277,14 @@ unsafe extern "C" fn ssbexo_robot_up_smash_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("robot")
-    .game_acmd("game_attacks4", ssbexo_robot_forward_smash_acmd)
-    .effect_acmd("effect_attacks4", ssbexo_robot_forward_smash_effect)
-    .game_acmd("game_attacks4hi", ssbexo_robot_forward_smash_hi_acmd)
-    .effect_acmd("effect_attacks4hi", ssbexo_robot_forward_smash_hi_effect)
-    .game_acmd("game_attacks4lw", ssbexo_robot_forward_smash_lw_acmd)
-    .effect_acmd("effect_attacks4lw", ssbexo_robot_forward_smash_lw_effect)
-    .game_acmd("game_attackhi4", ssbexo_robot_up_smash_acmd)
-    .effect_acmd("effect_attackhi4", ssbexo_robot_up_smash_effect)
+    .game_acmd("game_attacks4", ssbexo_robot_forward_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4", ssbexo_robot_forward_smash_effect, Priority::Low)
+    .game_acmd("game_attacks4hi", ssbexo_robot_forward_smash_hi_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4hi", ssbexo_robot_forward_smash_hi_effect, Priority::Low)
+    .game_acmd("game_attacks4lw", ssbexo_robot_forward_smash_lw_acmd, Priority::Low)
+    .effect_acmd("effect_attacks4lw", ssbexo_robot_forward_smash_lw_effect, Priority::Low)
+    .game_acmd("game_attackhi4", ssbexo_robot_up_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_robot_up_smash_effect, Priority::Low)
     .install()
     ;
 }

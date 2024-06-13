@@ -178,17 +178,17 @@ unsafe extern "C" fn ssbexo_lucina_down_tilt_expression(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("lucina")
-    .game_acmd("game_attacks3", ssbexo_lucina_forward_tilt_acmd)
-    .sound_acmd("sound_attacks3", ssbexo_lucina_forward_tilt_sound)
-    .expression_acmd("expression_attacks3", ssbexo_lucina_forward_tilt_expression)
-    .game_acmd("game_attackhi3", ssbexo_lucina_up_tilt_acmd)
-    .effect_acmd("game_attackhi3", ssbexo_lucina_up_tilt_effect)
-    .sound_acmd("sound_attackhi3", ssbexo_lucina_up_tilt_sound)
-    .expression_acmd("expression_attackhi3", ssbexo_lucina_up_tilt_expression)
-    .game_acmd("game_attacklw3", ssbexo_lucina_down_tilt_acmd)
-    .effect_acmd("game_attacklw3", ssbexo_lucina_down_tilt_effect)
-    .sound_acmd("sound_attacklw3", ssbexo_lucina_down_tilt_sound)
-    .expression_acmd("expression_attacklw3", ssbexo_lucina_down_tilt_expression)
+    .game_acmd("game_attacks3", ssbexo_lucina_forward_tilt_acmd, Priority::Low)
+    .sound_acmd("sound_attacks3", ssbexo_lucina_forward_tilt_sound, Priority::Low)
+    .expression_acmd("expression_attacks3", ssbexo_lucina_forward_tilt_expression, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_lucina_up_tilt_acmd, Priority::Low)
+    .effect_acmd("game_attackhi3", ssbexo_lucina_up_tilt_effect, Priority::Low)
+    .sound_acmd("sound_attackhi3", ssbexo_lucina_up_tilt_sound, Priority::Low)
+    .expression_acmd("expression_attackhi3", ssbexo_lucina_up_tilt_expression, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_lucina_down_tilt_acmd, Priority::Low)
+    .effect_acmd("game_attacklw3", ssbexo_lucina_down_tilt_effect, Priority::Low)
+    .sound_acmd("sound_attacklw3", ssbexo_lucina_down_tilt_sound, Priority::Low)
+    .expression_acmd("expression_attacklw3", ssbexo_lucina_down_tilt_expression, Priority::Low)
     .install()
     ;
 }

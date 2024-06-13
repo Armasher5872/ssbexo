@@ -19,9 +19,9 @@ unsafe extern "C" fn ssbexo_yoshi_side_special_loop_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("yoshi")
-    .game_acmd("game_specialairsstart", ssbexo_yoshi_side_special_start_acmd)
-    .game_acmd("game_specialsloop", ssbexo_yoshi_side_special_loop_acmd)
-    .game_acmd("game_specialairsloop", ssbexo_yoshi_side_special_loop_acmd)
+    .game_acmd("game_specialairsstart", ssbexo_yoshi_side_special_start_acmd, Priority::Low)
+    .game_acmd("game_specialsloop", ssbexo_yoshi_side_special_loop_acmd, Priority::Low)
+    .game_acmd("game_specialairsloop", ssbexo_yoshi_side_special_loop_acmd, Priority::Low)
     .install()
     ;
 }

@@ -56,9 +56,9 @@ unsafe extern "C" fn ssbexo_pzenigame_pivot_grab_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("pzenigame")
-    .game_acmd("game_catch", ssbexo_pzenigame_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_pzenigame_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_pzenigame_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_pzenigame_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_pzenigame_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_pzenigame_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

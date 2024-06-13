@@ -9,7 +9,7 @@ unsafe extern "C" fn ssbexo_littlemac_dash_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("littlemac")
-    .game_acmd("game_dash", ssbexo_littlemac_dash_acmd)
+    .game_acmd("game_dash", ssbexo_littlemac_dash_acmd, Priority::Low)
     .install()
     ;
 }

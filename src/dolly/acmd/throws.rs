@@ -99,11 +99,11 @@ unsafe extern "C" fn ssbexo_dolly_back_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("dolly")
-    .game_acmd("game_catch", ssbexo_dolly_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_dolly_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_dolly_pivot_grab_acmd)
-    .game_acmd("game_throwf", ssbexo_dolly_forward_throw_acmd)
-    .game_acmd("game_throwb", ssbexo_dolly_back_throw_acmd)
+    .game_acmd("game_catch", ssbexo_dolly_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_dolly_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_dolly_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_dolly_forward_throw_acmd, Priority::Low)
+    .game_acmd("game_throwb", ssbexo_dolly_back_throw_acmd, Priority::Low)
     .install()
     ;
 }

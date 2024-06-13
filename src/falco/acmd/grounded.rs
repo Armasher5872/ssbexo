@@ -51,9 +51,9 @@ unsafe extern "C" fn ssbexo_falco_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("falco")
-    .game_acmd("game_attack12", ssbexo_falco_jab_2_acmd)
-    .game_acmd("game_attack100end", ssbexo_falco_rapid_jab_finisher_acmd)
-    .game_acmd("game_attackdash", ssbexo_falco_dash_attack_acmd)
+    .game_acmd("game_attack12", ssbexo_falco_jab_2_acmd, Priority::Low)
+    .game_acmd("game_attack100end", ssbexo_falco_rapid_jab_finisher_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_falco_dash_attack_acmd, Priority::Low)
     .install()
     ;
 }

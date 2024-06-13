@@ -56,9 +56,9 @@ unsafe extern "C" fn ssbexo_reflet_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("reflet")
-    .game_acmd("game_catch", ssbexo_reflet_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_reflet_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_reflet_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_reflet_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_reflet_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_reflet_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

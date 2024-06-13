@@ -128,12 +128,12 @@ unsafe extern "C" fn ssbexo_miiswordsman_down_throw_acmd(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("miiswordsman")
-    .game_acmd("game_catch", ssbexo_miiswordsman_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_miiswordsman_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_miiswordsman_pivot_grab_acmd)
-    .game_acmd("game_throwf", ssbexo_miiswordsman_forward_throw_acmd)
-    .game_acmd("game_throwb", ssbexo_miiswordsman_back_throw_acmd)
-    .game_acmd("game_throwlw", ssbexo_miiswordsman_down_throw_acmd)
+    .game_acmd("game_catch", ssbexo_miiswordsman_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_miiswordsman_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_miiswordsman_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwf", ssbexo_miiswordsman_forward_throw_acmd, Priority::Low)
+    .game_acmd("game_throwb", ssbexo_miiswordsman_back_throw_acmd, Priority::Low)
+    .game_acmd("game_throwlw", ssbexo_miiswordsman_down_throw_acmd, Priority::Low)
     .install()
     ;
 }

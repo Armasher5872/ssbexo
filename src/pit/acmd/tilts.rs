@@ -51,9 +51,9 @@ unsafe extern "C" fn ssbexo_pit_down_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pit")
-    .game_acmd("game_attacks3", ssbexo_pit_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_pit_up_tilt_acmd)
-    .game_acmd("game_attacklw3", ssbexo_pit_down_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_pit_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_pit_up_tilt_acmd, Priority::Low)
+    .game_acmd("game_attacklw3", ssbexo_pit_down_tilt_acmd, Priority::Low)
     .install()
     ;
 }

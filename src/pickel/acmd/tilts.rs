@@ -174,8 +174,8 @@ unsafe extern "C" fn ssbexo_pickel_up_tilt_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("pickel")
-    .game_acmd("game_attacks3", ssbexo_pickel_forward_tilt_acmd)
-    .game_acmd("game_attackhi3", ssbexo_pickel_up_tilt_acmd)
+    .game_acmd("game_attacks3", ssbexo_pickel_forward_tilt_acmd, Priority::Low)
+    .game_acmd("game_attackhi3", ssbexo_pickel_up_tilt_acmd, Priority::Low)
     .install()
     ;
 }

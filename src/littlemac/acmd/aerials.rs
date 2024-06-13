@@ -210,17 +210,17 @@ unsafe extern "C" fn ssbexo_littlemac_dair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("littlemac")
-    .game_acmd("game_attackairn", ssbexo_littlemac_nair_acmd)
-    .game_acmd("game_attackairf", ssbexo_littlemac_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_littlemac_fair_effect)
-    .sound_acmd("sound_attackairf", ssbexo_littlemac_fair_sound)
-    .expression_acmd("expression_attackairf", ssbexo_littlemac_fair_expression)
-    .game_acmd("game_attackairb", ssbexo_littlemac_bair_acmd)
-    .effect_acmd("effect_attackairb", ssbexo_littlemac_bair_effect)
-    .sound_acmd("sound_attackairb", ssbexo_littlemac_bair_sound)
-    .expression_acmd("expression_attackairb", ssbexo_littlemac_bair_expression)
-    .game_acmd("game_attackairhi", ssbexo_littlemac_uair_acmd)
-    .game_acmd("game_attackairlw", ssbexo_littlemac_dair_acmd)
+    .game_acmd("game_attackairn", ssbexo_littlemac_nair_acmd, Priority::Low)
+    .game_acmd("game_attackairf", ssbexo_littlemac_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_littlemac_fair_effect, Priority::Low)
+    .sound_acmd("sound_attackairf", ssbexo_littlemac_fair_sound, Priority::Low)
+    .expression_acmd("expression_attackairf", ssbexo_littlemac_fair_expression, Priority::Low)
+    .game_acmd("game_attackairb", ssbexo_littlemac_bair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairb", ssbexo_littlemac_bair_effect, Priority::Low)
+    .sound_acmd("sound_attackairb", ssbexo_littlemac_bair_sound, Priority::Low)
+    .expression_acmd("expression_attackairb", ssbexo_littlemac_bair_expression, Priority::Low)
+    .game_acmd("game_attackairhi", ssbexo_littlemac_uair_acmd, Priority::Low)
+    .game_acmd("game_attackairlw", ssbexo_littlemac_dair_acmd, Priority::Low)
     .install()
     ;
 }

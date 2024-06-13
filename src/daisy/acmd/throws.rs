@@ -59,9 +59,9 @@ unsafe extern "C" fn ssbexo_daisy_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("daisy")
-    .game_acmd("game_catch", ssbexo_daisy_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_daisy_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_daisy_pivot_grab_acmd)
+    .game_acmd("game_catch", ssbexo_daisy_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_daisy_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_daisy_pivot_grab_acmd, Priority::Low)
     .install()
     ;
 }

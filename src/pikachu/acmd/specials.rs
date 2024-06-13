@@ -60,13 +60,13 @@ unsafe extern "C" fn ssbexo_pikachu_side_special_attack_expression(agent: &mut L
 
 pub fn install() {
     Agent::new("pikachu")
-    .game_acmd("game_specials", ssbexo_pikachu_side_special_attack_acmd)
-    .effect_acmd("effect_specials", ssbexo_pikachu_side_special_attack_effect)
-    .effect_acmd("effect_specialairs", ssbexo_pikachu_side_special_attack_effect)
-    .sound_acmd("sound_specials", ssbexo_pikachu_side_special_attack_sound)
-    .sound_acmd("sound_specialairs", ssbexo_pikachu_side_special_attack_sound)
-    .expression_acmd("expression_specials", ssbexo_pikachu_side_special_attack_expression)
-    .expression_acmd("expression_specialairs", ssbexo_pikachu_side_special_attack_expression)
+    .game_acmd("game_specials", ssbexo_pikachu_side_special_attack_acmd, Priority::Low)
+    .effect_acmd("effect_specials", ssbexo_pikachu_side_special_attack_effect, Priority::Low)
+    .effect_acmd("effect_specialairs", ssbexo_pikachu_side_special_attack_effect, Priority::Low)
+    .sound_acmd("sound_specials", ssbexo_pikachu_side_special_attack_sound, Priority::Low)
+    .sound_acmd("sound_specialairs", ssbexo_pikachu_side_special_attack_sound, Priority::Low)
+    .expression_acmd("expression_specials", ssbexo_pikachu_side_special_attack_expression, Priority::Low)
+    .expression_acmd("expression_specialairs", ssbexo_pikachu_side_special_attack_expression, Priority::Low)
     .install()
     ;
 }

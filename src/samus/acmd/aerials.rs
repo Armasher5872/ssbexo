@@ -92,9 +92,9 @@ unsafe extern "C" fn ssbexo_samus_zair_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("samus")
-    .game_acmd("game_attackairf", ssbexo_samus_fair_acmd)
-    .effect_acmd("effect_attackairf", ssbexo_samus_fair_effect)
-    .game_acmd("game_aircatch", ssbexo_samus_zair_acmd)
+    .game_acmd("game_attackairf", ssbexo_samus_fair_acmd, Priority::Low)
+    .effect_acmd("effect_attackairf", ssbexo_samus_fair_effect, Priority::Low)
+    .game_acmd("game_aircatch", ssbexo_samus_zair_acmd, Priority::Low)
     .install()
     ;
 }

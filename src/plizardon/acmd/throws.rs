@@ -98,10 +98,10 @@ unsafe extern "C" fn ssbexo_plizardon_up_throw_acmd(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("plizardon")
-    .game_acmd("game_catch", ssbexo_plizardon_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_plizardon_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_plizardon_pivot_grab_acmd)
-    .game_acmd("game_throwhi", ssbexo_plizardon_up_throw_acmd)
+    .game_acmd("game_catch", ssbexo_plizardon_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_plizardon_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_plizardon_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwhi", ssbexo_plizardon_up_throw_acmd, Priority::Low)
     .install()
     ;
 }

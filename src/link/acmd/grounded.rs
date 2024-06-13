@@ -194,15 +194,15 @@ unsafe extern "C" fn ssbexo_link_dash_attack_bound_expression(agent: &mut L2CAge
 
 pub fn install() {
     Agent::new("link")
-    .game_acmd("game_attack11", ssbexo_link_jab_1_acmd)
-    .game_acmd("game_attackdash", ssbexo_link_dash_attack_acmd)
-    .effect_acmd("effect_attackdash", ssbexo_link_dash_attack_effect)
-    .sound_acmd("sound_attackdash", ssbexo_link_dash_attack_sound)
-    .expression_acmd("expression_attackdash", ssbexo_link_dash_attack_expression)
-    .game_acmd("game_attackdashbound", ssbexo_link_dash_attack_bound_acmd)
-    .effect_acmd("effect_attackdashbound", ssbexo_link_dash_attack_bound_effect)
-    .sound_acmd("sound_attackdashbound", ssbexo_link_dash_attack_bound_sound)
-    .expression_acmd("expression_attackdashbound", ssbexo_link_dash_attack_bound_expression)
+    .game_acmd("game_attack11", ssbexo_link_jab_1_acmd, Priority::Low)
+    .game_acmd("game_attackdash", ssbexo_link_dash_attack_acmd, Priority::Low)
+    .effect_acmd("effect_attackdash", ssbexo_link_dash_attack_effect, Priority::Low)
+    .sound_acmd("sound_attackdash", ssbexo_link_dash_attack_sound, Priority::Low)
+    .expression_acmd("expression_attackdash", ssbexo_link_dash_attack_expression, Priority::Low)
+    .game_acmd("game_attackdashbound", ssbexo_link_dash_attack_bound_acmd, Priority::Low)
+    .effect_acmd("effect_attackdashbound", ssbexo_link_dash_attack_bound_effect, Priority::Low)
+    .sound_acmd("sound_attackdashbound", ssbexo_link_dash_attack_bound_sound, Priority::Low)
+    .expression_acmd("expression_attackdashbound", ssbexo_link_dash_attack_bound_expression, Priority::Low)
     .install()
     ;
 }

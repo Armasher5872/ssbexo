@@ -153,16 +153,16 @@ unsafe extern "C" fn ssbexo_falco_up_throw_laser_acmd(agent: &mut L2CAgentBase) 
 
 pub fn install() {
     Agent::new("falco")
-    .game_acmd("game_catch", ssbexo_falco_grab_acmd)
-    .game_acmd("game_catchdash", ssbexo_falco_dash_grab_acmd)
-    .game_acmd("game_catchturn", ssbexo_falco_pivot_grab_acmd)
-    .game_acmd("game_throwb", ssbexo_falco_back_throw_acmd)
-    .game_acmd("game_throwhi", ssbexo_falco_up_throw_acmd)
+    .game_acmd("game_catch", ssbexo_falco_grab_acmd, Priority::Low)
+    .game_acmd("game_catchdash", ssbexo_falco_dash_grab_acmd, Priority::Low)
+    .game_acmd("game_catchturn", ssbexo_falco_pivot_grab_acmd, Priority::Low)
+    .game_acmd("game_throwb", ssbexo_falco_back_throw_acmd, Priority::Low)
+    .game_acmd("game_throwhi", ssbexo_falco_up_throw_acmd, Priority::Low)
     .install()
     ;
     Agent::new("falco_blaster_bullet")
-    .game_acmd("game_flythrowb", ssbexo_falco_back_throw_laser_acmd)
-    .game_acmd("game_flythrowhi", ssbexo_falco_up_throw_laser_acmd)
+    .game_acmd("game_flythrowb", ssbexo_falco_back_throw_laser_acmd, Priority::Low)
+    .game_acmd("game_flythrowhi", ssbexo_falco_up_throw_laser_acmd, Priority::Low)
     .install()
     ;
 }
