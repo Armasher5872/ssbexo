@@ -1,36 +1,16 @@
 use {
-    crate::functions::{
-        ext::{
-            fighter::common::*,
-            utility::boma_ext::*,
-        },
-        var::{
-            captain::*,
-            consts::*,
-            globals::*,
-            variables::*,
-        }
-    },
     smash::{
-        app::{
-            lua_bind::*,
-            sv_information
-        },
-        hash40,
+        app::lua_bind::*,
         lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40
+        lua2cpp::L2CFighterCommon
     },
-    smash_script::*,
     smashline::*,
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
 }

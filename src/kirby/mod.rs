@@ -2,12 +2,9 @@ use {
   crate::functions::{
     ext::utility::boma_ext::*,
     var::{
-      consts::*,
       globals::*,
       kirby::*,
       link::*,
-      samusd::*,
-      variables::*,
     }
   },
   smash::{
@@ -28,11 +25,9 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
   acmd::install();
-  opff::install();
   status::install();
 }

@@ -1,10 +1,8 @@
 #![allow(unused_parens)]
 use {
   crate::functions::var::{
-    consts::*,
     bayonetta::*,
     globals::*,
-    variables::*,
   },
   smash::{
     app::{

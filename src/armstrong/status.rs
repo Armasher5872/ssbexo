@@ -1,10 +1,5 @@
 use super::*;
 
-unsafe extern "C" fn armstrong_appeal_check_damage_status(_fighter: &mut L2CFighterCommon, _param_2: &L2CValue) -> L2CValue {
-    println!("Is Hit");
-    0.into()
-}
-
 unsafe extern "C" fn armstrong_special_n_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_pre_SpecialNCommon();
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
@@ -407,7 +402,6 @@ unsafe extern "C" fn armstrong_special_lw_end_status(_fighter: &mut L2CFighterCo
 
 pub fn install() {
     Agent::new("ganon")
-    .status(CheckDamage, *FIGHTER_STATUS_KIND_APPEAL, armstrong_appeal_check_damage_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, armstrong_special_n_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_N, armstrong_special_n_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, armstrong_special_n_main_status)

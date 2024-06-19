@@ -1,29 +1,18 @@
 use {
-    crate::functions::{
-        ext::utility::boma_ext::*,
-        var::{
-            consts::*,
-            globals::*,
-            variables::*,
-        }
+    crate::functions::var::{
+        consts::*,
+        globals::*,
+        variables::*,
     },
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
+        app::lua_bind::*,
         lib::lua_const::*,
         lua2cpp::{
             L2CFighterCommon,
             *
         },
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        phx::Hash40
     },
-    smash_script::*,
     smashline::*,
 };
 

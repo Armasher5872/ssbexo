@@ -17,7 +17,6 @@ use {
         var::{
             consts::*,
             globals::*,
-            link::*,
             pfushigisou::*,
             purin::*,
             sheik::*,

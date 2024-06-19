@@ -1,18 +1,11 @@
 #![allow(unused_must_use)]
 use {
     crate::functions::{
-        ext::{
-            fighter::donkey::*,
-            utility::{
-                boma_ext::*,
-                misc::*,
-            }
-        },
+        ext::fighter::donkey::*,
         var::{
             consts::*,
             donkey::*,
             globals::*,
-            variables::*,
         }
     },
     smash::{
@@ -33,13 +26,11 @@ use {
 };
 
 mod acmd;
-mod hook;
 mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
-    hook::install();
     opff::install();
     status::install();
 }

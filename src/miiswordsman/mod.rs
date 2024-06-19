@@ -3,10 +3,8 @@ use {
     functions::{
       ext::fighter::common::*,
       var::{
-        consts::*,
         globals::*,
         miiswordsman::*,
-        variables::*,
       }
     },
     miiswordsman::status::{
@@ -57,16 +55,12 @@ use {
     },
   },
   smash::{
-    app::{
-      lua_bind::*,
-      sv_information
-    },
+    app::lua_bind::*,
     lib::{
       L2CValue,
       lua_const::*,
     },
-    lua2cpp::L2CFighterCommon,
-    phx::Vector3f
+    lua2cpp::L2CFighterCommon
   },
   smashline::*,
 };

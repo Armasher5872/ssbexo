@@ -5,10 +5,8 @@ use {
       misc::*,
     },
     var::{
-      consts::*,
       edge::*,
       globals::*,
-      variables::*,
     }
   },
   smash::{

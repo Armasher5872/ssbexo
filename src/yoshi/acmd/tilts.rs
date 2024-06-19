@@ -97,7 +97,7 @@ unsafe extern "C" fn ssbexo_yoshi_up_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 13, -1, 0, 52, 88, 1.15, true, *EF_FLIP_YZ);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 1, false);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 0.75, false);
     }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
@@ -134,7 +134,7 @@ unsafe extern "C" fn ssbexo_yoshi_down_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 4, 4, 0, 35, 180, 1.2, true, *EF_FLIP_YZ);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 0.5, false);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("yoshi_tamago_line"), Hash40::new("tail3"), 0, 0, 0, 0, 0, 0, 0.25, false);
         macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, -2.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_YZ);
     }
     frame(agent.lua_state_agent, 12.0);

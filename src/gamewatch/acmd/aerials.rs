@@ -61,31 +61,6 @@ unsafe extern "C" fn ssbexo_gamewatch_nair_acmd(fighter: &mut L2CAgentBase) {
     }
 }
 
-//Fair ACMD
-unsafe extern "C" fn ssbexo_gamewatch_fair_acmd(fighter: &mut L2CAgentBase) {
-	let owner_module_accessor = sv_battle_object::module_accessor((WorkModule::get_int(fighter.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-	let bomb_explosion = &mut FIGHTER_BOOL_2[get_player_number(&mut *owner_module_accessor)];
-	if macros::is_excute(fighter) {
-		VisibilityModule::set_whole(fighter.module_accessor, false);
-		if *bomb_explosion == false {
-			macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 12.0, 45, 101, 0, 30, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_OBJECT);
-		}
-		else {
-			macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.0, 45, 101, 0, 30, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_OBJECT);
-		}
-		ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_explosion"), 0, false, 0 as u32);
-	}
-	wait(fighter.lua_state_agent, 2.0);
-	if macros::is_excute(fighter) {
-		AttackModule::clear_all(fighter.module_accessor);
-		macros::AREA_WIND_2ND_RAD(fighter, 0, 1, 0.02, 1000, 1, 0, 0, 25);
-	}
-	wait(fighter.lua_state_agent, 2.0);
-	if macros::is_excute(fighter) {
-		notify_event_msc_cmd!(fighter, Hash40::new_raw(0x199c462b5du64));
-	}
-}
-
 //Uair ACMD
 unsafe extern "C" fn ssbexo_gamewatch_uair_acmd(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter) {
@@ -161,10 +136,6 @@ pub fn install() {
     ;
     Agent::new("gamewatch_breath")
     .game_acmd("game_attackairhi", ssbexo_gamewatch_uair_acmd, Priority::Low)
-    .install()
-    ;
-    Agent::new("gamewatch_bomb")
-    .game_acmd("game_burst", ssbexo_gamewatch_fair_acmd, Priority::Low)
     .install()
     ;
 }

@@ -18,8 +18,10 @@ use {
 
 mod specials;
 mod throws;
+mod tilts;
 
 pub fn install() {
     specials::install();
     throws::install();
+    tilts::install();
 }

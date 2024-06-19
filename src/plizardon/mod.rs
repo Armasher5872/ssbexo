@@ -2,7 +2,6 @@ use {
     crate::functions::var::{
         consts::*,
         globals::*,
-        variables::*,
     },
     smash::{
         app::lua_bind::*,

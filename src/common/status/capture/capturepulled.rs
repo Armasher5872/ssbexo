@@ -12,11 +12,6 @@ unsafe fn status_pre_capturepulled_common(fighter: &mut L2CFighterCommon, param_
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CapturePulled_Main)]
 unsafe fn status_capturepulled_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.CapturePulledCommon_Main();
-    //Fighter Specific
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION) {
-        WorkModule::sub_float(fighter.module_accessor, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
-    }
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CAPTURE_WAIT) {
         if !fighter.is_capture_pulled_special_fighter().get_bool() {
             if !MotionModule::is_end(fighter.module_accessor) {

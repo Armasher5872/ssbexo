@@ -8,10 +8,8 @@ use {
             utility::misc::*,
         },
         var::{
-            consts::*,
             globals::*,
             metaknight::*,
-            variables::*,
         }
     },
     smash::{
@@ -35,12 +33,10 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
     clone_weapon("koopajr", "cannonball", "metaknight", "galaxiabeam", false);
     add_param_object("metaknight", "param_glide");

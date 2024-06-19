@@ -6,7 +6,6 @@ use {
             armstrong::*,
             consts::*,
             globals::*,
-            variables::*,
         }
     },
     smash::{

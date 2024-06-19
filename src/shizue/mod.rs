@@ -1,12 +1,5 @@
 use {
-    crate::functions::{
-        ext::fighter::murabito_shizue_common::*,
-        var::{
-            consts::*,
-            murabito::*,
-            variables::*,
-        }
-    },
+    crate::functions::ext::fighter::murabito_shizue_common::*,
     smash::{
         app::lua_bind::*,
         lib::lua_const::*,

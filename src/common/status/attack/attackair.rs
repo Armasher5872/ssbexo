@@ -9,12 +9,13 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
         let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
         let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
         let frame = fighter.global_table[CURRENT_FRAME].get_f32();
+        let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
         let motion_kind = MotionModule::motion_kind(boma);
         let lr = PostureModule::lr(boma);
         let stick_x = fighter.global_table[STICK_X].get_f32()*lr;
         let mut pos = Vector3f{x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma), z: PostureModule::pos_z(boma)}; // get current pos
         let get_sum_speed_x = lr*KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_PASS {
+        if prev_status_kind == *FIGHTER_STATUS_KIND_PASS {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) != true {
                 GroundModule::set_passable_check(boma, true);
             }
@@ -26,6 +27,15 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) 
         && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
             WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+        }
+        //Yoshi
+        if fighter_kind == *FIGHTER_KIND_YOSHI
+        && prev_status_kind != *FIGHTER_STATUS_KIND_TREAD_JUMP
+        && motion_kind == hash40("attack_air_lw")
+        && (12.0..=36.0).contains(&frame)
+        && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.015);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.05);
         }
         //Captain Falcon Voice Exclamation
         if fighter_kind == *FIGHTER_KIND_CAPTAIN

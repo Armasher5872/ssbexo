@@ -23,6 +23,7 @@ pub mod metaknight;
 pub mod mewtwo;
 pub mod miiswordsman;
 pub mod murabito;
+pub mod peach;
 pub mod pfushigisou;
 pub mod pikachu;
 pub mod purin;

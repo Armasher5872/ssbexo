@@ -46,24 +46,24 @@ unsafe extern "C" fn ssbexo_armstrong_neutral_special_acmd(agent: &mut L2CAgentB
         if AttackModule::is_infliction_status(agent.module_accessor, *COLLISION_KIND_MASK_HIT) {
             macros::QUAKE(agent, *CAMERA_QUAKE_KIND_L);
         }
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 361, 80, 0, 60, 6.0, 0.0, 7.0, 16.0, Some(0.0), Some(22.0), Some(16.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 20.0, 361, 80, 0, 60, 6.0, 0.0, 4.0, 16.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 361, 80, 0, 60, 6.0, 0.0, 7.0, 16.0, Some(0.0), Some(22.0), Some(16.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 20.0, 361, 80, 0, 60, 6.0, 0.0, 4.0, 16.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
     }
     frame(agent.lua_state_agent, 100.0);
     if macros::is_excute(agent) {
         if AttackModule::is_infliction_status(agent.module_accessor, *COLLISION_KIND_MASK_HIT) {
             macros::QUAKE(agent, *CAMERA_QUAKE_KIND_L);
         }
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 361, 80, 0, 60, 6.0, 0.0, 7.0, 30.0, Some(0.0), Some(22.0), Some(30.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 20.0, 361, 80, 0, 60, 6.0, 0.0, 4.0, 30.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 361, 80, 0, 60, 6.0, 0.0, 7.0, 30.0, Some(0.0), Some(22.0), Some(30.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 20.0, 361, 80, 0, 60, 6.0, 0.0, 4.0, 30.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
     }
     frame(agent.lua_state_agent, 105.0);
     if macros::is_excute(agent) {
         if AttackModule::is_infliction_status(agent.module_accessor, *COLLISION_KIND_MASK_HIT) {
             macros::QUAKE(agent, *CAMERA_QUAKE_KIND_L);
         }
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 361, 80, 0, 60, 6.0, 0.0, 7.0, 44.0, Some(0.0), Some(22.0), Some(44.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 20.0, 361, 80, 0, 60, 6.0, 0.0, 4.0, 44.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 361, 80, 0, 60, 6.0, 0.0, 7.0, 44.0, Some(0.0), Some(22.0), Some(44.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 20.0, 361, 80, 0, 60, 6.0, 0.0, 4.0, 44.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
     }
     frame(agent.lua_state_agent, 110.0);
     if macros::is_excute(agent) {
@@ -115,39 +115,45 @@ unsafe extern "C" fn ssbexo_armstrong_neutral_special_effect(agent: &mut L2CAgen
     frame(agent.lua_state_agent, 81.0);
     if macros::is_excute(agent) {
         macros::QUAKE(agent, *CAMERA_QUAKE_KIND_L);
-        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 16, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 16, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("edge_gokumon_impact"), Hash40::new("top"), 0, 0, 16, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(agent, 0.5);
     }
     frame(agent.lua_state_agent, 86.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 30, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 30, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("edge_gokumon_impact"), Hash40::new("top"), 0, 0, 30, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(agent, 0.5);
     }
     frame(agent.lua_state_agent, 91.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 44, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 44, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("edge_gokumon_impact"), Hash40::new("top"), 0, 0, 44, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(agent, 0.5);
     }
     frame(agent.lua_state_agent, 95.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_bomb_b"), Hash40::new("top"), 16, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 16, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("ganon_majinken"), Hash40::new("top"), 16, 0, 0, 90, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), -6, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
     }
     frame(agent.lua_state_agent, 100.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_bomb_b"), Hash40::new("top"), 30, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 30, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("ganon_majinken"), Hash40::new("top"), 30, 0, 0, 90, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
     }
     frame(agent.lua_state_agent, 105.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_bomb_b"), Hash40::new("top"), 44, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 44, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("ganon_majinken"), Hash40::new("top"), 44, 0, 0, 90, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LANDING_EFFECT(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 6, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
@@ -563,6 +569,15 @@ unsafe extern "C" fn ssbexo_armstrong_power_drive_grab_acmd(agent: &mut L2CAgent
     }
 }
 
+//Power Drive Grab Effect
+unsafe extern "C" fn ssbexo_armstrong_power_drive_grab_effect(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::EFFECT_FLW_POS_NO_STOP(agent, Hash40::new("sys_catch"), Hash40::new("haver"), 1, 0, 0, 0, 0, 0, 1, true);
+        macros::EFFECT_FLW_POS_NO_STOP(agent, Hash40::new("ganon_raijin"), Hash40::new("haver"), 3, 0, 0, 0, 0, 0, 1, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+    }
+}
+
 //Power Drive Throw ACMD
 unsafe extern "C" fn ssbexo_armstrong_power_drive_throw_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
@@ -580,6 +595,15 @@ unsafe extern "C" fn ssbexo_armstrong_power_drive_throw_acmd(agent: &mut L2CAgen
     frame(agent.lua_state_agent, 46.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_STATUS_SPECIAL_HI_THROW_FLAG_FALL);
+    }
+}
+
+//Power Drive Throw Effect
+unsafe extern "C" fn ssbexo_armstrong_power_drive_throw_effect(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("ganon_raijin"), false, true);
+        macros::EFFECT(agent, Hash40::new("ganon_raijin_bomb"), Hash40::new("top"), 0, 12, -4, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
     }
 }
 
@@ -696,7 +720,9 @@ pub fn install() {
     .effect_acmd("effect_specialhi", ssbexo_armstrong_up_special_effect, Priority::Low)
     .effect_acmd("effect_specialairhi", ssbexo_armstrong_up_special_effect, Priority::Low)
     .game_acmd("game_specialhicatch", ssbexo_armstrong_power_drive_grab_acmd, Priority::Low)
+    .effect_acmd("effecT_specialhicatch", ssbexo_armstrong_power_drive_grab_effect, Priority::Low)
     .game_acmd("game_specialhithrow", ssbexo_armstrong_power_drive_throw_acmd, Priority::Low)
+    .effect_acmd("effect_specialhithrow", ssbexo_armstrong_power_drive_throw_effect, Priority::Low)
     .game_acmd("game_speciallw", ssbexo_armstrong_grounded_down_special_acmd, Priority::Low)
     .effect_acmd("effect_speciallw", ssbexo_armstrong_grounded_down_special_effect, Priority::Low)
     .game_acmd("game_specialairlw", ssbexo_armstrong_aerial_down_special_acmd, Priority::Low)

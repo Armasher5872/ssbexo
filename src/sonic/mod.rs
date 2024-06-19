@@ -8,7 +8,6 @@ use {
             consts::*,
             globals::*,
             sonic::*,
-            variables::*,
         },
     },
     smash::{

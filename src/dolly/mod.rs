@@ -8,10 +8,8 @@ use {
                 commandcat::*,
             },
             var::{
-                consts::*,
                 dolly::*,
                 globals::*,
-                variables::*,
             }
         }
     },

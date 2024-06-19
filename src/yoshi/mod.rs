@@ -1,15 +1,11 @@
 #![allow(unused_parens)]
 use {
-    crate::{
-        functions::{
-            var::{
-                consts::*,
-                globals::*,
-            }
-        }
-    },
+    crate::functions::var::globals::*,
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         hash40,
         lib::{
             L2CValue,
@@ -17,16 +13,13 @@ use {
         },
         lua2cpp::L2CFighterCommon
     },
-    smash_script::*,
     smashline::*,
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
-  acmd::install();
-  opff::install();
-  status::install();
+    acmd::install();
+    status::install();
 }

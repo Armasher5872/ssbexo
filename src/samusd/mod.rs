@@ -1,23 +1,14 @@
 #![allow(unused_parens)]
 use {
     crate::functions::{
-        ext::{
-            fighter::common::*,
-            utility::boma_ext::*,
-        },
+        ext::fighter::common::*,
         var::{
             consts::*,
             globals::*,
-            samusd::*,
-            variables::*,
         }
     },
     smash::{
-        app::{
-            lua_bind::*,
-            sv_information
-        },
-        hash40,
+        app::lua_bind::*,
         lib::{
             L2CValue,
             lua_const::*,

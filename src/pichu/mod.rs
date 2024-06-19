@@ -5,7 +5,6 @@ use {
             utility::misc::*,
         },
         var::{
-            consts::*,
             globals::*,
             variables::*,
         }
@@ -15,15 +14,12 @@ use {
             lua_bind::*,
             *
         },
-        hash40,
         lib::lua_const::*,
         lua2cpp::{
             L2CFighterCommon,
             *
-        },
-        phx::Hash40
+        }
     },
-    smash_script::*,
     smashline::*,
 };
 

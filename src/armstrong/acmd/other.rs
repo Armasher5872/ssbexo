@@ -1,5 +1,70 @@
 use super::*;
 
+//Entry Effect
+unsafe extern "C" fn ssbexo_armstrong_entry_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 39.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_machstomp"), Hash40::new("top"), 0, 0, 0.0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+    }
+    frame(agent.lua_state_agent, 43.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("edge_gokumon_impact"), Hash40::new("top"), -2.3, 0, 2, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_RATE(agent, 0.5);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0.0, 0.0, 0, 0.0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+        macros::LAST_EFFECT_SET_RATE(agent, 0.75);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        macros::EFFECT(agent, Hash40::new("sys_quake"), Hash40::new("top"), 0.0, 0.0, 0, 0.0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+        macros::LAST_EFFECT_SET_RATE(agent, 0.75);
+    }
+    frame(agent.lua_state_agent, 60.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("edge_gokumon_impact"), Hash40::new("top"), -2.3, 0, 2, 0, 0, 0, 2.0, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        macros::LAST_EFFECT_SET_RATE(agent, 8.0);
+    }
+    frame(agent.lua_state_agent, 61.0);
+    if macros::is_excute(agent) {
+        macros::LAST_EFFECT_SET_RATE(agent, 0.3);
+    }
+}
+
+//Entry Sound
+unsafe extern "C" fn ssbexo_armstrong_entry_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_ganon_appear01"));
+    }
+    frame(agent.lua_state_agent, 41.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_ganon_step_right_m"));
+        macros::PLAY_SE(agent, Hash40::new("se_common_heavy_hit_l"));
+    }
+    frame(agent.lua_state_agent, 100.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_ganon_step_right_m"));
+    }
+    frame(agent.lua_state_agent, 110.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_ganon_step_left_m"));
+    }
+}
+
+//Entry Expression
+unsafe extern "C" fn ssbexo_armstrong_entry_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BACKSHIELD_INVISIBLE);
+    }
+    frame(agent.lua_state_agent, 41.0);
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 1);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BACKSHIELD_INVISIBLE);
+        macros::QUAKE(agent, *CAMERA_QUAKE_KIND_XL);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_impact"), 0, false, 0);
+    }
+}
+
 //Taunt Effect
 unsafe extern "C" fn ssbexo_armstrong_taunt_effect(_agent: &mut L2CAgentBase) {}
 
@@ -155,6 +220,12 @@ unsafe extern "C" fn ssbexo_armstrong_passive_wall_sound(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("ganon")
+    .effect_acmd("effect_entryr", ssbexo_armstrong_entry_effect, Priority::Low)
+    .effect_acmd("effect_entryl", ssbexo_armstrong_entry_effect, Priority::Low)
+    .sound_acmd("sound_entryr", ssbexo_armstrong_entry_sound, Priority::Low)
+    .sound_acmd("sound_entryl", ssbexo_armstrong_entry_sound, Priority::Low)
+    .expression_acmd("expression_entryr", ssbexo_armstrong_entry_expression, Priority::Low)
+    .expression_acmd("expression_entryl", ssbexo_armstrong_entry_expression, Priority::Low)
     .effect_acmd("effect_appealhir", ssbexo_armstrong_taunt_effect, Priority::Low)
     .effect_acmd("effect_appealhil", ssbexo_armstrong_taunt_effect, Priority::Low)
     .effect_acmd("effect_appealsr", ssbexo_armstrong_taunt_effect, Priority::Low)

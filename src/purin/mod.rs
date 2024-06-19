@@ -12,10 +12,8 @@ use {
       }
     },
     var::{
-      consts::*,
       globals::*,
       purin::*,
-      variables::*,
     }
   },
   smash::{
@@ -33,12 +31,10 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
   acmd::install();
-  opff::install();
   status::install();
   clone_weapon("ganon", "sword", "purin", "microphone", false);
   clone_weapon("koopajr", "cannonball", "purin", "disarmingvoice", false);

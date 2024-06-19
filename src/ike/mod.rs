@@ -8,10 +8,8 @@ use {
       utility::misc::*,
     },
     var::{
-      consts::*,
       globals::*,
       ike::*,
-      variables::*,
     }
   },
   smash::{
@@ -28,12 +26,10 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
   acmd::install();
-  opff::install();
   status::install();
   clone_weapon("koopajr", "cannonball", "ike", "slash", false);
 }

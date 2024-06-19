@@ -4,8 +4,6 @@ use {
     var::{
       consts::*,
       globals::*,
-      pikachu::*,
-      variables::*,
     }
   },
   smash::{

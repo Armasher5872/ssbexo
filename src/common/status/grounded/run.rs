@@ -174,6 +174,10 @@ unsafe fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         fighter.change_status(FIGHTER_STATUS_KIND_APPEAL.into(), false.into());
         return 0.into();
     }
+    //Captain Falcon's Dash Grab Speed
+    if fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_CAPTAIN {
+        WorkModule::set_float(fighter.module_accessor, 2.338, FIGHTER_INSTANCE_WORK_ID_FLOAT_DASH_GRAB_SPEED);
+    }
     /* END OF NEW ADDITION */
     fighter.sub_ground_check_stop_wall();
     0.into()

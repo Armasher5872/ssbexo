@@ -62,13 +62,11 @@ unsafe extern "C" fn bayonetta_attack_air_f_dash_exec_status(_fighter: &mut L2CF
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_dash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_f_dash_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_dash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_f_dash_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -134,13 +132,11 @@ unsafe extern "C" fn bayonetta_attack_air_f_smash_exec_status(_fighter: &mut L2C
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_smash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_f_smash_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_smash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_f_smash_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -206,13 +202,11 @@ unsafe extern "C" fn bayonetta_attack_air_hi_smash_exec_status(_fighter: &mut L2
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_hi_smash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_hi_smash_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_hi_smash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_hi_smash_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -278,13 +272,11 @@ unsafe extern "C" fn bayonetta_attack_air_lw_smash_exec_status(_fighter: &mut L2
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_lw_smash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_lw_smash_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_lw_smash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+unsafe extern "C" fn bayonetta_attack_air_lw_smash_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

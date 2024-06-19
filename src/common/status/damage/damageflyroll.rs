@@ -9,10 +9,6 @@ unsafe fn status_damageflyroll_main(fighter: &mut L2CFighterCommon) -> L2CValue 
         WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
     }
     //Fighter Specific
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION) {
-        WorkModule::dec_float(fighter.module_accessor, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
-    }
     if fighter_kind == *FIGHTER_KIND_PICKEL {
         if fighter.global_table[IS_STOP].get_bool() {
             macros::COL_NORMAL(fighter);

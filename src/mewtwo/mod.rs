@@ -12,7 +12,6 @@ use {
             consts::*,
             globals::*,
             mewtwo::*,
-            variables::*,
         }
     },
     smash::{

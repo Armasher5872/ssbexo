@@ -16,6 +16,7 @@ use {
 
 mod aerials;
 mod grounded;
+mod other;
 mod specials;
 mod throws;
 mod tilts;
@@ -23,6 +24,7 @@ mod tilts;
 pub fn install() {
     aerials::install();
     grounded::install();
+    other::install();
     specials::install();
     throws::install();
     tilts::install();
