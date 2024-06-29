@@ -1,29 +1,12 @@
 #![allow(improper_ctypes_definitions)]
 use super::*;
 
-const LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET: usize = 0x68cda0;
-const LITTLEMAC_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0xc44b80;
-const LITTLEMAC_VTABLE_ON_ATTACK_OFFSET: usize = 0xc456a0;
-const LITTLEMAC_VTABLE_ON_DAMAGE_OFFSET: usize = 0xc45d70;
-const LITTLEMAC_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xc44790;
-const LITTLEMAC_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc44830;
-
-//Collision Log
-pub struct CollisionLog {
-    next: *mut CollisionLog,
-    end: *mut CollisionLog,
-    location: Vector3f,
-    padding_0: u32,
-    padding_1: u32,
-    opponent_battle_object_id: u32,
-    padding_2: [u8;7],
-    collision_kind: u8,
-    receiver_part_id: u8,
-    collider_part_id: u8,
-    receiver_id: u8,
-    collider_id: u8,
-    padding_3: [u8;10]
-}
+const LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET: usize = 0x68cda0; //Little Mac only
+const LITTLEMAC_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0xc44b80; //Little Mac only
+const LITTLEMAC_VTABLE_ON_ATTACK_OFFSET: usize = 0xc456a0; //Little Mac only
+const LITTLEMAC_VTABLE_ON_DAMAGE_OFFSET: usize = 0xc45d70; //Little Mac only
+const LITTLEMAC_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xc44790; //Little Mac only
+const LITTLEMAC_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc44830; //Little Mac only
 
 #[skyline::from_offset(LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET)]
 fn update_littlemac_ui_internal(manager_offset: *mut u32, total_gauge: i32);

@@ -19,7 +19,6 @@ use {
             globals::*,
             pfushigisou::*,
             purin::*,
-            sheik::*,
             variables::*,
         },
         util::*,

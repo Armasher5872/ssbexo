@@ -1,8 +1,8 @@
 use super::*;
 
-const CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8b7ce0;
-const CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8b7610;
-const CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x8b7d20;
+const CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8b7ce0; //Captain Falcon only
+const CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8b7610; //Captain Falcon only
+const CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x8b7d20; //Captain Falcon only
 
 //Captain Falcon Startup Initialization
 #[skyline::hook(offset = CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET)]

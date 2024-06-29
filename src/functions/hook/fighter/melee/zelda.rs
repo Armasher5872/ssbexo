@@ -1,7 +1,7 @@
 use super::*;
 
-const ZELDA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x130e3e0;
-const ZELDA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x130e260;
+const ZELDA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x130e3e0; //Zelda only
+const ZELDA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x130e260; //Zelda only
 
 //Zelda Startup Initialization
 #[skyline::hook(offset = ZELDA_VTABLE_START_INITIALIZATION_OFFSET)]

@@ -1,7 +1,7 @@
 use super::*;
 
-const CLOUD_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8dacd0;
-const CLOUD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8db3b0;
+const CLOUD_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8dacd0; //Cloud only
+const CLOUD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8db3b0; //Cloud only
 
 //Cloud Startup Initialization
 #[skyline::hook(offset = CLOUD_VTABLE_START_INITIALIZATION_OFFSET)]

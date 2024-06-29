@@ -1,7 +1,7 @@
 use super::*;
 
-const PIT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf6d5c0;
-const PIT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf6d1c0;
+const PIT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf6d5c0; //Shared
+const PIT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf6d1c0; //Shared
 
 //Pit Startup Initialization
 #[skyline::hook(offset = PIT_VTABLE_START_INITIALIZATION_OFFSET)]

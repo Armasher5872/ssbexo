@@ -1,8 +1,8 @@
 use super::*;
 
-const ROY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x10bb480;
-const ROY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0;
-const ROY_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x10bbaa0;
+const ROY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x10bb480; //Shared
+const ROY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
+const ROY_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x10bbaa0; //Shared
 
 //Roy Startup Initialization
 #[skyline::hook(offset = ROY_VTABLE_START_INITIALIZATION_OFFSET)]

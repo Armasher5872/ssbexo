@@ -1,10 +1,14 @@
 use {
-  crate::functions::var::globals::*,
+  crate::functions::var::{
+    diddy::*,
+    globals::*,
+  },
   smash::{
     app::{
       lua_bind::*,
       *
     },
+    hash40,
     lib::{
       L2CValue,
       lua_const::*,

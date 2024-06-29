@@ -16,11 +16,8 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 //A hook regarding the generation/visiblity of articles. Used to allow entry articles to generate
 #[skyline::hook(offset = 0x3a6670)]
 unsafe fn get_article_use_type_mask(weapon_kind: i32, entry_id: i32) -> u8 {
-    if [*WEAPON_KIND_DONKEY_DKBARREL, *WEAPON_KIND_LINK_PARASAIL].contains(&weapon_kind) {
+    if [*WEAPON_KIND_DONKEY_DKBARREL, *WEAPON_KIND_LINK_PARASAIL, *WEAPON_KIND_DIDDY_DKBARREL].contains(&weapon_kind) {
         return 1;
-    }
-    if [*WEAPON_KIND_BUDDY_PIECE].contains(&weapon_kind) {
-        return 0;
     }
     call_original!(weapon_kind, entry_id)
 }
@@ -73,6 +70,9 @@ pub unsafe fn create_item(item_manager: *mut smash::app::ItemManager, create_ite
     }
     original!()(item_manager, create_item_param, unk, unk2, unk3)
 }
+
+#[skyline::from_offset(0x3ac560)]
+pub fn get_battle_object_from_id(id: u32) -> *mut BattleObject;
 
 //Installation
 pub fn install() {

@@ -178,20 +178,6 @@ unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_i
 		}
 	}
 	LAST_DAMAGE[get_player_number(defender_boma)] = DamageModule::damage(defender_boma, 0);
-    //Sheik Vanish Back Hit Detection
-    if attacker_boma.is_fighter() {
-        if attacker_kind == *FIGHTER_KIND_SHEIK
-        && attacker_status_kind == FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK {
-            let attacker_lr = PostureModule::lr(attacker_boma);
-            let defender_lr = PostureModule::lr(defender_boma);
-            if attacker_lr == defender_lr {
-                WorkModule::set_flag(attacker_boma, true, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
-            }
-            else {
-                WorkModule::set_flag(attacker_boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
-            }
-        }
-    }
     if attacker_status_kind == WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT {
         ItemModule::drop_item(defender_boma, 0.0, 0.0, 0);
     }

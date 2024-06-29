@@ -1,7 +1,7 @@
 use super::*;
 
-const POPO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xfb6750;
-const POPO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xfb6a50;
+const POPO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xfb6750; //Shared
+const POPO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xfb6a50; //Shared
 
 //Popo Startup Initialization
 #[skyline::hook(offset = POPO_VTABLE_START_INITIALIZATION_OFFSET)]

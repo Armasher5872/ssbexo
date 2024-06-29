@@ -1,7 +1,7 @@
 use super::*;
 
-const PITB_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf6d5c0;
-const PITB_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf6d1c0;
+const PITB_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf6d5c0; //Shared
+const PITB_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf6d1c0; //Shared
 
 //Dark Pit Startup Initialization
 #[skyline::hook(offset = PITB_VTABLE_START_INITIALIZATION_OFFSET)]

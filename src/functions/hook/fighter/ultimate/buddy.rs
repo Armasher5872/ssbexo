@@ -1,7 +1,7 @@
 use super::*;
 
-const BUDDY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x891260;
-const BUDDY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x891bf0;
+const BUDDY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x891260; //Banjo & Kazooie only
+const BUDDY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x891bf0; //Banjo & Kazooie only
 
 //Banjo & Kazooie Startup Initialization
 #[skyline::hook(offset = BUDDY_VTABLE_START_INITIALIZATION_OFFSET)]

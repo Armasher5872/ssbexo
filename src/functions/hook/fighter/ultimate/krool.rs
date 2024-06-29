@@ -1,7 +1,7 @@
 use super::*;
 
-const KROOL_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xc02400;
-const KROOL_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc026a0;
+const KROOL_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xc02400; //King K Rool only
+const KROOL_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc026a0; //King K Rool only
 
 //King K Rool Startup Initialization
 #[skyline::hook(offset = KROOL_VTABLE_START_INITIALIZATION_OFFSET)]

@@ -1,8 +1,8 @@
 use super::*;
 
-const PEACH_VTABLE_LINK_EVENT_OFFSET: usize = 0x68d880; //A Link Event that's used by the following fighters: Jigglypuff, Peach, Daisy, Roy, and Chrom
-const PEACH_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xe88ca0;
-const PEACH_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0;
+const PEACH_VTABLE_LINK_EVENT_OFFSET: usize = 0x68d880; //Shared
+const PEACH_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xe88ca0; //Shared
+const PEACH_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 
 //Link Event for Peach
 #[skyline::hook(offset = PEACH_VTABLE_LINK_EVENT_OFFSET)]
@@ -89,7 +89,7 @@ unsafe extern "C" fn peach_start_initialization(vtable: u64, fighter: &mut Fight
 
 //Peach Reset Initialization
 #[skyline::hook(offset = PEACH_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn peach_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
+unsafe extern "C" fn peach_reset_initialization(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if fighter.battle_object.kind == *FIGHTER_KIND_PEACH as u32 {
@@ -143,7 +143,6 @@ unsafe extern "C" fn peach_reset_initialization(vtable: u64, fighter: &mut Fight
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
-    original!()(vtable, fighter)
 }
 
 pub fn install() {

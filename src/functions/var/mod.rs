@@ -14,6 +14,7 @@ pub mod donkey;
 pub mod edge;
 pub mod globals;
 pub mod ike;
+pub mod jack;
 pub mod kirby;
 pub mod link;
 pub mod littlemac;

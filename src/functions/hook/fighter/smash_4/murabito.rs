@@ -1,7 +1,7 @@
 use super::*;
 
-const MURABITO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xdba810;
-const MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30;
+const MURABITO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xdba810; //Shared
+const MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
 
 //Villager Startup Initialization
 #[skyline::hook(offset = MURABITO_VTABLE_START_INITIALIZATION_OFFSET)]

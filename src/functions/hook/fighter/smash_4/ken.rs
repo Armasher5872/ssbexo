@@ -1,7 +1,7 @@
 use super::*;
 
-const KEN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0;
-const KEN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10d4570;
+const KEN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0; //Shared
+const KEN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10d4570; //Shared
 
 //Ken Startup Initialization
 #[skyline::hook(offset = KEN_VTABLE_START_INITIALIZATION_OFFSET)]

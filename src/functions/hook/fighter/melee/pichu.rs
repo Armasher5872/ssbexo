@@ -1,10 +1,8 @@
-use crate::functions::ext::utility::get_objects::GetObjects;
-
 use super::*;
 
-const PICHU_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf2a520;
-const PICHU_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0;
-const PICHU_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0xf2a630;
+const PICHU_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf2a520; //Shared
+const PICHU_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
+const PICHU_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0xf2a630; //Shared
 
 //Pichu Startup Initialization
 #[skyline::hook(offset = PICHU_VTABLE_START_INITIALIZATION_OFFSET)]

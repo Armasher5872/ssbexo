@@ -1,8 +1,11 @@
 #![allow(unused_assignments)]
 use {
-  crate::functions::var::{
-    globals::*,
-    sheik::*,
+  crate::functions::{
+    ext::fighter::common::*,
+    var::{
+      globals::*,
+      sheik::*,
+    }
   },
   smash::{
     app::{

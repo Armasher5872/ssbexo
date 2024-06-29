@@ -1,7 +1,7 @@
 use super::*;
 
-const SZEROSUIT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x11f4ba0;
-const SZEROSUIT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x11f4c40;
+const SZEROSUIT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x11f4ba0; //Zero Suit Samus only
+const SZEROSUIT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x11f4c40; //Zero Suit Samus only
 
 //Zero Suit Samus Startup Initialization
 #[skyline::hook(offset = SZEROSUIT_VTABLE_START_INITIALIZATION_OFFSET)]

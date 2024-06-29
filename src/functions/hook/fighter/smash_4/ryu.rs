@@ -1,7 +1,7 @@
 use super::*;
 
-const RYU_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0;
-const RYU_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10d4570;
+const RYU_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0; //Shared
+const RYU_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10d4570; //Shared
 
 //Ryu Startup Initialization
 #[skyline::hook(offset = RYU_VTABLE_START_INITIALIZATION_OFFSET)]

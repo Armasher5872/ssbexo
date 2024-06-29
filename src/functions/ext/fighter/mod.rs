@@ -5,6 +5,7 @@ use {
         var::{
             consts::*,
             donkey::*,
+            globals::*,
             ike::*,
             kirby::*,
             link::*,

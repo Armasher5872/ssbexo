@@ -1,7 +1,7 @@
 use super::*;
 
-const KOOPAJR_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xbe37b0;
-const KOOPAJR_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xbe37e0;
+const KOOPAJR_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xbe37b0; //Bowser Jr only
+const KOOPAJR_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xbe37e0; //Bowser Jr only
 
 //Bowser Jr Startup Initialization
 #[skyline::hook(offset = KOOPAJR_VTABLE_START_INITIALIZATION_OFFSET)]

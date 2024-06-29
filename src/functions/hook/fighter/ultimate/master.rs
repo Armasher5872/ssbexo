@@ -1,7 +1,7 @@
 use super::*;
 
-const MASTER_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xce92a0;
-const MASTER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xce9340;
+const MASTER_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xce92a0; //Byleth only
+const MASTER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xce9340; //Byleth only
 
 //Byleth Startup Initialization
 #[skyline::hook(offset = MASTER_VTABLE_START_INITIALIZATION_OFFSET)]

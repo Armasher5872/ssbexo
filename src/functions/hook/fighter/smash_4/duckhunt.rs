@@ -1,7 +1,7 @@
 use super::*;
 
-const DUCKHUNT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x9a0cf0;
-const DUCKHUNT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x9a0d00;
+const DUCKHUNT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x9a0cf0; //Duck Hunt only
+const DUCKHUNT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x9a0d00; //Duck Hunt only
 
 //Duck Hunt Startup Initialization
 #[skyline::hook(offset = DUCKHUNT_VTABLE_START_INITIALIZATION_OFFSET)]

@@ -3,6 +3,7 @@ use {
         ext::utility::{
             boma_ext::*,
             commandcat::*,
+            get_objects::*,
             misc::*,
         },
         var::{

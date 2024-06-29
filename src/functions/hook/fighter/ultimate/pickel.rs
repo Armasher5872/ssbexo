@@ -1,7 +1,7 @@
 use super::*;
 
-const PICKEL_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf02a00;
-const PICKEL_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf030d0;
+const PICKEL_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf02a00; //Steve only
+const PICKEL_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf030d0; //Steve only
 
 //Steve Startup Initialization
 #[skyline::hook(offset = PICKEL_VTABLE_START_INITIALIZATION_OFFSET)]

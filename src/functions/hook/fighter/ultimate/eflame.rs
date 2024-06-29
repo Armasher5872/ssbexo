@@ -1,7 +1,7 @@
 use super::*;
 
-const EFLAME_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xa0b890;
-const EFLAME_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa0b8a0;
+const EFLAME_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xa0b890; //Pyra only
+const EFLAME_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa0b8a0; //Pyra only
 
 //Pyra Startup Initialization
 #[skyline::hook(offset = EFLAME_VTABLE_START_INITIALIZATION_OFFSET)]

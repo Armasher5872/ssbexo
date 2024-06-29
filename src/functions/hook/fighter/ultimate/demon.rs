@@ -1,7 +1,7 @@
 use super::*;
 
-const DEMON_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x930d60;
-const DEMON_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x930ff0;
+const DEMON_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x930d60; //Kazuya only
+const DEMON_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x930ff0; //Kazuya only
 
 //Kazuya Startup Initialization
 #[skyline::hook(offset = DEMON_VTABLE_START_INITIALIZATION_OFFSET)]

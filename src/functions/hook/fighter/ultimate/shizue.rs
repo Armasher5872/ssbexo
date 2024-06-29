@@ -1,7 +1,7 @@
 use super::*;
 
-const SHIZUE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xdba810;
-const SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30;
+const SHIZUE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xdba810; //Shared
+const SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
 
 //Isabelle Startup Initialization
 #[skyline::hook(offset = SHIZUE_VTABLE_START_INITIALIZATION_OFFSET)]

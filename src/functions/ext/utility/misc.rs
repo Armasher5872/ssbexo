@@ -53,3 +53,20 @@ pub unsafe fn estimate_frame(module_accessor: &mut smash::app::BattleObjectModul
 pub unsafe fn get_owner_boma(weapon: &mut L2CAgentBase) -> *mut BattleObjectModuleAccessor {
     return &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 }
+
+//Collision Log
+pub struct CollisionLog {
+    pub next: *mut CollisionLog,
+    pub end: *mut CollisionLog,
+    pub location: Vector3f,
+    pub padding_0: u32,
+    pub padding_1: u32,
+    pub opponent_battle_object_id: u32,
+    pub padding_2: [u8;7],
+    pub collision_kind: u8,
+    pub receiver_part_id: u8,
+    pub collider_part_id: u8,
+    pub receiver_id: u8,
+    pub collider_id: u8,
+    pub padding_3: [u8;10]
+}

@@ -1,7 +1,7 @@
 use super::*;
 
-const NANA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xfb6750;
-const NANA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xfb6a50;
+const NANA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xfb6750; //Shared
+const NANA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xfb6a50; //Shared
 
 //Nana Startup Initialization
 #[skyline::hook(offset = NANA_VTABLE_START_INITIALIZATION_OFFSET)]

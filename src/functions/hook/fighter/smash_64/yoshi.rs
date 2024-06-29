@@ -1,7 +1,7 @@
 use super::*;
 
-const YOSHI_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x12dbb90;
-const YOSHI_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12db8f0;
+const YOSHI_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x12dbb90; //Yoshi only
+const YOSHI_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12db8f0; //Yoshi only
 
 //Yoshi Startup Initialization
 #[skyline::hook(offset = YOSHI_VTABLE_START_INITIALIZATION_OFFSET)]

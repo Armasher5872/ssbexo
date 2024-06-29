@@ -1,7 +1,7 @@
 use super::*;
 
-const DAISY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xe88ca0;
-const DAISY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0;
+const DAISY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xe88ca0; //Shared
+const DAISY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 
 //Daisy Startup Initialization
 #[skyline::hook(offset = DAISY_VTABLE_START_INITIALIZATION_OFFSET)]

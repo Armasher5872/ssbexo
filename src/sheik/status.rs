@@ -335,6 +335,27 @@ unsafe extern "C" fn sheik_special_lw_vanish_attack_main_loop(fighter: &mut L2CF
     0.into()
 }
 
+unsafe extern "C" fn sheik_special_lw_vanish_attack_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    let table = param_3.get_table() as *mut smash2::lib::L2CTable;
+    let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
+    let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
+    if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        if collision_kind == *COLLISION_KIND_HIT {
+            let object_id = get_table_value(table, "object_id_").try_integer().unwrap() as u32;
+            let opponent_boma = sv_battle_object::module_accessor(object_id);
+            let attacker_lr = PostureModule::lr(fighter.module_accessor);
+            let defender_lr = PostureModule::lr(opponent_boma);
+            if attacker_lr == defender_lr {
+                WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+            }
+            else {
+                WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+            }
+        }
+    }
+    0.into()
+}
+
 unsafe extern "C" fn sheik_special_lw_vanish_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let transition_terms = [
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_100, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_DASH, 
@@ -377,6 +398,7 @@ pub fn install() {
     .status(Pre, FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, sheik_special_lw_vanish_attack_pre_status)
     .status(Init, FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, sheik_special_lw_vanish_attack_init_status)
     .status(Main, FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, sheik_special_lw_vanish_attack_main_status)
+    .status(CheckAttack, FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, sheik_special_lw_vanish_attack_check_attack_status)
     .status(End, FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, sheik_special_lw_vanish_attack_end_status)
     .install()
     ;

@@ -15,7 +15,10 @@ use {
         },
         hash40,
         lib::lua_const::*,
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector3f
+        }
     }
 };
 

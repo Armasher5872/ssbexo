@@ -1,7 +1,7 @@
 use super::*;
 
-const MIIGUNNER_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xd735a0;
-const MIIGUNNER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xd738c0;
+const MIIGUNNER_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xd735a0; //Mii Gunner only
+const MIIGUNNER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xd738c0; //Mii Gunner only
 
 //Mii Gunner Startup Initialization
 #[skyline::hook(offset = MIIGUNNER_VTABLE_START_INITIALIZATION_OFFSET)]

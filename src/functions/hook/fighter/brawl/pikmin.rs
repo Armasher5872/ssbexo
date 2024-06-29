@@ -1,7 +1,7 @@
 use super::*;
 
-const PIKMIN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf51380;
-const PIKMIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf51390;
+const PIKMIN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf51380; //Olimar only
+const PIKMIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf51390; //Olimar only
 
 //Olimar Startup Initialization
 #[skyline::hook(offset = PIKMIN_VTABLE_START_INITIALIZATION_OFFSET)]

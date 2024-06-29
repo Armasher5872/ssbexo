@@ -2,10 +2,7 @@ use {
   crate::{
     functions::{
       ext::fighter::common::*,
-      var::{
-        globals::*,
-        miiswordsman::*,
-      }
+      var::miiswordsman::*,
     },
     miiswordsman::status::{
       special_n::{
@@ -35,22 +32,7 @@ use {
           special_s2_attack_1::*,
           special_s2_attack_2::*,
           special_s2_attack_3::*,
-        },
-        special_s3::special_s3::*,
-      },
-      special_hi::{
-        special_hi1::{
-          special_hi1::*,
-          special_hi1_jump::*,
-          special_hi1_loop::*,
-        },
-        special_hi2::special_hi2::*,
-        special_hi3::special_hi3::*,
-      },
-      special_lw::{
-        special_lw1::special_lw1::*,
-        special_lw2::special_lw2::*,
-        special_lw3::special_lw3::*,
+        }
       }
     },
   },

@@ -1,7 +1,7 @@
 use super::*;
 
-const ROBOT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x105bce0;
-const ROBOT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x105bf20;
+const ROBOT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x105bce0; //R.O.B only
+const ROBOT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x105bf20; //R.O.B only
 
 //R.O.B Startup Initialization
 #[skyline::hook(offset = ROBOT_VTABLE_START_INITIALIZATION_OFFSET)]

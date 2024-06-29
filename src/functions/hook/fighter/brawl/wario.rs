@@ -1,7 +1,7 @@
 use super::*;
 
-const WARIO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x1285a70;
-const WARIO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12864e0;
+const WARIO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x1285a70; //Wario only
+const WARIO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12864e0; //Wario only
 
 //Wario Startup Initialization
 #[skyline::hook(offset = WARIO_VTABLE_START_INITIALIZATION_OFFSET)]

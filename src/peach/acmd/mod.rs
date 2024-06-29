@@ -16,11 +16,13 @@ use {
     smashline::*,
 };
 
+mod aerials;
 mod specials;
 mod throws;
 mod tilts;
 
 pub fn install() {
+    aerials::install();
     specials::install();
     throws::install();
     tilts::install();

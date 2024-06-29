@@ -1,8 +1,8 @@
 use super::*;
 
-const MIISWORDSMAN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xd99a30;
-const MIISWORDSMAN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xd99d30;
-const MIISWORDSMAN_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x68d670;
+const MIISWORDSMAN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xd99a30; //Mii Swordfighter only
+const MIISWORDSMAN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xd99d30; //Mii Swordfighter only
+const MIISWORDSMAN_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x68d670; //Shared
 
 //Mii Swordfighter Startup Initialization
 #[skyline::hook(offset = MIISWORDSMAN_VTABLE_START_INITIALIZATION_OFFSET)]
@@ -136,13 +136,15 @@ unsafe extern "C" fn miiswordsman_opff(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let blurring_slashes_timer = WorkModule::get_int(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
     let long_sword_scale = Vector3f{x: 1.015, y: 1.15, z: 1.045};
-    ModelModule::set_joint_scale(boma, Hash40::new("havel"), &long_sword_scale);
-    ModelModule::set_joint_scale(boma, Hash40::new("haver"), &long_sword_scale);
-    if WorkModule::is_flag(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) && blurring_slashes_timer > 0 {
-        WorkModule::dec_int(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
-    }
-    if blurring_slashes_timer <= 0 {
-        WorkModule::set_flag(boma, false, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
+    if fighter.battle_object.kind == *FIGHTER_KIND_MIISWORDSMAN as u32 {
+        ModelModule::set_joint_scale(boma, Hash40::new("havel"), &long_sword_scale);
+        ModelModule::set_joint_scale(boma, Hash40::new("haver"), &long_sword_scale);
+        if WorkModule::is_flag(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) && blurring_slashes_timer > 0 {
+            WorkModule::dec_int(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
+        }
+        if blurring_slashes_timer <= 0 {
+            WorkModule::set_flag(boma, false, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
+        }
     }
 }
 

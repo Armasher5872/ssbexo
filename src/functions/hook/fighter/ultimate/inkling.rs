@@ -1,7 +1,7 @@
 use super::*;
 
-const INKLING_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xb0ac70;
-const INKLING_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb0ac80;
+const INKLING_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xb0ac70; //Inkling only
+const INKLING_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb0ac80; //Inkling only
 
 //Inkling Startup Initialization
 #[skyline::hook(offset = INKLING_VTABLE_START_INITIALIZATION_OFFSET)]

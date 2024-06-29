@@ -18,7 +18,10 @@ use {
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::L2CFighterCommon,
+        lua2cpp::{
+            L2CFighterCommon,
+            *
+        },
         phx::Hash40
     },
     smash_script::*,

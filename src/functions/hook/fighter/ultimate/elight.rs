@@ -1,7 +1,7 @@
 use super::*;
 
-const ELIGHT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xa285e0;
-const ELIGHT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa28640;
+const ELIGHT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xa285e0; //Mythra only
+const ELIGHT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa28640; //Mythra only
 
 //Mythra Startup Initialization
 #[skyline::hook(offset = ELIGHT_VTABLE_START_INITIALIZATION_OFFSET)]
