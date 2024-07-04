@@ -1,11 +1,14 @@
 use {
-    crate::functions::var::{
-        consts::*,
-        dolly::*,
-        edge::*,
-        jack::*,
-        murabito::*,
-        variables::*,
+    crate::functions::{
+        ext::fighter::murabito_shizue_common::*,
+        var::{
+            consts::*,
+            dolly::*,
+            edge::*,
+            jack::*,
+            murabito::*,
+            variables::*,
+        }
     },
     smash::{
         app::{

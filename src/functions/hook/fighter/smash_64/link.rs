@@ -156,6 +156,7 @@ unsafe extern "C" fn link_reset_initialization(vtable: u64, fighter: &mut Fighte
 unsafe extern "C" fn link_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let team_no = TeamModule::team_no(boma) as i32;
     if fighter.battle_object.kind == *FIGHTER_KIND_LINK as u32 {
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE);

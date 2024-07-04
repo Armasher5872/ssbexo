@@ -8,6 +8,7 @@ use {
         },
         var::{
             consts::*,
+            marth::*,
             mewtwo::*,
             sheik::*,
             variables::*,

@@ -198,9 +198,9 @@ unsafe extern "C" fn kirby_death_initialization(vtable: u64, fighter: &mut Fight
     WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
     WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("kirby_armfoot"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("kirby_eye1"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("kirby_facen"), true);
     original!()(vtable, fighter)
 }
 

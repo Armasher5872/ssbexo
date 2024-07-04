@@ -1,40 +1,6 @@
 #![allow(dead_code, unused_must_use)]
 use {
-    crate::functions::{
-        ext::utility::{
-            boma_ext::*,
-            controls::*,
-        },
-        var::{
-            armstrong::*,
-            captain::*,
-            consts::*,
-            dedede::*,
-            dolly::*,
-            edge::*,
-            globals::*,
-            ike::*,
-            kirby::*,
-            link::*,
-            littlemac::*,
-            luigi::*,
-            marth::*,
-            metaknight::*,
-            mewtwo::*,
-            miiswordsman::*,
-            murabito::*,
-            pfushigisou::*,
-            pikachu::*,
-            purin::*,
-            robot::*,
-            rosetta::*,
-            ryu::*,
-            samusd::*,
-            sheik::*,
-            sonic::*,
-            variables::*,
-        }
-    },
+    crate::functions::ext::utility::controls::*,
     smash::{
         app::{
             BattleObject,
@@ -51,19 +17,10 @@ use {
             GimmickEventPresenter,
             ItemManager,
             ItemParamAccessor,
-            lua_bind::{
-                PostureModule,
-                *
-            },
-            StageManager,
-            sv_battle_object
+            StageManager
         },
-        hash40,
-        lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40
+        lua2cpp::L2CFighterCommon
     },
-    smashline::*,
     skyline::nn::ro::LookupSymbol,
     std::sync::Once
 };

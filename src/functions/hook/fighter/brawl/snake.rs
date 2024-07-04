@@ -2,7 +2,7 @@ use super::*;
 
 const SNAKE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x11b5710; //Snake only
 const SNAKE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x11b5720; //Snake only
-const SNAKE_VTABLE_DEAHT_INITIALIZATION_OFFSET: usize = 0x11b5890; //Snake only
+const SNAKE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11b5890; //Snake only
 const SNAKE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11b59f0; //Snake only
 
 //Snake Startup Initialization

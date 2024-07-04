@@ -189,11 +189,11 @@ unsafe extern "C" fn sheik_death_initialization(vtable: u64, fighter: &mut Fight
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("gamemodel"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("hair"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_eye"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_facen"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_openblink"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("gamemodel"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("hair"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_eye"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_facen"), true);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_openblink"), true);
     WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
     WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
     WorkModule::set_flag(boma, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);

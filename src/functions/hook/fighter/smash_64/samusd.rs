@@ -2,6 +2,7 @@ use super::*;
 
 const SAMUSD_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0; //Shared
 const SAMUSD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10f3630; //Shared
+const SAMUSD_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10f3650; //Shared
 const SAMUSD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x10f37a0; //Shared
 
 //Dark Samus Startup Initialization

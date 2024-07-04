@@ -192,6 +192,6 @@ pub fn install() {
 	skyline::install_hooks!(
         ike_start_initialization,
         ike_reset_initialization,
-        ike_death_intialization
+        ike_death_initialization
     );
 }

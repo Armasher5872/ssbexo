@@ -196,7 +196,7 @@ unsafe extern "C" fn murabito_death_initialization(vtable: u64, fighter: &mut Fi
 }
 
 //Villager Once Per Fighter Frame
-#[skyline::hook(offset = MURABITO_VTABLE_ONCE_PER_FIGHTER_FRAME)]
+#[skyline::hook(offset = MURABITO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn murabito_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     ac_common(boma);

@@ -2,6 +2,7 @@ use super::*;
 
 const MARTH_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xcd98a0; //Shared
 const MARTH_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc732a0; //Shared
+const MARTH_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xcd99a0; //Shared
 const MARTH_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x68d670; //Shared
 
 //Marth Startup Initialization

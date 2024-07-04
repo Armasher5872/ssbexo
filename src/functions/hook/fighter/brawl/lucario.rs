@@ -2,7 +2,7 @@ use super::*;
 
 const LUCARIO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xc5b730; //Lucario only
 const LUCARIO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc5b8f0; //Lucario only
-const LUCATIO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc5bb60; //Lucario only
+const LUCARIO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc5bb60; //Lucario only
 const LUCARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xc5ce40; //Lucario only
 
 //Lucario Startup Initialization

@@ -11,7 +11,7 @@ pub unsafe extern "C" fn ac_common(boma: *mut BattleObjectModuleAccessor) {
         let owner_boma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(obj_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
         let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
         if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
-            let fighter_kind = smash::app::utility::get_kind(&mut boma);
+            let fighter_kind = smash::app::utility::get_kind(&mut *boma);
             let item_id = WorkModule::get_int64(obj_boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
             let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
             let fused_item = if owner_kind == *FIGHTER_KIND_KIRBY {

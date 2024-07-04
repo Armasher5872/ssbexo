@@ -30,7 +30,7 @@ pub unsafe fn get_param_int_impl_hook(module_accessor: u64, param_type: u64, par
 		}
 	}
 	else if boma_reference.is_weapon() {
-        let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+        let owner_module_accessor = (&mut *smash::app::sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32));
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 		if fighter_kind == *WEAPON_KIND_NESS_PK_FIRE
 		&& param_type == hash40("param_pkfire") {
@@ -126,7 +126,7 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 		}
 	}
 	else if boma_reference.is_weapon() {
-        let owner_module_accessor = &mut *sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+        let owner_module_accessor = &mut *smash::app::sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
 		if fighter_kind == *WEAPON_KIND_KOOPA_BREATH {
 			if param_type == hash40("param_special_n") {

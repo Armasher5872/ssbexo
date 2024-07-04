@@ -1,11 +1,15 @@
 use {
     crate::functions::{
-        ext::utility::{
-            boma_ext::*,
-            misc::*,
-            get_objects::*,
+        ext::{
+            fighter::murabito_shizue_common::*,
+            utility::{
+                boma_ext::*,
+                misc::*,
+                get_objects::*,
+            }
         },
         var::{
+            bayonetta::*,
             consts::*,
             link::*,
             littlemac::*,

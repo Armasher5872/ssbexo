@@ -196,7 +196,7 @@ unsafe extern "C" fn shizue_death_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Isabelle Once Per Fighter Frame
-#[skyline::hook(offset = SHIZUE_VTABLE_ONCE_PER_FIGHTER_FRAME)]
+#[skyline::hook(offset = SHIZUE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn shizue_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     ac_common(boma);

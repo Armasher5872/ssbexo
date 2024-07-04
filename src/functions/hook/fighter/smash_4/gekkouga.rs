@@ -121,7 +121,7 @@ unsafe extern "C" fn gekkouga_reset_initialization(vtable: u64, fighter: &mut Fi
 
 //Greninja Death Initialization
 #[skyline::hook(offset = GEKKOUGA_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn gekkouga_death_initialization(vtable: u64, fighter: &mut Fighter, u32: param_3) -> u64 {
+unsafe extern "C" fn gekkouga_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: u32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
