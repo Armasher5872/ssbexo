@@ -2,7 +2,7 @@ use super::*;
 
 const WIIFIT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x12aab40; //Wii Fit Trainer only
 const WIIFIT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
-const WIIFIT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x; //Wii Fit Trainer only
+const WIIFIT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x12aab50; //Wii Fit Trainer only
 
 //Wii Fit Trainer Startup Initialization
 #[skyline::hook(offset = WIIFIT_VTABLE_START_INITIALIZATION_OFFSET)]

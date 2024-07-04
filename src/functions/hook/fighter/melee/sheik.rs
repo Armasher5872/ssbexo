@@ -2,7 +2,7 @@ use super::*;
 
 const SHEIK_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x1120c60; //Sheik only
 const SHEIK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x1120910; //Sheik only
-const SHEIK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x ; //Sheik only
+const SHEIK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x1120c70; //Sheik only
 const SHEIK_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x1120e10; //Sheik only
 
 //Sheik Startup Initialization

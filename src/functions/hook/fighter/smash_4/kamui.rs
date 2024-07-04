@@ -2,7 +2,7 @@ use super::*;
 
 const KAMUI_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xb5c1a0; //Corrin only
 const KAMUI_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb5c360; //Corrin only
-const KAMUI_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x ; //Corrin only
+const KAMUI_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xb5cb30; //Corrin only
 
 //Corrin Startup Initialization
 #[skyline::hook(offset = KAMUI_VTABLE_START_INITIALIZATION_OFFSET)]
