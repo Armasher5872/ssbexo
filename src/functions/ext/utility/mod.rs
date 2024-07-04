@@ -4,6 +4,7 @@ use {
     bitflags::bitflags,
     crate::functions::{
         ext::utility::commandcat::*,
+        hook::misc::*,
         var::globals::*,
     },
     modular_bitfield::{

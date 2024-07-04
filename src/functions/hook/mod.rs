@@ -69,6 +69,7 @@ pub mod effect;
 pub mod fighter;
 pub mod misc;
 pub mod music;
+pub mod params;
 pub mod status;
 pub mod throw;
 pub mod workmodule;
@@ -80,6 +81,7 @@ pub fn install() {
     fighter::install();
     misc::install();
     music::install();
+    params::install();
     status::install();
     throw::install();
     workmodule::install();

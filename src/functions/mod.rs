@@ -71,14 +71,10 @@ use {
 pub mod ext;
 pub mod hook;
 pub mod offsets;
-pub mod params;
-pub mod reset;
 pub mod singletons;
 pub mod util;
 pub mod var;
 
 pub fn install() {
     hook::install();
-	params::install();
-	reset::install();
 }

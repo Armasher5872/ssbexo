@@ -24,7 +24,6 @@ pub trait BomaExt {
     unsafe fn is_item(&mut self) -> bool;
     unsafe fn status(&mut self) -> i32;
     unsafe fn magic_series(&mut self) -> i32;
-    unsafe fn get_grabber_boma(&mut self) -> &mut BattleObjectModuleAccessor;
 }
 
 impl BomaExt for BattleObjectModuleAccessor {
@@ -1372,10 +1371,5 @@ impl BomaExt for BattleObjectModuleAccessor {
             }
         }
         return 0;
-    }
-    unsafe fn get_grabber_boma(&mut self) -> &mut BattleObjectModuleAccessor {
-        let opponent_id = LinkModule::get_parent_object_id(self, *LINK_NO_CAPTURE) as u32;
-        let opponent_object = crate::functions::util::get_battle_object_from_id(opponent_id);
-        &mut *(*opponent_object).module_accessor
     }
 }

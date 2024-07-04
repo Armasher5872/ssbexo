@@ -1,5 +1,6 @@
 use super::*;
 
+/*
 unsafe extern "C" fn edge_frame(fighter: &mut L2CFighterCommon) {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
     let frame = MotionModule::frame(boma);
@@ -50,6 +51,7 @@ unsafe extern "C" fn edge_frame(fighter: &mut L2CFighterCommon) {
         }
     }
 }
+*/
 
 unsafe extern "C" fn edge_flaredummy_frame(weapon: &mut L2CFighterBase) {
     let owner_boma = get_owner_boma(weapon);
@@ -66,10 +68,12 @@ unsafe extern "C" fn edge_flaredummy_frame(weapon: &mut L2CFighterBase) {
 }
 
 pub fn install() {
+    /*
     Agent::new("edge")
     .on_line(Main, edge_frame)
     .install()
     ;
+    */
     Agent::new("edge_flaredummy")
     .on_line(Main, edge_flaredummy_frame)
     .install()

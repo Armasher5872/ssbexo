@@ -48,7 +48,6 @@ mod pikmin;
 mod pit;
 mod pitb;
 mod plizardon;
-mod ptrainer;
 mod pzenigame;
 mod robot;
 mod snake;
@@ -70,7 +69,6 @@ pub fn install() {
     pit::install();
     pitb::install();
     plizardon::install();
-    ptrainer::install();
     pzenigame::install();
     robot::install();
     snake::install();
