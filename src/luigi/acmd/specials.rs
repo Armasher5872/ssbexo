@@ -1,355 +1,90 @@
 use super::*;
 
-//Grounded Side Special ACMD
-unsafe extern "C" fn ssbexo_luigi_grounded_side_special_acmd(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_TYPHOON_ACTIVE) {
-        frame(agent.lua_state_agent, 10.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 367, 30, 0, 85, 5.5, 0.0, 10.0, -5.5, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 367, 30, 0, 85, 5.5, 0.0, 10.0, 5.5, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 367, 60, 0, 25, 6.0, 0.0, 5.5, 0.0, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 4, 1, Hash40::new("top"), 0.0, 180, 100, 50, 0, 19.5, 0.0, 8.5, 0.0, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 10, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 0, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 9, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 1, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 9, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 2, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 9, false);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
-        }
-        macros::FT_MOTION_RATE(agent, 0.6);
-        frame(agent.lua_state_agent, 44.0);
-        macros::FT_MOTION_RATE(agent, 1.0);
-        if macros::is_excute(agent) {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, -9.5, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, 9.5, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 8.0, 90, 90, 0, 85, 6.5, 0.0, 4.0, 0.0, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-        }
-        wait(agent.lua_state_agent, 1.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
-            WorkModule::off_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            AttackModule::clear_all(agent.module_accessor);
-        }
+//Side Special ACMD
+unsafe extern "C" fn ssbexo_luigi_side_special_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        macros::SEARCH(agent, 0, 0, Hash40::new("top"), 8.0, 0.0, 6.5, 2.5, Some(0.0), Some(6.5), Some(8.0), *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_NORMAL, 60, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false);
+        search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
+        shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("top"), 8.0, 0.0, 6.5, 2.5, 0.0, 6.5, -6.0, 0.0, 0.0, 0, false, 1.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
-    else {
-        frame(agent.lua_state_agent, 10.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 367, 30, 0, 85, 5.5, 0.0, 10.0, -5.5, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 367, 30, 0, 85, 5.5, 0.0, 10.0, 5.5, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 367, 60, 0, 25, 6.0, 0.0, 5.5, 0.0, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 4, 1, Hash40::new("top"), 0.0, 180, 100, 50, 0, 19.5, 0.0, 8.5, 0.0, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 10, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 0, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 9, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 1, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 9, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 2, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 9, false);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
-        }
-        macros::FT_MOTION_RATE(agent, 0.6);
-        frame(agent.lua_state_agent, 44.0);
-        macros::FT_MOTION_RATE(agent, 1.0);
-        if macros::is_excute(agent) {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, -9.5, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 4.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, 9.5, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 4.0, 90, 90, 0, 85, 6.5, 0.0, 4.0, 0.0, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        }
-        wait(agent.lua_state_agent, 1.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
-            WorkModule::off_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            AttackModule::clear_all(agent.module_accessor);
-        }
+    frame(agent.lua_state_agent, 4.0);
+    if macros::is_excute(agent) {
+        macros::SA_SET(agent, *SITUATION_KIND_AIR);
+        KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_LUIGI_SPECIAL_S_RAM);
+        macros::CORRECT(agent, *GROUND_CORRECT_KIND_AIR);
+    }
+    frame(agent.lua_state_agent, 5.0);
+    if macros::is_excute(agent) {
+        macros::ATTACK(agent, 0, 0, Hash40::new("neck"), 10.0, 361, 80, 0, 30, 4.8, 1.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_HEAD);
+        AttackModule::set_attack_keep_rumble(agent.module_accessor, 0, true);
+        JostleModule::set_status(agent.module_accessor, false);
+    }
+    frame(agent.lua_state_agent, 6.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_GROUND_CHECK);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent) {
+        macros::ATTACK(agent, 0, 0, Hash40::new("neck"), 10.0, 361, 80, 0, 30, 4.8, 1.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_HEAD);
+    }
+    frame(agent.lua_state_agent, 14.0);
+    if macros::is_excute(agent) {
+        WorkModule::enable_transition_term(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_TRANSITION_TERM_ID_GROUND);
+    }
+    frame(agent.lua_state_agent, 21.0);
+    if macros::is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+    }
+    frame(agent.lua_state_agent, 24.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_BRAKE);
+    }
+    frame(agent.lua_state_agent, 28.0);
+    if macros::is_excute(agent) {
+        shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
 }
 
-//Aerial Side Special ACMD
-unsafe extern "C" fn ssbexo_luigi_aerial_side_special_acmd(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_TYPHOON_ACTIVE) {
-        frame(agent.lua_state_agent, 10.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 367, 30, 0, 80, 6.0, 0.0, 9.5, 5.5, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 367, 30, 0, 80, 6.0, 0.0, 9.5, -5.5, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 367, 30, 0, 80, 6.0, 0.0, 2.5, 0.0, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 4, 1, Hash40::new("top"), 0.0, 180, 100, 45, 0, 15.5, 0.0, 8.5, 0.0, None, None, None, 1.25, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 10, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 0, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 1, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 2, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
-        }
-        macros::FT_MOTION_RATE(agent, 0.6);
-        frame(agent.lua_state_agent, 44.0);
-        macros::FT_MOTION_RATE(agent, 1.0);
-        if macros::is_excute(agent) {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, -9.5, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, 9.5, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 8.0, 89, 90, 0, 85, 6.5, 0.0, 2.0, 0.0, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
-        }
-        wait(agent.lua_state_agent, 1.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
-            WorkModule::off_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BUOYANCY);
-            AttackModule::clear_all(agent.module_accessor);
-        }
-    }
-    else {
-        frame(agent.lua_state_agent, 10.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 2.0, 367, 30, 0, 80, 6.0, 0.0, 9.5, 5.5, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 367, 30, 0, 80, 6.0, 0.0, 9.5, -5.5, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 367, 30, 0, 80, 6.0, 0.0, 2.5, 0.0, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 4, 1, Hash40::new("top"), 0.0, 180, 100, 45, 0, 15.5, 0.0, 8.5, 0.0, None, None, None, 0.5, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 10, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 0, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 1, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
-            AttackModule::set_vec_target_pos(agent.module_accessor, 2, Hash40::new("top"), &Vector2f{x: 0.0, y: 8.0}, 8, false);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
-        }
-        macros::FT_MOTION_RATE(agent, 0.6);
-        frame(agent.lua_state_agent, 44.0);
-        macros::FT_MOTION_RATE(agent, 1.0);
-        if macros::is_excute(agent) {
-            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 4.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, -9.5, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 4.0, 70, 90, 0, 85, 7.5, 0.0, 11.0, 9.5, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 4.0, 89, 90, 0, 85, 6.5, 0.0, 2.0, 0.0, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        }
-        wait(agent.lua_state_agent, 1.0);
-        if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
-            WorkModule::off_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_LW_FLAG_RISE);
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BUOYANCY);
-            AttackModule::clear_all(agent.module_accessor);
-        }
-    }
-}
-
-//Grounded Side Special Effect
-unsafe extern "C" fn ssbexo_luigi_grounded_side_special_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_TYPHOON_ACTIVE) {
-        frame(agent.lua_state_agent, 8.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-        }
-        frame(agent.lua_state_agent, 9.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("luigi_cyclone_tornado_r"), Hash40::new("luigi_cyclone_tornado_l"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, true, *EF_FLIP_NONE);
-            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-        }
-        frame(agent.lua_state_agent, 20.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-        }
-        frame(agent.lua_state_agent, 33.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_r"), false, true);
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_l"), false, true);
-        }
-        frame(agent.lua_state_agent, 43.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT(agent, Hash40::new("luigi_cyclone_finish"), Hash40::new("top"), 0, 7, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-        }
-        frame(agent.lua_state_agent, 44.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        }
-    }
-    else {
-        frame(agent.lua_state_agent, 8.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-        }
-        frame(agent.lua_state_agent, 9.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("luigi_cyclone_tornado_r"), Hash40::new("luigi_cyclone_tornado_l"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, true, *EF_FLIP_NONE);
-        }
-        frame(agent.lua_state_agent, 20.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-        }
-        frame(agent.lua_state_agent, 33.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_r"), false, true);
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_l"), false, true);
-        }
-        frame(agent.lua_state_agent, 43.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT(agent, Hash40::new("luigi_cyclone_finish"), Hash40::new("top"), 0, 7, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        }
-        frame(agent.lua_state_agent, 44.0);
-        if macros::is_excute(agent) {
-            macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        }
-    }
-}
-
-//Aerial Side Special Effect
-unsafe extern "C" fn ssbexo_luigi_aerial_side_special_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_TYPHOON_ACTIVE) {
-        frame(agent.lua_state_agent, 9.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("luigi_cyclone_tornado_r"), Hash40::new("luigi_cyclone_tornado_l"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, true, *EF_FLIP_NONE);
-            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_r"), false, true);
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_l"), false, true);
-        }
-        frame(agent.lua_state_agent, 43.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT(agent, Hash40::new("luigi_cyclone_finish"), Hash40::new("top"), 0, 7, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-        }
-    }
-    else {
-        frame(agent.lua_state_agent, 9.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("luigi_cyclone_tornado_r"), Hash40::new("luigi_cyclone_tornado_l"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, true, *EF_FLIP_NONE);
-        }
-        frame(agent.lua_state_agent, 34.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_r"), false, true);
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_cyclone_tornado_l"), false, true);
-        }
-        frame(agent.lua_state_agent, 43.0);
-        if macros::is_excute(agent) {
-            macros::EFFECT(agent, Hash40::new("luigi_cyclone_finish"), Hash40::new("top"), 0, 7, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        }   
-    }
-}
-
-//Grounded Side Special Sound
-unsafe extern "C" fn ssbexo_luigi_grounded_side_special_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+//Side Special Misfire ACMD
+unsafe extern "C" fn ssbexo_luigi_side_special_misfire_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_luigi_special_l01"));
+        macros::SEARCH(agent, 0, 0, Hash40::new("top"), 8.0, 0.0, 6.5, 2.5, Some(0.0), Some(6.5), Some(8.0), *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_NORMAL, 60, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false);
+        search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
+        shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("top"), 8.0, 0.0, 6.5, 2.5, 0.0, 6.5, -6.0, 0.0, 0.0, 0, false, 1.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
-    wait(agent.lua_state_agent, 37.0);
+    frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_luigi_special_l02"));
-        macros::PLAY_SE(agent, Hash40::new("vc_luigi_006"));
+        macros::SA_SET(agent, *SITUATION_KIND_AIR);
+        KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_LUIGI_SPECIAL_S_RAM);
+        macros::CORRECT(agent, *GROUND_CORRECT_KIND_AIR);
     }
-}
-
-//Aerial Side Special Sound
-unsafe extern "C" fn ssbexo_luigi_aerial_side_special_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_luigi_special_l01"));
+        macros::ATTACK(agent, 0, 0, Hash40::new("neck"), 25.0, 361, 100, 0, 20, 5.5, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_HEAD);
+        AttackModule::set_attack_keep_rumble(agent.module_accessor, 0, true);
+        JostleModule::set_status(agent.module_accessor, false);
     }
-    wait(agent.lua_state_agent, 37.0);
+    frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_luigi_special_l02"));
-        macros::PLAY_SE(agent, Hash40::new("vc_luigi_006"));
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_GROUND_CHECK);
     }
-}
-
-//Grounded Side Special Expression
-unsafe extern "C" fn ssbexo_luigi_grounded_side_special_expression(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
+        macros::ATTACK(agent, 0, 0, Hash40::new("neck"), 25.0, 361, 100, 0, 20, 5.5, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_HEAD);
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
+        WorkModule::enable_transition_term(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_TRANSITION_TERM_ID_GROUND);
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(agent.lua_state_agent, 28.0);
     if macros::is_excute(agent) {
-        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 9);
+        shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(agent.lua_state_agent, 29.0);
     if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 23.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 30.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 37.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 40.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 43.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 44.0);
-    if macros::is_excute(agent) {
-        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
-    }
-}
-
-//Aerial Side Special Expression
-unsafe extern "C" fn ssbexo_luigi_aerial_side_special_expression(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
-    }
-    frame(agent.lua_state_agent, 9.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 10.0);
-    if macros::is_excute(agent) {
-        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 9);
-    }
-    frame(agent.lua_state_agent, 16.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 23.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 30.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 6, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 37.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 40.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 43.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 44.0);
-    if macros::is_excute(agent) {
-        macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_BRAKE);
     }
 }
 
@@ -485,24 +220,52 @@ unsafe extern "C" fn ssbexo_luigi_down_special_loop_expression(agent: &mut L2CAg
     }
 }
 
-//Down Special Catch Pull ACMD
-unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_acmd(_agent: &mut L2CAgentBase) {}
+//Down Special Catch ACMD
+unsafe extern "C" fn ssbexo_luigi_down_special_catch_acmd(_agent: &mut L2CAgentBase) {}
 
-//Down Special Catch Pull Effect
-unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_effect(_agent: &mut L2CAgentBase) {}
+//Down Special Catch Effect
+unsafe extern "C" fn ssbexo_luigi_down_special_catch_effect(_agent: &mut L2CAgentBase) {}
 
-//Down Special Catch Pull Sound
-unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_sound(_agent: &mut L2CAgentBase) {}
+//Down Special Catch Sound
+unsafe extern "C" fn ssbexo_luigi_down_special_catch_sound(_agent: &mut L2CAgentBase) {}
 
 //Down Special Catch Pull Expression
-unsafe extern "C" fn ssbexo_luigi_down_special_catch_pull_expression(agent: &mut L2CAgentBase) {
+unsafe extern "C" fn ssbexo_luigi_down_special_catch_expression(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
 }
 
-//Down Special Throw ACMD
-unsafe extern "C" fn ssbexo_luigi_down_special_throw_acmd(agent: &mut L2CAgentBase) {
+//Down Special End ACMD
+unsafe extern "C" fn ssbexo_luigi_down_special_end_acmd(agent: &mut L2CAgentBase) {
+    if macros::IS_EXIST_ARTICLE(agent, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER) {
+        if macros::is_excute(agent) {
+            ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        }
+    }
+    if macros::is_excute(agent) {
+        ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
+        AttackModule::clear_all(agent.module_accessor);
+    }
+}
+
+//Down Special End Effect
+unsafe extern "C" fn ssbexo_luigi_down_special_end_effect(_agent: &mut L2CAgentBase) {}
+
+//Down Special End Sound
+unsafe extern "C" fn ssbexo_luigi_down_special_end_sound(_agent: &mut L2CAgentBase) {}
+
+//Down Special End Expression
+unsafe extern "C" fn ssbexo_luigi_down_special_end_expression(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
+//Down Special Forward Throw ACMD
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_f_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 9.0, 45, 65, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
@@ -520,8 +283,11 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_acmd(agent: &mut L2CAgentBa
     }
 }
 
-//Down Special Throw Effect
-unsafe extern "C" fn ssbexo_luigi_down_special_throw_effect(agent: &mut L2CAgentBase) {
+//Down Special Forward Throw Effect
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_f_effect(agent: &mut L2CAgentBase) {
+    let discharge_chance = WorkModule::get_int(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
+    let lr = PostureModule::lr(agent.module_accessor);
+    let offset = WorkModule::get_param_float(agent.module_accessor, hash40("height"), 0);
     frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, -3, 3, 0, 20, -90, 1.7, true, *EF_FLIP_YZ, 0.4);
@@ -540,10 +306,44 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_effect(agent: &mut L2CAgent
     if macros::is_excute(agent) {
         macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_spin_wind"), false, false);
     }
+    if discharge_chance > 1 {
+        if macros::is_excute(agent) {
+            if WorkModule::get_param_int(agent.module_accessor, hash40("param_motion"), hash40("flip")) != 0 {
+                macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -5, offset, 2, 0, 0, 0, 1.0, true, *EF_FLIP_YZ);
+            }
+            else {
+                macros::EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), -5.0 * lr, offset, 2, 0, 0, 0, 1.0, true);
+            }
+            if discharge_chance == 9 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 1.0); //White
+            }
+            else if discharge_chance == 7 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0); //Red
+            }
+            else if discharge_chance == 5 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.647, 0.0); //Orange
+            }
+            else {
+                macros::LAST_EFFECT_SET_COLOR(agent, 0.831, 0.686, 0.216); //Yellow
+            }
+        }
+    }
+    else {
+        if macros::is_excute(agent) {
+            smash::app::FighterUtil::flash_eye_info(agent.module_accessor);
+            if WorkModule::get_param_int(agent.module_accessor, hash40("param_motion"), hash40("flip")) != 0 {
+                macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -5, offset, 2, 0, 0, 0, 1.0, true, *EF_FLIP_YZ);
+            }
+            else {
+                macros::EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), -5.0 * lr, offset, 2, 0, 0, 0, 1.0, true);
+            }
+            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0); //Green
+        }
+    }
 }
 
-//Down Special Throw Sound
-unsafe extern "C" fn ssbexo_luigi_down_special_throw_sound(agent: &mut L2CAgentBase) {
+//Down Special Forward Throw Sound
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_f_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
         macros::PLAY_SE(agent, Hash40::new("se_common_throw_01"));
@@ -555,8 +355,8 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_sound(agent: &mut L2CAgentB
     }
 }
 
-//Down Special Throw Expression
-unsafe extern "C" fn ssbexo_luigi_down_special_throw_expression(agent: &mut L2CAgentBase) {
+//Down Special Forward Throw Expression
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_f_expression(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
@@ -567,75 +367,227 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_expression(agent: &mut L2CA
     }
 }
 
-//Down Special End ACMD
-unsafe extern "C" fn ssbexo_luigi_down_special_end_acmd(agent: &mut L2CAgentBase) {
-    let status_kind = StatusModule::status_kind(agent.module_accessor);
-    if [*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_LANDING].contains(&status_kind) {
-        if macros::IS_EXIST_ARTICLE(agent, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU) {
-            if macros::is_excute(agent) {
-                ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+//Down Special Back Throw ACMD
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_b_acmd(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 10.0, 45, 65, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+    }
+    frame(agent.lua_state_agent, 14.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_REVERSE_LR_FINISH_CAMERA_THROW_ORBIT);
+        macros::CHECK_FINISH_CAMERA(agent, 21, 3);
+        smash::app::lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.0);
+        smash::app::lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 10.0, y: -1.0, z: 0.0});
+        macros::FT_CATCH_STOP(agent, 5, 1);
+    }
+    frame(agent.lua_state_agent, 15.0);
+    if macros::is_excute(agent) {
+        macros::REVERSE_LR(agent);
+        let target = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+    }
+}
+
+//Down Special Back Throw Effect
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_b_effect(agent: &mut L2CAgentBase) {
+    let discharge_chance = WorkModule::get_int(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
+    let lr = PostureModule::lr(agent.module_accessor);
+    let offset = WorkModule::get_param_float(agent.module_accessor, hash40("height"), 0);
+    frame(agent.lua_state_agent, 11.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, -3, 0, 0, 230, 90, 1.7, true, *EF_FLIP_YZ, 0.4);
+        EffectModule::set_disable_render_offset_last(agent.module_accessor);
+    }
+    frame(agent.lua_state_agent, 12.0);
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 13.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), -16, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), -16, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 15.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_spin_wind"), false, false);
+    }
+    if discharge_chance > 1 {
+        if macros::is_excute(agent) {
+            if WorkModule::get_param_int(agent.module_accessor, hash40("param_motion"), hash40("flip")) != 0 {
+                macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -5, offset, 2, 0, 0, 0, 1.0, true, *EF_FLIP_YZ);
             }
-        }
-        if macros::IS_EXIST_ARTICLE(agent, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER) {
-            if macros::is_excute(agent) {
-                ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            else {
+                macros::EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), -5.0 * lr, offset, 2, 0, 0, 0, 1.0, true);
             }
-        }
-        if macros::is_excute(agent) {
-            ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, false, -1);
-            ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, false, -1);
-            ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_AIR_LASSO_FLAG_LANDING);
-        }
-        frame(agent.lua_state_agent, 2.0);
-        if macros::is_excute(agent) {
-            ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-            ArticleModule::shoot(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUIGI_STATUS_AIR_LASSO_FLAG_SHOOT_PLUNGER);
-        }
-        frame(agent.lua_state_agent, 37.0);
-        if macros::is_excute(agent) {
-            WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_AIR_LASSO_FLAG_LANDING);
+            if discharge_chance == 9 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 1.0); //White
+            }
+            else if discharge_chance == 7 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0); //Red
+            }
+            else if discharge_chance == 5 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.647, 0.0); //Orange
+            }
+            else {
+                macros::LAST_EFFECT_SET_COLOR(agent, 0.831, 0.686, 0.216); //Yellow
+            }
         }
     }
     else {
-        if macros::IS_EXIST_ARTICLE(agent, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER) {
-            if macros::is_excute(agent) {
-                ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-            }
-        }
         if macros::is_excute(agent) {
-            ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_PLUNGER, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-            AttackModule::clear_all(agent.module_accessor);
+            smash::app::FighterUtil::flash_eye_info(agent.module_accessor);
+            if WorkModule::get_param_int(agent.module_accessor, hash40("param_motion"), hash40("flip")) != 0 {
+                macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -5, offset, 2, 0, 0, 0, 1.0, true, *EF_FLIP_YZ);
+            }
+            else {
+                macros::EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), -5.0 * lr, offset, 2, 0, 0, 0, 1.0, true);
+            }
+            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0); //Green
         }
     }
 }
 
-//Down Special End Effect
-unsafe extern "C" fn ssbexo_luigi_down_special_end_effect(_agent: &mut L2CAgentBase) {}
-
-//Down Special End Sound
-unsafe extern "C" fn ssbexo_luigi_down_special_end_sound(_agent: &mut L2CAgentBase) {}
-
-//Down Special End Expression
-unsafe extern "C" fn ssbexo_luigi_down_special_end_expression(agent: &mut L2CAgentBase) {
+//Down Special Back Throw Sound
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_b_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    wait(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_luigi_rnd_attack"));
+    }
+    wait(agent.lua_state_agent, 3.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_DOWN_SE(agent, Hash40::new("se_common_down_soil_s"));
+        macros::PLAY_SE(agent, Hash40::new("se_common_kick_hit_m"));
+    }
+}
+
+//Down Special Back Throw Expression
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_b_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(agent.lua_state_agent, 15.0);
+    if macros::is_excute(agent) {
+        macros::QUAKE(agent, *CAMERA_QUAKE_KIND_M);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
+//Down Special Up Throw ACMD
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_hi_acmd(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 8.0, 90, 72, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+    }
+    frame(agent.lua_state_agent, 15.0);
+    if macros::is_excute(agent) {
+        macros::ATTACK_IGNORE_THROW(agent, 0, 0, Hash40::new("top"), 6.0, 88, 55, 0, 95, 8.5, 0.0, 8.0, 10.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_THROW);
+        AttackModule::set_catch_only_all(agent.module_accessor, true, false);
+    }
+    frame(agent.lua_state_agent, 16.0);
+    if macros::is_excute(agent) {
+        AttackModule::clear_all(agent.module_accessor);
+    }
+    frame(agent.lua_state_agent, 17.0);
+    if macros::is_excute(agent) {
+        macros::CHECK_FINISH_CAMERA(agent, -2, 24);
+        smash::app::lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
+        smash::app::lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 0.0, y: 7.0, z: 0.0});
+    }
+    frame(agent.lua_state_agent, 18.0);
+    if macros::is_excute(agent) {
+        let target = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+    }
+}
+
+//Down Special Up Throw Effect
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_hi_effect(agent: &mut L2CAgentBase) {
+    let discharge_chance = WorkModule::get_int(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
+    let lr = PostureModule::lr(agent.module_accessor);
+    let offset = WorkModule::get_param_float(agent.module_accessor, hash40("height"), 0);
+    frame(agent.lua_state_agent, 16.0);
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 18.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
+    }
+    if discharge_chance > 1 {
+        if macros::is_excute(agent) {
+            if WorkModule::get_param_int(agent.module_accessor, hash40("param_motion"), hash40("flip")) != 0 {
+                macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -5, offset, 2, 0, 0, 0, 1.0, true, *EF_FLIP_YZ);
+            }
+            else {
+                macros::EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), -5.0 * lr, offset, 2, 0, 0, 0, 1.0, true);
+            }
+            if discharge_chance == 9 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 1.0); //White
+            }
+            else if discharge_chance == 7 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0); //Red
+            }
+            else if discharge_chance == 5 {
+                macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.647, 0.0); //Orange
+            }
+            else {
+                macros::LAST_EFFECT_SET_COLOR(agent, 0.831, 0.686, 0.216); //Yellow
+            }
+        }
+    }
+    else {
+        if macros::is_excute(agent) {
+            smash::app::FighterUtil::flash_eye_info(agent.module_accessor);
+            if WorkModule::get_param_int(agent.module_accessor, hash40("param_motion"), hash40("flip")) != 0 {
+                macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_flash"), Hash40::new("sys_flash"), Hash40::new("top"), -5, offset, 2, 0, 0, 0, 1.0, true, *EF_FLIP_YZ);
+            }
+            else {
+                macros::EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), -5.0 * lr, offset, 2, 0, 0, 0, 1.0, true);
+            }
+            macros::LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0); //Green
+        }
+    }
+}
+
+//Down Special Up Throw Sound
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_hi_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    wait(agent.lua_state_agent, 15.0);
+    if macros::is_excute(agent) {
+        macros::PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+        macros::PLAY_SEQUENCE(agent, Hash40::new("seq_luigi_rnd_attack"));
+    }
+}
+
+//Down Special Up Throw Expression
+unsafe extern "C" fn ssbexo_luigi_down_special_throw_hi_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(agent.lua_state_agent, 18.0);
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        macros::QUAKE(agent, *CAMERA_QUAKE_KIND_M);
     }
 }
 
 pub fn install() {
     Agent::new("luigi")
-    .game_acmd("game_specialsstart", ssbexo_luigi_grounded_side_special_acmd, Priority::Low)
-    .game_acmd("game_specialairsstart", ssbexo_luigi_aerial_side_special_acmd, Priority::Low)
-    .effect_acmd("effect_specialsstart", ssbexo_luigi_grounded_side_special_effect, Priority::Low)
-    .effect_acmd("effect_specialairsstart", ssbexo_luigi_aerial_side_special_effect, Priority::Low)
-    .sound_acmd("sound_specialsstart", ssbexo_luigi_grounded_side_special_sound, Priority::Low)
-    .sound_acmd("sound_specialairsstart", ssbexo_luigi_aerial_side_special_sound, Priority::Low)
-    .expression_acmd("expression_specialsstart", ssbexo_luigi_grounded_side_special_expression, Priority::Low)
-    .expression_acmd("expression_specialairsstart", ssbexo_luigi_aerial_side_special_expression, Priority::Low)
+    .game_acmd("game_specials", ssbexo_luigi_side_special_acmd, Priority::Low)
+    .game_acmd("game_specialsdischarge", ssbexo_luigi_side_special_misfire_acmd, Priority::Low)
     .game_acmd("game_specialhi", ssbexo_luigi_grounded_up_special_acmd, Priority::Low)
     .game_acmd("game_specialairhi", ssbexo_luigi_aerial_up_special_acmd, Priority::Low)
     .game_acmd("game_speciallw", ssbexo_luigi_down_special_acmd, Priority::Low)
@@ -650,18 +602,10 @@ pub fn install() {
     .effect_acmd("effect_speciallwloop", ssbexo_luigi_down_special_loop_effect, Priority::Low)
     .sound_acmd("sound_speciallwloop", ssbexo_luigi_down_special_loop_sound, Priority::Low)
     .expression_acmd("expression_speciallwloop", ssbexo_luigi_down_special_loop_expression, Priority::Low)
-    .game_acmd("game_speciallwcatchpull", ssbexo_luigi_down_special_catch_pull_acmd, Priority::Low)
-    .effect_acmd("effect_speciallwcatchpull", ssbexo_luigi_down_special_catch_pull_effect, Priority::Low)
-    .sound_acmd("sound_speciallwcatchpull", ssbexo_luigi_down_special_catch_pull_sound, Priority::Low)
-    .expression_acmd("expression_speciallwcatchpull", ssbexo_luigi_down_special_catch_pull_expression, Priority::Low)
-    .game_acmd("game_speciallwthrow", ssbexo_luigi_down_special_throw_acmd, Priority::Low)
-    .game_acmd("game_specialairlwthrow", ssbexo_luigi_down_special_throw_acmd, Priority::Low)
-    .effect_acmd("effect_speciallwthrow", ssbexo_luigi_down_special_throw_effect, Priority::Low)
-    .effect_acmd("effect_specialairlwthrow", ssbexo_luigi_down_special_throw_effect, Priority::Low)
-    .sound_acmd("sound_speciallwthrow", ssbexo_luigi_down_special_throw_sound, Priority::Low)
-    .sound_acmd("sound_specialairlwthrow", ssbexo_luigi_down_special_throw_sound, Priority::Low)
-    .expression_acmd("expression_speciallwthrow", ssbexo_luigi_down_special_throw_expression, Priority::Low)
-    .expression_acmd("expression_specialairlwthrow", ssbexo_luigi_down_special_throw_expression, Priority::Low)
+    .game_acmd("game_speciallwcatch", ssbexo_luigi_down_special_catch_acmd, Priority::Low)
+    .effect_acmd("effect_speciallwcatch", ssbexo_luigi_down_special_catch_effect, Priority::Low)
+    .sound_acmd("sound_speciallwcatch", ssbexo_luigi_down_special_catch_sound, Priority::Low)
+    .expression_acmd("expression_speciallwcatch", ssbexo_luigi_down_special_catch_expression, Priority::Low)
     .game_acmd("game_speciallwend", ssbexo_luigi_down_special_end_acmd, Priority::Low)
     .game_acmd("game_specialairlwend", ssbexo_luigi_down_special_end_acmd, Priority::Low)
     .effect_acmd("effect_speciallwend", ssbexo_luigi_down_special_end_effect, Priority::Low)
@@ -670,6 +614,30 @@ pub fn install() {
     .sound_acmd("sound_specialairlwend", ssbexo_luigi_down_special_end_sound, Priority::Low)
     .expression_acmd("expression_speciallwend", ssbexo_luigi_down_special_end_expression, Priority::Low)
     .expression_acmd("expression_specialairlwend", ssbexo_luigi_down_special_end_expression, Priority::Low)
+    .game_acmd("game_speciallwthrowf", ssbexo_luigi_down_special_throw_f_acmd, Priority::Low)
+    .game_acmd("game_specialairlwthrowf", ssbexo_luigi_down_special_throw_f_acmd, Priority::Low)
+    .effect_acmd("effect_speciallwthrowf", ssbexo_luigi_down_special_throw_f_effect, Priority::Low)
+    .effect_acmd("effect_specialairlwthrowf", ssbexo_luigi_down_special_throw_f_effect, Priority::Low)
+    .sound_acmd("sound_speciallwthrowf", ssbexo_luigi_down_special_throw_f_sound, Priority::Low)
+    .sound_acmd("sound_specialairlwthrowf", ssbexo_luigi_down_special_throw_f_sound, Priority::Low)
+    .expression_acmd("expression_speciallwthrowf", ssbexo_luigi_down_special_throw_f_expression, Priority::Low)
+    .expression_acmd("expression_specialairlwthrowf", ssbexo_luigi_down_special_throw_f_expression, Priority::Low)
+    .game_acmd("game_speciallwthrowb", ssbexo_luigi_down_special_throw_b_acmd, Priority::Low)
+    .game_acmd("game_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_acmd, Priority::Low)
+    .effect_acmd("effect_speciallwthrowb", ssbexo_luigi_down_special_throw_b_effect, Priority::Low)
+    .effect_acmd("effect_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_effect, Priority::Low)
+    .sound_acmd("sound_speciallwthrowb", ssbexo_luigi_down_special_throw_b_sound, Priority::Low)
+    .sound_acmd("sound_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_sound, Priority::Low)
+    .expression_acmd("expression_speciallwthrowb", ssbexo_luigi_down_special_throw_b_expression, Priority::Low)
+    .expression_acmd("expression_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_expression, Priority::Low)
+    .game_acmd("game_speciallwthrowhi", ssbexo_luigi_down_special_throw_hi_acmd, Priority::Low)
+    .game_acmd("game_specialairlwthrowhi", ssbexo_luigi_down_special_throw_hi_acmd, Priority::Low)
+    .effect_acmd("effect_speciallwthrowhi", ssbexo_luigi_down_special_throw_hi_effect, Priority::Low)
+    .effect_acmd("effect_specialairlwthrowhi", ssbexo_luigi_down_special_throw_hi_effect, Priority::Low)
+    .sound_acmd("sound_speciallwthrowhi", ssbexo_luigi_down_special_throw_hi_sound, Priority::Low)
+    .sound_acmd("sound_specialairlwthrowhi", ssbexo_luigi_down_special_throw_hi_sound, Priority::Low)
+    .expression_acmd("expression_speciallwthrowhi", ssbexo_luigi_down_special_throw_hi_expression, Priority::Low)
+    .expression_acmd("expression_specialairlwthrowhi", ssbexo_luigi_down_special_throw_hi_expression, Priority::Low)
     .install()
     ;
 }

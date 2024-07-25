@@ -4,7 +4,7 @@ use super::*;
 unsafe extern "C" fn ssbexo_armstrong_entry_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 39.0);
     if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_machstomp"), Hash40::new("top"), 0, 0, 0.0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
+        macros::EFFECT(agent, Hash40::new("sys_machstamp"), Hash40::new("top"), 0, 0, 0.0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, true);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
     }
     frame(agent.lua_state_agent, 43.0);

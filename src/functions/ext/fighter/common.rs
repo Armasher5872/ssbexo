@@ -17,6 +17,12 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app24FighterSpecializer_Luigi14delete_plungerERNS_7FighterEb"]
 	pub fn delete_plunger(fighter: *mut smash::app::Fighter, param: bool) -> u64;
 
+    #[link_name = "\u{1}_ZN3app24FighterSpecializer_Sonic17start_final_sonicERNS_7FighterE"]
+	pub fn start_final_sonic(instance: *mut smash::app::Fighter) -> u64;
+
+    #[link_name = "\u{1}_ZN3app24FighterSpecializer_Sonic24start_final_sonic_cameraERNS_7FighterE"]
+	pub fn start_final_sonic_camera(instance: *mut smash::app::Fighter) -> u64;
+
     #[link_name = "\u{1}_ZN3app25FighterSpecializer_Dedede29end_special_n_shot_object_hitERNS_7FighterE"]
 	pub fn end_special_n_shot_object_hit(fighter: *mut smash::app::Fighter) -> u64;
 

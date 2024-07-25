@@ -41,7 +41,7 @@ unsafe fn status_damageflyroll_main(fighter: &mut L2CFighterCommon) -> L2CValue 
             return 0.into();
         }
         if !FighterStopModuleImpl::is_damage_stop(fighter.module_accessor) {
-            if fighter.sub_AirChkDamageReflectWall() || fighter.sub_AirChkDamageReflectCeil() || fighter.sub_AirChkDamageReflectFloor() {
+            if fighter.sub_AirChkDamageReflectWall().get_bool() || fighter.sub_AirChkDamageReflectCeil().get_bool() || fighter.sub_AirChkDamageReflectFloor().get_bool() {
                 return 0.into();
             }
         }

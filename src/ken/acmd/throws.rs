@@ -55,7 +55,7 @@ unsafe extern "C" fn ssbexo_ken_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    Agent::new("ike")
+    Agent::new("ken")
     .game_acmd("game_catch", ssbexo_ken_grab_acmd, Priority::Low)
     .game_acmd("game_catchdash", ssbexo_ken_dash_grab_acmd, Priority::Low)
     .game_acmd("game_catchturn", ssbexo_ken_pivot_grab_acmd, Priority::Low)

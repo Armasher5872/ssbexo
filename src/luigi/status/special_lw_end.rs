@@ -7,22 +7,29 @@ unsafe extern "C" fn luigi_special_lw_end_pre_status(fighter: &mut L2CFighterCom
     0.into()
 }
 
-unsafe extern "C" fn luigi_special_lw_end_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let lr = PostureModule::lr(fighter.module_accessor);
-    fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw_end"), L2CValue::Hash40s("special_air_lw_end"), false.into());
-    if lr == -1.0 {
-        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("special_lw_end_l"), false, -1.0);
-    }
-    else {
-        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("special_lw_end"), false, -1.0);
-    }
-    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+unsafe extern "C" fn luigi_special_lw_end_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    if situation_kind == *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+    }
+    0.into()
+}
+
+unsafe extern "C" fn luigi_special_lw_end_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let lr = PostureModule::lr(fighter.module_accessor);
+    fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw_end"), L2CValue::Hash40s("special_air_lw_end"), false.into());
+    if lr == -1.0 {
+        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("catch_l"), false, -1.0);
+        ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 13.0);
+    }
+    else {
+        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, Hash40::new("catch"), false, -1.0);
+        ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, 13.0);
     }
     fighter.sub_shift_status_main(L2CValue::Ptr(luigi_special_lw_end_loop as *const () as _))
 }
@@ -76,6 +83,7 @@ unsafe extern "C" fn luigi_special_lw_end_end_status(fighter: &mut L2CFighterCom
 pub fn install() {
     Agent::new("luigi")
     .status(Pre, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END, luigi_special_lw_end_pre_status)
+    .status(Init, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END, luigi_special_lw_end_init_status)
     .status(Main, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END, luigi_special_lw_end_main_status)
     .status(End, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END, luigi_special_lw_end_end_status)
     .install()

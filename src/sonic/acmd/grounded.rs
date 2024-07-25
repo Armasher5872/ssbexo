@@ -1,109 +1,5 @@
 use super::*;
 
-//Win 2 Effect
-unsafe extern "C" fn ssbexo_sonic_win_2_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_SONIC {
-        if macros::is_excute(agent) {
-            macros::EFFECT_FOLLOW_arg11(agent, Hash40::new("sonic_runtrace"), Hash40::new("throw"), 0, 0, 0, 180, 180, 0, -1, true, WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR));
-            macros::LAST_EFFECT_SET_RATE(agent, 1.09);
-        }
-        else {
-            if macros::is_excute(agent) {
-                macros::EFFECT_FOLLOW_arg11(agent, Hash40::new("sonic_runtrace"), Hash40::new("throw"), 0, 0, 0, 0, 180, 0, 1, true, WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR));
-                macros::LAST_EFFECT_SET_RATE(agent, 1.09);
-            }
-        }
-    }
-    for _ in 0..11 {
-        if macros::is_excute(agent) {
-            macros::FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("throw"), 5, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-            macros::LAST_EFFECT_SET_RATE(agent, 1.5);
-        }
-        wait(agent.lua_state_agent, 2.0);
-        if macros::is_excute(agent) {
-            macros::FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("throw"), 5, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-            macros::LAST_EFFECT_SET_RATE(agent, 1.5);
-        }
-        wait(agent.lua_state_agent, 2.0);
-    }
-    frame(agent.lua_state_agent, 43.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.675, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.78);
-        macros::EFFECT(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 12.5, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.55);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), -9.869, 19.497, -1.426, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 9.665, 7.789, -1.426, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-    }
-    frame(agent.lua_state_agent, 46.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.675, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.78);
-        macros::EFFECT(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 12.5, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.55);
-    }
-    frame(agent.lua_state_agent, 50.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.675, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.78);
-        macros::EFFECT(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 12.5, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.55);
-    }
-    frame(agent.lua_state_agent, 52.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), -5.595, 16.493, -0.235, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 2.638, 11.604, -0.071, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-    }
-    frame(agent.lua_state_agent, 55.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.675, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.78);
-        macros::EFFECT(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 12.5, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.55);
-    }
-    frame(agent.lua_state_agent, 61.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.675, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.78);
-        macros::EFFECT(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 12.5, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.55);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), -5.424, 11.947, -0.091, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 7.699, 17.179, -0.058, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-    }
-    frame(agent.lua_state_agent, 70.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.675, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.78);
-        macros::EFFECT(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 12.5, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_ALPHA(agent, 0.55);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), -9.841, 13.105, -0.058, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 9.715, 11.046, -0.782, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-    }
-    frame(agent.lua_state_agent, 79.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), -9.869, 7.789, -1.426, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-        macros::EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 9.665, 19.497, -1.426, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.7);
-    }
-    frame(agent.lua_state_agent, 88.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.675, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_RATE(agent, 0.78);
-    }
-}
-
-//Win 2 Wait Effect
-unsafe extern "C" fn ssbexo_sonic_win_2_wait_effect(_agent: &mut L2CAgentBase) {}
-
 //Jab 1 Effect
 unsafe extern "C" fn ssbexo_sonic_jab_1_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
@@ -267,8 +163,6 @@ unsafe extern "C" fn ssbexo_sonic_dash_attack_effect(agent: &mut L2CAgentBase) {
 
 pub fn install() {
     Agent::new("sonic")
-    .effect_acmd("effect_win2", ssbexo_sonic_win_2_effect, Priority::Low)
-    .effect_acmd("effect_win2wait", ssbexo_sonic_win_2_wait_effect, Priority::Low)
     .effect_acmd("effect_attack11", ssbexo_sonic_jab_1_effect, Priority::Low)
     .game_acmd("game_attack12", ssbexo_sonic_jab_2_acmd, Priority::Low)
     .effect_acmd("effect_attack12", ssbexo_sonic_jab_2_effect, Priority::Low)

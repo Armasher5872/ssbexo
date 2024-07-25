@@ -67,7 +67,6 @@ unsafe extern "C" fn jack_start_initialization(vtable: u64, fighter: &mut Fighte
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    WorkModule::set_float(boma, 0.0, FIGHTER_JACK_INSTANCE_WORK_ID_FLOAT_CURRENT_REBEL_GAUGE);
     original!()(vtable, fighter)
 }
 
@@ -125,7 +124,6 @@ unsafe extern "C" fn jack_reset_initialization(vtable: u64, fighter: &mut Fighte
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    WorkModule::set_float(boma, 0.0, FIGHTER_JACK_INSTANCE_WORK_ID_FLOAT_CURRENT_REBEL_GAUGE);
     original!()(vtable, fighter)
 }
 
@@ -188,9 +186,6 @@ unsafe extern "C" fn jack_death_initialization(vtable: u64, fighter: &mut Fighte
 unsafe extern "C" fn jack_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let rebel_gauge = WorkModule::get_float(boma, 0x4D);
-    if !WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE_EXIST) {
-        WorkModule::set_float(boma, rebel_gauge, FIGHTER_JACK_INSTANCE_WORK_ID_FLOAT_CURRENT_REBEL_GAUGE);
-    }
     if WorkModule::is_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE_EXIST) && rebel_gauge <= 0.0 {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
     }

@@ -5,7 +5,6 @@ use {
             consts::*,
             dolly::*,
             edge::*,
-            jack::*,
             murabito::*,
             variables::*,
         }

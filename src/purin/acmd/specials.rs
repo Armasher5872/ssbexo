@@ -41,7 +41,6 @@ unsafe extern "C" fn ssbexo_purin_neutral_special_expression(agent: &mut L2CAgen
 
 //Disarming Voice ACMD
 unsafe extern "C" fn ssbexo_purin_disarming_voice_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 361, 20, 0, 40, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
     }
@@ -49,7 +48,6 @@ unsafe extern "C" fn ssbexo_purin_disarming_voice_acmd(agent: &mut L2CAgentBase)
 
 //Disarming Voice Effect
 unsafe extern "C" fn ssbexo_purin_disarming_voice_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1000, true);
     }

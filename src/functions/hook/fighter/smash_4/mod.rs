@@ -9,8 +9,8 @@ use {
             }
         },
         var::{
-            bayonetta::*,
             consts::*,
+            ken::*,
             link::*,
             littlemac::*,
             miiswordsman::*,

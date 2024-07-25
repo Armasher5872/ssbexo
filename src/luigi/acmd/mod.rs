@@ -4,14 +4,13 @@ use {
         app::{
             lua_bind::*,
             sv_animcmd::*,
-            sv_module_access::*,
             *
         },
+        hash40,
         lib::lua_const::*,
         lua2cpp::*,
         phx::{
             Hash40,
-            Vector2f,
             Vector3f
         }
     },

@@ -33,6 +33,7 @@ use {
 mod damage;
 mod damageair;
 mod damagefly;
+mod damageflyroll;
 mod damagelanding;
 //mod damagesleep;
 mod damagesleepfall;
@@ -46,6 +47,7 @@ pub fn install() {
     damage::install();
     damageair::install();
     damagefly::install();
+    damageflyroll::install();
     damagelanding::install();
     //damagesleep::install();
     damagesleepfall::install();

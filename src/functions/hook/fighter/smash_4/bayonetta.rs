@@ -3,7 +3,6 @@ use super::*;
 const BAYONETTA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x819430; //Shared
 const BAYONETTA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x819440; //Shared
 const BAYONETTA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x81a050; //Bayonetta only
-const BAYONETTA_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x81b450; //Shared
 
 //Bayonetta Startup Initialization
 #[skyline::hook(offset = BAYONETTA_VTABLE_START_INITIALIZATION_OFFSET)]
@@ -179,29 +178,10 @@ unsafe extern "C" fn bayonetta_death_initialization(vtable: u64, fighter: &mut F
     original!()(vtable, fighter)
 }
 
-//Bayonetta Once Per Fighter Frame
-#[skyline::hook(offset = BAYONETTA_VTABLE_ONCE_PER_FIGHTER_FRAME)]
-unsafe extern "C" fn bayonetta_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let status_kind = StatusModule::status_kind(boma);
-    let situation_kind = StatusModule::situation_kind(boma);
-    if fighter.battle_object.kind == *FIGHTER_KIND_BAYONETTA as u32 {
-        if ![FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F_DASH, FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F_SMASH, FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_U_SMASH, FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_D_SMASH].contains(&status_kind)
-        && situation_kind != *SITUATION_KIND_GROUND {
-            WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
-        }
-        else {
-            WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
-        }
-    }
-    original!()(vtable, fighter)
-}
-
 pub fn install() {
 	skyline::install_hooks!(
         bayonetta_start_initialization,
         bayonetta_reset_initialization,
-        bayonetta_death_initialization,
-        bayonetta_opff
+        bayonetta_death_initialization
     );
 }

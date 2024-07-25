@@ -2,12 +2,6 @@ use super::*;
 
 //Forward Smash ACMD
 unsafe extern "C" fn ssbexo_purin_forward_smash_acmd(agent: &mut L2CAgentBase) {
-    /*
-    if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_PURIN_GENERATE_ARTICLE_MICROPHONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_PURIN_GENERATE_ARTICLE_MICROPHONE, false, -1);
-    }
-    */
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
@@ -28,12 +22,6 @@ unsafe extern "C" fn ssbexo_purin_forward_smash_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }
-    /*
-    frame(agent.lua_state_agent, 40.0);
-    if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_PURIN_GENERATE_ARTICLE_MICROPHONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    }
-    */
 }
 
 //Forward Smash Effect
@@ -188,12 +176,6 @@ unsafe extern "C" fn ssbexo_purin_up_smash_expression(agent: &mut L2CAgentBase) 
 
 //Down Smash ACMD
 unsafe extern "C" fn ssbexo_purin_down_smash_acmd(agent: &mut L2CAgentBase) {
-    /*
-    if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_PURIN_GENERATE_ARTICLE_MICROPHONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_PURIN_GENERATE_ARTICLE_MICROPHONE, false, -1);
-    }
-    */
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
@@ -212,12 +194,6 @@ unsafe extern "C" fn ssbexo_purin_down_smash_acmd(agent: &mut L2CAgentBase) {
         lua_args!(agent, *SITUATION_KIND_AIR);
         SA_SET(agent.lua_state_agent);
     }
-    /*
-    frame(agent.lua_state_agent, 40.0);
-    if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_PURIN_GENERATE_ARTICLE_MICROPHONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    }
-    */
 }
 
 //Down Smash Effect

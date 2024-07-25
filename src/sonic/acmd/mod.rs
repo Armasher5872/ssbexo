@@ -21,18 +21,20 @@ use {
     smashline::*,
 };
 
-mod grounded;
-mod tilts;
-mod smashes;
 mod aerials;
-mod throws;
+mod grounded;
+mod other;
+mod smashes;
 mod specials;
+mod throws;
+mod tilts;
 
 pub fn install() {
-  grounded::install();
-  tilts::install();
-  smashes::install();
-  aerials::install();
-  throws::install();
-  specials::install();
+    aerials::install();
+    grounded::install();
+    other::install();
+    smashes::install();
+    specials::install();
+    throws::install();
+    tilts::install();
 }

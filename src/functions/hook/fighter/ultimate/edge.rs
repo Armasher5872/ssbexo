@@ -3,7 +3,7 @@ use super::*;
 const EDGE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x819430; //Shared
 const EDGE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x819440; //Shared
 const EDGE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x9da970; //Sephiroth only
-const EDGE_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x81b450; //Shared
+const EDGE_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x9db070; //Sephiroth only
 
 //Sephiroth Startup Initialization
 #[skyline::hook(offset = EDGE_VTABLE_START_INITIALIZATION_OFFSET)]

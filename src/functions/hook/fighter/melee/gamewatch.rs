@@ -3,7 +3,6 @@ use super::*;
 const GAMEWATCH_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xa80d30; //Game & Watch only
 const GAMEWATCH_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa80fd0; //Game & Watch only
 const GAMEWATCH_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xa81240; //Game & Watch only
-const GAMEWATCH_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa815d0; //Game & Watch only
 
 //Mr. Game & Watch Startup Initialization
 #[skyline::hook(offset = GAMEWATCH_VTABLE_START_INITIALIZATION_OFFSET)]
@@ -173,42 +172,10 @@ unsafe extern "C" fn gamewatch_death_initialization(vtable: u64, fighter: &mut F
     original!()(vtable, fighter)
 }
 
-//Mr. Game & Watch Once Per Fighter Frame
-#[skyline::hook(offset = GAMEWATCH_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn gamewatch_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-	let motion_kind = MotionModule::motion_kind(boma);
-	let status_kind = StatusModule::status_kind(boma);
-    let situation_kind = StatusModule::situation_kind(boma);
-	let sticky = ControlModule::get_stick_y(boma);
-	//Neutral Special
-	if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
-	&& situation_kind == *SITUATION_KIND_AIR 
-	&& fighter.battle_object.is_cat_flag(Cat2::FallJump)
-	&& sticky < -0.66
-	&& KineticModule::get_sum_speed_y(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) <= 0.0 {
-		WorkModule::set_flag(boma, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
-	};
-	//Up Special
-	if [*FIGHTER_GAMEWATCH_STATUS_KIND_SPECIAL_HI_FALL, *FIGHTER_GAMEWATCH_STATUS_KIND_SPECIAL_HI_CLOSE].contains(&status_kind) {
-		if ControlModule::check_button_on_trriger(boma, *CONTROL_PAD_BUTTON_JUMP) {
-			if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) 
-			&& situation_kind == *SITUATION_KIND_AIR {
-				StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
-			};
-			if situation_kind == *SITUATION_KIND_GROUND {
-				StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
-			};
-		}
-	}
-    original!()(vtable, fighter)
-}
-
 pub fn install() {
     skyline::install_hooks!(
         gamewatch_start_initialization,
         gamewatch_reset_initialization,
-        gamewatch_death_initialization,
-        gamewatch_opff
+        gamewatch_death_initialization
     );
 }

@@ -9,10 +9,7 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        phx::Hash40
     },
     smash_script::*,
     smashline::*,
