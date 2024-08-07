@@ -1,13 +1,7 @@
 use {
     crate::functions::{
-        ext::{
-            fighter::common::*,
-            utility::misc::*,
-        },
-        var::{
-            globals::*,
-            variables::*,
-        }
+        ext::utility::misc::*,
+        var::variables::*,
     },
     smash::{
         app::{
@@ -15,10 +9,7 @@ use {
             *
         },
         lib::lua_const::*,
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        }
+        lua2cpp::*,
     },
     smashline::*,
 };

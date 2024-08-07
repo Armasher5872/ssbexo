@@ -42,11 +42,6 @@ unsafe fn status_appeal_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         if fighter_kind == *FIGHTER_KIND_FOX && (41.0..=44.0).contains(&frame) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             fighter.change_status(FIGHTER_FOX_STATUS_KIND_SPECIAL_HI_RUSH.into(), false.into());
         }
-        //Shield Specials
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL) {
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
-        }
         /*   END OF NEW ADDITIONS   */
         if MotionModule::is_end(fighter.module_accessor) {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());

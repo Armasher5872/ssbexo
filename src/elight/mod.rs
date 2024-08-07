@@ -1,6 +1,10 @@
 use {
+  crate::functions::var::element::*,
   smash::{
-    app::lua_bind::*,
+    app::{
+      lua_bind::*,
+      *
+    },
     lib::lua_const::*,
     lua2cpp::L2CFighterCommon
   },

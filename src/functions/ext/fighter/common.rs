@@ -1,3 +1,4 @@
+#![allow(improper_ctypes_definitions)]
 use super::*;
 
 //A variety of extern C functions mainly regarding custom game modes and other offsets in Main
@@ -78,24 +79,6 @@ pub unsafe fn get_table_value(table: *mut smash2::lib::L2CTable, key: &str) -> s
     (*table).get_map(hash).unwrap().clone()
 }
 
-//Shield Specials
-pub unsafe extern "C" fn if_shield_special(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let kind = smash::app::utility::get_kind(&mut *fighter.module_accessor);
-    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
-    && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
-        if kind == *FIGHTER_KIND_NESS {
-            fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_N.into(),true.into());
-            return true.into();
-        }
-        if [*FIGHTER_KIND_PICHU, *FIGHTER_KIND_PZENIGAME].contains(&kind) {
-            fighter.change_status(FIGHTER_STATUS_KIND_APPEAL.into(),true.into());
-            return true.into();
-        }
-    }
-    return false.into();
-}
-
 pub unsafe extern "C" fn empty_waza_customize() -> L2CValue {
     0.into()
 }
@@ -120,4 +103,24 @@ pub unsafe fn set_move_customizer(fighter: &mut L2CFighterCommon, customizer: un
     fighter.global_table["move_customizer_set"].assign(&L2CValue::Bool(true));
     fighter.global_table["move_customizer_original"].assign(&waza_customize_control);
     fighter.global_table[WAZA_CUSTOMIZE_CONTROL].assign(&L2CValue::Ptr(customizer as *const () as _));
+}
+
+//Gets the necessary grab animation for throws
+pub unsafe extern "C" fn grabbed_anim_selector(fighter: &mut L2CFighterCommon, anim_name: &str, mot_rate: f32) {
+    let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+    let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+    if capture_id != 0x50000000 {
+        let motion_share = WorkModule::get_param_int(capture_boma,0xcad2ee25e,0xc07d88ea0);
+        let mut motion = hash40(anim_name);
+        if motion_share == *FIGHTER_MOTION_SHARE_TYPE_TARO {
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_DX);
+        }
+        else if motion_share == *FIGHTER_MOTION_SHARE_TYPE_GIRL {
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_GIRL);
+        }
+        else if motion_share == *FIGHTER_MOTION_SHARE_TYPE_BIG {
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_BIG);
+        }
+        MotionModule::change_motion(capture_boma, Hash40::new_raw(motion), 0.0, mot_rate, false, 0.0, false, false);
+    }
 }

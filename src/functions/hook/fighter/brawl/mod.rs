@@ -5,6 +5,7 @@ use {
             utility::{
                 boma_ext::*,
                 commandcat::*,
+                misc::*,
             }
         },
         var::{
@@ -14,6 +15,7 @@ use {
             ike::*,
             kirby::*,
             link::*,
+            lucas::*,
             metaknight::*,
             murabito::*,
             pfushigisou::*,

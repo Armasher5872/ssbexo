@@ -106,9 +106,10 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
 }
 
-//Status Guard Main Common, makes it to where shield breaks now put you into the Dizzy End animation
+//Status Guard Main Common, handles shield special transitioning
 #[skyline::hook(replace = L2CFighterCommon_status_guard_main_common)]
 unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
         let min_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME);
         if min_frame <= 0 {
@@ -116,6 +117,24 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
                 fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), true.into());
                 return true.into();
             }
+        }
+    }
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        if fighter_kind == *FIGHTER_KIND_NESS {
+            if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP) {
+                fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_GUARD.into(), false.into());
+            }
+            else {
+                fighter.change_status(FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST.into(), false.into());
+            } 
+        }
+        if fighter_kind == *FIGHTER_KIND_LUCAS {
+            if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_LUCAS_INSTANCE_WORK_ID_FLAG_DEFENSE_UP) {
+                fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_GUARD.into(), false.into());
+            }
+            else {
+                fighter.change_status(FIGHTER_LUCAS_STATUS_KIND_SPECIAL_GUARD_BURST.into(), false.into());
+            }   
         }
     }
     false.into()

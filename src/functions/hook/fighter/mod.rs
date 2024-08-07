@@ -1,7 +1,11 @@
 use {
-    crate::functions::var::{
-        link::*,
-        variables::*,
+    crate::functions::{
+        ext::utility::boma_ext::*,
+        var::{
+            link::*,
+            ness::*,
+            variables::*,
+        }
     },
     smash::{
         app::{
@@ -41,4 +45,12 @@ Fighters have 146 entries
 Weapon Vtable Location: 710529d400
 
 Weapons presumably have 216 entries, need to research if weapons have a repeating pattern akin to fighters
+
+Weapon On Attack Vtable Entry: 29
+
+Item Vtable Location: 
+
+Article Limit Location: 710064b730
+
+Also ordered in the same manner as article vtables
 */

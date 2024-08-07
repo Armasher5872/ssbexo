@@ -37,7 +37,6 @@ unsafe extern "C" fn pzenigame_start_initialization(vtable: u64, fighter: &mut F
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
     WorkModule::set_flag(boma, sv_information::is_ready_go(), FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO);
-    WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
@@ -52,6 +51,7 @@ unsafe extern "C" fn pzenigame_start_initialization(vtable: u64, fighter: &mut F
     SIZE1[entry_id] = 0.0;
     SIZE2[entry_id] = 0.0;
     SIZE3[entry_id] = 0.0;
+    WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     FULL_HOP_ENABLE_DELAY[entry_id] = 0;
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
@@ -95,7 +95,6 @@ unsafe extern "C" fn pzenigame_reset_initialization(vtable: u64, fighter: &mut F
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
         WorkModule::set_flag(boma, sv_information::is_ready_go(), FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO);
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
@@ -110,6 +109,7 @@ unsafe extern "C" fn pzenigame_reset_initialization(vtable: u64, fighter: &mut F
         SIZE1[entry_id] = 0.0;
         SIZE2[entry_id] = 0.0;
         SIZE3[entry_id] = 0.0;
+        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
         FULL_HOP_ENABLE_DELAY[entry_id] = 0;
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
@@ -119,6 +119,7 @@ unsafe extern "C" fn pzenigame_reset_initialization(vtable: u64, fighter: &mut F
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
+    original!()(vtable, fighter)
 }
 
 //Squirtle Death Initialization
@@ -149,7 +150,6 @@ unsafe extern "C" fn pzenigame_death_initialization(vtable: u64, fighter: &mut F
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
-    WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
@@ -164,6 +164,7 @@ unsafe extern "C" fn pzenigame_death_initialization(vtable: u64, fighter: &mut F
     SIZE1[entry_id] = 0.0;
     SIZE2[entry_id] = 0.0;
     SIZE3[entry_id] = 0.0;
+    WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     FULL_HOP_ENABLE_DELAY[entry_id] = 0;
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
@@ -190,60 +191,11 @@ unsafe extern "C" fn pzenigame_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let pos_x = PostureModule::pos_x(boma);
         let pos_y = PostureModule::pos_y(boma);
         let lr = PostureModule::lr(boma);
-        let point_offset_x1 = lr*(RAIN_DANCE_X1[entry_id]-pos_x);
-        let point_offset_x2 = lr*(RAIN_DANCE_X2[entry_id]-pos_x);
-        let point_offset_y1 = RAIN_DANCE_Y1[entry_id]-pos_y;
         if [hash40("attack_s4_s"), hash40("attack_s4_hi"), hash40("attack_s4_lw")].contains(&motion_kind)
         && (14.0..17.0).contains(&frame) {
             if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_LOOP, true);
             }
-        }
-        if status_kind == *FIGHTER_STATUS_KIND_APPEAL
-        && WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL) {
-            MotionModule::change_motion(boma, Hash40::new("special_shield"), 1.0, 1.0, false, 0.0, false, false);
-        }
-        if motion_kind == hash40("special_shield") {
-            WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
-        };
-        if motion_kind == hash40("special_shield") && frame == 50.0 {
-            if !RAIN_DANCE_ACTIVE[entry_id] || RAIN_DANCE_FRAME[entry_id] != 600.0 {
-                RAIN_DANCE_ACTIVE[entry_id] = true;
-                RAIN_DANCE_FRAME[entry_id] = 600.0;
-                RAIN_DANCE_X1[entry_id] = pos_x - (18.0 * lr);
-                RAIN_DANCE_X2[entry_id] = pos_x + (18.0 * lr);
-                RAIN_DANCE_Y1[entry_id] = pos_y;
-                RAIN_DANCE_Y2[entry_id] = pos_y + 20.0;
-            }
-        }
-        if (pos_x <= RAIN_DANCE_X2[entry_id] && pos_x >= RAIN_DANCE_X1[entry_id]) && (pos_y >= RAIN_DANCE_Y1[entry_id] && pos_y <= RAIN_DANCE_Y2[entry_id]) && IN_RAIN_DANCE[entry_id] != true {
-            IN_RAIN_DANCE[entry_id] = true;
-        }
-        else {
-            IN_RAIN_DANCE[entry_id] = false;
-        }
-        if RAIN_DANCE_ACTIVE[entry_id] {
-            RAIN_DANCE_FRAME[entry_id] -= 1.0;
-            if RAIN_DANCE_FRAME[entry_id] <= 600.0 && RAIN_DANCE_FRAME[entry_id] >= 598.0 {
-                EffectModule::kill_kind(boma, Hash40::new("sys_ground_shockwave"), false, false);
-            }
-            else if RAIN_DANCE_FRAME[entry_id] < 598.0 && RAIN_DANCE_FRAME[entry_id] % 30.0 == 0.0 {
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x1, y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x2, y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x1-(12.0*lr), y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x2+(12.0*lr), y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-            }
-            if RAIN_DANCE_FRAME[entry_id] <= 0.0 {
-                RAIN_DANCE_ACTIVE[entry_id] = false;
-            }
-        }
-        if !RAIN_DANCE_ACTIVE[entry_id] {
-            RAIN_DANCE_FRAME[entry_id] = -1.0;
-            RAIN_DANCE_X1[entry_id] = 0.0;
-            RAIN_DANCE_X2[entry_id] = 0.0;
-            RAIN_DANCE_Y1[entry_id] = 0.0;
-            RAIN_DANCE_Y2[entry_id] = 0.0;
-            EffectModule::kill_kind(boma, Hash40::new("sys_ground_shockwave"), false, false);
         }
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
             if situation_kind == *SITUATION_KIND_AIR {
@@ -322,7 +274,6 @@ unsafe extern "C" fn pzenigame_respawn_initialization(vtable: u64, fighter: &mut
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
@@ -337,6 +288,7 @@ unsafe extern "C" fn pzenigame_respawn_initialization(vtable: u64, fighter: &mut
         SIZE1[entry_id] = 0.0;
         SIZE2[entry_id] = 0.0;
         SIZE3[entry_id] = 0.0;
+        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
         FULL_HOP_ENABLE_DELAY[entry_id] = 0;
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);

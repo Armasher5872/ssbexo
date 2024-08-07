@@ -3,6 +3,8 @@ use {
     crate::functions::var::{
         consts::*,
         globals::*,
+        ness::*,
+        lucas::*,
         sonic::*,
     },
     smash::{

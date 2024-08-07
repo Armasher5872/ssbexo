@@ -1,10 +1,17 @@
 use {
     crate::functions::{
-        ext::fighter::murabito_shizue_common::*,
+        ext::{
+            fighter::murabito_shizue_common::*,
+            utility::{
+                boma_ext::*,
+                commandcat::*,
+            }
+        },
         var::{
             consts::*,
             dolly::*,
             edge::*,
+            element::*,
             murabito::*,
             variables::*,
         }

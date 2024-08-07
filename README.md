@@ -58,10 +58,10 @@ Marth changes with new Dair and Crescent Slash
 Fully Decloned Lucina with an Electrical Sword, a reworked moveset, and a weapon swap
 (Planned) Young Link with reworked specials based on the Majora's Mask Masks
 (Planned) Fully Decloned Ganondorf based around strong moves, heavy neutral emphasis, and deception
-(Planned) Reworked Mewtwo with Psychic Normals, Float, Future Sight, and general high skill testing gameplay
+Reworked Mewtwo with Psychic Normals, Float, Future Sight, and general high skill testing gameplay
 (Planned) Roy Changes
 (Planned) Reworked Chrom based around a greatsword and wind elements
-(Planned) Mr. Game & Watch Changes
+Mr. Game & Watch with less spammy Smashes, Melee Nair, Smash 4 Fair, Smash 4 Uair, Melee Up Special and Melee Down Special
 
 Brawl
 
@@ -76,13 +76,13 @@ Ike with Brawl Fair, Ragnallian Slash, and Eruption Down Special
 (Planned) Squirtle with Bubble
 Ivysaur with Seed Bomb (Planned to become Sludge Bomb)
 Charizard with Dragon Rush, Flame Pledge, and Brawl Fair
-(Planned) Diddy Kong Changes
-(Planned) Lucas Changes
+Diddy Kong with Brawl Dash Attack, Breakdance Down Smash, and Boombox Victory
+Lucas with PSI Defense Up and PSI Counter
 Reworked Sonic focused around rushdown, with moves like Sonic Updraft, Star Shattering Kick, Sonic Flare, Instashield, Humming Top Trick, Stomp, Boost, and Bounce Bracelet/Drop Dash
 King Dedede with inspiration from Loxodont in Rivals 2, like King's Scepter, Brawl Fair, Reworked Gordo, and Storable Jet Hammer
 (Planned) Olimar Changes
 Lucario with Hitflow (Planned to be changed later on into a Mega Evolution gimmick)
-(Planned) ROB Changes
+ROB with Snaking and Power Boosting
 (Planned) Toon Link with Skull Hammer and Great Hurricane Slash
 Wolf with new Up Tilt and Jump Cancelable Wolf Flash
 
@@ -99,14 +99,14 @@ Mii Swordfighter with reworked aerials, and specials, made to be more akin to ot
 (Planned) Palutena with Super Speed
 (Planned) Pac-Man Changes
 (Planned) Robin Changes
-(Planned) Shulk with Smash 4 Bair and updated Aesthetics on Monado Arts
+Shulk with Smash 4 Bair and updated Aesthetics on Monado Arts
 (Planned) Bowser Jr Changes
-(Planned) Duck Hunt Changes
+Duck Hunt with QoL buffs
 Ryu with Drive Rush Dash Attack, Hasogeki, and Projectile Invincible Tatsumaki
-(Planned) Ken with Dragonlash Dance
-(Planned) Cloud with Meteor Rain
+Ken with Triple Flash Kick Jab, Thunder Kick Heavy Jab, and Dragonlash Dance Dash Attack
+Cloud with Smash 4 Nair and Uair
 Corrin with more multihits and Draconic Surge Down Smash
-(Planned) Bayonetta Changes
+Bayonetta with Aerial Dash Attack/Smash Attacks, and better Witch Time
 
 Ultimate
 
@@ -118,15 +118,15 @@ King K Rool with Platform Drop Down Smash
 (Planned) Isabelle Changes
 (Planned) Incineroar Changes
 Overall better Piranha Plant
-(Planned) Joker with reworked Arsene
-(Planned) Hero Changes
+Joker with massively overhauled Rebellion Gauge, and manually summonable Arsene
+Hero with general QoL buffs and rebalancing of Command Select spell odds
 (Planned) Banjo & Kazooie Changes
 Terry with Feint Moves
 (Planned) Byleth Changes
 (Planned) Reworked Min Min to utilize fully extended ARMs less often
 Steve nerfs and cosmetic changes
 Sephiroth with less polarizing One Winged Angel and more unique One Winged Angel abilities like Charge Cancel Shadow Flare, Manual Detonation Shadow Flare, Hit Cancel Blade Dash, and Manual Detonation Scintilla
-(Planned) Aegis Changes
+Aegis with Hit Swapping and general QoL changes
 (Planned) Kazuya Changes
 (Planned) Sora Changes
 

@@ -24,6 +24,7 @@ use {
             },
             *
         },
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,

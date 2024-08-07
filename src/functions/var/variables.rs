@@ -76,12 +76,6 @@ pub static mut USE_UP_SPECIAL: [bool; 8] = [true; 8];
 //Mii Brawler Variables
 pub static mut USE_ONSLAUGHT: [bool; 8] = [true; 8];
 
-//Ness Variables
-pub static mut OFFENSE_UP_ACTIVE: [bool; 65544] = [false; 65544];
-pub static mut OFFENSE_UP_TIMER: [i32; 8] = [0; 8];
-pub static mut OFFENSE_UP_GFX_COUNTER: [i32; 8] = [0; 8];
-pub static mut PK_FLASH_TIMER: [i32; 8] = [0; 8];
-
 //Pichu Variables
 pub static mut DISCHARGE_ACTIVE: [bool; 65544] = [false; 65544];
 pub static mut DISCHARGE_DAMAGE_TIMER: [i32; 8] = [60; 8];

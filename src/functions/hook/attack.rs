@@ -89,6 +89,7 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
         data.r_fix = 0;
         data.attr = smash2::phx::Hash40::new("collision_attr_normal");
     }
+    WorkModule::set_int(boma, data.vector, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     call_original!(module, id, group, data);
 }
 

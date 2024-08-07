@@ -21,9 +21,7 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
         ColorBlendModule::set_main_color(boma, /* Brightness */&cbm_vec1, /* Diffuse */&cbm_vec2, 0.21, 2.2, 5, /* Display Color */ true);
     }
     if !WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT) && ![*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_OFF].contains(&status_kind) {
-        if OFFENSE_UP_ACTIVE[entry_id] != true {
-            ColorBlendModule::cancel_main_color(boma, 0);
-        }
+        ColorBlendModule::cancel_main_color(boma, 0);
     }
     //Zair Platform Dropping
     if status_kind == *FIGHTER_STATUS_KIND_AIR_LASSO {

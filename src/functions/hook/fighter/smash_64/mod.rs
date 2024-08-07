@@ -12,6 +12,7 @@ use {
             kirby::*,
             link::*,
             luigi::*,
+            ness::*,
             pikachu::*,
             purin::*,
             samusd::*,
@@ -31,8 +32,7 @@ use {
         lib::lua_const::*,
         phx::{
             Hash40,
-            Vector3f,
-            Vector4f
+            Vector3f
         }
     }
 };

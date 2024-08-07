@@ -37,7 +37,6 @@ unsafe extern "C" fn metaknight_start_initialization(vtable: u64, fighter: &mut 
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
         WorkModule::set_flag(boma, sv_information::is_ready_go(), FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO);
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
@@ -52,6 +51,7 @@ unsafe extern "C" fn metaknight_start_initialization(vtable: u64, fighter: &mut 
         SIZE1[entry_id] = 0.0;
         SIZE2[entry_id] = 0.0;
         SIZE3[entry_id] = 0.0;
+        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
         FULL_HOP_ENABLE_DELAY[entry_id] = 0;
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
@@ -62,6 +62,7 @@ unsafe extern "C" fn metaknight_start_initialization(vtable: u64, fighter: &mut 
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         WorkModule::set_flag(boma, false, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
     }
+    original!()(vtable, fighter)
 }
 
 //Meta Knight Reset Initialization
@@ -96,7 +97,6 @@ unsafe extern "C" fn metaknight_reset_initialization(vtable: u64, fighter: &mut 
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
         WorkModule::set_flag(boma, sv_information::is_ready_go(), FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO);
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
@@ -111,6 +111,7 @@ unsafe extern "C" fn metaknight_reset_initialization(vtable: u64, fighter: &mut 
         SIZE1[entry_id] = 0.0;
         SIZE2[entry_id] = 0.0;
         SIZE3[entry_id] = 0.0;
+        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
         FULL_HOP_ENABLE_DELAY[entry_id] = 0;
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
@@ -121,6 +122,7 @@ unsafe extern "C" fn metaknight_reset_initialization(vtable: u64, fighter: &mut 
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         WorkModule::set_flag(boma, false, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
     }
+    original!()(vtable, fighter)
 }
 
 //Meta Knight Death Initialization
@@ -151,7 +153,6 @@ unsafe extern "C" fn metaknight_death_initialization(vtable: u64, fighter: &mut 
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
-    WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SHIELD_SPECIAL);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
@@ -166,6 +167,7 @@ unsafe extern "C" fn metaknight_death_initialization(vtable: u64, fighter: &mut 
     SIZE1[entry_id] = 0.0;
     SIZE2[entry_id] = 0.0;
     SIZE3[entry_id] = 0.0;
+    WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     FULL_HOP_ENABLE_DELAY[entry_id] = 0;
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);

@@ -208,9 +208,11 @@ unsafe extern "C" fn status_end_attackair(fighter: &mut L2CFighterCommon) -> L2C
     0.into()
 }
 
+//Sub Attack Air Inherit Jump Aerial Motion Uniq Process Init, inherits the initial motion of double jump
 #[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_init)]
 unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[FIGHTER_KIND] != *FIGHTER_KIND_MEWTWO {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
+    if ![*FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&fighter_kind) {
         call_original!(fighter)
     }
     else {
@@ -228,7 +230,7 @@ unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init
                     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
                 }
-            } 
+            }
             else {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
@@ -243,10 +245,12 @@ unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init
     }
 }
 
+//Sub Attack Air Inherit Jump Aerial Motion Uniq Process Exec, inherits the momentum of double jump
 #[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec)]
 unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     if KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND 
-    && fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_MEWTWO
+    && [*FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&fighter_kind)
     && MotionModule::frame_2nd(fighter.module_accessor) >= 2.0
     && fighter.global_table[CURRENT_FRAME].get_f32() <= 5.0
     && ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
