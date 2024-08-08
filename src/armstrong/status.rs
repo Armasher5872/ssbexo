@@ -96,7 +96,7 @@ unsafe extern "C" fn armstrong_special_n_init_status(fighter: &mut L2CFighterCom
         fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES.into());
     }
     else {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
         fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_NONE.into());
     }

@@ -2,6 +2,7 @@
 use super::*;
 
 /*   SPECIAL STATUSES   */
+
 //Super Jump Punch Main, seems to control code regarding Super Jump Punch like moves
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_super_jump_punch_main)]
 pub unsafe fn super_jump_punch_main(fighter: &mut L2CFighterCommon) {

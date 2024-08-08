@@ -179,4 +179,5 @@ pub fn install() {
         reflet_reset_initialization,
         reflet_death_initialization
     );
+    skyline::patching::Patch::in_text(0x1005d30).nop(); //Starts the match with Levin Sword fully charged
 }
