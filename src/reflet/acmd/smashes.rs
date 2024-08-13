@@ -45,7 +45,7 @@ unsafe extern "C" fn ssbexo_reflet_forward_smash_acmd(agent: &mut L2CAgentBase) 
     }
     frame(agent.lua_state_agent, 38.0);
     if macros::is_excute(agent) {
-        FighterSpecializer_Reflet::throwaway_sword(agent.battle_object as *mut Fighter, Vector2f{x: 1.0, y: 8.0}, true);
+        FighterSpecializer_Reflet::throwaway_sword(agent.battle_object as *mut Fighter, &Vector2f{x: 1.0, y: 8.0}, true);
     }
 }
 
@@ -101,7 +101,7 @@ unsafe extern "C" fn ssbexo_reflet_up_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 40.0);
     if macros::is_excute(agent) {
-        FighterSpecializer_Reflet::throwaway_sword(agent.battle_object as *mut Fighter, Vector2f{x: 1.5, y: 22.0}, true);
+        FighterSpecializer_Reflet::throwaway_sword(agent.battle_object as *mut Fighter, &Vector2f{x: 1.5, y: 22.0}, true);
     }
 }
 

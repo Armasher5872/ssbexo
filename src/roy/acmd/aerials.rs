@@ -154,7 +154,7 @@ unsafe extern "C" fn ssbexo_roy_dair_acmd(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    Agent::new("rosetta")
+    Agent::new("roy")
     .game_acmd("game_attackairn", ssbexo_roy_nair_acmd, Priority::Low)
     .effect_acmd("effect_attackairn", ssbexo_roy_nair_effect, Priority::Low)
     .sound_acmd("sound_attackairn", ssbexo_roy_nair_sound, Priority::Low)

@@ -7,7 +7,7 @@ unsafe extern "C" fn ssbexo_snake_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.2, 7.0, Some(0.0), Some(8.2), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.2, 7.0, Some(0.0), Some(8.2), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);
@@ -27,7 +27,7 @@ unsafe extern "C" fn ssbexo_snake_dash_grab_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
         macros::FT_MOTION_RATE(agent, 1.0);
-        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.2, 7.0, Some(0.0), Some(8.2), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.2, 7.0, Some(0.0), Some(8.2), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);
@@ -49,7 +49,7 @@ unsafe extern "C" fn ssbexo_snake_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         macros::FT_MOTION_RATE(agent, 1.0);
-        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.2, -11.0, Some(0.0), Some(8.2), Some(-17.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.2, -11.0, Some(0.0), Some(8.2), Some(-17.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 1.0);

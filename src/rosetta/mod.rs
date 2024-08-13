@@ -1,19 +1,25 @@
-#![allow(unused_parens)]
 use {
-  crate::functions::var::globals::*,
+  crate::functions::var::{
+    consts::*,
+    globals::*,
+    rosetta::*,
+  },
   smash::{
-    app::lua_bind::*,
-    hash40,
+    app::{
+      lua_bind::*,
+      *
+    },
     lib::lua_const::*,
     lua2cpp::*,
+    phx::Vector3f
   },
   smashline::*,
 };
 
 mod acmd;
-mod opff;
+mod status;
 
 pub fn install() {
   acmd::install();
-  opff::install();
+  status::install();
 }

@@ -57,6 +57,10 @@ unsafe extern "C" fn gaogaen_start_initialization(vtable: u64, fighter: &mut Fig
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE);
 }
 
 //Incineroar Reset Initialization
@@ -112,6 +116,10 @@ unsafe extern "C" fn gaogaen_reset_initialization(vtable: u64, fighter: &mut Fig
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE);
     original!()(vtable, fighter)
 }
 
@@ -165,6 +173,10 @@ unsafe extern "C" fn gaogaen_death_initialization(vtable: u64, fighter: &mut Fig
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+    WorkModule::set_flag(boma, false, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE);
     original!()(vtable, fighter)
 }
 

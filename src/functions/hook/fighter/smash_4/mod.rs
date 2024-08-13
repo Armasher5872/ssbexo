@@ -10,6 +10,7 @@ use {
         },
         var::{
             consts::*,
+            gekkouga::*,
             ken::*,
             link::*,
             littlemac::*,

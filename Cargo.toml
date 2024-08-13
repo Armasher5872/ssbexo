@@ -1,6 +1,6 @@
 [package]
 name = "ssbexo"
-version = "0.4.5"
+version = "0.5.5"
 authors = ["phazoganon"]
 edition = "2021"
 

@@ -2,7 +2,9 @@ use super::*;
 
 const GEKKOUGA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xadac40; //Greninja only
 const GEKKOUGA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
-const GEKKOUGA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xadaf30; //Greninja only
+const GEKKOUGA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xadaf50; //Greninja only
+const GEKKOUGA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xadca30; //Greninja only
+const GEKKOUGA_VTABLE_ON_SEARCH_OFFSET: usize = 0x68d8a0; //Shared
 
 //Greninja Startup Initialization
 #[skyline::hook(offset = GEKKOUGA_VTABLE_START_INITIALIZATION_OFFSET)]
@@ -57,6 +59,11 @@ unsafe extern "C" fn gekkouga_start_initialization(vtable: u64, fighter: &mut Fi
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
     original!()(vtable, fighter)
 }
 
@@ -114,13 +121,18 @@ unsafe extern "C" fn gekkouga_reset_initialization(vtable: u64, fighter: &mut Fi
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
+        WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
+        WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
+        WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
+        WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
     }
     original!()(vtable, fighter)
 }
 
 //Greninja Death Initialization
 #[skyline::hook(offset = GEKKOUGA_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn gekkouga_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: u32) -> u64 {
+unsafe extern "C" fn gekkouga_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
@@ -168,13 +180,49 @@ unsafe extern "C" fn gekkouga_death_initialization(vtable: u64, fighter: &mut Fi
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
+    WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
     original!()(vtable, fighter, param_3)
+}
+
+//Greninja Once Per Fighter Frame
+#[skyline::hook(offset = GEKKOUGA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn gekkouga_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE) {
+        WorkModule::off_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_START_HOLD);
+    }
+    original!()(vtable, fighter)
+}
+
+//Greninja On Search
+#[skyline::hook(offset = GEKKOUGA_VTABLE_ON_SEARCH_OFFSET)]
+unsafe extern "C" fn gekkouga_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
+    if fighter.battle_object.kind == *FIGHTER_KIND_GEKKOUGA as u32 {
+        let boma = fighter.battle_object.module_accessor;
+        let collision_log = *(log as *const u64).add(0x10/0x8);
+        let collision_log = collision_log as *const CollisionLog;
+        let status_kind = StatusModule::status_kind(boma);
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
+            let opponent_id = (*collision_log).opponent_battle_object_id;
+            let doll_id = WorkModule::get_int(boma, 0x100000C2);
+            if opponent_id == doll_id as u32 {
+                WorkModule::set_flag(boma, true, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
+            }
+        }
+    }
+    original!()(vtable, fighter, log)
 }
 
 pub fn install() {
     skyline::install_hooks!(
         gekkouga_start_initialization,
-        gekkouga_reset_initialization
-        //gekkouga_death_initialization
+        gekkouga_reset_initialization,
+        gekkouga_death_initialization,
+        gekkouga_opff,
+        gekkouga_on_search
     );
 }

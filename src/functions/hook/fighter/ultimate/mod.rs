@@ -12,6 +12,7 @@ use {
             dolly::*,
             edge::*,
             element::*,
+            gaogaen::*,
             murabito::*,
             variables::*,
         }

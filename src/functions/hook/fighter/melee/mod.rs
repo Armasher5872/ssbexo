@@ -27,7 +27,6 @@ use {
         lib::lua_const::*,
         phx::{
             Hash40,
-            Vector2f,
             Vector3f
         }
     }

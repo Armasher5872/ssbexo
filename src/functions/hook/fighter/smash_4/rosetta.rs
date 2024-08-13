@@ -58,7 +58,10 @@ unsafe extern "C" fn rosetta_start_initialization(vtable: u64, fighter: &mut Fig
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_float(boma, 0.0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
+    WorkModule::set_float(boma, 0.0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, FIGHTER_ROSETTA_STATUS_SPECIAL_LW_INT_CAPTURE_OBJECT_ID);
+    WorkModule::set_int(boma, 0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     original!()(vtable, fighter)
 }
 
@@ -116,7 +119,10 @@ unsafe extern "C" fn rosetta_reset_initialization(vtable: u64, fighter: &mut Fig
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::set_float(boma, 0.0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
+        WorkModule::set_float(boma, 0.0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
         WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, FIGHTER_ROSETTA_STATUS_SPECIAL_LW_INT_CAPTURE_OBJECT_ID);
+        WorkModule::set_int(boma, 0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     }
     original!()(vtable, fighter)
 }
@@ -171,7 +177,10 @@ unsafe extern "C" fn rosetta_death_initialization(vtable: u64, fighter: &mut Fig
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_float(boma, 0.0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
+    WorkModule::set_float(boma, 0.0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, FIGHTER_ROSETTA_STATUS_SPECIAL_LW_INT_CAPTURE_OBJECT_ID);
+    WorkModule::set_int(boma, 0, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     original!()(vtable, fighter)
 }
 
@@ -179,6 +188,13 @@ unsafe extern "C" fn rosetta_death_initialization(vtable: u64, fighter: &mut Fig
 #[skyline::hook(offset = ROSETTA_VTABLE_ONCE_PER_FIGHTER_FRAME)]
 unsafe extern "C" fn rosetta_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let transit_timer = WorkModule::get_int(boma, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    if transit_timer > 0 {
+        WorkModule::dec_int(boma, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    }
+    if transit_timer == 1 {
+        fighter.battle_object.gimmick_flash();
+    }
     if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_LW {
         let obj_id = WorkModule::get_int(boma, FIGHTER_ROSETTA_STATUS_SPECIAL_LW_INT_CAPTURE_OBJECT_ID) as u32;
         let obj_boma = smash::app::sv_battle_object::module_accessor(obj_id);

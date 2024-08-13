@@ -13,8 +13,8 @@ unsafe extern "C" fn ness_start_initialization(vtable: u64, fighter: &mut Fighte
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let attack_air_f_data = ShieldDataResource::new(0.0, 6.8, 10.0, 0.0, 6.8, 10.0, 6.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_UNDEFINED as u8);
     let attack_air_f_2_data = ShieldDataResource::new(0.0, 4.8, 9.6, 0.0, 4.8, 9.6, 10.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_UNDEFINED as u8);
-    let attack_air_f_datas = &mut (ShieldDatas::new().add(attack_air_f_data, 1));
-    let attack_air_f_2_datas = &mut (ShieldDatas::new().add(attack_air_f_2_data, 2));
+    let attack_air_f_datas = &mut (ShieldDatas::new().add(attack_air_f_data, 0));
+    let attack_air_f_2_datas = &mut (ShieldDatas::new().add(attack_air_f_2_data, 0));
     let resource_attack_air_f = &mut ShieldGroupResource::new(attack_air_f_datas, 1, 0, false, false, false);
     let resource_attack_air_f_2 = &mut ShieldGroupResource::new(attack_air_f_2_datas, 1, 0, false, false, false);
     add_shield_group(boma, resource_attack_air_f, FIGHTER_NESS_SHIELD_GROUP_KIND_PSI_ATTACK_AIR_F_GUARD);

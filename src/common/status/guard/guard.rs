@@ -136,6 +136,9 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
                 fighter.change_status(FIGHTER_LUCAS_STATUS_KIND_SPECIAL_GUARD_BURST.into(), false.into());
             }   
         }
+        if fighter_kind == *FIGHTER_KIND_ROSETTA {
+            fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_GUARD.into(), false.into());
+        }
     }
     false.into()
 }

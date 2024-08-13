@@ -44,11 +44,11 @@ Fighters have 146 entries
 
 Weapon Vtable Location: 710529d400
 
-Weapons presumably have 216 entries, need to research if weapons have a repeating pattern akin to fighters
+Weapons have 102 entries
 
 Weapon On Attack Vtable Entry: 29
 
-Item Vtable Location: 
+Item Vtable Location: Uncertain but it's likely somewhere in the 7104500000 range
 
 Article Limit Location: 710064b730
 

@@ -1,4 +1,5 @@
 use {
+    crate::functions::var::gaogaen::*,
     smash::{
         app::{
             lua_bind::*,
@@ -16,10 +17,16 @@ use {
     smashline::*,
 };
 
+mod aerials;
 mod smashes;
+mod specials;
 mod throws;
+mod tilts;
 
 pub fn install() {
+    aerials::install();
     smashes::install();
+    specials::install();
     throws::install();
+    tilts::install();
 }

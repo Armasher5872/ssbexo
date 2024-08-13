@@ -45,19 +45,6 @@ pub static mut TAP_WAIT : [i32; 65544] = [6; 65544];
 pub static mut TEMP_SPAWN_POS: [Vector3f;9] = [Vector3f{x: 0.0, y: 0.0, z: 0.0};9]; //Used to randomize spawn pos in Volleyball mode
 pub static mut TOTAL_FIGHTER: i32 = 1; //Tracks how many fighters are present
 
-//Bowser Variables
-pub static mut CAN_FIREBALL: [bool; 8] = [false; 8];
-pub static mut FIREBALL_GFX: [i32; 8] = [0; 8];
-pub static mut FIREBALL_TIMER: [i32; 8] = [0; 8];
-pub static mut KOOPA_EXCELLENT_SMASH: [bool; 8] = [false; 8];
-pub static mut KOOPA_EXCELLENT_SMASH_GFX: [i32; 8] = [0; 8];
-pub static mut KOOPA_GOOD_SMASH: [bool; 8] = [false; 8];
-pub static mut KOOPA_GOOD_SMASH_GFX: [i32; 8] = [0; 8];
-pub static mut KOOPA_GREAT_SMASH: [bool; 8] = [false; 8];
-pub static mut KOOPA_GREAT_SMASH_GFX: [i32; 8] = [0; 8];
-pub static mut KOOPA_OK_SMASH: [bool; 8] = [false; 8];
-pub static mut KOOPA_OK_SMASH_GFX: [i32; 8] = [0; 8];
-
 //Falco Variables
 pub static mut REFLECTOR_KNOCKBACK: [i32; 8] = [100; 8];
 pub static mut REFLECTOR_ANGLE: [u64; 8] = [60; 8];

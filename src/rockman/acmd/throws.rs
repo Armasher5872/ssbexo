@@ -7,7 +7,7 @@ unsafe extern "C" fn ssbexo_rockman_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(8.9), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(8.9), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
         GrabModule::set_constraint(agent.module_accessor, 0, true);
     }
     macros::game_CaptureCutCommon(agent);
@@ -28,7 +28,7 @@ unsafe extern "C" fn ssbexo_rockman_dash_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 2.9, 0.0, 6.6, 4.5, Some(0.0), Some(6.6), Some(10.6), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 2.9, 0.0, 6.6, 4.5, Some(0.0), Some(6.6), Some(10.6), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
         GrabModule::set_constraint(agent.module_accessor, 0, true);
     }
     macros::game_CaptureCutCommon(agent);
@@ -49,7 +49,7 @@ unsafe extern "C" fn ssbexo_rockman_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.6, -3.8, Some(0.0), Some(6.6), Some(-14.8), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.6, -3.8, Some(0.0), Some(6.6), Some(-14.8), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
         GrabModule::set_constraint(agent.module_accessor, 0, true);
     }
     macros::game_CaptureCutCommon(agent);

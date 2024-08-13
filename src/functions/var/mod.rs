@@ -13,6 +13,8 @@ pub mod dolly;
 pub mod donkey;
 pub mod edge;
 pub mod element;
+pub mod gaogaen;
+pub mod gekkouga;
 pub mod globals;
 pub mod ike;
 pub mod ken;

@@ -164,13 +164,6 @@ impl ShieldGroupResource {
     }
 }
 
-//Gets the boma of the grabbed opponent
-pub unsafe fn get_grabbed_opponent_boma(attacker: *mut BattleObjectModuleAccessor) -> &'static mut BattleObjectModuleAccessor {
-    let opponent_id = LinkModule::get_node_object_id(attacker, *LINK_NO_CAPTURE) as u32;
-    let opponent_object = get_battle_object_from_id(opponent_id);
-    return &mut *(*opponent_object).module_accessor
-}
-
 //Adds a new shield type, used for making new counters
 pub unsafe fn add_shield_group(boma: *mut BattleObjectModuleAccessor, resource: *mut ShieldGroupResource, group_id: i32) {
     let ptr = get_module_vtable_func(boma, 0x100, 0x58);
@@ -190,4 +183,11 @@ pub unsafe fn get_module_vtable_func(boma: *mut BattleObjectModuleAccessor, modu
     let module = (boma as *mut u64).add(module_offset/0x8);
     let vtable = *module as *const u64;
     *((*vtable + func_offset) as *const u64)
+}
+
+//Gets the boma of the grabbed opponent
+pub unsafe fn get_grabbed_opponent_boma(attacker: *mut BattleObjectModuleAccessor) -> &'static mut BattleObjectModuleAccessor {
+    let opponent_id = LinkModule::get_node_object_id(attacker, *LINK_NO_CAPTURE) as u32;
+    let opponent_object = get_battle_object_from_id(opponent_id);
+    return &mut *(*opponent_object).module_accessor
 }

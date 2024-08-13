@@ -9,7 +9,7 @@ unsafe extern "C" fn ssbexo_sheik_grab_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 0.7);
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 3.1, 0.0, 7.0, 4.0, Some(0.0), Some(7.0), Some(9.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 3.1, 0.0, 7.0, 4.0, Some(0.0), Some(7.0), Some(9.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     macros::FT_MOTION_RATE(agent, 1.0);
@@ -31,7 +31,7 @@ unsafe extern "C" fn ssbexo_sheik_dash_grab_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 0.8);
     frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 3.0, 0.0, 7.25, 4.0, Some(0.0), Some(7.25), Some(9.1), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 3.0, 0.0, 7.25, 4.0, Some(0.0), Some(7.25), Some(9.1), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     macros::FT_MOTION_RATE(agent, 1.0);
@@ -53,7 +53,7 @@ unsafe extern "C" fn ssbexo_sheik_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 0.9);
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 3.1, 0.0, 6.0, -4.0, Some(0.0), Some(6.0), Some(-13.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 3.1, 0.0, 6.0, -4.0, Some(0.0), Some(6.0), Some(-13.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     macros::FT_MOTION_RATE(agent, 1.0);

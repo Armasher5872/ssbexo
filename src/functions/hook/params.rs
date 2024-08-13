@@ -105,68 +105,6 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 	else if boma_reference.is_weapon() {
         let owner_module_accessor = &mut *smash::app::sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 		let entry_id = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-		if fighter_kind == *WEAPON_KIND_KOOPA_BREATH {
-			if param_type == hash40("param_special_n") {
-				if param_hash == hash40("fire_speed_mul_max") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 1.5;
-					}
-					else {
-						return 1.2;
-					}
-				}
-				if param_hash == hash40("fire_speed_mul_min") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 1.5;
-					}
-					else {
-						return 0.15;
-					}
-				}
-				if param_hash == hash40("fire_speed_min") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.57;
-					}
-					else {
-						return 0.2;
-					}
-				}
-			}
-			if param_type == hash40("param_breath") {
-				if param_hash == hash40("life") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 70.0;
-					}
-					else {
-						return 12.0;
-					}
-				}
-				if param_hash == hash40("hit_frames") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 70.0;
-					}
-					else {
-						return 12.0;
-					}
-				}
-				if param_hash == hash40("min_speed") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.8;
-					}
-					else {
-						return 0.5;
-					}
-				}
-				if param_hash == hash40("max_speed") {
-					if CAN_FIREBALL[entry_id] == true {
-						return 0.8;
-					}
-					else {
-						return 3.0;
-					}
-				}
-			}
-		}
 		if fighter_kind == *WEAPON_KIND_PICHU_DENGEKI
 		&& param_type == hash40("param_degeki")
 		&& param_hash == hash40("move_life_") {

@@ -7,7 +7,7 @@ unsafe extern "C" fn ssbexo_falco_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("trans"), 3.1, 0.0, 7.2, 4.0, Some(0.0), Some(7.2), Some(8.9), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("trans"), 3.1, 0.0, 7.2, 4.0, Some(0.0), Some(7.2), Some(8.9), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);
@@ -25,7 +25,7 @@ unsafe extern "C" fn ssbexo_falco_dash_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("trans"), 2.5, 0.0, 7.2, 4.0, Some(0.0), Some(6.0), Some(10.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("trans"), 2.5, 0.0, 7.2, 4.0, Some(0.0), Some(6.0), Some(10.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);
@@ -43,7 +43,7 @@ unsafe extern "C" fn ssbexo_falco_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("trans"), 3.1, 0.0, 7.2, -4.0, Some(0.0), Some(7.2), Some(-14.9), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("trans"), 3.1, 0.0, 7.2, -4.0, Some(0.0), Some(7.2), Some(-14.9), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);

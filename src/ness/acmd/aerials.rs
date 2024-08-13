@@ -101,7 +101,7 @@ unsafe extern "C" fn ssbexo_ness_fair_acmd(agent: &mut L2CAgentBase) {
         if macros::is_excute(agent) {
             WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 1.5, 367, 60, 0, 16, 6.0, 0.0, 6.8, 10.0, None, None, None, 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
-            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 1.5, 367, 60, 0, 16, 4.0, 0.0, 5.8, 6.0, Some(0.0), Some(3.8), Some(3.0), 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
+            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 1.5, 367, 60, 0, 16, 4.0, 0.0, 5.8, 6.0, Some(0.0), Some(5.8), Some(6.0), 1.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 5, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
             ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NORMAL), FIGHTER_NESS_SHIELD_GROUP_KIND_PSI_ATTACK_AIR_F_GUARD);
         }
     }
