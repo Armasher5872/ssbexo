@@ -1,8 +1,11 @@
 use {
-  crate::functions::var::{
-    consts::*,
-    globals::*,
-    rosetta::*,
+  crate::functions::{
+    ext::utility::misc::*,
+    var::{
+      consts::*,
+      globals::*,
+      rosetta::*,
+    }
   },
   smash::{
     app::{

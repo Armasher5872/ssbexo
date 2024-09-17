@@ -1,8 +1,5 @@
 use {
-    crate::functions::var::{
-        consts::*,
-        globals::*,
-    },
+    crate::functions::var::consts::*,
     smash::{
         app::lua_bind::*,
         lib::{
@@ -17,11 +14,9 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
 }

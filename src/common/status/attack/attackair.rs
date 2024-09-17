@@ -13,15 +13,11 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
         let motion_kind = MotionModule::motion_kind(boma);
         let lr = PostureModule::lr(boma);
         let stick_x = fighter.global_table[STICK_X].get_f32()*lr;
-        let mut pos = Vector3f{x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma), z: PostureModule::pos_z(boma)}; // get current pos
+        let pos = Vector3f{x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma), z: PostureModule::pos_z(boma)}; // get current pos
         let get_sum_speed_x = lr*KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if prev_status_kind == *FIGHTER_STATUS_KIND_PASS {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) != true {
                 GroundModule::set_passable_check(boma, true);
-            }
-            if frame <= 1.0 {
-                pos.y += 4.5;
-                PostureModule::set_pos(boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
             }
         }
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) 

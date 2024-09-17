@@ -5,11 +5,20 @@ const WOLF_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa617c0; //Shared
 const WOLF_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xa62210; //Shared
 const WOLF_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa62480; //Shared
 
+unsafe extern "C" fn wolf_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    }
+    0.into()
+}
+
 //Wolf Startup Initialization
 #[skyline::hook(offset = WOLF_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn wolf_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if fighter.battle_object.kind == *FIGHTER_KIND_WOLF as u32 {
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -60,6 +69,9 @@ unsafe extern "C" fn wolf_start_initialization(vtable: u64, fighter: &mut Fighte
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        lua_module_fighter.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
+        lua_module_fighter.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
+        lua_module_fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(wolf_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }

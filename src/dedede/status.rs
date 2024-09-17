@@ -423,23 +423,12 @@ unsafe extern "C" fn dedede_special_lw_attack_main_status(fighter: &mut L2CFight
 unsafe extern "C" fn dedede_special_lw_attack_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if !fighter.sub_air_check_fall_common().get_bool() {
                 return 1.into();
             }
         }
-    }
-    if special_zoom_gfx > 0 {
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    }
-    if special_zoom_gfx >= 4 {
-        SlowModule::clear_whole(fighter.module_accessor);
-        CameraModule::reset_all(fighter.module_accessor);
-        EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), false, false);
-        macros::CAM_ZOOM_OUT(fighter);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
     if situation_kind == *SITUATION_KIND_AIR
     && prev_situation_kind == *SITUATION_KIND_GROUND {
@@ -468,30 +457,9 @@ unsafe extern "C" fn dedede_special_lw_attack_exec_status(_fighter: &mut L2CFigh
     0.into()
 }
 
-unsafe extern "C" fn dedede_special_lw_attack_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
-    let table = param_3.get_table() as *mut smash2::lib::L2CTable;
-    let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
-    let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
-    if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-        if collision_kind == *COLLISION_KIND_HIT {
-            let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-            WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-            if special_zoom_gfx < 2 {
-                SlowModule::set_whole(fighter.module_accessor, 8, 80);
-                macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
-                EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.0, false, 0, 0, 0, 0, 0, false, false);
-                macros::PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
-                macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
-            }
-        }
-    }
-    0.into()
-}
-
 unsafe extern "C" fn dedede_special_lw_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     FighterUtil::cancel_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL));
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     0.into()
 }
 
@@ -531,7 +499,6 @@ pub fn install() {
     .status(Init, *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_LW_ATTACK, dedede_special_lw_attack_init_status)
     .status(Main, *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_LW_ATTACK, dedede_special_lw_attack_main_status)
     .status(Exec, *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_LW_ATTACK, dedede_special_lw_attack_exec_status)
-    .status(CheckAttack, *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_LW_ATTACK, dedede_special_lw_attack_check_attack_status)
     .status(End, *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_LW_ATTACK, dedede_special_lw_attack_end_status)
     .install()
     ;

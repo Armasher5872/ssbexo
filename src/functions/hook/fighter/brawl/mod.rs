@@ -1,17 +1,22 @@
 use {
     crate::functions::{
         ext::{
-            fighter::link::*,
+            fighter::{
+                common::*,
+                link::*,
+            },
             utility::{
                 boma_ext::*,
                 commandcat::*,
                 misc::*,
             }
         },
+        hook::attack::*,
         var::{
             consts::*,
             dedede::*,
             diddy::*,
+            globals::*,
             ike::*,
             kirby::*,
             link::*,
@@ -22,7 +27,8 @@ use {
             robot::*,
             sonic::*,
             variables::*,
-        }
+        },
+        util::*,
     },
     smash::{
         app::{
@@ -31,12 +37,17 @@ use {
             *
         },
         hash40,
-        lib::lua_const::*,
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
+        lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
             Vector3f
         }
-    }
+    },
+    smash_script::*,
 };
 
 mod dedede;

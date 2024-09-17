@@ -1,12 +1,9 @@
 #![allow(unused_parens)]
 use {
     crate::functions::{
-        ext::{
-            fighter::common::*,
-            utility::{
-                boma_ext::*,
-                commandcat::*,
-            }
+        ext::utility::{
+            boma_ext::*,
+            commandcat::*,
         },
         var::{
             consts::*,
@@ -33,11 +30,9 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
 }

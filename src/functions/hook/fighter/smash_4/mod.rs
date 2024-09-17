@@ -1,25 +1,69 @@
 use {
-    crate::functions::{
-        ext::{
-            fighter::murabito_shizue_common::*,
-            utility::{
-                boma_ext::*,
-                misc::*,
-                get_objects::*,
+    crate::{
+        functions::{
+            ext::{
+                fighter::{
+                    common::*,
+                    murabito_shizue_common::*,
+                },
+                utility::{
+                    boma_ext::*,
+                    misc::*,
+                    get_objects::*,
+                }
+            },
+            hook::ui::UiManager,
+            var::{
+                bayonetta::*,
+                consts::*,
+                gekkouga::*,
+                globals::*,
+                ken::*,
+                link::*,
+                littlemac::*,
+                miifighter::*,
+                miiswordsman::*,
+                murabito::*,
+                palutena::*,
+                reflet::*,
+                rosetta::*,
+                ryu::*,
+                variables::*,
+            },
+            util::*,
+        },
+        miifighter::status::*,
+        miiswordsman::status::{
+            special_n::{
+                special_n1::{
+                    special_n1::*,
+                    special_n1_loop::*,
+                    special_n1_attack::*,
+                },
+                special_n2::{
+                    special_n2::*,
+                    special_n2_hold::*,
+                    special_n2_fire::*,
+                },
+                special_n3::{
+                    special_n3::*,
+                    special_n3_slash::*,
+                }
+            },
+            special_s::{
+                special_s1::{
+                    special_s1_start::*,
+                    special_s1::*,
+                    special_s1_end::*,
+                },
+                special_s2::{
+                    special_s2::*,
+                    special_s2_attack_1::*,
+                    special_s2_attack_2::*,
+                    special_s2_attack_3::*,
+                }
             }
         },
-        var::{
-            consts::*,
-            gekkouga::*,
-            ken::*,
-            link::*,
-            littlemac::*,
-            miiswordsman::*,
-            murabito::*,
-            rosetta::*,
-            ryu::*,
-            variables::*,
-        }
     },
     smash::{
         app::{
@@ -28,12 +72,18 @@ use {
             lua_bind::*,
             *
         },
-        lib::lua_const::*,
+        hash40,
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
+        lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
             Vector3f
         }
-    }
+    },
+    smash_script::*,
 };
 
 mod bayonetta;

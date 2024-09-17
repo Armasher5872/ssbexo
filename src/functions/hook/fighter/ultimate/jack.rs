@@ -7,17 +7,32 @@ const JACK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xb303a0; //Joker only
 const JACK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xb31350; //Joker only
 const JACK_VTABLE_ON_ATTACK_OFFSET: usize = 0xb33d30; //Joker only
 const JACK_CUSTOMIZER_OFFSET: usize = 0xb2f820; //Joker only
-const JACK_KILL_DEAD_EVENT_LISTENERS_OFFSET: usize = 0x37addc0; //Joker only
 const JACK_FIGHTERSPECIALIZER_CHECK_DOYLE_SUMMON_DISPATCH_OFFSET: usize = 0xb30954; //Joker only
 
 #[skyline::from_offset(JACK_CUSTOMIZER_OFFSET)]
 extern "C" fn jack_customizer(boma: *mut BattleObjectModuleAccessor, customize_to: u32);
+
+//Set Move Customizer is accredited to WuBor Patch
+unsafe extern "C" fn jack_waza_customize(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let waza_customize_to = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO);
+    if [*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1, *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_2].contains(&waza_customize_to) {
+        fighter.sv_set_status_func(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(), std::mem::transmute(jack_special_lw_pre_status as *const ()));
+        0.into()
+    }
+    else if let Some(original) = get_original_customizer(fighter) {
+        original(fighter)
+    } 
+    else {
+        0.into()
+    }
+}
 
 //Joker Startup Initialization
 #[skyline::hook(offset = JACK_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn jack_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
@@ -66,6 +81,8 @@ unsafe extern "C" fn jack_start_initialization(vtable: u64, fighter: &mut Fighte
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    set_move_customizer(lua_module_fighter, jack_waza_customize);
+    jack_waza_customize(lua_module_fighter);
     original!()(vtable, fighter)
 }
 

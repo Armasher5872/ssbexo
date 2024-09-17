@@ -1,10 +1,18 @@
 use {
-  crate::functions::var::globals::*,
+  crate::functions::var::{
+    globals::*,
+    palutena::*,
+  },
   smash::{
-    app::lua_bind::*,
+    app::{
+      lua_bind::*,
+      *
+    },
+    hash40,
     lib::lua_const::*,
     lua2cpp::L2CFighterCommon
   },
+  smash_script::*,
   smashline::*,
 };
 

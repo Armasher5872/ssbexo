@@ -5,11 +5,142 @@ const DOLLY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x970900; //Terry only
 const DOLLY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x970e40; //Terry only
 const DOLLY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x971c80; //Terry only
 
+unsafe extern "C" fn dolly_check_special_hi_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.is_cat_flag(Cat4::SpecialHi2Command) && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_HI_UNIQ].clone()).get_bool() {
+        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+        || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+        || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+        }
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_HI_COMMAND.into(), true.into());
+        return true.into();
+    }
+    false.into()
+}
+
+unsafe extern "C" fn dolly_check_super_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let cancel_statuses = [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&prev_status_kind);
+    let opplr = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SPECIAL_COMMAND_USER_INSTANCE_WORK_ID_FLOAT_OPPONENT_LR_1ON1);
+    WorkModule::set_int(fighter.module_accessor, fighter.global_table[CMD_CAT4].get_i32(), *FIGHTER_DOLLY_INSTANCE_WORK_ID_INT_CAT4_SPECIAL_COMMAND);
+    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
+    && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_ENABLE_SUPER_SPECIAL) {
+        if fighter.is_cat_flag(Cat4::SuperSpecial2Command)
+        && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2) {
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+            || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+            && !cancel_statuses {
+                WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+            }
+            fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL2.into(), true.into());
+            return true.into();
+        }
+        if fighter.is_cat_flag(Cat4::SuperSpecialCommand)
+        && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL) {
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+            || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+            && !cancel_statuses {
+                WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+            }
+            fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL.into(), true.into());
+            return true.into();
+        }
+        if fighter.is_cat_flag(Cat4::SuperSpecial2RCommand)
+        && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL2) {
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+            || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            && !cancel_statuses {
+                WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+            }
+            if opplr != 0.0 {
+                PostureModule::reverse_lr(fighter.module_accessor);
+            }
+            fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL2.into(), true.into());
+            return true.into();
+        }
+        if fighter.is_cat_flag(Cat4::SuperSpecialRCommand)
+        && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SUPER_SPECIAL) {
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+            || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+            && !cancel_statuses {
+                WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+            }
+            if opplr != 0.0 {
+                PostureModule::reverse_lr(fighter.module_accessor);
+            }
+            fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL.into(), true.into());
+            return true.into();
+        }
+    }
+    false.into()
+}
+
+unsafe extern "C" fn dolly_check_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let cancel_statuses = [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&prev_status_kind);
+    if dolly_check_super_special_command(fighter).get_bool() {
+        return true.into();
+    }
+    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI_COMMAND)
+    && dolly_check_special_hi_command(fighter).get_bool() {
+        return true.into();
+    }
+    if fighter.is_cat_flag(Cat4::SpecialHiCommand)
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW_COMMAND)
+    && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_LW_UNIQ].clone()).get_bool() {
+        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+        || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+        || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+        && !cancel_statuses {
+            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+        }
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_LW_COMMAND.into(), true.into());
+        return true.into();
+    }
+    if fighter.is_cat_flag(Cat4::SpecialSCommand)
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
+    && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
+        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+        || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+        || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+        && !cancel_statuses {
+            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+        }
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_B_COMMAND.into(), true.into());
+        return true.into();
+    }
+    if fighter.is_cat_flag(Cat4::SpecialNCommand)
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND)
+    && fighter.sub_transition_term_id_cont_disguise(fighter.global_table[CHECK_SPECIAL_S_UNIQ].clone()).get_bool() {
+        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
+        || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+        || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
+        && !cancel_statuses {
+            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+        }
+        fighter.change_status(FIGHTER_DOLLY_STATUS_KIND_SPECIAL_S_COMMAND.into(), true.into());
+        return true.into();
+    }
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) 
+    || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
+    || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
+    && !cancel_statuses {
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+        fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_N.into(), false.into());
+    }
+    false.into()
+}
+
 //Terry Startup Initialization
 #[skyline::hook(offset = DOLLY_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn dolly_start_initialization(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
@@ -59,6 +190,7 @@ unsafe extern "C" fn dolly_start_initialization(vtable: u64, fighter: &mut Fight
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     WorkModule::set_flag(boma, false, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+    lua_module_fighter.global_table[CHECK_SPECIAL_COMMAND].assign(&L2CValue::Ptr(dolly_check_special_command as *const () as _));
 }
 
 //Terry Reset Initialization

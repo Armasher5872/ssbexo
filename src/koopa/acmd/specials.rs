@@ -4,7 +4,7 @@ use super::*;
 unsafe extern "C" fn ssbexo_koopa_neutral_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 22.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_START);
+        WorkModule::set_int(agent.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_STEP_START, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_STEP);
     }
 }
 
@@ -136,7 +136,7 @@ pub fn install() {
     Agent::new("koopa_breath")
     .game_acmd("game_move", ssbexo_koopa_firebreath_move_acmd, Priority::Low)
     .effect_acmd("effect_move", ssbexo_koopa_firebreath_move_effect, Priority::Low)
-    .effect_acmd("effect_move", ssbexo_koopa_firebreath_move_sound, Priority::Low)
+    .sound_acmd("sound_move", ssbexo_koopa_firebreath_move_sound, Priority::Low)
     .install()
     ;
 }

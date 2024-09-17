@@ -6,7 +6,7 @@ unsafe fn hit_module_handle_attack_event(ctx: &InlineCtx) {
     let data = *ctx.registers[1].x.as_ref() as *mut u32;
     let attacker_id = *data;
     let collision_id = *data.add(1);
-    let battle_object = &mut *get_battle_object_from_id(attacker_id);
+    let battle_object = &mut *crate::functions::hook::misc::get_battle_object_from_id(attacker_id);
     if !battle_object.is_fighter() && !battle_object.is_weapon() {
         return;
     }
@@ -26,7 +26,7 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
     let defender_boma = *(shield_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let defender_status_kind = StatusModule::status_kind(defender_boma);
     let attacker_id = *(collision.add(0x24) as *const u32);
-	let attacker_battle_object = &mut *get_battle_object_from_id(attacker_id);
+	let attacker_battle_object = &mut *crate::functions::hook::misc::get_battle_object_from_id(attacker_id);
     let attacker_boma = attacker_battle_object.module_accessor;
     let attacker_shield_damage = WorkModule::get_int(attacker_boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
     let defender_shield_hp = WorkModule::get_float(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
@@ -227,8 +227,36 @@ unsafe fn set_team_owner_id_hook(boma: &mut BattleObjectModuleAccessor, arg2: i3
     }
 }
 
+//Calls the Special Zoom function
+#[skyline::from_offset(0x696720)]
+pub fn call_special_zoom(boma: *mut BattleObjectModuleAccessor, collision_log: u64, fighter_kind: i32, vl_params: u64, param_5: i32, param_6: i32, param_7: i32, param_8: i32, param_9: i32) -> u64;
+
+//Related to the updated finishing zoom function
+#[skyline::hook(offset = 0x402f00, inline)]
+unsafe fn calculate_knockback(ctx: &InlineCtx) {
+    let damage_module = *ctx.registers[19].x.as_ref();
+    let our_boma = *((damage_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
+    let ptr = *ctx.registers[20].x.as_ref() as *mut u8;
+    let id = *(ptr.add(0x24) as *const u32);
+    IS_CALCULATING = Some(((*our_boma).battle_object_id, id));
+}
+
+#[skyline::hook(offset = 0x403950, inline)]
+unsafe fn process_knockback(ctx: &InlineCtx) {
+    if let Some((defender, attacker)) = IS_CALCULATING {
+        let boma = *ctx.registers[20].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+        if (*boma).battle_object_id == defender {
+            calculate_finishing_hit(defender, attacker, *ctx.registers[19].x.as_ref() as *const f32);
+        }
+    }
+}
+
 pub fn install() {
 	unsafe {
+        //Removes the vanilla kill zoom in favor of the updated function
+        const KILL_ZOOM_DATA: u32 = 0xD503201Fu32;
+        skyline::patching::Patch::in_text(0x633de0).nop();
+        skyline::patching::Patch::in_text(0x6373a4).data(KILL_ZOOM_DATA);
         //Removes phantoms
         skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32);
         //Resets projectile lifetime on parry, rather than using remaining lifetime
@@ -246,6 +274,8 @@ pub fn install() {
         set_hit_team_second_hook,
         set_team_second_hook,
         set_team_hook,
-        set_team_owner_id_hook
+        set_team_owner_id_hook,
+        process_knockback,
+        calculate_knockback
     );
 }

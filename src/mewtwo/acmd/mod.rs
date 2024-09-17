@@ -1,7 +1,7 @@
 use {
-    crate::functions::var::{
-        consts::*,
-        mewtwo::*,
+    crate::functions::{
+        ext::utility::misc::*,
+        var::mewtwo::*,
     },
     smash::{
         app::{

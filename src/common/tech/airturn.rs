@@ -78,6 +78,7 @@ pub unsafe extern "C" fn flip_air(fighter : &mut L2CFighterCommon) {
 		else if TAP_NUM[entry_id] == 2 && stick_x < -0.5 {
 			PostureModule::reverse_lr(boma);
 			PostureModule::update_rot_y_lr(boma);
+			CancelModule::enable_cancel(boma);
 			TAP_WAIT[entry_id] = 1;
 			TAP_NUM[entry_id] = 0;
 		};

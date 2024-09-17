@@ -28,7 +28,7 @@ unsafe fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValu
                 return 0.into();
             }
             //Don't know exactly what the original is doing
-            EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_sleep"), Hash40::new_raw(sleep_effect_bone_hash), &NONE_VECTOR, &NONE_VECTOR, 1.0, false, 0.0 as u32, -1, 0, 0, 0, false, false);
+            EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_sleep"), Hash40::new_raw(sleep_effect_bone_hash), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0.0 as u32, -1, 0, 0, 0, false, false);
         }
         else {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
@@ -53,6 +53,10 @@ unsafe fn status_end_damagesleepfall(fighter: &mut L2CFighterCommon) -> L2CValue
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
     if ![*FIGHTER_STATUS_KIND_DAMAGE_SLEEP, *FIGHTER_STATUS_KIND_SLEEP].contains(&status_kind) {
         EffectModule::remove_common(fighter.module_accessor, Hash40::new("damage_song"));
     }

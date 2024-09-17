@@ -1,13 +1,7 @@
 use {
-  crate::{
-    functions::{
-      ext::{
-        fighter::common::*,
-        utility::misc::*,
-      },
-      var::globals::*,
-    },
-    jack::status::*,
+  crate::functions::{
+    ext::utility::misc::*,
+    var::globals::*,
   },
   smash::{
     app::{
@@ -26,7 +20,7 @@ use {
 
 mod acmd;
 mod opff;
-mod status;
+pub mod status;
 
 pub fn install() {
   acmd::install();

@@ -8,7 +8,6 @@ use {
       }
     },
     var::{
-      consts::*,
       dedede::*,
       globals::*,
     }
@@ -23,8 +22,7 @@ use {
       L2CValue,
       lua_const::*,
     },
-    lua2cpp::L2CFighterCommon,
-    phx::Vector3f
+    lua2cpp::L2CFighterCommon
   },
   smash_script::*,
   smashline::*,

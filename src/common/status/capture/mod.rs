@@ -1,6 +1,7 @@
 #![allow(unused_must_use)]
 use {
     crate::functions::var::{
+        chrom::*,
         consts::*,
         littlemac::*,
     },

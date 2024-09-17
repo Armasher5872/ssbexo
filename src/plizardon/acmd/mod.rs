@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::consts::*,
+    crate::functions::{
+        ext::utility::misc::*,
+        var::consts::*,
+    },
     smash::{
         app::{
             lua_bind::*,

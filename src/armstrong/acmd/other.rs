@@ -17,6 +17,7 @@ unsafe extern "C" fn ssbexo_armstrong_entry_effect(agent: &mut L2CAgentBase) {
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::EFFECT(agent, Hash40::new("sys_quake"), Hash40::new("top"), 0.0, 0.0, 0, 0.0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_RATE(agent, 0.75);
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_machstamp"), false, false);
     }
     frame(agent.lua_state_agent, 60.0);
     if macros::is_excute(agent) {
@@ -376,7 +377,7 @@ unsafe extern "C" fn ssbexo_armstrong_final_smash_throw_acmd(agent: &mut L2CAgen
     if macros::is_excute(agent) {
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 20.0, 0, 50, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-        macros::REQ_FINAL_START_CAMERA_arg3(agent,Hash40::new("d04finalthrow.nuanmb"), false, false);
+        macros::REQ_FINAL_START_CAMERA_arg3(agent, Hash40::new("d04finalthrow.nuanmb"), false, false);
         macros::FT_SET_FINAL_FEAR_FACE(agent, 200);
         macros::FT_START_CUTIN(agent);
     }

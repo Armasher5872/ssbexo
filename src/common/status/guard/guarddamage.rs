@@ -45,7 +45,7 @@ unsafe fn status_guarddamage_common(fighter: &mut L2CFighterCommon, param_1: L2C
             ModelModule::enable_gold_eye(fighter.module_accessor);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_GUARD_DAMAGE_WORK_FLAG_GOLD_EYE);
         }
-        EffectModule::req_on_joint(fighter.module_accessor, Hash40::new("sys_just_shield"), Hash40::new("throw"), &NONE_VECTOR, &NONE_VECTOR, 1.0, &NONE_VECTOR, &NONE_VECTOR, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, *EFFECT_FLIP_NONE, 1);
+        EffectModule::req_on_joint(fighter.module_accessor, Hash40::new("sys_just_shield"), Hash40::new("throw"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, *EFFECT_FLIP_NONE, 1);
         ColorBlendModule::set_last_attack_direction(fighter.module_accessor, &Vector3f{x: -shield_lr, y: 0.0, z: 0.0});
         EffectModule::req_common(fighter.module_accessor, Hash40::new("just_shield"), 0.0);
         if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_GUARD_OFF {
@@ -77,11 +77,11 @@ unsafe fn status_guarddamage_common(fighter: &mut L2CFighterCommon, param_1: L2C
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_IS_DONE_GUARD_DAMAGE_NUM);
         }
         if param_1.get_bool() {
-            EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x12c9377e3d), Hash40::new("throw"), &NONE_VECTOR, &NONE_VECTOR, 0.1, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
-            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x12be304eab), Hash40::new("throw"), &NONE_VECTOR, &NONE_VECTOR, 0.1, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
+            EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x12c9377e3d), Hash40::new("throw"), &Vector3f::zero(), &Vector3f::zero(), 0.1, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
+            let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x12be304eab), Hash40::new("throw"), &Vector3f::zero(), &Vector3f::zero(), 0.1, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
             EffectModule::set_rgb_partial_last(fighter.module_accessor, shield_effect_color.x, shield_effect_color.y, shield_effect_color.z);
             WorkModule::set_int(fighter.module_accessor, handle as i32, *FIGHTER_STATUS_GUARD_ON_WORK_INT_SHIELD_DAMAGE2_EFFECT_HANDLE);
-            let handle_1 = EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x113434cb66), Hash40::new("throw"), &NONE_VECTOR, &NONE_VECTOR, 1.0, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
+            let handle_1 = EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x113434cb66), Hash40::new("throw"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
             EffectModule::set_rgb_partial_last(fighter.module_accessor, shield_effect_color.x, shield_effect_color.y, shield_effect_color.z);
             WorkModule::set_int(fighter.module_accessor, handle_1 as i32, *FIGHTER_STATUS_GUARD_ON_WORK_INT_SHIELD_DAMAGE_EFFECT_HANDLE);
             if handle_1 != 0 {

@@ -1,11 +1,17 @@
 use {
     crate::functions::{
-        ext::utility::boma_ext::*,
+        ext::{
+            fighter::common::*,
+            utility::boma_ext::*,
+        },
+        hook::attack::*,
         var::{
             armstrong::*,
             consts::*,
+            globals::*,
             variables::*,
-        }
+        },
+        util::*,
     },
     smash::{
         app::{
@@ -14,7 +20,11 @@ use {
             *
         },
         hash40,
-        lib::lua_const::*,
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
+        lua2cpp::L2CFighterCommon,
         phx::Hash40
     }
 };

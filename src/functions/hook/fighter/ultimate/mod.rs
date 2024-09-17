@@ -1,21 +1,29 @@
 use {
-    crate::functions::{
-        ext::{
-            fighter::murabito_shizue_common::*,
-            utility::{
-                boma_ext::*,
-                commandcat::*,
-            }
+    crate::{
+        functions::{
+            ext::{
+                fighter::{
+                    common::*,
+                    murabito_shizue_common::*,
+                },
+                utility::{
+                    boma_ext::*,
+                    commandcat::*,
+                }
+            },
+            var::{
+                consts::*,
+                dolly::*,
+                edge::*,
+                element::*,
+                gaogaen::*,
+                globals::*,
+                murabito::*,
+                variables::*,
+            },
+            util::*,
         },
-        var::{
-            consts::*,
-            dolly::*,
-            edge::*,
-            element::*,
-            gaogaen::*,
-            murabito::*,
-            variables::*,
-        }
+        jack::status::*,
     },
     smash::{
         app::{
@@ -24,13 +32,18 @@ use {
             *
         },
         hash40,
-        lib::lua_const::*,
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
+        lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
             Vector2f,
             Vector3f
         }
-    }
+    },
+    smash_script::*,
 };
 
 mod brave;

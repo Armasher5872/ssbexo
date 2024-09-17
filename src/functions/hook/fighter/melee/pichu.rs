@@ -186,6 +186,7 @@ unsafe extern "C" fn pichu_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let situation_kind = StatusModule::situation_kind(boma);
     let frame = MotionModule::frame(boma);
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if fighter.battle_object.kind == *FIGHTER_KIND_PICHU as u32 {
         if frame < 2.0 && [hash40("attack_s3_s"), hash40("attack_s4_s"), hash40("attack_lw4"), hash40("attack_air_f"), hash40("attack_air_b"), hash40("attack_air_lw"), hash40("special_n"), hash40("special_air_n"), hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind) && !DISCHARGE_ACTIVE[entry_id] {
             WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
@@ -447,7 +448,7 @@ unsafe extern "C" fn pichu_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         }
         //Tackle
         if motion_kind == hash40("special_s_tackle") {
-            //fighter.sub_transition_group_check_air_cliff();
+            lua_module_fighter.sub_transition_group_check_air_cliff();
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
             if frame > 40.0 {
                 CancelModule::enable_cancel(boma);
@@ -492,7 +493,7 @@ unsafe extern "C" fn pichu_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             }
         }
         if motion_kind == hash40("special_air_s_tackle") {
-            //fighter.sub_transition_group_check_air_cliff();
+            lua_module_fighter.sub_transition_group_check_air_cliff();
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
             if frame > 40.0 {
                 CancelModule::enable_cancel(boma);
@@ -527,7 +528,7 @@ unsafe extern "C" fn pichu_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         }
         if motion_kind == hash40("special_air_s") {
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-            //fighter.sub_transition_group_check_air_cliff();
+            lua_module_fighter.sub_transition_group_check_air_cliff();
             if MotionModule::end_frame(boma) - frame <= 2.0 {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
                 DISCHARGE_ACTIVE[entry_id] = false;

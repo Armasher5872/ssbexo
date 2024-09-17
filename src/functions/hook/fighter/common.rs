@@ -1,7 +1,5 @@
 use super::*;
 
-const COMMON_WEAPON_SHIELD_ATTACK_CALLBACK: usize = 0x346c8b0; //Used for when generic weapons hit something elses shield.
-
 #[skyline::hook(replace=FighterUtil::is_valid_auto_catch_item)]
 pub unsafe fn is_valid_auto_catch_item_hook(module_accessor: &mut BattleObjectModuleAccessor, is_possible: bool) -> bool {
     let fighter_kind = smash::app::utility::get_kind(module_accessor);
@@ -45,31 +43,22 @@ unsafe fn is_valid_just_shield_replace(boma: &mut BattleObjectModuleAccessor) ->
 	}
 }
 
-#[skyline::hook(offset = COMMON_WEAPON_SHIELD_ATTACK_CALLBACK)]
-unsafe extern "C" fn common_weapon_shield_attack_callback(vtable: u64, weapon: *mut smash::app::Weapon, arg: u32) {
-    let boma = (*weapon).battle_object.module_accessor;
-    let owner_object_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER);
-    let owner_boma = smash::app::sv_battle_object::module_accessor(owner_object_id as u32);
-    let status_kind = StatusModule::status_kind(boma);
-    if (*weapon).battle_object.kind == *WEAPON_KIND_NESS_PK_FIRE as u32
-    && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD)
-    && status_kind != *WEAPON_NESS_PK_FIRE_STATUS_KIND_PILLAR {
-        if WorkModule::is_flag(owner_boma, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP) {
-            *(weapon as *mut bool).add(0x90) = true;
-            (*boma).change_status_req(WEAPON_NESS_PK_FIRE_STATUS_KIND_PILLAR.into(), false.into());
-        }
-        else {
-            *(weapon as *mut bool).add(0x90) = false;
-        }
-    }
-    call_original!(vtable, weapon, arg)
+//Credited to HDR, retains your previously selected character when returning from a match exit to the CSS
+#[skyline::hook(offset = 0x1798ac8, inline)]
+unsafe fn fix_chara_replace(ctx: &skyline::hooks::InlineCtx) {
+    let ptr1 = *ctx.registers[0].x.as_ref() as *mut u64;
+    let ptr2 = *ctx.registers[1].x.as_ref() as *mut u64;
+
+    *ptr2.add(0x2) = *ptr1.add(0x2);
+    *ptr2.add(0x3) = *ptr1.add(0x3);
+    *ptr2.add(0x4) = *ptr1.add(0x4);
 }
 
 pub fn install() {
-    skyline::install_hook!(is_valid_just_shield_replace);
     skyline::install_hooks!(
+        is_valid_just_shield_replace,
         is_valid_auto_catch_item_hook,
         gravity_replace,
-        common_weapon_shield_attack_callback
+        fix_chara_replace
     );
 }

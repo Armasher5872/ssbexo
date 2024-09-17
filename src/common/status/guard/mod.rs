@@ -1,11 +1,14 @@
 #![allow(unused_must_use)]
 use {
-    crate::functions::var::{
-        consts::*,
-        globals::*,
-        ness::*,
-        lucas::*,
-        sonic::*,
+    crate::functions::{
+        ext::utility::misc::*,
+        var::{
+            consts::*,
+            globals::*,
+            ness::*,
+            lucas::*,
+            sonic::*,
+        }
     },
     smash::{
         app::{

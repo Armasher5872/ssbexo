@@ -47,18 +47,18 @@ unsafe extern "C" fn ssbexo_koopa_nair_effect(agent: &mut L2CAgentBase) {
             let stv2 = Vector3f{x: 0.0, y: 18.25, z: -18.0};
             let stv3 = Vector3f{x: 0.0, y: 18.25, z: 9.5};
             let stv4 = Vector3f{x: 0.0, y: 18.25, z: -9.5};
-            let spin1: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv1, &NONE_VECTOR, 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let spin2: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv2, &NONE_VECTOR, 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let spin3: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv3, &NONE_VECTOR, 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let spin4: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv4, &NONE_VECTOR, 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let spin5: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv5, &NONE_VECTOR, 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let star1: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &spv5, &NONE_VECTOR, 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let star2: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv1, &NONE_VECTOR, 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let star3: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv2, &NONE_VECTOR, 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let star4: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 1.4, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let star5: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 1.4, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let star6: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv3, &NONE_VECTOR, 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
-            let star7: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv4, &NONE_VECTOR, 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let spin1: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv1, &Vector3f::zero(), 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let spin2: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv2, &Vector3f::zero(), 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let spin3: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv3, &Vector3f::zero(), 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let spin4: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv4, &Vector3f::zero(), 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let spin5: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_spin_wind"), Hash40::new("top"), &spv5, &Vector3f::zero(), 1.6, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let star1: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &spv5, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let star2: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv1, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let star3: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv2, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let star4: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.4, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let star5: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.4, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let star6: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv3, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
+            let star7: u32 = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_starrod_splash"), Hash40::new("top"), &stv4, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true) as u32;
             EffectModule::set_rgb(agent.module_accessor, spin1, 1.0, 0.0, 1.0);
             EffectModule::set_rgb(agent.module_accessor, spin2, 1.0, 0.0, 1.0);
             EffectModule::set_rgb(agent.module_accessor, spin3, 1.0, 0.0, 1.0);
@@ -228,6 +228,10 @@ unsafe extern "C" fn ssbexo_koopa_bair_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("koopa_breath_m_fire"), Hash40::new("head"), -2, 5, 0, 180, 0, 50, 1, true);
         macros::EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire_fly"), Hash40::new("top"), 0, 8, -17, 0, 0, 0, 0.9, true);
+    }
+    frame(agent.lua_state_agent, 17.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_damage_fire_fly"), false, false);
     }
 }
 

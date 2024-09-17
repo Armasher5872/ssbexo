@@ -218,16 +218,16 @@ unsafe extern "C" fn ness_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             WorkModule::set_int(boma, 0, FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_EFFECT_TIMER);
         }
         if offense_up_effect_timer == 10 {
-            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handl"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &NONE_VECTOR, 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
-            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handr"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &NONE_VECTOR, 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
-            EffectModule::req_follow(boma, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &NONE_VECTOR, 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handl"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handr"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::req_follow(boma, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
         }
         if offense_up_effect_timer >= 20 {
             EffectModule::kill_kind(boma, Hash40::new("ness_pkfl_hold"), false, false);
             EffectModule::kill_kind(boma, Hash40::new("sys_status_attack_up"), false, false);
-            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handl"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &NONE_VECTOR, 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
-            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handr"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &NONE_VECTOR, 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
-            EffectModule::req_follow(boma, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &NONE_VECTOR, 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handl"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::req_follow(boma, Hash40::new("ness_pkfl_hold"), Hash40::new("handr"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::req_follow(boma, Hash40::new("sys_status_attack_up"), Hash40::new("hip"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
         }
         //Game Mechanics
         AttackModule::set_power_up(boma, 1.1);

@@ -36,6 +36,5 @@ mod status;
 pub fn install() {
   acmd::install();
   status::install();
-  clone_weapon("ganon", "sword", "purin", "microphone", false);
-  clone_weapon("koopajr", "cannonball", "purin", "disarmingvoice", false);
+  clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "purin", "disarmingvoice", false);
 }

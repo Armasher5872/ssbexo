@@ -192,6 +192,7 @@ unsafe extern "C" fn lucina_opff(vtable: u64, fighter: &mut Fighter) {
     let valueb = Vector3f{x: 0.0, y: 0.0, z: 5.0};
     let valuec = Vector3f{x: 0.0, y: 0.0, z: 8.0};
     let long_sword_scale = Vector3f{x: 1.015, y: 1.115, z: 1.045};
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     let statuses = [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_N_LOOP, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_N_END, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_N_END_MAX, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S2, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S3, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S4, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_LW_HIT].contains(&status_kind); 
     if fighter.battle_object.kind == *FIGHTER_KIND_LUCINA as u32 {
         LUCINA_GFX_COUNTER[entry_id] += 1;
@@ -356,17 +357,15 @@ unsafe extern "C" fn lucina_opff(vtable: u64, fighter: &mut Fighter) {
             if StatusModule::is_situation_changed(boma) && situation_kind == *SITUATION_KIND_GROUND {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, true);
             }
-            /*
             if stick_x >= 0.2 {
-                macros::SET_SPEED_EX(fighter, 1.0, -6.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+                macros::SET_SPEED_EX(lua_module_fighter, 1.0, -6.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             }
             else if stick_x <= -0.2 {
-                macros::SET_SPEED_EX(fighter, -1.0, -6.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+                macros::SET_SPEED_EX(lua_module_fighter, -1.0, -6.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             }
             else {
-                macros::SET_SPEED_EX(fighter, 0.0, -6.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+                macros::SET_SPEED_EX(lua_module_fighter, 0.0, -6.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
             }
-            */
             if MotionModule::end_frame(boma) - frame <= 2.0 {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
             }

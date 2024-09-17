@@ -4,14 +4,23 @@ const ARMSTRONG_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xaa6510; //Armstron
 const ARMSTRONG_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const ARMSTRONG_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xaa6520; //Armstrong only
 const ARMSTRONG_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x68d680; //Shared
+const ARMSTRONG_VTABLE_ON_ATTACK_OFFSET: usize = 0xaa6540; //Armstrong only
 const ARMSTRONG_VTABLE_ON_DAMAGE_OFFSET: usize = 0x68d9e0; //Shared
 const ARMSTRONG_VTABLE_LINK_EVENT_OFFSET: usize = 0xaa6990; //Armstrong only
+
+unsafe extern "C" fn armstrong_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    }
+    0.into()
+}
 
 //Armstrong Startup Initialization
 #[skyline::hook(offset = ARMSTRONG_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn armstrong_start_initialization(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
@@ -68,6 +77,8 @@ unsafe extern "C" fn armstrong_start_initialization(vtable: u64, fighter: &mut F
     WorkModule::set_float(boma, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START);
     WorkModule::set_float(boma, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CURRENT_DAMAGE);
     WorkModule::set_float(boma, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
+    lua_module_fighter.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
+    lua_module_fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(armstrong_end_control as *const () as _));
 }
 
 //Armstrong Reset Initialization
@@ -322,6 +333,22 @@ unsafe extern "C" fn armstrong_opff(vtable: u64, fighter: &mut Fighter) {
     original!()(vtable, fighter)
 }
 
+//Armstrong On Attack
+#[skyline::hook(offset = ARMSTRONG_VTABLE_ON_ATTACK_OFFSET)]
+unsafe extern "C" fn armstrong_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let status_kind = StatusModule::status_kind(boma);
+    let situation_kind = StatusModule::situation_kind(boma);
+    let frame = MotionModule::frame(boma);
+    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N && situation_kind != *SITUATION_KIND_AIR && frame < 94.0 {
+        call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
+    }
+    if [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind) && WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+        call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
+    }
+    original!()(vtable, fighter, log)
+}
+
 //Armstrong On Damage
 #[skyline::hook(offset = ARMSTRONG_VTABLE_ON_DAMAGE_OFFSET)]
 unsafe extern "C" fn armstrong_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) {
@@ -370,7 +397,10 @@ pub fn install() {
         armstrong_start_initialization,
         armstrong_reset_initialization,
         armstrong_opff,
+        armstrong_on_attack,
         armstrong_on_damage,
         armstrong_link_event
     );
+    //Nops the original location where Neutral Special inflicts critical zoom, as I only want the fully charged final hit to inflict critical zoom
+    skyline::patching::Patch::in_text(0xaa6618).nop();
 }

@@ -1,10 +1,7 @@
 #![allow(unused_assignments)]
 use {
     crate::functions::{
-        ext::{
-            fighter::common::*,
-            utility::misc::*,
-        },
+        ext::utility::misc::*,
         var::{
             armstrong::*,
             consts::*,
@@ -32,11 +29,9 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
 }

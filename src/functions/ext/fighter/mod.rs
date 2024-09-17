@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 use {
     crate::functions::{
+        ext::utility::misc::*,
         hook::misc::*,
         var::{
             consts::*,

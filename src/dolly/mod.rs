@@ -2,15 +2,9 @@
 use {
     crate::{
         common::status::grounded::dash::fgc_dashback_main,
-        functions::{
-            ext::utility::{
-                boma_ext::*,
-                commandcat::*,
-            },
-            var::{
-                dolly::*,
-                globals::*,
-            }
+        functions::var::{
+            dolly::*,
+            globals::*,
         }
     },
     smash::{
@@ -30,11 +24,9 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
 }

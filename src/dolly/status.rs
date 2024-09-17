@@ -149,6 +149,7 @@ unsafe extern "C" fn dolly_super_special_2_main_loop(fighter: &mut L2CFighterCom
             && fighter.global_table[CURRENT_FRAME].get_f32() >= 13.0 {
                 sv_animcmd::STOP_SE(fighter.lua_state_agent);
                 WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+                sv_kinetic_energy!(set_speed_mul, fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.0);
                 fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
             }
             if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DOLLY_STATUS_SUPER_SPECIAL2_WORK_FLAG_HIT) {

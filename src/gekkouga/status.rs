@@ -365,7 +365,7 @@ unsafe extern "C" fn gekkouga_special_lw_main_loop(fighter: &mut L2CFighterCommo
             VisibilityModule::set_whole(doll_boma, true);
             LinkModule::link(doll_boma, *ITEM_LINK_NO_HAVE, (*(fighter.module_accessor)).battle_object_id);
             LinkModule::set_model_constraint_pos_ort(doll_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("haver"), *CONSTRAINT_FLAG_ORIENTATION as u32 | *CONSTRAINT_FLAG_POSITION as u32 | *CONSTRAINT_FLAG_OFFSET_TRANSLATE as u32, true);
-            LinkModule::set_constraint_translate_offset(doll_boma, &NONE_VECTOR);
+            LinkModule::set_constraint_translate_offset(doll_boma, &Vector3f::zero());
         }
     }
     else {

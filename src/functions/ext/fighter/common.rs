@@ -3,18 +3,21 @@ use super::*;
 
 //A variety of extern C functions mainly regarding custom game modes and other offsets in Main
 extern "C" {
-	#[link_name = "\u{1}_ZN3app17sv_camera_manager10dead_rangeEP9lua_State"]
+    #[link_name = "\u{1}_ZN3app8lua_bind28PostureModule__rot_y_lr_implEPNS_26BattleObjectModuleAccessorE"]
+	pub fn imported_rot_y_lr(boma: &mut BattleObjectModuleAccessor) -> f32;
+    
+    #[link_name = "\u{1}_ZN3app9curryshot15is_preview_modeEv"]
+	pub fn is_preview_mode() -> bool;
+    
+    #[link_name = "\u{1}_ZN3app17sv_camera_manager10dead_rangeEP9lua_State"]
 	pub fn dead_range(lua_state: u64) -> Vector4f;
 
     #[link_name = "\u{1}_ZN3app17sv_camera_manager12camera_rangeEv"]
 	pub fn camera_range() -> Vector4f;
 
-    #[link_name = "\u{1}_ZN3app9curryshot15is_preview_modeEv"]
-	pub fn is_preview_mode() -> bool;
-
-    #[link_name = "\u{1}_ZN3app8lua_bind28PostureModule__rot_y_lr_implEPNS_26BattleObjectModuleAccessorE"]
-	pub fn imported_rot_y_lr(boma: &mut BattleObjectModuleAccessor) -> f32;
-
+    #[link_name = "\u{1}_ZN3app19FighterCutInManager13is_one_on_oneEv"]
+    pub fn FighterCutInManager__is_one_on_one() -> bool;
+    
     #[link_name = "\u{1}_ZN3app24FighterSpecializer_Luigi14delete_plungerERNS_7FighterEb"]
 	pub fn delete_plunger(fighter: *mut smash::app::Fighter, param: bool) -> u64;
 
@@ -26,6 +29,9 @@ extern "C" {
 
     #[link_name = "\u{1}_ZN3app25FighterSpecializer_Dedede29end_special_n_shot_object_hitERNS_7FighterE"]
 	pub fn end_special_n_shot_object_hit(fighter: *mut smash::app::Fighter) -> u64;
+
+    #[link_name = "\u{1}_ZN3app8lua_bind38FighterManager__get_fighter_entry_implEPNS_14FighterManagerENS_14FighterEntryIDE"]
+    pub fn get_fighter_entry(manager: *mut smash::app::FighterManager, entry_id: u32) -> *mut u8;
 
     pub fn change_version_string(arg: u64, string: *const c_char);
 }

@@ -1,6 +1,6 @@
 use {
   crate::functions::{
-    ext::fighter::common::*,
+    ext::utility::misc::*,
     var::{
       consts::*,
       gekkouga::*,
@@ -26,11 +26,9 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
   acmd::install();
-  opff::install();
   status::install();
 }

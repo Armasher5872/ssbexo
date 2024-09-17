@@ -1,4 +1,8 @@
 use {
+    crate::functions::{
+        ext::utility::misc::*,
+        var::reflet::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -10,7 +14,8 @@ use {
         lua2cpp::*,
         phx::{
             Hash40,
-            Vector2f
+            Vector2f,
+            Vector3f
         }
     },
     smash_script::*,

@@ -31,5 +31,5 @@ mod status;
 pub fn install() {
   acmd::install();
   status::install();
-  clone_weapon("koopajr", "cannonball", "ike", "slash", false);
+  clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "ike", "slash", false);
 }

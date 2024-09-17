@@ -189,6 +189,7 @@ unsafe extern "C" fn ridley_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let pos_y_prev = RIDLEY_VEC2_SPECIAL_LW_BOUNCE_POS_CHECK_PREV[entry_id].y;
     RIDLEY_VEC2_SPECIAL_LW_BOUNCE_POS_CHECK_PREV[entry_id] = Vector2f{x: v3f_tail_pos.x-pos_x_global, y: v3f_tail_pos.y-pos_y_global}; //save current tail pos relative to fighter
     let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if RIDLEY_INT_SPECIAL_HI_REBOUNCE_COUNT[entry_id] > 0 {
         if situation_kind == *SITUATION_KIND_GROUND {
             RIDLEY_INT_SPECIAL_HI_REBOUNCE_COUNT[entry_id] = 0;
@@ -219,7 +220,7 @@ unsafe extern "C" fn ridley_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     }
     if POGO_OPPONENT_BOUNCE[entry_id] {
         let velocity_x = lr*KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        //ridley_speed_add_function(agent, velocity_x, 1.8);
+        macros::SET_SPEED_EX(lua_module_fighter, velocity_x*0.5, 1.8, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         POGO_OPPONENT_BOUNCE[entry_id] = false;
     }
     if POGO_GROUND_BOUNCE[entry_id] {
@@ -250,17 +251,11 @@ unsafe extern "C" fn ridley_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             velocity_y = bounce_vel_min;
         }
         let velocity_x = PostureModule::lr(boma) * KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        //ridley_speed_add_function(agent, velocity_x, velocity_y);
+        macros::SET_SPEED_EX(lua_module_fighter, velocity_x*0.5, velocity_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         POGO_GROUND_BOUNCE[entry_id] = false;
     }
     original!()(vtable, fighter)
 }
-
-/*
-unsafe extern "C" fn ridley_speed_add_function(agent: &mut L2CAgentBase, velocity_x: f32, velocity_y: f32) {
-    macros::SET_SPEED_EX(agent, velocity_x*0.5, velocity_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-}
-*/
 
 pub fn install() {
     skyline::install_hooks!(

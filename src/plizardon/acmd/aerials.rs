@@ -66,7 +66,7 @@ unsafe extern "C" fn ssbexo_plizardon_fair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
         let vec = Vector3f{x: 0.0, y: 9.0, z: 12.0};
-        let f1: u32 = EffectModule::req_follow(agent.module_accessor, smash::phx::Hash40::new("sys_fireflower_shot"), smash::phx::Hash40::new("top"), &vec, &NONE_VECTOR, 1.5, true, 0, 0, 0, 0, 0, true, true) as u32;
+        let f1: u32 = EffectModule::req_follow(agent.module_accessor, smash::phx::Hash40::new("sys_fireflower_shot"), smash::phx::Hash40::new("top"), &vec, &Vector3f::zero(), 1.5, true, 0, 0, 0, 0, 0, true, true) as u32;
         EffectModule::set_rgb(agent.module_accessor, f1, 1.0, 1.0, 0.333);
     }
     wait(agent.lua_state_agent, 6.0);

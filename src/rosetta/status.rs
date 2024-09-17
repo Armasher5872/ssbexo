@@ -54,7 +54,7 @@ unsafe extern "C" fn rosetta_special_guard_main_loop(fighter: &mut L2CFighterCom
                 WorkModule::set_float(fighter.module_accessor, PostureModule::pos_y(fighter.module_accessor), FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
                 WorkModule::set_float(tico_boma, PostureModule::pos_x(tico_boma), WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
                 WorkModule::set_float(tico_boma, PostureModule::pos_y(tico_boma), WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
-                let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape"), Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 0.5, &NONE_VECTOR, &NONE_VECTOR, false, 0, 0, 0);
+                let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
                 EffectModule::set_alpha(tico_boma, handle as u32, 1.0);
             }
             if frame == 9.0 {
@@ -67,7 +67,7 @@ unsafe extern "C" fn rosetta_special_guard_main_loop(fighter: &mut L2CFighterCom
                 PostureModule::init_pos(fighter.module_accessor, &Vector3f{x: tico_start_x, y: tico_start_y, z: PostureModule::pos_z(fighter.module_accessor)}, true, true);
                 PostureModule::init_pos(tico_boma, &Vector3f{x: start_x, y: start_y, z: PostureModule::pos_z(tico_boma)}, true, true);
                 WorkModule::set_int(fighter.module_accessor, 300, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
-                let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape_end"), Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 1.0, &NONE_VECTOR, &NONE_VECTOR, false, 0, 0, 0);
+                let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape_end"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
                 EffectModule::set_alpha(tico_boma, handle as u32, 1.0);
             }
         }

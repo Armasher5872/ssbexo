@@ -8,8 +8,7 @@ unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAc
 		let pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
 		if pos.x < camera_range().x + 10.0 
         || pos.x > camera_range().y - 10.0 
-        || pos.y < camera_range().w + 10.0 { 
-			//If we do know who it was, trigger the ball KO sequence
+        || pos.y < camera_range().w + 10.0 {
 			if WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED) {
 				BALL_BOUNCED = Vector3f{x: pos.x, y: 0.0, z: 0.0};
 			}
@@ -25,7 +24,6 @@ unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAc
                 WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
 			}
 			else { 
-                //Otherwise, just record that we already bounced
 				WorkModule::set_flag(module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
 			}
             WorkModule::set_flag(module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
@@ -40,12 +38,8 @@ unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c
 	if boma.is_fighter() { 
 		if int == *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI {
 			let entry_id =  WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-			//Removal of SH macro via hooking on_flag. FULL_HOP_ENABLE_DELAY allows fullhop button to not give shorthops. 
 			if (ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_JUMP) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI)) && !(FULL_HOP_ENABLE_DELAY[entry_id] > 0) {
 				original!()(boma, int)
-			} 
-			else {
-				println!("SH height banned");
 			}
 		}
 		else {

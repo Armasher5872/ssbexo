@@ -93,7 +93,8 @@ pub fn get_fighter_common_from_entry_id(entry_id: u32) -> Option<&'static mut L2
         unsafe {
             Some(get_fighter_common_from_accessor(std::mem::transmute((*object).module_accessor)))
         }
-    } else {
+    } 
+    else {
         None
     }
 }
@@ -120,15 +121,21 @@ pub fn get_active_battle_object_id_from_entry_id(entry_id: u32) -> Option<u32> {
     } 
     else if kind == *FIGHTER_KIND_PZENIGAME || kind == *FIGHTER_KIND_PFUSHIGISOU || kind == *FIGHTER_KIND_PLIZARDON {
         let next_id = object.battle_object_id + 0x10000;
-        let next_object = unsafe { &mut *get_battle_object_from_id(next_id) };
-        let next_status = unsafe {
-            StatusModule::status_kind(next_object.module_accessor)
-        };
-        if next_status != *FIGHTER_STATUS_KIND_NONE && next_status != *FIGHTER_STATUS_KIND_STANDBY {
-            Some(next_id)
-        } 
+        let next_object = unsafe { get_battle_object_from_id(next_id) };
+        if !next_object.is_null() {
+            let next_object = unsafe { &mut *next_object };
+            let next_status = unsafe {
+                StatusModule::status_kind(next_object.module_accessor)
+            };
+            if next_status != *FIGHTER_STATUS_KIND_NONE && next_status != *FIGHTER_STATUS_KIND_STANDBY {
+                Some(next_id)
+            } 
+            else {
+                Some(next_id + 0x10000)
+            }
+        }
         else {
-            Some(next_id + 0x10000)
+            Some(object.battle_object_id)
         }
     } 
     else {
@@ -136,17 +143,13 @@ pub fn get_active_battle_object_id_from_entry_id(entry_id: u32) -> Option<u32> {
     }
 }
 
-extern "C" {
-    #[link_name = "\u{1}_ZN3app8lua_bind38FighterManager__get_fighter_entry_implEPNS_14FighterManagerENS_14FighterEntryIDE"]
-    fn get_fighter_entry(manager: *mut smash::app::FighterManager, entry_id: u32) -> *mut u8;
-}
-
 pub fn get_battle_object_from_entry_id(entry_id: u32) -> Option<*mut BattleObject> {
     unsafe {
         let entry = get_fighter_entry(crate::functions::singletons::FighterManager(), entry_id);
         if entry.is_null() {
             None
-        } else {
+        } 
+        else {
             Some(*(entry.add(0x4160) as *mut *mut BattleObject))
         }
     }

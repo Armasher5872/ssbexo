@@ -3,6 +3,7 @@ use {
     crate::functions::var::{
         consts::*,
         globals::*,
+        palutena::*,
     },
     smash::{
         app::lua_bind::*,

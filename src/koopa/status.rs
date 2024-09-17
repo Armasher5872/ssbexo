@@ -15,6 +15,7 @@ unsafe extern "C" fn koopa_special_n_pre_status(fighter: &mut L2CFighterCommon) 
 unsafe extern "C" fn koopa_special_n_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    WorkModule::set_int(fighter.module_accessor, -1, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_STEP);
     WorkModule::set_int(fighter.module_accessor, -1, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_PREV_STEP);
     WorkModule::set_int(fighter.module_accessor, -1, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_PREV_GENERATE_KIND);
     WorkModule::set_int(fighter.module_accessor, -1, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_SE1_HANDLE);
@@ -45,11 +46,15 @@ unsafe extern "C" fn koopa_special_n_init_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn koopa_special_n_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_CONTINUE_START);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_CONTINUE);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_CONTINUE_END);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n"), L2CValue::Hash40s("special_air_n"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(koopa_special_n_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn koopa_special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let step = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_STEP);
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -72,11 +77,9 @@ unsafe extern "C" fn koopa_special_n_main_loop(fighter: &mut L2CFighterCommon) -
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_n"), -1.0, 1.0, 0.0, false, false);
     }
-    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KOOPA_STATUS_BREATH_WORK_FLOAT_GENE_ANGLE);
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_START) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_START);
-        ArticleModule::generate_article_enable(fighter.module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH, false, -1);
-        ArticleModule::set_float(fighter.module_accessor,*FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH, 0.0, *WEAPON_KOOPA_BREATH_INSTANCE_WORK_ID_FLOAT_ANGLE);
+    if step == *FIGHTER_KOOPA_STATUS_BREATH_STEP_START {
+        WorkModule::set_int(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_STEP_END, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_STEP);
+        ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH, false, -1);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -112,27 +115,34 @@ unsafe extern "C" fn koopa_firebreath_move_pre_status(weapon: &mut L2CWeaponComm
 }
 
 unsafe extern "C" fn koopa_firebreath_move_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_breath"), hash40("life"));
-    let max_speed = WorkModule::get_param_float(weapon.module_accessor, hash40("param_breath"), hash40("max_speed"));
+    let life = WorkModule::get_param_float(weapon.module_accessor, hash40("param_breath"), hash40("life")) as i32;
+    let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_breath"), hash40("max_speed"));
     let lr = PostureModule::lr(weapon.module_accessor);
-    let speed_x = max_speed*lr;
-    PostureModule::set_scale(weapon.module_accessor, 1.0, false);
-    WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, 0.0);
-    sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, 0.0);
-    sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
+    WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
+    PostureModule::set_scale(weapon.module_accessor, 1.0, false);
+    if !StopModule::is_stop(weapon.module_accessor) {
+        koopa_firebreath_move_substatus(weapon, false.into());
+    }
+    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr);
+    weapon.global_table[SUB_STATUS].assign(&L2CValue::Ptr(koopa_firebreath_move_substatus as *const () as _));
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("move"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(koopa_firebreath_move_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn koopa_firebreath_move_substatus(weapon: &mut L2CWeaponCommon, param_1: L2CValue) -> L2CValue {
+    if param_1.get_bool() {
+        WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    }
+    0.into()
 }
 
 unsafe extern "C" fn koopa_firebreath_move_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let pos = PostureModule::pos(weapon.module_accessor);
-    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_ALL) || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32) {
-        EffectModule::req(weapon.module_accessor, Hash40::new("sys_bomb_b"), pos, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+        EffectModule::req(weapon.module_accessor, Hash40::new("sys_bomb_b"), pos, &Vector3f::zero(), 1.0, 0, -1, false, 0);
         SoundModule::play_se(weapon.module_accessor, Hash40::new("se_common_bomb_m"), true, false, false, false, enSEType(0));
         notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
     }
@@ -176,12 +186,9 @@ pub fn install() {
     .status(Pre, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_LW_A, koopa_special_lw_a_pre_status)
     .install()
     ;
-    /*
     Agent::new("koopa_breath")
     .status(Pre, *WEAPON_KOOPA_BREATH_STATUS_KIND_MOVE, koopa_firebreath_move_pre_status)
-    .status(Init, *WEAPON_KOOPA_BREATH_STATUS_KIND_MOVE, koopa_firebreath_move_init_status)
     .status(Main, *WEAPON_KOOPA_BREATH_STATUS_KIND_MOVE, koopa_firebreath_move_main_status)
     .install()
     ;
-    */
 }

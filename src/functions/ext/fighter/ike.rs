@@ -25,7 +25,7 @@ pub unsafe extern "C" fn should_remove_slash_on_hit(weapon: &mut L2CWeaponCommon
 
 pub unsafe extern "C" fn slash_removal(weapon: &mut L2CWeaponCommon) {
     let pos = *PostureModule::pos(weapon.module_accessor);
-    EffectModule::req(weapon.module_accessor, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+    EffectModule::req(weapon.module_accessor, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
     EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
@@ -34,7 +34,7 @@ pub unsafe extern "C" fn slash_removal(weapon: &mut L2CWeaponCommon) {
 
 pub unsafe extern "C" fn slash_hit_removal(weapon: &mut L2CWeaponCommon) {
     let pos = *PostureModule::pos(weapon.module_accessor);
-    EffectModule::req(weapon.module_accessor, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &NONE_VECTOR, 1.0, 0, -1, false, 0);
+    EffectModule::req(weapon.module_accessor, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
     EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));

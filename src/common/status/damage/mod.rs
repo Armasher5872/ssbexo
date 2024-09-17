@@ -1,7 +1,10 @@
 #![allow(unused_must_use, unused_assignments, unused_parens)]
 use {
     crate::functions::{
-        ext::status::damage::*,
+        ext::{
+            status::damage::*,
+            utility::misc::*,
+        },
         var::{
             consts::*,
             globals::*,

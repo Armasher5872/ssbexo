@@ -1,4 +1,4 @@
-#![feature(concat_idents, proc_macro_hygiene, repr_simd, simd_ffi)]
+#![feature(concat_idents, proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
 
 mod armstrong;
 mod bayonetta;

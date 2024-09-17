@@ -6,11 +6,19 @@ const GEKKOUGA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xadaf50; //Greninja 
 const GEKKOUGA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xadca30; //Greninja only
 const GEKKOUGA_VTABLE_ON_SEARCH_OFFSET: usize = 0x68d8a0; //Shared
 
+unsafe extern "C" fn gekkouga_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    }
+    0.into()
+}
+
 //Greninja Startup Initialization
 #[skyline::hook(offset = GEKKOUGA_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn gekkouga_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
@@ -64,6 +72,8 @@ unsafe extern "C" fn gekkouga_start_initialization(vtable: u64, fighter: &mut Fi
     WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
     WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
     WorkModule::set_flag(boma, false, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
+    lua_module_fighter.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
+    lua_module_fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(gekkouga_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 

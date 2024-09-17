@@ -121,7 +121,7 @@ unsafe extern "C" fn ssbexo_mewtwo_up_special_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_mewtwo_up_special_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        EffectModule::req_follow(agent.module_accessor, Hash40::new("mewtwo_final_aura"), Hash40::new("hip"), &NONE_VECTOR, &NONE_VECTOR, 1.25, true, 0, 0, 0, 0, 0, false, false);
+        EffectModule::req_follow(agent.module_accessor, Hash40::new("mewtwo_final_aura"), Hash40::new("hip"), &Vector3f::zero(), &Vector3f::zero(), 1.25, true, 0, 0, 0, 0, 0, false, false);
     }
     frame(agent.lua_state_agent, 67.0);
     if macros::is_excute(agent) {

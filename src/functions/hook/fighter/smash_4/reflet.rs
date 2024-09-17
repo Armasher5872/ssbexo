@@ -4,11 +4,19 @@ const REFLET_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x10058d0; //Shared
 const REFLET_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const REFLET_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x1005b20; //Robin only
 
+unsafe extern "C" fn reflet_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    }
+    0.into()
+}
+
 //Robin Startup Initialization
 #[skyline::hook(offset = REFLET_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn reflet_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if fighter.battle_object.kind == *FIGHTER_KIND_REFLET as u32 {
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -58,6 +66,10 @@ unsafe extern "C" fn reflet_start_initialization(vtable: u64, fighter: &mut Figh
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::off_flag(boma, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
+        WorkModule::set_int(boma, 0, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
+        lua_module_fighter.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
+        lua_module_fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(reflet_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }
@@ -116,6 +128,8 @@ unsafe extern "C" fn reflet_reset_initialization(vtable: u64, fighter: &mut Figh
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::off_flag(boma, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
+        WorkModule::set_int(boma, 0, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
     }
     original!()(vtable, fighter)
 }
@@ -170,6 +184,7 @@ unsafe extern "C" fn reflet_death_initialization(vtable: u64, fighter: &mut Figh
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_int(boma, 0, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
     original!()(vtable, fighter)
 }
 
@@ -179,5 +194,6 @@ pub fn install() {
         reflet_reset_initialization,
         reflet_death_initialization
     );
-    skyline::patching::Patch::in_text(0x1005d30).nop(); //Starts the match with Levin Sword fully charged
+    //Starts the match with Levin Sword fully charged
+    skyline::patching::Patch::in_text(0x1005d30).nop();
 }

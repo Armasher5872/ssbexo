@@ -820,7 +820,7 @@ unsafe extern "C" fn link_special_hi_ascend_end_pre_status(fighter: &mut L2CFigh
 unsafe extern "C" fn link_special_hi_ascend_end_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        PostureModule::add_pos(fighter.module_accessor, &NONE_VECTOR);
+        PostureModule::add_pos(fighter.module_accessor, &Vector3f::zero());
     }
     else {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);

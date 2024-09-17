@@ -285,7 +285,7 @@ unsafe extern "C" fn littlemac_on_attack(vtable: u64, battle_object: *mut Battle
     //Removes critical zoom if meter isn't full
     if boma.is_status(*FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2)
     && meter != 100.0 {
-        EffectModule::req_on_joint(boma, Hash40::new("sys_hit_normal_l"), Hash40::new("handr"), &NONE_VECTOR, &NONE_VECTOR, 0.8, &NONE_VECTOR, &NONE_VECTOR, false, 0, 0, 0);
+        EffectModule::req_on_joint(boma, Hash40::new("sys_hit_normal_l"), Hash40::new("handr"), &Vector3f::zero(), &Vector3f::zero(), 0.8, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
         return 1;
     }
     //Adds a third of the meter if Little Mac lands a counterhit

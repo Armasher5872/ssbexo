@@ -184,6 +184,7 @@ unsafe extern "C" fn lucario_opff(vtable: u64, fighter: &mut Fighter) {
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
     let frame = MotionModule::frame(boma);
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT)
     && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
         WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HITFLOW);
@@ -215,13 +216,11 @@ unsafe extern "C" fn lucario_opff(vtable: u64, fighter: &mut Fighter) {
         ArticleModule::remove_exist(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         ArticleModule::set_visibility_whole(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, false, ArticleOperationTarget(0));
     }
-    /*
     //Up Special
     if [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_BOUND, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_HI_RUSH_END].contains(&status_kind) {
-        fighter.sub_transition_group_check_air_cliff();
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        lua_module_fighter.sub_transition_group_check_air_cliff();
+        notify_event_msc_cmd!(lua_module_fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
     };
-    */
 }
 
 pub fn install() {

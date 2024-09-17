@@ -1,9 +1,10 @@
 use {
   crate::functions::{
-    ext::fighter::common::*,
+    ext::utility::misc::*,
     var::{
       consts::*,
       globals::*,
+      reflet::*,
     }
   },
   smash::{
@@ -17,18 +18,19 @@ use {
       lua_const::*,
     },
     lua2cpp::L2CFighterCommon,
-    phx::Vector2f
+    phx::{
+      Vector2f,
+      Vector3f
+    }
   },
   smash_script::*,
   smashline::*,
 };
 
 mod acmd;
-mod opff;
 mod status;
 
 pub fn install() {
   acmd::install();
-  opff::install();
   status::install();
 }

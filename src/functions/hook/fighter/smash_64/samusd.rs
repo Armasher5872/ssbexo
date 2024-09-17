@@ -5,11 +5,19 @@ const SAMUSD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10f3630; //Shared
 const SAMUSD_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10f3650; //Shared
 const SAMUSD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x10f37a0; //Shared
 
+unsafe extern "C" fn samusd_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    }
+    0.into()
+}
+
 //Dark Samus Startup Initialization
 #[skyline::hook(offset = SAMUSD_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn samusd_start_initialization(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if fighter.battle_object.kind == *FIGHTER_KIND_SAMUSD as u32 {
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -61,6 +69,8 @@ unsafe extern "C" fn samusd_start_initialization(vtable: u64, fighter: &mut Figh
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         HAS_FIRE_CHARGE_SHOT[entry_id] = false;
         CHARGE_SHOT_TIMER[entry_id] = 0;
+        lua_module_fighter.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
+        lua_module_fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(samusd_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }

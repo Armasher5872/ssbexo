@@ -1,6 +1,9 @@
 #![allow(dead_code, unused_must_use)]
 use {
-    crate::functions::ext::utility::controls::*,
+    crate::functions::ext::{
+        fighter::common::*,
+        utility::controls::*,
+    },
     smash::{
         app::{
             BattleObject,

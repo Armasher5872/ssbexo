@@ -4,11 +4,40 @@ const BAYONETTA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x819430; //Bayonett
 const BAYONETTA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x819440; //Bayonetta only
 const BAYONETTA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x81a050; //Bayonetta only
 
+unsafe extern "C" fn bayonetta_check_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let mut ret = false;
+    let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+    let cmd_cat4 = fighter.global_table[CMD_CAT4].get_i32();
+    if !ret && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND) {
+        if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0 {
+            fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F_DASH.into(), false.into());
+            ret = true;
+        }
+        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SMASH) {
+            if stick_x > 0.7 {
+                fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F_SMASH.into(), false.into());
+                ret = true;
+            }
+            if stick_y > 0.7 {
+                fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_U_SMASH.into(), false.into());
+                ret = true;
+            }
+            if stick_y < -0.7 {
+                fighter.change_status(FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_D_SMASH.into(), false.into());
+                ret = true;
+            }
+        }
+    }
+    ret.into()
+}
+
 //Bayonetta Startup Initialization
 #[skyline::hook(offset = BAYONETTA_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn bayonetta_start_initialization(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -58,6 +87,7 @@ unsafe extern "C" fn bayonetta_start_initialization(vtable: u64, fighter: &mut F
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    lua_module_fighter.global_table[CHECK_SPECIAL_COMMAND].assign(&L2CValue::Ptr(bayonetta_check_special_command as *const () as _));
     original!()(vtable, fighter)
 }
 

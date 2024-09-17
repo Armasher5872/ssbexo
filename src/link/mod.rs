@@ -4,6 +4,7 @@ use {
     ext::{
       fighter::link::*,
       status::attack_xx4::*,
+      utility::misc::*,
     },
     var::{
       consts::*,

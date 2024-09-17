@@ -9,6 +9,7 @@ const DAISY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xe89090; //Shared
 unsafe extern "C" fn daisy_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if fighter.battle_object.kind == *FIGHTER_KIND_DAISY as u32 {
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -58,6 +59,8 @@ unsafe extern "C" fn daisy_start_initialization(vtable: u64, fighter: &mut Fight
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        lua_module_fighter.global_table[CHECK_AIR_JUMP_UNIQ].assign(&false.into());
+        lua_module_fighter.global_table[CHECK_AIR_JUMP_AERIAL_UNIQ].assign(&false.into());
     }
     original!()(vtable, fighter)
 }

@@ -53,6 +53,7 @@ unsafe fn status_furafura_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_FuraFuraEnd)]
 unsafe fn status_furafuraend(fighter: &mut L2CFighterCommon) -> L2CValue {
     if [*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON].contains(&fighter.global_table[PREV_STATUS_KIND].get_i32()) {
+        MotionModule::set_rate(fighter.module_accessor, 0.6);
         macros::EFFECT(fighter, Hash40::new("sys_piyo"), Hash40::new("head"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true);
     }
     WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);

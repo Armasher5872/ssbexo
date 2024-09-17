@@ -14,6 +14,7 @@ pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 pub static mut FULL_HOP_ENABLE_DELAY: [i32; 65544] = [0; 65544];
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
 pub static mut HIT_PLAYER: i32 = -1; //Tracks which players need to be respawned
+pub static mut IS_CALCULATING: Option<(u32, u32)> = None;
 pub static mut ITEM_MANAGER_ADDR: usize = 0;
 pub static mut LAST_ALT_STICK: [f32; 2] = [0.0, 0.0];
 pub static mut LAST_ANALOG: f32 = 0.0;
@@ -59,9 +60,6 @@ pub static mut LANDING_HIT: [bool; 8] = [false; 8];
 pub static mut LUCINA_GFX_COUNTER: [i32; 8] = [0; 8];
 pub static mut USE_SWORDSMAN_DASH: [bool; 8] = [true; 8];
 pub static mut USE_UP_SPECIAL: [bool; 8] = [true; 8];
-
-//Mii Brawler Variables
-pub static mut USE_ONSLAUGHT: [bool; 8] = [true; 8];
 
 //Pichu Variables
 pub static mut DISCHARGE_ACTIVE: [bool; 65544] = [false; 65544];

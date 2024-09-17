@@ -5,11 +5,19 @@ const PEACH_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const PEACH_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xe89090; //Shared
 const PEACH_VTABLE_LINK_EVENT_OFFSET: usize = 0x68d880; //Shared
 
+unsafe extern "C" fn peach_check_special_lw_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if ItemModule::is_have_item(fighter.module_accessor, 0) {
+        return 0.into();
+    }
+    1.into()
+}
+
 //Peach Startup Initialization
 #[skyline::hook(offset = PEACH_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn peach_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if fighter.battle_object.kind == *FIGHTER_KIND_PEACH as u32 {
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -59,6 +67,8 @@ unsafe extern "C" fn peach_start_initialization(vtable: u64, fighter: &mut Fight
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        lua_module_fighter.global_table[CHECK_AIR_SPECIAL_UNIQ].assign(&false.into());
+        lua_module_fighter.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(peach_check_special_lw_uniq as *const () as _));
     }
     original!()(vtable, fighter)
 }

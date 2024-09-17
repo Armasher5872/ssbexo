@@ -3,9 +3,18 @@
 use {
     bitflags::bitflags,
     crate::functions::{
-        ext::utility::commandcat::*,
-        hook::misc::*,
-        var::globals::*,
+        ext::{
+            fighter::common::*,
+            utility::{
+                boma_ext::*,
+                commandcat::*,
+            }
+        },
+        var::{
+            consts::*,
+            globals::*,
+        },
+        util::*,
     },
     modular_bitfield::{
         bitfield,
@@ -22,6 +31,7 @@ use {
             },
             sv_battle_object,
             utility::*,
+            *
         },
         hash40,
         lib::{
@@ -34,6 +44,7 @@ use {
         },
         phx::{
             Hash40,
+            Vector2f,
             Vector3f
         }
     },

@@ -38,6 +38,6 @@ mod status;
 pub fn install() {
     acmd::install();
     status::install();
-    clone_weapon("koopajr", "cannonball", "metaknight", "galaxiabeam", false);
+    clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "metaknight", "galaxiabeam", false);
     add_param_object("metaknight", "param_glide");
 }

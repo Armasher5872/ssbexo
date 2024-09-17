@@ -1,4 +1,4 @@
-#![allow(unused_parens, unused_variables, unused_unsafe)]
+#![allow(improper_ctypes, unused_parens, unused_variables, unused_unsafe)]
 use {
     crate::functions::{
         ext::{
@@ -17,12 +17,15 @@ use {
         var::{
             consts::*,
             globals::*,
+            palutena::*,
             pfushigisou::*,
             purin::*,
             variables::*,
         },
         util::*,
     },
+    once_cell::sync::Lazy,
+    parking_lot::RwLock,
     skyline::{
         c_str,
         from_c_str,
@@ -72,6 +75,8 @@ pub mod music;
 pub mod params;
 pub mod status;
 pub mod throw;
+pub mod ui;
+pub mod weapon;
 pub mod workmodule;
 
 pub fn install() {
@@ -84,5 +89,7 @@ pub fn install() {
     params::install();
     status::install();
     throw::install();
+    ui::install();
+    weapon::install();
     workmodule::install();
 }

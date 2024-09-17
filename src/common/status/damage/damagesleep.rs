@@ -53,7 +53,7 @@ unsafe fn status_damagesleep_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         if motion_kind != hash_3.hash as u64 {
             if current_frame as i32 % damage_song_effect_interval == 0 {
                 //Don't know exactly what the original is doing
-                EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_sleep"), Hash40::new_raw(sleep_effect_bone_hash), &NONE_VECTOR, &NONE_VECTOR, 1.0, false, 0.0 as u32, -1, 0, 0, 0, false, false);
+                EffectModule::req_follow(fighter.module_accessor, Hash40::new("sys_sleep"), Hash40::new_raw(sleep_effect_bone_hash), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0.0 as u32, -1, 0, 0, 0, false, false);
             }
         }
         if ![hash_4.hash as u64, hash_5.hash as u64].contains(&motion_kind) {
@@ -76,6 +76,10 @@ unsafe fn status_end_damagesleep(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x15a773446b), false);
     fighter.sub_DamageSongExit();
     if MotionModule::is_anim_resource(fighter.module_accessor, Hash40::new("fill_blank_sleep")) {

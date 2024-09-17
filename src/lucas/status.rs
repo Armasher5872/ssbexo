@@ -258,7 +258,7 @@ unsafe extern "C" fn lucas_pkfreeze_move_end_status(weapon: &mut L2CWeaponCommon
     KineticModule::change_kinetic(weapon.module_accessor, *WEAPON_KINETIC_TYPE_RESET);
     smash::app::lua_bind::KineticEnergy::clear_speed(get_energy_gravity);
     smash::app::lua_bind::KineticEnergy::unable(get_energy_gravity);
-    EffectModule::req_follow(weapon.module_accessor, Hash40::new("lucas_pkfr_bullet_ed"), Hash40::new("top"), &NONE_VECTOR, &NONE_VECTOR, 1.0, false, 0, 0, -1, 0, 0, false, false);
+    EffectModule::req_follow(weapon.module_accessor, Hash40::new("lucas_pkfr_bullet_ed"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, -1, 0, 0, false, false);
     WorkModule::set_flag(owner_boma, true, FIGHTER_LUCAS_INSTANCE_WORK_ID_FLAG_ACTIVE_PK_FREEZE);
     0.into()
 }
@@ -620,6 +620,10 @@ unsafe extern "C" fn lucas_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
     0.into()
 }
 
+unsafe extern "C" fn lucas_special_lw_throw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_throw_uniq_process_exit()
+}
+
 pub fn install() {
     Agent::new("lucas")
     .status(Pre, *FIGHTER_STATUS_KIND_JUMP_AERIAL, lucas_jump_aerial_pre_status)
@@ -653,6 +657,7 @@ pub fn install() {
     .status(Pre, FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_THROW, lucas_special_lw_throw_pre_status)
     .status(Init, FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_THROW, lucas_special_lw_throw_init_status)
     .status(Main, FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_THROW, lucas_special_lw_throw_main_status)
+    .status(Exit, FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_THROW, lucas_special_lw_throw_exit_status)
     .install()
     ;
     Agent::new("lucas_pkfreeze")

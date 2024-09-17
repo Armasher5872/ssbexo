@@ -4,6 +4,7 @@ const DEDEDE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x903c80; //Dedede only
 const DEDEDE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x904520; //Dedede only
 const DEDEDE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x904cf0; //Dedede only
 const DEDEDE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x904e70; //Dedede only
+const DEDEDE_VTABLE_ON_ATTACK_OFFSET: usize = 0x90d630; //Dedede only
 
 //Dedede Startup Initialization
 #[skyline::hook(offset = DEDEDE_VTABLE_START_INITIALIZATION_OFFSET)]
@@ -266,11 +267,23 @@ unsafe extern "C" fn dedede_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     original!()(vtable, fighter)
 }
 
+//Dedede On Attack
+#[skyline::hook(offset = DEDEDE_VTABLE_ON_ATTACK_OFFSET)]
+unsafe extern "C" fn dedede_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let status_kind = StatusModule::status_kind(boma);
+    if status_kind == *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_LW_ATTACK {
+        call_special_zoom(boma, log, *FIGHTER_KIND_DEDEDE, hash40("param_special_lw"), 1, 0, 0, 0, 0);
+    }
+    call_original!(vtable, fighter, log)
+}
+
 pub fn install() {
     skyline::install_hooks!(
         dedede_start_initialization,
         dedede_reset_initialization,
         dedede_death_initialization,
-        dedede_opff
+        dedede_opff,
+        dedede_on_attack
     );
 }

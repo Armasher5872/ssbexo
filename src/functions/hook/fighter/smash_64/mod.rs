@@ -1,14 +1,18 @@
 use {
     crate::functions::{
-        ext::utility::{
-            boma_ext::*,
-            commandcat::*,
-            misc::*,
+        ext::{
+            fighter::common::*,
+            utility::{
+                boma_ext::*,
+                commandcat::*,
+                misc::*,
+            }
         },
         var::{
             captain::*,
             consts::*,
             donkey::*,
+            globals::*,
             kirby::*,
             link::*,
             luigi::*,
@@ -17,7 +21,8 @@ use {
             purin::*,
             samusd::*,
             variables::*,
-        }
+        },
+        util::*,
     },
     smash::{
         app::{
@@ -29,7 +34,11 @@ use {
             *
         },
         hash40,
-        lib::lua_const::*,
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
+        lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
             Vector3f
