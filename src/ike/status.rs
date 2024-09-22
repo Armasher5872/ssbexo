@@ -98,6 +98,7 @@ unsafe extern "C" fn ike_slash_shoot_init_status(weapon: &mut L2CWeaponCommon) -
 unsafe extern "C" fn ike_slash_shoot_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_slash"), hash40("speed_max"));
     let lr = PostureModule::lr(weapon.module_accessor);
+    ReflectorModule::set_status(weapon.module_accessor, WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("shoot"), 0.0, 1.0, false, 0.0, false, false);
     if GroundModule::is_floor_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
         weapon.set_situation(SITUATION_KIND_GROUND.into());

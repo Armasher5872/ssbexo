@@ -1,7 +1,14 @@
-#![allow(dead_code)]
 use {
     crate::functions::{
-        ext::utility::misc::*,
+        ext::{
+            fighter::{
+                ike::*,
+                metaknight::*,
+                pfushigisou::*,
+                purin::*,
+            },
+            utility::misc::*,
+        },
         hook::misc::*,
         var::{
             consts::*,
@@ -12,8 +19,10 @@ use {
             link::*,
             metaknight::*,
             murabito::*,
+            pfushigisou::*,
             purin::*,
-        }
+        },
+        util::*,
     },
     smash::{
         app::{
@@ -52,4 +61,5 @@ pub mod inkling;
 pub mod link;
 pub mod metaknight;
 pub mod murabito_shizue_common;
+pub mod pfushigisou;
 pub mod purin;

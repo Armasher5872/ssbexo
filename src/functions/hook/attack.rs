@@ -70,7 +70,6 @@ unsafe fn shield_module_send_shield_attack_collision_event(shield_module: *mut u
 #[skyline::hook(offset = 0x3dc180)]
 unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut smash2::app::AttackData) {
     let boma = *(module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if data.slip < 1.0 {
         data.slip = -1.0;
     }
@@ -79,15 +78,6 @@ unsafe fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut 
     }
     else {
         WorkModule::set_int(boma, data.sub_shield as i32, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
-    }
-    if (*boma).is_item() && (*boma).kind() == *ITEM_KIND_DEKU && PFUSHIGISOU_IS_ACTIVE_BOMB[entry_id] {
-        data.power = 8.0;
-        data.r_eff = 100;
-        data.r_add = 20;
-        data.size = 8.0;
-        data.no_reaction_search = 0;
-        data.r_fix = 0;
-        data.attr = smash2::phx::Hash40::new("collision_attr_normal");
     }
     WorkModule::set_int(boma, data.vector, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     call_original!(module, id, group, data);

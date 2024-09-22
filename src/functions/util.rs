@@ -88,6 +88,13 @@ pub fn get_fighter_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAcce
     }
 }
 
+pub fn get_weapon_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAccessor) -> &'a mut L2CWeaponCommon {
+    unsafe {
+        let lua_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x190 / 8);
+        std::mem::transmute(*((lua_module + 0x1D8) as *mut *mut L2CWeaponCommon))
+    }
+}
+
 pub fn get_fighter_common_from_entry_id(entry_id: u32) -> Option<&'static mut L2CFighterCommon> {
     if let Some(object) = get_battle_object_from_entry_id(entry_id) {
         unsafe {

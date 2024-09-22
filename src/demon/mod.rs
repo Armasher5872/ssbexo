@@ -1,6 +1,20 @@
 use {
-    crate::common::status::grounded::dash::fgc_dashback_main,
+    crate::{
+        common::status::grounded::dash::fgc_dashback_main,
+        functions::{
+            ext::status::attack::*,
+            var::{
+                demon::*,
+                globals::*,
+            }
+        }
+    },
     smash::{
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,

@@ -3,7 +3,6 @@ use super::*;
 const PLIZARDON_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf93940; //Charizard only
 const PLIZARDON_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const PLIZARDON_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xf93b20; //Charizard only
-const PLIZARDON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xf947e0; //Charizard only 
 const PLIZARDON_VTABLE_RESPAWN_INITIALIZATION_OFFSET: usize = 0xf96330; //Shared
 
 //Charizard Startup Initialization
@@ -178,50 +177,6 @@ unsafe extern "C" fn plizardon_death_initialization(vtable: u64, fighter: &mut F
     original!()(vtable, fighter)
 }
 
-//Charizard Once Per Fighter Frame
-#[skyline::hook(offset = PLIZARDON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn plizardon_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let pos_x = PostureModule::pos_x(boma);
-    let pos_y = PostureModule::pos_y(boma);
-    let lr = PostureModule::lr(boma);
-    let point_offset_x1 = lr*(RAIN_DANCE_X1[entry_id]-pos_x);
-    let point_offset_x2 = lr*(RAIN_DANCE_X2[entry_id]-pos_x);
-    let point_offset_y1 = RAIN_DANCE_Y1[entry_id]-pos_y;
-    if (pos_x <= RAIN_DANCE_X2[entry_id] && pos_x >= RAIN_DANCE_X1[entry_id]) && (pos_y >= RAIN_DANCE_Y1[entry_id] && pos_y <= RAIN_DANCE_Y2[entry_id]) && IN_RAIN_DANCE[entry_id] != true {
-        IN_RAIN_DANCE[entry_id] = true;
-    }
-    else {
-        IN_RAIN_DANCE[entry_id] = false;
-    }
-    //Rain Dance Effects
-    if RAIN_DANCE_ACTIVE[entry_id] {
-        RAIN_DANCE_FRAME[entry_id] -= 1.0;
-        if RAIN_DANCE_FRAME[entry_id] <= 600.0 && RAIN_DANCE_FRAME[entry_id] >= 598.0 {
-            EffectModule::kill_kind(boma, Hash40::new("sys_ground_shockwave"), false, false);
-        }
-        else if RAIN_DANCE_FRAME[entry_id] < 598.0 && RAIN_DANCE_FRAME[entry_id] % 30.0 == 0.0 {
-            EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x1, y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-            EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x2, y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-            EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x1-(12.0*lr), y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-            EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x2+(12.0*lr), y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-        }
-        if RAIN_DANCE_FRAME[entry_id] <= 0.0 {
-            RAIN_DANCE_ACTIVE[entry_id] = false;
-        }
-    }
-    if !RAIN_DANCE_ACTIVE[entry_id] {
-        RAIN_DANCE_FRAME[entry_id] = -1.0;
-        RAIN_DANCE_X1[entry_id] = 0.0;
-        RAIN_DANCE_X2[entry_id] = 0.0;
-        RAIN_DANCE_Y1[entry_id] = 0.0;
-        RAIN_DANCE_Y2[entry_id] = 0.0;
-        EffectModule::kill_kind(boma, Hash40::new("sys_ground_shockwave"), false, false);
-    }
-    original!()(vtable, fighter)
-}
-
 //Charizard Respawn Initialization
 #[skyline::hook(offset = PLIZARDON_VTABLE_RESPAWN_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn plizardon_respawn_initialization(vtable: u64, fighter: &mut Fighter) {
@@ -282,7 +237,6 @@ pub fn install() {
         plizardon_start_initialization,
         plizardon_reset_initialization,
         plizardon_death_initialization,
-        plizardon_opff,
         plizardon_respawn_initialization
     );
 }

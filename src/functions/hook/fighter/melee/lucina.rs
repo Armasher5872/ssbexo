@@ -221,7 +221,7 @@ unsafe extern "C" fn lucina_opff(vtable: u64, fighter: &mut Fighter) {
             USE_UP_SPECIAL[entry_id] = true;
         }
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
-            //fighter.sub_transition_group_check_air_cliff();
+            lua_module_fighter.sub_transition_group_check_air_cliff();
             USE_SWORDSMAN_DASH[entry_id] = false;
             USE_UP_SPECIAL[entry_id] = false;
         }
@@ -375,6 +375,7 @@ unsafe extern "C" fn lucina_opff(vtable: u64, fighter: &mut Fighter) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_LW_HIT, true);
         }
     }
+    original!()(vtable, fighter)
 }
 
 pub fn install() {

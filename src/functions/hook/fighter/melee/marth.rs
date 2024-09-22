@@ -188,6 +188,7 @@ unsafe extern "C" fn marth_opff(vtable: u64, fighter: &mut Fighter) {
         ModelModule::set_joint_scale(boma, Hash40::new("havel"), &long_sword_scale);
         ModelModule::set_joint_scale(boma, Hash40::new("haver"), &long_sword_scale);
     }
+    original!()(vtable, fighter)
 }
 
 pub fn install() {

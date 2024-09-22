@@ -199,6 +199,7 @@ unsafe extern "C" fn rosetta_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let obj_id = WorkModule::get_int(boma, FIGHTER_ROSETTA_STATUS_SPECIAL_LW_INT_CAPTURE_OBJECT_ID) as u32;
         let obj_boma = smash::app::sv_battle_object::module_accessor(obj_id);
         let obj_kind = smash::app::utility::get_kind(&mut *obj_boma);
+        let weapon = get_weapon_common_from_accessor(&mut *obj_boma);
         let item_id = if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
             WorkModule::get_int64(obj_boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
         }
@@ -210,6 +211,26 @@ unsafe extern "C" fn rosetta_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         };
         let item_manager = *(singletons::ItemManager() as *mut *mut smash::app::ItemManager);
         smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, item_id);
+        if is_slash(obj_boma) {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
+            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
+            slash_removal(weapon);
+        }
+        if is_galaxia(obj_boma) {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
+            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
+            galaxia_beam_removal(weapon);
+        }
+        if is_sludge(obj_boma) {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
+            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
+            sludge_removal(weapon);
+        }
+        if is_disarming_voice(obj_boma) {
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
+            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
+            disarming_voice_removal(weapon);
+        }
     }
     original!()(vtable, fighter)
 }

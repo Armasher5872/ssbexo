@@ -128,6 +128,7 @@ unsafe extern "C" fn mewtwo_reset_initialization(vtable: u64, fighter: &mut Figh
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         WorkModule::set_float(boma, 1.0, FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLOAT_PSYCHIC_GLARE_POWER);
     }
+    original!()(vtable, fighter)
 }
 
 //Mewtwo Death Initialization

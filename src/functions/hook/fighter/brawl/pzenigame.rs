@@ -3,7 +3,6 @@ use super::*;
 const PZENIGAME_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xfeef30; //Squirtle only
 const PZENIGAME_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const PZENIGAME_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xfef060; //Squirtle only
-const PZENIGAME_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xf95c90; //Shared
 const PZENIGAME_VTABLE_RESPAWN_INITIALIZATION_OFFSET: usize = 0xf96330; //Shared
 
 //Squirtle Startup Initialization
@@ -176,75 +175,6 @@ unsafe extern "C" fn pzenigame_death_initialization(vtable: u64, fighter: &mut F
     original!()(vtable, fighter)
 }
 
-//Squirtle Once Per Fighter Frame
-#[skyline::hook(offset = PZENIGAME_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn pzenigame_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_PZENIGAME as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let status_kind = StatusModule::status_kind(boma);
-        let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
-        let situation_kind = StatusModule::situation_kind(boma);
-        let motion_kind = MotionModule::motion_kind(boma);
-        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let kinetic_type = KineticModule::get_kinetic_type(boma);
-        let frame = MotionModule::frame(boma);
-        let pos_x = PostureModule::pos_x(boma);
-        let pos_y = PostureModule::pos_y(boma);
-        let lr = PostureModule::lr(boma);
-        if [hash40("attack_s4_s"), hash40("attack_s4_hi"), hash40("attack_s4_lw")].contains(&motion_kind)
-        && (14.0..17.0).contains(&frame) {
-            if (ControlModule::get_command_flag_cat(boma, 0) & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_S) != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_LOOP, true);
-            }
-        }
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
-            if situation_kind == *SITUATION_KIND_AIR {
-                WorkModule::unable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
-                ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-            }
-        }
-        if status_kind == *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_CHARGE {
-            if situation_kind == *SITUATION_KIND_AIR {
-                if fighter.battle_object.is_cat_flag(Cat1::AirEscape) {
-                    WorkModule::unable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
-                    ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_AIR_ESCAPE);
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, false);
-                }
-            }
-        }
-        if [*FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_END, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_HIT, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_STATUS_KIND_SPECIAL_S].contains(&status_kind) {
-            if MotionModule::frame(boma) >= 10.0 && ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_JUMP) {
-                if situation_kind == *SITUATION_KIND_GROUND {
-                    PZENIGAME_WITHDRAW_JUMP[entry_id] = 1;
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_JUMP_SQUAT, true);
-                }
-                else if situation_kind == *SITUATION_KIND_AIR
-                && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT) < WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX) {
-                    PZENIGAME_WITHDRAW_JUMP[entry_id] = 1;
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_JUMP_AERIAL, true);
-                }
-            }
-        }
-        //Side Special Related Stuff
-        if [*FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_STATUS_KIND_JUMP_AERIAL].contains(&status_kind) && PZENIGAME_WITHDRAW_JUMP[entry_id] == 1 {
-            MotionModule::set_rate(boma, 0.5);
-            PZENIGAME_WITHDRAW_JUMP[entry_id] = 0;
-        }
-        if [*FIGHTER_KINETIC_TYPE_JUMP, *FIGHTER_KINETIC_TYPE_JUMP_ICE, *FIGHTER_KINETIC_TYPE_JUMP_CLIFF, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION, *FIGHTER_KINETIC_TYPE_JUMP_CLIFF_VERTICAL, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND].contains(&kinetic_type) && PZENIGAME_WITHDRAW_JUMP[entry_id] == 1 {
-            PZENIGAME_WITHDRAW_JUMP[entry_id] = 0;
-        }
-        if situation_kind == *SITUATION_KIND_AIR {
-            if [*FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_STATUS_KIND_JUMP_AERIAL].contains(&prev_status_kind) && PZENIGAME_WITHDRAW_JUMP[entry_id] != 0 {
-                PZENIGAME_WITHDRAW_JUMP[entry_id] = 0;
-            }
-            if PZENIGAME_WITHDRAW_JUMP[entry_id] == 0 {
-                MotionModule::set_rate(boma, 1.0);
-            }
-        }
-    }
-    original!()(vtable, fighter)
-}
-
 //Squirtle Respawn Initialization
 #[skyline::hook(offset = PZENIGAME_VTABLE_RESPAWN_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn pzenigame_respawn_initialization(vtable: u64, fighter: &mut Fighter) {
@@ -305,7 +235,6 @@ pub fn install() {
         pzenigame_start_initialization,
         pzenigame_reset_initialization,
         pzenigame_death_initialization,
-        pzenigame_opff,
         pzenigame_respawn_initialization
     );
 }

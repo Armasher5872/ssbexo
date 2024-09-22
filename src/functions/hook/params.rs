@@ -1,4 +1,3 @@
-#![allow(unused_variables)]
 use super::*;
 
 //Param Adjustments (mainly used in things like Bowsers Fireballs and Ness's PSIOU PK Fire)
@@ -53,7 +52,7 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 		&& param_hash == hash40("jump_angle") {
 			let max = 80.0;
 			let min = 10.0;
-			return (max*ControlModule::get_stick_y(boma)).abs().clamp(min, max);
+			return (max*sticky).abs().clamp(min, max);
 		}
 		if fighter_kind == *FIGHTER_KIND_PICHU
 		&& param_type == hash40("param_special_hi")
@@ -63,33 +62,6 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 			}
 			else {
 				return 9.0;
-			}
-		}
-		if fighter_kind == *FIGHTER_KIND_PZENIGAME
-		&& param_type == hash40("ground_brake") {
-			if IN_RAIN_DANCE[entry_id] == true {
-				return 0.0143;
-			}
-			else {
-				return 0.0572;
-			}
-		}
-		if fighter_kind == *FIGHTER_KIND_PFUSHIGISOU
-		&& param_type == hash40("ground_brake") {
-			if IN_RAIN_DANCE[entry_id] == true {
-				return 0.0197;
-			}
-			else {
-				return 0.07865;
-			}
-		}
-		if fighter_kind == *FIGHTER_KIND_PLIZARDON
-		&& param_type == hash40("ground_brake") {
-			if IN_RAIN_DANCE[entry_id] == true {
-				return 0.0179;
-			}
-			else {
-				return 0.0715;
 			}
 		}
 		if fighter_kind == *FIGHTER_KIND_SONIC
@@ -106,7 +78,7 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 		&& param_hash == hash40("n1_throw_angle") {
 			let max = 90.0;
 			let min = 0.0;
-			return (max*ControlModule::get_stick_y(boma)).abs().clamp(min, max);
+			return (max*sticky).abs().clamp(min, max);
 		}
 		if fighter_kind == *FIGHTER_KIND_PALUTENA {
 			if param_type == hash40("walk_accel_mul") {
@@ -422,7 +394,7 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 		if fighter_kind == *WEAPON_KIND_SNAKE_TRENCHMORTAR_BULLET
 		&& param_type == hash40("param_trenchmortarbullet")
 		&& param_hash == hash40("speed_x") {
-			return ControlModule::get_stick_x(boma) / 1.5 * PostureModule::lr(boma);
+			return ControlModule::get_stick_x(boma)/1.5*PostureModule::lr(boma);
 		}
     }
 	original!()(module_accessor, param_type, param_hash)

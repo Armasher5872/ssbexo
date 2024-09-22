@@ -9,10 +9,12 @@ use {
     },
 };
 
+mod brawl;
 mod common;
 mod smash_4;
 
 pub fn install() {
+    brawl::install();
     common::install();
     smash_4::install();
 }

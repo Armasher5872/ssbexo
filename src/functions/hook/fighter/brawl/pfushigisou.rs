@@ -3,7 +3,6 @@ use super::*;
 const PFUSHIGISOU_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xea03d0; //Ivysaur only
 const PFUSHIGISOU_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const PFUSHIGISOU_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xea03e0; //Ivysaur only
-const PFUSHIGISOU_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xf95c90; //Shared
 const PFUSHIGISOU_VTABLE_RESPAWN_INITIALIZATION_OFFSET: usize = 0xf96330; //Shared
 
 //Ivysaur Startup Initialization
@@ -60,7 +59,6 @@ unsafe extern "C" fn pfushigisou_start_initialization(vtable: u64, fighter: &mut
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    PFUSHIGISOU_IS_ACTIVE_BOMB[entry_id] = false;
 }
 
 //Ivysaur Reset Initialization
@@ -118,7 +116,6 @@ unsafe extern "C" fn pfushigisou_reset_initialization(vtable: u64, fighter: &mut
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-        PFUSHIGISOU_IS_ACTIVE_BOMB[entry_id] = false;
     }
     original!()(vtable, fighter)
 }
@@ -174,59 +171,6 @@ unsafe extern "C" fn pfushigisou_death_initialization(vtable: u64, fighter: &mut
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    PFUSHIGISOU_IS_ACTIVE_BOMB[entry_id] = false;
-    original!()(vtable, fighter)
-}
-
-//Ivysaur Once Per Fighter Frame
-#[skyline::hook(offset = PFUSHIGISOU_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn pfushigisou_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_PFUSHIGISOU as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        let pos_x = PostureModule::pos_x(boma);
-        let pos_y = PostureModule::pos_y(boma);
-        let lr = PostureModule::lr(boma);
-        let point_offset_x1 = lr*(RAIN_DANCE_X1[entry_id]-pos_x);
-        let point_offset_x2 = lr*(RAIN_DANCE_X2[entry_id]-pos_x);
-        let point_offset_y1 = RAIN_DANCE_Y1[entry_id]-pos_y;
-        let itemmanager = smash2::app::ItemManager::instance().unwrap();
-        let bomb_count = smash2::app::ItemManager::get_num_of_ownered_item(itemmanager, (*boma).battle_object_id, smash2::app::ItemKind::Deku);
-        if (pos_x <= RAIN_DANCE_X2[entry_id] && pos_x >= RAIN_DANCE_X1[entry_id]) && (pos_y >= RAIN_DANCE_Y1[entry_id] && pos_y <= RAIN_DANCE_Y2[entry_id]) && IN_RAIN_DANCE[entry_id] != true {
-            IN_RAIN_DANCE[entry_id] = true;
-        }
-        else {
-            IN_RAIN_DANCE[entry_id] = false;
-        }
-        //Rain Dance Effects
-        if RAIN_DANCE_ACTIVE[entry_id] {
-            RAIN_DANCE_FRAME[entry_id] -= 1.0;
-            if RAIN_DANCE_FRAME[entry_id] <= 600.0 && RAIN_DANCE_FRAME[entry_id] >= 598.0 {
-                EffectModule::kill_kind(boma, Hash40::new("sys_ground_shockwave"), false, false);
-            }
-            else if RAIN_DANCE_FRAME[entry_id] < 598.0 && RAIN_DANCE_FRAME[entry_id] % 30.0 == 0.0 {
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x1, y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x2, y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x1-(12.0*lr), y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-                EffectModule::req_follow(boma, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), &Vector3f{x: point_offset_x2+(12.0*lr), y: point_offset_y1, z: 0.0} as *const Vector3f, &Vector3f{x: 0.0, y: 0.0, z: 0.0} as *const Vector3f, 1.5, false, 0, 0, 0, 0, 0, false, false);
-            }
-            if RAIN_DANCE_FRAME[entry_id] <= 0.0 {
-                RAIN_DANCE_ACTIVE[entry_id] = false;
-            }
-        }
-        if !RAIN_DANCE_ACTIVE[entry_id] {
-            RAIN_DANCE_FRAME[entry_id] = -1.0;
-            RAIN_DANCE_X1[entry_id] = 0.0;
-            RAIN_DANCE_X2[entry_id] = 0.0;
-            RAIN_DANCE_Y1[entry_id] = 0.0;
-            RAIN_DANCE_Y2[entry_id] = 0.0;
-            EffectModule::kill_kind(boma, Hash40::new("sys_ground_shockwave"), false, false);
-        }
-        //Seed Bomb
-        if bomb_count == 0 {
-            PFUSHIGISOU_IS_ACTIVE_BOMB[entry_id] = false;
-        }
-    }
     original!()(vtable, fighter)
 }
 
@@ -282,7 +226,6 @@ unsafe extern "C" fn pfushigisou_respawn_initialization(vtable: u64, fighter: &m
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-        PFUSHIGISOU_IS_ACTIVE_BOMB[entry_id] = false;
     }
 }
 
@@ -291,7 +234,6 @@ pub fn install() {
         pfushigisou_start_initialization,
         pfushigisou_reset_initialization,
         pfushigisou_death_initialization,
-        pfushigisou_opff,
         pfushigisou_respawn_initialization
     );
 }

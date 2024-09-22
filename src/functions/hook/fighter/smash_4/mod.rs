@@ -4,7 +4,11 @@ use {
             ext::{
                 fighter::{
                     common::*,
+                    ike::*,
+                    metaknight::*,
                     murabito_shizue_common::*,
+                    pfushigisou::*,
+                    purin::*,
                 },
                 utility::{
                     boma_ext::*,

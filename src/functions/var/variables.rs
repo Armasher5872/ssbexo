@@ -82,13 +82,3 @@ pub static mut GRENADE_HOLD: [bool; 8] = [false; 8];
 pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_ENABLE: [bool; 8] = [false; 8];
 pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_IS_BUFFERED: [bool; 8] = [false; 8];
 pub static mut SNAKE_INT_ATTACK_S4_COMBO_COUNT: [i32; 8] = [0; 8];
-
-//Squirtle Variables
-pub static mut IN_RAIN_DANCE: [bool; 8] = [false; 8];
-pub static mut PZENIGAME_WITHDRAW_JUMP: [i32; 8] = [0; 8];
-pub static mut RAIN_DANCE_ACTIVE: [bool; 8] = [false; 8];
-pub static mut RAIN_DANCE_FRAME: [f32; 8] = [-1.0; 8];
-pub static mut RAIN_DANCE_X1: [f32; 8] = [0.0; 8];
-pub static mut RAIN_DANCE_X2: [f32; 8] = [0.0; 8];
-pub static mut RAIN_DANCE_Y1: [f32; 8] = [0.0; 8];
-pub static mut RAIN_DANCE_Y2: [f32; 8] = [0.0; 8];

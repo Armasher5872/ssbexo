@@ -22,7 +22,10 @@ use {
             ItemParamAccessor,
             StageManager
         },
-        lua2cpp::L2CFighterCommon
+        lua2cpp::{
+            L2CFighterCommon,
+            L2CWeaponCommon
+        }
     },
     skyline::nn::ro::LookupSymbol,
     std::sync::Once

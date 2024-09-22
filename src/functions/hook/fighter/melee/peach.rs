@@ -128,6 +128,7 @@ unsafe extern "C" fn peach_reset_initialization(vtable: u64, fighter: &mut Fight
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
+    original!()(vtable, fighter)
 }
 
 //Peach Death Initialization
