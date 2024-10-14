@@ -596,7 +596,7 @@ unsafe extern "C" fn ssbexo_demon_electric_wind_god_fist_acmd(agent: &mut L2CAge
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
-        shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("handr"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.0, 0.01, 0.01, 0.01, false, 1.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
+        shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("handr"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 12.0, 1.0, 1.0, 0.0, false, 1.0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
         macros::HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_NORMAL);
         macros::HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_NORMAL);
         macros::HIT_NODE(agent, Hash40::new("shoulderl"), *HIT_STATUS_NORMAL);

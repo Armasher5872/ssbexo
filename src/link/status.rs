@@ -74,7 +74,7 @@ unsafe extern "C" fn link_attack_hi_4_end_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn link_attack_lw_4_hold_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let mut log_mask_flag = (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_LW4 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_HAJIKI | *FIGHTER_STATUS_ATTR_ENABLE_ROCKETBELT_EJECT | *FIGHTER_STATUS_ATTR_INTO_DOOR);
+    let mut log_mask_flag = *FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_LW4 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_HAJIKI | *FIGHTER_STATUS_ATTR_ENABLE_ROCKETBELT_EJECT | *FIGHTER_STATUS_ATTR_INTO_DOOR;
     if 0 < WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND) {
         log_mask_flag = *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP;
     }
@@ -92,7 +92,7 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_status(fighter: &mut L2CFighterC
     let attack_4_hold_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("attack_4_hold_frame"), 0);
     let attack_lw4_hold_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_lw4_hold_frame"), 0);
     let attack_lw4_hold_keep_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_lw4_hold_keep_frame"), 0);
-    let ratio = (attack_lw4_hold_frame as f32/attack_4_hold_frame);
+    let ratio = attack_lw4_hold_frame as f32/attack_4_hold_frame;
     WorkModule::set_int(fighter.module_accessor, ratio as i32, *FIGHTER_STATUS_ATTACK_WORK_INT_SMASH_LOOP_BASE_FRAME);
     WorkModule::set_int(fighter.module_accessor, ratio as i32, *FIGHTER_STATUS_ATTACK_WORK_INT_SMASH_LOOP_FRAME);
     WorkModule::set_int(fighter.module_accessor, ratio as i32, *FIGHTER_STATUS_ATTACK_WORK_INT_SMASH_LOOP_TOTAL_FRAME);
@@ -127,7 +127,7 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
                     MotionAnimcmdModule::call_script_single(fighter.module_accessor, *FIGHTER_ANIMCMD_EXPRESSION, Hash40::new_raw(0x10f40d7b92), -1);
                     WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
                     fighter.change_status_jump_mini_attack(true.into());
-                    ret = 1.into();
+                    ret = 1;
                 }
             }
         }
@@ -179,10 +179,10 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
             }
             if !fighter.is_smash_hold(FIGHTER_STATUS_ATTACK_WORK_INT_SMASH_HOLD_KEEP_FRAME.into()).get_bool() {
                 fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4.into(), true.into());
-                ret = 1.into();
+                ret = 1;
             }
         }
-        ret = 0.into();
+        ret = 0;
     }
     else {
         if [hash40("attack_lw4_hold_walk_f"), hash40("attack_lw4_hold_walk_b")].contains(&motion_kind) {
@@ -248,7 +248,7 @@ unsafe extern "C" fn link_attack_lw_4_end_status(fighter: &mut L2CFighterCommon)
 unsafe extern "C" fn link_attachwall_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut start_stamina = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("attach_wall_frame"));
     let cliff_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_COUNT);
-    start_stamina -= (cliff_count*20);
+    start_stamina -= cliff_count*20;
     WorkModule::set_int(fighter.module_accessor, start_stamina as i32, *FIGHTER_INSTANCE_WORK_ID_INT_NO_ATTACH_WALL_FRAME);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attach_wall"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(fighter.module_accessor) {
@@ -303,7 +303,7 @@ unsafe extern "C" fn link_attachwall_main_loop(fighter: &mut L2CFighterCommon) -
     let stamina = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_NO_ATTACH_WALL_FRAME)-1;
     let max_cliff = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("cliff_max_count"));
     let sweat_rate = 10.0;
-    let modulo = stamina as f32 % sweat_rate;
+    let modulo = stamina as f32%sweat_rate;
     WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_STATUS_ATTACH_WALL_WORK_INT_FRAME);
     if GroundModule::can_entry_cliff(fighter.module_accessor) != 0  || fighter.sub_transition_group_check_air_cliff().get_bool() || remove_attach {
         if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_COUNT) < max_cliff {
@@ -325,7 +325,7 @@ unsafe extern "C" fn link_attachwall_main_loop(fighter: &mut L2CFighterCommon) -
         if stamina == 45 {
 			macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_steam3"), Hash40::new("top"), 0, 7.0, 3.0, 0, 0, 0, 1.0, true);
         }
-		if (modulo < 1.0) {
+		if modulo < 1.0 {
 			macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_hit_sweat"), Hash40::new("top"), 0, 14.5, 3.0, 0, 0, 0, 0.35, true);
 		}
     }
@@ -767,7 +767,7 @@ unsafe extern "C" fn link_special_hi_ascend_main_loop(fighter: &mut L2CFighterCo
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END.into(), false.into());
         return 0.into();
     }
-    if (modulo < 1.0) {
+    if modulo < 1.0 {
         if GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x, y: target_y+5.0}, &Vector2f{x: 0.0, y: -10.0}, true) != 1 {
             if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x: pos_x, y: target_y+20.0}, &Vector2f{x: 0.0, y: -40.0}, ground_hit_pos, true) {
                 WorkModule::set_float(fighter.module_accessor, ground_hit_pos.y, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);

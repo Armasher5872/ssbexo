@@ -11,6 +11,7 @@ pub unsafe fn super_jump_punch_main(fighter: &mut L2CFighterCommon) {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let trans_move_speed = MotionModule::trans_move_speed(boma);
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return;
     }
@@ -31,20 +32,20 @@ pub unsafe fn super_jump_punch_main(fighter: &mut L2CFighterCommon) {
         }
     }
     /* END OF NEW ADDITIONS */
-    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_FALL_SPECIAL) {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS) {
-            if prev_situation_kind == SITUATION_KIND_AIR && situation_kind == SITUATION_KIND_GROUND && MotionModule::trans_move_speed(fighter.module_accessor).y < 0.0 {
+    if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_FALL_SPECIAL) {
+        if WorkModule::is_flag(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS) {
+            if prev_situation_kind == SITUATION_KIND_AIR && situation_kind == SITUATION_KIND_GROUND && trans_move_speed.value[1] < 0.0 {
                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             }
         }
         else {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE) && prev_situation_kind == SITUATION_KIND_AIR && situation_kind == SITUATION_KIND_GROUND {
+            if WorkModule::is_flag(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_CHANGE_KINE) && prev_situation_kind == SITUATION_KIND_AIR && situation_kind == SITUATION_KIND_GROUND {
                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
             }
         }
     }
-    if MotionModule::is_end(fighter.module_accessor) {
-        let new_status = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
+    if MotionModule::is_end(boma) {
+        let new_status = WorkModule::get_int(boma, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_WORK_INT_STATUS_KIND_END);
         fighter.change_status_req(new_status, false);
     }
 }

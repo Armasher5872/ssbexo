@@ -1,5 +1,4 @@
 use {
-    crate::functions::var::variables::*,
     smash::{
         app::{
             lua_bind::*,
@@ -25,10 +24,10 @@ mod throws;
 mod tilts;
 
 pub fn install() {
-  aerials::install();
-  grounded::install();
-  smashes::install();
-  specials::install();
-  throws::install();
-  tilts::install();
+    aerials::install();
+    grounded::install();
+    smashes::install();
+    specials::install();
+    throws::install();
+    tilts::install();
 }

@@ -1,6 +1,6 @@
 use super::*;
 
-const REFLET_GIGAFIRE_VTABLE_ON_ATTACK_OFFSET: usize = 0x34d2160;
+const REFLET_GIGAFIRE_VTABLE_ON_ATTACK_OFFSET: usize = 0x34d2180;
 
 //Robin Arcfire On Attack Offset
 #[skyline::hook(offset = REFLET_GIGAFIRE_VTABLE_ON_ATTACK_OFFSET)]
@@ -21,7 +21,7 @@ unsafe extern "C" fn reflet_gigafire_on_attack(vtable: u64, weapon: *mut smash::
 pub fn install() {
     skyline::install_hook!(reflet_gigafire_on_attack);
     //Removes the vanila effect call
-    skyline::patching::Patch::in_text(0x34d2098).nop();
+    skyline::patching::Patch::in_text(0x34d20b8).nop();
     //Removes the set int for the effect
-    skyline::patching::Patch::in_text(0x34d20b4).nop();
+    skyline::patching::Patch::in_text(0x34d20d4).nop();
 }

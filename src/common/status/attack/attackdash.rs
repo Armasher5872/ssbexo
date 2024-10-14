@@ -198,6 +198,13 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     && frame > 25.0 {
         fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
     }
+    //Snake Dash Attack Item Toss
+    if fighter_kind == *FIGHTER_KIND_SNAKE {
+        if frame > 12.0 && ItemModule::is_have_item(fighter.module_accessor, 0) && MotionModule::motion_kind(fighter.module_accessor) != hash40("attack_dash_throw") {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_dash_throw"), 0.0, 1.0, false, 0.0, false, false);
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+    }
     /* END OF NEW ADDITIONS */
     if MotionModule::is_end(fighter.module_accessor) {
         let status = if situation_kind != *SITUATION_KIND_GROUND {

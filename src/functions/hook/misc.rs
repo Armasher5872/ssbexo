@@ -3,13 +3,23 @@ use super::*;
 //Changes the title screen version
 #[skyline::hook(replace = change_version_string)]
 fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
-	let original_string = unsafe {from_c_str(string)};
+	let original_string = unsafe { from_c_str(string) };
 	if original_string.contains("Ver.") {
-		let version_string = format!("{} / SSB:EXO (Beta) | Ver. 0.6.0 \0", original_string);
-		call_original!(arg, c_str(&version_string));
-	}
-	else {
-		call_original!(arg, string);
+        let version = match std::fs::read_to_string("sd:/ultimate/mods/Super Smash Bros EXO (Code Edits Only)/ui/exo_version.txt") {
+            Ok(version_value) => version_value.trim().to_string(),
+            Err(_) => {
+                #[cfg(feature = "main_nro")]
+                if !is_on_ryujinx() {
+                    skyline_web::dialog_ok::DialogOk::ok("Super Smash Bros EXO Version unknown!");
+                }
+                String::from("UNKNOWN")
+            }
+        };
+		let version_str = format!("{} / SSB:EXO (Beta) | Ver. {}\0", original_string, version);
+		call_original!(arg, c_str(&version_str))
+	} 
+    else {
+		call_original!(arg, string)
 	}
 }
 
@@ -58,7 +68,7 @@ pub unsafe fn create_item(item_manager: *mut smash::app::ItemManager, create_ite
 pub fn get_battle_object_from_id(id: u32) -> *mut BattleObject;
 
 //Credited to HDR, makes the main menu load quicker
-#[skyline::hook(offset = 0x235cab0, inline)]
+#[skyline::hook(offset = 0x235cad0, inline)]
 unsafe fn main_menu_quick(ctx: &skyline::hooks::InlineCtx) {
     let sp = (ctx as *const skyline::hooks::InlineCtx as *mut u8).add(0x100);
     *(sp.add(0x60) as *mut u64) = 0x1100000000;

@@ -3,7 +3,6 @@ use super::*;
 const FALCO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xa44a90; //Falco only
 const FALCO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa44b90; //Falco only
 const FALCO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xa45360; //Falco only
-const FALCO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa45450; //Falco only
 
 //Falco Startup Initialization
 #[skyline::hook(offset = FALCO_VTABLE_START_INITIALIZATION_OFFSET)]
@@ -170,43 +169,10 @@ unsafe extern "C" fn falco_death_initialization(vtable: u64, fighter: &mut Fight
     original!()(vtable, fighter)
 }
 
-//Falco Once Per Fighter Frame
-#[skyline::hook(offset = FALCO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn falco_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let status_kind = StatusModule::status_kind(boma);
-    let frame = MotionModule::frame(boma);
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
-    && StatusModule::is_situation_changed(boma) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, true);
-    };
-    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-        if (5.0..=15.0).contains(&frame) {
-            REFLECTOR_KNOCKBACK[entry_id] -= 3;
-            REFLECTOR_ANGLE[entry_id] -= 1;
-        }
-        if (16.0..=19.0).contains(&frame) {
-            REFLECTOR_KNOCKBACK[entry_id] = 90;
-            REFLECTOR_ANGLE[entry_id] = 60;
-        }
-        if (20.0..=31.0).contains(&frame) {
-            REFLECTOR_KNOCKBACK[entry_id] -= 3;
-            REFLECTOR_ANGLE[entry_id] -= 1;
-        }
-    }
-    else {
-        REFLECTOR_KNOCKBACK[entry_id] = 100;
-        REFLECTOR_ANGLE[entry_id] = 60;
-    }
-    original!()(vtable, fighter)
-}
-
 pub fn install() {
     skyline::install_hooks!(
         falco_start_initialization,
         falco_reset_initialization,
-        falco_death_initialization,
-        falco_opff
+        falco_death_initialization
     );
 }

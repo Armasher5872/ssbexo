@@ -10,7 +10,7 @@ use {
 };
 
 mod brawl;
-mod common;
+pub mod common;
 mod smash_4;
 
 pub fn install() {

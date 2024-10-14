@@ -2,13 +2,19 @@
 use super::*;
 
 extern "C" {
+    #[link_name = "\u{1}_ZN3app4item12disable_areaEP9lua_Statei"]
+    pub fn disable_area(lua_state: u64, area_kind: i32);
+
+    /*
     #[link_name = "_ZN3app6camera13get_dead_areaEv"]
     fn get_dead_area() -> Rect;
+    */
 
     #[link_name = "_ZN3app10sv_animcmd25EFFECT_GLOBAL_BACK_GROUNDEP9lua_State"]
     fn effect_global_back_ground(lua_state: u64);
 }
 
+/*
 #[repr(simd)]
 #[derive(Debug)]
 struct Rect {
@@ -23,6 +29,7 @@ impl Rect {
         (self.left <= x && x <= self.right) && (self.bottom <= y && y <= self.top)
     }
 }
+*/
 
 //Checks what alt you are
 pub unsafe fn get_player_number(module_accessor:  &mut smash::app::BattleObjectModuleAccessor) -> usize {
@@ -121,8 +128,8 @@ impl ShieldDataResource {
         shield_type: u8
     ) -> Self {
         ShieldDataResource {
-            offset: smash2::cpp::simd::Vector3{x: x, y: y, z: z},
-            offset2: smash2::cpp::simd::Vector3{x: x2, y: y2, z: z2},
+            offset: smash2::cpp::simd::Vector3{vec: [x, y, z]},
+            offset2: smash2::cpp::simd::Vector3{vec: [x2, y2, z2]},
             size: size,
             x24: 0,
             joint: joint,
@@ -165,8 +172,8 @@ impl ShieldData {
         shield_type: u8
     ) -> Self {
         ShieldData {
-            offset: smash2::cpp::simd::Vector3{x: x, y: y, z: z},
-            offset2: smash2::cpp::simd::Vector3{x: x2, y: y2, z: z2},
+            offset: smash2::cpp::simd::Vector3{vec: [x, y, z]},
+            offset2: smash2::cpp::simd::Vector3{vec: [x2, y2, z2]},
             size: size,
             x24: 0,
             joint: joint,
@@ -480,7 +487,6 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
     if !FighterCutInManager__is_one_on_one() {
         return;
     }
-    // ensure kill calculations only occur when the defender is on their last stock
     let entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
     let fighter_info = smash::app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), FighterEntryID(entry_id));
     if smash::app::lua_bind::FighterInformation::stock_count(fighter_info) != 1 { 
@@ -504,7 +510,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
     let air_speed_y_stable = WorkModule::get_param_float(defender_boma, hash40("air_speed_y_stable"), 0);
     let damage_fly_top_speed_y_stable = WorkModule::get_param_float(defender_boma, hash40("damage_fly_top_speed_y_stable"), 0);
     let mut context = KnockbackCalcContext{knockback, x_launch_speed: initial_speed_x, y_launch_speed: initial_speed_y, y_chara_speed: 0.0, tumble: *(knockback_info.add(1) as *const u32) >= 3, is_damage_fly_top: fly_top_angle_lw <= angle && angle <= fly_top_angle_hi, hitstun: reaction, gravity: air_accel_y, damageflytop_gravity: damage_fly_top_air_accel_y, fall_speed: air_speed_y_stable, damageflytop_fall_speed: damage_fly_top_speed_y_stable, x_pos: PostureModule::pos_x(defender_boma), y_pos: PostureModule::pos_y(defender_boma), decay_x: damage_air_brake*angle.cos().abs(), decay_y: damage_air_brake*angle.sin().abs()};
-    let blastzones = get_dead_area();
+    let blastzones = dead_range(get_fighter_common_from_accessor(&mut *defender_boma).lua_state_agent);
     let mag = (context.y_launch_speed.powi(2)+context.x_launch_speed.powi(2)).sqrt();
     let kb_angle = context.y_launch_speed.atan2(context.x_launch_speed).to_degrees();
     let min_di = kb_angle-damage_fly_correction_max;
@@ -523,7 +529,13 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             if GroundModule::ray_check(defender_boma, &Vector2f{x: context.x_pos, y: (context.y_pos + 4.0)}, &Vector2f{x: 0.0, y: -6.0}, true) == 1 && !(30.0..150.0).contains(&ang.to_degrees()) {
                 will_touch_stage = true;
             }
+            /*
             if !blastzones.contains(context.x_pos, context.y_pos) && !will_touch_stage {
+                kill_angle_num += 1;
+                break;
+            }
+            */
+            if context.x_pos < blastzones.x && context.x_pos > blastzones.y && context.y_pos > blastzones.z && context.y_pos < blastzones.w {
                 kill_angle_num += 1;
                 break;
             }
@@ -542,6 +554,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             SlowModule::set_whole(defender_boma, 8, 50);
             macros::CAM_ZOOM_IN_arg5(get_fighter_common_from_accessor(&mut *defender_boma), /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
             macros::QUAKE(get_fighter_common_from_accessor(&mut *defender_boma), *CAMERA_QUAKE_KIND_XL);
+            set_vis_hud(false);
             effect_global_back_ground(get_fighter_common_from_accessor(&mut *defender_boma).lua_state_agent);
         }
         else {
@@ -592,47 +605,47 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
                 _ if [*FIGHTER_KIND_PIKMIN, *WEAPON_KIND_PIKMIN_PIKMIN].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pikmin_final"), false, true, true),
                 _ if attacker_kind == *FIGHTER_KIND_LUCARIO => EffectModule::req_screen(attacker_boma, Hash40::new("bg_lucario_final"), false, true, true),
                 _ if [*FIGHTER_KIND_ROBOT, *WEAPON_KIND_ROBOT_BEAM].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_robot_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_TOONLINK => EffectModule::req_screen(attacker_boma, Hash40::new("bg_toonlink_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_MURABITO => EffectModule::req_screen(attacker_boma, Hash40::new("bg_murabito_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_ROCKMAN => EffectModule::req_screen(attacker_boma, Hash40::new("bg_rockman_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_WIIFIT => EffectModule::req_screen(attacker_boma, Hash40::new("bg_wiifit_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_ROSETTA => EffectModule::req_screen(attacker_boma, Hash40::new("bg_rosetta_final"), false, true, true),
+                _ if [*FIGHTER_KIND_TOONLINK, *WEAPON_KIND_TOONLINK_HOOKSHOT, *WEAPON_KIND_TOONLINK_BOWARROW, *WEAPON_KIND_TOONLINK_BOOMERANG].contains(&attacker_kind)  => EffectModule::req_screen(attacker_boma, Hash40::new("bg_toonlink_final"), false, true, true),
+                _ if [*FIGHTER_KIND_MURABITO, *WEAPON_KIND_MURABITO_WEEDS, *WEAPON_KIND_MURABITO_FLOWERPOT, *WEAPON_KIND_MURABITO_BOWLING_BALL, *WEAPON_KIND_MURABITO_FIREWORK, *WEAPON_KIND_MURABITO_BULLET, *WEAPON_KIND_MURABITO_CLAYROCKET, *WEAPON_KIND_MURABITO_TREE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_murabito_final"), false, true, true),
+                _ if [*FIGHTER_KIND_ROCKMAN, *WEAPON_KIND_ROCKMAN_CHARGESHOT, *WEAPON_KIND_ROCKMAN_AIRSHOOTER, *WEAPON_KIND_ROCKMAN_HARDKNUCKLE, *WEAPON_KIND_ROCKMAN_CRASHBOMB, *WEAPON_KIND_ROCKMAN_LEAFSHIELD].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_rockman_final"), false, true, true),
+                _ if [*FIGHTER_KIND_WIIFIT, *WEAPON_KIND_WIIFIT_SUNBULLET, *WEAPON_KIND_WIIFIT_HULAHOOP].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_wiifit_final"), false, true, true),
+                _ if [*FIGHTER_KIND_ROSETTA, *WEAPON_KIND_ROSETTA_METEOR, *WEAPON_KIND_ROSETTA_STARPIECE, *WEAPON_KIND_ROSETTA_TICO].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_rosetta_final"), false, true, true),
                 _ if attacker_kind == *FIGHTER_KIND_LITTLEMAC => EffectModule::req_screen(attacker_boma, Hash40::new("bg_littlemac_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_GEKKOUGA => EffectModule::req_screen(attacker_boma, Hash40::new("bg_gekkouga_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_PALUTENA => EffectModule::req_screen(attacker_boma, Hash40::new("bg_palutena_final"), false, true, true),
+                _ if [*FIGHTER_KIND_GEKKOUGA, *WEAPON_KIND_GEKKOUGA_SHURIKEN, *WEAPON_KIND_GEKKOUGA_WATER].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_gekkouga_final"), false, true, true),
+                _ if [*FIGHTER_KIND_PALUTENA, *WEAPON_KIND_PALUTENA_EXPLOSIVEFLAME].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_palutena_final"), false, true, true),
                 _ if attacker_kind == *FIGHTER_KIND_PACMAN => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pacman_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_REFLET => EffectModule::req_screen(attacker_boma, Hash40::new("bg_reflet_final"), false, true, true),
+                _ if [*FIGHTER_KIND_REFLET, *WEAPON_KIND_REFLET_THUNDER, *WEAPON_KIND_REFLET_GIGAFIRE, *WEAPON_KIND_REFLET_ELWIND].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_reflet_final"), false, true, true),
                 _ if attacker_kind == *FIGHTER_KIND_SHULK => EffectModule::req_screen(attacker_boma, Hash40::new("bg_shulk_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_KOOPAJR => EffectModule::req_screen(attacker_boma, Hash40::new("bg_koopajr_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_DUCKHUNT => EffectModule::req_screen(attacker_boma, Hash40::new("bg_duckhunt_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_RYU => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ryu_final_shinsyoryu"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_KEN => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ken_final_shinryuken"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_CLOUD => EffectModule::req_screen(attacker_boma, Hash40::new("bg_cloud_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_KAMUI => EffectModule::req_screen(attacker_boma, Hash40::new("bg_kamui_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_BAYONETTA => EffectModule::req_screen(attacker_boma, Hash40::new("bg_bayonetta_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_INKLING => EffectModule::req_screen(attacker_boma, Hash40::new("bg_inkling_final_l"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_RIDLEY => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ridley_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_SIMON => EffectModule::req_screen(attacker_boma, Hash40::new("bg_simon_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_RICHTER => EffectModule::req_screen(attacker_boma, Hash40::new("bg_richter_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_KROOL => EffectModule::req_screen(attacker_boma, Hash40::new("bg_krool_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_SHIZUE => EffectModule::req_screen(attacker_boma, Hash40::new("bg_shizue_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_GAOGAEN => EffectModule::req_screen(attacker_boma, Hash40::new("bg_gaogaen_final"), false, true, true),
+                _ if [*FIGHTER_KIND_KOOPAJR, *WEAPON_KIND_KOOPAJR_CANNONBALL, *WEAPON_KIND_KOOPAJR_HAMMER].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_koopajr_final"), false, true, true),
+                _ if [*FIGHTER_KIND_DUCKHUNT, *WEAPON_KIND_DUCKHUNT_CAN, *WEAPON_KIND_DUCKHUNT_CLAY, *WEAPON_KIND_DUCKHUNT_GUNMANBULLET].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_duckhunt_final"), false, true, true),
+                _ if [*FIGHTER_KIND_RYU, *WEAPON_KIND_RYU_HADOKEN].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ryu_final_shinsyoryu"), false, true, true),
+                _ if [*FIGHTER_KIND_KEN, *WEAPON_KIND_KEN_HADOKEN].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ken_final_shinryuken"), false, true, true),
+                _ if [*FIGHTER_KIND_CLOUD, *WEAPON_KIND_CLOUD_WAVE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_cloud_final"), false, true, true),
+                _ if [*FIGHTER_KIND_KAMUI, *WEAPON_KIND_KAMUI_DRAGONHAND, *WEAPON_KIND_KAMUI_RYUSENSYA].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_kamui_final"), false, true, true),
+                _ if [*FIGHTER_KIND_BAYONETTA, *WEAPON_KIND_BAYONETTA_WICKEDWEAVEARM, *WEAPON_KIND_BAYONETTA_WICKEDWEAVELEG, *WEAPON_KIND_BAYONETTA_SPECIALN_BULLET].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_bayonetta_final"), false, true, true),
+                _ if [*FIGHTER_KIND_INKLING, *WEAPON_KIND_INKLING_BRUSH, *WEAPON_KIND_INKLING_INKBULLET, *WEAPON_KIND_INKLING_SPLASHBOMB].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_inkling_final_l"), false, true, true),
+                _ if [*FIGHTER_KIND_RIDLEY, *WEAPON_KIND_RIDLEY_BREATH].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ridley_final"), false, true, true),
+                _ if [*FIGHTER_KIND_SIMON, *WEAPON_KIND_SIMON_AXE, *WEAPON_KIND_SIMON_CROSS, *WEAPON_KIND_SIMON_WHIP, *WEAPON_KIND_SIMON_WHIP2, *WEAPON_KIND_SIMON_WHIPWIRE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_simon_final"), false, true, true),
+                _ if [*FIGHTER_KIND_RICHTER, *WEAPON_KIND_RICHTER_AXE, *WEAPON_KIND_RICHTER_CROSS, *WEAPON_KIND_RICHTER_WHIP, *WEAPON_KIND_RICHTER_WHIP2, *WEAPON_KIND_RICHTER_WHIPWIRE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_richter_final"), false, true, true),
+                _ if [*FIGHTER_KIND_KROOL, *WEAPON_KIND_KROOL_IRONBALL, *WEAPON_KIND_KROOL_CROWN].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_krool_final"), false, true, true),
+                _ if [*FIGHTER_KIND_SHIZUE, *WEAPON_KIND_SHIZUE_PICOPICOHAMMER, *WEAPON_KIND_SHIZUE_WEEDS, *WEAPON_KIND_SHIZUE_POT, *WEAPON_KIND_SHIZUE_TRAFFICSIGN, *WEAPON_KIND_SHIZUE_POMPON, *WEAPON_KIND_SHIZUE_BULLET, *WEAPON_KIND_SHIZUE_CLAYROCKET].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_shizue_final"), false, true, true),
+                _ if [*FIGHTER_KIND_GAOGAEN, *WEAPON_KIND_PACKUN_SPIKEBALL].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_gaogaen_final"), false, true, true),
                 _ if attacker_kind == *FIGHTER_KIND_PACKUN => EffectModule::req_screen(attacker_boma, Hash40::new("bg_packun_final1"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_JACK => EffectModule::req_screen(attacker_boma, Hash40::new("bg_jack_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_BRAVE => EffectModule::req_screen(attacker_boma, Hash40::new("bg_brave_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_BUDDY => EffectModule::req_screen(attacker_boma, Hash40::new("bg_buddy_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_DOLLY => EffectModule::req_screen(attacker_boma, Hash40::new("bg_dolly_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_MASTER => EffectModule::req_screen(attacker_boma, Hash40::new("bg_master_final_l"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_TANTAN => EffectModule::req_screen(attacker_boma, Hash40::new("bg_tantan_final_l"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_PICKEL => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pickel_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_EDGE => EffectModule::req_screen(attacker_boma, Hash40::new("bg_edge_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_EFLAME => EffectModule::req_screen(attacker_boma, Hash40::new("bg_eflame_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_ELIGHT => EffectModule::req_screen(attacker_boma, Hash40::new("bg_eelight_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_DEMON => EffectModule::req_screen(attacker_boma, Hash40::new("bg_demon_final"), false, true, true),
+                _ if [*FIGHTER_KIND_JACK, *WEAPON_KIND_JACK_FIRE, *WEAPON_KIND_JACK_FIRE2, *WEAPON_KIND_JACK_WIREROPE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_jack_final"), false, true, true),
+                _ if [*FIGHTER_KIND_BRAVE, *WEAPON_KIND_BRAVE_CRASH, *WEAPON_KIND_BRAVE_DEATHBALL, *WEAPON_KIND_BRAVE_EXPLOSION, *WEAPON_KIND_BRAVE_FIREBALL, *WEAPON_KIND_BRAVE_FLASH, *WEAPON_KIND_BRAVE_LIGHTNING, *WEAPON_KIND_BRAVE_SPARK, *WEAPON_KIND_BRAVE_TORNADO].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_brave_final"), false, true, true),
+                _ if [*FIGHTER_KIND_BUDDY, *WEAPON_KIND_BUDDY_BULLET, *WEAPON_KIND_BUDDY_PAD].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_buddy_final"), false, true, true),
+                _ if [*FIGHTER_KIND_DOLLY, *WEAPON_KIND_DOLLY_WAVE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_dolly_final"), false, true, true),
+                _ if [*FIGHTER_KIND_MASTER, *WEAPON_KIND_MASTER_ARROW1, *WEAPON_KIND_MASTER_ARROW2, *WEAPON_KIND_MASTER_AXE, *WEAPON_KIND_MASTER_BOW, *WEAPON_KIND_MASTER_SPEAR, *WEAPON_KIND_MASTER_SWORD, *WEAPON_KIND_MASTER_SWORD2].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_master_final_l"), false, true, true),
+                _ if [*FIGHTER_KIND_TANTAN, *WEAPON_KIND_TANTAN_BEAM, *WEAPON_KIND_TANTAN_PUNCH1, *WEAPON_KIND_TANTAN_PUNCH2, *WEAPON_KIND_TANTAN_PUNCH3, *WEAPON_KIND_TANTAN_RING, *WEAPON_KIND_TANTAN_SPIRALLEFT, *WEAPON_KIND_TANTAN_SPIRALLEFTLOUPE, *WEAPON_KIND_TANTAN_SPIRALRIGHT, *WEAPON_KIND_TANTAN_SPIRALRIGHTLOUPE, *WEAPON_KIND_TANTAN_SPIRALSIMPLE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_tantan_final_l"), false, true, true),
+                _ if [*FIGHTER_KIND_PICKEL, *WEAPON_KIND_PICKEL_AXE, *WEAPON_KIND_PICKEL_FIRE, *WEAPON_KIND_PICKEL_MELT, *WEAPON_KIND_PICKEL_PICK, *WEAPON_KIND_PICKEL_PUSHOBJECT, *WEAPON_KIND_PICKEL_STUFF, *WEAPON_KIND_PICKEL_SWORD, *WEAPON_KIND_PICKEL_TROLLEY].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pickel_final"), false, true, true),
+                _ if [*FIGHTER_KIND_EDGE, *WEAPON_KIND_EDGE_FIRE, *WEAPON_KIND_EDGE_FLARE2, *WEAPON_KIND_EDGE_FLASH].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_edge_final"), false, true, true),
+                _ if [*FIGHTER_KIND_EFLAME, *WEAPON_KIND_EFLAME_ESWORD].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_eflame_final"), false, true, true),
+                _ if [*FIGHTER_KIND_ELIGHT, *WEAPON_KIND_ELIGHT_EXPROSIVESHOT, *WEAPON_KIND_ELIGHT_METEOR, *WEAPON_KIND_ELIGHT_SPREADBULLET].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_eelight_final"), false, true, true),
+                _ if [*FIGHTER_KIND_DEMON, *WEAPON_KIND_DEMON_BLASTER].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_demon_final"), false, true, true),
                 _ if attacker_kind == *FIGHTER_KIND_TRAIL => EffectModule::req_screen(attacker_boma, Hash40::new("bg_trail_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_MIIFIGHTER => EffectModule::req_screen(attacker_boma, Hash40::new("bg_miifighter_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_MIISWORDSMAN => EffectModule::req_screen(attacker_boma, Hash40::new("bg_miiswordsman_final"), false, true, true),
-                _ if attacker_kind == *FIGHTER_KIND_MIIGUNNER => EffectModule::req_screen(attacker_boma, Hash40::new("bg_miigunner_final"), false, true, true),
+                _ if [*FIGHTER_KIND_MIIFIGHTER, *WEAPON_KIND_MIIFIGHTER_IRONBALL].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_miifighter_final"), false, true, true),
+                _ if [*FIGHTER_KIND_MIISWORDSMAN, *WEAPON_KIND_MIISWORDSMAN_LIGHTSHURIKEN, *WEAPON_KIND_MIISWORDSMAN_CHAKRAM].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_miiswordsman_final"), false, true, true),
+                _ if [*FIGHTER_KIND_MIIGUNNER, *WEAPON_KIND_MIIGUNNER_ATTACKAIRF_BULLET, *WEAPON_KIND_MIIGUNNER_FLAMEPILLAR, *WEAPON_KIND_MIIGUNNER_GRENADELAUNCHER, *WEAPON_KIND_MIIGUNNER_GROUNDBOMB, *WEAPON_KIND_MIIGUNNER_LASER, *WEAPON_KIND_MIIGUNNER_GUNNERCHARGE, *WEAPON_KIND_MIIGUNNER_RAPIDSHOT_BULLET, *WEAPON_KIND_MIIGUNNER_STEALTHBOMB_S, *WEAPON_KIND_MIIGUNNER_SUPERMISSILE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_miigunner_final"), false, true, true),
                 _ => EffectModule::req_screen(attacker_boma, Hash40::new("bg_criticalhit"), false, true, true)
             };
             EffectModule::set_billboard(attacker_boma, handle as u32, true);
@@ -661,10 +674,26 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
 unsafe extern "C" fn is_invalid_finishing_hit(boma: &mut BattleObjectModuleAccessor) -> bool {
     for id in 0..8 {
         let attack_data = AttackModule::attack_data(boma, id, false);
+        let fixed_knockback = (*attack_data).r_fix;
         let attribute = (*attack_data).attr;
-        if [hash40("collision_attr_saving"), hash40("collision_attr_lay"), hash40("collision_attr_bury")].contains(&attribute) {
+        if [hash40("collision_attr_saving"), hash40("collision_attr_lay"), hash40("collision_attr_bury")].contains(&attribute) || fixed_knockback > 0 {
             return true;
         }
     }
     return false;
+}
+
+pub fn is_on_ryujinx() -> bool {
+    unsafe {
+        //Ryujinx skip based on text addr
+        let text_addr = skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64;
+        if text_addr == 0x8504000 || text_addr == 0x80004000 {
+            println!("On Ryujinx");
+            return true;
+        } 
+        else {
+            println!("Not on Ryujinx");
+            return false;
+        }
+    }
 }

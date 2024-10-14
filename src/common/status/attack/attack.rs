@@ -4,7 +4,7 @@ use super::*;
 /*   GROUNDED ATTACK STATUSES   */
 //Sub Status Attack Common, removes the combo check
 #[skyline::hook(replace = L2CFighterCommon_sub_status_AttackCommon)]
-unsafe fn sub_status_attackcommon(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn sub_status_attackcommon(fighter: &mut L2CFighterCommon) {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     if fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_ATTACK {
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ATTACK_WORK_INT_100_HIT_NEAR_COUNT);
@@ -21,7 +21,7 @@ unsafe fn sub_status_attackcommon(fighter: &mut L2CFighterCommon) {
 
 //Attack Combo None Uniq Chk Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
 #[skyline::hook(replace = L2CFighterCommon_attack_combo_none_uniq_chk_button)]
-unsafe fn attack_combo_none_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue, param_3: L2CValue) {
+unsafe extern "C" fn attack_combo_none_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue, param_3: L2CValue) {
     if !param_1.get_bool() {
         if ControlModule::check_button_on(fighter.module_accessor, param_2.get_i32()) && only_jabs(fighter) {
             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_RESTART) {
@@ -45,7 +45,7 @@ unsafe fn attack_combo_none_uniq_chk_button(fighter: &mut L2CFighterCommon, para
 
 //Attack Combo Uniq Chk Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
 #[skyline::hook(replace = L2CFighterCommon_attack_combo_uniq_chk_button)]
-unsafe fn attack_combo_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue, param_3: L2CValue) {
+unsafe extern "C" fn attack_combo_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue, param_3: L2CValue) {
     if !param_1.get_bool() {
         fighter.attack_uniq_chk_command(param_3.clone());
         if fighter.global_table[CMD_CAT1].get_i32() & param_3.get_i32() != 0 && only_jabs(fighter) {
@@ -107,7 +107,7 @@ unsafe fn attack_combo_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: 
 
 //Attack Uniq Chk Command, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
 #[skyline::hook(replace = L2CFighterCommon_attack_uniq_chk_command)]
-unsafe fn attack_uniq_chk_command(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
+unsafe extern "C" fn attack_uniq_chk_command(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
     let cat1 = fighter.global_table[CMD_CAT1].get_i32();
     if cat1 & param_1.get_i32() != 0 && only_jabs(fighter) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO_PRECEDE);
@@ -116,7 +116,7 @@ unsafe fn attack_uniq_chk_command(fighter: &mut L2CFighterCommon, param_1: L2CVa
 
 //Check 100 Count Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
 #[skyline::hook(replace = L2CFighterCommon_check_100_count_button)]
-unsafe fn check_100_count_button(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
+unsafe extern "C" fn check_100_count_button(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
     let button = param_1.get_i32();
     if only_jabs(fighter) {
         if fighter.global_table[IS_STOP].get_bool() {
@@ -136,7 +136,7 @@ unsafe fn check_100_count_button(fighter: &mut L2CFighterCommon, param_1: L2CVal
 
 //Status Attack Main Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
 #[skyline::hook(replace = L2CFighterCommon_status_Attack_Main_button)]
-unsafe fn status_attack_main_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue) -> L2CValue {
+unsafe extern "C" fn status_attack_main_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     fighter.check_100_count_button(param_1.clone());
     if CancelModule::is_enable_cancel(fighter.module_accessor) {

@@ -1,7 +1,14 @@
 use {
-    crate::functions::var::variables::*,
+    crate::functions::var::{
+        globals::*,
+        snake::*,
+    },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,

@@ -39,6 +39,6 @@ impl GetObjects for BattleObjectModuleAccessor {
     }
 
     unsafe fn get_object(this: &mut Self) -> &'static mut BattleObject {
-        std::mem::transmute(crate::functions::util::get_battle_object_from_id(this.battle_object_id))
+        std::mem::transmute(get_battle_object_from_id(this.battle_object_id))
     }
 }

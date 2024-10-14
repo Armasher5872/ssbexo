@@ -78,14 +78,7 @@ unsafe extern "C" fn ssbexo_palutena_neutral_special_expression(agent: &mut L2CA
 unsafe extern "C" fn ssbexo_palutena_side_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
-        macros::SEARCH(agent, 0, 0, Hash40::new("top"), 12.0, 0.0, 7.0, 7.0, None, None, None, *COLLISION_KIND_MASK_ALL, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, true);
-        shield!(agent, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
-    }
-    frame(agent.lua_state_agent, 25.0);
-    if macros::is_excute(agent) {
-        search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
-        shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
-        HitModule::set_whole(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_PALUTENA_GENERATE_ARTICLE_REFLECTIONBOARD, false, -1);
     }
 }
 
@@ -184,6 +177,35 @@ unsafe extern "C" fn ssbexo_palutena_side_special_expression(agent: &mut L2CAgen
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
         macros::RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+    }
+}
+
+//Reflection Board Shoot ACMD
+unsafe extern "C" fn ssbexo_palutena_reflection_board_shoot_acmd(agent: &mut L2CAgentBase) {
+    for _ in 0..i32::MAX {
+        if macros::is_excute(agent) {
+            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 20, 100, 10, 0, 5.0, 0.0, 8.5, 0.0, Some(0.0), Some(-4.5), Some(0.0), 2.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_ITEM, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
+        }
+        wait(agent.lua_state_agent, 3.0);
+        if macros::is_excute(agent) {
+            AttackModule::clear_all(agent.module_accessor);
+        }
+    }
+}
+
+//Reflection Board Break Effect
+unsafe extern "C" fn ssbexo_palutena_reflection_board_break_effect(agent: &mut L2CAgentBase) {
+    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+        if macros::is_excute(agent) {
+            macros::EFFECT(agent, Hash40::new("palutena_mirror_break"), Hash40::new("top"), 0, 2, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
+            macros::LAST_EFFECT_SET_RATE(agent, 0.8);
+        }
+        else {
+            if macros::is_excute(agent) {
+                macros::EFFECT(agent, Hash40::new("palutena_mirror_break"), Hash40::new("top"), 0, 2, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
+                macros::LAST_EFFECT_SET_RATE(agent, 0.8);
+            }
+        }
     }
 }
 
@@ -447,6 +469,11 @@ pub fn install() {
     .sound_acmd("sound_specialairlw", ssbexo_palutena_down_special_sound, Priority::Low)
     .expression_acmd("expression_speciallw", ssbexo_palutena_down_special_expression, Priority::Low)
     .expression_acmd("expression_specialairlw", ssbexo_palutena_down_special_expression, Priority::Low)
+    .install()
+    ;
+    Agent::new("palutena_reflectionboard")
+    .game_acmd("game_shoot", ssbexo_palutena_reflection_board_shoot_acmd, Priority::Low)
+    .effect_acmd("effect_break", ssbexo_palutena_reflection_board_break_effect, Priority::Low)
     .install()
     ;
 }

@@ -7,11 +7,13 @@ use {
             },
             utility::{
                 boma_ext::*,
-                commandcat::*,
                 misc::*,
             }
         },
-        hook::attack::*,
+        hook::{
+            attack::*,
+            ui::ui_manager::*,
+        },
         var::{
             consts::*,
             dedede::*,
@@ -23,8 +25,8 @@ use {
             lucas::*,
             metaknight::*,
             murabito::*,
-            pfushigisou::*,
             robot::*,
+            snake::*,
             sonic::*,
             variables::*,
         },

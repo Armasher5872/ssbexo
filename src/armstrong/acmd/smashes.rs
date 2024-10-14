@@ -116,13 +116,13 @@ unsafe extern "C" fn ssbexo_armstrong_up_smash_effect(agent: &mut L2CAgentBase) 
 	if macros::is_excute(agent) {
         macros::LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
 	    macros::LAST_EFFECT_SET_RATE(agent, 0.4);
-        macros::EFFECT_FOLLOW(agent, Hash40::new_raw(0x10e97de698), Hash40::new("top"), 0, 15, -3, 180, 190, -90, 1.15, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 15, -3, 180, 190, -90, 1.15, true);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         macros::LAST_EFFECT_SET_RATE(agent, 1.5);
     }
     frame(agent.lua_state_agent, 21.0);
 	if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW_ALPHA(agent, Hash40::new_raw(0x1156ac182a), Hash40::new("footl"), 0, 0, 0, 0, 0, 0, 1.5, true, 0.9);
+        macros::EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.5, true, 0.9);
         macros::LAST_EFFECT_SET_RATE(agent, 2.0);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
     }

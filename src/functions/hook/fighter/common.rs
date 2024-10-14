@@ -48,7 +48,6 @@ unsafe fn is_valid_just_shield_replace(boma: &mut BattleObjectModuleAccessor) ->
 unsafe fn fix_chara_replace(ctx: &skyline::hooks::InlineCtx) {
     let ptr1 = *ctx.registers[0].x.as_ref() as *mut u64;
     let ptr2 = *ctx.registers[1].x.as_ref() as *mut u64;
-
     *ptr2.add(0x2) = *ptr1.add(0x2);
     *ptr2.add(0x3) = *ptr1.add(0x3);
     *ptr2.add(0x4) = *ptr1.add(0x4);

@@ -1,7 +1,7 @@
 use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_AirLasso)]
-unsafe fn status_airlasso(fighter: &mut L2CFighterCommon, article_id: &mut L2CValue, article2_id: &mut L2CValue, cliff_data: &mut L2CValue, param_4: &mut L2CValue) -> L2CValue {
+unsafe extern "C" fn status_airlasso(fighter: &mut L2CFighterCommon, article_id: &mut L2CValue, article2_id: &mut L2CValue, cliff_data: &mut L2CValue, param_4: &mut L2CValue) -> L2CValue {
     let bool_check = true;
     let landing_air_lasso_motion_rate = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("landing_air_lasso_motion_rate"));
     let lr = PostureModule::lr(fighter.module_accessor);

@@ -15,6 +15,7 @@ use {
             globals::*,
             marth::*,
             mewtwo::*,
+            roy::*,
             sheik::*,
             variables::*,
         },

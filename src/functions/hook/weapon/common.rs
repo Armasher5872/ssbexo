@@ -1,6 +1,9 @@
 use super::*;
 
-const COMMON_WEAPON_SHIELD_ATTACK_CALLBACK: usize = 0x346c8b0; //Used for when generic weapons hit something elses shield.
+const COMMON_WEAPON_SHIELD_ATTACK_CALLBACK: usize = 0x346c8d0; //Used for when generic weapons hit something elses shield.
+
+#[skyline::from_offset(0x33bdc30)]
+pub unsafe extern "C" fn normal_weapon_hit_handler(vtable: u64, weapon: *mut smash::app::Weapon, something: u32) -> u64;
 
 #[skyline::hook(offset = COMMON_WEAPON_SHIELD_ATTACK_CALLBACK)]
 unsafe extern "C" fn common_weapon_shield_attack_callback(vtable: u64, weapon: *mut smash::app::Weapon, arg: u32) {

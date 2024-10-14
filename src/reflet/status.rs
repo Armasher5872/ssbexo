@@ -276,11 +276,11 @@ unsafe extern "C" fn reflet_special_hi_check_jump(fighter: &mut L2CFighterCommon
         smash::app::lua_bind::FighterKineticEnergyController::set_accel_x_add(control_energy as *mut smash::app::FighterKineticEnergyController, air_accel_x_add*control_mul);
         smash::app::lua_bind::FighterKineticEnergyController::set_accel_x_mul(control_energy as *mut smash::app::FighterKineticEnergyController, air_accel_x_mul*control_mul);
         smash::app::lua_bind::KineticEnergy::reset_energy(control_energy as *mut smash::app::KineticEnergy, *ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, &Vector2f{x: 0.0, y: 0.0}, &Vector3f::zero(), fighter.module_accessor);
-        smash::app::lua_bind::KineticEnergy::reset_energy(grav_energy, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &Vector2f{x: 0.0, y: get_special_hi_jump_speed.y}, &Vector3f::zero(), fighter.module_accessor);
+        smash::app::lua_bind::KineticEnergy::reset_energy(grav_energy, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, &Vector2f{x: 0.0, y: get_special_hi_jump_speed.value[1]}, &Vector3f::zero(), fighter.module_accessor);
         smash::app::lua_bind::KineticEnergy::unable(stop_energy);
         smash::app::lua_bind::KineticEnergyNormal::set_limit_speed(control_energy as *mut smash::app::KineticEnergyNormal, &Vector2f{x: air_speed_x_limit*control_mul, y: 0.0});
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, get_special_hi_jump_speed.x, 0.0);
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, get_special_hi_jump_speed.value[0], 0.0);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_REFLET_STATUS_SPECIAL_HI_FLAG_JUMP);
     }
 }

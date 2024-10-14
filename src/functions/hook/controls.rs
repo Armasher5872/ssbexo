@@ -34,7 +34,7 @@ struct ControlModuleInternal {
     clamped_rstick_y: f32,
 }
 
-#[skyline::hook(offset = 0x1D39FE0)]
+#[skyline::hook(offset = 0x1d3a000)]
 unsafe fn get_button_label_by_operation_kind(hashed_string: &mut HashedString, operation: u8, arg: bool) {
     if operation == InputKind::JumpMini as u8 {
         for (index, byte) in "mnu_opt_btn_key_short_hop\0".as_bytes().iter().enumerate() {
@@ -51,7 +51,7 @@ unsafe fn get_button_label_by_operation_kind(hashed_string: &mut HashedString, o
     }
 }
 
-#[skyline::hook(offset = 0x1d334c8, inline)]
+#[skyline::hook(offset = 0x1d334e8, inline)]
 unsafe fn add_footstool_to_gc(ctx: &skyline::hooks::InlineCtx) {
     let button = *ctx.registers[25].w.as_ref();
     if ![0x3, 0x4, 0x5, 0x8].contains(&button) {
@@ -66,7 +66,7 @@ unsafe fn add_footstool_to_gc(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
-#[skyline::hook(offset = 0x1D331D8, inline)]
+#[skyline::hook(offset = 0x1D331f8, inline)]
 unsafe fn add_footstool_to_fk(ctx: &skyline::hooks::InlineCtx) {
     let button = *ctx.registers[25].w.as_ref();
     if [0x4, 0x5, 0x6, 0x9].contains(&button) {
@@ -82,7 +82,7 @@ unsafe fn add_footstool_to_fk(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
-#[skyline::hook(offset = 0x1D33CB8, inline)]
+#[skyline::hook(offset = 0x1D33Cd8, inline)]
 unsafe fn add_footstool_to_jc(ctx: &skyline::hooks::InlineCtx) {
     let input_list_vector = &mut *((*ctx.registers[24].x.as_ref() + 0x148) as *mut CppVector<u8>);
 
@@ -94,7 +94,7 @@ unsafe fn add_footstool_to_jc(ctx: &skyline::hooks::InlineCtx) {
     }
 }
 
-#[skyline::hook(offset = 0x1D3592C, inline)]
+#[skyline::hook(offset = 0x1D3594C, inline)]
 unsafe fn add_more_buttons(ctx: &mut skyline::hooks::InlineCtx) {
     let input_list_vector = &mut *((*ctx.registers[24].x.as_ref() + 0x148) as *mut CppVector<u8>);
     // panic!("{}", input_list_vector.len());
@@ -125,7 +125,7 @@ unsafe fn write_packet(ctx: &mut skyline::hooks::InlineCtx) {
     *ctx.registers[8].x.as_mut() = packet;
 }
 
-#[skyline::hook(offset = crate::functions::offsets::map_controls())]
+#[skyline::hook(offset = 0x1750f70)]
 unsafe fn map_controls_hook(
     mappings: *mut ControllerMapping,
     player_idx: i32,
@@ -429,6 +429,8 @@ unsafe fn map_controls_hook(
     }
 }
 
+//Offset Search needs to be updated, using hardcoded offsets to 13.0.3 for now
+/*
 #[skyline::hook(offset = crate::functions::offsets::analog_trigger_l(), inline)]
 unsafe fn analog_trigger_l(ctx: &mut skyline::hooks::InlineCtx) {
     if *ctx.registers[9].x.as_ref() & 0x40 != 0 {
@@ -439,6 +441,25 @@ unsafe fn analog_trigger_l(ctx: &mut skyline::hooks::InlineCtx) {
 }
 
 #[skyline::hook(offset = crate::functions::offsets::analog_trigger_r(), inline)]
+unsafe fn analog_trigger_r(ctx: &mut skyline::hooks::InlineCtx) {
+    if *ctx.registers[8].x.as_ref() & 0x80 != 0 {
+        *ctx.registers[11].x.as_mut() = 0;
+    } else {
+        *ctx.registers[11].w.as_mut() = 0x27FF;
+    }
+}
+*/
+
+#[skyline::hook(offset = 0x3666b00, inline)]
+unsafe fn analog_trigger_l(ctx: &mut skyline::hooks::InlineCtx) {
+    if *ctx.registers[9].x.as_ref() & 0x40 != 0 {
+        *ctx.registers[11].x.as_mut() = 0;
+    } else {
+        *ctx.registers[11].w.as_mut() = 0x27FF;
+    }
+}
+
+#[skyline::hook(offset = 0x3666b14, inline)]
 unsafe fn analog_trigger_r(ctx: &mut skyline::hooks::InlineCtx) {
     if *ctx.registers[8].x.as_ref() & 0x80 != 0 {
         *ctx.registers[11].x.as_mut() = 0;
@@ -502,7 +523,7 @@ unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
 pub fn install() {
 	unsafe {
         //Related to adding buttons
-        skyline::patching::Patch::in_text(0x1D3592C).nop();
+        skyline::patching::Patch::in_text(0x1D3594C).nop();
     }
 	skyline::install_hooks!(
 		get_button_label_by_operation_kind,

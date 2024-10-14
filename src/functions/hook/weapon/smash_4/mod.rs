@@ -1,6 +1,10 @@
 use {
     crate::functions::{
-        var::reflet::*,
+        hook::weapon::common::*,
+        var::{
+            palutena::*,
+            reflet::*,
+        },
         util::*,
     },
     smash::{
@@ -11,8 +15,12 @@ use {
     smash_script::*,
 };
 
+mod palutena;
 mod reflet;
+mod rockman;
 
 pub fn install() {
+    palutena::install();
     reflet::install();
+    rockman::install();
 }

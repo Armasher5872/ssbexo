@@ -1,8 +1,11 @@
 #![allow(dead_code, unused_must_use)]
 use {
-    crate::functions::ext::{
-        fighter::common::*,
-        utility::controls::*,
+    crate::functions::{
+        ext::{
+            fighter::common::*,
+            utility::controls::*,
+        },
+        hook::misc::*,
     },
     smash::{
         app::{
@@ -33,7 +36,7 @@ use {
 
 pub mod ext;
 pub mod hook;
-pub mod offsets;
+//pub mod offsets;
 pub mod singletons;
 pub mod util;
 pub mod var;

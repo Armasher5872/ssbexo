@@ -79,10 +79,10 @@ unsafe fn status_guarddamage_common(fighter: &mut L2CFighterCommon, param_1: L2C
         if param_1.get_bool() {
             EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x12c9377e3d), Hash40::new("throw"), &Vector3f::zero(), &Vector3f::zero(), 0.1, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
             let handle = EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x12be304eab), Hash40::new("throw"), &Vector3f::zero(), &Vector3f::zero(), 0.1, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
-            EffectModule::set_rgb_partial_last(fighter.module_accessor, shield_effect_color.x, shield_effect_color.y, shield_effect_color.z);
+            EffectModule::set_rgb_partial_last(fighter.module_accessor, shield_effect_color.value[0], shield_effect_color.value[1], shield_effect_color.value[2]);
             WorkModule::set_int(fighter.module_accessor, handle as i32, *FIGHTER_STATUS_GUARD_ON_WORK_INT_SHIELD_DAMAGE2_EFFECT_HANDLE);
             let handle_1 = EffectModule::req_follow(fighter.module_accessor, Hash40::new_raw(0x113434cb66), Hash40::new("throw"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, *EFFECT_SUB_ATTRIBUTE_NONE as u32, 0, -1, *EFFECT_FLIP_NONE, 1, false, true);
-            EffectModule::set_rgb_partial_last(fighter.module_accessor, shield_effect_color.x, shield_effect_color.y, shield_effect_color.z);
+            EffectModule::set_rgb_partial_last(fighter.module_accessor, shield_effect_color.value[0], shield_effect_color.value[1], shield_effect_color.value[2]);
             WorkModule::set_int(fighter.module_accessor, handle_1 as i32, *FIGHTER_STATUS_GUARD_ON_WORK_INT_SHIELD_DAMAGE_EFFECT_HANDLE);
             if handle_1 != 0 {
                 let diff = (shield_hp/shield_max).clamp(0.1, 1.0)*0.1;

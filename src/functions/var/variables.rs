@@ -46,10 +46,6 @@ pub static mut TAP_WAIT : [i32; 65544] = [6; 65544];
 pub static mut TEMP_SPAWN_POS: [Vector3f;9] = [Vector3f{x: 0.0, y: 0.0, z: 0.0};9]; //Used to randomize spawn pos in Volleyball mode
 pub static mut TOTAL_FIGHTER: i32 = 1; //Tracks how many fighters are present
 
-//Falco Variables
-pub static mut REFLECTOR_KNOCKBACK: [i32; 8] = [100; 8];
-pub static mut REFLECTOR_ANGLE: [u64; 8] = [60; 8];
-
 //Lucario Variables
 pub static mut MEGA_EVOLVE: [bool; 8] = [false; 8];
 
@@ -73,12 +69,3 @@ pub static mut POGO_GROUND_BOUNCE: [bool; 8] = [false; 8];
 pub static mut POGO_OPPONENT_BOUNCE: [bool; 8] = [false; 8];
 pub static mut RIDLEY_INT_SPECIAL_HI_REBOUNCE_COUNT: [i32; 8] = [0; 8];
 pub static mut RIDLEY_VEC2_SPECIAL_LW_BOUNCE_POS_CHECK_PREV : [Vector2f; 8] = [Vector2f{x:0.0,y:0.0}; 8];
-
-//Roy Variables
-pub static mut ROY_GFX_COUNTER: [i32; 8] = [0; 8];
-
-//Snake Variables
-pub static mut GRENADE_HOLD: [bool; 8] = [false; 8];
-pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_ENABLE: [bool; 8] = [false; 8];
-pub static mut SNAKE_FLAG_ATTACK_S4_COMBO_IS_BUFFERED: [bool; 8] = [false; 8];
-pub static mut SNAKE_INT_ATTACK_S4_COMBO_COUNT: [i32; 8] = [0; 8];

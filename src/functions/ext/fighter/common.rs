@@ -9,6 +9,9 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app9curryshot15is_preview_modeEv"]
 	pub fn is_preview_mode() -> bool;
     
+    #[link_name = "\u{1}_ZN3app16kiiladarzmanager15set_visible_hudEb"]
+    pub fn set_vis_hud(param_1: bool);
+
     #[link_name = "\u{1}_ZN3app17sv_camera_manager10dead_rangeEP9lua_State"]
 	pub fn dead_range(lua_state: u64) -> Vector4f;
 

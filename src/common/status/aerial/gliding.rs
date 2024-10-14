@@ -265,12 +265,12 @@ unsafe extern "C" fn status_glide_exit(fighter: &mut L2CFighterCommon) -> L2CVal
 }
 
 #[skyline::hook(replace = L2CFighterCommon_bind_address_call_status_end_Glide)]
-unsafe fn bind_address_call_status_end_glide(fighter: &mut L2CFighterCommon, _agent: &mut L2CAgent) -> L2CValue {
+unsafe extern "C" fn bind_address_call_status_end_glide(fighter: &mut L2CFighterCommon, _agent: &mut L2CAgent) -> L2CValue {
     fighter.status_end_Glide()
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_end_Glide)]
-unsafe fn status_glide_end(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_glide_end(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

@@ -121,108 +121,103 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
     };
     //Final Zoom Effect Clearing
     if counter > 0 {
-        let kind = (*boma).kind();
         let handle = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
         if counter == 40 {
             if !WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
                 EffectModule::set_rate(boma, handle as u32, 1.0);
             }
+            set_vis_hud(true);
         }
         if counter == 10 {
             if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
                 EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
             }
             else {
-                match kind {
-                    _ if kind == *FIGHTER_KIND_MARIO => EffectModule::remove_screen(boma, Hash40::new("bg_mario_final"), -1),
-                    _ if kind == *FIGHTER_KIND_DONKEY => EffectModule::remove_screen(boma, Hash40::new("bg_donkey_final"), -1),
-                    _ if kind == *FIGHTER_KIND_LINK => EffectModule::remove_screen(boma, Hash40::new("bg_link_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SAMUS => EffectModule::remove_screen(boma, Hash40::new("bg_samus_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SAMUSD => EffectModule::remove_screen(boma, Hash40::new("bg_samusd_final"), -1),
-                    _ if kind == *FIGHTER_KIND_YOSHI => EffectModule::remove_screen(boma, Hash40::new("bg_yoshi_final"), -1),
-                    _ if kind == *FIGHTER_KIND_KIRBY => EffectModule::remove_screen(boma, Hash40::new("bg_kirby_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PIKACHU => EffectModule::remove_screen(boma, Hash40::new("bg_pikachu_final"), -1),
-                    _ if kind == *FIGHTER_KIND_LUIGI => EffectModule::remove_screen(boma, Hash40::new("bg_luigi_final"), -1),
-                    _ if kind == *FIGHTER_KIND_NESS => EffectModule::remove_screen(boma, Hash40::new("bg_ness_final"), -1),
-                    _ if kind == *FIGHTER_KIND_CAPTAIN => EffectModule::remove_screen(boma, Hash40::new("bg_captain_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PURIN => EffectModule::remove_screen(boma, Hash40::new("bg_purin_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PEACH => EffectModule::remove_screen(boma, Hash40::new("bg_peach_final"), -1),
-                    _ if kind == *FIGHTER_KIND_DAISY => EffectModule::remove_screen(boma, Hash40::new("bg_daisy_final"), -1),
-                    _ if kind == *FIGHTER_KIND_KOOPA => EffectModule::remove_screen(boma, Hash40::new("bg_koopa_final"), -1),
-                    _ if kind == *FIGHTER_KIND_POPO => EffectModule::remove_screen(boma, Hash40::new("bg_popo_final"), -1),
-                    _ if kind == *FIGHTER_KIND_NANA => EffectModule::remove_screen(boma, Hash40::new("bg_popo_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SHEIK => EffectModule::remove_screen(boma, Hash40::new("bg_sheik_final"), -1),
-                    _ if kind == *FIGHTER_KIND_ZELDA => EffectModule::remove_screen(boma, Hash40::new("bg_zelda_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MARIOD => EffectModule::remove_screen(boma, Hash40::new("bg_mariod_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PICHU => EffectModule::remove_screen(boma, Hash40::new("bg_pichu_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MARTH => EffectModule::remove_screen(boma, Hash40::new("bg_marth_final"), -1),
-                    _ if kind == *FIGHTER_KIND_LUCINA => EffectModule::remove_screen(boma, Hash40::new("bg_lucina_final"), -1),
-                    _ if kind == *FIGHTER_KIND_YOUNGLINK => EffectModule::remove_screen(boma, Hash40::new("bg_younglink_final"), -1),
-                    _ if kind == *FIGHTER_KIND_GANON => EffectModule::remove_screen(boma, Hash40::new("bg_ganon_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MEWTWO => EffectModule::remove_screen(boma, Hash40::new("bg_mewtwo_final"), -1),
-                    _ if kind == *FIGHTER_KIND_ROY => EffectModule::remove_screen(boma, Hash40::new("bg_roy_final"), -1),
-                    _ if kind == *FIGHTER_KIND_CHROM => EffectModule::remove_screen(boma, Hash40::new("bg_chrom_final"), -1),
-                    _ if kind == *FIGHTER_KIND_GAMEWATCH => EffectModule::remove_screen(boma, Hash40::new("bg_gamewatch_final"), -1),
-                    _ if kind == *FIGHTER_KIND_METAKNIGHT => EffectModule::remove_screen(boma, Hash40::new("bg_metaknight_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PIT => EffectModule::remove_screen(boma, Hash40::new("bg_pit_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PITB => EffectModule::remove_screen(boma, Hash40::new("bg_pitb_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SZEROSUIT => EffectModule::remove_screen(boma, Hash40::new("bg_szerosuit_final"), -1),
-                    _ if kind == *FIGHTER_KIND_WARIO => EffectModule::remove_screen(boma, Hash40::new("bg_wario_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SNAKE => EffectModule::remove_screen(boma, Hash40::new("bg_snake_final"), -1),
-                    _ if kind == *FIGHTER_KIND_IKE => EffectModule::remove_screen(boma, Hash40::new("bg_ike_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PZENIGAME => EffectModule::remove_screen(boma, Hash40::new("bg_ptrainer_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PFUSHIGISOU => EffectModule::remove_screen(boma, Hash40::new("bg_ptrainer_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PLIZARDON => EffectModule::remove_screen(boma, Hash40::new("bg_ptrainer_final"), -1),
-                    _ if kind == *FIGHTER_KIND_DIDDY => EffectModule::remove_screen(boma, Hash40::new("bg_diddy_final"), -1),
-                    _ if kind == *FIGHTER_KIND_LUCAS => EffectModule::remove_screen(boma, Hash40::new("bg_lucas_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SONIC => EffectModule::remove_screen(boma, Hash40::new("bg_sonic_final"), -1),
-                    _ if kind == *FIGHTER_KIND_DEDEDE => EffectModule::remove_screen(boma, Hash40::new("bg_dedede_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PIKMIN => EffectModule::remove_screen(boma, Hash40::new("bg_pikmin_final"), -1),
-                    _ if kind == *FIGHTER_KIND_LUCARIO => EffectModule::remove_screen(boma, Hash40::new("bg_lucario_final"), -1),
-                    _ if kind == *FIGHTER_KIND_ROBOT => EffectModule::remove_screen(boma, Hash40::new("bg_robot_final"), -1),
-                    _ if kind == *FIGHTER_KIND_TOONLINK => EffectModule::remove_screen(boma, Hash40::new("bg_toonlink_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MURABITO => EffectModule::remove_screen(boma, Hash40::new("bg_murabito_final"), -1),
-                    _ if kind == *FIGHTER_KIND_ROCKMAN => EffectModule::remove_screen(boma, Hash40::new("bg_rockman_final"), -1),
-                    _ if kind == *FIGHTER_KIND_WIIFIT => EffectModule::remove_screen(boma, Hash40::new("bg_wiifit_final"), -1),
-                    _ if kind == *FIGHTER_KIND_ROSETTA => EffectModule::remove_screen(boma, Hash40::new("bg_rosetta_final"), -1),
-                    _ if kind == *FIGHTER_KIND_LITTLEMAC => EffectModule::remove_screen(boma, Hash40::new("bg_littlemac_final"), -1),
-                    _ if kind == *FIGHTER_KIND_GEKKOUGA => EffectModule::remove_screen(boma, Hash40::new("bg_gekkouga_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PALUTENA => EffectModule::remove_screen(boma, Hash40::new("bg_palutena_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PACMAN => EffectModule::remove_screen(boma, Hash40::new("bg_pacman_final"), -1),
-                    _ if kind == *FIGHTER_KIND_REFLET => EffectModule::remove_screen(boma, Hash40::new("bg_reflet_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SHULK => EffectModule::remove_screen(boma, Hash40::new("bg_shulk_final"), -1),
-                    _ if kind == *FIGHTER_KIND_KOOPAJR => EffectModule::remove_screen(boma, Hash40::new("bg_koopajr_final"), -1),
-                    _ if kind == *FIGHTER_KIND_DUCKHUNT => EffectModule::remove_screen(boma, Hash40::new("bg_duckhunt_final"), -1),
-                    _ if kind == *FIGHTER_KIND_RYU => EffectModule::remove_screen(boma, Hash40::new("bg_ryu_final_shinsyoryu"), -1),
-                    _ if kind == *FIGHTER_KIND_KEN => EffectModule::remove_screen(boma, Hash40::new("bg_ken_final_shinryuken"), -1),
-                    _ if kind == *FIGHTER_KIND_CLOUD => EffectModule::remove_screen(boma, Hash40::new("bg_cloud_final"), -1),
-                    _ if kind == *FIGHTER_KIND_KAMUI => EffectModule::remove_screen(boma, Hash40::new("bg_kamui_final"), -1),
-                    _ if kind == *FIGHTER_KIND_BAYONETTA => EffectModule::remove_screen(boma, Hash40::new("bg_bayonetta_final"), -1),
-                    _ if kind == *FIGHTER_KIND_INKLING => EffectModule::remove_screen(boma, Hash40::new("bg_inkling_final_l"), -1),
-                    _ if kind == *FIGHTER_KIND_RIDLEY => EffectModule::remove_screen(boma, Hash40::new("bg_ridley_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SIMON => EffectModule::remove_screen(boma, Hash40::new("bg_simon_final"), -1),
-                    _ if kind == *FIGHTER_KIND_RICHTER => EffectModule::remove_screen(boma, Hash40::new("bg_richter_final"), -1),
-                    _ if kind == *FIGHTER_KIND_KROOL => EffectModule::remove_screen(boma, Hash40::new("bg_krool_final"), -1),
-                    _ if kind == *FIGHTER_KIND_SHIZUE => EffectModule::remove_screen(boma, Hash40::new("bg_shizue_final"), -1),
-                    _ if kind == *FIGHTER_KIND_GAOGAEN => EffectModule::remove_screen(boma, Hash40::new("bg_gaogaen_final"), -1),
-                    _ if kind == *FIGHTER_KIND_PACKUN => EffectModule::remove_screen(boma, Hash40::new("bg_packun_final1"), -1),
-                    _ if kind == *FIGHTER_KIND_JACK => EffectModule::remove_screen(boma, Hash40::new("bg_jack_final"), -1),
-                    _ if kind == *FIGHTER_KIND_BRAVE => EffectModule::remove_screen(boma, Hash40::new("bg_brave_final"), -1),
-                    _ if kind == *FIGHTER_KIND_BUDDY => EffectModule::remove_screen(boma, Hash40::new("bg_buddy_final"), -1),
-                    _ if kind == *FIGHTER_KIND_DOLLY => EffectModule::remove_screen(boma, Hash40::new("bg_dolly_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MASTER => EffectModule::remove_screen(boma, Hash40::new("bg_master_final"), -1),
-                    _ if kind == *FIGHTER_KIND_TANTAN => EffectModule::remove_screen(boma, Hash40::new("bg_tantan_final_l"), -1),
-                    _ if kind == *FIGHTER_KIND_PICKEL => EffectModule::remove_screen(boma, Hash40::new("bg_pickel_final_l"), -1),
-                    _ if kind == *FIGHTER_KIND_EDGE => EffectModule::remove_screen(boma, Hash40::new("bg_edge_final"), -1),
-                    _ if kind == *FIGHTER_KIND_EFLAME => EffectModule::remove_screen(boma, Hash40::new("bg_eflame_final"), -1),
-                    _ if kind == *FIGHTER_KIND_ELIGHT => EffectModule::remove_screen(boma, Hash40::new("bg_eelight_final"), -1),
-                    _ if kind == *FIGHTER_KIND_DEMON => EffectModule::remove_screen(boma, Hash40::new("bg_demon_final"), -1),
-                    _ if kind == *FIGHTER_KIND_TRAIL => EffectModule::remove_screen(boma, Hash40::new("bg_trail_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MIIFIGHTER => EffectModule::remove_screen(boma, Hash40::new("bg_miifighter_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MIISWORDSMAN => EffectModule::remove_screen(boma, Hash40::new("bg_miiswordsman_final"), -1),
-                    _ if kind == *FIGHTER_KIND_MIIGUNNER => EffectModule::remove_screen(boma, Hash40::new("bg_miigunner_final"), -1),
-                    _ => EffectModule::remove_screen(boma, Hash40::new("bg_criticalhit"), -1)
-                };
+                EffectModule::remove_screen(boma, Hash40::new("bg_mario_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_donkey_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_link_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_samus_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_samusd_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_yoshi_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_kirby_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_pikachu_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_luigi_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_ness_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_captain_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_purin_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_peach_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_daisy_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_koopa_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_popo_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_sheik_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_zelda_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_mariod_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_pichu_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_marth_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_lucina_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_younglink_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_ganon_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_mewtwo_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_roy_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_chrom_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_gamewatch_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_metaknight_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_pit_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_pitb_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_szerosuit_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_wario_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_snake_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_ike_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_ptrainer_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_diddy_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_lucas_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_sonic_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_dedede_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_pikmin_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_lucario_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_robot_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_toonlink_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_murabito_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_rockman_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_wiifit_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_rosetta_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_littlemac_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_gekkouga_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_palutena_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_pacman_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_reflet_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_shulk_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_koopajr_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_duckhunt_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_ryu_final_shinsyoryu"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_ken_final_shinryuken"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_cloud_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_kamui_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_bayonetta_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_inkling_final_l"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_ridley_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_simon_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_richter_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_krool_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_shizue_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_gaogaen_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_packun_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_jack_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_brave_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_buddy_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_dolly_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_master_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_tantan_final_l"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_pickel_final_l"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_edge_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_eflame_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_eelight_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_demon_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_trail_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_miifighter_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_miiswordsman_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_miigunner_final"), -1);
+                EffectModule::remove_screen(boma, Hash40::new("bg_criticalhit"), -1);
             }
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_bg_black"), false, false);
         }

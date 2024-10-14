@@ -10,6 +10,7 @@ use {
                 commandcat::*,
             }
         },
+        hook::misc::*,
         var::{
             consts::*,
             globals::*,

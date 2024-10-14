@@ -194,6 +194,7 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
     let status_kind = StatusModule::status_kind(boma);
     let motion_kind = MotionModule::motion_kind(boma);
     if motion_kind == hash40("attack_stand_23") && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
+        WorkModule::set_float(boma, 1.0, *FIGHTER_STATUS_WORK_ID_FLOAT_REBOUND_MOTION_RATE);
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_REBOUND, false);
     }
     if status_kind == *FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {

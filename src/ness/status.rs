@@ -1,5 +1,19 @@
 use super::*;
 
+unsafe extern "C" fn ness_appeal_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    let log_attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    if status_kind != *FIGHTER_STATUS_KIND_SMASH_APPEAL {
+        if 0 < log_attack_kind {
+            FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, log_attack_kind);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+        }
+        macros::CANCEL_FILL_SCREEN(fighter, 1, 4);
+        macros::CANCEL_FILL_SCREEN(fighter, 2, 4);
+    }
+    0.into()
+}
+
 unsafe extern "C" fn ness_attack_s4_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_NESS_STATUS_ATTACK_S4_FLAG_REFLECT_START);
     fighter.sub_AttackS4(true.into());
@@ -82,6 +96,8 @@ unsafe extern "C" fn ness_special_guard_main_loop(fighter: &mut L2CFighterCommon
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     if frame == 120.0 {
+        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
+        WorkModule::set_int(fighter.module_accessor, 600, FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
         fighter.gimmick_flash();
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -100,9 +116,7 @@ unsafe extern "C" fn ness_special_guard_exec_status(_fighter: &mut L2CFighterCom
     0.into()
 }
 
-unsafe extern "C" fn ness_special_guard_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
-    WorkModule::set_int(fighter.module_accessor, 600, FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
+unsafe extern "C" fn ness_special_guard_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
@@ -176,6 +190,7 @@ unsafe extern "C" fn ness_special_guard_burst_exit_status(fighter: &mut L2CFight
 
 pub fn install() {
     Agent::new("ness")
+    .status(End, *FIGHTER_STATUS_KIND_APPEAL, ness_appeal_end_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4, ness_attack_s4_main_status)
     .status(Pre, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_pre_status)
     .status(Init, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_init_status)

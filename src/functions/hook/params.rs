@@ -391,11 +391,6 @@ pub unsafe fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, p
 				}
 			}
 		}
-		if fighter_kind == *WEAPON_KIND_SNAKE_TRENCHMORTAR_BULLET
-		&& param_type == hash40("param_trenchmortarbullet")
-		&& param_hash == hash40("speed_x") {
-			return ControlModule::get_stick_x(boma)/1.5*PostureModule::lr(boma);
-		}
     }
 	original!()(module_accessor, param_type, param_hash)
 }

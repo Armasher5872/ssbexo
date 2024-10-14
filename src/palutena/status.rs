@@ -175,6 +175,11 @@ unsafe extern "C" fn palutena_special_s_end_status(_fighter: &mut L2CFighterComm
     0.into()
 }
 
+unsafe extern "C" fn palutena_reflectionboard_shoot_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    WorkModule::set_int(weapon.module_accessor, 0, WEAPON_PALUTENA_REFLECTIONBOARD_INSTANCE_WORK_ID_INT_HIT_COUNT);
+    0.into()
+}
+
 //Up Special
 
 unsafe extern "C" fn palutena_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -433,6 +438,10 @@ pub fn install() {
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_LW, palutena_special_lw_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, palutena_special_lw_main_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_LW, palutena_special_lw_end_status)
+    .install()
+    ;
+    Agent::new("palutena_reflectionboard")
+    .status(End, *WEAPON_PALUTENA_REFLECTIONBOARD_STATUS_KIND_SHOOT, palutena_reflectionboard_shoot_end_status)
     .install()
     ;
 }

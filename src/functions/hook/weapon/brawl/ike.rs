@@ -1,11 +1,10 @@
 use super::*;
 
-const IKE_SLASH_VTABLE_INITIALIZATION_EVENT_OFFSET: usize = 0x3425b20;
+const IKE_SLASH_VTABLE_INITIALIZATION_EVENT_OFFSET: usize = 0x3425b40;
 
 //Ike Ragnellian Slash Initialization Event Offset
 #[skyline::hook(offset = IKE_SLASH_VTABLE_INITIALIZATION_EVENT_OFFSET)]
 unsafe extern "C" fn ike_slash_initialization_event(vtable: u64, weapon: *mut smash::app::Weapon, param_3: u64) -> u64 {
-    let ret = call_original!(vtable, weapon, param_3);
     let boma = (*weapon).battle_object.module_accessor;
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = smash::app::sv_battle_object::module_accessor(owner_id);
@@ -17,7 +16,7 @@ unsafe extern "C" fn ike_slash_initialization_event(vtable: u64, weapon: *mut sm
         add_reflector_group(boma, resource, WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR);
         ReflectorModule::set_hop(boma, true, 45.0, WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR);
     }
-    ret
+    call_original!(vtable, weapon, param_3)
 }
 
 pub fn install() {

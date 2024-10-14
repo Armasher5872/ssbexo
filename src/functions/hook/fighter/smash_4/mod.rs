@@ -16,7 +16,7 @@ use {
                     get_objects::*,
                 }
             },
-            hook::ui::UiManager,
+            hook::ui::ui_manager::UiManager,
             var::{
                 bayonetta::*,
                 consts::*,
@@ -30,6 +30,7 @@ use {
                 murabito::*,
                 palutena::*,
                 reflet::*,
+                rockman::*,
                 rosetta::*,
                 ryu::*,
                 variables::*,

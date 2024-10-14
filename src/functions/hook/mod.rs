@@ -18,14 +18,11 @@ use {
             consts::*,
             globals::*,
             palutena::*,
-            pfushigisou::*,
             purin::*,
             variables::*,
         },
         util::*,
     },
-    once_cell::sync::Lazy,
-    parking_lot::RwLock,
     skyline::{
         c_str,
         from_c_str,
@@ -70,11 +67,11 @@ pub mod attack;
 pub mod controls;
 pub mod effect;
 pub mod fighter;
+//pub mod item; //Broken for whatever reason, despite the offsets being the same
 pub mod misc;
 pub mod music;
 pub mod params;
 pub mod status;
-pub mod throw;
 pub mod ui;
 pub mod weapon;
 pub mod workmodule;
@@ -84,11 +81,11 @@ pub fn install() {
     controls::install();
     effect::install();
     fighter::install();
+    //item::install();
     misc::install();
     music::install();
     params::install();
     status::install();
-    throw::install();
     ui::install();
     weapon::install();
     workmodule::install();

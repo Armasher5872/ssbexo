@@ -175,12 +175,13 @@ unsafe fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_i
 	original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
 
-//The following hooks are used to ignore setting the barrel's team, which resolves the issue of the Barrel Item being able to hit the item thrower for 1 frame. This is here since item status scripts aren't currently editable
+//The following hooks are used to ignore setting the team of several items, which are used to resolve issues regarding items being able to hit the user, or them not being hittable themselves.
 
 #[skyline::hook(replace=TeamModule::set_hit_team)]
 unsafe fn set_hit_team_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
     original!()(boma, arg2);
-    if (boma.kind() == *ITEM_KIND_BARREL) {
+    let kind = boma.kind();
+    if [*ITEM_KIND_BARREL, *ITEM_KIND_SNAKEGRENADE].contains(&kind) {
         return;
     }
 }
@@ -188,14 +189,16 @@ unsafe fn set_hit_team_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
 #[skyline::hook(replace=TeamModule::set_hit_team_second)]
 unsafe fn set_hit_team_second_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
     original!()(boma, arg2);
-    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
+    let kind = boma.kind();
+    if (boma.is_item() && [*ITEM_KIND_BARREL, *ITEM_KIND_SNAKEGRENADE].contains(&kind)) {
         return;
     }
 }
 
 #[skyline::hook(replace=TeamModule::set_team)]
 unsafe fn set_team_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32, arg3: bool) {
-    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {} 
+    let kind = boma.kind();
+    if (boma.is_item() && [*ITEM_KIND_BARREL, *ITEM_KIND_SNAKEGRENADE].contains(&kind)) {} 
     else {
         original!()(boma, arg2, arg3);
     }
@@ -204,7 +207,8 @@ unsafe fn set_team_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32, arg3: 
 #[skyline::hook(replace=TeamModule::set_team_second)]
 unsafe fn set_team_second_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
     original!()(boma, arg2);
-    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
+    let kind = boma.kind();
+    if (boma.is_item() && [*ITEM_KIND_BARREL, *ITEM_KIND_SNAKEGRENADE].contains(&kind)) {
         return;
     }
 }
@@ -212,7 +216,8 @@ unsafe fn set_team_second_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32)
 #[skyline::hook(replace=TeamModule::set_team_owner_id)]
 unsafe fn set_team_owner_id_hook(boma: &mut BattleObjectModuleAccessor, arg2: i32) {
     original!()(boma, arg2);
-    if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
+    let kind = boma.kind();
+    if (boma.is_item() && [*ITEM_KIND_BARREL, *ITEM_KIND_SNAKEGRENADE].contains(&kind)) {
         return;
     }
 }
@@ -249,9 +254,6 @@ pub fn install() {
         skyline::patching::Patch::in_text(0x6373a4).data(KILL_ZOOM_DATA);
         //Removes phantoms
         skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32);
-        //Resets projectile lifetime on parry, rather than using remaining lifetime
-        skyline::patching::Patch::in_text(0x33bdfd8).nop();
-        skyline::patching::Patch::in_text(0x33bdfdc).data(0x2a0a03e1);
     }
     skyline::install_hook!(attack_replace);
 	skyline::install_hook!(attack_abs_replace);
