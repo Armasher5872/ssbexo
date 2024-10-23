@@ -9,6 +9,7 @@ use {
                 utility::{
                     boma_ext::*,
                     commandcat::*,
+                    misc::*,
                 }
             },
             var::{
@@ -34,6 +35,7 @@ use {
         },
         hash40,
         lib::{
+            L2CAgent,
             L2CValue,
             lua_const::*,
         },

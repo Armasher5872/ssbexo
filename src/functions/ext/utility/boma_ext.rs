@@ -7,20 +7,14 @@ pub trait BomaExt {
     unsafe fn is_status_one_of(&mut self, kinds: &[i32]) -> bool;
 	unsafe fn is_weapon(&mut self) -> bool;
     unsafe fn kind(&mut self) -> i32;
-	unsafe fn set_front_cliff_hangdata(&mut self, x: f32, y: f32);
-    unsafe fn set_back_cliff_hangdata(&mut self, x: f32, y: f32);
     unsafe fn change_status_req(&mut self, kind: i32, repeat: bool) -> i32;
     unsafe fn is_situation(&mut self, kind: i32) -> bool;
     unsafe fn is_cat_flag<T: Into<CommandCat>>(&mut self, fighter_pad_cmd_flag: T) -> bool;
     unsafe fn down_input(&mut self) -> bool;
-    unsafe fn up_input(&mut self) -> bool;
     unsafe fn check_jump_cancel(&mut self, update_lr: bool, skip_other_checks: bool) -> bool;
     unsafe fn gimmick_flash(&mut self);
     unsafe fn is_status(&mut self, kind: i32) -> bool;
     unsafe fn dacsa_check(&mut self) -> i32;
-    unsafe fn stick_x(&mut self) -> f32;
-    unsafe fn stick_y(&mut self) -> f32;
-    unsafe fn get_param_float(&mut self, obj: &str, field: &str) -> f32;
     unsafe fn is_item(&mut self) -> bool;
     unsafe fn status(&mut self) -> i32;
     unsafe fn magic_series(&mut self) -> i32;
@@ -39,34 +33,6 @@ impl BomaExt for BattleObjectModuleAccessor {
     }
     unsafe fn kind(&mut self) -> i32 {
         return smash::app::utility::get_kind(self);
-    }
-	/* 
-	Sets the position of the front/red ledge-grab box (see [`set_center_cliff_hangdata`](BomaExt::set_center_cliff_hangdata) for more information) 
-	
-	# Arguments:
-	
-	* `x` - The x coordinate, relative to the [position](smash::app::lua_bind::PostureModule::pos) of the fighter
-	* `y` - The y coordinate, relative to the [position](smash::app::lua_bind::PostureModule::pos) of the fighter
-	*/
-	unsafe fn set_front_cliff_hangdata(&mut self, x: f32, y: f32) {
-		let ground_module = *(self as *mut BattleObjectModuleAccessor as *const u64).add(0x58 / 8);
-        let ground_data = *((ground_module + 0x28) as *mut *mut f32);
-        *ground_data.add(0x530 / 4) = x;
-        *ground_data.add(0x534 / 4) = y;
-    }
-	/* 
-	Sets the position of the front/red ledge-grab box (see [`set_center_cliff_hangdata`](BomaExt::set_center_cliff_hangdata) for more information) 
-	
-	# Arguments:
-	
-	* `x` - The x coordinate, relative to the [position](smash::app::lua_bind::PostureModule::pos) of the fighter
-	* `y` - The y coordinate, relative to the [position](smash::app::lua_bind::PostureModule::pos) of the fighter
-	*/
-    unsafe fn set_back_cliff_hangdata(&mut self, x: f32, y: f32) {
-        let ground_module = *(self as *mut BattleObjectModuleAccessor as *const u64).add(0x58 / 8);
-        let ground_data = *((ground_module + 0x28) as *mut *mut f32);
-        *ground_data.add(0x540 / 4) = x;
-        *ground_data.add(0x544 / 4) = y;
     }
     unsafe fn change_status_req(&mut self, kind: i32, repeat: bool) -> i32 {
         return StatusModule::change_status_request_from_script(self, kind, repeat) as i32;
@@ -91,18 +57,6 @@ impl BomaExt for BattleObjectModuleAccessor {
         }
         //Checks if you flick the stick down more than 3 times but less than 20 times, or your stick is less than or equal to -1.0
         if ((ControlModule::get_flick_y(self) >= 3 && ControlModule::get_flick_y(self) < 20) || stick_y <= -1.0) {
-            return true;
-        };
-        return false;
-    }
-    unsafe fn up_input(&mut self) -> bool {
-        let stick_y = ControlModule::get_stick_y(self);
-        //Checks if you're holding down the control stick more than the tap jump threshold
-        if stick_y >= 0.7 {
-            return true;
-        }
-        //Checks if you flick the stick down more than 3 times but less than 20 times, or your stick is greater than or equal to 1.0
-        if ((ControlModule::get_flick_y(self) >= 3 && ControlModule::get_flick_y(self) < 20) || stick_y >= 1.0) {
             return true;
         };
         return false;
@@ -203,17 +157,6 @@ impl BomaExt for BattleObjectModuleAccessor {
             }
         }
         return 0;
-    }
-    unsafe fn stick_x(&mut self) -> f32 {
-        return ControlModule::get_stick_x(self);
-    }
-    unsafe fn stick_y(&mut self) -> f32 {
-        return ControlModule::get_stick_y(self);
-    }
-    unsafe fn get_param_float(&mut self, obj: &str, field: &str) -> f32 {
-        let obj = obj.into();
-        let field = field.into();
-        WorkModule::get_param_float(self, Hash40::new(obj).hash, Hash40::new(field).hash)
     }
     unsafe fn is_item(&mut self) -> bool {
         return smash::app::utility::get_category(self) == *BATTLE_OBJECT_CATEGORY_ITEM;

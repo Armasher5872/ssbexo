@@ -258,7 +258,6 @@ unsafe extern "C" fn miifighter_on_search(vtable: u64, fighter: &mut Fighter, lo
     if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
             let opponent_id = (*collision_log).opponent_battle_object_id;
-            let opponent_boma = sv_battle_object::module_accessor(opponent_id as u32);
             WorkModule::set_int(boma, opponent_id as i32, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
             WorkModule::set_flag(boma, true, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
             if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 {

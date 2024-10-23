@@ -3,13 +3,8 @@ use super::*;
 
 //Prevention of Moves in Air (Credit to Chrispo)
 #[skyline::hook(replace = StatusModule::change_status_request_from_script)]
-unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
+unsafe extern "C" fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-	if get_kind(boma) == *FIGHTER_KIND_PICHU
-	&& [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind)
-	&& !USE_TACKLE[entry_id as usize] {
-		return 0;
-	}
 	if get_kind(boma) == *FIGHTER_KIND_LUCINA {
 		if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
 		&& !USE_SWORDSMAN_DASH[entry_id as usize] {
@@ -24,7 +19,7 @@ unsafe fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, 
 }
 
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term)]
-unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
+unsafe extern "C" fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
 	let situation_kind = StatusModule::situation_kind(module_accessor);
 	let ret = original!()(module_accessor, term);
 	if smash::app::utility::get_category(module_accessor) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
@@ -47,30 +42,34 @@ unsafe fn is_enable_transition_term_replace(module_accessor: &mut smash::app::Ba
 
 //Deals with DK's Barrels, Gordo, and CC
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::change_status_request)]
-unsafe fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
+unsafe extern "C" fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
 	let mut next_status = status_kind;
-    let frame = MotionModule::frame(boma);
     if (boma.is_weapon() && boma.kind() == *WEAPON_KIND_DEDEDE_GORDO) {
         if next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_ATTACK || next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_HOP {
             HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
             HitModule::set_no_team(boma, true);
         }
     }
-	else if (boma.is_item() && boma.kind() == *ITEM_KIND_BARREL) {
-        if next_status == *ITEM_STATUS_KIND_BORN || next_status == *ITEM_STATUS_KIND_LOST {
-            let bounce_mul = Vector3f { x: -0.25, y: -0.25, z: -0.25 };
-            KineticModule::mul_speed(boma, &bounce_mul, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            PostureModule::reverse_lr(boma);
-            AttackModule::clear_all(boma);
-            next_status = *ITEM_STATUS_KIND_FALL;
-            TeamModule::set_hit_team(boma, *TEAM_NONE);
-        }
-    }
+	else if boma.is_item() {
+		if boma.kind() == *ITEM_KIND_BARREL {
+			if next_status == *ITEM_STATUS_KIND_BORN || next_status == *ITEM_STATUS_KIND_LOST {
+				let bounce_mul = Vector3f { x: -0.25, y: -0.25, z: -0.25 };
+				KineticModule::mul_speed(boma, &bounce_mul, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+				PostureModule::reverse_lr(boma);
+				AttackModule::clear_all(boma);
+				next_status = *ITEM_STATUS_KIND_FALL;
+				TeamModule::set_hit_team(boma, *TEAM_NONE);
+			}
+		}
+		if boma.kind() == *ITEM_KIND_SNAKEGRENADE {
+			TeamModule::set_hit_team(boma, *TEAM_NONE);
+		}
+	}
 	original!()(boma, next_status, arg3)
 }
 
 //Credit to HDR
-pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, _situation: smash::app::SituationKind, _arg3: i32, arg4: u32, _ground_cliff_check_kind: smash::app::GroundCliffCheckKind, _arg6: bool, _arg7: i32, _arg8: i32, _arg9: i32, _arg10: i32) -> u32 {
+pub unsafe extern "C" fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, _situation: smash::app::SituationKind, _arg3: i32, arg4: u32, _ground_cliff_check_kind: smash::app::GroundCliffCheckKind, _arg6: bool, _arg7: i32, _arg8: i32, _arg9: i32, _arg10: i32) -> u32 {
 	/* "fix" forces GroundModule::correct to be called for the statuses we need */
     let mut fix = arg4;
     let fighter_kind = boma.kind();
@@ -127,7 +126,7 @@ pub unsafe fn init_settings_edges(boma: &mut BattleObjectModuleAccessor, _situat
 
 //(Credit to HDR)
 #[skyline::hook(replace=StatusModule::init_settings)]
-unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, situation: smash::app::SituationKind, kinetic_type: i32, arg4: u32, ground_cliff_check_kind: smash::app::GroundCliffCheckKind, jostle: bool, keep_flag: i32, keep_int: i32, keep_float: i32, arg10: i32) -> u64 {
+unsafe extern "C" fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, situation: smash::app::SituationKind, kinetic_type: i32, arg4: u32, ground_cliff_check_kind: smash::app::GroundCliffCheckKind, jostle: bool, keep_flag: i32, keep_int: i32, keep_float: i32, arg10: i32) -> u64 {
     let mut cliff_check_kind = ground_cliff_check_kind;                     
     //Call Edge Cancel init_settings
     let fix = init_settings_edges(boma, situation, kinetic_type, arg4, ground_cliff_check_kind, jostle, keep_flag, keep_int, keep_float, arg10);
@@ -143,7 +142,7 @@ unsafe fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, situation: s
 
 //GroundModule::correct. The Edge Cancel function (Credit to HDR)
 #[skyline::hook(replace=GroundModule::correct)]
-unsafe fn correct_hook(boma: &mut BattleObjectModuleAccessor, kind: GroundCorrectKind) -> u64 {
+unsafe extern "C" fn correct_hook(boma: &mut BattleObjectModuleAccessor, kind: GroundCorrectKind) -> u64 {
     let status_kind = StatusModule::status_kind(boma);
     let fighter_kind = boma.kind();
 	//All statuses seem to count as "landing" for some reason
@@ -175,14 +174,14 @@ extern "C" {
 }
 
 #[skyline::hook(replace=get_ground_correct_kind_air_trans)]
-unsafe fn get_ground_correct_kind_air_trans_hook(_boma: &mut smash::app::BattleObjectModuleAccessor, _something: i32) -> i32 {
+unsafe extern "C" fn get_ground_correct_kind_air_trans_hook(_boma: &mut smash::app::BattleObjectModuleAccessor, _something: i32) -> i32 {
     return *GROUND_CORRECT_KIND_AIR;
 }
 
 pub fn install() {
-    skyline::install_hook!(change_status_hook);
-	skyline::install_hook!(is_enable_transition_term_replace);
 	skyline::install_hooks!(
+		change_status_hook,
+		is_enable_transition_term_replace,
 		change_status_request_hook,
 		init_settings_hook,
         correct_hook,

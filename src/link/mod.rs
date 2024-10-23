@@ -1,4 +1,3 @@
-//#![allow(unused_assignments, unused_parens)]
 #![allow(unused_assignments)]
 use {
   crate::functions::{

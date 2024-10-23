@@ -206,6 +206,9 @@ unsafe extern "C" fn elight_on_attack(vtable: u64, fighter: &mut Fighter, log: u
 }
 
 pub fn install() {
+    //Both of these patches are related to disabling the transition from the normal escape animation into Foresight. The offsets are located in Myhtra's Once Per Fighter Frame
+    let _ = skyline::patching::Patch::in_text(0xa28e78).nop();
+    let _ = skyline::patching::Patch::in_text(0xa28e84).data(0x140000ACu32);
 	skyline::install_hooks!(
         elight_start_initialization,
         elight_reset_initialization,
@@ -213,7 +216,4 @@ pub fn install() {
         elight_opff,
         elight_on_attack
     );
-    //Both of these patches are related to disabling the transition from the normal escape animation into Foresight. The offsets are located in Myhtra's Once Per Fighter Frame
-    skyline::patching::Patch::in_text(0xa28e78).nop();
-    skyline::patching::Patch::in_text(0xa28e84).data(0x140000ACu32);
 }

@@ -20,11 +20,9 @@ unsafe fn training_reset_music2(ctx: &skyline::hooks::InlineCtx) {
 }
 
 pub fn install() {
-    unsafe {
-        //Overwrites the vanilla functions regarding resetting the training mode music to use the custom functions above
-        skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
-        skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
-    }
+    //Overwrites the vanilla functions regarding resetting the training mode music to use the custom functions above
+    let _ = skyline::patching::Patch::in_text(0x14f99cc).nop().unwrap();
+    let _ = skyline::patching::Patch::in_text(0x1509fd4).nop().unwrap();
 	skyline::install_hooks!(
         training_reset_music1,
         training_reset_music2

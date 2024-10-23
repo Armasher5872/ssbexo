@@ -1,4 +1,4 @@
-#![allow(unconditional_recursion)]
+#![allow(dead_code, unconditional_recursion)]
 use super::*;
 
 pub trait UiObject {

@@ -2,7 +2,7 @@ use super::*;
 
 //Credit to Lily Lambda
 #[skyline::hook(replace = sv_animcmd::AFTER_IMAGE4_ON_arg29)]
-unsafe fn after_image4_on_arg29_replace(lua_state: u64) {
+unsafe extern "C" fn after_image4_on_arg29_replace(lua_state: u64) {
 	let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
 	let fighter_kind = smash::app::utility::get_kind(boma);
 	if fighter_kind == FIGHTER_KIND_SHULK 
@@ -30,7 +30,7 @@ unsafe fn after_image4_on_arg29_replace(lua_state: u64) {
 }
 
 #[skyline::hook(replace = sv_animcmd::EFFECT_FOLLOW)]
-unsafe fn effect_follow_replace(lua_state: u64) {
+unsafe extern "C" fn effect_follow_replace(lua_state: u64) {
 	let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
 	let fighter_kind = smash::app::utility::get_kind(boma);
 	if fighter_kind == FIGHTER_KIND_SHULK 

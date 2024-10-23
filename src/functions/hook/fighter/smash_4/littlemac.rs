@@ -79,7 +79,7 @@ unsafe extern "C" fn littlemac_start_initialization(vtable: u64, fighter: &mut F
 
 //Little Mac Reset Initialization
 #[skyline::hook(offset = LITTLEMAC_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn littlemac_reset_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn littlemac_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
@@ -200,7 +200,7 @@ unsafe extern "C" fn littlemac_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let ko_gauge = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
     let strength = WorkModule::get_int(boma, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
     //Resets the meter to 0 if the values are invalid
-    if ko_gauge < 0.0 || ko_gauge == f32::NAN {
+    if ko_gauge < 0.0 || ko_gauge.is_nan() {
         WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
     }
     //Sets the meter to specific values if they're not the exact bounds

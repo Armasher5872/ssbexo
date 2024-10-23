@@ -10,7 +10,6 @@ const ROCKMAN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x107ed30; //Mega-Ma
 unsafe extern "C" fn rockman_start_initialization(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     if fighter.battle_object.kind == *FIGHTER_KIND_ROCKMAN as u32 {
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
         WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
@@ -192,7 +191,7 @@ unsafe extern "C" fn rockman_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let agent = get_fighter_common_from_accessor(&mut *boma);
     let status_kind = StatusModule::status_kind(boma);
     let battle_object_slow = singletons::BattleObjectSlow() as *mut u8;
-    let vtable_slow = (*battle_object_slow.add(0x8) == 0 || *(battle_object_slow as *const u32) == 0);
+    let vtable_slow = *battle_object_slow.add(0x8) == 0 || *(battle_object_slow as *const u32) == 0;
     let special_lw_hold_frame = WorkModule::get_int(boma, 0x100000c3);
     if vtable_slow && !StopModule::is_stop(boma) && !SlowModule::is_skip(boma) {
         if ![*FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_ROCKMAN_STATUS_KIND_SPECIAL_LW_SHOOT].contains(&status_kind) && WorkModule::is_flag(boma, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_LEAFSHIELD) {
@@ -259,38 +258,8 @@ unsafe extern "C" fn set_leafshield(boma: *mut BattleObjectModuleAccessor, set_s
 }
 
 pub fn install() {
-    //The following patch disables the original function that forced Mega Man into Leaf Shield Throw. This is so that the custom function can be used. This offset is located in Mega-Man's OPFF
-    skyline::patching::Patch::in_text(0x107eaa4).data(0x1400001Eu32);
-    //The following patch disables the removal of Leaf Shield if Mega Man enters certain statuses
-    skyline::patching::Patch::in_text(0x107ff6c).data(0x14000007u32);
-    /*
-    //The following removes the unable_transition_term_group_forbid in Mega-Man's Link Event
-    skyline::patching::Patch::in_text(0x1083bec).nop(); //Unable Transition Term Forbid FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW
-    skyline::patching::Patch::in_text(0x1083c0c).nop(); //Off Flag SPECIAL_LW_LEAFSHIELD
-    skyline::patching::Patch::in_text(0x1083c28).nop(); //Set Int 0 SPECIAL_LW_HOLD_FRAME
-    skyline::patching::Patch::in_text(0x1083c3c).nop(); //Off Flag SPECIAL_LW_ENABLE_SHOOT
-    skyline::patching::Patch::in_text(0x1083c50).nop(); //Unable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_SPECIAL
-    skyline::patching::Patch::in_text(0x1083c6c).nop(); //Unable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ITEM
-    skyline::patching::Patch::in_text(0x1083c80).nop(); //Unable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_CATCH
-    skyline::patching::Patch::in_text(0x1083c94).nop(); //Unable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ATTACK
-    skyline::patching::Patch::in_text(0x1083ca8).nop(); //Unable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ESCAPE
-    skyline::patching::Patch::in_text(0x1083cbc).nop(); //Unable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD
-    skyline::patching::Patch::in_text(0x1083cd0).nop(); //Enable Transition Term Forbid FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW
-    skyline::patching::Patch::in_text(0x1083ce4).nop(); //Enable Transition Term Forbid FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ATTACK
-    //The following removes the enable_transition_term_group_forbid in Mega-Man's Link Event
-    skyline::patching::Patch::in_text(0x10838e0).nop(); //Enable Transtion Term Forbid FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW
-    skyline::patching::Patch::in_text(0x1083900).nop(); //On Flag SPECIAL_LW_LEAFSHIELD
-    skyline::patching::Patch::in_text(0x1083928).nop(); //Get Param Int Special Lw Hold Frame
-    skyline::patching::Patch::in_text(0x1083944).nop(); //Set Int Special Lw Hold Frame SPECIAL_LW_HOLD_FRAME
-    skyline::patching::Patch::in_text(0x1083958).nop(); //On Flag SPECIAL_LW_ENABLE_SHOOT
-    skyline::patching::Patch::in_text(0x108396c).nop(); //Enable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_SPECIAL
-    skyline::patching::Patch::in_text(0x1083988).nop(); //Enable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ITEM
-    skyline::patching::Patch::in_text(0x108399c).nop(); //Enable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_CATCH
-    skyline::patching::Patch::in_text(0x10839b0).nop(); //Enable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ATTACK
-    skyline::patching::Patch::in_text(0x10839c4).nop(); //Enable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ESCAPE
-    skyline::patching::Patch::in_text(0x10839d8).nop(); //Enable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD
-    skyline::patching::Patch::in_text(0x10839ec).nop(); //Enable Transition Term Forbid Group FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ATTACK
-    */
+    let _ = skyline::patching::Patch::in_text(0x107eaa4).data(0x1400001Eu32); //The following patch disables the original function that forced Mega Man into Leaf Shield Throw. This is so that the custom function can be used. This offset is located in Mega-Man's OPFF
+    let _ = skyline::patching::Patch::in_text(0x107ff6c).data(0x14000007u32); //The following patch disables the removal of Leaf Shield if Mega Man enters certain statuses
     skyline::install_hooks!(
         rockman_start_initialization,
         rockman_reset_initialization,

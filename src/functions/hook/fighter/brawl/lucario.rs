@@ -221,6 +221,7 @@ unsafe extern "C" fn lucario_opff(vtable: u64, fighter: &mut Fighter) {
         lua_module_fighter.sub_transition_group_check_air_cliff();
         notify_event_msc_cmd!(lua_module_fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
     };
+    original!()(vtable, fighter)
 }
 
 pub fn install() {

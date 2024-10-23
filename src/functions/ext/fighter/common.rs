@@ -1,4 +1,4 @@
-#![allow(improper_ctypes_definitions)]
+#![allow(dead_code, improper_ctypes_definitions)]
 use super::*;
 
 //A variety of extern C functions mainly regarding custom game modes and other offsets in Main
@@ -9,6 +9,15 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app9curryshot15is_preview_modeEv"]
 	pub fn is_preview_mode() -> bool;
     
+    #[link_name = "\u{1}_ZN3app9holywater35HOLYWATER_FIRE_PILLAR_GRAVITY_ACCELENS_11FighterKindE"]
+    pub fn fire_pillar_gravity_accel(kind: FighterKind) -> f32;
+
+    #[link_name = "\u{1}_ZN3app9holywater39HOLYWATER_FIRE_PILLAR_GRAVITY_ACCEL_MAXENS_11FighterKindE"]
+    pub fn fire_pillar_gravity_accel_max(kind: FighterKind) -> f32;
+
+    #[link_name = "\u{1}_ZN3app9holywater29HOLYWATER_FIRE_PILLAR_SPEED_YENS_11FighterKindE"]
+    pub fn fire_pillar_speed_y(kind: FighterKind) -> f32;
+    
     #[link_name = "\u{1}_ZN3app16kiiladarzmanager15set_visible_hudEb"]
     pub fn set_vis_hud(param_1: bool);
 
@@ -18,9 +27,36 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app17sv_camera_manager12camera_rangeEv"]
 	pub fn camera_range() -> Vector4f;
 
+    #[link_name = "\u{1}_ZN3app18kinetic_energy_rot12set_rotationEP9lua_StateRKN3phx8Vector3fE"]
+    pub fn kinetic_energy_rot_set_rotation(lua_state: u64, rotation: *const Vector3f);
+
     #[link_name = "\u{1}_ZN3app19FighterCutInManager13is_one_on_oneEv"]
     pub fn FighterCutInManager__is_one_on_one() -> bool;
     
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_control6enableEP9lua_State"]
+    pub fn kinetic_energy_control_enable(lua_state: u64);
+
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_control9set_accelEP9lua_StateRKN3phx8Vector2fE"]
+    pub fn kinetic_energy_control_set_accel(lua_state: u64, accel: *const Vector2f);
+
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_control9set_brakeEP9lua_StateRKN3phx8Vector2fE"]
+    pub fn kinetic_energy_control_set_brake(lua_state: u64, accel: *const Vector2f);
+
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_control16set_stable_speedEP9lua_StateRKN3phx8Vector2fE"]
+    pub fn kinetic_energy_control_set_stable_speed(lua_state: u64, accel: *const Vector2f);
+
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_control15set_limit_speedEP9lua_StateRKN3phx8Vector2fE"]
+    pub fn kinetic_energy_control_set_limit_speed(lua_state: u64, accel: *const Vector2f);
+
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_control9set_speedEP9lua_StateRKN3phx8Vector2fE"]
+    pub fn kinetic_energy_control_set_speed(lua_state: u64, accel: *const Vector2f);
+
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_gravity9set_accelEP9lua_Statef"]
+    pub fn kinetic_energy_gravity_set_accel(lua_state: u64, accel: f32);
+
+    #[link_name = "\u{1}_ZN3app22kinetic_energy_gravity15set_limit_speedEP9lua_Statef"]
+    pub fn kinetic_energy_gravity_set_limit_speed(lua_state: u64, accel: f32);
+
     #[link_name = "\u{1}_ZN3app24FighterSpecializer_Luigi14delete_plungerERNS_7FighterEb"]
 	pub fn delete_plunger(fighter: *mut smash::app::Fighter, param: bool) -> u64;
 
@@ -32,6 +68,9 @@ extern "C" {
 
     #[link_name = "\u{1}_ZN3app25FighterSpecializer_Dedede29end_special_n_shot_object_hitERNS_7FighterE"]
 	pub fn end_special_n_shot_object_hit(fighter: *mut smash::app::Fighter) -> u64;
+
+    #[link_name = "\u{1}_ZN3app26kinetic_energy_control_rot12set_rotationEP9lua_StateRKN3phx8Vector3fE"]
+    pub fn kinetic_energy_control_rot_set_rotation(lua_state: u64, rotation: *const Vector3f);
 
     #[link_name = "\u{1}_ZN3app8lua_bind38FighterManager__get_fighter_entry_implEPNS_14FighterManagerENS_14FighterEntryIDE"]
     pub fn get_fighter_entry(manager: *mut smash::app::FighterManager, entry_id: u32) -> *mut u8;

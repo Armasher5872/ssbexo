@@ -126,6 +126,7 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
             if !WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
                 EffectModule::set_rate(boma, handle as u32, 1.0);
             }
+            stage_hide(boma, 1);
             set_vis_hud(true);
         }
         if counter == 10 {

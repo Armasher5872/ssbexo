@@ -179,7 +179,7 @@ unsafe extern "C" fn plizardon_death_initialization(vtable: u64, fighter: &mut F
 
 //Charizard Respawn Initialization
 #[skyline::hook(offset = PLIZARDON_VTABLE_RESPAWN_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn plizardon_respawn_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn plizardon_respawn_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if fighter.battle_object.kind == *FIGHTER_KIND_PLIZARDON as u32 {

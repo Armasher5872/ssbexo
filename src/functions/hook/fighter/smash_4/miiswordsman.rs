@@ -322,6 +322,7 @@ unsafe extern "C" fn miiswordsman_opff(vtable: u64, fighter: &mut Fighter) {
             WorkModule::set_flag(boma, false, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
         }
     }
+    original!()(vtable, fighter)
 }
 
 pub fn install() {

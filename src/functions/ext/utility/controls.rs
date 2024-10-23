@@ -1,3 +1,4 @@
+#![allow(dead_code, non_snake_case)]
 use super::*;
 
 /// Enum for the kinds of controls that are mapped

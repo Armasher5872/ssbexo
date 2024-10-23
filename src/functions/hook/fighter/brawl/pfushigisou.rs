@@ -7,7 +7,7 @@ const PFUSHIGISOU_VTABLE_RESPAWN_INITIALIZATION_OFFSET: usize = 0xf96330; //Shar
 
 //Ivysaur Startup Initialization
 #[skyline::hook(offset = PFUSHIGISOU_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn pfushigisou_start_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn pfushigisou_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
@@ -176,7 +176,7 @@ unsafe extern "C" fn pfushigisou_death_initialization(vtable: u64, fighter: &mut
 
 //Ivysaur Respawn Initialization
 #[skyline::hook(offset = PFUSHIGISOU_VTABLE_RESPAWN_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn pfushigisou_respawn_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn pfushigisou_respawn_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if fighter.battle_object.kind == *FIGHTER_KIND_PFUSHIGISOU as u32 {

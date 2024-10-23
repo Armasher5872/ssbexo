@@ -51,6 +51,9 @@ unsafe extern "C" fn roy_special_s_main_loop(fighter: &mut L2CFighterCommon) -> 
             }
         }
     }
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if !StatusModule::is_changing(fighter.module_accessor) {
         if prev_situation_kind == *SITUATION_KIND_GROUND 
         && situation_kind == *SITUATION_KIND_AIR {

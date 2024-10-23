@@ -68,7 +68,7 @@ unsafe extern "C" fn murabito_start_initialization(vtable: u64, fighter: &mut Fi
 
 //Villager Reset Initialization
 #[skyline::hook(offset = MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn murabito_reset_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn murabito_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let team_no = TeamModule::team_no(boma) as i32;

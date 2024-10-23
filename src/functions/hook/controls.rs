@@ -1,3 +1,4 @@
+#![allow(unused_variables)]
 use super::*;
 
 macro_rules! apply_button_mappings {
@@ -429,27 +430,6 @@ unsafe fn map_controls_hook(
     }
 }
 
-//Offset Search needs to be updated, using hardcoded offsets to 13.0.3 for now
-/*
-#[skyline::hook(offset = crate::functions::offsets::analog_trigger_l(), inline)]
-unsafe fn analog_trigger_l(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[9].x.as_ref() & 0x40 != 0 {
-        *ctx.registers[11].x.as_mut() = 0;
-    } else {
-        *ctx.registers[11].w.as_mut() = 0x27FF;
-    }
-}
-
-#[skyline::hook(offset = crate::functions::offsets::analog_trigger_r(), inline)]
-unsafe fn analog_trigger_r(ctx: &mut skyline::hooks::InlineCtx) {
-    if *ctx.registers[8].x.as_ref() & 0x80 != 0 {
-        *ctx.registers[11].x.as_mut() = 0;
-    } else {
-        *ctx.registers[11].w.as_mut() = 0x27FF;
-    }
-}
-*/
-
 #[skyline::hook(offset = 0x3666b00, inline)]
 unsafe fn analog_trigger_l(ctx: &mut skyline::hooks::InlineCtx) {
     if *ctx.registers[9].x.as_ref() & 0x40 != 0 {
@@ -521,10 +501,8 @@ unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
 }
 
 pub fn install() {
-	unsafe {
-        //Related to adding buttons
-        skyline::patching::Patch::in_text(0x1D3594C).nop();
-    }
+    //Replaces the vanilla function in favor of the updated one
+    let _ = skyline::patching::Patch::in_text(0x1D3594C).nop();
 	skyline::install_hooks!(
 		get_button_label_by_operation_kind,
         add_footstool_to_gc,

@@ -219,11 +219,14 @@ unsafe extern "C" fn demon_link_event(vtable: u64, fighter: &mut Fighter, event:
 
 //Kazuya On Grab
 #[skyline::hook(offset = DEMON_VTABLE_ON_GRAB_OFFSET)]
-unsafe extern "C" fn demon_on_grab(vtable: u64, fighter: &mut Fighter, catch_status: i32) -> i32 {
+unsafe extern "C" fn demon_on_grab(_vtable: u64, _fighter: &mut Fighter, catch_status: i32) -> i32 {
     return catch_status
 }
 
 pub fn install() {
+    //Removes the call_script_single that creates the EWGF Unblockable Windbox
+    let _ = skyline::patching::Patch::in_text(0x933434).nop();
+    let _ = skyline::patching::Patch::in_text(0x933454).nop();
     skyline::install_hooks!(
         demon_start_initialization,
         demon_reset_initialization,
@@ -232,7 +235,4 @@ pub fn install() {
         demon_link_event,
         demon_on_grab
     );
-    //Removes the call_script_single that creates the EWGF Unblockable Windbox
-    skyline::patching::Patch::in_text(0x933434).nop();
-    skyline::patching::Patch::in_text(0x933454).nop();
 }

@@ -29,6 +29,7 @@ use {
             snake::*,
             sonic::*,
             variables::*,
+            wario::*,
         },
         util::*,
     },
@@ -40,6 +41,7 @@ use {
         },
         hash40,
         lib::{
+            L2CAgent,
             L2CValue,
             lua_const::*,
         },

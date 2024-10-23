@@ -9,7 +9,6 @@ pub static mut COUNTERHIT_CHECK: [bool; 8] = [false; 8]; //Checks if a fighter i
 pub static mut COUNTERHIT_SUCCESS: [bool; 8] = [false; 8]; //Checks if a fighter has landed a successful counterhit. Used for GGST COUNTER!
 pub static mut FIGHTER_BOOL_1: [bool; 8] = [false; 8];
 pub static mut FIGHTER_BOOL_2: [bool; 8] = [false; 8];
-pub static mut FIGHTER_CUTIN_MANAGER_ADDR: usize = 0;
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
 pub static mut FULL_HOP_ENABLE_DELAY: [i32; 65544] = [0; 65544];
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
@@ -56,13 +55,6 @@ pub static mut LANDING_HIT: [bool; 8] = [false; 8];
 pub static mut LUCINA_GFX_COUNTER: [i32; 8] = [0; 8];
 pub static mut USE_SWORDSMAN_DASH: [bool; 8] = [true; 8];
 pub static mut USE_UP_SPECIAL: [bool; 8] = [true; 8];
-
-//Pichu Variables
-pub static mut DISCHARGE_ACTIVE: [bool; 65544] = [false; 65544];
-pub static mut DISCHARGE_DAMAGE_TIMER: [i32; 8] = [60; 8];
-pub static mut DISCHARGE_GFX: [i32; 8] = [0; 8];
-pub static mut ELECTRIC_HIT: [i32; 8] = [0; 8];
-pub static mut USE_TACKLE: [bool; 8] = [true; 8];
 
 //Ridley Variables
 pub static mut POGO_GROUND_BOUNCE: [bool; 8] = [false; 8];

@@ -136,7 +136,7 @@ unsafe extern "C" fn dolly_check_special_command(fighter: &mut L2CFighterCommon)
 
 //Terry Startup Initialization
 #[skyline::hook(offset = DOLLY_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn dolly_start_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn dolly_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);

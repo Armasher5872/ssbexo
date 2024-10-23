@@ -19,9 +19,7 @@ unsafe extern "C" fn reflet_gigafire_on_attack(vtable: u64, weapon: *mut smash::
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x34d20b8).nop(); //Removes the vanila effect call
+    let _ = skyline::patching::Patch::in_text(0x34d20d4).nop(); //Removes the set int for the effect
     skyline::install_hook!(reflet_gigafire_on_attack);
-    //Removes the vanila effect call
-    skyline::patching::Patch::in_text(0x34d20b8).nop();
-    //Removes the set int for the effect
-    skyline::patching::Patch::in_text(0x34d20d4).nop();
 }

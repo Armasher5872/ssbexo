@@ -7,7 +7,7 @@ const CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x8b7d20; //Captain Falcon 
 
 //Captain Falcon Startup Initialization
 #[skyline::hook(offset = CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn captain_start_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn captain_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);

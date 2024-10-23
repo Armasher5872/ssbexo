@@ -8,6 +8,7 @@ use {
                 misc::*,
             }
         },
+        hook::misc::*,
         var::{
             consts::*,
             globals::*,

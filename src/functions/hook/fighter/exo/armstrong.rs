@@ -17,7 +17,7 @@ unsafe extern "C" fn armstrong_end_control(fighter: &mut L2CFighterCommon) -> L2
 
 //Armstrong Startup Initialization
 #[skyline::hook(offset = ARMSTRONG_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn armstrong_start_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn armstrong_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
@@ -149,7 +149,7 @@ unsafe extern "C" fn armstrong_reset_initialization(vtable: u64, fighter: &mut F
 
 //Armstrong Death Initialization
 #[skyline::hook(offset = ARMSTRONG_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn armstrong_death_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn armstrong_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
@@ -393,6 +393,8 @@ unsafe extern "C" fn armstrong_link_event(vtable: u64, fighter: &mut Fighter, ev
 }
 
 pub fn install() {
+    //Nops the original location where Neutral Special inflicts critical zoom, as I only want the fully charged final hit to inflict critical zoom
+    let _ = skyline::patching::Patch::in_text(0xaa6618).nop();
 	skyline::install_hooks!(
         armstrong_start_initialization,
         armstrong_reset_initialization,
@@ -402,6 +404,4 @@ pub fn install() {
         armstrong_on_damage,
         armstrong_link_event
     );
-    //Nops the original location where Neutral Special inflicts critical zoom, as I only want the fully charged final hit to inflict critical zoom
-    skyline::patching::Patch::in_text(0xaa6618).nop();
 }

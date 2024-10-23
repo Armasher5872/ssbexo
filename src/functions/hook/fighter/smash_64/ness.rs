@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use super::*;
 
 const NESS_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xdefdf0; //Ness only

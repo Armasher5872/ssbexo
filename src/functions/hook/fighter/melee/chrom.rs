@@ -192,11 +192,11 @@ unsafe extern "C" fn chrom_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 pub fn install() {
+    //Nops the original location where Neutral Special inflicts critical zoom, as I only want the fully charged final hit to inflict critical zoom
+    let _ = skyline::patching::Patch::in_text(0x10bbf04).nop();
 	skyline::install_hooks!(
         chrom_start_initialization,
         chrom_reset_initialization,
         chrom_death_initialization
     );
-    //Nops the original location where Neutral Special inflicts critical zoom, as I only want the fully charged final hit to inflict critical zoom
-    skyline::patching::Patch::in_text(0x10bbf04).nop();
 }

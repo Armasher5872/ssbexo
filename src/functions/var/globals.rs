@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 //Vanilla Consts
 pub const UNK1: i32 = 0x0; //void value
 pub const UNK2: i32 = 0x1; //void value
@@ -92,6 +93,6 @@ pub const CHECK_ATTACK_LW4_UNIQ: i32 = 0x59;
 pub const SQUAT_COMMON_UNIQ: i32 = 0x5A;
 
 //Offsets
-pub static mut CONSTANT_OFFSET : usize = 0x3728030;
-pub static FLOAT_OFFSET: usize = 0x4E53E0;
-pub static INT_OFFSET: usize = 0x4E53A0;
+pub const CONSTANT_OFFSET : usize = 0x3728030;
+pub const FLOAT_OFFSET: usize = 0x4E53E0;
+pub const INT_OFFSET: usize = 0x4E53A0;

@@ -176,6 +176,7 @@ unsafe extern "C" fn simon_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x1195224).data(0x7100001F); //Credited to HDR, makes it so Simon/Richter only enter the Cross Catch animation if they are idle
 	skyline::install_hooks!(
         simon_start_initialization,
         simon_reset_initialization,

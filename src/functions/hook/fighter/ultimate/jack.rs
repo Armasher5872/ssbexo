@@ -307,6 +307,9 @@ unsafe fn jack_fighterspecializer_check_doyle_summon_dispatch_hook(ctx: &mut sky
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0xb3153c).data(0x14000035u32); //Disables automatically summoning Arsene
+    let _ = skyline::patching::Patch::in_text(0xb30dd4).data(0x14000031u32); //Disables automatically summoning Arsene
+    let _ = skyline::patching::Patch::in_text(0xb31674).nop(); //Nops the location where Jokers meter is set while Arsene is active
     skyline::install_hooks!(
         jack_start_initialization,
         jack_reset_initialization,
@@ -315,9 +318,4 @@ pub fn install() {
         jack_on_attack,
         jack_fighterspecializer_check_doyle_summon_dispatch_hook
     );
-    //Disables automatically summoning Arsene
-    skyline::patching::Patch::in_text(0xb3153c).data(0x14000035u32);
-    skyline::patching::Patch::in_text(0xb30dd4).data(0x14000031u32);
-    //Nops the location where Jokers meter is set while Arsene is active
-    skyline::patching::Patch::in_text(0xb31674).nop();
 }

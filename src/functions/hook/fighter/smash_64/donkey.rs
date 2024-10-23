@@ -224,6 +224,7 @@ unsafe extern "C" fn donkey_opff(vtable: u64, fighter: &mut Fighter) {
             fighter.battle_object.gimmick_flash();
         }
     }
+    original!()(vtable, fighter)
 }
 
 //Link Event for Donkey Kong

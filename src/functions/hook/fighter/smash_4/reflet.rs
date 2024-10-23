@@ -189,11 +189,11 @@ unsafe extern "C" fn reflet_death_initialization(vtable: u64, fighter: &mut Figh
 }
 
 pub fn install() {
+    //Starts the match with Levin Sword fully charged
+    let _ = skyline::patching::Patch::in_text(0x1005d30).nop();
     skyline::install_hooks!(
         reflet_start_initialization,
         reflet_reset_initialization,
         reflet_death_initialization
     );
-    //Starts the match with Levin Sword fully charged
-    skyline::patching::Patch::in_text(0x1005d30).nop();
 }

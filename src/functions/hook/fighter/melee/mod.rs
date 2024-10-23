@@ -5,7 +5,6 @@ use {
             utility::{
                 boma_ext::*,
                 commandcat::*,
-                get_objects::*,
                 misc::*,
             }
         },
@@ -15,6 +14,7 @@ use {
             globals::*,
             marth::*,
             mewtwo::*,
+            pichu::*,
             roy::*,
             sheik::*,
             variables::*,

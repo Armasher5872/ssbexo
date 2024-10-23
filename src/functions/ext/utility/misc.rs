@@ -1,35 +1,28 @@
-#![allow(improper_ctypes)]
+#![allow(dead_code, improper_ctypes)]
 use super::*;
 
 extern "C" {
     #[link_name = "\u{1}_ZN3app4item12disable_areaEP9lua_Statei"]
     pub fn disable_area(lua_state: u64, area_kind: i32);
 
-    /*
     #[link_name = "_ZN3app6camera13get_dead_areaEv"]
     fn get_dead_area() -> Rect;
-    */
 
     #[link_name = "_ZN3app10sv_animcmd25EFFECT_GLOBAL_BACK_GROUNDEP9lua_State"]
     fn effect_global_back_ground(lua_state: u64);
 }
 
-/*
 #[repr(simd)]
 #[derive(Debug)]
 struct Rect {
-    left: f32,
-    right: f32,
-    top: f32,
-    bottom: f32,
+    direction: [f32;4]
 }
 
 impl Rect {
     fn contains(&self, x: f32, y: f32) -> bool {
-        (self.left <= x && x <= self.right) && (self.bottom <= y && y <= self.top)
+        (x >= self.direction[0] && x <= self.direction[1]) && (y <= self.direction[2] && y >= self.direction[3])
     }
 }
-*/
 
 //Checks what alt you are
 pub unsafe fn get_player_number(module_accessor:  &mut smash::app::BattleObjectModuleAccessor) -> usize {
@@ -510,7 +503,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
     let air_speed_y_stable = WorkModule::get_param_float(defender_boma, hash40("air_speed_y_stable"), 0);
     let damage_fly_top_speed_y_stable = WorkModule::get_param_float(defender_boma, hash40("damage_fly_top_speed_y_stable"), 0);
     let mut context = KnockbackCalcContext{knockback, x_launch_speed: initial_speed_x, y_launch_speed: initial_speed_y, y_chara_speed: 0.0, tumble: *(knockback_info.add(1) as *const u32) >= 3, is_damage_fly_top: fly_top_angle_lw <= angle && angle <= fly_top_angle_hi, hitstun: reaction, gravity: air_accel_y, damageflytop_gravity: damage_fly_top_air_accel_y, fall_speed: air_speed_y_stable, damageflytop_fall_speed: damage_fly_top_speed_y_stable, x_pos: PostureModule::pos_x(defender_boma), y_pos: PostureModule::pos_y(defender_boma), decay_x: damage_air_brake*angle.cos().abs(), decay_y: damage_air_brake*angle.sin().abs()};
-    let blastzones = dead_range(get_fighter_common_from_accessor(&mut *defender_boma).lua_state_agent);
+    let blastzones = get_dead_area();
     let mag = (context.y_launch_speed.powi(2)+context.x_launch_speed.powi(2)).sqrt();
     let kb_angle = context.y_launch_speed.atan2(context.x_launch_speed).to_degrees();
     let min_di = kb_angle-damage_fly_correction_max;
@@ -529,13 +522,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             if GroundModule::ray_check(defender_boma, &Vector2f{x: context.x_pos, y: (context.y_pos + 4.0)}, &Vector2f{x: 0.0, y: -6.0}, true) == 1 && !(30.0..150.0).contains(&ang.to_degrees()) {
                 will_touch_stage = true;
             }
-            /*
             if !blastzones.contains(context.x_pos, context.y_pos) && !will_touch_stage {
-                kill_angle_num += 1;
-                break;
-            }
-            */
-            if context.x_pos < blastzones.x && context.x_pos > blastzones.y && context.y_pos > blastzones.z && context.y_pos < blastzones.w {
                 kill_angle_num += 1;
                 break;
             }
@@ -552,9 +539,11 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             WorkModule::set_int(attacker_boma, 50, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
             SoundModule::play_se(defender_boma, Hash40::new("se_common_finishhit"), false, false, false, false, enSEType(0));
             SlowModule::set_whole(defender_boma, 8, 50);
+            StopModule::set_hit_stop_frame(defender_boma, 20, true);
             macros::CAM_ZOOM_IN_arg5(get_fighter_common_from_accessor(&mut *defender_boma), /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
             macros::QUAKE(get_fighter_common_from_accessor(&mut *defender_boma), *CAMERA_QUAKE_KIND_XL);
             set_vis_hud(false);
+            stage_hide(defender_boma, 0);
             effect_global_back_ground(get_fighter_common_from_accessor(&mut *defender_boma).lua_state_agent);
         }
         else {
@@ -655,6 +644,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             WorkModule::set_int(attacker_boma, handle as i32, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
             SoundModule::play_se(defender_boma, Hash40::new("se_common_boss_down"), false, false, false, false, enSEType(0));
             SlowModule::set_whole(defender_boma, 8, 50);
+            StopModule::set_hit_stop_frame(defender_boma, 20, true);
             effect_global_back_ground(get_fighter_common_from_accessor(&mut *defender_boma).lua_state_agent);
         }
         match attacker_kind {
@@ -674,9 +664,8 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
 unsafe extern "C" fn is_invalid_finishing_hit(boma: &mut BattleObjectModuleAccessor) -> bool {
     for id in 0..8 {
         let attack_data = AttackModule::attack_data(boma, id, false);
-        let fixed_knockback = (*attack_data).r_fix;
         let attribute = (*attack_data).attr;
-        if [hash40("collision_attr_saving"), hash40("collision_attr_lay"), hash40("collision_attr_bury")].contains(&attribute) || fixed_knockback > 0 {
+        if [hash40("collision_attr_saving"), hash40("collision_attr_lay"), hash40("collision_attr_bury")].contains(&attribute) {
             return true;
         }
     }

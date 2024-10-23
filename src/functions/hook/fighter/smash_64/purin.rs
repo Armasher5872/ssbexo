@@ -6,7 +6,7 @@ const PURIN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x68d620; //Jigglypuff o
 
 //Jigglypuff Startup Initialization
 #[skyline::hook(offset = PURIN_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn purin_start_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn purin_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
@@ -121,7 +121,7 @@ unsafe extern "C" fn purin_reset_initialization(vtable: u64, fighter: &mut Fight
 
 //Jigglypuff Death Initialization
 #[skyline::hook(offset = PURIN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn purin_death_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn purin_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);

@@ -1,5 +1,4 @@
 //Most of the code in this folder is credited to either HDR's Code Repository, or Championship Edition
-#![allow(dead_code, non_snake_case, non_upper_case_globals)]
 use {
     bitflags::bitflags,
     crate::functions::{
@@ -35,14 +34,8 @@ use {
             *
         },
         hash40,
-        lib::{
-            L2CAgent,
-            lua_const::*,
-        },
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        },
+        lib::lua_const::*,
+        lua2cpp::*,
         phx::{
             Hash40,
             Vector2f,
@@ -55,6 +48,5 @@ use {
 pub mod boma_ext;
 pub mod commandcat;
 pub mod controls;
-pub mod frame_info;
 pub mod get_objects;
 pub mod misc;

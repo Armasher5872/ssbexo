@@ -1,7 +1,7 @@
 use super::*;
 
 #[skyline::hook(replace=smash::app::lua_bind::WorkModule::get_int)]
-unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
+unsafe extern "C" fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
 	let fighter_kind = smash::app::utility::get_kind(module_accessor);
 	if SPECIAL_SMASH_BODY == 3 
     && fighter_kind == *ITEM_KIND_SOCCERBALL {
@@ -34,7 +34,7 @@ unsafe fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAc
 
 //On Flag Hook (Credit to Chrispo)
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::on_flag)]
-unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c_int) -> () {
+unsafe extern "C" fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c_int) -> () {
 	if boma.is_fighter() { 
 		if int == *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI {
 			let entry_id =  WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -53,6 +53,8 @@ unsafe fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c
 
 //Installation
 pub fn install() {
-	skyline::install_hook!(get_int_replace);
-	skyline::install_hook!(on_flag_hook);
+	skyline::install_hooks!(
+		get_int_replace,
+		on_flag_hook
+	);
 }

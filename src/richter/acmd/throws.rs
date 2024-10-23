@@ -5,9 +5,11 @@ unsafe extern "C" fn ssbexo_richter_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         FighterAreaModuleImpl::enable_fix_jostle_area(agent.module_accessor, 4.0, 6.0);
         GrabModule::set_rebound(agent.module_accessor, true);
+        MotionModule::set_rate(agent.module_accessor, 1.43);
     }
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
+        MotionModule::set_rate(agent.module_accessor, 1.0);
         macros::CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -24,9 +26,11 @@ unsafe extern "C" fn ssbexo_richter_dash_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         FighterAreaModuleImpl::enable_fix_jostle_area(agent.module_accessor, 6.0, 4.0);
         GrabModule::set_rebound(agent.module_accessor, true);
+        MotionModule::set_rate(agent.module_accessor, 1.3);
     }
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
+        MotionModule::set_rate(agent.module_accessor, 1.0);
         macros::CATCH(agent, 0, Hash40::new("top"), 2.6, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -43,9 +47,11 @@ unsafe extern "C" fn ssbexo_richter_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         FighterAreaModuleImpl::enable_fix_jostle_area(agent.module_accessor, 6.5, 6.0);
         GrabModule::set_rebound(agent.module_accessor, true);
+        MotionModule::set_rate(agent.module_accessor, 1.273);
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
+        MotionModule::set_rate(agent.module_accessor, 1.0);
         macros::CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -4.0, Some(0.0), Some(6.6), Some(-14.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
