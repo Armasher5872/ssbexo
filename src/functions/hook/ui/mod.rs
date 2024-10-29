@@ -1,6 +1,7 @@
 use {
     crate::functions::{
         hook::ui::{
+            ice_climber_meter::*,
             palutena_meter::*,
             robot_meter::*,
             ui_manager::*,
@@ -13,6 +14,7 @@ use {
     parking_lot::RwLock
 };
 
+pub mod ice_climber_meter;
 pub mod palutena_meter;
 pub mod robot_meter;
 pub mod ui_hooks;

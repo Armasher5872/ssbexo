@@ -1,6 +1,12 @@
 #![allow(unused_parens)]
 use {
-  crate::functions::var::globals::*,
+  crate::functions::{
+    ext::utility::misc::*,
+    var::{
+      globals::*,
+      koopajr::*,
+    }
+  },
   smash::{
     app::{
       lua_bind::*,
@@ -8,7 +14,11 @@ use {
     },
     hash40,
     lib::lua_const::*,
-    lua2cpp::L2CFighterCommon
+    lua2cpp::{
+      L2CFighterCommon,
+      L2CWeaponCommon
+    },
+    phx::Hash40
   },
   smash_script::*,
   smashline::*,

@@ -8,6 +8,7 @@ use {
                 misc::*,
             }
         },
+        hook::ui::ui_manager::*,
         var::{
             chrom::*,
             consts::*,

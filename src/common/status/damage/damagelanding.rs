@@ -6,8 +6,7 @@ unsafe fn status_landingstiffness(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_DAMAGE_AIR
     && WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC) {
         let hitstun = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
-        let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("landing_frame"), 0);
-        WorkModule::set_float(fighter.module_accessor, (hitstun * 0.5).max(landing_frame), *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
+        WorkModule::set_float(fighter.module_accessor, hitstun*0.5, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
     }
     WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC);
     original!()(fighter)

@@ -25,8 +25,7 @@ unsafe extern "C" fn robot_attack_s4_main_loop(fighter: &mut L2CFighterCommon) -
             WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST)
-    && current_frame < 16.0 {
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && current_frame < 16.0 {
         let rate = (16.0-current_frame)/(3.0+(16.0-current_frame));
         MotionModule::set_rate(fighter.module_accessor, rate);
     }
@@ -97,8 +96,7 @@ unsafe extern "C" fn robot_attack_hi4_start_main_loop(fighter: &mut L2CFighterCo
             WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST)
-    && current_frame < 8.0 {
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && current_frame < 8.0 {
         let rate = (8.0-current_frame)/(2.0+(8.0-current_frame));
         MotionModule::set_rate(fighter.module_accessor, rate);
     }

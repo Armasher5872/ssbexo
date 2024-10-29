@@ -25,9 +25,9 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 
 //A hook regarding the generation/visiblity of articles. Used to allow entry articles to generate
 #[skyline::hook(offset = 0x3a6670)]
-unsafe extern "C" fn get_article_use_type_mask(weapon_kind: i32, entry_id: i32) -> u8 {
+unsafe extern "C" fn get_article_use_type_mask(weapon_kind: i32, entry_id: i32) -> u32 {
     if [*WEAPON_KIND_DONKEY_DKBARREL, *WEAPON_KIND_LINK_PARASAIL, *WEAPON_KIND_DIDDY_DKBARREL].contains(&weapon_kind) {
-        return 1;
+        return *ARTICLE_USETYPE_FINAL as u32;
     }
     call_original!(weapon_kind, entry_id)
 }

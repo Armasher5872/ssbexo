@@ -109,9 +109,6 @@ unsafe extern "C" fn ike_slash_shoot_main_status(weapon: &mut L2CWeaponCommon) -
     if should_remove_projectile(weapon) {
         slash_removal(weapon);
     }
-    if should_remove_slash_on_hit(weapon) {
-        slash_hit_removal(weapon);
-    }
     weapon.fastshift(L2CValue::Ptr(ike_slash_shoot_main_loop as *const () as _))
 }
 
@@ -119,12 +116,8 @@ unsafe extern "C" fn ike_slash_shoot_main_loop(weapon: &mut L2CWeaponCommon) -> 
     let owner_boma = get_owner_boma(weapon);
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
-    if should_remove_projectile(weapon)
-    || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
+    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
         slash_removal(weapon);
-    }
-    if should_remove_slash_on_hit(weapon) {
-        slash_hit_removal(weapon);
     }
     0.into()
 }

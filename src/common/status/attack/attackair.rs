@@ -53,9 +53,7 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
             WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
         }
         //Angleable Metaknight Dair
-        if fighter_kind == *FIGHTER_KIND_METAKNIGHT 
-        && motion_kind == hash40("attack_air_lw") 
-        && frame < 7.0 {
+        if fighter_kind == *FIGHTER_KIND_METAKNIGHT  && motion_kind == hash40("attack_air_lw") && frame < 7.0 {
             if stick_x > 0.5 {
                 MotionModule::change_motion_inherit_frame(boma, Hash40::new("attack_air_lw_diagonal_r"), -1.0, 1.0, 0.0, false, false);
             }
@@ -84,8 +82,7 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
                 || GroundModule::ray_check(boma, &Vector2f{x: pos.x+(ike_x_check*0.2), y: pos.y+(ike_y_check*0.2)}, &Vector2f{x: 6.0*lr, y: 0.0}, true) == 1
                 || GroundModule::ray_check(boma, &Vector2f{x: pos.x+(ike_x_check*0.1), y: pos.y+(ike_y_check*0.1)}, &Vector2f{x: 6.0*lr, y: 0.0}, true) == 1
             );
-            if WorkModule::is_flag(boma, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND) 
-            && (AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) || ray_check || wall_check) {
+            if WorkModule::is_flag(boma, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND)  && (AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) || ray_check || wall_check) {
                 WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
                 WorkModule::set_flag(boma, false, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND);
             }

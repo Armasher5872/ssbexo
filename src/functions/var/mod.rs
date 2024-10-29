@@ -21,6 +21,7 @@ pub mod globals;
 pub mod ike;
 pub mod ken;
 pub mod kirby;
+pub mod koopajr;
 pub mod link;
 pub mod littlemac;
 pub mod lucas;

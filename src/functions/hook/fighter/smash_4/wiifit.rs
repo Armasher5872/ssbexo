@@ -61,7 +61,7 @@ unsafe extern "C" fn wiifit_start_initialization(_vtable: u64, fighter: &mut Fig
 
 //Wii Fit Trainer Reset Initialization
 #[skyline::hook(offset = WIIFIT_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn wiifit_reset_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn wiifit_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if fighter.battle_object.kind == *FIGHTER_KIND_WIIFIT as u32 {

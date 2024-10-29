@@ -23,6 +23,7 @@ use {
                 gekkouga::*,
                 globals::*,
                 ken::*,
+                koopajr::*,
                 link::*,
                 littlemac::*,
                 miifighter::*,

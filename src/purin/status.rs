@@ -182,9 +182,6 @@ unsafe extern "C" fn purin_disarming_voice_shoot_main_status(weapon: &mut L2CWea
     if should_remove_projectile(weapon) {
         disarming_voice_removal(weapon);
     }
-    if should_remove_disarming_voice_on_hit(weapon) {
-        disarming_voice_hit_removal(weapon);
-    }
     weapon.fastshift(L2CValue::Ptr(purin_disarming_voice_shoot_main_loop as *const () as _))
 }
 
@@ -192,12 +189,8 @@ unsafe extern "C" fn purin_disarming_voice_shoot_main_loop(weapon: &mut L2CWeapo
     let owner_boma = get_owner_boma(weapon);
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
-    if should_remove_projectile(weapon)
-    || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
+    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
         disarming_voice_removal(weapon);
-    }
-    if should_remove_disarming_voice_on_hit(weapon) {
-        disarming_voice_hit_removal(weapon);
     }
     0.into()
 }

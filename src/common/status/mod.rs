@@ -11,6 +11,7 @@ mod jump;
 mod landing;
 mod special;
 //mod squat;
+mod thrown;
 
 pub fn install() {
     aerial::install();
@@ -26,4 +27,5 @@ pub fn install() {
     landing::install();
     special::install();
     //squat::install();
+    thrown::install();
 }

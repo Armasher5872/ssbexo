@@ -85,6 +85,33 @@ unsafe extern "C" fn trail_attack_lw4_map_correction_status(fighter: &mut L2CFig
     0.into()
 }
 
+unsafe extern "C" fn trail_attack_air_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let attack_air_kind = ControlModule::get_attack_air_kind(fighter.module_accessor);
+    if attack_air_kind != *FIGHTER_COMMAND_ATTACK_AIR_KIND_F {
+        StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_MOTION_FALL, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ATTACK_AIR_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ATTACK_AIR_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ATTACK_AIR_FLOAT, 0);
+        FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_NONE as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_ATTACK_AIR as u32, 0);
+        return 0.into()
+    }
+    else {
+        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_F);
+    }
+    1.into()
+}
+
+unsafe extern "C" fn trail_attack_air_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let frame = MotionModule::frame(fighter.module_accessor);
+    fighter.sub_attack_air_kind();
+    if [hash40("jump_aerial_f"), hash40("jump_aerial_b")].contains(&motion_kind) {
+        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_IGNORE_2ND_MOTION) {
+            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new_raw(motion_kind), frame, 1.0, false, 1.0);
+            MotionModule::set_weight(fighter.module_accessor, 1.0, true);
+        }
+    }
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND);
+    fighter.sub_attack_air_uniq_process_init();
+    0.into()
+}
 
 unsafe extern "C" fn trail_special_lw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
@@ -97,6 +124,8 @@ pub fn install() {
     .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_LW4, trail_attack_lw4_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4, trail_attack_lw4_main_status)
     .status(MapCorrection, *FIGHTER_STATUS_KIND_ATTACK_LW4, trail_attack_lw4_map_correction_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_AIR, trail_attack_air_pre_status)
+    .status(Init, *FIGHTER_STATUS_KIND_ATTACK_AIR, trail_attack_air_init_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, trail_special_lw_pre_status)
     .install()
     ;

@@ -5,8 +5,6 @@ unsafe extern "C" fn ssbexo_popo_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         GrabModule::set_rebound(agent.module_accessor, true);
     }
-    frame(agent.lua_state_agent, 1.0);
-    macros::FT_MOTION_RATE(agent, 1.4);
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
         macros::FT_MOTION_RATE(agent, 1.0);
@@ -27,8 +25,6 @@ unsafe extern "C" fn ssbexo_popo_dash_grab_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         GrabModule::set_rebound(agent.module_accessor, true);
     }
-    frame(agent.lua_state_agent, 1.0);
-    macros::FT_MOTION_RATE(agent, 1.285);
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         macros::FT_MOTION_RATE(agent, 1.0);

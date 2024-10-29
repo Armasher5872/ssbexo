@@ -86,9 +86,6 @@ unsafe extern "C" fn pfushigisou_sludge_shoot_main_status(weapon: &mut L2CWeapon
     if should_remove_projectile(weapon) {
         sludge_removal(weapon);
     }
-    if should_remove_sludge_on_hit(weapon) {
-        sludge_hit_removal(weapon);
-    }
     weapon.fastshift(L2CValue::Ptr(pfushigisou_sludge_shoot_main_loop as *const () as _))
 }
 
@@ -99,9 +96,6 @@ unsafe extern "C" fn pfushigisou_sludge_shoot_main_loop(weapon: &mut L2CWeaponCo
     }
     if should_remove_projectile(weapon) {
         sludge_removal(weapon);
-    }
-    if should_remove_sludge_on_hit(weapon) {
-        sludge_hit_removal(weapon);
     }
     0.into()
 }
