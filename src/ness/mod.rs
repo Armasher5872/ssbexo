@@ -1,6 +1,9 @@
 use {
     crate::functions::{
-        ext::utility::boma_ext::*,
+        ext::{
+            fighter::common::*,
+            utility::boma_ext::*,
+        },
         var::{
             consts::*,
             globals::*,

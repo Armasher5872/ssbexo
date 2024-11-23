@@ -107,8 +107,7 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
     }
     //Enables Dash Attack Gravity. Code runs once and only whilst in the air, but enables a second flag that checks when your situation kind changes, and if so, reenable gravity.
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY)
-    && situation_kind != *SITUATION_KIND_GROUND {
+    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY) && situation_kind != *SITUATION_KIND_GROUND {
         WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY);
         WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED);
         let fall_mul = WorkModule::get_float(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL);
@@ -192,10 +191,7 @@ unsafe fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
     }
     //Kirby Aerial Dash Attack
-    if fighter_kind == *FIGHTER_KIND_KIRBY
-    && situation_kind == *SITUATION_KIND_AIR
-    && fighter.check_jump_cancel(false, false) 
-    && frame > 25.0 {
+    if fighter_kind == *FIGHTER_KIND_KIRBY && situation_kind == *SITUATION_KIND_AIR && fighter.check_jump_cancel(false, false) && frame > 25.0 {
         fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
     }
     //Snake Dash Attack Item Toss

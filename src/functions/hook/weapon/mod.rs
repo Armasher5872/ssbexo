@@ -11,10 +11,12 @@ use {
 
 mod brawl;
 pub mod common;
+mod melee;
 mod smash_4;
 
 pub fn install() {
     brawl::install();
     common::install();
+    melee::install();
     smash_4::install();
 }

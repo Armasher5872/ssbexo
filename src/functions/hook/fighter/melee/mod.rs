@@ -4,7 +4,6 @@ use {
             fighter::common::*,
             utility::{
                 boma_ext::*,
-                commandcat::*,
                 misc::*,
             }
         },
@@ -13,12 +12,12 @@ use {
             chrom::*,
             consts::*,
             globals::*,
+            lucina::*,
+            mariod::*,
             marth::*,
-            mewtwo::*,
             pichu::*,
             roy::*,
             sheik::*,
-            variables::*,
         },
         util::*,
     },

@@ -7,14 +7,9 @@ unsafe extern "C" fn ridley_attack_lw4_pre_status(fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn ridley_attack_lw4_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let restart_frame = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_WORK_FLOAT_SMASH_RESTART_FRAME);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
-    ControlModule::reset_trigger(fighter.module_accessor);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
-    ComboModule::set(fighter.module_accessor, *FIGHTER_COMBO_KIND_S4);
-    MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("attack_lw4"), restart_frame, 1.0, 0.0);
+    fighter.attack_lw4_mtrans();
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_THROW_KIRBY_GROUND);
-    WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL);
     if !StopModule::is_stop(fighter.module_accessor) {
         fighter.status_ThrowKirby_Uniq(L2CValue::Bool(false));
     }

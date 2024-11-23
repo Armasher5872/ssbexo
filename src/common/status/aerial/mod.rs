@@ -1,6 +1,9 @@
 #![allow(unused_must_use)]
 use {
-    crate::functions::var::globals::*,
+    crate::functions::var::{
+        consts::*,
+        globals::*,
+    },
     smash::{
         app::{
             lua_bind::{
@@ -31,9 +34,11 @@ use {
 };
 
 mod airlasso;
+mod fall;
 pub mod gliding;
 
 pub fn install() {
     airlasso::install();
+    fall::install();
     gliding::install();
 }

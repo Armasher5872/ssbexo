@@ -1,111 +1,16 @@
 use super::*;
 
-//Neutral Special Start ACMD
-unsafe extern "C" fn ssbexo_mewtwo_neutral_special_start_acmd(_agent: &mut L2CAgentBase) {}
-
-//Neutral Special Shoot ACMD
-unsafe extern "C" fn ssbexo_mewtwo_neutral_special_shoot_acmd(agent: &mut L2CAgentBase) {
-    let damage_multiplier = WorkModule::get_float(agent.module_accessor, FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLOAT_PSYCHIC_GLARE_POWER);
-    if macros::is_excute(agent) {
-        AttackModule::set_power_up(agent.module_accessor, damage_multiplier);
-        AttackModule::set_reaction_mul(agent.module_accessor, damage_multiplier/2.0);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 361, 75, 0, 45, 6.0, 0.0, 11.0, 2.0, Some(0.0), Some(11.0), Some(22.0*damage_multiplier), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_HEAD);
-    }
-    frame(agent.lua_state_agent, 18.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLOAT_PSYCHIC_GLARE_POWER);
-        AttackModule::set_power_up(agent.module_accessor, 1.0);
-        AttackModule::set_reaction_mul(agent.module_accessor, 1.0);
-    }
-}
-
-//Neutral Special Shoot Effect
-unsafe extern "C" fn ssbexo_mewtwo_neutral_special_shoot_effect(agent: &mut L2CAgentBase) {
-    let damage_multiplier = WorkModule::get_float(agent.module_accessor, FIGHTER_MEWTWO_INSTANCE_WORK_ID_FLOAT_PSYCHIC_GLARE_POWER);
-    if macros::is_excute(agent) {
-        macros::FLASH(agent, 1, 1, 1, 0.55);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("robot_robobeam_shot"), Hash40::new("head"), 0.7, 1.9, -1.4, 0, 0, 0, 0.5, true);
-        macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 1.0);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH(agent, 0.35, 0.5, 1, 0.4);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH_FRM(agent, 5, 0, 0, 0.35, 0);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH(agent, 1, 1, 1, 0.55);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH(agent, 0.35, 0.5, 1, 0.4);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH_FRM(agent, 5, 0, 0, 0.35, 0);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH(agent, 1, 1, 1, 0.55);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH(agent, 0.35, 0.5, 1, 0.4);
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        macros::FLASH_FRM(agent, 5, 0, 0, 0.35, 0);
-    }
-    wait(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        macros::COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 10.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("mewtwo_kanasibari_eye"), Hash40::new("head"), 0.7, 1.9, 1.4, 0, 0, 0, 0.5, true);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("mewtwo_kanasibari"), Hash40::new("top"), 0.0, 14.0, 3.0, 0, 0, 0, 1.0, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("robot_robobeam_s"), Hash40::new("top"), 0.0, 14.0, 24.0*damage_multiplier, 0, 0, 0, 0.55*damage_multiplier, true);
-        macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 1.0);
-    }
-    frame(agent.lua_state_agent, 22.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_OFF_KIND(agent, Hash40::new("robot_robobeam_s"), false, false);
-    }
-}
-
-//Neutral Special Shoot Sound
-unsafe extern "C" fn ssbexo_mewtwo_neutral_special_shoot_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 8.0);
-    if macros::is_excute(agent) {
-        macros::PLAY_SE(agent, Hash40::new("se_mewtwo_special_l01"));
-    }
-}
-
-//Neutral Special Shoot Expression
-unsafe extern "C" fn ssbexo_mewtwo_neutral_special_shoot_expression(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if macros::is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_beams"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        agent.clear_lua_stack();
-        lua_args!(agent, 0, 0.5, 220, 3, 0.2, -10, 5, 20, 10, 80);
-        sv_animcmd::AREA_WIND_2ND_arg10(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 32.0);
-    if macros::is_excute(agent) {
-        AreaModule::erase_wind(agent.module_accessor, 0);
+//Shadowball Charge ACMD
+unsafe extern "C" fn ssbexo_mewtwo_shadowball_charge_acmd(agent: &mut L2CAgentBase) {
+    for _ in 0..i32::MAX {
+        if macros::is_excute(agent) {
+            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.4, 85, 90, 0, 90, 2.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        }
+        wait(agent.lua_state_agent, 3.0);
+        if macros::is_excute(agent) {
+            AttackModule::clear_all(agent.module_accessor);
+        }
+        wait(agent.lua_state_agent, 3.0);
     }
 }
 
@@ -260,24 +165,19 @@ unsafe extern "C" fn ssbexo_mewtwo_futuresight_ball_sound(agent: &mut L2CAgentBa
 
 pub fn install() {
     Agent::new("mewtwo")
-    .game_acmd("game_specialnstart", ssbexo_mewtwo_neutral_special_start_acmd, Priority::Low)
-    .game_acmd("game_specialairnstart", ssbexo_mewtwo_neutral_special_start_acmd, Priority::Low)
-    .game_acmd("game_specialnshoot", ssbexo_mewtwo_neutral_special_shoot_acmd, Priority::Low)
-    .game_acmd("game_specialairnshoot", ssbexo_mewtwo_neutral_special_shoot_acmd, Priority::Low)
-    .effect_acmd("effect_specialnshoot", ssbexo_mewtwo_neutral_special_shoot_effect, Priority::Low)
-    .effect_acmd("effect_specialairnshoot", ssbexo_mewtwo_neutral_special_shoot_effect, Priority::Low)
-    .sound_acmd("sound_specialnshoot", ssbexo_mewtwo_neutral_special_shoot_sound, Priority::Low)
-    .sound_acmd("sound_specialairnshoot", ssbexo_mewtwo_neutral_special_shoot_sound, Priority::Low)
-    .expression_acmd("expression_specialnshoot", ssbexo_mewtwo_neutral_special_shoot_expression, Priority::Low)
-    .expression_acmd("expression_specialairnshoot", ssbexo_mewtwo_neutral_special_shoot_expression, Priority::Low)
-    .game_acmd("game_specialhistart", ssbexo_mewtwo_up_special_acmd, Priority::Low)
-    .game_acmd("game_specialairhistart", ssbexo_mewtwo_up_special_acmd, Priority::Low)
-    .effect_acmd("effect_specialhistart", ssbexo_mewtwo_up_special_effect, Priority::Low)
-    .effect_acmd("effect_specialairhistart", ssbexo_mewtwo_up_special_effect, Priority::Low)
-    .sound_acmd("sound_specialhistart", ssbexo_mewtwo_up_special_sound, Priority::Low)
-    .sound_acmd("sound_specialairhistart", ssbexo_mewtwo_up_special_sound, Priority::Low)
-    .expression_acmd("expression_specialhistart", ssbexo_mewtwo_up_special_expression, Priority::Low)
-    .expression_acmd("expression_specialairhistart", ssbexo_mewtwo_up_special_expression, Priority::Low)
+    .game_acmd("game_specialhi", ssbexo_mewtwo_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_mewtwo_up_special_acmd, Priority::Low)
+    .effect_acmd("effect_specialhi", ssbexo_mewtwo_up_special_effect, Priority::Low)
+    .effect_acmd("effect_specialairhi", ssbexo_mewtwo_up_special_effect, Priority::Low)
+    .sound_acmd("sound_specialhi", ssbexo_mewtwo_up_special_sound, Priority::Low)
+    .sound_acmd("sound_specialairhi", ssbexo_mewtwo_up_special_sound, Priority::Low)
+    .expression_acmd("expression_specialhi", ssbexo_mewtwo_up_special_expression, Priority::Low)
+    .expression_acmd("expression_specialairhi", ssbexo_mewtwo_up_special_expression, Priority::Low)
+    .install()
+    ;
+    Agent::new("mewtwo_shadowball")
+    .game_acmd("game_charge", ssbexo_mewtwo_shadowball_charge_acmd, Priority::Low)
+    .game_acmd("game_chargemax", ssbexo_mewtwo_shadowball_charge_acmd, Priority::Low)
     .install()
     ;
     Agent::new("mewtwo_bindball")

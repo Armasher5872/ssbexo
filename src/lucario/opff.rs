@@ -3,52 +3,51 @@ use super::*;
 unsafe extern "C" fn lucariom_frame(weapon: &mut L2CFighterBase) {
     let lucario_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let lucario_boma = sv_battle_object::module_accessor(lucario_id);
-    let lucario_motion = MotionModule::motion_kind(lucario_boma);
+    let motion_kind = MotionModule::motion_kind(weapon.module_accessor);
+    let status_kind = StatusModule::status_kind(weapon.module_accessor);
+    let situation_kind = StatusModule::situation_kind(weapon.module_accessor);
+    let rate = MotionModule::rate(weapon.module_accessor);
+    let lr = PostureModule::lr(weapon.module_accessor);
+    let scale = PostureModule::scale(weapon.module_accessor);
+    let lucario_situation_kind = StatusModule::situation_kind(lucario_boma);
+    let lucario_motion_kind = MotionModule::motion_kind(lucario_boma);
     let lucario_frame = MotionModule::frame(lucario_boma);
     let lucario_rate = MotionModule::rate(lucario_boma);
-    let lucario_status_kind = StatusModule::status_kind(lucario_boma);
     let lucario_lr = PostureModule::lr(lucario_boma);
     let lucario_scale = PostureModule::scale(lucario_boma);
-    let lucario_pos = PostureModule::pos(lucario_boma);
-    let lucario_x = PostureModule::pos_x(lucario_boma);
-    let lucario_y = PostureModule::pos_y(lucario_boma);
-    let lucario_z = PostureModule::pos_z(lucario_boma);
-    let mut lucario_vector = Vector3f{x: lucario_x, y: lucario_y, z: lucario_z};
-    let lucario_situation_kind = StatusModule::situation_kind(lucario_boma);
-    if StatusModule::status_kind(weapon.module_accessor) != lucario_status_kind {
-        StatusModule::change_status_force(weapon.module_accessor, lucario_status_kind, true);
+    if ![*WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_FINAL_START, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_FINAL_ENTRY, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_FINAL, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_FINAL_END].contains(&status_kind) {
+        if motion_kind != lucario_motion_kind {
+            MotionModule::change_motion(weapon.module_accessor, Hash40::new_raw(lucario_motion_kind), lucario_frame, lucario_rate, false, 0.0, false, false);
+        }
+        if situation_kind != lucario_situation_kind {
+            StatusModule::set_situation_kind(weapon.module_accessor, SituationKind(lucario_situation_kind), true);
+        }
+        if rate != lucario_rate {
+            MotionModule::set_rate(weapon.module_accessor, lucario_rate);
+        }
+        if lr != lucario_lr {
+            PostureModule::set_lr(weapon.module_accessor, lucario_lr);
+        }
+        if scale != lucario_scale {
+            PostureModule::set_scale(weapon.module_accessor, lucario_scale, true);
+        }
+        if [hash40("wait"), hash40("wait_item"), hash40("squat_wait"), hash40("attack_100")].contains(&motion_kind) {
+            if !StatusModule::is_changing(weapon.module_accessor) && !StatusModule::is_situation_changed(weapon.module_accessor) && MotionModule::is_end(weapon.module_accessor) {
+                MotionModule::change_motion(weapon.module_accessor, Hash40::new_raw(lucario_motion_kind), lucario_frame, lucario_rate, false, 0.0, false, false);
+            }
+        }
     }
-    if StatusModule::is_situation_changed(weapon.module_accessor) {
-        StatusModule::set_situation_kind(weapon.module_accessor, SituationKind(lucario_situation_kind), true);
-    }
-    if MotionModule::motion_kind(weapon.module_accessor) != lucario_motion {
-        MotionModule::change_motion(weapon.module_accessor, Hash40::new_raw(lucario_motion), lucario_frame, lucario_rate , false, 0.0, false, false);
-        ArticleModule::change_motion(weapon.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, Hash40::new_raw(lucario_motion), false, -1.0);
-    }
-    if MotionModule::frame(weapon.module_accessor) != lucario_frame {
-        ArticleModule::set_frame(weapon.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, lucario_frame);
-        MotionModule::set_frame(weapon.module_accessor, lucario_frame, true);
-    }
-    if MotionModule::rate(weapon.module_accessor) != lucario_rate {
-        ArticleModule::set_rate(weapon.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, lucario_rate);
-        MotionModule::set_rate(weapon.module_accessor, lucario_rate);
-    }
-    if PostureModule::lr(weapon.module_accessor) != lucario_lr {
-        PostureModule::set_lr(weapon.module_accessor, lucario_lr);
-        PostureModule::update_rot_y_lr(weapon.module_accessor);
-    }
-    if PostureModule::scale(weapon.module_accessor) != lucario_scale {
-        PostureModule::set_scale(weapon.module_accessor, lucario_scale, false);
-    }
-    if PostureModule::pos(weapon.module_accessor) != lucario_pos
-    || PostureModule::pos_x(weapon.module_accessor) != lucario_x
-    || PostureModule::pos_y(weapon.module_accessor) != lucario_y
-    || PostureModule::pos_z(weapon.module_accessor) != lucario_z {
-        ArticleModule::set_pos(weapon.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, lucario_vector);
-        PostureModule::set_pos(weapon.module_accessor, lucario_pos);
-        MotionModule::joint_local_tra(weapon.module_accessor, Hash40::new("trans"), true, &mut lucario_vector);
-        MotionModule::joint_local_tra(weapon.module_accessor, Hash40::new("rot"), true, &mut lucario_vector);
-        MotionModule::joint_local_tra(weapon.module_accessor, Hash40::new("hip"), true, &mut lucario_vector);
+    if status_kind == WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE {
+        if [hash40("mega_evolve"), hash40("mega_evolve_air")].contains(&motion_kind) {
+            if MotionModule::is_end(weapon.module_accessor) {
+                if lucario_situation_kind == *SITUATION_KIND_AIR {
+                    MotionModule::change_motion(weapon.module_accessor, Hash40::new("fall"), 0.0, 1.0, false, 0.0, false, false);
+                }
+                else {
+                    MotionModule::change_motion(weapon.module_accessor, Hash40::new("wait"), 0.0, 1.0, false, 0.0, false, false);
+                }
+            }
+        }
     }
 }
 

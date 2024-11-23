@@ -1,15 +1,7 @@
-#![allow(unused_parens)]
 use {
-    crate::functions::{
-        ext::utility::{
-            boma_ext::*,
-            commandcat::*,
-        },
-        var::{
-            consts::*,
-            globals::*,
-            mewtwo::*,
-        }
+    crate::functions::var::{
+        consts::*,
+        globals::*,
     },
     smash::{
         app::{

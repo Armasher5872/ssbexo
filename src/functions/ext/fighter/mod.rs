@@ -17,6 +17,7 @@ use {
             kirby::*,
             link::*,
             murabito::*,
+            variables::*,
         },
         util::*,
     },

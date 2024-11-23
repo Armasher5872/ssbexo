@@ -5,7 +5,6 @@ use {
         var::{
             consts::*,
             globals::*,
-            robot::*,
         }
     },
     smash::{

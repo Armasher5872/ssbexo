@@ -115,6 +115,20 @@ unsafe extern "C" fn lucas_attack_s4_main_loop(fighter: &mut L2CFighterCommon) -
     0.into()
 }
 
+unsafe extern "C" fn lucas_attack_s4_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    let table = param_3.get_table() as *mut smash2::lib::L2CTable;
+    let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
+    let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
+    if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        if collision_kind == *COLLISION_KIND_HIT {
+            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+                macros::EFFECT(fighter, Hash40::new("starman_smash"), Hash40::new("top"), 0, 5, 12, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, true);
+            }
+        }
+    }
+    0.into()
+}
+
 unsafe extern "C" fn lucas_special_guard_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_GROUND_STOP, *GROUND_CORRECT_KIND_GROUND as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_N | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_N as u32, 0);
@@ -629,6 +643,7 @@ pub fn install() {
     .status(Pre, *FIGHTER_STATUS_KIND_JUMP_AERIAL, lucas_jump_aerial_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4_START, lucas_attack_s4_start_main_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4, lucas_attack_s4_main_status)
+    .status(CheckAttack, *FIGHTER_STATUS_KIND_ATTACK_S4, lucas_attack_s4_check_attack_status)
     .status(Pre, FIGHTER_STATUS_KIND_SPECIAL_GUARD, lucas_special_guard_pre_status)
     .status(Init, FIGHTER_STATUS_KIND_SPECIAL_GUARD, lucas_special_guard_init_status)
     .status(Main, FIGHTER_STATUS_KIND_SPECIAL_GUARD, lucas_special_guard_main_status)

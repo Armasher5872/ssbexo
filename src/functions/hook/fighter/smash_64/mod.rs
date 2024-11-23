@@ -20,7 +20,6 @@ use {
             pikachu::*,
             purin::*,
             samusd::*,
-            variables::*,
         },
         util::*,
     },

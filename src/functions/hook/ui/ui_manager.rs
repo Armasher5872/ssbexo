@@ -5,7 +5,9 @@ pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
         UiManager {
             palutena_meter: [PalutenaMeter::default(); 8],
             robot_meter: [RobotMeter::default(); 8],
-            ice_climber_meter: [IceClimberMeter::default(); 8]
+            ice_climber_meter: [IceClimberMeter::default(); 8],
+            mariod_meter: [MarioDMeter::default(); 8],
+            lucario_meter: [LucarioMeter::default(); 8],
         }
     )}
 );
@@ -14,7 +16,9 @@ pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
 pub struct UiManager {
     pub palutena_meter: [PalutenaMeter; 8],
     pub robot_meter: [RobotMeter; 8],
-    pub ice_climber_meter: [IceClimberMeter; 8]
+    pub ice_climber_meter: [IceClimberMeter; 8],
+    pub mariod_meter: [MarioDMeter; 8],
+    pub lucario_meter: [LucarioMeter; 8],
 }
 
 impl UiManager {
@@ -109,5 +113,32 @@ impl UiManager {
     pub unsafe extern "C" fn set_iceclimber_meter_color(entry_id: u32, percent: f32) {
         let mut manager = UI_MANAGER.write();
         manager.ice_climber_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].update_color(percent);
+    }
+    //Dr. Mario
+    #[export_name = "UiManager__set_mariod_meter_enable"]
+    pub extern "C" fn set_mariod_meter_enable(entry_id: u32, enable: bool) {
+        let mut manager = UI_MANAGER.write();
+        manager.mariod_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_enable(enable);
+    }
+    #[export_name = "UiManager__set_mariod_meter_info"]
+    pub extern "C" fn set_mariod_meter_info(entry_id: u32, element: i32) {
+        let mut manager = UI_MANAGER.write();
+        manager.mariod_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_meter_info(element);
+    }
+    #[export_name = "UiManager__get_mariod_pill_id"]
+    pub extern "C" fn get_mariod_pill_id(entry_id: u32) -> i32 {
+        let manager = UI_MANAGER.write();
+        return manager.mariod_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].pill_id();
+    }
+    //Lucario
+    #[export_name = "UiManager__set_lucario_meter_enable"]
+    pub extern "C" fn set_lucario_meter_enable(entry_id: u32, enable: bool) {
+        let mut manager = UI_MANAGER.write();
+        manager.lucario_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_enable(enable);
+    }
+    #[export_name = "UiManager__set_lucario_meter_info"]
+    pub extern "C" fn set_lucario_meter_info(entry_id: u32, value: i32) {
+        let mut manager = UI_MANAGER.write();
+        manager.lucario_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_meter_info(value);
     }
 }

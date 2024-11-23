@@ -2,22 +2,29 @@ use {
     crate::functions::{
         ext::{
             fighter::common::*,
-            utility::boma_ext::*,
+            utility::{
+                boma_ext::*,
+                misc::*,
+            }
         },
-        hook::attack::*,
+        hook::{
+            attack::*,
+            misc::*,
+        },
         var::{
             armstrong::*,
             consts::*,
             globals::*,
-            variables::*,
         },
         util::*,
     },
     smash::{
         app::{
+            BattleObject,
+            BattleObjectModuleAccessor,
+            DamageNoReactionMode,
             Fighter,
             lua_bind::*,
-            *
         },
         hash40,
         lib::{
@@ -25,7 +32,14 @@ use {
             lua_const::*,
         },
         lua2cpp::L2CFighterCommon,
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector3f
+        }
+    },
+    smash2::app::{
+        LinkEvent,
+        LinkEventCapture
     }
 };
 

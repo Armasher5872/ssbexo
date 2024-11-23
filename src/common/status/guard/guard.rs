@@ -148,14 +148,34 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe fn sub_ftstatusuniqprocessguardfunc_updateshield(fighter: &mut L2CFighterCommon, _param_1: L2CValue) {
     let shield_hp = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     let scale = fighter.FighterStatusGuard__calc_shield_scale(shield_hp.into()).get_f32();
+    let shield_eff = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID) as u32;
+    let shield_max = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD_MAX);
     ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: scale, y: scale, z: scale});
+    if EffectModule::is_exist_effect(fighter.module_accessor, shield_eff) {
+        let ratio = (shield_hp/shield_max).clamp(0.1, 1.0)*0.1;
+        EffectModule::set_scale(fighter.module_accessor, shield_eff, &Vector3f{x: ratio, y: ratio, z: ratio});
+    }
 }
 
 //FighterStatusGuard set_shield_scale. Removes shield tilting, and makes shields no longer decrease in size
 #[skyline::hook(replace = L2CFighterCommon_FighterStatusGuard__set_shield_scale)]
 unsafe fn fighterstatusguard_set_shield_scale(fighter: &mut L2CFighterCommon, _param_1: L2CValue) -> L2CValue {
-    ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: 1.0, y: 1.0, z: 1.0});
+    let shield_hp = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
+    let scale = fighter.FighterStatusGuard__calc_shield_scale(shield_hp.into()).get_f32();
+    let shield_eff = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID) as u32;
+    let shield_max = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD_MAX);
+    ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: scale, y: scale, z: scale});
+    if EffectModule::is_exist_effect(fighter.module_accessor, shield_eff) {
+        let ratio = (shield_hp/shield_max).clamp(0.1, 1.0)*0.1;
+        EffectModule::set_scale(fighter.module_accessor, shield_eff, &Vector3f{x: ratio, y: ratio, z: ratio});
+    }
     0.into()
+}
+
+//FighterStatusGuard__check_hit_stop_delay_flick. Removes shield SDI
+#[skyline::hook(replace = L2CFighterCommon_FighterStatusGuard__check_hit_stop_delay_flick)]
+unsafe extern "C" fn fighterstatusguard_check_hit_stop_delay_flick(_fighter: &mut L2CFighterCommon, _param_1: L2CValue) -> L2CValue {
+    false.into()
 }
 
 //Effect Guard On Common, deals with Shield Effects
@@ -176,16 +196,8 @@ unsafe fn effect_guardoncommon(fighter: &mut L2CFighterAnimcmdEffectCommon) -> L
         agent.clear_lua_stack();
         lua_args!(agent, 0.5);
         LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
-        //Internal Shield, demonstrates shield health
+        //Base Color
         let color = {agent.clear_lua_stack(); lua_args!(agent, FT_VAR_INT_TEAM_COLOR); get_value_int(agent.lua_state_agent, *FT_VAR_INT_TEAM_COLOR)};
-        let shield_hp = WorkModule::get_float(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
-        let shield_max = WorkModule::get_float(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD_MAX);
-        let ratio = (shield_hp/shield_max).clamp(0.1, 1.0);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("sys_shield"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1*ratio, false, 0, color);
-        EFFECT_FOLLOW_arg12(agent.lua_state_agent);
-        lua_args!(agent, 0.6);
-        LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
         //External Shield, prevents shield poking
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("sys_shield"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, 0, color);
@@ -193,6 +205,18 @@ unsafe fn effect_guardoncommon(fighter: &mut L2CFighterAnimcmdEffectCommon) -> L
         agent.clear_lua_stack();
         lua_args!(agent, 0.2);
         LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
+        //Internal Shield, demonstrates shield health
+        let shield_hp = WorkModule::get_float(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
+        let shield_max = WorkModule::get_float(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD_MAX);
+        let ratio = (shield_hp/shield_max).clamp(0.1, 1.0);
+        agent.clear_lua_stack();
+        lua_args!(agent, Hash40::new("sys_shield"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1*ratio, false, 0, color);
+        EFFECT_FOLLOW_arg12(agent.lua_state_agent);
+        agent.clear_lua_stack();
+        lua_args!(agent, 0.6);
+        LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
+        let effect_id = EffectModule::get_last_handle(agent.module_accessor) as u32;
+        WorkModule::set_int(agent.module_accessor, effect_id as i32, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID);
     }
     0.into()
 }
@@ -205,6 +229,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             status_guard_main_common,
             sub_ftstatusuniqprocessguardfunc_updateshield,
             fighterstatusguard_set_shield_scale,
+            fighterstatusguard_check_hit_stop_delay_flick,
             effect_guardoncommon
         );
     }

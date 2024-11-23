@@ -20,6 +20,7 @@ unsafe fn sub_landing_attack_air_init(fighter: &mut L2CFighterCommon, aerial_mot
 unsafe fn status_end_landingattackair(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
     WorkModule::on_flag(fighter.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     fighter.sub_landing_cancel_damage_face();
     0.into()
 }

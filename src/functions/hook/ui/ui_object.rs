@@ -31,6 +31,21 @@ pub trait IceClimberUiObject {
     unsafe fn update_color(&mut self, percentage: f32);
 }
 
+pub trait MarioDUiObject {
+    fn update(&mut self);
+    fn is_valid(&self) -> bool;
+    fn set_enable(&mut self, enable: bool);
+    fn is_enabled(&self) -> bool;
+    fn pill_id(&self) -> i32;
+}
+
+pub trait LucarioUiObject {
+    fn update(&mut self);
+    fn is_valid(&self) -> bool;
+    fn set_enable(&mut self, enable: bool);
+    fn is_enabled(&self) -> bool;
+}
+
 impl UiObject for PalutenaMeter {
     fn update(&mut self) {
         self.set_tex_coords();
@@ -182,5 +197,51 @@ impl IceClimberUiObject for IceClimberMeter {
     }
     unsafe fn update_color(&mut self, percent: f32) {
         self.update_color(percent);
+    }
+}
+
+impl MarioDUiObject for MarioDMeter {
+    fn update(&mut self) {
+        self.update_icon();
+    }
+    fn is_valid(&self) -> bool {
+        return is_pane_valid(self.icon);
+    }
+    fn set_enable(&mut self, enable: bool) {
+        if !enable {
+            set_pane_visible(self.icon, false);
+        } 
+        else if !self.is_enabled {
+            self.reset();
+        }
+        self.is_enabled = enable;
+    }
+    fn is_enabled(&self) -> bool {
+        return self.is_enabled;
+    }
+    fn pill_id(&self) -> i32 {
+        return self.element;
+    }
+}
+
+impl LucarioUiObject for LucarioMeter {
+    fn update(&mut self) {
+        self.update_icon();
+    }
+    fn is_valid(&self) -> bool {
+        is_pane_valid(self.number) && is_pane_valid(self.icon)
+    }
+    fn set_enable(&mut self, enable: bool) {
+        if !enable {
+            set_pane_visible(self.number, false);
+            set_pane_visible(self.icon, false);
+        }
+        else if !self.enabled {
+            self.reset();
+        }
+        self.enabled = enable;
+    }
+    fn is_enabled(&self) -> bool {
+        self.enabled
     }
 }

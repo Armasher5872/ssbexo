@@ -2,6 +2,8 @@ use {
     crate::functions::{
         hook::ui::{
             ice_climber_meter::*,
+            lucario_meter::*,
+            mariod_meter::*,
             palutena_meter::*,
             robot_meter::*,
             ui_manager::*,
@@ -15,6 +17,8 @@ use {
 };
 
 pub mod ice_climber_meter;
+pub mod lucario_meter;
+pub mod mariod_meter;
 pub mod palutena_meter;
 pub mod robot_meter;
 pub mod ui_hooks;

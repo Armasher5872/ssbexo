@@ -1,23 +1,6 @@
 #![allow(unused_parens)]
 use super::*;
 
-//Prevention of Moves in Air (Credit to Chrispo)
-#[skyline::hook(replace = StatusModule::change_status_request_from_script)]
-unsafe extern "C" fn change_status_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, unk: bool) -> u64 {
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-	if get_kind(boma) == *FIGHTER_KIND_LUCINA {
-		if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N
-		&& !USE_SWORDSMAN_DASH[entry_id as usize] {
-			return 0;
-		}
-		if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI
-		&& !USE_UP_SPECIAL[entry_id as usize] {
-			return 0;
-		}
-	}
-	return original!()(boma, status_kind, unk);
-}
-
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term)]
 unsafe extern "C" fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
 	let situation_kind = StatusModule::situation_kind(module_accessor);
@@ -40,7 +23,7 @@ unsafe extern "C" fn is_enable_transition_term_replace(module_accessor: &mut sma
 	return ret;
 }
 
-//Deals with DK's Barrels, Gordo, and CC
+//Deals with DK's Barrels and Gordo
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::change_status_request)]
 unsafe extern "C" fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
 	let mut next_status = status_kind;
@@ -60,9 +43,6 @@ unsafe extern "C" fn change_status_request_hook(boma: &mut smash::app::BattleObj
 				next_status = *ITEM_STATUS_KIND_FALL;
 				TeamModule::set_hit_team(boma, *TEAM_NONE);
 			}
-		}
-		if boma.kind() == *ITEM_KIND_SNAKEGRENADE {
-			TeamModule::set_hit_team(boma, *TEAM_NONE);
 		}
 	}
 	original!()(boma, next_status, arg3)
@@ -178,13 +158,33 @@ unsafe extern "C" fn get_ground_correct_kind_air_trans_hook(_boma: &mut smash::a
     return *GROUND_CORRECT_KIND_AIR;
 }
 
+#[skyline::hook(replace=FighterStatusModuleImpl::set_fighter_status_data)]
+unsafe extern "C" fn set_fighter_status_data_hook(boma: &mut BattleObjectModuleAccessor, arg2: bool, treaded_kind: i32, arg4: bool, arg5: bool, arg6: bool, log_mask_flag: u64, status_attr: u32, power_up_attack_bit: u32, arg10: u32) {
+    let mut new_status_attr = status_attr;
+    if boma.is_fighter() {
+        // this handles turnaround special/b-reversible moves
+        if (boma.kind() == *FIGHTER_KIND_LINK && boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW]))
+        || (boma.kind() == *FIGHTER_KIND_YOUNGLINK && boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW]))
+        || (boma.kind() == *FIGHTER_KIND_TOONLINK && boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_LW]))
+        || (boma.kind() == *FIGHTER_KIND_MIIFIGHTER && boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_SPECIAL_N])) {
+            // if b-reverse flag does not already exist in status_attr bitmask
+            if status_attr & *FIGHTER_STATUS_ATTR_START_TURN as u32 == 0 {
+                // add b-reverse flag to status_attr bitmask
+                new_status_attr = status_attr + *FIGHTER_STATUS_ATTR_START_TURN as u32;
+            }
+        }
+
+    }
+    original!()(boma, arg2, treaded_kind, arg4, arg5, arg6, log_mask_flag, new_status_attr, power_up_attack_bit, arg10)
+}
+
 pub fn install() {
 	skyline::install_hooks!(
-		change_status_hook,
 		is_enable_transition_term_replace,
 		change_status_request_hook,
 		init_settings_hook,
         correct_hook,
-        get_ground_correct_kind_air_trans_hook
+        get_ground_correct_kind_air_trans_hook,
+		set_fighter_status_data_hook
     );
 }

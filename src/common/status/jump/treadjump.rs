@@ -1,8 +1,9 @@
 use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_transition_group_check_air_tread_jump)]
-pub unsafe fn sub_transition_group_check_air_tread_jump(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn sub_transition_group_check_air_tread_jump(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cont;
+    let cat2 = fighter.global_table[CMD_CAT2].get_i32();
     if !fighter.global_table[CHECK_AIR_TREAD_JUMP_UNIQ].get_bool() {
         cont = false;
     }
@@ -10,14 +11,13 @@ pub unsafe fn sub_transition_group_check_air_tread_jump(fighter: &mut L2CFighter
         let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[CHECK_AIR_TREAD_JUMP_UNIQ].get_ptr());
         cont = callable(fighter).get_bool();
     }
-    if cont == false {
+    if !cont {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-			let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
-            if (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_L) != 0 
-			|| (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_R) != 0 
-			|| (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI) != 0 
-			|| (cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW) != 0 
-			|| ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
+            if cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_L != 0 
+            || cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_R != 0 
+            || cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0 
+            || cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 
+            || ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
                 if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TREAD_JUMP_BUTTON) {
                     let do_footstool;
                     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_NO_TREAD_FRAME) != 0 {
@@ -60,7 +60,7 @@ pub unsafe fn sub_transition_group_check_air_tread_jump(fighter: &mut L2CFighter
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_TreadJump)]
-unsafe fn status_treadjump(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_treadjump(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Added taunt buttons to the "Is Button Footstool" check
     if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
     || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI)
@@ -126,5 +126,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

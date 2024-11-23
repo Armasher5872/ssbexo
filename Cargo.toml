@@ -1,6 +1,6 @@
 [package]
 name = "ssbexo"
-version = "0.8.0"
+version = "0.8.5"
 authors = ["phazoganon"]
 edition = "2021"
 
@@ -35,5 +35,6 @@ lto = true
 codegen-units = 1
 
 [features]
+dev = []
 default = ["skyline-web"]
 main_nro = ["skyline-web"]

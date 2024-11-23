@@ -12,6 +12,7 @@ use {
                 misc::*,
             }
         },
+        hook::misc::*,
         var::{
             consts::*,
             globals::*,
@@ -38,7 +39,7 @@ use {
                 *
             },
             sv_animcmd,
-            utility::*,
+            *
         },
         hash40,
         lib::{
@@ -46,8 +47,13 @@ use {
             L2CValue,
             lua_const::*,
         },
-        phx::Vector3f
+        phx::{
+            Hash40,
+            Vector3f,
+            Vector2f
+        }
     },
+    smash_script::*,
     std::{
         ffi::CStr,
         os::raw::{
@@ -66,6 +72,7 @@ pub mod controls;
 pub mod delay;
 pub mod effect;
 pub mod fighter;
+pub mod knockback;
 pub mod menu;
 pub mod misc;
 pub mod music;
@@ -81,6 +88,7 @@ pub fn install() {
     delay::install();
     effect::install();
     fighter::install();
+    knockback::install();
     menu::install();
     misc::install();
     music::install();

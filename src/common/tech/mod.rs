@@ -3,7 +3,6 @@ use {
         ext::{
             fighter::common::*,
             utility::{
-                boma_ext::*,
                 commandcat::*,
                 misc::*,
             }
@@ -17,11 +16,7 @@ use {
     },
     smash::{
         app::{
-            BattleObjectModuleAccessor,
-            lua_bind::{
-                PostureModule,
-                *
-            },
+            lua_bind::*,
             self,
             sv_information
         },
@@ -44,14 +39,10 @@ use {
     skyline::nn::ro::LookupSymbol
 };
 
-mod airturn;
-mod breverse;
 mod customgamemodes;
 mod misc;
 
 pub fn install() {
-    airturn::install();
-    breverse::install();
     customgamemodes::install();
     misc::install();
 }

@@ -177,9 +177,17 @@ unsafe extern "C" fn sheik_special_lw_vanish_cancel_pre_status(fighter: &mut L2C
 }
 
 unsafe extern "C" fn sheik_special_lw_vanish_cancel_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    AreaModule::set_whole(fighter.module_accessor, true);
+    CameraModule::set_status(fighter.module_accessor, CameraStatus{ _address: *CAMERA_STATUS_NORMAL as u8 }, 0);
+    JostleModule::set_status(fighter.module_accessor, true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("gamemodel"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("hair"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_eye"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_facen"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_openblink"), true);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
     WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -189,11 +197,6 @@ unsafe extern "C" fn sheik_special_lw_vanish_cancel_init_status(fighter: &mut L2
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
     }
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("gamemodel"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("hair"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_eye"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_facen"), true);
-    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_openblink"), true);
     0.into()
 }
 
@@ -260,9 +263,17 @@ unsafe extern "C" fn sheik_special_lw_vanish_cancel_end_status(fighter: &mut L2C
     for x in 0..transition_group_check.len() {
         WorkModule::enable_transition_term_group(fighter.module_accessor, transition_group_check[x]);
     }
+    AreaModule::set_whole(fighter.module_accessor, true);
+    CameraModule::set_status(fighter.module_accessor, CameraStatus{ _address: *CAMERA_STATUS_NORMAL as u8 }, 0);
+    JostleModule::set_status(fighter.module_accessor, true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("gamemodel"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("hair"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_eye"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_facen"), true);
+    ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_openblink"), true);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
     WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
     0.into()
 }
@@ -274,13 +285,16 @@ unsafe extern "C" fn sheik_special_lw_vanish_attack_pre_status(fighter: &mut L2C
 }
 
 unsafe extern "C" fn sheik_special_lw_vanish_attack_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+    AreaModule::set_whole(fighter.module_accessor, true);
+    CameraModule::set_status(fighter.module_accessor, CameraStatus{ _address: *CAMERA_STATUS_NORMAL as u8 }, 0);
+    JostleModule::set_status(fighter.module_accessor, true);
     ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("gamemodel"), true);
     ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("hair"), true);
     ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_eye"), true);
     ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_facen"), true);
     ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("sheik_openblink"), true);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
     0.into()
 }
 
@@ -378,7 +392,11 @@ unsafe extern "C" fn sheik_special_lw_vanish_attack_end_status(fighter: &mut L2C
     for x in 0..transition_group_check.len() {
         WorkModule::enable_transition_term_group(fighter.module_accessor, transition_group_check[x]);
     }
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
+    AreaModule::set_whole(fighter.module_accessor, true);
+    CameraModule::set_status(fighter.module_accessor, CameraStatus{ _address: *CAMERA_STATUS_NORMAL as u8 }, 0);
+    JostleModule::set_status(fighter.module_accessor, true);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
+    WorkModule::off_flag(fighter.module_accessor, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
     0.into()
 }
 

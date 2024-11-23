@@ -16,13 +16,23 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
         let pos = Vector3f{x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma), z: PostureModule::pos_z(boma)}; // get current pos
         let get_sum_speed_x = lr*KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         if prev_status_kind == *FIGHTER_STATUS_KIND_PASS {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) != true {
+            if !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
                 GroundModule::set_passable_check(boma, true);
             }
         }
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) 
-        && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+            WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR);
+            WorkModule::unable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
+            if !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
+                WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+            }
+            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) && !WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP) {
+                WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
+                PostureModule::reverse_lr(boma);
+                PostureModule::update_rot_y_lr(boma);
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
+                return true.into();
+            }
         }
         //Yoshi
         if fighter_kind == *FIGHTER_KIND_YOSHI
@@ -30,8 +40,8 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
         && motion_kind == hash40("attack_air_lw")
         && (12.0..=36.0).contains(&frame)
         && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
-            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.015);
-            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.05);
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.015);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.05);
         }
         //Captain Falcon Voice Exclamation
         if fighter_kind == *FIGHTER_KIND_CAPTAIN
@@ -53,7 +63,7 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
             WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
         }
         //Angleable Metaknight Dair
-        if fighter_kind == *FIGHTER_KIND_METAKNIGHT  && motion_kind == hash40("attack_air_lw") && frame < 7.0 {
+        if fighter_kind == *FIGHTER_KIND_METAKNIGHT && motion_kind == hash40("attack_air_lw") && frame < 7.0 {
             if stick_x > 0.5 {
                 MotionModule::change_motion_inherit_frame(boma, Hash40::new("attack_air_lw_diagonal_r"), -1.0, 1.0, 0.0, false, false);
             }
@@ -159,7 +169,7 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
         /* END OF NEW ADDITIONS */
         if !CancelModule::is_enable_cancel(boma) {
             if MotionModule::is_end(boma) {
-                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+                WorkModule::off_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
             return false.into();
@@ -172,7 +182,7 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
                 if !MotionModule::is_end(boma) {
                     return false.into();
                 }
-                WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+                WorkModule::off_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
         }
@@ -184,7 +194,15 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
 #[skyline::hook(replace = L2CFighterCommon_status_end_AttackAir)]
 unsafe extern "C" fn status_end_attackair(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    WorkModule::on_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    if status_kind == *FIGHTER_STATUS_KIND_FALL && WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP) {
+        WorkModule::unable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR);
+    }
+    if status_kind != *FIGHTER_STATUS_KIND_FALL {
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
+    }
     if fighter_kind == *FIGHTER_KIND_GANON {
         WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
         WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
@@ -194,9 +212,9 @@ unsafe extern "C" fn status_end_attackair(fighter: &mut L2CFighterCommon) -> L2C
         WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);	
     }
     if fighter_kind == *FIGHTER_KIND_ROBOT {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+        WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
     }
     0.into()
 }
@@ -205,7 +223,7 @@ unsafe extern "C" fn status_end_attackair(fighter: &mut L2CFighterCommon) -> L2C
 #[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_init)]
 unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    if ![*FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&fighter_kind) {
+    if ![*FIGHTER_KIND_NESS, *FIGHTER_KIND_LUCAS].contains(&fighter_kind) {
         call_original!(fighter)
     }
     else {
@@ -243,7 +261,7 @@ unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init
 unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     if KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND 
-    && [*FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&fighter_kind)
+    && [*FIGHTER_KIND_NESS, *FIGHTER_KIND_LUCAS].contains(&fighter_kind)
     && MotionModule::frame_2nd(fighter.module_accessor) >= 2.0
     && fighter.global_table[CURRENT_FRAME].get_f32() <= 5.0
     && ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {

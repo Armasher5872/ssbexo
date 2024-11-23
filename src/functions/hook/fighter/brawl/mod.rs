@@ -12,6 +12,7 @@ use {
         },
         hook::{
             attack::*,
+            misc::*,
             ui::ui_manager::*,
         },
         var::{
@@ -22,6 +23,7 @@ use {
             ike::*,
             kirby::*,
             link::*,
+            lucario::*,
             lucas::*,
             metaknight::*,
             murabito::*,

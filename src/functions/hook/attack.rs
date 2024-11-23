@@ -31,7 +31,7 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
     let attacker_shield_damage = WorkModule::get_int(attacker_boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
     let defender_shield_hp = WorkModule::get_float(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     let motion_rate: f32;
-    let damage: f32;
+    let damage = defender_shield_hp+10.0;
     if !attacker_battle_object.is_fighter() && !attacker_battle_object.is_weapon() {
         return;
     }
@@ -43,7 +43,6 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
     LAST_ATTACK_HITBOX_LOCATION_X = loc_x;
     LAST_ATTACK_HITBOX_LOCATION_Y = loc_y;
     LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
-    damage = ((30.0/(defender_shield_hp*1.4))+(defender_shield_hp*1.65)).clamp(15.0, 30.0);
     if (real_power+attacker_shield_damage) >= damage && [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD].contains(&defender_status_kind) {
         StatusModule::change_status_request_from_script(defender_boma, *FIGHTER_STATUS_KIND_FURAFURA, false);
     }
@@ -53,13 +52,12 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
     else {
         motion_rate = (1.0-(0.02*real_power)).clamp(0.5, 1.0);
     };
-    if defender_status_kind == *FIGHTER_STATUS_KIND_GUARD_OFF
-    && FighterUtil::is_valid_just_shield(defender_boma) {
-        WorkModule::set_float(attacker_boma, motion_rate, *FIGHTER_STATUS_WORK_ID_FLOAT_REBOUND_MOTION_RATE);
+    if defender_status_kind == *FIGHTER_STATUS_KIND_GUARD_OFF && FighterUtil::is_valid_just_shield(defender_boma) {
         if attacker_battle_object.is_situation(*SITUATION_KIND_AIR) {
-            StatusModule::change_status_request_from_script(attacker_boma, *FIGHTER_STATUS_KIND_REBOUND_JUMP, false);
+            StatusModule::change_status_request_from_script(attacker_boma, *FIGHTER_STATUS_KIND_TREAD_DAMAGE_AIR, false);
         }
         else {
+            WorkModule::set_float(attacker_boma, motion_rate, *FIGHTER_STATUS_WORK_ID_FLOAT_REBOUND_MOTION_RATE);
             StatusModule::change_status_request_from_script(attacker_boma, *FIGHTER_STATUS_KIND_REBOUND, false);
         }
     }
@@ -73,7 +71,7 @@ unsafe extern "C" fn attack_module_set_attack(module: u64, id: i32, group: i32, 
     if data.slip < 1.0 {
         data.slip = -1.0;
     }
-    if (data.sub_shield as f32) < 0.0 || (data.sub_shield as f32) > 50.0 {
+    if (data.power+(data.sub_shield as f32)) < 0.0 || (data.power+(data.sub_shield as f32)) > 200.0 {
         WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     }
     else {
@@ -179,29 +177,7 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
 #[skyline::from_offset(0x696720)]
 pub fn call_special_zoom(boma: *mut BattleObjectModuleAccessor, collision_log: u64, fighter_kind: i32, vl_params: u64, param_5: i32, param_6: i32, param_7: i32, param_8: i32, param_9: i32) -> u64;
 
-//Related to the updated finishing zoom function
-#[skyline::hook(offset = 0x402f00, inline)]
-unsafe extern "C" fn calculate_knockback(ctx: &InlineCtx) {
-    let damage_module = *ctx.registers[19].x.as_ref();
-    let our_boma = *((damage_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
-    let ptr = *ctx.registers[20].x.as_ref() as *mut u8;
-    let id = *(ptr.add(0x24) as *const u32);
-    IS_CALCULATING = Some(((*our_boma).battle_object_id, id));
-}
-
-#[skyline::hook(offset = 0x403950, inline)]
-unsafe extern "C" fn process_knockback(ctx: &InlineCtx) {
-    if let Some((defender, attacker)) = IS_CALCULATING {
-        let boma = *ctx.registers[20].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
-        if (*boma).battle_object_id == defender {
-            calculate_finishing_hit(defender, attacker, *ctx.registers[19].x.as_ref() as *const f32);
-        }
-    }
-}
-
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x633de0).nop(); //Removes the vanilla kill zoom in favor of the updated function. This one handles normal hits
-    let _ = skyline::patching::Patch::in_text(0x6373a4).data(0xD503201Fu32); //Removes the vanilla kill zoom in favor of the updated function. This one handles throws
     let _ = skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32); //Removes phantoms
 	skyline::install_hooks!(
         attack_replace,
@@ -209,8 +185,6 @@ pub fn install() {
         notify_log_event_collision_hit,
         hit_module_handle_attack_event,
         shield_module_send_shield_attack_collision_event,
-        attack_module_set_attack,
-        process_knockback,
-        calculate_knockback
+        attack_module_set_attack
     );
 }

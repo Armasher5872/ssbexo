@@ -68,7 +68,13 @@ pub unsafe extern "C" fn create_item(item_manager: *mut smash::app::ItemManager,
 pub fn get_battle_object_from_id(id: u32) -> *mut BattleObject;
 
 #[skyline::from_offset(0x159fb20)]
-pub unsafe extern "C" fn stage_hide(boma: *mut smash::app::BattleObjectModuleAccessor, set_vis: i32);
+pub unsafe extern "C" fn set_stage_visibility(module_accessor: *mut smash::app::BattleObjectModuleAccessor, param_2: i32);
+
+//Credit to CSK, changes the timing of the voice line for victories to be after "The Winner Is: "
+#[skyline::hook(offset = 0x1468868, inline)]
+unsafe extern "C" fn set_language(ctx: &mut InlineCtx) {
+    *ctx.registers[9].w.as_mut() = 7;
+}
 
 //Installation
 pub fn install() {
@@ -76,6 +82,7 @@ pub fn install() {
         const_allot_hook,
 		change_version_string_hook,
         get_article_use_type_mask,
-        create_item
+        create_item,
+        set_language
     );
 }

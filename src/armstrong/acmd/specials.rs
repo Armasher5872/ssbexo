@@ -275,6 +275,7 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_neutral_special_sound(agent: &mut L
 //Grounded Side Special Start ACMD
 unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_start_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 9.0);
         DamageModule::set_reaction_mul(agent.module_accessor, 0.85);
     }
@@ -284,16 +285,15 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_start_acmd(agent: &m
     }
     frame(agent.lua_state_agent, 16.0);
     if macros::is_excute(agent) {
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 6.0, 0, 50, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_POS, 0.0, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        macros::CATCH(agent, 0, Hash40::new("top"), 8.0, 0.0, 8.0, 5.0, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_GANON, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 3.0, 7.5, Some(0.0), Some(12.0), Some(7.5), *FIGHTER_STATUS_KIND_CATCHED_GANON, *COLLISION_SITUATION_MASK_GA);
     }
     frame(agent.lua_state_agent, 31.0);
     if macros::is_excute(agent) {
+        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         AttackModule::clear_all(agent.module_accessor);
         AttackModule::set_power_up(agent.module_accessor, 1.0);
         DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
         WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
         WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
@@ -324,54 +324,17 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_start_effect(agent: 
     }
 }
 
-//Grounded Chokehold Throw ACMD
-unsafe extern "C" fn ssbexo_armstrong_grounded_chokehold_throw_acmd(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 12.0, 361, 90, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-    }
-    frame(agent.lua_state_agent, 31.0);
-    if macros::is_excute(agent) {
-        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
-    }
-    frame(agent.lua_state_agent, 39.0);
-    if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_STATUS_WORK_ID_FLAG_EXPLOSION_SET_FALL);
-    }
-    frame(agent.lua_state_agent, 41.0);
-    if macros::is_excute(agent) {
-        AttackModule::set_power_up(agent.module_accessor, 1.0);
-        DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
-    }
-}
-
-//Grounded Chokehold Throw Effect
-unsafe extern "C" fn ssbexo_armstrong_grounded_chokehold_throw_effect(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        macros::EFFECT_FLW_POS(agent, Hash40::new("sys_catch"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_catch"), Hash40::new("havel"), -1, 0, 0.5, 0, 0, 0, 1, true);
-        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
-    }
-    frame(agent.lua_state_agent, 31.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("ganon_engokua"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
-    }
-}
-
 //Aerial Side Special Start ACMD
 unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_start_acmd(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
+    }
     frame(agent.lua_state_agent, 1.0);
     macros::FT_MOTION_RATE(agent, 0.8);
-    frame(agent.lua_state_agent, 19.0);
+    frame(agent.lua_state_agent, 16.0);
     if macros::is_excute(agent) {
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 6.0, 0, 50, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_POS, 0.0, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        macros::CATCH(agent, 0, Hash40::new("top"), 8.0, 0.0, 8.0, 9.0, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_GANON, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 6.0, 7.5, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 1, Hash40::new("top"), 5.0, 0.0, 11.0, 7.5, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *COLLISION_SITUATION_MASK_GA);
     }
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 29.0);
@@ -380,9 +343,9 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_start_acmd(agent: &mut
     }
     frame(agent.lua_state_agent, 32.0);
     if macros::is_excute(agent) {
+        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         AttackModule::clear_all(agent.module_accessor);
         AttackModule::set_power_up(agent.module_accessor, 1.0);
-        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
         WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     }
@@ -401,8 +364,22 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_start_effect(agent: &m
     }
 }
 
-//Aerial Chokehold Grab ACMD
-unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_grab_acmd(agent: &mut L2CAgentBase) {
+//Grounded Side Special Catch Effect
+unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_catch_effect(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::EFFECT_FLW_POS(agent, Hash40::new("sys_catch"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_catch"), Hash40::new("havel"), -1, 0, 0.5, 0, 0, 0, 1, true);
+    }
+    frame(agent.lua_state_agent, 31.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("ganon_engokua"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
+        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+    }
+}
+
+//Aerial Side Special Catch ACMD
+unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_catch_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
     }
@@ -412,8 +389,8 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_grab_acmd(agent: &mut L2C
     }
 }
 
-//Aerial Chokehold Grab Effect
-unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_grab_effect(agent: &mut L2CAgentBase) {
+//Aerial Side Special Catch Effect
+unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_catch_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_FLW_POS(agent, Hash40::new("sys_catch"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1, true);
         macros::EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("havel"), -1, 0, 0.5, 0, 0, 0, 1, true);
@@ -424,10 +401,13 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_grab_effect(agent: &mut L
     }
 }
 
-//Aerial Chokehold Fall ACMD
-unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_fall_acmd(agent: &mut L2CAgentBase) {
+//Aerial Side Special Fall ACMD
+unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_fall_acmd(agent: &mut L2CAgentBase) {
+    let explosion_air_speed_x = WorkModule::get_float(agent.module_accessor, *FIGHTER_GANON_STATUS_WORK_ID_FLOAT_EXPLOSION_AIR_SPEED_X);
     if macros::is_excute(agent) {
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
+        macros::SET_SPEED_EX(agent, explosion_air_speed_x, -5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        KineticModule::suspend_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
@@ -435,54 +415,34 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_fall_acmd(agent: &mut L2C
     }
 }
 
-//Aerial Chokehold Fall Effect
-unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_fall_effect(agent: &mut L2CAgentBase) {
+//Aerial Side Special Fall Effect
+unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_fall_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_catch"), Hash40::new("havel"), -1, 0, 0.5, 0, 0, 0, 1, true);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
     }
 }
 
-//Aerial Chokehold Throw ACMD
-unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_throw_acmd(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 15.0, 361, 82, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_NONE);
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
-    }
-    frame(agent.lua_state_agent, 1.0);
-    if macros::is_excute(agent) {
-        AttackModule::set_power_up(agent.module_accessor, 1.0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
-    }
-}
-
-//Aerial Chokehold Throw Effect
-unsafe extern "C" fn ssbexo_armstrong_aerial_chokehold_throw_effect(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        macros::EFFECT(agent, Hash40::new("ganon_engokua"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
-    }
-    frame(agent.lua_state_agent, 7.0);
-    if macros::is_excute(agent) {
-        macros::EFFECT_OFF_KIND(agent, Hash40::new("ganon_engokua"), true, true);
-        macros::EFFECT(agent, Hash40::new("ganon_engokua"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
-        macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
-    }
-}
-
-//Grounded Up Special ACMD
-unsafe extern "C" fn ssbexo_armstrong_grounded_up_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 6.0, 0, 50, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_POS, 0.0, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        macros::CATCH(agent, 0, Hash40::new("top"), 8.0, 0.0, 8.0, 9.0, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_GANON, *COLLISION_SITUATION_MASK_GA);
-    }
+//Up Special ACMD
+unsafe extern "C" fn ssbexo_armstrong_up_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
-        macros::CATCH(agent, 0, Hash40::new("top"), 8.0, 0.0, 8.0, 9.0, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *COLLISION_SITUATION_MASK_GA);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS);
+    }
+    frame(agent.lua_state_agent, 14.0);
+    if macros::is_excute(agent) {
+        macros::CATCH(agent, 0, Hash40::new("top"), 4.4, 0.0, 16.0, 6.5, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_GANON, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 1, Hash40::new("top"), 6.5, 0.0, 8.8, 13.7, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_GANON, *COLLISION_SITUATION_MASK_GA);
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 6.0, 0, 50, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
+    }
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR, 1);
+        macros::CATCH(agent, 0, Hash40::new("top"), 4.4, 0.0, 16.0, 6.5, Some(0.0), Some(18.0), Some(3.0), *FIGHTER_STATUS_KIND_CLUNG_GANON, *COLLISION_SITUATION_MASK_GA);
+    }
+    frame(agent.lua_state_agent, 18.0);
+    if macros::is_excute(agent) {
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
     frame(agent.lua_state_agent, 29.0);
     if macros::is_excute(agent) {
@@ -491,43 +451,13 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_up_special_acmd(agent: &mut L2CAg
     }
     frame(agent.lua_state_agent, 34.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("armr"), 7.0, 70, 90, 0, 70, 5.0, 6.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-        macros::ATTACK(agent, 1, 0, Hash40::new("armr"), 7.0, 70, 90, 0, 70, 4.0, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(agent, 0, 0, Hash40::new("armr"), 7.0, 70, 90, 0, 70, 9.0, 6.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
+        macros::ATTACK(agent, 1, 0, Hash40::new("armr"), 7.0, 70, 90, 0, 70, 6.0, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
     }
     wait(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-    }
-    frame(agent.lua_state_agent, 46.0);
-    if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_STATUS_SPECIAL_HI_FLAG_IS_CHECK_DIVE);
-    }
-}
-
-//Aerial Up Special ACMD
-unsafe extern "C" fn ssbexo_armstrong_aerial_up_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 6.0, 0, 50, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_POS, 0.0, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
-        macros::CATCH(agent, 0, Hash40::new("top"), 8.0, 0.0, 8.0, 9.0, None, None, None, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *COLLISION_SITUATION_MASK_GA);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS);
-    }
-    frame(agent.lua_state_agent, 29.0);
-    if macros::is_excute(agent) {
-        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        AttackModule::clear_all(agent.module_accessor);
-    }
-    frame(agent.lua_state_agent, 34.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("armr"), 7.0, 70, 90, 0, 70, 5.0, 6.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-        macros::ATTACK(agent, 1, 0, Hash40::new("armr"), 7.0, 70, 90, 0, 70, 4.0, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-    }
-    wait(agent.lua_state_agent, 3.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
     }
     frame(agent.lua_state_agent, 46.0);
     if macros::is_excute(agent) {
@@ -545,8 +475,8 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_effect(agent: &mut L2CAgentBase
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("ganon_raijin_hold"), Hash40::new("armr"), 2, 0, 0, 0, 0, 0, 1, true);
-        EffectModule::enable_sync_init_pos_last(agent.module_accessor);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
+        EffectModule::enable_sync_init_pos_last(agent.module_accessor);
     }
     frame(agent.lua_state_agent, 31.0);
     for _ in 0..4 {
@@ -562,15 +492,16 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_effect(agent: &mut L2CAgentBase
     }
 }
 
-//Power Drive Grab ACMD
-unsafe extern "C" fn ssbexo_armstrong_power_drive_grab_acmd(agent: &mut L2CAgentBase) {
+//Up Special Catch ACMD
+unsafe extern "C" fn ssbexo_armstrong_up_special_catch_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 8.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_THROW);
     }
 }
 
-//Power Drive Grab Effect
-unsafe extern "C" fn ssbexo_armstrong_power_drive_grab_effect(agent: &mut L2CAgentBase) {
+//Up Special Catch Effect
+unsafe extern "C" fn ssbexo_armstrong_up_special_catch_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_FLW_POS_NO_STOP(agent, Hash40::new("sys_catch"), Hash40::new("haver"), 1, 0, 0, 0, 0, 0, 1, true);
         macros::EFFECT_FLW_POS_NO_STOP(agent, Hash40::new("ganon_raijin"), Hash40::new("haver"), 3, 0, 0, 0, 0, 0, 1, true);
@@ -578,28 +509,26 @@ unsafe extern "C" fn ssbexo_armstrong_power_drive_grab_effect(agent: &mut L2CAge
     }
 }
 
-//Power Drive Throw ACMD
-unsafe extern "C" fn ssbexo_armstrong_power_drive_throw_acmd(agent: &mut L2CAgentBase) {
+//Up Special Throw ACMD
+unsafe extern "C" fn ssbexo_armstrong_up_special_throw_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 9.0, 361, 108, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_bomb"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_THROW);
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 9.0, 361, 108, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_THROW);
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 8.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_THROW);
-        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+        let target = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        macros::ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
     }
     frame(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        AttackModule::set_power_up(agent.module_accessor, 1.0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
-        macros::FT_MOTION_RATE(agent, 0.75);
-    }
+    macros::FT_MOTION_RATE(agent, 0.75);
     frame(agent.lua_state_agent, 46.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_STATUS_SPECIAL_HI_THROW_FLAG_FALL);
     }
 }
 
-//Power Drive Throw Effect
-unsafe extern "C" fn ssbexo_armstrong_power_drive_throw_effect(agent: &mut L2CAgentBase) {
+//Up Special Throw Effect
+unsafe extern "C" fn ssbexo_armstrong_up_special_throw_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_OFF_KIND(agent, Hash40::new("ganon_raijin"), false, true);
         macros::EFFECT(agent, Hash40::new("ganon_raijin_bomb"), Hash40::new("top"), 0, 12, -4, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, true);
@@ -631,7 +560,6 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_acmd(agent: &mut L2C
         AttackModule::set_power_up(agent.module_accessor, 1.0);
         DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
         WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
         WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
@@ -704,25 +632,22 @@ pub fn install() {
     .effect_acmd("effect_specialairn", ssbexo_armstrong_aerial_neutral_special_effect, Priority::Low)
     .sound_acmd("sound_specialairn", ssbexo_armstrong_aerial_neutral_special_sound, Priority::Low)
     .game_acmd("game_specialsstart", ssbexo_armstrong_grounded_side_special_start_acmd, Priority::Low)
-    .effect_acmd("effect_specialsstart", ssbexo_armstrong_grounded_side_special_start_effect, Priority::Low)
-    .game_acmd("game_specials", ssbexo_armstrong_grounded_chokehold_throw_acmd, Priority::Low)
-    .effect_acmd("effect_specials", ssbexo_armstrong_grounded_chokehold_throw_effect, Priority::Low)
     .game_acmd("game_specialairsstart", ssbexo_armstrong_aerial_side_special_start_acmd, Priority::Low)
+    .effect_acmd("effect_specialsstart", ssbexo_armstrong_grounded_side_special_start_effect, Priority::Low)
     .effect_acmd("effect_specialairsstart", ssbexo_armstrong_aerial_side_special_start_effect, Priority::Low)
-    .game_acmd("game_specialairscatch", ssbexo_armstrong_aerial_chokehold_grab_acmd, Priority::Low)
-    .effect_acmd("effect_specialairscatch", ssbexo_armstrong_aerial_chokehold_grab_effect, Priority::Low)
-    .game_acmd("game_specialairsfall", ssbexo_armstrong_aerial_chokehold_fall_acmd, Priority::Low)
-    .effect_acmd("effect_specialairsfall", ssbexo_armstrong_aerial_chokehold_fall_effect, Priority::Low)
-    .game_acmd("game_specialairs", ssbexo_armstrong_aerial_chokehold_throw_acmd, Priority::Low)
-    .effect_acmd("effect_specialairs", ssbexo_armstrong_aerial_chokehold_throw_effect, Priority::Low)
-    .game_acmd("game_specialhi", ssbexo_armstrong_grounded_up_special_acmd, Priority::Low)
-    .game_acmd("game_specialairhi", ssbexo_armstrong_aerial_up_special_acmd, Priority::Low)
+    .game_acmd("game_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_acmd, Priority::Low)
+    .effect_acmd("effect_specials", ssbexo_armstrong_grounded_side_special_catch_effect, Priority::Low)
+    .effect_acmd("effect_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_effect, Priority::Low)
+    .game_acmd("game_specialairsfall", ssbexo_armstrong_aerial_side_special_fall_acmd, Priority::Low)
+    .effect_acmd("effect_specialairsfall", ssbexo_armstrong_aerial_side_special_fall_effect, Priority::Low)
+    .game_acmd("game_specialhi", ssbexo_armstrong_up_special_acmd, Priority::Low)
     .effect_acmd("effect_specialhi", ssbexo_armstrong_up_special_effect, Priority::Low)
+    .game_acmd("game_specialairhi", ssbexo_armstrong_up_special_acmd, Priority::Low)
     .effect_acmd("effect_specialairhi", ssbexo_armstrong_up_special_effect, Priority::Low)
-    .game_acmd("game_specialhicatch", ssbexo_armstrong_power_drive_grab_acmd, Priority::Low)
-    .effect_acmd("effect_specialhicatch", ssbexo_armstrong_power_drive_grab_effect, Priority::Low)
-    .game_acmd("game_specialhithrow", ssbexo_armstrong_power_drive_throw_acmd, Priority::Low)
-    .effect_acmd("effect_specialhithrow", ssbexo_armstrong_power_drive_throw_effect, Priority::Low)
+    .game_acmd("game_specialhicatch", ssbexo_armstrong_up_special_catch_acmd, Priority::Low)
+    .effect_acmd("effect_specialhicatch", ssbexo_armstrong_up_special_catch_effect, Priority::Low)
+    //.game_acmd("game_specialhithrow", ssbexo_armstrong_up_special_throw_acmd, Priority::Low)
+    .effect_acmd("effect_specialhithrow", ssbexo_armstrong_up_special_throw_effect, Priority::Low)
     .game_acmd("game_speciallw", ssbexo_armstrong_grounded_down_special_acmd, Priority::Low)
     .effect_acmd("effect_speciallw", ssbexo_armstrong_grounded_down_special_effect, Priority::Low)
     .game_acmd("game_specialairlw", ssbexo_armstrong_aerial_down_special_acmd, Priority::Low)

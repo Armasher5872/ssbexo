@@ -2,19 +2,9 @@
 use {
     bitflags::bitflags,
     crate::functions::{
-        ext::{
-            fighter::common::*,
-            utility::{
-                boma_ext::*,
-                commandcat::*,
-            }
-        },
+        ext::utility::commandcat::*,
         hook::misc::*,
-        var::{
-            consts::*,
-            globals::*,
-        },
-        util::*,
+        var::globals::*,
     },
     modular_bitfield::{
         bitfield,
@@ -31,14 +21,12 @@ use {
             },
             sv_battle_object,
             utility::*,
-            *
         },
         hash40,
         lib::lua_const::*,
         lua2cpp::*,
         phx::{
             Hash40,
-            Vector2f,
             Vector3f
         }
     },

@@ -22,6 +22,7 @@ unsafe extern "C" fn luigi_throw_main_status(fighter: &mut L2CFighterCommon) -> 
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         }
+        luigi_throw_sub_status(fighter);
         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, false, -1);
         if direction == 2 {
             fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw_throw_hi"), L2CValue::Hash40s("special_air_lw_throw_hi"), false.into());
@@ -42,17 +43,24 @@ unsafe extern "C" fn luigi_throw_main_status(fighter: &mut L2CFighterCommon) -> 
     }
 }
 
+unsafe extern "C" fn luigi_throw_sub_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
+    if !StopModule::is_stop(fighter.module_accessor) {
+        fighter.ThrowUniq();
+    }
+    fighter.global_table[PREV_SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_bind_address_call_ThrowUniq as *const () as _));
+    0.into()
+}
+
 unsafe extern "C" fn luigi_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let direction = WorkModule::get_int(fighter.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
+        || fighter.sub_air_check_fall_common().get_bool() {
             return 1.into();
         }
-    }
-    if fighter.sub_air_check_fall_common().get_bool() {
-        return 1.into();
     }
     if situation_kind == *SITUATION_KIND_GROUND
     && prev_situation_kind == *SITUATION_KIND_AIR {
@@ -96,7 +104,6 @@ unsafe extern "C" fn luigi_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2
 
 unsafe extern "C" fn luigi_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
-        fighter.status_end_Throw();
         let mut remove_object_id: bool = true;
         let discharge_chance = WorkModule::get_int(fighter.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
         if fighter.global_table[STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_CATCH_CUT {
@@ -110,11 +117,17 @@ unsafe extern "C" fn luigi_throw_end_status(fighter: &mut L2CFighterCommon) -> L
             WorkModule::sub_int(fighter.module_accessor, 2, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
         }
         WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
-        0.into()
+        fighter.status_end_Throw()
     }
     else {
         fighter.status_end_Throw()
     }
+}
+
+unsafe extern "C" fn luigi_throw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+    fighter.sub_throw_uniq_process_exit();
+    0.into()
 }
 
 pub fn install() {
@@ -122,6 +135,7 @@ pub fn install() {
     .status(Pre, *FIGHTER_STATUS_KIND_THROW, luigi_throw_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_THROW, luigi_throw_main_status)
     .status(End, *FIGHTER_STATUS_KIND_THROW, luigi_throw_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_THROW, luigi_throw_exit_status)
     .install()
     ;
 }

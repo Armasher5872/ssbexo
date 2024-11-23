@@ -7,14 +7,9 @@ unsafe extern "C" fn gaogaen_attack_lw4_pre_status(fighter: &mut L2CFighterCommo
 }
 
 unsafe extern "C" fn gaogaen_attack_lw4_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let restart_frame = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_WORK_FLOAT_SMASH_RESTART_FRAME);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
-    ControlModule::reset_trigger(fighter.module_accessor);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
-    ComboModule::set(fighter.module_accessor, *FIGHTER_COMBO_KIND_S4);
-    MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("attack_lw4"), restart_frame, 1.0, 0.0);
+    fighter.attack_lw4_mtrans();
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_THROW_KIRBY_GROUND);
-    WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL);
     if !StopModule::is_stop(fighter.module_accessor) {
         fighter.status_ThrowKirby_Uniq(L2CValue::Bool(false));
     }
@@ -45,8 +40,7 @@ unsafe extern "C" fn gaogaen_attack_lw4_map_correction_status(fighter: &mut L2CF
     if frame <= fall_start_frame {
         return 0.into()
     }
-    if prev_frame < start_air_frame 
-    && frame >= start_air_frame {
+    if prev_frame < start_air_frame && frame >= start_air_frame {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_THROW_FLAG_START_AIR);
     }
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
@@ -67,8 +61,7 @@ unsafe extern "C" fn gaogaen_attack_lw4_map_correction_status(fighter: &mut L2CF
             else {
                 GroundModule::set_passable_check(fighter.module_accessor, false);
             }
-            if GroundModule::is_passable_check(fighter.module_accessor)
-            && GroundModule::is_passable_ground(fighter.module_accessor) {
+            if GroundModule::is_passable_check(fighter.module_accessor) && GroundModule::is_passable_ground(fighter.module_accessor) {
                 fighter.set_situation(SITUATION_KIND_AIR.into());
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
                 GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
