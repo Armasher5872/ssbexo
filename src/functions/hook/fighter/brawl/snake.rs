@@ -11,8 +11,10 @@ pub static mut SNAKE_GRENADE_STATUS_THROWN_STATUS: usize = 0x7c9fc0;
 #[skyline::hook(offset = SNAKE_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn snake_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
-    WorkModule::set_int(boma, 0, FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -21,7 +23,7 @@ unsafe extern "C" fn snake_start_initialization(vtable: u64, fighter: &mut Fight
 unsafe extern "C" fn snake_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_initialization_variable_reset(&mut *boma);
-    WorkModule::set_int(boma, 0, FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
     original!()(vtable, fighter)
 }
 
@@ -30,7 +32,7 @@ unsafe extern "C" fn snake_reset_initialization(vtable: u64, fighter: &mut Fight
 unsafe extern "C" fn snake_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_initialization_variable_reset(&mut *boma);
-    WorkModule::set_int(boma, 0, FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
     original!()(vtable, fighter)
 }
 
@@ -39,9 +41,6 @@ unsafe extern "C" fn snake_death_initialization(vtable: u64, fighter: &mut Fight
 unsafe extern "C" fn snake_grenade_status_fall_status(item: &mut L2CAgent) -> L2CValue {
     TeamModule::set_hit_team(item.module_accessor, -1);
     HitModule::set_hit_stop_mul(item.module_accessor, 0.25, HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_ALL as u8}, 0.0);
-    item.clear_lua_stack();
-    lua_args!(item, ITEM_AREA_KIND_PICKUP);
-    disable_area(item.lua_state_agent, *ITEM_AREA_KIND_PICKUP);
     original!()(item)
 }
 
@@ -49,9 +48,6 @@ unsafe extern "C" fn snake_grenade_status_fall_status(item: &mut L2CAgent) -> L2
 unsafe extern "C" fn snake_grenade_status_landing_status(item: &mut L2CAgent) -> L2CValue {
     TeamModule::set_hit_team(item.module_accessor, -1);
     HitModule::set_hit_stop_mul(item.module_accessor, 0.25, HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_ALL as u8}, 0.0);
-    item.clear_lua_stack();
-    lua_args!(item, ITEM_AREA_KIND_PICKUP);
-    disable_area(item.lua_state_agent, *ITEM_AREA_KIND_PICKUP);
     original!()(item)
 }
 
@@ -59,9 +55,6 @@ unsafe extern "C" fn snake_grenade_status_landing_status(item: &mut L2CAgent) ->
 unsafe extern "C" fn snake_grenade_status_thrown_status(item: &mut L2CAgent) -> L2CValue {
     TeamModule::set_hit_team(item.module_accessor, -1);
     HitModule::set_hit_stop_mul(item.module_accessor, 0.25, HitStopMulTarget{_address: *HIT_STOP_MUL_TARGET_ALL as u8}, 0.0);
-    item.clear_lua_stack();
-    lua_args!(item, ITEM_AREA_KIND_PICKUP);
-    disable_area(item.lua_state_agent, *ITEM_AREA_KIND_PICKUP);
     original!()(item)
 }
 

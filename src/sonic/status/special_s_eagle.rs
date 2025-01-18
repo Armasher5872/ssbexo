@@ -52,9 +52,9 @@ unsafe extern "C" fn sonic_special_s_eagle_end_status(_fighter: &mut L2CFighterC
 
 pub fn install() {
     Agent::new("sonic")
-    .status(Pre, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_EAGLE, sonic_special_s_eagle_pre_status)
-    .status(Main, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_EAGLE, sonic_special_s_eagle_main_status)
-    .status(End, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_EAGLE, sonic_special_s_eagle_end_status)
+    .status(Pre, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_EAGLE, sonic_special_s_eagle_pre_status)
+    .status(Main, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_EAGLE, sonic_special_s_eagle_main_status)
+    .status(End, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_EAGLE, sonic_special_s_eagle_end_status)
     .install()
     ;
 }

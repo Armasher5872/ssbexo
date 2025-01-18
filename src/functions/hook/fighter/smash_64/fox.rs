@@ -10,7 +10,9 @@ const FOX_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa62480; //Shared
 unsafe extern "C" fn fox_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_FOX as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
         common_initialization_variable_reset(&mut *boma);
+        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }
@@ -57,7 +59,7 @@ unsafe extern "C" fn fox_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         //Fast Fall Blaster/Land Cancel Blaster (Not doing it in statuses yet)
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
             if situation_kind == *SITUATION_KIND_AIR && fighter.battle_object.is_cat_flag(Cat2::FallJump) && stick_y < -0.66 && KineticModule::get_sum_speed_y(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) <= 0.0 {
-                WorkModule::set_flag(boma, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+                WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
             };
             if StatusModule::is_situation_changed(boma) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, true);

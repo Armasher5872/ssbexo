@@ -51,13 +51,13 @@ unsafe extern "C" fn miiswordsman_special_n2_hold_main_loop(fighter: &mut L2CFig
 pub unsafe extern "C" fn miiswordsman_special_n2_hold_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     if (0.0..=19.0).contains(&frame) {
-        WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
     }
     if (20.0..=39.0).contains(&frame) {
-        WorkModule::set_int(fighter.module_accessor, 2, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
     }
     if frame >= 40.0 {
-        WorkModule::set_int(fighter.module_accessor, 3, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 3, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
     }
     0.into()
 }

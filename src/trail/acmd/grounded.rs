@@ -108,7 +108,11 @@ unsafe extern "C" fn ssbexo_trail_dash_attack_acmd(agent: &mut L2CAgentBase) {
         macros::ATK_SET_SHIELD_SETOFF_MUL_arg4(agent, 0, 1, 2, 2.2);
         FighterAreaModuleImpl::enable_fix_jostle_area(agent.module_accessor, 5.0, 6.0);
     }
-    wait(agent.lua_state_agent, 6.0);
+    frame(agent.lua_state_agent, 10.0);
+    if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
+    }
+    wait(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.6, 52, 56, 0, 84, 3.4, 0.0, 4.6, 2.4, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         macros::ATTACK(agent, 1, 0, Hash40::new("top"), 7.6, 52, 56, 0, 84, 3.2, 0.0, 3.2, 6.6, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);

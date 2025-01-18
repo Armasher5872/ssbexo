@@ -1,3 +1,1 @@
-//Dark Samus Variables
-pub static mut CHARGE_SHOT_TIMER: [i32; 8] = [0; 8];
-pub static mut HAS_FIRE_CHARGE_SHOT: [bool; 8] = [false; 8];
+pub const FIGHTER_SAMUSD_INSTANCE_WORK_ID_INT_FLOAT_TIME: smash::lib::LuaConst = smash::lib::LuaConst::new(0x100000C4);

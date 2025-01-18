@@ -8,7 +8,9 @@ const WIIFIT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x12aab50; //Wii Fit Tr
 #[skyline::hook(offset = WIIFIT_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn wiifit_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
 }
 
 //Wii Fit Trainer Reset Initialization

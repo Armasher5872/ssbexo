@@ -11,6 +11,7 @@ unsafe extern "C" fn plizardon_start_initialization(vtable: u64, fighter: &mut F
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     agent.global_table[THROW_HI_STATUS_KIND].assign(&FIGHTER_STATUS_KIND_THROW_KIRBY.into());
     original!()(vtable, fighter)
 }

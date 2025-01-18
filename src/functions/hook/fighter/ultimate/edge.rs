@@ -6,16 +6,18 @@ const EDGE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x9da970; //Sephiroth onl
 const EDGE_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x9db070; //Sephiroth only
 
 unsafe extern "C" fn edge_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
-    WorkModule::set_int(boma, 0, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+    WorkModule::off_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
+    WorkModule::set_int(boma, 0, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
 }
 
 //Sephiroth Startup Initialization
 #[skyline::hook(offset = EDGE_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn edge_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     edge_var(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -65,18 +67,18 @@ unsafe extern "C" fn edge_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     //Up Special Early Cancel
     if status_kind == *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH {
         if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            WorkModule::set_flag(boma, true, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
+            WorkModule::on_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
         }
     }
     if status_kind == *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_LANDING
-    && WorkModule::is_flag(boma, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL) {
+    && WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL) {
         if frame >= 9.0 {
             CancelModule::enable_cancel(boma);
         }
     }
     if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
         if [*FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_LANDING, *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind) {
-            if WorkModule::is_flag(boma, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL) {
+            if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL) {
                 CancelModule::enable_cancel(boma);
             }
         }

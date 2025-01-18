@@ -117,6 +117,7 @@ unsafe extern "C" fn ssbexo_lucario_high_jump_kick_landing_acmd(agent: &mut L2CA
     if !AttackModule::is_infliction_status(agent.module_accessor, *COLLISION_KIND_MASK_HIT) {
         if macros::is_excute(agent) {
             macros::FT_ADD_DAMAGE(agent, 10.0);
+            StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_DOWN, false);
         }
     }
 }
@@ -170,13 +171,22 @@ unsafe extern "C" fn ssbexo_lucario_high_jump_kick_landing_expression(agent: &mu
 //Dashing Force Palm ACMD
 unsafe extern "C" fn ssbexo_lucario_dashing_force_palm_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
+        GrabModule::set_rebound(agent.module_accessor, true);
         FighterAreaModuleImpl::enable_fix_jostle_area(agent.module_accessor, 2.0, 5.0);
+        macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 6.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(agent.lua_state_agent, 24.0);
     if macros::IS_GENERATABLE_ARTICLE(agent, *FIGHTER_LUCARIO_GENERATE_ARTICLE_QIGONG) {
         if macros::is_excute(agent) {
             ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_QIGONG, false, -1);
+            macros::CATCH(agent, 0, Hash40::new("top"), 3.0, 0.0, 6.0, 5.3, Some(0.0), Some(6.0), Some(1.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+            macros::CATCH(agent, 1, Hash40::new("top"), 3.0, 0.0, 6.0, 7.4, Some(0.0), Some(6.0), Some(1.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_G);
         }
+    }
+    wait(agent.lua_state_agent, 3.0);
+    if macros::is_excute(agent) {
+        grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
+        GrabModule::set_rebound(agent.module_accessor, false);
     }
 }
 
@@ -338,9 +348,9 @@ unsafe extern "C" fn ssbexo_lucario_power_up_punch_expression(agent: &mut L2CAge
 //Grounded Side Special ACMD
 unsafe extern "C" fn ssbexo_lucario_grounded_side_special_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
-        ArticleModule::change_motion(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_s"), false, -1.0);
+        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+        ArticleModule::change_motion(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_s"), false, -1.0);
     }
     frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
@@ -364,9 +374,9 @@ unsafe extern "C" fn ssbexo_lucario_grounded_side_special_acmd(agent: &mut L2CAg
 //Aerial Side Special ACMD
 unsafe extern "C" fn ssbexo_lucario_aerial_side_special_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
-        ArticleModule::change_motion(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_air_s"), false, -1.0);
+        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+        ArticleModule::change_motion(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_air_s"), false, -1.0);
     }
     frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
@@ -395,15 +405,15 @@ unsafe extern "C" fn ssbexo_lucario_grounded_side_special_effect(agent: &mut L2C
     }
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 24.0);
     if macros::is_excute(agent) {
@@ -415,15 +425,15 @@ unsafe extern "C" fn ssbexo_lucario_grounded_side_special_effect(agent: &mut L2C
 unsafe extern "C" fn ssbexo_lucario_aerial_side_special_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 21.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
 }
 
@@ -506,9 +516,9 @@ unsafe extern "C" fn ssbexo_lucario_aerial_side_special_expression(agent: &mut L
 //Grounded Side Special Hi ACMD
 unsafe extern "C" fn ssbexo_lucario_grounded_side_special_hi_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
-        ArticleModule::change_motion(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_s_hi"), false, -1.0);
+        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+        ArticleModule::change_motion(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_s_hi"), false, -1.0);
     }
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
@@ -523,9 +533,9 @@ unsafe extern "C" fn ssbexo_lucario_grounded_side_special_hi_acmd(agent: &mut L2
 //Aerial Side Special Hi ACMD
 unsafe extern "C" fn ssbexo_lucario_aerial_side_special_hi_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
-        ArticleModule::change_motion(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_air_s_hi"), false, -1.0);
+        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+        ArticleModule::change_motion(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_air_s_hi"), false, -1.0);
     }
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
@@ -540,15 +550,15 @@ unsafe extern "C" fn ssbexo_lucario_aerial_side_special_hi_acmd(agent: &mut L2CA
 //Grounded Side Special Hi Effect
 unsafe extern "C" fn ssbexo_lucario_grounded_side_special_hi_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 41.0);
     if macros::is_excute(agent) {
@@ -559,15 +569,15 @@ unsafe extern "C" fn ssbexo_lucario_grounded_side_special_hi_effect(agent: &mut 
 //Aerial Side Special Hi Effect
 unsafe extern "C" fn ssbexo_lucario_aerial_side_special_hi_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
 }
 
@@ -623,9 +633,9 @@ unsafe extern "C" fn ssbexo_lucario_aerial_side_special_hi_expression(agent: &mu
 //Grounded Side Special Lw ACMD
 unsafe extern "C" fn ssbexo_lucario_grounded_side_special_lw_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
-        ArticleModule::change_motion(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_s_lw"), false, -1.0);
+        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+        ArticleModule::change_motion(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_s_lw"), false, -1.0);
     }
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
@@ -642,9 +652,9 @@ unsafe extern "C" fn ssbexo_lucario_grounded_side_special_lw_acmd(agent: &mut L2
 //Aerial Side Special Lw ACMD
 unsafe extern "C" fn ssbexo_lucario_aerial_side_special_lw_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
-        ArticleModule::change_motion(agent.module_accessor, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_air_s_lw"), false, -1.0);
+        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+        ArticleModule::change_motion(agent.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("special_air_s_lw"), false, -1.0);
     }
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
@@ -661,9 +671,9 @@ unsafe extern "C" fn ssbexo_lucario_aerial_side_special_lw_acmd(agent: &mut L2CA
 //Grounded Side Special Lw Effect
 unsafe extern "C" fn ssbexo_lucario_grounded_side_special_lw_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
@@ -671,24 +681,24 @@ unsafe extern "C" fn ssbexo_lucario_grounded_side_special_lw_effect(agent: &mut 
     }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
 }
 
 //Aerial Side Special Lw Effect
 unsafe extern "C" fn ssbexo_lucario_aerial_side_special_lw_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
-        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, -6, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.25, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("lucario_aura"), Hash40::new("haver"), 0, 6, 0, 0, 0, 0, 0.25, true);
     }
 }
 
@@ -742,18 +752,18 @@ unsafe extern "C" fn ssbexo_lucario_aerial_side_special_lw_expression(agent: &mu
 
 //Down Special ACMD
 unsafe extern "C" fn ssbexo_lucario_down_special_acmd(agent: &mut L2CAgentBase) {
-    let aura_level = WorkModule::get_int(agent.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+    let aura_level = WorkModule::get_int(agent.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     frame(agent.lua_state_agent, 78.0);
     if aura_level < 9 {
         if macros::is_excute(agent) {
             agent.gimmick_flash();
-            WorkModule::inc_int(agent.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+            WorkModule::inc_int(agent.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
         }
     }
     if aura_level == 9 {
         if macros::is_excute(agent) {
             agent.gimmick_flash();
-            WorkModule::inc_int(agent.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+            WorkModule::inc_int(agent.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
             //macros::FILL_SCREEN_MODEL_COLOR(agent, 0, 10, 0.3, 0.3, 0.3, 0, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, *EFFECT_SCREEN_PRIO_FINAL);
         }
     }

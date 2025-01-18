@@ -4,14 +4,14 @@ use super::*;
 unsafe extern "C" fn ssbexo_robot_nair_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
-        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
             MotionModule::set_rate(agent.module_accessor, 1.75);
         }
     }
     frame(agent.lua_state_agent, 14.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::sub_float(agent.module_accessor, 72.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
             MotionModule::set_rate(agent.module_accessor, 1.0);
@@ -27,18 +27,18 @@ unsafe extern "C" fn ssbexo_robot_nair_acmd(agent: &mut L2CAgentBase) {
         }
     }
     frame(agent.lua_state_agent, 15.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
-            WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
         }
     }
     else {
         if macros::is_excute(agent) {
-            WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
         }
     }
     frame(agent.lua_state_agent, 30.0);
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             AttackModule::clear_all(agent.module_accessor);
         }
@@ -48,13 +48,13 @@ unsafe extern "C" fn ssbexo_robot_nair_acmd(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(agent.module_accessor);
     }
     frame(agent.lua_state_agent, 40.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     }
     frame(agent.lua_state_agent, 42.0);
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
@@ -67,7 +67,7 @@ unsafe extern "C" fn ssbexo_robot_nair_effect(agent: &mut L2CAgentBase) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("robot_nozzle_flare"), Hash40::new("knee1"), 1.5, 0, 0, 90, -90, 0, 1, true);
     }
     frame(agent.lua_state_agent, 14.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("robot_atk_n_jet"), Hash40::new("knee1"), 1.5, 0, 0, 0, 0, -90, 1.5, true);
         }
@@ -118,15 +118,15 @@ unsafe extern "C" fn ssbexo_robot_bair_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
-        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
             MotionModule::set_rate(agent.module_accessor, 2.5);
             KineticModule::suspend_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }
     frame(agent.lua_state_agent, 19.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::sub_float(agent.module_accessor, 120.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
             MotionModule::set_rate(agent.module_accessor, 1.0);
@@ -143,18 +143,18 @@ unsafe extern "C" fn ssbexo_robot_bair_acmd(agent: &mut L2CAgentBase) {
         }
     }
     frame(agent.lua_state_agent, 20.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
-            WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
         }
     }
     else {
         if macros::is_excute(agent) {
-            WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
         }
     }
     frame(agent.lua_state_agent, 24.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             KineticModule::resume_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 9.0, 35, 76, 0, 35, 12.9, 0.0, 3.5, -8.5, Some(0.0), Some(3.5), Some(-15.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
@@ -168,19 +168,19 @@ unsafe extern "C" fn ssbexo_robot_bair_acmd(agent: &mut L2CAgentBase) {
         }
     }
     frame(agent.lua_state_agent, 33.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             AttackModule::clear_all(agent.module_accessor);
         }
     }
     frame(agent.lua_state_agent, 45.0);
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     }
     frame(agent.lua_state_agent, 46.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
@@ -193,7 +193,7 @@ unsafe extern "C" fn ssbexo_robot_bair_effect(agent: &mut L2CAgentBase) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("robot_nozzle_flare"), Hash40::new("knee"), 0, 0, 0, 90, -90, 0, 1, true);
     }
     frame(agent.lua_state_agent, 19.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("robot_atk_ab_jet"), Hash40::new("knee1"), 1.5, 0, 0, 0, 0, -90, 1.35, true);
             macros::LAST_EFFECT_SET_RATE(agent, 0.5);
@@ -270,14 +270,14 @@ unsafe extern "C" fn ssbexo_robot_dair_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
-        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
             MotionModule::set_rate(agent.module_accessor, 2.0);
         }
     }
     frame(agent.lua_state_agent, 20.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::sub_float(agent.module_accessor, 144.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
             MotionModule::set_rate(agent.module_accessor, 1.0);
@@ -298,14 +298,14 @@ unsafe extern "C" fn ssbexo_robot_dair_acmd(agent: &mut L2CAgentBase) {
         }
     }
     frame(agent.lua_state_agent, 21.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
-            WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
         }
     }
     else {
         if macros::is_excute(agent) {
-            WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
         }
     }
     frame(agent.lua_state_agent, 22.0);
@@ -317,13 +317,13 @@ unsafe extern "C" fn ssbexo_robot_dair_acmd(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(agent.module_accessor);
     }
     frame(agent.lua_state_agent, 44.0);
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     }
     frame(agent.lua_state_agent, 45.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
@@ -340,7 +340,7 @@ unsafe extern "C" fn ssbexo_robot_dair_effect(agent: &mut L2CAgentBase) {
         macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("knee1"), 6, -0.0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(agent.lua_state_agent, 20.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("robot_atk_lw_jet"), Hash40::new("knee"), 0, 0, 0, -90, -90, 0, 1.5, true);
             macros::LAST_EFFECT_SET_RATE(agent, 0.8);

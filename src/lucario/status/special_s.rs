@@ -61,13 +61,13 @@ unsafe extern "C" fn lucario_side_special_main_loop(fighter: &mut L2CFighterComm
         }
     }
     if stick_y < -0.7 {
-        WorkModule::on_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
     }
     else {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT) {
             fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW.into(), false.into());
         }
         else {
@@ -83,16 +83,16 @@ unsafe extern "C" fn lucario_side_special_exec_status(_fighter: &mut L2CFighterC
 
 unsafe extern "C" fn lucario_side_special_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_S, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW].contains(&status_kind) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
+    if ![*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW].contains(&status_kind) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
     }
     0.into()
 }
 
 unsafe extern "C" fn lucario_side_special_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_S, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW].contains(&status_kind) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
+    if ![*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW].contains(&status_kind) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
     }
     0.into()
 }

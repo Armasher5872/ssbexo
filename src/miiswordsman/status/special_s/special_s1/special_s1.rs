@@ -34,7 +34,7 @@ pub unsafe extern "C" fn miiswordsman_special_s1_main_status(fighter: &mut L2CFi
 unsafe extern "C" fn miiswordsman_special_s1_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let angle = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
+    let angle = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
     match angle {
         -30 => {
             fighter.clear_lua_stack();
@@ -77,6 +77,6 @@ unsafe extern "C" fn miiswordsman_special_s1_main_loop(fighter: &mut L2CFighterC
 }
 
 pub unsafe extern "C" fn miiswordsman_special_s1_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
     0.into()
 }

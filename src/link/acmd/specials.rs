@@ -2,8 +2,8 @@ use super::*;
 
 //Arrow Fly ACMD
 unsafe extern "C" fn ssbexo_link_bowarrow_fly_acmd(agent: &mut L2CAgentBase) {
-    if WorkModule::get_int(agent.module_accessor,WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG) == FuseType::ELEMENTAL {
-        let fuse_item_kind = WorkModule::get_int(agent.module_accessor,WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
+    if WorkModule::get_int(agent.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG) == FuseType::ELEMENTAL {
+        let fuse_item_kind = WorkModule::get_int(agent.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
         if fuse_item_kind == *ITEM_KIND_FIREFLOWER {
             if macros::is_excute(agent) {
                 macros::ATTACK(agent,0,0,Hash40::new("top"), 10.0, 361, 71, 0, 10, 1.5, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0.0, 0.0, 0.0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
@@ -62,7 +62,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
         ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, true, ArticleOperationTarget(0));
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 60, 145, 0, 50, 6.0, 0.0, 4.0, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
@@ -73,7 +73,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 25.0);
     if macros::is_excute(agent) {
-        WorkModule::set_flag(agent.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
     }
     frame(agent.lua_state_agent, 28.0);
     if macros::is_excute(agent) {
@@ -370,7 +370,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_ascend_start_acmd(agent: &mut L2CAge
 //Up Special Ascend Start Effect
 unsafe extern "C" fn ssbexo_link_special_hi_ascend_start_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {        
-        let target_y = WorkModule::get_float(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+        let target_y = WorkModule::get_float(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
         let pos_y = PostureModule::pos_y(agent.module_accessor);
         macros::EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, target_y-pos_y+5.0, 0, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.25, 1.0, 0.5);
@@ -415,7 +415,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_ascend_start_expression(agent: &mut 
 //Up Special Ascend Effect
 unsafe extern "C" fn ssbexo_link_special_hi_ascend_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {        
-        let target_y = WorkModule::get_float(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+        let target_y = WorkModule::get_float(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
         let pos_y = PostureModule::pos_y(agent.module_accessor);
         macros::EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, target_y-pos_y+5.0, 0, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, false);
         macros::LAST_EFFECT_SET_COLOR(agent, 0.25, 1.0, 0.5);

@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::pichu::*,
+    crate::functions::var::{
+        consts::*,
+        pichu::*,
+    },
     smash::{
         app::{
             lua_bind::*,

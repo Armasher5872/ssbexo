@@ -328,7 +328,7 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 8.0, 5.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
             macros::ATTACK(agent, 3, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 3.5, 0.0, 6.0, 8.5, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         }
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
             AttackModule::clear_all(agent.module_accessor);
             macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 8.0, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
             macros::CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 6.0, 8.5, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
@@ -347,7 +347,7 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 9.5, 5.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
             macros::ATTACK(agent, 3, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 3.5, 0.0, 8.5, 12.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         }
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
             AttackModule::clear_all(agent.module_accessor);
             macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 9.5, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
             macros::CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 8.5, 12.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
@@ -365,7 +365,7 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
             macros::ATTACK(agent, 3, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 3.5, 0.0, 21.0, 8.5, Some(0.0), Some(8.5), Some(12.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         }
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
             AttackModule::clear_all(agent.module_accessor);
             macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
             macros::CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 19.0, 9.0, Some(0.0), Some(8.5), Some(12.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
@@ -383,7 +383,7 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
             macros::ATTACK(agent, 3, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 3.5, 0.0, 24.0, 8.5, Some(0.0), Some(8.5), Some(10.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         }
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
             AttackModule::clear_all(agent.module_accessor);
             macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
             macros::CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 22.0, 7.0, Some(0.0), Some(8.5), Some(10.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
@@ -426,7 +426,7 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 9.5, 5.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
             macros::ATTACK(agent, 3, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 3.5, 0.0, 8.5, 12.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         }
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
             AttackModule::clear_all(agent.module_accessor);
             macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 9.5, 5.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
             macros::CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 8.5, 12.0, None, None, None, *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
@@ -444,7 +444,7 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 4.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
             macros::ATTACK(agent, 3, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 3.5, 0.0, 21.0, 8.5, Some(0.0), Some(8.5), Some(12.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
         }
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE) {
             AttackModule::clear_all(agent.module_accessor);
             macros::CATCH(agent, 0, Hash40::new("top"), 5.0, 0.0, 14.0, 5.0, Some(0.0), Some(9.5), Some(5.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);
             macros::CATCH(agent, 1, Hash40::new("top"), 4.5, 0.0, 19.0, 9.0, Some(0.0), Some(8.5), Some(12.0), *FIGHTER_STATUS_KIND_DEMON_DIVED, *COLLISION_SITUATION_MASK_G);

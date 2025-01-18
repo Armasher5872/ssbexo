@@ -38,7 +38,7 @@ unsafe extern "C" fn sonic_special_n_hit_main_loop(fighter: &mut L2CFighterCommo
         ivar4 = 0.into();
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        WorkModule::set_flag(fighter.module_accessor, false, *FIGHTER_SONIC_INSTANCE_WORK_FLAG_SPECIAL_N_FALL);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_FLAG_SPECIAL_N_FALL);
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         ivar4 = 0.into();
     }

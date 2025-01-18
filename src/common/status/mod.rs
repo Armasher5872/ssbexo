@@ -6,7 +6,6 @@ mod damage;
 mod escape;
 pub mod grounded;
 mod guard;
-mod item;
 mod jump;
 mod landing;
 mod special;
@@ -22,7 +21,6 @@ pub fn install() {
     escape::install();
     grounded::install();
     guard::install();
-    item::install();
     jump::install();
     landing::install();
     special::install();

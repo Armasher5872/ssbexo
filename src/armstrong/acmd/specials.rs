@@ -294,9 +294,9 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_start_acmd(agent: &m
         AttackModule::set_power_up(agent.module_accessor, 1.0);
         DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
+        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
+        WorkModule::set_float(agent.module_accessor, 1.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
+        WorkModule::set_float(agent.module_accessor, 1.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     }
     frame(agent.lua_state_agent, 42.0);
     if macros::is_excute(agent) {
@@ -346,8 +346,8 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_start_acmd(agent: &mut
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         AttackModule::clear_all(agent.module_accessor);
         AttackModule::set_power_up(agent.module_accessor, 1.0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
+        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
+        WorkModule::set_float(agent.module_accessor, 1.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     }
 }
 
@@ -509,6 +509,7 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_catch_effect(agent: &mut L2CAge
     }
 }
 
+/*
 //Up Special Throw ACMD
 unsafe extern "C" fn ssbexo_armstrong_up_special_throw_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
@@ -526,6 +527,7 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_throw_acmd(agent: &mut L2CAgent
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_STATUS_SPECIAL_HI_THROW_FLAG_FALL);
     }
 }
+*/
 
 //Up Special Throw Effect
 unsafe extern "C" fn ssbexo_armstrong_up_special_throw_effect(agent: &mut L2CAgentBase) {
@@ -538,7 +540,7 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_throw_effect(agent: &mut L2CAge
 
 //Grounded Down Special ACMD
 unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_acmd(agent: &mut L2CAgentBase) {
-    let damage_charge_multiplier = WorkModule::get_float(agent.module_accessor, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
+    let damage_charge_multiplier = WorkModule::get_float(agent.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     if macros::is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 9.0);
         DamageModule::set_reaction_mul(agent.module_accessor, 0.85);
@@ -560,9 +562,9 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_acmd(agent: &mut L2C
         AttackModule::set_power_up(agent.module_accessor, 1.0);
         DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
-        WorkModule::set_float(agent.module_accessor, 1.0, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
+        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
+        WorkModule::set_float(agent.module_accessor, 1.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
+        WorkModule::set_float(agent.module_accessor, 1.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     }
 }
 
@@ -589,7 +591,7 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_effect(agent: &mut L
 
 //Aerial Down Special ACMD
 unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_acmd(agent: &mut L2CAgentBase) {
-    let damage_charge_multiplier = WorkModule::get_float(agent.module_accessor, FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
+    let damage_charge_multiplier = WorkModule::get_float(agent.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
         macros::SEARCH(agent, 0, 0, Hash40::new("top"), 13.5, 0.0, 7.0, 0.0, None, None, None, *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 60, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false);

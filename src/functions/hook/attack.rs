@@ -28,7 +28,7 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
     let attacker_id = *(collision.add(0x24) as *const u32);
 	let attacker_battle_object = &mut *crate::functions::hook::misc::get_battle_object_from_id(attacker_id);
     let attacker_boma = attacker_battle_object.module_accessor;
-    let attacker_shield_damage = WorkModule::get_int(attacker_boma, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
+    let attacker_shield_damage = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
     let defender_shield_hp = WorkModule::get_float(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     let motion_rate: f32;
     let damage = defender_shield_hp+10.0;
@@ -48,7 +48,7 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
     }
     if real_power == 0.0 {
         motion_rate = 1.0;
-    } 
+    }
     else {
         motion_rate = (1.0-(0.02*real_power)).clamp(0.5, 1.0);
     };
@@ -72,12 +72,12 @@ unsafe extern "C" fn attack_module_set_attack(module: u64, id: i32, group: i32, 
         data.slip = -1.0;
     }
     if (data.power+(data.sub_shield as f32)) < 0.0 || (data.power+(data.sub_shield as f32)) > 200.0 {
-        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     }
     else {
-        WorkModule::set_int(boma, data.sub_shield as i32, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
+        WorkModule::set_int(boma, data.sub_shield as i32, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     }
-    WorkModule::set_int(boma, data.vector, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
+    WorkModule::set_int(boma, data.vector, *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     call_original!(module, id, group, data);
 }
 
@@ -154,7 +154,7 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
 	}
 	if defender_kind == *ITEM_KIND_SOCCERBALL {
 		LAST_TO_HIT_BALL = get_player_number(attacker_boma);
-        WorkModule::set_flag(attacker_boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
+        WorkModule::off_flag(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
 	}
 	//GGST COUNTER!/Little Mac Star Punch Counterhit Detection
 	if COUNTERHIT_CHECK[get_player_number(defender_boma)]

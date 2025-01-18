@@ -39,7 +39,7 @@ unsafe extern "C" fn sonic_special_s_boost_main_loop(fighter: &mut L2CFighterCom
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    let boost_speed = WorkModule::get_float(fighter.module_accessor, FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
+    let boost_speed = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
     let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
     let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -110,12 +110,12 @@ unsafe extern "C" fn sonic_special_s_boost_main_loop(fighter: &mut L2CFighterCom
         }
     }
     if frame >= 10.0 {
-        let boost_gauge = WorkModule::get_int(fighter.module_accessor, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE);
-        if WorkModule::get_int(fighter.module_accessor, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE) >= 5 {
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE);
+        let boost_gauge = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE);
+        if WorkModule::get_int(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE) >= 5 {
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE);
             if boost_gauge > 0 {
-                WorkModule::sub_int(fighter.module_accessor, 1, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
+                WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
             }
         }
         if boost_gauge <= 0
@@ -151,10 +151,10 @@ unsafe extern "C" fn sonic_special_s_boost_end_status(fighter: &mut L2CFighterCo
 
 pub fn install() {
     Agent::new("sonic")
-    .status(Pre, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_pre_status)
-    .status(Init, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_init_status)
-    .status(Main, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_main_status)
-    .status(End, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_end_status)
+    .status(Pre, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_pre_status)
+    .status(Init, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_init_status)
+    .status(Main, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_main_status)
+    .status(End, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOOST, sonic_special_s_boost_end_status)
     .install()
     ;
 }

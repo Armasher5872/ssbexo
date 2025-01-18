@@ -5,7 +5,7 @@ unsafe fn sub_landing_attack_air_init(fighter: &mut L2CFighterCommon, aerial_mot
     let mot = aerial_motion_kind.get_int();
     let mut motion_rate: f32 = 1.0;
     let mut landing_lag = WorkModule::get_param_float(fighter.module_accessor, aerial_landing_lag.get_int(), 0)+kind.get_f32();
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE) {
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE) {
         landing_lag = landing_lag*1.5;
     }
     if landing_lag != 0.0 {
@@ -18,9 +18,8 @@ unsafe fn sub_landing_attack_air_init(fighter: &mut L2CFighterCommon, aerial_mot
 //Status End Landing Attack Air
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_LandingAttackAir)]
 unsafe fn status_end_landingattackair(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
     fighter.sub_landing_cancel_damage_face();
     0.into()
 }
@@ -35,5 +34,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

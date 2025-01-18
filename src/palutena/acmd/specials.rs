@@ -350,10 +350,10 @@ unsafe extern "C" fn ssbexo_palutena_up_special_turn_expression(agent: &mut L2CA
 //Down Special ACMD
 unsafe extern "C" fn ssbexo_palutena_down_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 40.0);
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) && !WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) && !WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
         if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT);
-            WorkModule::set_int(agent.module_accessor, 735, FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_TIMER);
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT);
+            WorkModule::set_int(agent.module_accessor, 735, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_TIMER);
         }
     }
 }
@@ -370,7 +370,7 @@ unsafe extern "C" fn ssbexo_palutena_down_special_effect(agent: &mut L2CAgentBas
         macros::EFFECT_FOLLOW(agent, Hash40::new("palutena_appeal_twinkle"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 0.7, true);
     }
     frame(agent.lua_state_agent, 40.0);
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) && !WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) && !WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW_ALPHA(agent, Hash40::new("palutena_backlight"), Hash40::new("top"), -5, 23, 0, 0, 90, 0, 1, true, 0.7);
         }

@@ -23,7 +23,7 @@ unsafe extern "C" fn ssbexo_link_forward_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 24.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("sword2"), 14.0, 45, 85, 0, 85, 3.2, 8.5, 0.0, -2.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 1, 0, Hash40::new("sword2"), 14.0, 45, 85, 0, 85, 3.5, 3.0, 0.0, -2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 2, 0, Hash40::new("armr"), 14.0, 45, 85, 0, 85, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -42,20 +42,20 @@ unsafe extern "C" fn ssbexo_link_forward_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 30.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 30, 60, 0, 60, 12.0, 0.0, 7.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
         }
     }
     wait(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::set_flag(agent.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
     }
 }
 
 //Forward Smash Effect
 unsafe extern "C" fn ssbexo_link_forward_smash_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
         frame(agent.lua_state_agent, 3.0);
         if macros::is_excute(agent) {
             macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword1"), 16, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -211,7 +211,7 @@ unsafe extern "C" fn ssbexo_link_up_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 41.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("sword2"), 11.0, 80, 101, 0, 60, 4.3, 7.0, 0.0, -3.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 1, 0, Hash40::new("sword2"), 11.0, 90, 101, 0, 60, 4.3, 1.0, 0.0, -3.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 2, 0, Hash40::new("armr"), 10.0, 90, 101, 0, 60, 3.0, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -230,19 +230,20 @@ unsafe extern "C" fn ssbexo_link_up_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 47.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 90, 60, 0, 60, 12.0, 0.0, 13.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
         }
     }
     frame(agent.lua_state_agent, 51.0);
     if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
         AttackModule::clear_all(agent.module_accessor);
     }
 }
 
 //Up Smash Effect
 unsafe extern "C" fn ssbexo_link_up_smash_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
         frame(agent.lua_state_agent, 2.0);
         if macros::is_excute(agent) {
             macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword1"), 13, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -460,7 +461,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("sword2"), 14.0, 45, 88, 0, 60, 4.0, -2.0, 0.0, 0.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 1, 0, Hash40::new("sword2"), 14.0, 45, 88, 0, 60, 3.5, 2.5, 0.0, 1.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 2, 0, Hash40::new("sword2"), 11.2, 45, 88, 0, 60, 2.8, 8.0, 0.0, 1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -473,7 +474,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("sword2"), 9.0, 43, 84, 0, 48, 4.0, -2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 1, 0, Hash40::new("sword2"), 9.0, 43, 84, 0, 48, 3.5, 2.5, 0.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 2, 0, Hash40::new("sword2"), 7.2, 43, 84, 0, 48, 2.8, 8.0, 0.0, 1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -487,14 +488,14 @@ unsafe extern "C" fn ssbexo_link_down_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
-        WorkModule::set_flag(agent.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
         AttackModule::clear_all(agent.module_accessor);
     }
 }
 
 //Down Smash Effect
 unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
         frame(agent.lua_state_agent, 2.0);
         if macros::is_excute(agent) {
             macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword1"), 13, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);

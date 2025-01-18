@@ -1,10 +1,12 @@
-#![allow(unused_parens)]
 use {
     crate::{
         common::status::grounded::dash::fgc_dashback_main,
-        functions::var::{
-            dolly::*,
-            globals::*,
+        functions::{
+            ext::fighter::common::*,
+            var::{
+                dolly::*,
+                globals::*,
+            }
         }
     },
     smash::{
@@ -24,9 +26,11 @@ use {
 };
 
 mod acmd;
+mod opff;
 mod status;
 
 pub fn install() {
     acmd::install();
+    opff::install();
     status::install();
 }

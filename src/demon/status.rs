@@ -5,10 +5,10 @@ unsafe extern "C" fn demon_dash_back_main_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn demon_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
     fighter.sub_status_AttackCommon();
     if !StopModule::is_stop(fighter.module_accessor) {
         fighter.check_attack_mtrans();
@@ -27,7 +27,7 @@ unsafe extern "C" fn demon_attack_main_loop(fighter: &mut L2CFighterCommon) -> L
         if motion_kind == hash40("attack_11") {
             if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) && only_jabs(fighter) {
                 if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_FLASH_PUNCH) {
-                    WorkModule::on_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
                     fighter.change_status(FIGHTER_DEMON_STATUS_KIND_FLASH_PUNCH.into(), true.into());
                     return 0.into();
                 }
@@ -60,26 +60,26 @@ unsafe extern "C" fn demon_attack_main_loop(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn demon_flash_punch_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH)
-    && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER)
-    && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH)
-    && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH)
+    && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER)
+    && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH)
+    && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0xbdeb83518), 0.0, 1.0, false, 0.0, false, false); //Standard Flash Punch Anim
     }
     else {
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_13"), 0.0, 1.0, false, 0.0, false, false); //One Two Punch
         }
         else {
-            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER) {
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER) {
                 MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0xbdeb83518), 0.0, 1.0, false, 0.0, false, false); //Demon Slayer
             }
             else {
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
                     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_stand_4"), 0.0, 1.0, false, 0.0, false, false); //Twin Fang Stature Smash
                 }
                 else {
-                    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
+                    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
                         MotionModule::change_motion(fighter.module_accessor, Hash40::new("twin_fang_double_kick"), 0.0, 1.0, false, 0.0, false, false); //Twin Fang Double Kick
                     }
                 }
@@ -100,15 +100,15 @@ unsafe extern "C" fn demon_flash_punch_main_loop(fighter: &mut L2CFighterCommon)
         }
         if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) && only_jabs(fighter) {
             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_FLASH_PUNCH) {
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
-                    WorkModule::on_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
                     fighter.change_status(FIGHTER_DEMON_STATUS_KIND_FLASH_PUNCH.into(), false.into());
                 }
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
                     fighter.change_status(FIGHTER_DEMON_STATUS_KIND_FLASH_PUNCH.into(), false.into());
                 }
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
-                    WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
                     fighter.change_status(FIGHTER_DEMON_STATUS_KIND_FLASH_PUNCH.into(), false.into());
                 }
                 return 0.into();
@@ -116,14 +116,14 @@ unsafe extern "C" fn demon_flash_punch_main_loop(fighter: &mut L2CFighterCommon)
         }
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) && only_jabs(fighter) {
             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_FLASH_PUNCH) {
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
-                    WorkModule::on_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
                     fighter.change_status(FIGHTER_DEMON_STATUS_KIND_FLASH_PUNCH.into(), false.into());
                 }
                 return 0.into();
             }
         }
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH) {
             if fighter.global_table[CURRENT_FRAME].get_f32() >= 15.0 {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
@@ -139,20 +139,20 @@ unsafe extern "C" fn demon_flash_punch_main_loop(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn demon_flash_punch_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
     }
     0.into()
 }

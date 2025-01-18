@@ -7,18 +7,20 @@ const SONIC_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11d7b20; //Sonic onl
 
 unsafe extern "C" fn sonic_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
 
 unsafe extern "C" fn sonic_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_BOOST_GRAVITY);
-    WorkModule::set_int(boma, 0, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
-    WorkModule::set_int(boma, 0, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE);
-    WorkModule::set_int(boma, 0, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
-    WorkModule::set_int(boma, 0, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_FINAL_SMASH_TIMER);
-    WorkModule::set_float(boma, 0.0, FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
+    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_BOOST_GRAVITY);
+    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
+    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE_DECREASE);
+    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
+    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_FINAL_SMASH_TIMER);
+    WorkModule::set_float(boma, 0.0, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
 }
 
 //Sonic Startup Initialization
@@ -61,23 +63,24 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let status_kind = StatusModule::status_kind(boma);
     let frame = MotionModule::frame(boma);
     let rand_num_10 = sv_math::rand(hash40("fighter"), 10);
-    let boost_gauge = WorkModule::get_int(boma, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
-    let boost_effect_counter = WorkModule::get_int(boma, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
+    let boost_gauge = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
+    let boost_effect_counter = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
     let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
+    let magic_series = fighter.battle_object.magic_series();
     if ![*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD_OFF, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_END, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_TURN, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_REBOUND, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD_JUMP, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING_START, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
         EffectModule::kill_kind(boma, Hash40::new("sonic_spintrace_homing"), false, true);
         EffectModule::kill_kind(boma, Hash40::new("sonic_spintrace_middle"), false, true);
         EffectModule::kill_kind(boma, Hash40::new("sys_shield"), false, true);
     };
     if ![*FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_END, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_TURN, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_REBOUND, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD_JUMP, *FIGHTER_STATUS_KIND_SPECIAL_S].contains(&status_kind) {
-        WorkModule::set_float(boma, KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN)*PostureModule::lr(boma), FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
+        WorkModule::set_float(boma, KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN)*PostureModule::lr(boma), *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
     };
     if frame < 2.0 && ![*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) { 
-        WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
     };
-    if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD) && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && ![*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
-        WorkModule::inc_int(boma, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD) && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && ![*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
+        WorkModule::inc_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
     };
     //Wait
     if status_kind == *FIGHTER_STATUS_KIND_WAIT {
@@ -105,13 +108,13 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         }
     }
     //Jab Cancel
-    if fighter.battle_object.magic_series() == 1 {
+    if magic_series == 1 {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, true);
     }
-    if fighter.battle_object.magic_series() == 2 {
+    if magic_series == 2 {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, true);
     }
-    if fighter.battle_object.magic_series() == 3 {
+    if magic_series == 3 {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, true);
     }
     //Dash Attack Speed
@@ -151,9 +154,9 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         }
     }
     //Boost Effect
-    WorkModule::inc_int(boma, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
+    WorkModule::inc_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
     if boost_effect_counter > 25 {
-        WorkModule::set_int(boma, 0, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
+        WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
     }
     if boost_gauge >= 15 {
         if boost_effect_counter == 10 {

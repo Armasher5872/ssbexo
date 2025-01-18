@@ -3,27 +3,29 @@ use super::*;
 //This opff really only exists to deal with status kinds I couldn't translate, or have far too many status kinds to account for
 unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let cbm_vec1 = Vector4f{/* Red */ x: 1.0, /* Green */ y: 1.0, /* Blue */ z: 1.0, /* Alpha */ w: 0.2};
     let cbm_vec2 = Vector4f{/* Red */ x: 0.0, /* Green */ y: 0.0, /* Blue */ z: 0.0, /* Alpha */w: 0.8};
-    let mashing = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
-    let special_zoom_gfx = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    let mashing = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
+    //let special_zoom_gfx = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     let jump_count = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
     let max_jump_count = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX);
-    let counter = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    let full_hop_enable_delay = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY);
+    let triggered_buttons: Buttons = unsafe {Buttons::from_bits_unchecked(ControlModule::get_button(boma) & !ControlModule::get_button_prev(boma))}; //This checks if the Full Hop button is pressed
     //Lost Double Jump Indicator
     if jump_count >= max_jump_count {
-        WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT);
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT);
     }
     else {
-        WorkModule::off_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT);
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT);
     }
-    if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT) {
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT) {
         ColorBlendModule::set_main_color(boma, /* Brightness */&cbm_vec1, /* Diffuse */&cbm_vec2, 0.21, 2.2, 5, /* Display Color */ true);
     }
-    if !WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT) && ![*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_OFF].contains(&status_kind) {
+    if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT) && ![*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_OFF].contains(&status_kind) {
         ColorBlendModule::cancel_main_color(boma, 0);
     }
     //Zair Platform Dropping
@@ -32,21 +34,22 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
     }
     //Mashing
     if [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT, *FIGHTER_STATUS_KIND_ICE].contains(&status_kind) {
-        WorkModule::inc_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
+        WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
         if mashing >= 5 {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
                 ControlModule::add_clatter_time(boma, -15.0, 0);
             }
-            WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
+            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
         }
     }
     //Bury Knockback Resistance
     if [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&status_kind) {
         DamageModule::set_reaction_mul(boma, 0.77);
     }
-    if status_kind == *FIGHTER_STATUS_KIND_BURY_JUMP || (WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) && [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&prev_status_kind)) {
+    if status_kind == *FIGHTER_STATUS_KIND_BURY_JUMP || (WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) && [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&prev_status_kind)) {
         DamageModule::set_reaction_mul(boma, 1.0);
     }
+    /*
     //Guilty Gear Strive COUNTER!
     if [
         *FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, 
@@ -69,7 +72,7 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
     }
     if COUNTERHIT_SUCCESS[get_player_number(&mut *boma)] {
         if special_zoom_gfx < 10 {
-            WorkModule::inc_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+            WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         }
         if special_zoom_gfx < 1 {
             let counter_sound = SoundModule::play_se(boma, Hash40::new("se_common_counter"), true, false, false, false, app::enSEType(0));
@@ -83,9 +86,10 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
             CameraModule::reset_all(boma);
             macros::CAM_ZOOM_OUT(fighter);
             COUNTERHIT_SUCCESS[get_player_number(&mut *boma)] = false;
-            WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         }
     }
+    */
     //Held Buffer
     let control_pad = [
         *CONTROL_PAD_BUTTON_ATTACK, *CONTROL_PAD_BUTTON_JUMP, *CONTROL_PAD_BUTTON_CATCH, *CONTROL_PAD_BUTTON_GUARD, *CONTROL_PAD_BUTTON_SMASH, *CONTROL_PAD_BUTTON_SPECIAL, *CONTROL_PAD_BUTTON_CSTICK_ON, *CONTROL_PAD_BUTTON_JUMP_MINI,
@@ -101,32 +105,26 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
         }
     }
     //Fullhop
-    if FULL_HOP_ENABLE_DELAY[entry_id] > 0 {
-        FULL_HOP_ENABLE_DELAY[entry_id] -= 1;
-    };
-    //This checks if the Full Hop button is pressed
-    let triggered_buttons: Buttons = unsafe {
-        Buttons::from_bits_unchecked(ControlModule::get_button(boma) & !ControlModule::get_button_prev(boma))
-    };
+    if full_hop_enable_delay > 0 {
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY);
+    }
     if triggered_buttons.intersects(Buttons::FullHop) {
-        FULL_HOP_ENABLE_DELAY[entry_id] = 14;
-    };
-    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) { 
-        //Removes possibility of FH coming out of a SH. Shorthop button has priority over Fullhop
-        FULL_HOP_ENABLE_DELAY[entry_id] = 0;
-    };
+        WorkModule::set_int(boma, 14, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY);
+    }
+    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY); //Removes possibility of FH coming out of a SH. Shorthop button has priority over Fullhop
+    }
     //Final Zoom Effect Clearing
     if counter > 0 {
-        let handle = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
-        if counter == 40 {
-            if !WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+        if counter <= 16 {
+            if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
                 EffectModule::set_rate(boma, handle as u32, 1.0);
             }
             set_stage_visibility(boma, 1);
             set_vis_hud(true);
         }
         if counter == 10 {
-            if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
                 EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
             }
             else {
@@ -218,32 +216,36 @@ unsafe extern "C" fn all_frame(fighter: &mut L2CFighterCommon) {
             }
             macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_bg_black"), false, false);
             macros::CAM_ZOOM_OUT(fighter);
+        }
+        if counter == 5 {
             SlowModule::clear_whole(boma);
         }
-        WorkModule::dec_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
     }
     else {
-        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     }
+    println!("Jump Speed Ratio: {}", WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO));
+    println!("Current X Speed: {}", KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN));
 }
 
 unsafe extern "C" fn all_weapon_frame(weapon: &mut L2CFighterBase) {
     let boma = smash::app::sv_system::battle_object_module_accessor(weapon.lua_state_agent);
     let link_owner = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
     let owner_boma = &mut *smash::app::sv_battle_object::module_accessor(link_owner);
-    let counter = WorkModule::get_int(owner_boma, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let counter = WorkModule::get_int(owner_boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
     //Final Zoom Effect Clearing
     if counter > 0 {
-        let handle = WorkModule::get_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
-        if counter == 40 {
-            if !WorkModule::is_flag(owner_boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+        let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        if counter <= 16 {
+            if !WorkModule::is_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
                 EffectModule::set_rate(boma, handle as u32, 1.0);
             }
             set_stage_visibility(boma, 1);
             set_vis_hud(true);
         }
         if counter == 10 {
-            if WorkModule::is_flag(owner_boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+            if WorkModule::is_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
                 EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
             }
             else {
@@ -334,15 +336,15 @@ unsafe extern "C" fn all_weapon_frame(weapon: &mut L2CFighterBase) {
                 EffectModule::remove_screen(boma, Hash40::new("bg_criticalhit"), -1);
             }
             macros::EFFECT_OFF_KIND(weapon, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(weapon);
         }
         if counter == 5 {
-            macros::CAM_ZOOM_OUT(weapon);
             SlowModule::clear_whole(boma);
         }
-        WorkModule::dec_int(boma, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
     }
     else {
-        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     }
 }
 

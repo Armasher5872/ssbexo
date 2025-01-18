@@ -12,23 +12,23 @@ pub unsafe extern "C" fn miiswordsman_special_s2_start_init_status(fighter: &mut
     let stick_x = fighter.global_table[STICK_X].get_f32()*lr;
     match stick_y {
         _ if stick_y >= 0.25 => {
-            WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
         _ if stick_y <= -0.25 => {
-            WorkModule::set_int(fighter.module_accessor, 2, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
         _ => {
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
     }
     if stick_x <= -0.25 {
-        WorkModule::set_int(fighter.module_accessor, 3, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+        WorkModule::set_int(fighter.module_accessor, 3, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     }
     0.into()
 }
 
 pub unsafe extern "C" fn miiswordsman_special_s2_start_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
@@ -60,7 +60,7 @@ pub unsafe extern "C" fn miiswordsman_special_s2_start_main_status(fighter: &mut
 unsafe extern "C" fn miiswordsman_special_s2_start_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
@@ -111,7 +111,7 @@ unsafe extern "C" fn miiswordsman_special_s2_start_main_loop(fighter: &mut L2CFi
         }
     }
     if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
-    && WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE) {
+    && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE) {
         fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_S2_ATTACK_1.into(), true.into());
     }
     if [hash40("special_s2_1s"), hash40("special_air_s2_1s")].contains(&motion_kind)
@@ -141,7 +141,7 @@ unsafe extern "C" fn miiswordsman_special_s2_start_main_loop(fighter: &mut L2CFi
 }
 
 pub unsafe extern "C" fn miiswordsman_special_s2_start_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     0.into()
 }

@@ -7,7 +7,7 @@ pub unsafe extern "C" fn miiswordsman_special_n1_loop_pre_status(fighter: &mut L
 }
 
 pub unsafe extern "C" fn miiswordsman_special_n1_loop_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_float(fighter.module_accessor, 1.0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
+    WorkModule::set_float(fighter.module_accessor, 1.0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
     0.into()
 }
 
@@ -27,7 +27,7 @@ pub unsafe extern "C" fn miiswordsman_special_n1_loop_main_status(fighter: &mut 
 unsafe extern "C" fn miiswordsman_special_n1_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let power = WorkModule::get_float(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
+    let power = WorkModule::get_float(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
     if situation_kind == *SITUATION_KIND_GROUND
     && prev_situation_kind == *SITUATION_KIND_AIR {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -58,7 +58,7 @@ unsafe extern "C" fn miiswordsman_special_n1_loop_main_loop(fighter: &mut L2CFig
 
 pub unsafe extern "C" fn miiswordsman_special_n1_loop_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    WorkModule::set_float(fighter.module_accessor, 1.0+(frame/120.0), FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
+    WorkModule::set_float(fighter.module_accessor, 1.0+(frame/120.0), *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
     0.into()
 }
 

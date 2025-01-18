@@ -66,10 +66,10 @@ unsafe extern "C" fn sonic_special_s_drop_end_status(fighter: &mut L2CFighterCom
 
 pub fn install() {
     Agent::new("sonic")
-    .status(Pre, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_pre_status)
-    .status(Init, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_init_status)
-    .status(Main, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_main_status)
-    .status(End, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_end_status)
+    .status(Pre, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_pre_status)
+    .status(Init, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_init_status)
+    .status(Main, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_main_status)
+    .status(End, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DROP, sonic_special_s_drop_end_status)
     .install()
     ;
 }

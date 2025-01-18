@@ -326,14 +326,14 @@ unsafe extern "C" fn ssbexo_gaogaen_grounded_side_special_start_acmd(agent: &mut
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_MOVE_START);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
     }
     macros::FT_MOTION_RATE(agent, 0.8);
     frame(agent.lua_state_agent, 11.0);
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 350, 100, 30, 0, 5.0, 0.0, 7.0, 2.0, Some(0.0), Some(7.0), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA_d, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
     }
     frame(agent.lua_state_agent, 16.0);
@@ -440,14 +440,14 @@ unsafe extern "C" fn ssbexo_gaogaen_aerial_side_special_start_acmd(agent: &mut L
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_STATUS_SPECIAL_S_FLAG_MOVE_START);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
     }
     macros::FT_MOTION_RATE(agent, 0.8);
     frame(agent.lua_state_agent, 11.0);
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 350, 100, 30, 0, 5.0, 0.0, 7.0, 2.0, Some(0.0), Some(7.0), Some(5.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA_d, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
     }

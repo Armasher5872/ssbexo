@@ -60,13 +60,13 @@ unsafe extern "C" fn dolly_special_n_main_loop(fighter: &mut L2CFighterCommon) -
             fighter.sub_exec_special_start_common_kinetic_setting(hash40("param_special_n").into());
         }
         if cancel_statuses {
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
         }
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED)
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED)
         && fighter.global_table[CURRENT_FRAME].get_f32() >= 11.0
         && situation_kind != *SITUATION_KIND_AIR {
             sv_animcmd::STOP_SE(fighter.lua_state_agent);
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
         fighter.sub_change_motion_by_situation(Hash40::new("special_n").into(), Hash40::new("special_air_n").into(), true.into());
@@ -84,7 +84,7 @@ unsafe extern "C" fn dolly_special_n_main_loop(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn dolly_special_n_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
     0.into()
 }
 
@@ -112,6 +112,7 @@ unsafe extern "C" fn dolly_super_special_2_main_loop(fighter: &mut L2CFighterCom
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let cancel_statuses = [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&prev_status_kind);
     let speed_mul = WorkModule::get_param_float(fighter.module_accessor, hash40("param_super_special2") as u64, hash40("speed_mul") as u64);
     if !fighter.sub_transition_group_check_air_cliff().get_bool() {
@@ -143,14 +144,16 @@ unsafe extern "C" fn dolly_super_special_2_main_loop(fighter: &mut L2CFighterCom
                 sv_kinetic_energy!(set_speed_mul, fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION, speed_mul);
             }
             if cancel_statuses {
-                WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
             }
-            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED)
-            && fighter.global_table[CURRENT_FRAME].get_f32() >= 13.0 {
-                sv_animcmd::STOP_SE(fighter.lua_state_agent);
-                WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED) {
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
                 sv_kinetic_energy!(set_speed_mul, fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.0);
-                fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+                if frame >= 13.0 {
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
+                    sv_animcmd::STOP_SE(fighter.lua_state_agent);
+                    fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+                }
             }
             if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DOLLY_STATUS_SUPER_SPECIAL2_WORK_FLAG_HIT) {
                 return 0.into();
@@ -167,6 +170,7 @@ unsafe extern "C" fn dolly_super_special_2_end_status(fighter: &mut L2CFighterCo
         EffectModule::kill_kind(fighter.module_accessor, Hash40::new("dolly_buster_punch"), true, true);
         EffectModule::kill_kind(fighter.module_accessor, Hash40::new("dolly_buster_dash"), true, true);
     }
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_FEINTED);
     0.into()
 }
 

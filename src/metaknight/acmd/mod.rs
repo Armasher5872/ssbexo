@@ -1,7 +1,10 @@
 use {
     crate::functions::{
         ext::utility::misc::*,
-        var::metaknight::*,
+        var::{
+            consts::*,
+            metaknight::*,
+        }
     },
     smash::{
         app::{

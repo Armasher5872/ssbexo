@@ -10,8 +10,10 @@ const MARTH_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x68d670; //Shared
 unsafe extern "C" fn marth_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_MARTH as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
         common_initialization_variable_reset(&mut *boma);
-        WorkModule::off_flag(boma, FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        WorkModule::off_flag(boma, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }
@@ -22,7 +24,7 @@ unsafe extern "C" fn marth_reset_initialization(vtable: u64, fighter: &mut Fight
     if fighter.battle_object.kind == *FIGHTER_KIND_MARTH as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_reset_variable_reset(&mut *boma);
-        WorkModule::off_flag(boma, FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        WorkModule::off_flag(boma, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
     }
     original!()(vtable, fighter)
 }
@@ -33,7 +35,7 @@ unsafe extern "C" fn marth_death_initialization(vtable: u64, fighter: &mut Fight
     if fighter.battle_object.kind == *FIGHTER_KIND_MARTH as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_death_variable_reset(&mut *boma);
-        WorkModule::off_flag(boma, FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        WorkModule::off_flag(boma, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
     }
     original!()(vtable, fighter)
 }

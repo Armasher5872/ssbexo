@@ -3,7 +3,7 @@ use super::*;
 /*   GRAB STATUSES   */
 //Sub Status Catch, allows item grabbing from standing grabs
 #[skyline::hook(replace = L2CFighterCommon_sub_status_Catch)]
-unsafe fn sub_status_catch(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn sub_status_catch(fighter: &mut L2CFighterCommon) {
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("catch"), 0.0, 1.0, false, 0.0, false, false);
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ITEM);
     let transition_terms = [*FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_LIGHT, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_PICKUP_HEAVY];
@@ -13,7 +13,7 @@ unsafe fn sub_status_catch(fighter: &mut L2CFighterCommon) {
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_Catch_Main)]
-unsafe fn status_catch_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_catch_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Goes through a variety of checks to see if you transition into the heavy pickup status or light pickup status
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let heavy_item = {fighter.clear_lua_stack(); lua_args!(fighter, MA_MSC_ITEM_IS_PICKABLE_ITEM_HEAVY); sv_module_access::item(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_bool()};
@@ -68,5 +68,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

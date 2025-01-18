@@ -176,7 +176,7 @@ unsafe extern "C" fn palutena_special_s_end_status(_fighter: &mut L2CFighterComm
 }
 
 unsafe extern "C" fn palutena_reflectionboard_shoot_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    WorkModule::set_int(weapon.module_accessor, 0, WEAPON_PALUTENA_REFLECTIONBOARD_INSTANCE_WORK_ID_INT_HIT_COUNT);
+    WorkModule::set_int(weapon.module_accessor, 0, *WEAPON_PALUTENA_REFLECTIONBOARD_INSTANCE_WORK_ID_INT_HIT_COUNT);
     0.into()
 }
 
@@ -200,7 +200,7 @@ unsafe extern "C" fn palutena_special_hi_init_status(fighter: &mut L2CFighterCom
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     }
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
     0.into()
 }
 
@@ -254,7 +254,7 @@ unsafe extern "C" fn palutena_special_hi_glide_init_status(fighter: &mut L2CFigh
     sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, combined_y_speed);
     sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 3.0, 0.0);
     sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.09);
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
     0.into()
 }
 
@@ -310,7 +310,7 @@ unsafe extern "C" fn palutena_special_hi_glide_turn_init_status(fighter: &mut L2
     sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, combined_y_speed);
     sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 3.0, 0.0);
     sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.09);
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
     0.into()
 }
 
@@ -426,14 +426,14 @@ pub fn install() {
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, palutena_special_hi_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_HI, palutena_special_hi_exec_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_HI, palutena_special_hi_end_status)
-    .status(Pre, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_pre_status)
-    .status(Init, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_init_status)
-    .status(Main, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_main_status)
-    .status(End, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_end_status)
-    .status(Pre, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_pre_status)
-    .status(Init, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_init_status)
-    .status(Main, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_main_status)
-    .status(End, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_end_status)
+    .status(Pre, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_pre_status)
+    .status(Init, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_init_status)
+    .status(Main, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_main_status)
+    .status(End, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, palutena_special_hi_glide_end_status)
+    .status(Pre, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_pre_status)
+    .status(Init, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_init_status)
+    .status(Main, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_main_status)
+    .status(End, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN, palutena_special_hi_glide_turn_end_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, palutena_special_lw_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_LW, palutena_special_lw_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, palutena_special_lw_main_status)

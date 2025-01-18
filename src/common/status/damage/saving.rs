@@ -9,8 +9,8 @@ unsafe fn sub_status_savingdamage_main_common(fighter: &mut L2CFighterCommon) ->
     }
     else {
         if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_FURAFURA {
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
             MotionModule::set_rate(fighter.module_accessor, 0.4286);
         }
         if MotionModule::is_end(fighter.module_accessor) {
@@ -30,5 +30,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

@@ -52,10 +52,10 @@ unsafe extern "C" fn sonic_special_s_bounce_end_status(_fighter: &mut L2CFighter
 
 pub fn install() {
     Agent::new("sonic")
-    .status(Pre, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_pre_status)
-    .status(Init, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_init_status)
-    .status(Main, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_main_status)
-    .status(End, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_end_status)
+    .status(Pre, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_pre_status)
+    .status(Init, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_init_status)
+    .status(Main, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_main_status)
+    .status(End, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_BOUNCE, sonic_special_s_bounce_end_status)
     .install()
     ;
 }

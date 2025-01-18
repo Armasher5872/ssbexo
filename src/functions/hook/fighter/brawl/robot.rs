@@ -7,11 +7,11 @@ const ROBOT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x105c7f0; //R.O.B onl
 
 unsafe extern "C" fn robot_var(boma: &mut BattleObjectModuleAccessor) {
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    WorkModule::set_float(boma, 0.0, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_SNAKE_SPEED_VALUE);
-    WorkModule::off_flag(boma, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-    WorkModule::off_flag(boma, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
-    WorkModule::off_flag(boma, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-    WorkModule::off_flag(boma, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+    WorkModule::set_float(boma, 0.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_SNAKE_SPEED_VALUE);
+    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
+    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
     UiManager::set_robot_meter_info(entry_id, 160.0, 160.0, 80.0);
 }
 
@@ -19,8 +19,10 @@ unsafe extern "C" fn robot_var(boma: &mut BattleObjectModuleAccessor) {
 #[skyline::hook(offset = ROBOT_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn robot_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     robot_var(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 

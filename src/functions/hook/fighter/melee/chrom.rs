@@ -6,14 +6,16 @@ const CHROM_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10bb700; //Shared
 
 unsafe extern "C" fn chrom_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
 
 unsafe extern "C" fn chrom_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
-    WorkModule::set_int(boma, 0, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    WorkModule::off_flag(boma, *FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
+    WorkModule::set_int(boma, 0, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
 }
 
 //Chrom Startup Initialization

@@ -405,11 +405,11 @@ unsafe extern "C" fn ssbexo_miifighter_suplex_throw_acmd(agent: &mut L2CAgentBas
 //Armor Crushing Thunder Kick Start ACMD
 unsafe extern "C" fn ssbexo_miifighter_armor_crushing_thunder_kick_start_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR);
     }
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL);
     }
 }
 
@@ -448,7 +448,7 @@ unsafe extern "C" fn ssbexo_miifighter_aerial_armor_crushing_thunder_kick_start_
 unsafe extern "C" fn ssbexo_miifighter_armor_crushing_thunder_kick_charge_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 50.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL);
     }
 }
 
@@ -517,15 +517,15 @@ unsafe extern "C" fn ssbexo_miifighter_aerial_armor_crushing_thunder_kick_charge
 
 //Armor Crushing Thunder Kick Attack ACMD
 unsafe extern "C" fn ssbexo_miifighter_armor_crushing_thunder_kick_attack_acmd(agent: &mut L2CAgentBase) {
-    let damage = WorkModule::get_float(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
-    let attribute = WorkModule::get_int(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
+    let damage = WorkModule::get_float(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
+    let attribute = WorkModule::get_int(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
     let collision_attr = match attribute {
         0 => Hash40::new("collision_attr_elec"),
         _ => Hash40::new("collision_attr_saving")
     };
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR);
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL);
     }
     frame(agent.lua_state_agent, 4.0);
     if macros::is_excute(agent) {
@@ -641,7 +641,7 @@ unsafe extern "C" fn ssbexo_miifighter_counter_throw_acmd(agent: &mut L2CAgentBa
 
 //Counter Throw Throw Toss ACMD
 unsafe extern "C" fn ssbexo_miifighter_counter_throw_throw_toss_acmd(agent: &mut L2CAgentBase) {
-    let counter_throw_object_id = WorkModule::get_int(agent.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
+    let counter_throw_object_id = WorkModule::get_int(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
     if macros::is_excute(agent) {
         macros::WHOLE_HIT(agent, *HIT_STATUS_XLU);
     }
@@ -663,7 +663,7 @@ unsafe extern "C" fn ssbexo_miifighter_counter_throw_throw_toss_acmd(agent: &mut
         if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_WEAPON {
             let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
             if macros::is_excute(agent) {
-                WorkModule::set_flag(agent.module_accessor, false, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
+                WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
                 macros::WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
                 GroundModule::set_ignore_boss(counter_throw_boma, false);
                 GroundModule::set_passable_check(counter_throw_boma, true);
@@ -675,7 +675,7 @@ unsafe extern "C" fn ssbexo_miifighter_counter_throw_throw_toss_acmd(agent: &mut
         if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_ITEM {
             let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
             if macros::is_excute(agent) {
-                WorkModule::set_flag(agent.module_accessor, false, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
+                WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
                 macros::WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
                 GroundModule::set_ignore_boss(counter_throw_boma, false);
                 GroundModule::set_passable_check(counter_throw_boma, true);
@@ -687,7 +687,7 @@ unsafe extern "C" fn ssbexo_miifighter_counter_throw_throw_toss_acmd(agent: &mut
     }
     else {
         if macros::is_excute(agent) {
-            WorkModule::set_flag(agent.module_accessor, false, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
             macros::WHOLE_HIT(agent, *HIT_STATUS_NORMAL);
             shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
         }

@@ -21,6 +21,7 @@ unsafe extern "C" fn peach_start_initialization(vtable: u64, fighter: &mut Fight
         common_initialization_variable_reset(&mut *boma);
         agent.global_table[CHECK_AIR_SPECIAL_UNIQ].assign(&false.into());
         agent.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(peach_check_special_lw_uniq as *const () as _));
+        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }
@@ -55,7 +56,7 @@ unsafe extern "C" fn peach_link_event(vtable: u64, fighter: &mut Fighter, event:
             let offset = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CATCH_MOTION_OFFSET);
             let offset_lw = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CATCH_MOTION_OFFSET_LW);
             if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_LW && capture_event.status == *FIGHTER_STATUS_KIND_CAPTURE_PULLED {
-                WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
                 capture_event.node = smash2::phx::Hash40::new("throw");
                 capture_event.result = true;
                 capture_event.motion_offset = offset;

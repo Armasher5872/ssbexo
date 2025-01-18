@@ -1,4 +1,4 @@
-#![allow(unused_must_use, unused_assignments)]
+#![allow(unused_assignments)]
 use {
     crate::functions::var::{
         consts::*,

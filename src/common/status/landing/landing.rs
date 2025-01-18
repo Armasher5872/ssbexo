@@ -29,10 +29,11 @@ unsafe fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> L2CValue {
             ret = 0.into();
         }
         if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
+			ControlModule::reset_main_stick_x(boma);
             if GroundModule::is_passable_ground(boma)
             && fighter.global_table[FLICK_Y].get_i32() < pass_flick_y
             && fighter.global_table[STICK_Y].get_f32() < pass_stick_y {
@@ -50,8 +51,6 @@ unsafe fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> L2CValue {
 //Status End Landing
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_Landing)]
 unsafe fn status_end_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     fighter.sub_landing_cancel_damage_face();
     0.into()
 }
@@ -66,5 +65,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

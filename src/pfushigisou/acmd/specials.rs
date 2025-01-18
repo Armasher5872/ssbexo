@@ -5,9 +5,9 @@ unsafe extern "C" fn ssbexo_pfushigisou_neutral_special_acmd(agent: &mut L2CAgen
     let speed = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let lr = PostureModule::lr(agent.module_accessor);
     frame(agent.lua_state_agent, 20.0);
-    if !macros::IS_EXIST_ARTICLE(agent, FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE)  {
+    if !macros::IS_EXIST_ARTICLE(agent, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE)  {
         if macros::is_excute(agent) {
-            ArticleModule::generate_article(agent.module_accessor, FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE, false, -1);
+            ArticleModule::generate_article(agent.module_accessor, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE, false, -1);
         }
     }
     if macros::is_excute(agent) {
@@ -76,7 +76,7 @@ unsafe extern "C" fn ssbexo_pfushigisou_aerial_neutral_special_expression(agent:
 //Sludge Bomb ACMD
 unsafe extern "C" fn ssbexo_pfushigisou_sludge_bomb_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 80, 100, 0, 20, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 80, 100, 20, 0, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_poison"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
         AttackModule::set_poison_param(agent.module_accessor, 0, 40, 5, 0.5, false);
     }
 }

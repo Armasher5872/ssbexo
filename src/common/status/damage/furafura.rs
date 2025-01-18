@@ -6,25 +6,25 @@ unsafe extern "C" fn status_furafura(fighter: &mut L2CFighterCommon) -> L2CValue
     if ![hash40("furafura_start_u"), hash40("furafura_start_d")].contains(&motion_kind) && MotionModule::is_end(fighter.module_accessor) {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("furafura"), 0.0, 1.0, false, 0.0, false, false);
     }
-    WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_FuraFura_Main as *const () as _))
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_FuraFura_Main)]
 unsafe extern "C" fn status_furafura_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    let shield_break_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
+    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    let shield_break_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
         if ![hash40("furafura_start_u"), hash40("furafura_start_d")].contains(&motion_kind) && MotionModule::is_end(fighter.module_accessor) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("furafura"), 0.0, 1.0, false, 0.0, false, false);
         }
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
         if shield_break_timer >= 120 {
             fighter.change_status(FIGHTER_STATUS_KIND_SAVING_DAMAGE.into(), false.into());
         }
         if special_zoom_gfx > 0 {
-            WorkModule::inc_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+            WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
         }
         if special_zoom_gfx == 2 {
             SlowModule::set_whole(fighter.module_accessor, 8, 80);
@@ -54,7 +54,7 @@ unsafe extern "C" fn status_end_furafura(fighter: &mut L2CFighterCommon) -> L2CV
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), false, false);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_piyopiyo"), false, false);
     macros::CAM_ZOOM_OUT(fighter);
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     0.into()
 }
 
@@ -76,5 +76,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

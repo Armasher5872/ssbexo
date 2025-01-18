@@ -4,7 +4,7 @@ use super::*;
 unsafe extern "C" fn ssbexo_purin_neutral_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_PURIN_GENERATE_ARTICLE_DISARMING_VOICE, false, -1);
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_PURIN_GENERATE_ARTICLE_DISARMING_VOICE, false, -1);
     }
 }
 
@@ -42,7 +42,7 @@ unsafe extern "C" fn ssbexo_purin_neutral_special_expression(agent: &mut L2CAgen
 //Disarming Voice ACMD
 unsafe extern "C" fn ssbexo_purin_disarming_voice_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 361, 20, 0, 40, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 361, 20, 0, 40, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
     }
 }
 

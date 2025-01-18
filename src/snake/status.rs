@@ -8,11 +8,11 @@ unsafe extern "C" fn snake_attack_s4_main_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn snake_attack_s4_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let count = WorkModule::get_int(fighter.module_accessor, FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    let count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
         if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-            WorkModule::inc_int(fighter.module_accessor, FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+            WorkModule::inc_int(fighter.module_accessor, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
         }
     }
     if CancelModule::is_enable_cancel(fighter.module_accessor)
@@ -39,7 +39,7 @@ unsafe extern "C" fn snake_attack_s4_main_loop(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn snake_attack_s4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
     0.into()
 }
 

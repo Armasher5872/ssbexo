@@ -3,7 +3,7 @@ use super::*;
 //Rockbuster Forward Tilt ACMD
 unsafe extern "C" fn ssbexo_rockman_rockbuster_forward_tilt_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED) {
         if macros::is_excute(agent) {
             ArticleModule::generate_article(agent.module_accessor, *FIGHTER_ROCKMAN_GENERATE_ARTICLE_CHARGESHOT, false, -1);
             WorkModule::set_int(agent.module_accessor, 3,  *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCKBUSTER_COUNT);
@@ -19,7 +19,7 @@ unsafe extern "C" fn ssbexo_rockman_rockbuster_forward_tilt_acmd(agent: &mut L2C
     }
     wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
     }
 }
 

@@ -1,1 +1,2 @@
-pub const FIGHTER_KEN_INSTANCE_WORK_ID_FLAG_CAN_KARA_CANCEL: i32 = 0x200000EC;
+pub const FIGHTER_KEN_INSTANCE_WORK_ID_FLAG_CAN_KARA_CANCEL: smash::lib::LuaConst = smash::lib::LuaConst::new(0x200000EC);
+pub const FIGHTER_KEN_INSTANCE_WORK_ID_INT_ATTACK_COMMAND1_COUNTER: smash::lib::LuaConst = smash::lib::LuaConst::new(0x100000CA);

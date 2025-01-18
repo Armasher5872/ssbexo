@@ -3,7 +3,7 @@ use super::*;
 //Rockbuster Nair ACMD
 unsafe extern "C" fn ssbexo_rockman_rockbuster_nair_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED) {
         if macros::is_excute(agent) {
             WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
             ArticleModule::generate_article(agent.module_accessor, *FIGHTER_ROCKMAN_GENERATE_ARTICLE_CHARGESHOT, false, -1);
@@ -26,7 +26,7 @@ unsafe extern "C" fn ssbexo_rockman_rockbuster_nair_acmd(agent: &mut L2CAgentBas
     wait(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
     }
     frame(agent.lua_state_agent, 34.0);
     if macros::is_excute(agent) {

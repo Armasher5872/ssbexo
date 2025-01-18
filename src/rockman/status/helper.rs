@@ -66,10 +66,10 @@ pub unsafe extern "C" fn rockman_rockbuster_main_loop_helper(fighter: &mut L2CFi
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCKBUSTER_LOOP);
         }
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) 
-        && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED)
-        && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
-            WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
-            WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
+        && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED)
+        && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
         }
     }
     let ude_motion = MotionModule::motion_kind_partial(fighter.module_accessor, *FIGHTER_ROCKMAN_MOTION_PART_SET_UDE);
@@ -84,7 +84,7 @@ pub unsafe extern "C" fn rockman_rockbuster_main_loop_helper(fighter: &mut L2CFi
         if situation_kind == *SITUATION_KIND_GROUND && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN != 0 && rockman_rockbuster_can_turn_helper(fighter).get_bool() {
             allow_end = false;
         }
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
             allow_end = false;
         }
         if allow_end && is_end {
@@ -114,15 +114,15 @@ pub unsafe extern "C" fn rockman_rockbuster_main_loop_helper(fighter: &mut L2CFi
         WorkModule::set_int(fighter.module_accessor, step_orig, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCKBUSTER_STEP_PREVIOUS);
     }
     WorkModule::set_int(fighter.module_accessor, step, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCKBUSTER_STEP);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL) {
         macros::PLAY_STATUS(fighter, Hash40::new("se_rockman_smash_s02"));
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
-        let charge_frame = WorkModule::get_int(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
+        let charge_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
         if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
         }
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_hold"), false, true);
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_elec"), false, true);
@@ -141,8 +141,8 @@ pub unsafe extern "C" fn rockman_rockbuster_main_loop_helper(fighter: &mut L2CFi
         }
         if charge_frame > 119 {
             fighter.gimmick_flash();
-            WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
             if situation_kind == *SITUATION_KIND_GROUND {
                 fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
             }
@@ -155,7 +155,7 @@ pub unsafe extern "C" fn rockman_rockbuster_main_loop_helper(fighter: &mut L2CFi
     else {
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_hold"), false, true);
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_elec"), false, true);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
     }
     ret.into()
 }
@@ -306,9 +306,9 @@ pub unsafe extern "C" fn rockman_rockbuster_end_var_reset(fighter: &mut L2CFight
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCKBUSTER_SHOOT_END);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCKBUSTER_L_SHOULDER_FIX);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCKBUSTER_GENERATE_TOP_N_OFFSET);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
 }
 
 pub unsafe extern "C" fn rockman_special_motion_helper(fighter: &mut L2CFighterCommon, motion_kind_ground: L2CValue, motion_kind_air: L2CValue, kinetic_type_ground: L2CValue, kinetic_type_air: L2CValue, inherit_const: L2CValue, ground_correct_kind: L2CValue) {

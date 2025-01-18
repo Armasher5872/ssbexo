@@ -39,7 +39,7 @@ unsafe extern "C" fn pfushigisou_special_n_main_loop(fighter: &mut L2CFighterCom
     && prev_situation_kind == *SITUATION_KIND_AIR {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_n_start"), -1.0, 1.0, 0.0, false, false);
     }
     if situation_kind == *SITUATION_KIND_AIR
     && prev_situation_kind == *SITUATION_KIND_GROUND {
@@ -117,11 +117,11 @@ pub fn install() {
     .install()
     ;
     Agent::new("pfushigisou_sludge")
-    .status(Pre, WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_pre_status)
-    .status(Init, WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_init_status)
-    .status(Main, WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_main_status)
-    .status(Exec, WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_exec_status)
-    .status(End, WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_end_status)
+    .status(Pre, *WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_pre_status)
+    .status(Init, *WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_init_status)
+    .status(Main, *WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_main_status)
+    .status(Exec, *WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_exec_status)
+    .status(End, *WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_end_status)
     .install()
     ;
 }

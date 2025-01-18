@@ -54,12 +54,12 @@ unsafe extern "C" fn lucario_power_up_punch_exit_status(_fighter: &mut L2CFighte
 
 pub fn install() {
     Agent::new("lucario")
-    .status(Pre, FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_pre_status)
-    .status(Init, FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_init_status)
-    .status(Main, FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_main_status)
-    .status(Exec, FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_exec_status)
-    .status(End, FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_end_status)
-    .status(Exit, FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_exit_status)
+    .status(Pre, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_pre_status)
+    .status(Init, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_init_status)
+    .status(Main, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_main_status)
+    .status(Exec, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_exec_status)
+    .status(End, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_end_status)
+    .status(Exit, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH, lucario_power_up_punch_exit_status)
     .install()
     ;
 }

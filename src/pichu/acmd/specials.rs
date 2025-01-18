@@ -12,7 +12,7 @@ unsafe extern "C" fn ssbexo_pichu_side_special_acmd(agent: &mut L2CAgentBase) {
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 0, 0, 0, 0, 7.0, 0.0, 5.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
     }
     for _ in 0..8 {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE) {
             macros::CATCH(agent, 0, Hash40::new("top"), 7.0, 0.0, 5.0, 0.0, None, None, None, *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
         }
         wait(agent.lua_state_agent, 1.0);
@@ -135,7 +135,7 @@ unsafe extern "C" fn ssbexo_pichu_aerial_up_special_end_acmd(agent: &mut L2CAgen
     let quick_attack_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_PIKACHU_STATUS_WORK_ID_INT_QUICK_ATTACK_COUNT);
     if quick_attack_count == 2 {
         if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL);
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL);
         }
     }
     if macros::is_excute(agent) {
@@ -152,7 +152,7 @@ unsafe extern "C" fn ssbexo_pichu_aerial_up_special_end_acmd(agent: &mut L2CAgen
     }
     frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL);
     }
 }
 

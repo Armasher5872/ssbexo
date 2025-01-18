@@ -8,17 +8,19 @@ const GEKKOUGA_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x68d8a0; //Shared
 
 unsafe extern "C" fn gekkouga_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
 
 unsafe extern "C" fn gekkouga_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
-    WorkModule::off_flag(boma, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
-    WorkModule::off_flag(boma, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
-    WorkModule::off_flag(boma, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
-    WorkModule::off_flag(boma, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
+    WorkModule::off_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
+    WorkModule::off_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
+    WorkModule::off_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
+    WorkModule::off_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
+    WorkModule::off_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
 }
 
 //Greninja Startup Initialization
@@ -57,7 +59,7 @@ unsafe extern "C" fn gekkouga_death_initialization(vtable: u64, fighter: &mut Fi
 #[skyline::hook(offset = GEKKOUGA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn gekkouga_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE) {
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE) {
         WorkModule::off_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_START_HOLD);
     }
     original!()(vtable, fighter)
@@ -75,7 +77,7 @@ unsafe extern "C" fn gekkouga_on_search(vtable: u64, fighter: &mut Fighter, log:
             let opponent_id = (*collision_log).opponent_battle_object_id;
             let doll_id = WorkModule::get_int(boma, 0x100000C2);
             if opponent_id == doll_id as u32 {
-                WorkModule::set_flag(boma, true, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
+                WorkModule::on_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
             }
         }
     }

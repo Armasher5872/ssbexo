@@ -10,7 +10,9 @@ const RIDLEY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x1044440; //Ridley o
 unsafe extern "C" fn ridley_start_initialization(vtable: u64, fighter: &mut Fighter) {
     if fighter.battle_object.kind == *FIGHTER_KIND_RIDLEY as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
         common_initialization_variable_reset(&mut *boma);
+        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }
@@ -53,20 +55,6 @@ unsafe extern "C" fn ridley_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         if situation_kind == *SITUATION_KIND_GROUND {
             RIDLEY_INT_SPECIAL_HI_REBOUNCE_COUNT[entry_id] = 0;
         }
-    }
-    if [hash40("special_lw_stab"), hash40("special_air_lw_stab")].contains(&motion_kind) {
-        if motion_kind == hash40("special_air_lw_stab") {
-            WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE);
-        }
-        else {
-            if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE) {
-               StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_LANDING, true);
-               AttackModule::clear_all(boma);
-            }
-        }
-    }
-    else {
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FIGHTER_SPECIAL_STATE);
     }
     if motion_kind == hash40("special_air_lw_stab") {
         WorkModule::set_int64(boma, hash40("special_air_lw_stab") as i64, *FIGHTER_STATUS_WORK_ID_UTILITY_WORK_INT_MOT_AIR_KIND);

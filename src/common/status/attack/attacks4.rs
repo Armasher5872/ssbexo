@@ -12,8 +12,8 @@ unsafe fn status_attacks4hold_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[skyline::hook(replace = L2CFighterCommon_status_end_AttackS4)]
 unsafe fn status_end_attacks4(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 
@@ -27,8 +27,8 @@ unsafe fn sub_attack_xx4_common_uniq_process_exit(fighter: &mut L2CFighterCommon
     if ![*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD].contains(&status_kind_interrupt)
     || ![*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind) {
         AttackModule::set_shield_stiff_mul(fighter.module_accessor, 1.0);
-        WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-        WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
         SlowModule::clear_whole(boma);
         CameraModule::reset_all(boma);
         macros::CAM_ZOOM_OUT(fighter);
@@ -58,5 +58,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

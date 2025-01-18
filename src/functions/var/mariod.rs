@@ -1,1 +1,1 @@
-pub const FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_PILL_ID: i32 = 0x100000C1;
+pub const FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_PILL_ID: smash::lib::LuaConst = smash::lib::LuaConst::new(0x100000C1);

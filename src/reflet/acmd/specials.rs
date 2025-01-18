@@ -44,7 +44,7 @@ unsafe extern "C" fn ssbexo_reflet_side_special_effect(agent: &mut L2CAgentBase)
 unsafe extern "C" fn ssbexo_reflet_side_special_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if WorkModule::is_flag(agent.module_accessor, *FIGHTER_REFLET_STATUS_SPECIAL_S_FLAG_SHOOT_OK) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
             if macros::is_excute(agent) {
                 macros::PLAY_SE(agent, Hash40::new("se_reflet_special_s01"));
                 macros::PLAY_SE(agent, Hash40::new("vc_reflet_final02"));
@@ -68,10 +68,10 @@ unsafe extern "C" fn ssbexo_reflet_side_special_sound(agent: &mut L2CAgentBase) 
 //Arcfire Shoot ACMD
 unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_acmd(agent: &mut L2CAgentBase) {
     let owner_boma = sv_battle_object::module_accessor((WorkModule::get_int(agent.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    if !WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
-        if WorkModule::is_flag(owner_boma, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
+    if !WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+        if WorkModule::is_flag(owner_boma, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
             if macros::is_excute(agent) {
-                WorkModule::on_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_BOLGANONE);
+                WorkModule::on_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_BOLGANONE);
                 macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 361, 60, 0, 40, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, -0.6, 0.0, 8, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_MAGIC);
             }
         }
@@ -82,14 +82,14 @@ unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_acmd(agent: &mut L2CAgentBase) 
         }
     }
     frame(agent.lua_state_agent, 120.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 18.0, 160, 50, 0, 50, 15.0, 0.0, 0.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
         }
     }
     frame(agent.lua_state_agent, 129.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA);
+        WorkModule::off_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA);
     }
 }
 
@@ -98,8 +98,8 @@ unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_effect(agent: &mut L2CAgentBase
     let owner_boma = sv_battle_object::module_accessor((WorkModule::get_int(agent.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
     let shoot_angle = WorkModule::get_param_float(agent.module_accessor, hash40("param_gigafire"), hash40("shoot_angle"));
     let rot_x = shoot_angle.to_radians().cos();
-    if WorkModule::is_flag(owner_boma, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
-        if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(owner_boma, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
             if macros::is_excute(agent) {
                 macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_explosion_sign"), false, false);
                 macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_metamon_aura"), false, false);
@@ -122,14 +122,14 @@ unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_effect(agent: &mut L2CAgentBase
         }
     }
     frame(agent.lua_state_agent, 10.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             macros::EFFECT(agent, Hash40::new("sys_metamon_aura"), Hash40::new("top"), 0.0, 0.0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, false);
             macros::EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
         }
     }
     frame(agent.lua_state_agent, 60.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             macros::EFFECT_OFF_KIND(agent, Hash40::new("reflet_rizaia"), false, true);
             macros::EFFECT(agent, Hash40::new("sys_metamon_aura"), Hash40::new("top"), 0.0, 0.0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, false);
@@ -140,21 +140,21 @@ unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_effect(agent: &mut L2CAgentBase
         }
     }
     frame(agent.lua_state_agent, 80.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_explosion_sign"), false, false);
             macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_metamon_aura"), false, false);
         }
     }
     frame(agent.lua_state_agent, 90.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             macros::EFFECT(agent, Hash40::new("sys_explosion_flash"), Hash40::new("top"), 0.0, 0.0, 0, 0, 0, 0, 0.8, 5, 5, 0, 0, 0, 0, false);
             macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 1.0);
         }
     }
     frame(agent.lua_state_agent, 120.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_explosion_flash"), false, false);
             macros::EFFECT(agent, Hash40::new("sys_hit_purple"), Hash40::new("top"), 0.0, 0.0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
@@ -169,7 +169,7 @@ unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_effect(agent: &mut L2CAgentBase
 
 //Arcfire Shoot Sound
 unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_sound(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             let start = SoundModule::play_se(agent.module_accessor, Hash40::new("se_reflet_special_l01"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(agent.module_accessor, start as i32, 1.1, 0);
@@ -181,14 +181,14 @@ unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_sound(agent: &mut L2CAgentBase)
         }
     }
     frame(agent.lua_state_agent, 30.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             let vortex = SoundModule::play_se(agent.module_accessor, Hash40::new("se_reflet_special_n01"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(agent.module_accessor, vortex as i32, 0.8, 0);
         }   
     }
     frame(agent.lua_state_agent, 90.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             SoundModule::stop_se(agent.module_accessor, Hash40::new("se_reflet_special_n01"), 0);
             let implode = SoundModule::play_se(agent.module_accessor, Hash40::new("se_reflet_final14"), true, false, false, false, smash::app::enSEType(0));
@@ -196,7 +196,7 @@ unsafe extern "C" fn ssbexo_reflet_arcfire_shoot_sound(agent: &mut L2CAgentBase)
         }   
     }
     frame(agent.lua_state_agent, 120.0);
-    if WorkModule::is_flag(agent.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if WorkModule::is_flag(agent.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         if macros::is_excute(agent) {
             SoundModule::stop_se(agent.module_accessor, Hash40::new("se_reflet_final14"), 0);
             let bomb = SoundModule::play_se(agent.module_accessor, Hash40::new("se_common_bomb_ll"), true, false, false, false, smash::app::enSEType(0));
@@ -229,7 +229,7 @@ unsafe extern "C" fn ssbexo_reflet_down_special_acmd(agent: &mut L2CAgentBase) {
     wait(agent.lua_state_agent, 20.0);
     macros::FT_MOTION_RATE(agent, 2.0);
     if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_SPECIAL_FAILURE) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
             if macros::is_excute(agent) {
                 WorkModule::sub_int(agent.module_accessor, 1, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_LW_CURRENT_POINT);
                 if WorkModule::get_int(agent.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_LW_CURRENT_POINT) <= 0 {
@@ -263,7 +263,7 @@ unsafe extern "C" fn ssbexo_reflet_down_special_effect(agent: &mut L2CAgentBase)
         }
     }
     frame(agent.lua_state_agent, 15.0);
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("reflet_rizaia"), Hash40::new("top"), 0, 5, 14, 0, 0, 0, 1, true);
         }
@@ -278,7 +278,7 @@ unsafe extern "C" fn ssbexo_reflet_down_special_sound(agent: &mut L2CAgentBase) 
             macros::PLAY_SE(agent, Hash40::new("se_reflet_special_l01"));
         }
     }
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) {
         agent.clear_lua_stack();
         lua_args!(agent, 2);
         sv_animcmd::IS_RANDOM(agent.lua_state_agent);

@@ -126,8 +126,8 @@ unsafe extern "C" fn ssbexo_gekkouga_down_special_acmd(agent: &mut L2CAgentBase)
     }
     frame(agent.lua_state_agent, 16.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
     }
 }
 

@@ -285,7 +285,7 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_f_acmd(agent: &mut L2CAgent
 
 //Down Special Forward Throw Effect
 unsafe extern "C" fn ssbexo_luigi_down_special_throw_f_effect(agent: &mut L2CAgentBase) {
-    let discharge_chance = WorkModule::get_int(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
+    let discharge_chance = WorkModule::get_int(agent.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
     let lr = PostureModule::lr(agent.module_accessor);
     let offset = WorkModule::get_param_float(agent.module_accessor, hash40("height"), 0);
     frame(agent.lua_state_agent, 11.0);
@@ -393,7 +393,7 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_b_acmd(agent: &mut L2CAgent
 
 //Down Special Back Throw Effect
 unsafe extern "C" fn ssbexo_luigi_down_special_throw_b_effect(agent: &mut L2CAgentBase) {
-    let discharge_chance = WorkModule::get_int(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
+    let discharge_chance = WorkModule::get_int(agent.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
     let lr = PostureModule::lr(agent.module_accessor);
     let offset = WorkModule::get_param_float(agent.module_accessor, hash40("height"), 0);
     frame(agent.lua_state_agent, 11.0);
@@ -512,7 +512,7 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_hi_acmd(agent: &mut L2CAgen
 
 //Down Special Up Throw Effect
 unsafe extern "C" fn ssbexo_luigi_down_special_throw_hi_effect(agent: &mut L2CAgentBase) {
-    let discharge_chance = WorkModule::get_int(agent.module_accessor, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
+    let discharge_chance = WorkModule::get_int(agent.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
     let lr = PostureModule::lr(agent.module_accessor);
     let offset = WorkModule::get_param_float(agent.module_accessor, hash40("height"), 0);
     frame(agent.lua_state_agent, 16.0);

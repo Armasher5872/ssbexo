@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::rockman::*,
+    crate::functions::var::{
+        consts::*,
+        rockman::*,
+    },
     smash::{
         app::{
             lua_bind::*,

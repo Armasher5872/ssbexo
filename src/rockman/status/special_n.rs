@@ -32,7 +32,7 @@ unsafe extern "C" fn rockman_special_n_main_loop(fighter: &mut L2CFighterCommon)
                 change_motion = true;
             }
             if stick_y > 0.7 {
-                WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROCKMAN_STATUS_SPECIAL_N_WORK_ID_FLAG_UP_MOTION);
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_STATUS_SPECIAL_N_WORK_ID_FLAG_UP_MOTION);
                 change_motion = true;
             }
         }
@@ -52,7 +52,7 @@ unsafe extern "C" fn rockman_special_n_main_loop(fighter: &mut L2CFighterCommon)
                 air_motion_kind = hash40("special_air_n_turn_empty");
             }
         }
-        else if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_STATUS_SPECIAL_N_WORK_ID_FLAG_UP_MOTION) {
+        else if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_STATUS_SPECIAL_N_WORK_ID_FLAG_UP_MOTION) {
             ground_motion_kind = hash40("special_n_hi");
             air_motion_kind = hash40("special_air_n_hi");
         }
@@ -99,7 +99,7 @@ unsafe extern "C" fn rockman_special_n_main_loop(fighter: &mut L2CFighterCommon)
 
 unsafe extern "C" fn rockman_special_n_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let metalblade_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_ROCKMAN_STATUS_SPECIAL_N_WORK_INT_METALBLADE_ID);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_STATUS_SPECIAL_N_WORK_ID_FLAG_UP_MOTION);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_STATUS_SPECIAL_N_WORK_ID_FLAG_UP_MOTION);
     if metalblade_id != 0 {
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x29b79a80a1));
     }

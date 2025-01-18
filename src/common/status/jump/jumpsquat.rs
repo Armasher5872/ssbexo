@@ -3,20 +3,19 @@ use super::*;
 
 //Status Jumpsquat Main, enables Wavedash out of Jumpsquat
 #[skyline::hook(replace = L2CFighterCommon_status_JumpSquat_Main)]
-unsafe fn status_jumpsquat_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+unsafe extern "C" fn status_jumpsquat_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
     if fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_bool() && {let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_ptr()); callable(fighter).get_bool()} {
         return 1.into();
     }
     /* START OF NEW ADDITIONS */
     if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-        FULL_HOP_ENABLE_DELAY[entry_id] = 0;
-        WorkModule::set_flag(boma, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);
     }
-    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) 
-    || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD_HOLD) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH);
+    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD_HOLD) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);
     }
     /* END OF NEW ADDITIONS */
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_JUMP_START) {
@@ -60,7 +59,7 @@ unsafe fn status_jumpsquat_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 //Status End Jumpsquat, clears flags
 #[skyline::hook(replace = L2CFighterCommon_status_end_JumpSquat)]
-unsafe fn status_end_jumpsquat(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_end_jumpsquat(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK);
     0.into()
 }

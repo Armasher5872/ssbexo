@@ -19,7 +19,7 @@ unsafe extern "C" fn ryu_special_n_substatus(fighter: &mut L2CFighterCommon, par
     else {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_N_FLAG_SHOOT) {
             if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_RYU_STATUS_WORK_ID_SPECIAL_N_FLAG_FAILED) {
-                if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI) {
+                if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI) {
                     ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_RYU_GENERATE_ARTICLE_HADOKEN, false, -1);
                 }
             }
@@ -37,13 +37,13 @@ unsafe extern "C" fn ryu_special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
             return 1.into();
         }
     }
     if fighter.global_table[CURRENT_FRAME].get_f32() < 12.0 {
         if fighter.global_table[CMD_CAT4].get_i32() & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_S_COMMAND != 0 {
-            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
             return 0.into();
         }
     }
@@ -79,7 +79,7 @@ unsafe extern "C" fn ryu_special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
         if situation_kind == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
@@ -92,8 +92,8 @@ unsafe extern "C" fn ryu_special_n_main_loop(fighter: &mut L2CFighterCommon) -> 
 
 unsafe extern "C" fn ryu_hadoken_move_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_boma = get_owner_boma(weapon);
-    if WorkModule::is_flag(owner_boma, FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI) {
-        WorkModule::set_flag(weapon.module_accessor, true, WEAPON_RYU_HADOKEN_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
+    if WorkModule::is_flag(owner_boma, *FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI) {
+        WorkModule::on_flag(weapon.module_accessor, *WEAPON_RYU_HADOKEN_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
         sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
         sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
         sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
@@ -103,7 +103,7 @@ unsafe extern "C" fn ryu_hadoken_move_init_status(weapon: &mut L2CWeaponCommon) 
 
 unsafe extern "C" fn ryu_hadoken_move_exec_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_boma = get_owner_boma(weapon);
-    if WorkModule::is_flag(owner_boma, FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI) {
+    if WorkModule::is_flag(owner_boma, *FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI) {
         sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
         sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
         sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);

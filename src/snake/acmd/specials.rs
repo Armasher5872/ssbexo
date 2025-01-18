@@ -22,7 +22,7 @@ unsafe extern "C" fn ssbexo_snake_neutral_special_start_acmd(agent: &mut L2CAgen
         }
     }
     if ArticleModule::is_exist(agent.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_GRENADE) {
-        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_GRENADE, ArticleOperationTarget(0));
+        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_SNAKE_GENERATE_ARTICLE_GRENADE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         let itemmanager = smash2::app::ItemManager::instance().unwrap();
         let grenade_count = smash2::app::ItemManager::get_num_of_ownered_item(itemmanager, agent.battle_object_id, smash2::app::ItemKind::Snakegrenade);
         if grenade_count < 2 {

@@ -50,6 +50,7 @@ pub mod samusd;
 pub mod sheik;
 pub mod snake;
 pub mod sonic;
+pub mod toonlink;
 pub mod variables;
 pub mod wario;
 pub mod wolf;

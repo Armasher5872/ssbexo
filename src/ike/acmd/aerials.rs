@@ -132,15 +132,15 @@ unsafe extern "C" fn ssbexo_ike_bair_acmd(agent: &mut L2CAgentBase) {
         macros::ATTACK(agent, 1, 0, Hash40::new("sword"), 14.0, 361, 100, 0, 30, 5.0, 0.0, 6.2, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 2, 0, Hash40::new("sword"), 14.0, 361, 100, 0, 30, 5.0, 0.0, 3.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 3, 0, Hash40::new("sword"), 14.0, 361, 100, 0, 30, 4.0, 0.0, -2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND);   
-        WorkModule::set_float(agent.module_accessor, 40.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_BOUND_ANGLE);
-        WorkModule::set_float(agent.module_accessor, -10.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
-        WorkModule::set_float(agent.module_accessor, -1.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_Y_CHECK);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND);   
+        WorkModule::set_float(agent.module_accessor, 40.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_BOUND_ANGLE);
+        WorkModule::set_float(agent.module_accessor, -10.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
+        WorkModule::set_float(agent.module_accessor, -1.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_Y_CHECK);
     }
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         macros::ATTACK(agent, 3, 0, Hash40::new("sword"), 14.0, 361, 100, 0, 30, 2.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
-        WorkModule::set_float(agent.module_accessor, -4.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
+        WorkModule::set_float(agent.module_accessor, -4.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
     }
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
@@ -148,15 +148,15 @@ unsafe extern "C" fn ssbexo_ike_bair_acmd(agent: &mut L2CAgentBase) {
         macros::ATTACK(agent, 0, 0, Hash40::new("sword"), 14.0, 361, 100, 0, 30, 3.5, 0.0, 10.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 1, 0, Hash40::new("sword"), 14.0, 361, 100, 0, 30, 3.0, 0.0, 4.7, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 4, 0, Hash40::new("top"), 14.0, 361, 100, 0, 30, 5.0, 0.0, 14.8, -11.0, Some(0.0), Some(12.0), Some(-17.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_IKE, *ATTACK_REGION_SWORD);
-        WorkModule::set_float(agent.module_accessor, -1.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
+        WorkModule::set_float(agent.module_accessor, -1.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
     }
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::set_flag(agent.module_accessor, false, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND);
-        WorkModule::set_float(agent.module_accessor, 0.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_BOUND_ANGLE);
-        WorkModule::set_float(agent.module_accessor, 0.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
-        WorkModule::set_float(agent.module_accessor, 0.0, FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_Y_CHECK);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND);
+        WorkModule::set_float(agent.module_accessor, 0.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_BOUND_ANGLE);
+        WorkModule::set_float(agent.module_accessor, 0.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
+        WorkModule::set_float(agent.module_accessor, 0.0, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_Y_CHECK);
     }
     frame(agent.lua_state_agent, 35.0);
     if macros::is_excute(agent) {

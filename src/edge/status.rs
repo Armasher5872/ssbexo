@@ -69,13 +69,13 @@ unsafe extern "C" fn edge_special_n_shoot_main_loop(fighter: &mut L2CFighterComm
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
         if stick_y >= 0.7 {
-            WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
         }
         else if stick_y <= -0.7 {
-            WorkModule::set_int(fighter.module_accessor, 2, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
         }
         else {
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -90,7 +90,7 @@ unsafe extern "C" fn edge_special_n_shoot_main_loop(fighter: &mut L2CFighterComm
 }
 
 unsafe extern "C" fn edge_special_n_shoot_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
     0.into()
 }
 
@@ -113,7 +113,6 @@ unsafe extern "C" fn edge_special_s_charge_main_loop(fighter: &mut L2CFighterCom
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
-    let cmd_cat2 = fighter.global_table[CMD_CAT2].get_i32();
     let hold_max = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("hold_max"));
     let hold_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_EDGE_STATUS_SPECIAL_S_INT_HOLD_FRAME);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -162,16 +161,6 @@ unsafe extern "C" fn edge_special_s_charge_main_loop(fighter: &mut L2CFighterCom
                         WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
                         fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
                     }
-                    else {
-                        if cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_STICK_ESCAPE_F != 0 {
-                            WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_F, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                            fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
-                        }
-                        else if cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_STICK_ESCAPE_B != 0 {
-                            WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_B, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                            fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
-                        }
-                    }
                 }
             }
         }
@@ -209,7 +198,7 @@ unsafe extern "C" fn edge_special_s_reverse_function(fighter: &mut L2CFighterCom
 //Up Special
 
 unsafe extern "C" fn edge_special_hi_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("edge_octaslash_line"), true, true);
     fun_7100014650(fighter);
     fun_71000147f0(fighter);
@@ -303,7 +292,7 @@ unsafe extern "C" fn edge_special_hi_param_helper_inner(hash: L2CValue, charged_
 }
 
 unsafe extern "C" fn edge_special_hi_landing_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("edge_octaslash_line"), true, true);
     0.into()
 }
@@ -312,7 +301,7 @@ unsafe extern "C" fn edge_special_hi_landing_end_status(fighter: &mut L2CFighter
 
 unsafe extern "C" fn edge_fire_s_fly_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_boma = get_owner_boma(weapon);
-    let owner_direction = WorkModule::get_int(owner_boma, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+    let owner_direction = WorkModule::get_int(owner_boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
     let lr = PostureModule::lr(weapon.module_accessor);
     let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_fire"), hash40("life_s"));
     let speed_x_s = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("speed_x_s"));
@@ -373,7 +362,7 @@ unsafe extern "C" fn edge_fire_s_fly_exec_status(weapon: &mut L2CWeaponCommon) -
 
 unsafe extern "C" fn edge_fire_m_fly_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_boma = get_owner_boma(weapon);
-    let owner_direction = WorkModule::get_int(owner_boma, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+    let owner_direction = WorkModule::get_int(owner_boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
     let lr = PostureModule::lr(weapon.module_accessor);
     let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_fire"), hash40("life_m"));
     let speed_x_m = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("speed_x_m"));
@@ -434,7 +423,7 @@ unsafe extern "C" fn edge_fire_m_fly_exec_status(weapon: &mut L2CWeaponCommon) -
 
 unsafe extern "C" fn edge_fire_l_fly_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_boma = get_owner_boma(weapon);
-    let owner_direction = WorkModule::get_int(owner_boma, FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
+    let owner_direction = WorkModule::get_int(owner_boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
     let lr = PostureModule::lr(weapon.module_accessor);
     let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_fire"), hash40("life_l"));
     let speed_x_l = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("speed_x_l"));

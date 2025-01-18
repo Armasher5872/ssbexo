@@ -38,7 +38,7 @@ unsafe extern "C" fn rockman_attack_air_end_status(fighter: &mut L2CFighterCommo
             rockman_rockbuster_end_var_reset(fighter);
         }
         else {
-            WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
         }
     }
     0.into()

@@ -237,6 +237,10 @@ unsafe extern "C" fn ssbexo_sheik_dash_attack_acmd(agent: &mut L2CAgentBase) {
             macros::ATK_SET_SHIELD_SETOFF_MUL_arg4(agent, 0, 1, 2, 1.5);
         }
     }
+    frame(agent.lua_state_agent, 6.0);
+    if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
+    }
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
         if needle_count == 6 {

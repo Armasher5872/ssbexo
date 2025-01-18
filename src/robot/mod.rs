@@ -1,10 +1,14 @@
 use {
   crate::functions::var::{
+    consts::*,
     globals::*,
     robot::*,
   },
   smash::{
-    app::lua_bind::*,
+    app::{
+      BattleObjectModuleAccessor,
+      lua_bind::*,
+    },
     hash40,
     lib::{
       L2CValue,

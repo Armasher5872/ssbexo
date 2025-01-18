@@ -52,7 +52,7 @@ unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCo
     let mut delete_plunger_condition: bool = true;
     let mut remove_object_id: bool = true;
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if [*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_LANDING, *FIGHTER_STATUS_KIND_CATCH_PULL, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind) {
+    if [*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_AIR_LASSO_LANDING, *FIGHTER_STATUS_KIND_CATCH_PULL, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind) {
         delete_plunger_condition = false;
         remove_object_id = false;
     }
@@ -69,10 +69,10 @@ unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCo
 
 pub fn install() {
     Agent::new("luigi")
-    .status(Pre, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_pre_status)
-    .status(Init, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_init_status)
-    .status(Main, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_main_status)
-    .status(End, FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_end_status)
+    .status(Pre, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_pre_status)
+    .status(Init, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_init_status)
+    .status(Main, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_main_status)
+    .status(End, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, luigi_special_lw_loop_end_status)
     .install()
     ;
 }

@@ -7,14 +7,16 @@ const PIKACHU_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xf2a630; //Shared
 
 unsafe extern "C" fn pikachu_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
 
 unsafe extern "C" fn pikachu_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
-    WorkModule::set_int(boma, 0, FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
+    WorkModule::off_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
+    WorkModule::set_int(boma, 0, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
 }
 
 //Pikachu Startup Initialization
@@ -62,20 +64,20 @@ unsafe extern "C" fn pikachu_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_PIKACHU as u32 {
         if status_kind == *FIGHTER_STATUS_KIND_ATTACK {
             if frame < 1.0 {
-                WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
+                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
             }
-            if WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD) && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-                WorkModule::off_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
-                WorkModule::inc_int(boma, FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD) && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
+                WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
+                WorkModule::inc_int(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
             }
-            if WorkModule::get_int(boma, FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT) > 1 {
+            if WorkModule::get_int(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT) > 1 {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_DASH, true);
-                WorkModule::on_flag(boma, FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
+                WorkModule::on_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
             }
         };
         if status_kind != *FIGHTER_STATUS_KIND_ATTACK {
-            WorkModule::set_int(boma, 0, FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
-            WorkModule::off_flag(boma, FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
+            WorkModule::set_int(boma, 0, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
+            WorkModule::off_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
         }
     }
     original!()(vtable, fighter)

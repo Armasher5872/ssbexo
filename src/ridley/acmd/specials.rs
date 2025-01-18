@@ -51,14 +51,14 @@ unsafe extern "C" fn ssbexo_ridley_up_special_wall_bounce_up_acmd(agent : &mut L
 
 //Grounded Down Special Stab
 unsafe extern "C" fn ssbexo_ridley_grounded_down_special_stab_acmd(agent : &mut L2CAgentBase) {
-    let special_zoom_gfx = WorkModule::get_int(agent.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    let special_zoom_gfx = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     frame(agent.lua_state_agent, 30.0);
     if macros::is_excute(agent) {
         if WorkModule::get_int(agent.module_accessor, *FIGHTER_RIDLEY_INSTANCE_WORK_ID_INT_DISABLE_SPECIAL_LW_FINISH_COUNT) == 0 {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 45.0, 25, 10, 0, 70, 2.5, 0.0, 8.0, 28.5, Some(0.0), Some(7.0), Some(35.5), 0.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_BODY_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_TAIL);
             AttackModule::set_no_dead_all(agent.module_accessor, true, false);
             if AttackModule::is_infliction_status(agent.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                WorkModule::inc_int(agent.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+                WorkModule::inc_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
                 if special_zoom_gfx < 2 {
                     SlowModule::set_whole(agent.module_accessor, 8, 80);
                     macros::CAM_ZOOM_IN_arg5(agent, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
@@ -78,7 +78,7 @@ unsafe extern "C" fn ssbexo_ridley_grounded_down_special_stab_acmd(agent : &mut 
         if WorkModule::is_flag(agent.module_accessor, *FIGHTER_RIDLEY_INSTANCE_WORK_ID_FLAG_DISABLE_CRITICAL_SPECIAL_LW) == false {
             macros::ATTACK(agent, 1, 0, Hash40::new("top"), 45.0, 25, 10, 0, 70, 2.5, 0.0, 8.0, 28.5, Some(0.0), Some(7.0), Some(35.5), 0.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_TAIL);
             if AttackModule::is_infliction_status(agent.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                WorkModule::get_int(agent.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+                WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
                 if special_zoom_gfx < 2 {
                     SlowModule::set_whole(agent.module_accessor, 8, 80);
                     macros::CAM_ZOOM_IN_arg5(agent, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);

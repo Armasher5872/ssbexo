@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::miifighter::*,
+    crate::functions::var::{
+        miifighter::*,
+        consts::*,
+    },
     smash::{
         app::{
             lua_bind::*,

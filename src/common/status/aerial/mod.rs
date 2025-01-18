@@ -1,4 +1,3 @@
-#![allow(unused_must_use)]
 use {
     crate::functions::var::{
         consts::*,
@@ -33,12 +32,10 @@ use {
     std::f32::consts::PI
 };
 
-mod airlasso;
 mod fall;
 pub mod gliding;
 
 pub fn install() {
-    airlasso::install();
     fall::install();
     gliding::install();
 }

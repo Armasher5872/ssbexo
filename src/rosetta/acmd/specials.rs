@@ -14,7 +14,7 @@ unsafe extern "C" fn ssbexo_rosetta_up_special_acmd(agent: &mut L2CAgentBase) {
 //Down Special ACMD
 unsafe extern "C" fn ssbexo_rosetta_down_special_acmd(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    let transit_timer = WorkModule::get_int(agent.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    let transit_timer = WorkModule::get_int(agent.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     if [*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON].contains(&prev_status_kind) {
         if transit_timer > 1 {
             frame(agent.lua_state_agent, 2.0);
@@ -70,7 +70,7 @@ unsafe extern "C" fn ssbexo_rosetta_down_special_acmd(agent: &mut L2CAgentBase) 
 //Down Special Effect
 unsafe extern "C" fn ssbexo_rosetta_down_special_effect(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    let transit_timer = WorkModule::get_int(agent.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    let transit_timer = WorkModule::get_int(agent.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     if [*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON].contains(&prev_status_kind) {
         if transit_timer > 0 {
             frame(agent.lua_state_agent, 2.0);
@@ -98,7 +98,7 @@ unsafe extern "C" fn ssbexo_rosetta_down_special_effect(agent: &mut L2CAgentBase
 //Down Special Sound
 unsafe extern "C" fn ssbexo_rosetta_down_special_sound(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    let transit_timer = WorkModule::get_int(agent.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    let transit_timer = WorkModule::get_int(agent.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     if [*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON].contains(&prev_status_kind) {
         if transit_timer > 0 {
             frame(agent.lua_state_agent, 2.0);
@@ -132,7 +132,7 @@ unsafe extern "C" fn ssbexo_rosetta_down_special_sound(agent: &mut L2CAgentBase)
 //Down Special Expression
 unsafe extern "C" fn ssbexo_rosetta_down_special_expression(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    let transit_timer = WorkModule::get_int(agent.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    let transit_timer = WorkModule::get_int(agent.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     if [*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON].contains(&prev_status_kind) {
         if transit_timer > 0 {
             frame(agent.lua_state_agent, 2.0);

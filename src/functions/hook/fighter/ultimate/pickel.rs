@@ -8,7 +8,9 @@ const PICKEL_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xf036a0; //Steve only
 #[skyline::hook(offset = PICKEL_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn pickel_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 

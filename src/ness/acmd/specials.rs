@@ -198,7 +198,7 @@ unsafe extern "C" fn ssbexo_ness_pkflash_bang_acmd(agent: &mut L2CAgentBase) {
     let offense_up_hashes = if (60..100).contains(&rng) {Hash40::new("collision_attr_death")} else if (25..59).contains(&rng) {Hash40::new("collision_attr_head_mushroom")} else if (14..24).contains(&rng) {Hash40::new("collision_attr_paralyze")} else {Hash40::new("collision_attr_normal_poison")};
     let default_hashes = if (53..100).contains(&rng) {Hash40::new("collision_attr_paralyze")} else if (18..52).contains(&rng) {Hash40::new("collision_attr_head_mushroom")} else if (3..17).contains(&rng) {Hash40::new("collision_attr_normal_poison")} else {Hash40::new("collision_attr_death")};
     if float_count > 90.0 {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP) {
             if offense_up_hashes == Hash40::new("collision_attr_normal_poison") {
                 if macros::is_excute(agent) {
                     macros::ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 70, 65, 0, 50, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, offense_up_hashes, *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PSI);

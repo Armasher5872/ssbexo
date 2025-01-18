@@ -2,10 +2,12 @@ use {
     crate::functions::var::{
         consts::*,
         globals::*,
-        variables::*,
     },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         hash40,
         lib::{
             L2CValue,
@@ -20,10 +22,12 @@ use {
     smash_script::*,
 };
 
+mod jump;
 mod jumpsquat;
 mod treadjump;
 
 pub fn install() {
+    jump::install();
     jumpsquat::install();
     treadjump::install();
 }

@@ -52,14 +52,14 @@ unsafe fn status_guarddamage_common(fighter: &mut L2CFighterCommon, param_1: L2C
             EffectModule::req_screen(fighter.module_accessor, Hash40::new("just_shield_screen"), false, false, false);
         }
         /*   NEW ADDITIONS   */
-        WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
+        WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED);
         if fighter_kind == *FIGHTER_KIND_CAPTAIN {
             SoundModule::play_se(fighter.module_accessor, Hash40::new("vc_captain_appeal03"), true, false, false, false, enSEType(0));
             SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
         }
         else if fighter_kind == *FIGHTER_KIND_SONIC {
             SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
-            WorkModule::add_int(fighter.module_accessor, 5, FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
+            WorkModule::add_int(fighter.module_accessor, 5, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
         }
         else if fighter_kind == *FIGHTER_KIND_LITTLEMAC {
             SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
@@ -106,5 +106,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

@@ -1,7 +1,10 @@
 use {
     crate::functions::{
         ext::utility::misc::*,
-        var::mariod::*,
+        var::{
+            consts::*,
+            mariod::*,
+        }
     },
     smash::{
         app::{

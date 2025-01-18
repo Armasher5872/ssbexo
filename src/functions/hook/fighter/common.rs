@@ -4,7 +4,7 @@ use super::*;
 pub unsafe fn is_valid_auto_catch_item_hook(module_accessor: &mut BattleObjectModuleAccessor, is_possible: bool) -> bool {
     let fighter_kind = smash::app::utility::get_kind(module_accessor);
     if fighter_kind == *FIGHTER_KIND_LINK {
-        if WorkModule::is_flag(module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM) {
+        if WorkModule::is_flag(module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM) {
             return true;
         }
         else {

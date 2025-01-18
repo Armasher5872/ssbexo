@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::pfushigisou::*,
+    crate::functions::var::{
+        consts::*,
+        pfushigisou::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -15,6 +18,7 @@ use {
 };
 
 mod aerials;
+mod grounded;
 mod specials;
 mod smashes;
 mod throws;
@@ -22,6 +26,7 @@ mod tilts;
 
 pub fn install() {
     aerials::install();
+    grounded::install();
     specials::install();
     smashes::install();
     throws::install();

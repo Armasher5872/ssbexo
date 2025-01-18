@@ -192,7 +192,7 @@ unsafe extern "C" fn ssbexo_kirby_side_special_jump_sound(agent: &mut L2CAgentBa
 
 //Grounded Side Special Attack ACMD
 unsafe extern "C" fn ssbexo_kirby_grounded_side_special_attack_acmd(agent: &mut L2CAgentBase) {
-    let wheel_power_up = WorkModule::get_float(agent.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+    let wheel_power_up = WorkModule::get_float(agent.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
     if macros::is_excute(agent) {
         ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("kirby_armfoot"), false);
         ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("kirby_eye1"), false);
@@ -220,7 +220,7 @@ unsafe extern "C" fn ssbexo_kirby_grounded_side_special_attack_acmd(agent: &mut 
 
 //Aerial Side Special Attack ACMD
 unsafe extern "C" fn ssbexo_kirby_aerial_side_special_attack_acmd(agent: &mut L2CAgentBase) {
-    let wheel_power_up = WorkModule::get_float(agent.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+    let wheel_power_up = WorkModule::get_float(agent.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
     if macros::is_excute(agent) {
         ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("kirby_armfoot"), false);
         ModelModule::set_mesh_visibility(agent.module_accessor, Hash40::new("kirby_eye1"), false);

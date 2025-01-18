@@ -1,7 +1,10 @@
 use {
     crate::functions::{
         ext::utility::misc::*,
-        var::reflet::*,
+        var::{
+            consts::*,
+            reflet::*,
+        }
     },
     smash::{
         app::{

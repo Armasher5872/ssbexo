@@ -245,7 +245,7 @@ unsafe extern "C" fn chrom_special_n_end_max_main_status(fighter: &mut L2CFighte
 unsafe extern "C" fn chrom_special_n_end_max_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
@@ -255,14 +255,14 @@ unsafe extern "C" fn chrom_special_n_end_max_main_loop(fighter: &mut L2CFighterC
         return 1.into();
     }
     if special_zoom_gfx > 0 {
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
     if special_zoom_gfx >= 4 {
         SlowModule::clear_whole(fighter.module_accessor);
         CameraModule::reset_all(fighter.module_accessor);
         EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_bg_criticalhit"), false, false);
         macros::CAM_ZOOM_OUT(fighter);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
     if situation_kind == *SITUATION_KIND_GROUND
     && prev_situation_kind == *SITUATION_KIND_AIR {
@@ -298,10 +298,10 @@ unsafe extern "C" fn chrom_special_n_end_max_check_attack_status(fighter: &mut L
     let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
     if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
         if collision_kind == *COLLISION_KIND_HIT {
-            let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+            let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
             let frame = fighter.global_table[CURRENT_FRAME].get_f32();
             if frame > 18.0 && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROY_STATUS_SPECIAL_N_FLAG_CHARGE_MAX) {
-                WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+                WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
                 if special_zoom_gfx < 2 {
                     SlowModule::set_whole(fighter.module_accessor, 8, 80);
                     macros::CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
@@ -316,13 +316,13 @@ unsafe extern "C" fn chrom_special_n_end_max_check_attack_status(fighter: &mut L
 }
 
 unsafe extern "C" fn chrom_special_n_end_max_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     AttackModule::set_power_up(fighter.module_accessor, 1.0);
     0.into()
 }
 
 unsafe extern "C" fn chrom_special_n_end_max_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     AttackModule::set_power_up(fighter.module_accessor, 1.0);
     0.into()
 }
@@ -353,7 +353,7 @@ unsafe extern "C" fn chrom_special_s_init_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn chrom_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s"), L2CValue::Hash40s("special_air_s"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(chrom_special_s_main_loop as *const () as _))
 }
@@ -381,8 +381,8 @@ unsafe extern "C" fn chrom_special_s_main_loop(fighter: &mut L2CFighterCommon) -
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s"), -1.0, 1.0, 0.0, false, false);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
         fighter.change_status(FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -404,14 +404,14 @@ unsafe extern "C" fn chrom_special_s_exec_status(_fighter: &mut L2CFighterCommon
 unsafe extern "C" fn chrom_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     EffectModule::detach_all(fighter.module_accessor, 5);
     macros::EFFECT_OFF_KIND(fighter, Hash40::new("chrom_final_speedline"), false, true);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
     0.into()
 }
 
 unsafe extern "C" fn chrom_special_s_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     EffectModule::detach_all(fighter.module_accessor, 5);
     macros::EFFECT_OFF_KIND(fighter, Hash40::new("chrom_final_speedline"), false, true);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
     0.into()
 }
 
@@ -729,7 +729,7 @@ unsafe extern "C" fn chrom_special_lw_hit_init_status(fighter: &mut L2CFighterCo
     let kinetic_energy_normal_stop_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP) as *mut smash::app::KineticEnergyNormal;
     let kinetic_energy_gravity_energy = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut smash::app::KineticEnergy;
     let fighter_kinetic_energy_gravity = KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY) as *mut smash::app::FighterKineticEnergyGravity;
-    let hit_count = WorkModule::get_int(fighter.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    let hit_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
     let start_mul_spd_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("start_mul_spd_x"));
     let start_air_acl_x = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("start_air_acl_x"));
     let attack_acl_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("attack_acl_y"));
@@ -768,12 +768,12 @@ unsafe extern "C" fn chrom_special_lw_hit_init_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn chrom_special_lw_hit_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let special_lw_count = WorkModule::get_int(fighter.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    let special_lw_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_SHIELD_CHK) {
         ShieldModule::set_status(fighter.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_ROY_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     }
     if special_lw_count < 3 {
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
     }
     0.into()
 }
@@ -805,36 +805,36 @@ pub fn install() {
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_S, chrom_special_s_exec_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_S, chrom_special_s_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_S, chrom_special_s_exit_status)
-    .status(Pre, FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_pre_status)
-    .status(Init, FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_init_status)
-    .status(Main, FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_main_status)
-    .status(Exec, FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_exec_status)
-    .status(End, FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_end_status)
-    .status(Exit, FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_exit_status)
+    .status(Pre, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_pre_status)
+    .status(Init, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_init_status)
+    .status(Main, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_main_status)
+    .status(Exec, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_exec_status)
+    .status(End, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_end_status)
+    .status(Exit, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK, chrom_special_s_attack_exit_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, chrom_special_hi_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, chrom_special_hi_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, chrom_special_hi_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_HI, chrom_special_hi_exec_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_HI, chrom_special_hi_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_HI, chrom_special_hi_exit_status)
-    .status(Pre, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_pre_status)
-    .status(Init, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_init_status)
-    .status(Main, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_main_status)
-    .status(Exec, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_exec_status)
-    .status(End, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_end_status)
-    .status(Exit, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_exit_status)
-    .status(Pre, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_pre_status)
-    .status(Init, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_init_status)
-    .status(Main, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_main_status)
-    .status(Exec, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_exec_status)
-    .status(End, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_end_status)
-    .status(Exit, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_exit_status)
-    .status(Pre, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_pre_status)
-    .status(Init, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_init_status)
-    .status(Main, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_main_status)
-    .status(Exec, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_exec_status)
-    .status(End, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_end_status)
-    .status(Exit, FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_exit_status)
+    .status(Pre, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_pre_status)
+    .status(Init, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_init_status)
+    .status(Main, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_main_status)
+    .status(Exec, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_exec_status)
+    .status(End, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_end_status)
+    .status(Exit, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD, chrom_special_hi_hold_exit_status)
+    .status(Pre, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_pre_status)
+    .status(Init, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_init_status)
+    .status(Main, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_main_status)
+    .status(Exec, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_exec_status)
+    .status(End, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_end_status)
+    .status(Exit, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP, chrom_special_hi_drop_exit_status)
+    .status(Pre, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_pre_status)
+    .status(Init, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_init_status)
+    .status(Main, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_main_status)
+    .status(Exec, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_exec_status)
+    .status(End, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_end_status)
+    .status(Exit, *FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND, chrom_special_hi_land_exit_status)
     .status(Init, *FIGHTER_ROY_STATUS_KIND_SPECIAL_LW_HIT, chrom_special_lw_hit_init_status)
     .status(End, *FIGHTER_ROY_STATUS_KIND_SPECIAL_LW_HIT, chrom_special_lw_hit_end_status)
     .install()

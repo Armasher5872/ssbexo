@@ -37,24 +37,24 @@ impl FuseType {
 pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAccessor, item_kind: i32, fuse_kind: i32, trait_type: i32) {
     if (![*ITEM_KIND_NONE, *ITEM_KIND_ASSIST, *ITEM_KIND_LINKARROW].contains(&item_kind) && ![*ITEM_TRAIT_FLAG_NONE, *ITEM_TRAIT_FLAG_SHOOT, *ITEM_TRAIT_FLAG_SWING].contains(&trait_type)) 
     || [*ITEM_KIND_BANANAGUN, *ITEM_KIND_FIREFLOWER].contains(&item_kind) {
-        WorkModule::on_flag(boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
+        WorkModule::on_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
     }
     else {
-        WorkModule::off_flag(boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
+        WorkModule::off_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
     }
-    if WorkModule::is_flag(boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+    if WorkModule::is_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
         let owner_boma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
         let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
-        WorkModule::set_int(boma, item_kind, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
+        WorkModule::set_int(boma, item_kind, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
         if fuse_kind == FuseKind::FUSE {
             if owner_kind == *FIGHTER_KIND_LINK {
-                WorkModule::set_int(owner_boma, item_kind, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
+                WorkModule::set_int(owner_boma, item_kind, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
             }
             else if owner_kind == *FIGHTER_KIND_KIRBY {
-                WorkModule::set_int(owner_boma, item_kind, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
+                WorkModule::set_int(owner_boma, item_kind, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
             }
             let item_id = ItemModule::get_have_item_id(owner_boma, 0) as i32;
-            WorkModule::set_int(boma, item_id, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+            WorkModule::set_int(boma, item_id, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
         }
         else if fuse_kind == FuseKind::REFUSE {
             let pos_x = PostureModule::pos_x(boma);
@@ -86,30 +86,30 @@ pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAcce
                 PostureModule::set_scale(item_boma, 1.35, false);
             }
             let item_id = (*(item_boma)).battle_object_id as i32;
-            WorkModule::set_int(boma, item_id, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+            WorkModule::set_int(boma, item_id, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
             if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
-                WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+                WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
             }
         }
         if item_kind == *ITEM_KIND_BOMBER {
-            WorkModule::set_int(boma, FuseType::NORMAL, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_BOMBER_STATUS_KIND_BORN2, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma, FuseType::NORMAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
+            WorkModule::set_int(boma, *ITEM_BOMBER_STATUS_KIND_BORN2, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
         else if [*ITEM_KIND_KILLER, *ITEM_KIND_BANANAGUN, *ITEM_KIND_DOLPHINBOMB].contains(&item_kind) {
-            WorkModule::set_int(boma, FuseType::POWER, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_THROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma, FuseType::POWER, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
+            WorkModule::set_int(boma, *ITEM_STATUS_KIND_THROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
         else if item_kind == *ITEM_KIND_FIREFLOWER {
-            WorkModule::set_int(boma, FuseType::ELEMENTAL, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_LOST, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma, FuseType::ELEMENTAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
+            WorkModule::set_int(boma, *ITEM_STATUS_KIND_LOST, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
         else if item_kind == *ITEM_KIND_LINKBOMB {
-            WorkModule::set_int(boma, FuseType::NORMAL, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_BORN, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma, FuseType::NORMAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
+            WorkModule::set_int(boma, *ITEM_STATUS_KIND_BORN, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
         else {
-            WorkModule::set_int(boma, FuseType::NORMAL, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_THROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma, FuseType::NORMAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
+            WorkModule::set_int(boma, *ITEM_STATUS_KIND_THROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
     }
 }
@@ -117,20 +117,20 @@ pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAcce
 pub unsafe extern "C" fn set_boomerang_fuse_params(boma: *mut BattleObjectModuleAccessor, item_kind: i32, fuse_kind: i32, trait_type: i32) {
     if (![*ITEM_KIND_NONE,*ITEM_KIND_ASSIST,*ITEM_KIND_LINKARROW].contains(&item_kind) && ![*ITEM_TRAIT_FLAG_NONE,*ITEM_TRAIT_FLAG_SHOOT,*ITEM_TRAIT_FLAG_SWING].contains(&trait_type))
     || [*ITEM_KIND_FIREFLOWER].contains(&item_kind) {
-        WorkModule::on_flag(boma,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
+        WorkModule::on_flag(boma,*WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
     }
     else {
-        WorkModule::off_flag(boma,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
+        WorkModule::off_flag(boma,*WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
     }
-    if WorkModule::is_flag(boma,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+    if WorkModule::is_flag(boma,*WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
         let owner_boma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-        WorkModule::set_int(boma,item_kind,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
+        WorkModule::set_int(boma,item_kind,*WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
         let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
         if fuse_kind == FuseKind::FUSE {
-            WorkModule::set_int(owner_boma,item_kind,FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
+            WorkModule::set_int(owner_boma,item_kind,*FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
             let item_id = ItemModule::get_have_item_id(owner_boma,0) as i32;
-            WorkModule::set_int(boma,item_id,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-            WorkModule::set_int(owner_boma,item_id,FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE_ID);
+            WorkModule::set_int(boma,item_id,*WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+            WorkModule::set_int(owner_boma,item_id,*FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE_ID);
         }
         else if fuse_kind == FuseKind::REFUSE {
             let mut params = CreateItemParam {
@@ -159,24 +159,24 @@ pub unsafe extern "C" fn set_boomerang_fuse_params(boma: *mut BattleObjectModule
                 PostureModule::set_scale(item_boma,1.3,false);
             }
             let item_id = (*(item_boma)).battle_object_id as i32;
-            WorkModule::set_int(boma,item_id,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-            WorkModule::set_int(owner_boma,item_id,FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM_ID);
+            WorkModule::set_int(boma,item_id, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+            WorkModule::set_int(owner_boma,item_id, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM_ID);
             if owner_kind == *FIGHTER_KIND_MURABITO
             || owner_kind == *FIGHTER_KIND_SHIZUE {
-                WorkModule::set_int(owner_boma,*ITEM_KIND_NONE,FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM);
+                WorkModule::set_int(owner_boma,*ITEM_KIND_NONE, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM);
             }
         }
         if item_kind == *ITEM_KIND_BOMBER {
-            WorkModule::set_int(boma,*ITEM_BOMBER_STATUS_KIND_BORN2,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma,*ITEM_BOMBER_STATUS_KIND_BORN2, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
         else if item_kind == *ITEM_KIND_FIREFLOWER {
-            WorkModule::set_int(boma,*ITEM_STATUS_KIND_LOST,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma,*ITEM_STATUS_KIND_LOST, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
         else if item_kind == *ITEM_KIND_LINKBOMB {
-            WorkModule::set_int(boma,*ITEM_STATUS_KIND_BORN,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma,*ITEM_STATUS_KIND_BORN, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
         else {
-            WorkModule::set_int(boma,*ITEM_STATUS_KIND_THROW,WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            WorkModule::set_int(boma,*ITEM_STATUS_KIND_THROW, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
         }
     }
 }

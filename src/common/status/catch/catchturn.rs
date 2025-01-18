@@ -3,7 +3,7 @@ use super::*;
 /*   GRAB STATUSES   */
 //Sub Status Catch Turn, allows item grabbing from pivot grabs
 #[skyline::hook(replace = L2CFighterCommon_sub_status_CatchTurn)]
-unsafe fn sub_status_catchturn(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn sub_status_catchturn(fighter: &mut L2CFighterCommon) {
     if fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_TURN_RUN {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("catch_turn"), 0.0, 1.0, false, 0.0, false, false);
     }
@@ -23,7 +23,7 @@ unsafe fn sub_status_catchturn(fighter: &mut L2CFighterCommon) {
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_CatchTurn_Main)]
-unsafe fn status_catchturn_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_catchturn_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let heavy_item = {fighter.clear_lua_stack(); lua_args!(fighter, MA_MSC_ITEM_IS_PICKABLE_ITEM_HEAVY); sv_module_access::item(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_bool()};
     let light_item = {fighter.clear_lua_stack(); lua_args!(fighter, MA_MSC_CMD_ITEM_IS_GET_PICKABLE_ITEM); sv_module_access::item(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_bool()};
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
@@ -76,5 +76,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

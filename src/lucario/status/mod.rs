@@ -5,7 +5,6 @@ use {
             misc::*,
         },
         var::{
-            consts::*,
             globals::*,
             lucario::*,
         }

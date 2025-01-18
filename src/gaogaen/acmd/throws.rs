@@ -8,7 +8,7 @@ unsafe extern "C" fn ssbexo_gaogaen_grab_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 9.0, 4.0, Some(0.0), Some(9.0), Some(12.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -27,7 +27,7 @@ unsafe extern "C" fn ssbexo_gaogaen_grab_hi_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 7.0, 0.0, 9.0, 2.0, Some(0.0), Some(13.0), Some(14.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -65,7 +65,7 @@ unsafe extern "C" fn ssbexo_gaogaen_grab_lw_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 9.0, 4.0, Some(0.0), Some(5.0), Some(12.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     macros::game_CaptureCutCommon(agent);
@@ -103,7 +103,7 @@ unsafe extern "C" fn ssbexo_gaogaen_dash_grab_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 3.2, 0.0, 9.0, 4.0, Some(0.0), Some(9.0), Some(11.8), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -122,7 +122,7 @@ unsafe extern "C" fn ssbexo_gaogaen_dash_grab_hi_acmd(agent: &mut L2CAgentBase) 
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 5.5, 0.0, 9.0, 2.4, Some(0.0), Some(12.5), Some(13.4), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -164,7 +164,7 @@ unsafe extern "C" fn ssbexo_gaogaen_dash_grab_lw_acmd(agent: &mut L2CAgentBase) 
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 3.2, 0.0, 9.0, 4.0, Some(0.0), Some(5.5), Some(11.8), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     macros::game_CaptureCutCommon(agent);
@@ -206,7 +206,7 @@ unsafe extern "C" fn ssbexo_gaogaen_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 9.0, -4.0, Some(0.0), Some(9.0), Some(-15.6), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -225,7 +225,7 @@ unsafe extern "C" fn ssbexo_gaogaen_pivot_grab_hi_acmd(agent: &mut L2CAgentBase)
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 7.0, 0.0, 9.0, -2.0, Some(0.0), Some(13.0), Some(-17.6), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA_d);
     }
     macros::game_CaptureCutCommon(agent);
@@ -267,7 +267,7 @@ unsafe extern "C" fn ssbexo_gaogaen_pivot_grab_lw_acmd(agent: &mut L2CAgentBase)
     macros::FT_MOTION_RATE(agent, 1.0);
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 9.0, -4.0, Some(0.0), Some(5.0), Some(-15.6), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     macros::game_CaptureCutCommon(agent);
@@ -326,7 +326,7 @@ unsafe extern "C" fn ssbexo_gaogaen_revenge_forward_throw_acmd(agent: &mut L2CAg
         macros::CHECK_FINISH_CAMERA(agent, 4, 3);
         macros::ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 361, 200, 0, 100, 10.0, 0.0, 4.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_bury_r"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         AttackModule::set_catch_only_all(agent.module_accessor, true, false);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
     }
     frame(agent.lua_state_agent, 48.0);
     if macros::is_excute(agent) {
@@ -458,7 +458,7 @@ unsafe extern "C" fn ssbexo_gaogaen_revenge_back_throw_acmd(agent: &mut L2CAgent
     }
     frame(agent.lua_state_agent, 44.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
         macros::FT_CATCH_STOP(agent, 20, 1);
         macros::CHECK_FINISH_CAMERA(agent, -10, 4);
     }
@@ -561,7 +561,7 @@ unsafe extern "C" fn ssbexo_gaogaen_revenge_up_throw_acmd(agent: &mut L2CAgentBa
     }
     frame(agent.lua_state_agent, 46.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
         macros::FT_CATCH_STOP(agent, 30, 1);
         macros::CHECK_FINISH_CAMERA(agent, 1, 20);
     }
@@ -664,7 +664,7 @@ unsafe extern "C" fn ssbexo_gaogaen_revenge_down_throw_acmd(agent: &mut L2CAgent
     }
     frame(agent.lua_state_agent, 25.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
         macros::FT_CATCH_STOP(agent, 10, 1);
         macros::CHECK_FINISH_CAMERA(agent, 8, 0);
     }

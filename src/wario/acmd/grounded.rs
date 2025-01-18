@@ -60,7 +60,7 @@ unsafe extern "C" fn ssbexo_wario_dash_attack_expression(agent: &mut L2CAgentBas
 
 //Dash Attack Loop ACMD
 unsafe extern "C" fn ssbexo_wario_dash_attack_loop_acmd(agent: &mut L2CAgentBase) {
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 50, 97, 0, 60, 4.0, 0.0, 5.0, 5.8, Some(0.0), Some(9.7), Some(5.8), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
             macros::ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 50, 97, 0, 60, 4.0, 0.0, 6.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
@@ -99,7 +99,7 @@ unsafe extern "C" fn ssbexo_wario_dash_attack_loop_expression(agent: &mut L2CAge
 
 //Dash Attack Jump Squat ACMD
 unsafe extern "C" fn ssbexo_wario_dash_attack_jump_squat_acmd(agent: &mut L2CAgentBase) {
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 50, 97, 0, 60, 4.0, 0.0, 5.0, 5.8, Some(0.0), Some(9.7), Some(5.8), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
             macros::ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 50, 97, 0, 60, 4.0, 0.0, 6.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
@@ -148,7 +148,7 @@ unsafe extern "C" fn ssbexo_wario_dash_attack_jump_squat_expression(agent: &mut 
 
 //Dash Attack Air Loop ACMD
 unsafe extern "C" fn ssbexo_wario_dash_attack_air_loop_acmd(agent: &mut L2CAgentBase) {
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 50, 97, 0, 60, 4.0, 0.0, 5.0, 5.8, Some(0.0), Some(9.7), Some(5.8), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
             macros::ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 50, 97, 0, 60, 4.0, 0.0, 6.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
@@ -180,7 +180,7 @@ unsafe extern "C" fn ssbexo_wario_dash_attack_air_loop_expression(agent: &mut L2
 
 //Dash Attack Landing ACMD
 unsafe extern "C" fn ssbexo_wario_dash_attack_landing_acmd(agent: &mut L2CAgentBase) {
-    if !WorkModule::is_flag(agent.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 50, 97, 0, 60, 4.0, 0.0, 5.0, 5.8, Some(0.0), Some(9.7), Some(5.8), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
             macros::ATTACK(agent, 1, 0, Hash40::new("top"), 5.0, 50, 97, 0, 60, 4.0, 0.0, 6.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);

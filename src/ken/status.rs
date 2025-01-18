@@ -67,6 +67,9 @@ unsafe extern "C" fn ken_attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> 
             return 1.into();
         }
     }
+    if motion_kind == hash40("attack_near_w") {
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
+    }
     if StatusModule::is_changing(fighter.module_accessor)
     || (combo_count < s3_combo_max && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO_PRECEDE) && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO)) {
         fighter.attack_s3_mtrans();
@@ -84,7 +87,7 @@ unsafe extern "C" fn ken_attack_s3_main_loop(fighter: &mut L2CFighterCommon) -> 
                 return 1.into();
             }
         }
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_KEN_INSTANCE_WORK_ID_FLAG_CAN_KARA_CANCEL) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KEN_INSTANCE_WORK_ID_FLAG_CAN_KARA_CANCEL) {
             if fighter.is_cat_flag(Cat1::Catch)  {
                 fighter.change_status(FIGHTER_STATUS_KIND_CATCH.into(), false.into());
             }
@@ -218,9 +221,14 @@ unsafe extern "C" fn attack_cancel(fighter: &mut L2CFighterCommon, motion_kind: 
 }
 
 unsafe extern "C" fn ken_attack_dash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let ret = original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK_DASH)(fighter);
+    let attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    if 0 < attack_kind {
+        FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, attack_kind);
+        WorkModule::set_int64(fighter.module_accessor, 0i64, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    }
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     macros::EFFECT_OFF_KIND(fighter, Hash40::new("ken_syoryuken_fire"), false, true);
-    ret
+    0.into()
 }
 
 pub fn install() {

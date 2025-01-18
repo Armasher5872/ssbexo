@@ -93,16 +93,16 @@ unsafe extern "C" fn kirby_special_s_wait_main_status(fighter: &mut L2CFighterCo
 unsafe extern "C" fn kirby_special_s_wait_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let wheel_hold_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-    WorkModule::inc_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-    WorkModule::set_float(fighter.module_accessor, 1.0+(0.0042*(wheel_hold_timer as f32)), FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+    let wheel_hold_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+    WorkModule::inc_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+    WorkModule::set_float(fighter.module_accessor, 1.0+(0.0042*(wheel_hold_timer as f32)), *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
     WHEEL_SPEED_UP[entry_id] = 2.5+(0.0167*(wheel_hold_timer as f32));
     if wheel_hold_timer >= 120 {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK.into(), false.into());
     }
     if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK.into(), false.into());
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
     }
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_FALL.into(), false.into());
@@ -121,12 +121,12 @@ unsafe extern "C" fn kirby_special_s_wait_end_status(fighter: &mut L2CFighterCom
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -138,12 +138,12 @@ unsafe extern "C" fn kirby_special_s_wait_exit_status(fighter: &mut L2CFighterCo
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -178,16 +178,16 @@ unsafe extern "C" fn kirby_special_s_fall_main_status(fighter: &mut L2CFighterCo
 unsafe extern "C" fn kirby_special_s_fall_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let wheel_hold_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-    WorkModule::inc_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-    WorkModule::set_float(fighter.module_accessor, 0.75+(0.0042*(wheel_hold_timer as f32)), FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+    let wheel_hold_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+    WorkModule::inc_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+    WorkModule::set_float(fighter.module_accessor, 0.75+(0.0042*(wheel_hold_timer as f32)), *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
     WHEEL_SPEED_UP[entry_id] = 1.0+(0.0167*(wheel_hold_timer as f32));
     if wheel_hold_timer >= 120 {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK.into(), false.into());
     }
     if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK.into(), false.into());
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
     }
     if situation_kind == *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_WAIT.into(), false.into());
@@ -206,12 +206,12 @@ unsafe extern "C" fn kirby_special_s_fall_end_status(fighter: &mut L2CFighterCom
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -223,12 +223,12 @@ unsafe extern "C" fn kirby_special_s_fall_exit_status(fighter: &mut L2CFighterCo
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -255,7 +255,7 @@ unsafe extern "C" fn kirby_special_s_turn_main_status(fighter: &mut L2CFighterCo
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
     }
-    WorkModule::inc_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+    WorkModule::inc_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_turn"), 1.0, 1.0, false, 0.0, false, false);
     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_KIRBY_GENERATE_ARTICLE_FINALCUTTER, Hash40::new("special_s_turn"), false, 0.0);
     fighter.sub_shift_status_main(L2CValue::Ptr(kirby_special_s_turn_loop as *const () as _))
@@ -287,12 +287,12 @@ unsafe extern "C" fn kirby_special_s_turn_end_status(fighter: &mut L2CFighterCom
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -304,12 +304,12 @@ unsafe extern "C" fn kirby_special_s_turn_exit_status(fighter: &mut L2CFighterCo
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -329,7 +329,7 @@ unsafe extern "C" fn kirby_special_s_attack_init_status(_fighter: &mut L2CFighte
 unsafe extern "C" fn kirby_special_s_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
     if situation_kind == *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
@@ -352,8 +352,8 @@ unsafe extern "C" fn kirby_special_s_attack_loop(fighter: &mut L2CFighterCommon)
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
     let turn_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("turn_stick_x"));
-    let jump_count = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-    let turn_count = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+    let jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+    let turn_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
@@ -380,8 +380,8 @@ unsafe extern "C" fn kirby_special_s_attack_loop(fighter: &mut L2CFighterCommon)
     if frame < 30.0
     && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) 
     && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD)
-    && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+    && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
         if situation_kind == *SITUATION_KIND_GROUND {
             MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 60.0, true, true, false);
             macros::SET_SPEED_EX(fighter, WHEEL_SPEED_UP[entry_id]/2.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -425,7 +425,7 @@ unsafe extern "C" fn kirby_special_s_attack_exec_status(_fighter: &mut L2CFighte
 unsafe extern "C" fn kirby_special_s_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    let turn_count = WorkModule::get_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+    let turn_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     if turn_count > 48 {
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
@@ -435,12 +435,12 @@ unsafe extern "C" fn kirby_special_s_attack_end_status(fighter: &mut L2CFighterC
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -452,12 +452,12 @@ unsafe extern "C" fn kirby_special_s_attack_exit_status(fighter: &mut L2CFighter
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -476,7 +476,7 @@ unsafe extern "C" fn kirby_special_s_jump_init_status(_fighter: &mut L2CFighterC
 
 unsafe extern "C" fn kirby_special_s_jump_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    WorkModule::inc_int(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+    WorkModule::inc_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_JUMP);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_jump"), 0.0, 1.0, false, 0.0, false, false);
@@ -527,12 +527,12 @@ unsafe extern "C" fn kirby_special_s_jump_end_status(fighter: &mut L2CFighterCom
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -544,12 +544,12 @@ unsafe extern "C" fn kirby_special_s_jump_exit_status(fighter: &mut L2CFighterCo
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_armfoot"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_eye1"), true);
         ModelModule::set_mesh_visibility(fighter.module_accessor, Hash40::new("kirby_facen"), true);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-        WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
         WHEEL_SPEED_UP[entry_id] = 0.0;
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
     }
     0.into()
 }
@@ -808,8 +808,8 @@ unsafe extern "C" fn kirby_link_special_n_exit_status(fighter: &mut L2CFighterCo
     let bow_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_BOW_ARTICLE_ID);
     ArticleModule::change_status_exist(fighter.module_accessor, bow_id, *WN_LINK_BOW_STATUS_KIND_BACK);
     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
-        if ArticleModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-            let item_id = ArticleModule::get_int(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+        if ArticleModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+            let item_id = ArticleModule::get_int(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
             let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
             LinkModule::remove_model_constraint(item_boma, true);
             if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {

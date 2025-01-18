@@ -5,10 +5,10 @@ unsafe extern "C" fn ssbexo_demon_forward_tilt_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
         macros::HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
-        macros::ATTACK(agent, 0, 0, Hash40::new("footl"), 14.5, 20, 71, 0, 37, 2.5, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
-        macros::ATTACK(agent, 1, 0, Hash40::new("footl"), 14.5, 20, 71, 0, 37, 4.25, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
-        macros::ATTACK(agent, 2, 0, Hash40::new("kneel"), 14.5, 20, 71, 0, 37, 3.5, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
-        macros::ATTACK(agent, 3, 0, Hash40::new("legl"), 14.5, 20, 71, 0, 37, 3.5, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 0, 0, Hash40::new("footl"), 14.5, 0, 71, 0, 37, 2.5, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 1, 0, Hash40::new("footl"), 14.5, 0, 71, 0, 37, 4.25, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 2, 0, Hash40::new("kneel"), 14.5, 0, 71, 0, 37, 3.5, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(agent, 3, 0, Hash40::new("legl"), 14.5, 0, 71, 0, 37, 3.5, 0.0, 0.0, 0.0, None, None, None, 0.35, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
         macros::ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 0.8);
         macros::ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 0.8);
         macros::ATK_SET_SHIELD_SETOFF_MUL(agent, 2, 0.8);
@@ -265,7 +265,7 @@ unsafe extern "C" fn ssbexo_demon_tsunami_kick_2_acmd(agent: &mut L2CAgentBase) 
 
 //Stature Smash ACMD
 unsafe extern "C" fn ssbexo_demon_stature_smash_acmd(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH) {
         frame(agent.lua_state_agent, 12.0);
         if macros::is_excute(agent) {
             macros::HIT_NODE(agent, Hash40::new("legr"), *HIT_STATUS_XLU);
@@ -287,16 +287,16 @@ unsafe extern "C" fn ssbexo_demon_stature_smash_acmd(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 17.0);
         if macros::is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
             WorkModule::on_flag(agent.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_FLASH_PUNCH);
         }
         frame(agent.lua_state_agent, 24.0);
         if macros::is_excute(agent) {
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_FLASH_PUNCH);
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
         }
     }
     else {

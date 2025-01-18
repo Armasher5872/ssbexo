@@ -1,4 +1,3 @@
-#![allow(unused_must_use)]
 use {
     crate::functions::{
         ext::utility::misc::*,

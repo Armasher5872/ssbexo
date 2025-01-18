@@ -49,9 +49,9 @@ unsafe extern "C" fn sonic_special_s_adventure_end_status(_fighter: &mut L2CFigh
 
 pub fn install() {
     Agent::new("sonic")
-    .status(Pre, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_ADVENTURE, sonic_special_s_adventure_pre_status)
-    .status(Main, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_ADVENTURE, sonic_special_s_adventure_main_status)
-    .status(End, FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_ADVENTURE, sonic_special_s_adventure_end_status)
+    .status(Pre, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_ADVENTURE, sonic_special_s_adventure_pre_status)
+    .status(Main, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_ADVENTURE, sonic_special_s_adventure_main_status)
+    .status(End, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_ADVENTURE, sonic_special_s_adventure_end_status)
     .install()
     ;
 }

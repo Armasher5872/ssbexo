@@ -55,23 +55,21 @@ use {
     },
     smash_script::*,
     std::{
+        arch::asm,
         ffi::CStr,
         os::raw::{
             c_char,
             c_int
-        },
-        sync::atomic::{
-            AtomicBool,
-            Ordering
         }
     }
 };
 
 pub mod attack;
 pub mod controls;
-pub mod delay;
 pub mod effect;
+pub mod energy;
 pub mod fighter;
+pub mod jump;
 pub mod knockback;
 pub mod menu;
 pub mod misc;
@@ -85,9 +83,10 @@ pub mod workmodule;
 pub fn install() {
     attack::install();
     controls::install();
-    delay::install();
     effect::install();
+    energy::install();
     fighter::install();
+    jump::install();
     knockback::install();
     menu::install();
     misc::install();

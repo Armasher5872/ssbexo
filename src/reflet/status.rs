@@ -77,7 +77,7 @@ unsafe extern "C" fn reflet_special_s_main_loop(fighter: &mut L2CFighterCommon) 
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let enhanced_magic_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
+    let enhanced_magic_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -104,11 +104,11 @@ unsafe extern "C" fn reflet_special_s_main_loop(fighter: &mut L2CFighterCommon) 
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s"), -1.0, 1.0, 0.0, false, false);
         }
     }
-    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) && current_frame < 8.0 {
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) && current_frame < 8.0 {
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
     }
     if enhanced_magic_timer >= 7 {
-        WorkModule::on_flag(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -123,8 +123,8 @@ unsafe extern "C" fn reflet_special_s_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn reflet_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
     0.into()
 }
 
@@ -144,9 +144,9 @@ unsafe extern "C" fn reflet_gigafire_shoot0_init_status(weapon: &mut L2CWeaponCo
     let owner_boma = get_owner_boma(weapon);
     let owner_status_kind = StatusModule::status_kind(owner_boma);
     if owner_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-        WorkModule::on_flag(weapon.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA);
+        WorkModule::on_flag(weapon.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA);
     }
-    if !WorkModule::is_flag(weapon.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
+    if !WorkModule::is_flag(weapon.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_GOEITA) {
         KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
         KineticModule::change_kinetic(weapon.module_accessor, *WEAPON_KINETIC_TYPE_NORMAL);
         WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
@@ -174,7 +174,7 @@ unsafe extern "C" fn reflet_gigafire_shoot0_main_loop(weapon: &mut L2CWeaponComm
     let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
         PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: pos_x, y: pos_y-3.0, z: pos_z});
-        if WorkModule::is_flag(weapon.module_accessor, WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_BOLGANONE) {
+        if WorkModule::is_flag(weapon.module_accessor, *WEAPON_REFLET_GIGAFIRE_INSTANCE_WORK_ID_FLAG_IS_BOLGANONE) {
             notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
         }
         weapon.change_status(WEAPON_REFLET_GIGAFIRE_STATUS_KIND_RISE.into(), false.into());
@@ -218,7 +218,7 @@ unsafe extern "C" fn reflet_special_hi_main_status(fighter: &mut L2CFighterCommo
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut FighterModuleAccessor;
     let special_hi_landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("special_hi_landing_frame"));
     let special_hi_current_point = WorkModule::get_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT);
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
     WorkModule::set_float(fighter.module_accessor, special_hi_landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
     WorkModule::set_int(fighter.module_accessor, *FIGHTER_REFLET_MAGIC_KIND_EL_WIND, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_LAST_USED_MAGIC_KIND);
     WorkModule::dec_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_SPECIAL_HI_CURRENT_POINT);
@@ -333,7 +333,7 @@ unsafe extern "C" fn reflet_special_lw_main_loop(fighter: &mut L2CFighterCommon)
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let catch_status = WorkModule::get_int(fighter.module_accessor, *FIGHTER_REFLET_STATUS_SPECIAL_LW_CAPTURE_WORK_INT_CATCH_STATUS);
-    let enhanced_magic_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
+    let enhanced_magic_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
     fighter.clear_lua_stack();
     lua_args!(fighter, MA_MSC_CMD_GRAB_IS_GRAB, 0);
     sv_module_access::grab(fighter.lua_state_agent);
@@ -351,11 +351,11 @@ unsafe extern "C" fn reflet_special_lw_main_loop(fighter: &mut L2CFighterCommon)
         fighter.change_status(FIGHTER_REFLET_STATUS_KIND_SPECIAL_LW_CAPTURE.into(), false.into());
         return 1.into()
     }
-    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) && current_frame < 8.0 {
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE) && current_frame < 8.0 {
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
     }
     if enhanced_magic_timer >= 7 {
-        WorkModule::on_flag(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
     }
     if situation_kind != prev_situation_kind {
         if situation_kind == *SITUATION_KIND_GROUND {
@@ -382,8 +382,8 @@ unsafe extern "C" fn reflet_special_lw_main_loop(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn reflet_special_lw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_ENHANCED_MAGIC_TIMER);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_ENHANCED_MAGIC_ACTIVE);
     0.into()
 }
 

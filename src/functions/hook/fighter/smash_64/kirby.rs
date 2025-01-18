@@ -11,21 +11,23 @@ unsafe extern "C" fn kirby_var(boma: &mut BattleObjectModuleAccessor) {
     ModelModule::set_mesh_visibility(boma, Hash40::new("kirby_armfoot"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("kirby_eye1"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("kirby_facen"), true);
-    WorkModule::off_flag(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
-    WorkModule::set_float(boma, 0.0, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
+    WorkModule::off_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+    WorkModule::set_float(boma, 0.0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLOAT_WHEEL_POWER_UP);
     WHEEL_SPEED_UP[entry_id] = 0.0;
-    WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
-    WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
-    WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
-    WorkModule::set_int(boma, team_no, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_TEAM_NO);
+    WorkModule::set_int(boma, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_HOLD_TIMER);
+    WorkModule::set_int(boma, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_JUMP_COUNT);
+    WorkModule::set_int(boma, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+    WorkModule::set_int(boma, team_no, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_TEAM_NO);
 }
 
 //Kirby Startup Initialization
 #[skyline::hook(offset = KIRBY_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn kirby_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     kirby_var(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -51,14 +53,12 @@ unsafe extern "C" fn kirby_death_initialization(vtable: u64, fighter: &mut Fight
 #[skyline::hook(offset = KIRBY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn kirby_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let status_kind = StatusModule::status_kind(boma);
     let situation_kind = StatusModule::situation_kind(boma);
     let motion_kind = MotionModule::motion_kind(boma);
     let frame = MotionModule::frame(boma);
-    let end_frame = MotionModule::end_frame(boma);
     let copy_chara = WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA);
-    let kirby_falcon_punch_turn_count = WorkModule::get_int(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+    let kirby_falcon_punch_turn_count = WorkModule::get_int(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     //Kirby Stuff
     if ![*FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4].contains(&status_kind) {
         ArticleModule::remove_exist(boma, *FIGHTER_KIRBY_GENERATE_ARTICLE_HAMMER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
@@ -78,10 +78,10 @@ unsafe extern "C" fn kirby_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let obj_boma = smash::app::sv_battle_object::module_accessor(obj_id);
         let obj_kind = smash::app::utility::get_kind(&mut *obj_boma);
         let item_id = if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
-            WorkModule::get_int64(obj_boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
+            WorkModule::get_int64(obj_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
         }
         else if obj_kind == *WEAPON_KIND_LINK_BOOMERANG {
-            WorkModule::get_int64(obj_boma, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
+            WorkModule::get_int64(obj_boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
         }
         else {
             *BATTLE_OBJECT_ID_INVALID as u32
@@ -90,8 +90,8 @@ unsafe extern "C" fn kirby_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, item_id);
     }
     if ![*FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_TURN, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_S_ATTACK].contains(&status_kind) {
-        WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
-        WorkModule::set_flag(boma, false, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
+        WorkModule::set_int(boma, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_WHEEL_TURN_COUNT);
+        WorkModule::off_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_WHEEL_RECOIL);
     }
     //Dark Samus
     if copy_chara == *FIGHTER_KIND_SAMUSD
@@ -105,21 +105,13 @@ unsafe extern "C" fn kirby_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
             }
         }
-        if end_frame - frame <= 2.0 {
+        if MotionModule::is_end(boma) {
             if situation_kind != *SITUATION_KIND_AIR {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_WAIT, true);
             }
             else {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_FALL, true);
             }
-        }
-        if CHARGE_SHOT_TIMER[entry_id] > 0 {
-            CHARGE_SHOT_TIMER[entry_id] -= 1;
-        }
-        if CHARGE_SHOT_TIMER[entry_id] <= 0
-        && HAS_FIRE_CHARGE_SHOT[entry_id] == true {
-            HAS_FIRE_CHARGE_SHOT[entry_id] = false;
-            fighter.battle_object.gimmick_flash();
         }
     }
     //Captain Falcon
@@ -129,25 +121,25 @@ unsafe extern "C" fn kirby_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         };
         if [*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
             if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-                WorkModule::set_flag(boma, true, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
+                WorkModule::on_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
             };
-            if WorkModule::is_flag(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
+            if WorkModule::is_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
             && (54.0..57.0).contains(&frame) {
                 SoundModule::play_se(boma, Hash40::new("vc_kirby_cheer"), true, false, false, false, enSEType(0));
             }
         };
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N
-        && WorkModule::is_flag(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
+        && WorkModule::is_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
         && frame > 70.0 {
             CancelModule::enable_cancel(boma);
         }
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN
-        && WorkModule::is_flag(boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
+        && WorkModule::is_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT)
         && frame > 104.0 {
             CancelModule::enable_cancel(boma);
         }
         if ![*FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN].contains(&status_kind) {
-            WorkModule::set_flag(boma, false, FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
+            WorkModule::off_flag(boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_FLAG_FALCON_PUNCH_HIT);
         }
         if status_kind == *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN 
         && (25.0..40.0).contains(&frame)
@@ -156,7 +148,7 @@ unsafe extern "C" fn kirby_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN, true);
         };
         if status_kind != *FIGHTER_KIRBY_STATUS_KIND_CAPTAIN_SPECIAL_N_TURN {
-            WorkModule::set_int(boma, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+            WorkModule::set_int(boma, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
         }
     }
     //Ryu

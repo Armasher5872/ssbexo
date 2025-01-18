@@ -1,4 +1,4 @@
-#![allow(unused_comparisons, unused_macros, unused_must_use, unused_parens)]
+#![allow(unused_comparisons, unused_macros, unused_parens)]
 use {
     crate::functions::{
         ext::{
@@ -12,12 +12,9 @@ use {
             }
         },
         var::{
-            armstrong::*,
             consts::*,
             globals::*,
-            ike::*,
             link::*,
-            robot::*,
             variables::*,
         }
     },
@@ -38,11 +35,7 @@ use {
             L2CFighterCommon,
             *
         },
-        phx::{
-            Hash40,
-            Vector2f,
-            Vector3f
-        }
+        phx::Hash40
     },
     smash_script::*,
 };

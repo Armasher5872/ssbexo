@@ -39,6 +39,67 @@ unsafe extern "C" fn yoshi_jump_aerial_main_loop(fighter: &mut L2CFighterCommon)
     0.into()
 }
 
+unsafe extern "C" fn yoshi_attack_air_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_attack_air_common(true.into());
+    fighter.sub_shift_status_main(L2CValue::Ptr(yoshi_attack_air_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn yoshi_attack_air_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
+    if !yoshi_attack_air_main_common(fighter).get_bool() {
+        fighter.sub_air_check_superleaf_fall_slowly();
+        if !fighter.global_table[IS_STOP].get_bool() {
+            smash::app::FighterUtil::check_cloud_through_out(module_accessor);
+        }
+    }
+    0.into()
+}
+
+unsafe extern "C" fn yoshi_attack_air_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    if !fighter.attack_air_common_strans().get_bool() {
+        if CancelModule::is_enable_cancel(fighter.module_accessor) {
+            if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+                if fighter.sub_air_check_fall_common().get_bool() {
+                    return true.into();
+                }
+            }
+        }
+        if prev_status_kind == *FIGHTER_STATUS_KIND_PASS {
+            if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+                GroundModule::set_passable_check(fighter.module_accessor, true);
+            }
+        }
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+            }
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
+                PostureModule::reverse_lr(fighter.module_accessor);
+                PostureModule::update_rot_y_lr(fighter.module_accessor);
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+                return true.into();
+            }
+        }
+        if prev_status_kind != *FIGHTER_STATUS_KIND_TREAD_JUMP
+        && motion_kind == hash40("attack_air_lw")
+        && (12.0..=36.0).contains(&frame)
+        && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+            sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.015);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.05);
+        }
+        if MotionModule::is_end(fighter.module_accessor) {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        }
+        return false.into();
+    }
+    true.into()
+}
+
 unsafe extern "C" fn yoshi_special_n_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_pre_SpecialNCommon();
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_GROUND as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ALL_FLOAT, 0);
@@ -63,6 +124,7 @@ pub fn install() {
     Agent::new("yoshi")
     .status(Pre, *FIGHTER_STATUS_KIND_JUMP_AERIAL, yoshi_jump_aerial_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_JUMP_AERIAL, yoshi_jump_aerial_main_status)
+    .status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, yoshi_attack_air_main_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, yoshi_special_n_pre_status)
     .status(Pre, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_N_1, yoshi_special_n_1_pre_status)
     .status(Pre, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_LW_LANDING, yoshi_special_lw_landing_pre_status)

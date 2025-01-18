@@ -8,14 +8,16 @@ const WARIO_VTABLE_LINK_EVENT_OFFSET: usize = 0x12876c0; //Wario only
 
 unsafe extern "C" fn wario_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
 
 unsafe extern "C" fn wario_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT);
-    WorkModule::off_flag(boma, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
+    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT);
+    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
 }
 
 //Wario Startup Initialization
@@ -54,10 +56,10 @@ unsafe extern "C" fn wario_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
     if [
-        *FIGHTER_STATUS_KIND_ATTACK_DASH, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING,
-        FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END
+        *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING,
+        *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END
     ].contains(&status_kind) {
-        WorkModule::on_flag(boma, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT);
+        WorkModule::on_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT);
     }
     call_original!(vtable, fighter, log)
 }
@@ -72,7 +74,7 @@ unsafe extern "C" fn wario_link_event(vtable: u64, fighter: &mut Fighter, event:
         let offset = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CATCH_MOTION_OFFSET);
         let offset_lw = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CATCH_MOTION_OFFSET_LW);
         if StatusModule::status_kind(boma) == *FIGHTER_WARIO_STATUS_KIND_SPECIAL_HI_JUMP && capture_event.status == *FIGHTER_STATUS_KIND_CAPTURE_PULLED {
-            WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+            WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
             capture_event.node = smash2::phx::Hash40::new("throw");
             capture_event.result = true;
             capture_event.motion_offset = offset;

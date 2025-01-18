@@ -3,6 +3,7 @@ use {
   crate::functions::{
     ext::fighter::common::*,
     var::{
+      consts::*,
       globals::*,
       sheik::*,
     }
@@ -17,6 +18,7 @@ use {
     lua2cpp::*,
     phx::Hash40
   },
+  smash_script::*,
   smashline::*,
 };
 

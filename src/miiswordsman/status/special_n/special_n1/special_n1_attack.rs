@@ -9,7 +9,7 @@ pub unsafe extern "C" fn miiswordsman_special_n1_attack_pre_status(fighter: &mut
 pub unsafe extern "C" fn miiswordsman_special_n1_attack_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let lr = PostureModule::lr(fighter.module_accessor);
-    let power = WorkModule::get_float(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
+    let power = WorkModule::get_float(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
     match stick_y {
         _ if stick_y >= 0.5 => {
             sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.5);
@@ -37,15 +37,15 @@ pub unsafe extern "C" fn miiswordsman_special_n1_attack_main_status(fighter: &mu
     match stick_y {
         _ if stick_y >= 0.5 => {
             fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n1_attack_hi"), L2CValue::Hash40s("special_air_n1_attack_hi"), false.into());
-            WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
         _ if stick_y <= -0.5 => {
             fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n1_attack_lw"), L2CValue::Hash40s("special_air_n1_attack_lw"), false.into());
-            WorkModule::set_int(fighter.module_accessor, 2, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
         _ => {
             fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n1_attack"), L2CValue::Hash40s("special_air_n1_attack"), false.into());
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
     }
     fighter.sub_shift_status_main(L2CValue::Ptr(miiswordsman_special_n1_attack_main_loop as *const () as _))
@@ -54,7 +54,7 @@ pub unsafe extern "C" fn miiswordsman_special_n1_attack_main_status(fighter: &mu
 unsafe extern "C" fn miiswordsman_special_n1_attack_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let guard_breaker_direction = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    let guard_breaker_direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
@@ -114,8 +114,8 @@ pub unsafe extern "C" fn miiswordsman_special_n1_attack_exec_status(_fighter: &m
 }
 
 pub unsafe extern "C" fn miiswordsman_special_n1_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_float(fighter.module_accessor, 1.0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    WorkModule::set_float(fighter.module_accessor, 1.0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     0.into()
 }
 

@@ -92,14 +92,14 @@ unsafe extern "C" fn ssbexo_miiswordsman_guard_breaker_loop_expression(agent: &m
 unsafe extern "C" fn ssbexo_miiswordsman_guard_breaker_attack_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
+        AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
         macros::ATTACK(agent, 0, 0, Hash40::new("haver"), 15.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 1, 0, Hash40::new("haver"), 10.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 2, 0, Hash40::new("haver"), 7.0, 361, 120, 0, 50, 3.5, 0.0, 2.0, 0.0, Some(0.0), Some(14.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 16, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
     }
     if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
         if macros::is_excute(agent) {
-            AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
+            AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
             macros::ATTACK(agent, 0, 0, Hash40::new("haver"), 15.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 1, 0, Hash40::new("haver"), 10.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 2, 0, Hash40::new("haver"), 7.0, 361, 120, 0, 50, 3.5, 0.0, 2.0, 0.0, Some(0.0), Some(14.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 16, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -115,14 +115,14 @@ unsafe extern "C" fn ssbexo_miiswordsman_guard_breaker_attack_acmd(agent: &mut L
 unsafe extern "C" fn ssbexo_miiswordsman_guard_breaker_attack_hi_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
+        AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
         macros::ATTACK(agent, 0, 0, Hash40::new("haver"), 15.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 1, 0, Hash40::new("haver"), 10.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 2, 0, Hash40::new("haver"), 7.0, 361, 120, 0, 50, 3.5, 0.0, 2.0, 0.0, Some(0.0), Some(14.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 16, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
     }
     if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
         if macros::is_excute(agent) {
-            AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
+            AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
             macros::ATTACK(agent, 0, 0, Hash40::new("haver"), 15.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 1, 0, Hash40::new("haver"), 10.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 2, 0, Hash40::new("haver"), 7.0, 361, 120, 0, 50, 3.5, 0.0, 2.0, 0.0, Some(0.0), Some(14.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 16, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -138,14 +138,14 @@ unsafe extern "C" fn ssbexo_miiswordsman_guard_breaker_attack_hi_acmd(agent: &mu
 unsafe extern "C" fn ssbexo_miiswordsman_guard_breaker_attack_lw_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
-        AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
+        AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
         macros::ATTACK(agent, 0, 0, Hash40::new("haver"), 15.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 1, 0, Hash40::new("haver"), 10.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         macros::ATTACK(agent, 2, 0, Hash40::new("haver"), 7.0, 361, 120, 0, 50, 3.5, 0.0, 2.0, 0.0, Some(0.0), Some(14.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 16, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
     }
     if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
         if macros::is_excute(agent) {
-            AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
+            AttackModule::set_power_up(agent.module_accessor, WorkModule::get_float(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER));
             macros::ATTACK(agent, 0, 0, Hash40::new("haver"), 15.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_HEAD, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 1, 0, Hash40::new("haver"), 10.0, 361, 130, 0, 50, 1.2, 0.0, 14.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
             macros::ATTACK(agent, 2, 0, Hash40::new("haver"), 7.0, 361, 120, 0, 50, 3.5, 0.0, 2.0, 0.0, Some(0.0), Some(14.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 16, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -210,7 +210,7 @@ unsafe extern "C" fn ssbexo_miiswordsman_guard_breaker_attack_expression(agent: 
 
 //Shuriken of Light ACMD
 unsafe extern "C" fn ssbexo_miiswordsman_shuriken_of_light_fire_acmd(agent: &mut L2CAgentBase) {
-    let shuriken_of_light_count = WorkModule::get_int(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
+    let shuriken_of_light_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
     if shuriken_of_light_count == 3 {
         frame(agent.lua_state_agent, 1.0);
         if macros::is_excute(agent) {
@@ -270,7 +270,7 @@ unsafe extern "C" fn ssbexo_miiswordsman_shuriken_of_light_fire_acmd(agent: &mut
 //Shuriken of Light Fly ACMD
 unsafe extern "C" fn ssbexo_miiswordsman_shuriken_of_light_fly_acmd(agent: &mut L2CAgentBase) {
     let owner_boma = get_owner_boma(agent);
-    let shuriken_of_light_count = WorkModule::get_int(owner_boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
+    let shuriken_of_light_count = WorkModule::get_int(owner_boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
     if shuriken_of_light_count == 3 {
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 2.0, 361, 45, 0, 20, 2.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -1, 0.0, 0, true, false, true, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
@@ -334,7 +334,7 @@ unsafe extern "C" fn ssbexo_miiswordsman_shuriken_of_light_fly_acmd(agent: &mut 
 
 //Blurring Slashes 1 ACMD
 unsafe extern "C" fn ssbexo_miiswordsman_blurring_slashes_1_acmd(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
         frame(agent.lua_state_agent, 8.0);
         if macros::is_excute(agent) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 361, 20, 0, 100, 10.0, 0.0, 10.0, 9.5, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -368,7 +368,7 @@ unsafe extern "C" fn ssbexo_miiswordsman_blurring_slashes_1_acmd(agent: &mut L2C
 
 //Grounded Blurring Slashes 1 Effect
 unsafe extern "C" fn ssbexo_miiswordsman_grounded_blurring_slashes_1_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
         frame(agent.lua_state_agent, 6.0);
         if macros::is_excute(agent) {
             macros::AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_miiswordsman_sword65"), Hash40::new("tex_miiswordsman_sword66"), 3, Hash40::new("haver"), 0.0, 0.2, 0.0, Hash40::new("haver"), -0.0, 0.2, 0.0, true, Hash40::new(""), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 2.0, 0.2);
@@ -407,7 +407,7 @@ unsafe extern "C" fn ssbexo_miiswordsman_grounded_blurring_slashes_1_effect(agen
 
 //Aerial Blurring Slashes 1 Effect
 unsafe extern "C" fn ssbexo_miiswordsman_aerial_blurring_slashes_1_effect(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
         frame(agent.lua_state_agent, 6.0);
         if macros::is_excute(agent) {
             macros::AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_miiswordsman_sword65"), Hash40::new("tex_miiswordsman_sword66"), 3, Hash40::new("haver"), 0.0, 0.2, 0.0, Hash40::new("haver"), -0.0, 0.2, 0.0, true, Hash40::new(""), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 2.0, 0.2);
@@ -444,7 +444,7 @@ unsafe extern "C" fn ssbexo_miiswordsman_aerial_blurring_slashes_1_effect(agent:
 
 //Blurring Slashes 1 Sound
 unsafe extern "C" fn ssbexo_miiswordsman_blurring_slashes_1_sound(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
         frame(agent.lua_state_agent, 8.0);
         if macros::is_excute(agent) {
             macros::PLAY_SEQUENCE(agent, Hash40::new("seq_miiswordsman_rnd_attack01"));
@@ -567,11 +567,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_1s_acmd(agent: &mut 
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 25.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -631,11 +631,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_2s_acmd(agent: &mut 
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 35.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -693,11 +693,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_3s_acmd(agent: &mut 
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 40.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -808,11 +808,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_1hi_acmd(agent: &mut
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -870,11 +870,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_2hi_acmd(agent: &mut
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 35.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -929,11 +929,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_3hi_acmd(agent: &mut
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 30.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -1046,11 +1046,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_1lw_acmd(agent: &mut
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 26.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -1107,11 +1107,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_2lw_acmd(agent: &mut
     frame(agent.lua_state_agent, 12.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 35.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -1166,11 +1166,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_3lw_acmd(agent: &mut
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 35.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -1277,11 +1277,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_1b_acmd(agent: &mut 
     frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 20.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
 }
 
@@ -1332,11 +1332,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_2b_acmd(agent: &mut 
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 27.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
         macros::REVERSE_LR(agent);
     }
 }
@@ -1395,11 +1395,11 @@ unsafe extern "C" fn ssbexo_miiswordsman_rending_serrations_3b_acmd(agent: &mut 
     frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     }
     frame(agent.lua_state_agent, 28.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
         macros::REVERSE_LR(agent);
     }
 }

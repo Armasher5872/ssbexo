@@ -35,6 +35,7 @@ unsafe extern "C" fn jack_start_initialization(vtable: u64, fighter: &mut Fighte
     common_initialization_variable_reset(&mut *boma);
     set_move_customizer(agent, jack_waza_customize);
     jack_waza_customize(agent);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 

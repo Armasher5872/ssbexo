@@ -98,7 +98,11 @@ unsafe extern "C" fn ssbexo_jack_dash_attack_acmd(agent: &mut L2CAgentBase) {
             WorkModule::sub_float(agent.module_accessor, 2.0, 0x4D);
         }
     }
-    wait(agent.lua_state_agent, 2.0);
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
+    }
+    wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }

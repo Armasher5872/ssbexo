@@ -292,14 +292,14 @@ unsafe fn status_dash_main_common(fighter: &mut L2CFighterCommon, param_1: L2CVa
     }
     //Captain Falcon's Dash Grab Speed
     if fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_CAPTAIN {
-        WorkModule::set_float(fighter.module_accessor, 1.933, FIGHTER_INSTANCE_WORK_ID_FLOAT_DASH_GRAB_SPEED);
+        WorkModule::set_float(fighter.module_accessor, 1.933, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DASH_GRAB_SPEED);
     }
     /* END OF NEW ADDITION */
     0.into()
 }
 
 //Dash Back Main
-pub unsafe fn fgc_dashback_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+pub unsafe extern "C" fn fgc_dashback_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Due to the fighting game characters having a different status for their dashes, this needs to be be implemented alongside the normal dash status script to allow for the new features to apply for them
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("dash_b"), 0.0, 1.0, false, 0.0, false, false);
     fighter.status_DashCommon();
@@ -520,5 +520,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

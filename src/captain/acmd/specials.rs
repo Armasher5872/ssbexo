@@ -45,18 +45,18 @@ unsafe extern "C" fn ssbexo_captain_neutral_special_acmd(agent: &mut L2CAgentBas
 
 //Reverse Neutral Special ACMD
 unsafe extern "C" fn ssbexo_captain_reverse_neutral_special_acmd(agent: &mut L2CAgentBase) {
-    let falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
-    let kirby_falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+    let falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+    let kirby_falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     let kind = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND);
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 20.0);
-        WorkModule::inc_int(agent.module_accessor, FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+        WorkModule::inc_int(agent.module_accessor, *FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     }
     if kind == *FIGHTER_KIND_KIRBY {
         if macros::is_excute(agent) {
             damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 20.0);
-            WorkModule::inc_int(agent.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+            WorkModule::inc_int(agent.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
         }
     }
     frame(agent.lua_state_agent, 21.0);
@@ -114,14 +114,14 @@ unsafe extern "C" fn ssbexo_captain_reverse_neutral_special_acmd(agent: &mut L2C
         AttackModule::set_power_up(agent.module_accessor, 1.0);
         AttackModule::clear_all(agent.module_accessor);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     }
     if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
         if macros::is_excute(agent) {
             AttackModule::set_power_up(agent.module_accessor, 1.0);
             AttackModule::clear_all(agent.module_accessor);
             damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-            WorkModule::set_int(agent.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+            WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
         }
     }
 }
@@ -189,18 +189,18 @@ unsafe extern "C" fn ssbexo_captain_aerial_neutral_special_acmd(agent: &mut L2CA
 
 //Aerial Reverse Neutral Special ACMD
 unsafe extern "C" fn ssbexo_captain_aerial_reverse_neutral_special_acmd(agent: &mut L2CAgentBase) {
-    let falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
-    let kirby_falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+    let falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+    let kirby_falcon_punch_turn_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     let kind = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND);
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 20.0);
-        WorkModule::inc_int(agent.module_accessor, FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+        WorkModule::inc_int(agent.module_accessor, *FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     }
     if kind == *FIGHTER_KIND_KIRBY {
         if macros::is_excute(agent) {
             damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 20.0);
-            WorkModule::inc_int(agent.module_accessor, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+            WorkModule::inc_int(agent.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
         }
     }
     frame(agent.lua_state_agent, 21.0);
@@ -264,14 +264,14 @@ unsafe extern "C" fn ssbexo_captain_aerial_reverse_neutral_special_acmd(agent: &
         AttackModule::set_power_up(agent.module_accessor, 1.0);
         AttackModule::clear_all(agent.module_accessor);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_FALCON_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
     }
     if kind == *FIGHTER_KIND_KIRBY {
         if macros::is_excute(agent) {
             AttackModule::set_power_up(agent.module_accessor, 1.0);
             AttackModule::clear_all(agent.module_accessor);
             damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-            WorkModule::set_int(agent.module_accessor, 0, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
+            WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_FALCON_PUNCH_TURN_COUNT);
         }
     }
     wait(agent.lua_state_agent, 12.0);

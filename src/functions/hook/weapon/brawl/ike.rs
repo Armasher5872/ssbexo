@@ -13,8 +13,8 @@ unsafe extern "C" fn ike_slash_initialization_event(vtable: u64, weapon: *mut sm
         let shield_data = ShieldData::new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0, Hash40::new("rot"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_UNDEFINED as u8);
         let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
         let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 4.0, 4.0, 100.0, 20.0, false, 0);
-        add_reflector_group(boma, resource, WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR);
-        ReflectorModule::set_hop(boma, true, 45.0, WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR);
+        add_reflector_group(boma, resource, *WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR);
+        ReflectorModule::set_hop(boma, true, 45.0, *WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR);
     }
     call_original!(vtable, weapon, param_3)
 }

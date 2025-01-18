@@ -1,7 +1,10 @@
 use {
     crate::functions::{
         ext::utility::boma_ext::*,
-        var::lucario::*,
+        var::{
+            consts::*,
+            lucario::*,
+        }
     },
     smash::{
         app::{

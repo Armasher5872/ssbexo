@@ -1,7 +1,10 @@
 use {
     crate::functions::{
         ext::fighter::link::*,
-        var::link::*,
+        var::{
+            consts::*,
+            link::*,
+        }
     },
     smash::{
         app::{

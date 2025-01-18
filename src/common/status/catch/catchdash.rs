@@ -3,7 +3,7 @@ use super::*;
 /*   GRAB STATUSES   */
 //Sub Status Catch Dash, allows item grabbing from dash grabs
 #[skyline::hook(replace = L2CFighterCommon_sub_status_CatchDash)]
-unsafe fn sub_status_catchdash(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn sub_status_catchdash(fighter: &mut L2CFighterCommon) {
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("catch_dash"), 0.0, 1.0, false, 0.0, false, false);
     let catch_turn_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("catch_turn_frame"));
     WorkModule::set_int(fighter.module_accessor, catch_turn_frame, *FIGHTER_STATUS_CATCH_DASH_WORK_INT_CATCH_TURN_FRAME);
@@ -19,7 +19,7 @@ unsafe fn sub_status_catchdash(fighter: &mut L2CFighterCommon) {
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_CatchDash_Main)]
-unsafe fn status_catchdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_catchdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     //Goes through a variety of checks to see if you transition into the heavy pickup status or light pickup status
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let stick_x = fighter.global_table[STICK_X].get_f32();
@@ -80,5 +80,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

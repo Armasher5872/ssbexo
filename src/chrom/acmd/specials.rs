@@ -281,11 +281,11 @@ unsafe extern "C" fn ssbexo_chrom_neutral_special_end_expression(agent: &mut L2C
 unsafe extern "C" fn ssbexo_chrom_side_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
     }
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK);
     }
 }
 
@@ -703,7 +703,7 @@ unsafe extern "C" fn ssbexo_chrom_up_special_land_expression(agent: &mut L2CAgen
 
 //Down Special Hit ACMD
 unsafe extern "C" fn ssbexo_chrom_down_special_hit_acmd(agent: &mut L2CAgentBase) {
-    let hit_count = WorkModule::get_int(agent.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    let hit_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
     let fixed_knockback = 100+(25*hit_count);
     let distance = 13.0+(10.0*hit_count as f32);
     let hit_sound = match hit_count {3 => *ATTACK_SOUND_LEVEL_L, 2 => *ATTACK_SOUND_LEVEL_M, _ => *ATTACK_SOUND_LEVEL_S};
@@ -728,7 +728,7 @@ unsafe extern "C" fn ssbexo_chrom_down_special_hit_acmd(agent: &mut L2CAgentBase
 
 //Grounded Down Special Hit Effect
 unsafe extern "C" fn ssbexo_chrom_grounded_down_special_hit_effect(agent: &mut L2CAgentBase) {
-    let hit_count = WorkModule::get_int(agent.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    let hit_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
     if macros::is_excute(agent) {
         macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_guard_mark"), true, true);
         macros::LANDING_EFFECT(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, false);
@@ -794,7 +794,7 @@ unsafe extern "C" fn ssbexo_chrom_grounded_down_special_hit_effect(agent: &mut L
 
 //Aerial Down Special Hit Effect
 unsafe extern "C" fn ssbexo_chrom_aerial_down_special_hit_effect(agent: &mut L2CAgentBase) {
-    let hit_count = WorkModule::get_int(agent.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    let hit_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
     if macros::is_excute(agent) {
         macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_guard_mark"), true, true);
         macros::EFFECT(agent, Hash40::new("chrom_counter_success"), Hash40::new("top"), 0, 14.8, -1, 0, 90, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
@@ -855,7 +855,7 @@ unsafe extern "C" fn ssbexo_chrom_aerial_down_special_hit_effect(agent: &mut L2C
 
 //Down Special Hit Sound
 unsafe extern "C" fn ssbexo_chrom_down_special_hit_sound(agent: &mut L2CAgentBase) {
-    let hit_count = WorkModule::get_int(agent.module_accessor, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    let hit_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
     if macros::is_excute(agent) {
         macros::PLAY_SEQUENCE(agent, Hash40::new("seq_chrom_rnd_special_l"));
     }

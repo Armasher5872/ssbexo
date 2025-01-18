@@ -1,5 +1,6 @@
 use super::*;
 
+//Dair ACMD
 unsafe extern "C" fn ssbexo_edge_dair_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_LANDING_CLEAR_SPEED);

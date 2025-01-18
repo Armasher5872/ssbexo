@@ -37,12 +37,12 @@ unsafe extern "C" fn lucariom_mega_evolve_exit_status(weapon: &mut L2CWeaponComm
 
 pub fn install() {
     Agent::new("lucario_lucariom")
-    .status(Pre, WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_pre_status)
-    .status(Init, WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_init_status)
-    .status(Main, WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_main_status)
-    .status(Exec, WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_exec_status)
-    .status(End, WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_end_status)
-    .status(Exit, WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_exit_status)
+    .status(Pre, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_pre_status)
+    .status(Init, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_init_status)
+    .status(Main, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_main_status)
+    .status(Exec, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_exec_status)
+    .status(End, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_end_status)
+    .status(Exit, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, lucariom_mega_evolve_exit_status)
     .install()
     ;
 }

@@ -1,35 +1,35 @@
-#![allow(unused_must_use)]
 use {
-    crate::functions::var::{
-        consts::*,
-        globals::*,
+    crate::functions::{
+        ext::utility::misc::*,
+        var::{
+            consts::*,
+            globals::*,
+        }
     },
     smash::{
         app::{
-            lua_bind::*,
+            lua_bind::{
+                PostureModule,
+                *
+            },
             *
         },
-        hash40,
         lib::{
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        },
+        lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
+            Vector2f,
             Vector3f
         }
     },
     smash_script::*,
 };
 
-mod escapeair;
-mod escapefb;
+mod escape_air;
 
 pub fn install() {
-    escapeair::install();
-    escapefb::install();
+    escape_air::install();
 }

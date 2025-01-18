@@ -2,31 +2,31 @@ use super::*;
 
 unsafe extern "C" fn elight_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK)(fighter);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     ret
 }
 
 unsafe extern "C" fn elight_attack_s3_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK_S3)(fighter);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     ret
 }
 
 unsafe extern "C" fn elight_attack_dash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK_DASH)(fighter);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     ret
 }
 
 unsafe extern "C" fn elight_attack_s4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK_S4)(fighter);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     ret
 }
 
 unsafe extern "C" fn elight_attack_air_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = original_status(End, fighter, *FIGHTER_STATUS_KIND_ATTACK_AIR)(fighter);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     ret
 }
 

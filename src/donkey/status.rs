@@ -3,7 +3,7 @@ use super::*;
 /*   AIR LASSO STATUS SCRIPTS   */
 
 unsafe extern "C" fn donkey_air_lasso_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_CATCH as u64, 0, 0, 0);
     0.into()
@@ -298,8 +298,8 @@ unsafe extern "C" fn donkey_special_lw_init_status(_fighter: &mut L2CFighterComm
 unsafe extern "C" fn donkey_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let motion;
     if donkey_barrel_bool(fighter.module_accessor) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
-        WorkModule::set_int(fighter.module_accessor, 900, FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
+        WorkModule::set_int(fighter.module_accessor, 900, *FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
         ItemModule::have_item(fighter.module_accessor, ItemKind(*ITEM_KIND_BARREL), 0, 0, false, false);
         if ItemModule::get_have_item_kind(fighter.module_accessor, 0) == *ITEM_KIND_BARREL {
             fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW_HEAVY.into(), false.into());
@@ -393,5 +393,5 @@ pub fn install() {
     .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_LW, donkey_special_lw_exit_status)
     .install()
     ;
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

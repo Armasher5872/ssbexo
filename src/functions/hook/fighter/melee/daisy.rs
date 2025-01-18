@@ -13,6 +13,7 @@ unsafe extern "C" fn daisy_start_initialization(vtable: u64, fighter: &mut Fight
         common_initialization_variable_reset(&mut *boma);
         agent.global_table[CHECK_AIR_JUMP_UNIQ].assign(&false.into());
         agent.global_table[CHECK_AIR_JUMP_AERIAL_UNIQ].assign(&false.into());
+        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }

@@ -6,11 +6,11 @@ const SHEIK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x1120c70; //Sheik only
 const SHEIK_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x1120e10; //Sheik only
 
 unsafe extern "C" fn sheik_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
-    WorkModule::off_flag(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
-    WorkModule::off_flag(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
-    WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
-    WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
+    WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
+    WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+    WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BACK_HIT);
+    WorkModule::set_int(boma, 0, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
+    WorkModule::set_int(boma, 0, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
     ModelModule::set_mesh_visibility(boma, Hash40::new("gamemodel"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("hair"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_eye"), true);
@@ -22,8 +22,10 @@ unsafe extern "C" fn sheik_var(boma: &mut BattleObjectModuleAccessor) {
 #[skyline::hook(offset = SHEIK_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn sheik_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     sheik_var(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
 }
 
 //Sheik Reset Initialization
@@ -49,8 +51,8 @@ unsafe extern "C" fn sheik_death_initialization(vtable: u64, fighter: &mut Fight
 unsafe extern "C" fn sheik_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
-    let vanish_timer = WorkModule::get_int(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
-    let sheikah_eye_timer = WorkModule::get_int(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
+    let vanish_timer = WorkModule::get_int(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
+    let sheikah_eye_timer = WorkModule::get_int(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
     let transition_terms = [
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_100, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_DASH, 
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_HOLD, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START, 
@@ -95,13 +97,13 @@ unsafe extern "C" fn sheik_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let alpha_5 = ((1.0/(((pos_x-pos_x_5).powf(2.0)+(pos_y-pos_y_5).powf(2.0)).sqrt()))*9.0).clamp(0.05, 1.0);
     let alpha_6 = ((1.0/(((pos_x-pos_x_6).powf(2.0)+(pos_y-pos_y_6).powf(2.0)).sqrt()))*9.0).clamp(0.05, 1.0);
     let alpha_7 = ((1.0/(((pos_x-pos_x_7).powf(2.0)+(pos_y-pos_y_7).powf(2.0)).sqrt()))*9.0).clamp(0.05, 1.0);
-    if WorkModule::is_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW) && WorkModule::is_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
-        WorkModule::set_flag(boma, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
+    if WorkModule::is_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW) && WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
         WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW);
     }
-    if WorkModule::is_flag(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED) {
+    if WorkModule::is_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED) {
         if vanish_timer > 0 {
-            WorkModule::dec_int(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
+            WorkModule::dec_int(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
             for x in 0..transition_terms.len() {
                 WorkModule::unable_transition_term(boma, transition_terms[x]);
                 WorkModule::enable_transition_term_forbid(boma, transition_terms[x]);
@@ -126,9 +128,9 @@ unsafe extern "C" fn sheik_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_ouch"), false);
             ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_talk"), false);
             WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
-            WorkModule::inc_int(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
+            WorkModule::inc_int(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
             if sheikah_eye_timer == 10 {
-                WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
+                WorkModule::set_int(boma, 0, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
                 EffectModule::kill_kind(opponent_boma_1, Hash40::new("sys_aura_light"), false, false);
                 EffectModule::kill_kind(opponent_boma_2, Hash40::new("sys_aura_light"), false, false);
                 EffectModule::kill_kind(opponent_boma_3, Hash40::new("sys_aura_light"), false, false);
@@ -153,8 +155,7 @@ unsafe extern "C" fn sheik_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             }
         }
         if vanish_timer <= 0 {
-            WorkModule::set_int(boma, 0, FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
-            WorkModule::set_flag(boma, true, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+            WorkModule::on_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
             EffectModule::kill_kind(opponent_boma_1, Hash40::new("sys_aura_light"), false, false);
             EffectModule::kill_kind(opponent_boma_2, Hash40::new("sys_aura_light"), false, false);
             EffectModule::kill_kind(opponent_boma_3, Hash40::new("sys_aura_light"), false, false);
@@ -163,8 +164,10 @@ unsafe extern "C" fn sheik_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             EffectModule::kill_kind(opponent_boma_6, Hash40::new("sys_aura_light"), false, false);
             EffectModule::kill_kind(opponent_boma_7, Hash40::new("sys_aura_light"), false, false);
         }
-        if WorkModule::is_flag(boma, FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK) && status_kind != FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_CANCEL {
-            StatusModule::change_status_request_from_script(boma, FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, false);
+        if ![*FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_CANCEL, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK].contains(&status_kind) && WorkModule::is_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK) {
+            WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_VANISH_ATTACK);
+            WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, false);
         }
     }
     original!()(vtable, fighter)

@@ -47,29 +47,29 @@ unsafe extern "C" fn link_attack_dash_bound_end_status(_fighter: &mut L2CFighter
 
 unsafe extern "C" fn link_attack_s_4_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     attack_4_hold(fighter);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
     }
     0.into()
 }
 
 unsafe extern "C" fn link_attack_s_4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 
 unsafe extern "C" fn link_attack_hi_4_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     attack_4_hold(fighter);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
     }
     0.into()
 }
 
 unsafe extern "C" fn link_attack_hi_4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 
@@ -142,9 +142,9 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
         }
         if situation_kind == *SITUATION_KIND_GROUND {
             if fighter.global_table[CURRENT_FRAME].get_f32() >= 59.0 {
-                WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
             }
-            if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK)
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK)
             && motion_kind == hash40("attack_lw4_hold") {
                 if stick_x >= 0.5 {
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_LOOP);
@@ -171,7 +171,7 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
                 if (-0.5..0.5).contains(&stick_x) {
                     MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("attack_lw4_hold"), -1.0, 1.0, 0.0);
                 }
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
                     GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
                     MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new("attack_lw4_hold"), -1.0, 1.0, 0.0);
@@ -186,14 +186,14 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
     }
     else {
         if [hash40("attack_lw4_hold_walk_f"), hash40("attack_lw4_hold_walk_b")].contains(&motion_kind) {
-            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL);
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
             fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_HI.into(), false.into());
         }
         else {
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
     }
@@ -202,8 +202,8 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
 
 unsafe extern "C" fn link_attack_lw_4_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     attack_4_hold(fighter);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
     }
     0.into()
 }
@@ -238,8 +238,8 @@ unsafe extern "C" fn link_attack_lw_4_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn link_attack_lw_4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 
@@ -338,8 +338,8 @@ unsafe extern "C" fn link_special_n_exit_status(fighter: &mut L2CFighterCommon) 
     let bow_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_BOW_ARTICLE_ID);
     ArticleModule::change_status_exist(fighter.module_accessor, bow_id, *WN_LINK_BOW_STATUS_KIND_BACK);
     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
-        if ArticleModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-            let item_id = ArticleModule::get_int(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+        if ArticleModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+            let item_id = ArticleModule::get_int(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
             let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
             LinkModule::remove_model_constraint(item_boma, true);
             if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
@@ -359,21 +359,21 @@ unsafe extern "C" fn link_bowarrow_haved_main_status(weapon: &mut L2CFighterBase
         set_arrow_fuse_params(weapon.module_accessor, ItemModule::get_have_item_kind(owner_boma, 0), FuseKind::FUSE, ItemModule::get_have_item_trait(owner_boma, 0) as i32);
     }
     else if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
-        let kind = WorkModule::get_int(owner_boma, FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+        let kind = WorkModule::get_int(owner_boma, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
         if kind != *ITEM_KIND_NONE {
             set_arrow_fuse_params(weapon.module_accessor, kind, FuseKind::REFUSE, i32::MAX);
         }
     }
     else {
         if owner_kind == *FIGHTER_KIND_LINK {
-            WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
+            WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
         }
         else if owner_kind == *FIGHTER_KIND_KIRBY {
-            WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
+            WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
         }
     }
-    if WorkModule::is_flag(weapon.module_accessor,WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-        let item_id = WorkModule::get_int(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+    if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+        let item_id = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
         let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
         LinkModule::remove_model_constraint(item_boma, true);
         if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
@@ -395,8 +395,8 @@ unsafe extern "C" fn link_bowarrow_haved_main_loop(_weapon: &mut L2CFighterBase)
 
 unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CFighterBase) -> L2CValue {
     original_status(Init, weapon, *WN_LINK_BOWARROW_STATUS_KIND_FLY)(weapon);
-    if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-        if WorkModule::get_int(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG) == FuseType::POWER {
+    if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+        if WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG) == FuseType::POWER {
             let lr = PostureModule::lr(weapon.module_accessor);
             sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 12.0*lr, 0.0);
             sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
@@ -409,20 +409,20 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CFighterBase) 
 
 unsafe extern "C" fn link_bowarrow_fly_end_status(weapon: &mut L2CFighterBase) -> L2CValue {
     let status_kind_next = StatusModule::status_kind_next(weapon.module_accessor);
-    let item_id = WorkModule::get_int(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+    let item_id = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
     let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
     if [*WN_LINK_BOWARROW_STATUS_KIND_STICK, *WN_LINK_BOWARROW_STATUS_KIND_HIT_STICK].contains(&status_kind_next) {
-        if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+        if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
             LinkModule::remove_model_constraint(item_boma, true);
             if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
                 LinkModule::unlink_all(item_boma);
-                let status = WorkModule::get_int(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+                let status = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
                 StatusModule::change_status_request(item_boma, status, false);
             }
         }
     }
     else {
-        if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED)
+        if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED)
         && sv_battle_object::is_active(item_id) {
             /*
             let item_manager = *(singletons::ItemManager() as *mut *mut smash::app::ItemManager);
@@ -437,22 +437,22 @@ unsafe extern "C" fn link_bowarrow_fly_end_status(weapon: &mut L2CFighterBase) -
 }
 
 unsafe extern "C" fn link_bowarrow_stick_end_status(weapon: &mut L2CFighterBase) -> L2CValue {
-    if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT) {
+    if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT) {
         let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER) as u32;
         let owner_boma = smash::app::sv_battle_object::module_accessor(owner_id);
         let owner_kind = utility::get_kind(&mut *owner_boma);
         let team_no = if owner_kind == *FIGHTER_KIND_KIRBY {
-            WorkModule::get_int(owner_boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_TEAM_NO)
+            WorkModule::get_int(owner_boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_TEAM_NO)
         }
         else if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
-            WorkModule::get_int(owner_boma, FIGHTER_MURABTIO_INSTANCE_WORK_ID_INT_TEAM_NO)
+            WorkModule::get_int(owner_boma, *FIGHTER_MURABTIO_INSTANCE_WORK_ID_INT_TEAM_NO)
         }
         else {
-            WorkModule::get_int(owner_boma, FIGHTER_LINK_INSTANCE_WORK_ID_INT_TEAM_NO)
+            WorkModule::get_int(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_TEAM_NO)
         };
         TeamModule::set_team(weapon.module_accessor, team_no, true);
         TeamModule::set_team_owner_id(weapon.module_accessor, (*(owner_boma)).battle_object_id);
-        WorkModule::set_flag(weapon.module_accessor, false, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT);
+        WorkModule::off_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT);
     }
     0.into()
 }
@@ -461,7 +461,7 @@ unsafe extern "C" fn link_bowarrow_stick_end_status(weapon: &mut L2CFighterBase)
 
 unsafe extern "C" fn link_special_s_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_BOOMERANG) {
-        let item_id = ArticleModule::get_int(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOOMERANG, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+        let item_id = ArticleModule::get_int(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOOMERANG, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
         let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
         LinkModule::remove_model_constraint(item_boma, true);
         if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
@@ -481,18 +481,18 @@ unsafe extern "C" fn link_boomerang_haved_main_status(weapon: &mut L2CFighterBas
             set_boomerang_fuse_params(weapon.module_accessor, ItemModule::get_have_item_kind(owner_boma, 0), FuseKind::FUSE, ItemModule::get_have_item_trait(owner_boma, 0) as i32);
         }
         else if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
-            let kind = WorkModule::get_int(owner_boma, FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM);
+            let kind = WorkModule::get_int(owner_boma, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM);
             if kind != *ITEM_KIND_NONE {
                 set_boomerang_fuse_params(weapon.module_accessor, kind, FuseKind::REFUSE, i32::MAX);
             }
         }
         else {
             if owner_kind == *FIGHTER_KIND_LINK {
-                WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
+                WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
             }
         }
-        if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-            let item_id = WorkModule::get_int(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+        if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+            let item_id = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
             let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
             LinkModule::remove_model_constraint(item_boma, true);
             if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
@@ -524,12 +524,12 @@ unsafe extern "C" fn link_boomerang_haved_main_loop(weapon: &mut L2CFighterBase)
 
 unsafe extern "C" fn link_boomerang_haved_end_status(weapon: &mut L2CFighterBase) -> L2CValue {
     let owner_boma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    if StatusModule::status_kind(owner_boma) == *FIGHTER_LINK_STATUS_KIND_SPECIAL_S2 && WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-        let item_id = WorkModule::get_int64(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+    if StatusModule::status_kind(owner_boma) == *FIGHTER_LINK_STATUS_KIND_SPECIAL_S2 && WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+        let item_id = WorkModule::get_int64(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
         let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
         StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
         if !ItemModule::is_have_item(owner_boma, 0) {
-            WorkModule::on_flag(owner_boma, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM);
+            WorkModule::on_flag(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_PICK_ITEM);
         }
     }
     0.into()
@@ -537,20 +537,20 @@ unsafe extern "C" fn link_boomerang_haved_end_status(weapon: &mut L2CFighterBase
 
 unsafe extern "C" fn link_boomerang_fly_end_status(weapon: &mut L2CFighterBase) -> L2CValue {
     let status_kind_next = StatusModule::status_kind_next(weapon.module_accessor);
-    let item_id = WorkModule::get_int64(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+    let item_id = WorkModule::get_int64(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
     let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
-    if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED)
-    && !WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT)
+    if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED)
+    && !WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT)
     && (AttackModule::is_infliction_status(weapon.module_accessor,*COLLISION_KIND_MASK_HIT) || AttackModule::is_infliction(weapon.module_accessor,*COLLISION_KIND_MASK_SHIELD)) {
         LinkModule::remove_model_constraint(item_boma, true);
         if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
             LinkModule::unlink_all(item_boma);
-            let status = WorkModule::get_int(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+            let status = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
             StatusModule::change_status_request(item_boma, status, false);
         }
     }
     else if ![*WN_LINK_BOOMERANG_STATUS_KIND_TURN, *WN_LINK_BOOMERANG_STATUS_KIND_SWALLOWED].contains(&status_kind_next)
-    && WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+    && WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
         LinkModule::remove_model_constraint(item_boma, true);
         StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
     }
@@ -558,8 +558,8 @@ unsafe extern "C" fn link_boomerang_fly_end_status(weapon: &mut L2CFighterBase) 
 }
 
 unsafe extern "C" fn link_boomerang_swallowed_pre_status(weapon: &mut L2CFighterBase) -> L2CValue {
-    let item_id = WorkModule::get_int64(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-    if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED)
+    let item_id = WorkModule::get_int64(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+    if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED)
     && sv_battle_object::is_active(item_id) {
         let item_manager = *(singletons::ItemManager() as *mut *mut smash::app::ItemManager);
         smash::app::lua_bind::ItemManager::remove_item_from_id(item_manager, item_id);
@@ -568,14 +568,14 @@ unsafe extern "C" fn link_boomerang_swallowed_pre_status(weapon: &mut L2CFighter
 }
 
 unsafe extern "C" fn link_boomerang_swallowed_end_status(weapon: &mut L2CFighterBase) -> L2CValue {
-    if WorkModule::is_flag(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-        let item_id = WorkModule::get_int64(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+    if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
+        let item_id = WorkModule::get_int64(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
         if smash::app::sv_battle_object::is_active(item_id) {
             let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
             LinkModule::remove_model_constraint(item_boma, true);
             if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
                 LinkModule::unlink_all(item_boma);
-                let status = WorkModule::get_int(weapon.module_accessor, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
+                let status = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
                 StatusModule::change_status_request(item_boma, status, false);
             }
         }
@@ -591,7 +591,7 @@ unsafe extern "C" fn link_special_hi_pre_status(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn link_special_hi_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL) {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_END.into(), false.into());
         0.into()
     }
@@ -622,7 +622,7 @@ unsafe extern "C" fn link_special_hi_main_loop(fighter: &mut L2CFighterCommon) -
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_hi"), -1.0, 1.0, 0.0, false, false);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND) {
         let pos_x = PostureModule::pos_x(fighter.module_accessor);
         let pos_y = PostureModule::pos_y(fighter.module_accessor);     
         let height = WorkModule::get_param_float(fighter.module_accessor, hash40("height"), 0);  
@@ -633,8 +633,8 @@ unsafe extern "C" fn link_special_hi_main_loop(fighter: &mut L2CFighterCommon) -
         }
         let ground = find_ascendable_ground(fighter.module_accessor, pos_x, min_pos_y+height, pos_y+100.0, height);
         if pos_y < ground && ground < pos_y+100.0 {
-            WorkModule::set_float(fighter.module_accessor, pos_y, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_START_Y);
-            WorkModule::set_float(fighter.module_accessor, ground+5.0, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+            WorkModule::set_float(fighter.module_accessor, pos_y, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_START_Y);
+            WorkModule::set_float(fighter.module_accessor, ground+5.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
             fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START.into(), false.into());
             return 0.into();
         }
@@ -650,7 +650,7 @@ unsafe extern "C" fn link_special_hi_exec_status(_fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn link_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
     0.into()
 }
 
@@ -692,7 +692,7 @@ unsafe extern "C" fn link_special_hi_end_main_loop(fighter: &mut L2CFighterCommo
 }
 
 unsafe extern "C" fn link_special_hi_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL);
     0.into()
 }
 
@@ -751,15 +751,15 @@ unsafe extern "C" fn link_special_hi_ascend_main_status(fighter: &mut L2CFighter
 }
 
 unsafe extern "C" fn link_special_hi_ascend_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let current_frame = WorkModule::get_float(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
-    let target_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+    let current_frame = WorkModule::get_float(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
+    let target_y = WorkModule::get_float(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
     let height = WorkModule::get_param_float(fighter.module_accessor, hash40("height"), 0);
     let pos_x = PostureModule::pos_x(fighter.module_accessor);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
     let mut max_y = target_y+height+20.0;
     let modulo = current_frame % 10.0;
-    WorkModule::add_float(fighter.module_accessor, 1.0, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
+    WorkModule::add_float(fighter.module_accessor, 1.0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
     macros::SET_SPEED_EX(fighter, 0.0, 3.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x: pos_x, y: pos_y+4.0}, &Vector2f{x: 0.0, y: -height/1.5}, ground_hit_pos, true) && pos_y >= max_y-(height*2.0) {
         PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: pos_x, y: ground_hit_pos.y, z: 0.0});
@@ -770,7 +770,7 @@ unsafe extern "C" fn link_special_hi_ascend_main_loop(fighter: &mut L2CFighterCo
     if modulo < 1.0 {
         if GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x, y: target_y+5.0}, &Vector2f{x: 0.0, y: -10.0}, true) != 1 {
             if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x: pos_x, y: target_y+20.0}, &Vector2f{x: 0.0, y: -40.0}, ground_hit_pos, true) {
-                WorkModule::set_float(fighter.module_accessor, ground_hit_pos.y, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+                WorkModule::set_float(fighter.module_accessor, ground_hit_pos.y, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
                 max_y = ground_hit_pos.y;
             }
             else {
@@ -853,9 +853,9 @@ unsafe extern "C" fn link_special_hi_ascend_end_exec_status(_fighter: &mut L2CFi
 }
 
 unsafe extern "C" fn link_special_hi_ascend_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
-    WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_START_Y);
-    WorkModule::set_float(fighter.module_accessor, 0.0, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
+    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_START_Y);
+    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
     0.into()
 }
 
@@ -1055,10 +1055,10 @@ unsafe extern "C" fn link_special_lw_blast_pre_status(fighter: &mut L2CFighterCo
 
 pub fn install() {
     Agent::new("link")
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_pre_status)
-    .status(Init, FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_init_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_main_status)
-    .status(End, FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_end_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_pre_status)
+    .status(Init, *FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_init_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_main_status)
+    .status(End, *FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND, link_attack_dash_bound_end_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, link_attack_s_4_hold_end_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_S4, link_attack_s_4_end_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, link_attack_hi_4_hold_end_status)
@@ -1079,30 +1079,30 @@ pub fn install() {
     .status(Init, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_END, link_special_hi_end_init_status)
     .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_END, link_special_hi_end_main_status)
     .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_END, link_special_hi_end_end_status)
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START, link_special_hi_ascend_start_pre_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START, link_special_hi_ascend_start_main_status)
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_pre_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_main_status)
-    .status(Exec, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_exec_status)
-    .status(Exit, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_exit_status)
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_pre_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_main_status)
-    .status(Exec, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_exec_status)
-    .status(End, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_end_status)
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_pre_status)
-    .status(Init, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_init_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_main_status)
-    .status(End, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_end_status)
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_pre_status)
-    .status(Init, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_init_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_main_status)
-    .status(End, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_end_status)
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_pre_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_main_status)
-    .status(End, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_end_status)
-    .status(Pre, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND, link_special_hi_glide_land_pre_status)
-    .status(Main, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND, link_special_hi_glide_land_main_status)
-    .status(End, FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND, link_special_hi_glide_land_end_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START, link_special_hi_ascend_start_pre_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START, link_special_hi_ascend_start_main_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_pre_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_main_status)
+    .status(Exec, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_exec_status)
+    .status(Exit, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND, link_special_hi_ascend_exit_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_pre_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_main_status)
+    .status(Exec, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_exec_status)
+    .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_END, link_special_hi_ascend_end_end_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_pre_status)
+    .status(Init, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_init_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_main_status)
+    .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_end_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_pre_status)
+    .status(Init, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_init_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_main_status)
+    .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN, link_special_hi_glide_turn_end_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_pre_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_main_status)
+    .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_end_status)
+    .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND, link_special_hi_glide_land_pre_status)
+    .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND, link_special_hi_glide_land_main_status)
+    .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND, link_special_hi_glide_land_end_status)
     .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_LW_BLAST, link_special_lw_blast_pre_status)
     .install()
     ;

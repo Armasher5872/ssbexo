@@ -1,2 +1,2 @@
-pub const FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE: i32 = 0x3;
-pub const WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT: i32 = 0x0;
+pub const FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x3);
+pub const WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT: smash::lib::LuaConst = smash::lib::LuaConst::new(0x0);

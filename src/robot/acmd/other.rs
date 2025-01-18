@@ -2,22 +2,22 @@ use super::*;
 
 //Turn Dash ACMD
 unsafe extern "C" fn ssbexo_robot_turn_dash_acmd(agent: &mut L2CAgentBase) {
-    let snake_speed_value = WorkModule::get_float(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_SNAKE_SPEED_VALUE);
+    let snake_speed_value = WorkModule::get_float(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_SNAKE_SPEED_VALUE);
     let snake_speed = Vector3f{x: snake_speed_value*PostureModule::lr(agent.module_accessor), y: 0.0, z: 0.0};
     if macros::is_excute(agent) {
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE) {
             KineticModule::add_speed(agent.module_accessor, &snake_speed);
         }
     }
     frame(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
-        if !WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE) {
+        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE) {
             WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
         }
     }
     frame(agent.lua_state_agent, 13.0);
     if macros::is_excute(agent) {
-        WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
         WorkModule::enable_transition_term(agent.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
     }
 }
@@ -26,7 +26,7 @@ unsafe extern "C" fn ssbexo_robot_turn_dash_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_robot_turn_dash_effect(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("robot_nozzle"), Hash40::new("knee1"), 1.2, 0, 0, 90, -90, 0, 1, true);
-        if WorkModule::is_flag(agent.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE) {
+        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire_fly"), Hash40::new("knee1"), 1.2, 0, 0, 0, 0, 0, 1, true);
             macros::EFFECT_FOLLOW(agent, Hash40::new("sys_damage_spark"), Hash40::new("knee1"), 1.2, 0, 0, 90, 0, 0, 1, true);
         }
@@ -45,12 +45,12 @@ unsafe extern "C" fn ssbexo_robot_turn_dash_effect(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_robot_turn_run_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::enable_transition_term(agent.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH);
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
     }
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
         WorkModule::unable_transition_term(agent.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH);
-        WorkModule::set_flag(agent.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
     }
     frame(agent.lua_state_agent, 17.0);
     if macros::is_excute(agent) {

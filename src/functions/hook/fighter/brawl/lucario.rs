@@ -14,9 +14,8 @@ const LUCARIO_HANDLE_AURA_EFFECT_SCALE_OFFSET: usize = 0xc5e6f0; //Lucario only
 unsafe extern "C" fn lucario_check_special_command(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let cat4 = fighter.global_table[CMD_CAT4].get_i32();
-    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6 != 0 {
+    if cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6N6AB != 0 {
         if situation_kind == *SITUATION_KIND_GROUND
-        && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
         && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S_COMMAND) {
             fighter.change_status(FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH.into(), true.into());
             return true.into();
@@ -41,9 +40,9 @@ unsafe extern "C" fn lucario_var(boma: &mut BattleObjectModuleAccessor) {
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     ArticleModule::remove_exist(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, ArticleOperationTarget(0));
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
-    WorkModule::off_flag(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
-    WorkModule::off_flag(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA);
-    WorkModule::set_int(boma, 0, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+    WorkModule::off_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
+    WorkModule::off_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA);
+    WorkModule::set_int(boma, 0, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     ModelModule::set_mesh_visibility(boma, Hash40::new("gamemodel"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("lucario_close_mouth"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("lucario_eye"), true);
@@ -55,12 +54,12 @@ unsafe extern "C" fn lucario_var(boma: &mut BattleObjectModuleAccessor) {
 unsafe extern "C" fn aura_handle(object: *mut BattleObject) -> f32 {
     let boma = (*object).module_accessor;
     let kind = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_KIND);
-    let aura_level = WorkModule::get_int(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL) as f32;
+    let aura_level = WorkModule::get_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL) as f32;
     if kind == *FIGHTER_KIND_KIRBY {
         1.0
     }
     else {
-        if WorkModule::is_flag(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
+        if WorkModule::is_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
             1.9
         }
         else {
@@ -70,8 +69,12 @@ unsafe extern "C" fn aura_handle(object: *mut BattleObject) -> f32 {
 }
 
 unsafe extern "C" fn lucario_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
+    }
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
@@ -83,8 +86,9 @@ unsafe extern "C" fn lucario_start_initialization(vtable: u64, fighter: &mut Fig
     let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     lucario_var(&mut *boma);
-    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT4_SPECIAL_S_COMMAND as usize, 2);
-    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT4_COMMAND_6N6 as usize, 2);
+    set_command_input_button(boma, 0x2, 2);
+    set_command_input_button(boma, 0x19, 1);
+    set_command_input_button(boma, 0x19, 2);
     agent.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(should_use_special_lw_callback as *const () as _));
     agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(lucario_end_control as *const () as _));
     agent.global_table[CHECK_SPECIAL_COMMAND].assign(&L2CValue::Ptr(lucario_check_special_command as *const () as _));
@@ -113,7 +117,7 @@ unsafe extern "C" fn lucario_death_initialization(vtable: u64, fighter: &mut Fig
 #[skyline::hook(offset = LUCARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn lucario_opff(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
-    let aura_level = WorkModule::get_int(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+    let aura_level = WorkModule::get_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     let magic_series = fighter.battle_object.magic_series();
     if [1, 93].contains(&magic_series) {
@@ -135,7 +139,7 @@ unsafe extern "C" fn lucario_opff(vtable: u64, fighter: &mut Fighter) {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, false);
     }
     if [181, 204, 227, 250, 273].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, false);
+        StatusModule::change_status_request_from_script(boma, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, false);
     }
     if [23, 45, 67, 89, 114, 133, 152, 171, 194, 217, 240, 263, 286].contains(&magic_series) {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
@@ -146,7 +150,7 @@ unsafe extern "C" fn lucario_opff(vtable: u64, fighter: &mut Fighter) {
     if [25, 47, 69, 91, 116, 135, 154, 173, 196, 219, 242, 265, 288].contains(&magic_series) {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
     }
-    if [26, 48, 70, 92, 117, 136, 155, 174, 197, 220, 243, 266, 289].contains(&magic_series) && !WorkModule::is_flag(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
+    if [26, 48, 70, 92, 117, 136, 155, 174, 197, 220, 243, 266, 289].contains(&magic_series) && !WorkModule::is_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
     }
     UiManager::set_lucario_meter_info(entry_id, aura_level);
@@ -173,22 +177,22 @@ unsafe extern "C" fn lucario_on_attack(vtable: u64, fighter: &mut Fighter, log: 
     let agent = get_fighter_common_from_accessor(&mut *boma);
     let situation_kind = agent.global_table[SITUATION_KIND].get_i32();
     let cmd_cat1 = agent.global_table[CMD_CAT1].get_i32();
-    let aura_level = WorkModule::get_int(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+    let aura_level = WorkModule::get_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     let status_kind = StatusModule::status_kind(boma);
-    if status_kind == FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH {
+    if status_kind == *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH {
         if aura_level < 9 {
             fighter.battle_object.gimmick_flash();
-            WorkModule::inc_int(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+            WorkModule::inc_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
         }
         if aura_level == 9 {
             fighter.battle_object.gimmick_flash();
-            WorkModule::inc_int(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+            WorkModule::inc_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
             //macros::FILL_SCREEN_MODEL_COLOR(agent, 0, 10, 0.3, 0.3, 0.3, 0, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, *EFFECT_SCREEN_PRIO_FINAL);
         }
     }
-    if WorkModule::is_flag(boma, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
+    if WorkModule::is_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
         if [
-            FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW, *FIGHTER_STATUS_KIND_SPECIAL_HI, 
+            *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW, *FIGHTER_STATUS_KIND_SPECIAL_HI, 
             *FIGHTER_STATUS_KIND_SPECIAL_LW
         ].contains(&status_kind) {
             if situation_kind == *SITUATION_KIND_AIR {
@@ -229,7 +233,7 @@ unsafe extern "C" fn lucario_on_attack(vtable: u64, fighter: &mut Fighter, log: 
                 }
             }
         }
-        if [FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_LANDING, FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH].contains(&status_kind) {
+        if [*FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_LANDING, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH].contains(&status_kind) {
             if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 != 0 {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S4_START, false);
             }
@@ -257,7 +261,7 @@ unsafe extern "C" fn lucario_on_attack(vtable: u64, fighter: &mut Fighter, log: 
                 }
             }
         }
-        if status_kind == FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK {
+        if status_kind == *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK {
             if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_N != 0
             || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_F != 0
             || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_B != 0
@@ -307,14 +311,14 @@ pub unsafe extern "C" fn lucario_article_invalid_status_removal_event(_vtable: u
     WorkModule::off_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_FORCE_AURAPOWER_ATTACK_POWER_MUL);
     if ![
         *FIGHTER_STATUS_KIND_APPEAL, *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4,
-        *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_REBOUND_STOP, *FIGHTER_STATUS_KIND_REBOUND, *FIGHTER_STATUS_KIND_SPECIAL_S, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI,
-        FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW
+        *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_REBOUND_STOP, *FIGHTER_STATUS_KIND_REBOUND, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI,
+        *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW
     ].contains(&status_kind) {
-        ArticleModule::remove_exist(boma, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(0));
+        ArticleModule::remove_exist(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(0));
     }
-    if [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_SPECIAL_S, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW].contains(&status_kind) {
+    if [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW].contains(&status_kind) {
         if status_kind == *FIGHTER_STATUS_KIND_REBOUND_STOP {
-            ArticleModule::generate_article_enable(boma, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+            ArticleModule::generate_article_enable(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
         }
     }
 }

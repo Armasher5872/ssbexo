@@ -6,10 +6,10 @@ const ROCKMAN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x107e890; //Mega-Man 
 const ROCKMAN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x107ed30; //Mega-Man only
 
 unsafe extern "C" fn rockman_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
-    WorkModule::off_flag(boma, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
-    WorkModule::off_flag(boma, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
-    WorkModule::set_int(boma, 0, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+    WorkModule::off_flag(boma, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
+    WorkModule::off_flag(boma, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
+    WorkModule::off_flag(boma, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
+    WorkModule::set_int(boma, 0, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
 }
 
 //Megaman Startup Initialization
@@ -17,8 +17,10 @@ unsafe extern "C" fn rockman_var(boma: &mut BattleObjectModuleAccessor) {
 unsafe extern "C" fn rockman_start_initialization(vtable: u64, fighter: &mut Fighter) {
     if fighter.battle_object.kind == *FIGHTER_KIND_ROCKMAN as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
         common_initialization_variable_reset(&mut *boma);
         rockman_var(&mut *boma);
+        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }
@@ -65,7 +67,7 @@ unsafe extern "C" fn rockman_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             }
         }
     }
-    if WorkModule::is_flag(boma, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED) {
+    if WorkModule::is_flag(boma, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x1f5b14bb65), *FIGHTER_ROCKMAN_ARM_LEFT, *FIGHTER_ROCKMAN_ARMFORM_ROCKBUSTER, 0);
         macros::EFFECT_OFF_KIND(agent, Hash40::new("rockman_chargeshot_hold"), false, true);
         macros::EFFECT_OFF_KIND(agent, Hash40::new("rockman_chargeshot_elec"), false, true);

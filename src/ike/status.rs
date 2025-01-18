@@ -1,5 +1,120 @@
 use super::*;
 
+unsafe extern "C" fn ike_attack_air_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_attack_air_common(true.into());
+    fighter.sub_shift_status_main(L2CValue::Ptr(ike_attack_air_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn ike_attack_air_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
+    if !ike_attack_air_main_common(fighter).get_bool() {
+        fighter.sub_air_check_superleaf_fall_slowly();
+        if !fighter.global_table[IS_STOP].get_bool() {
+            smash::app::FighterUtil::check_cloud_through_out(module_accessor);
+        }
+    }
+    0.into()
+}
+
+unsafe extern "C" fn ike_attack_air_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let pos_x = PostureModule::pos_x(fighter.module_accessor);
+    let pos_y = PostureModule::pos_y(fighter.module_accessor);
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let ike_bound_angle = WorkModule::get_float(fighter.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_BOUND_ANGLE);
+    let ike_x_check = WorkModule::get_float(fighter.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_X_CHECK);
+    let ike_y_check = WorkModule::get_float(fighter.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLOAT_Y_CHECK);
+    let data_0 = AttackModule::attack_data(fighter.module_accessor, 0, false);
+    let data_1 = AttackModule::attack_data(fighter.module_accessor, 1, false);
+    let data_2 = AttackModule::attack_data(fighter.module_accessor, 2, false);
+    let data_3 = AttackModule::attack_data(fighter.module_accessor, 3, false);
+    let data_4 = AttackModule::attack_data(fighter.module_accessor, 4, false);
+    let ike_damage_0: f32 = (*data_0).power;
+    let ike_damage_1: f32 = (*data_1).power;
+    let ike_damage_2: f32 = (*data_2).power;
+    let ike_damage_3: f32 = (*data_3).power;
+    let ike_damage_4: f32 = (*data_4).power;
+    let vector = Vector2f{x: 6.0*lr, y: 0.0};
+    let ray_check = GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: ike_x_check, y: ike_y_check}, &mut Vector2f::zero(), true);
+    let wall_check = GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+ike_x_check, y: pos_y+ike_y_check}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.9), y: pos_y+(ike_y_check*0.9)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.8), y: pos_y+(ike_y_check*0.8)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.7), y: pos_y+(ike_y_check*0.7)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.6), y: pos_y+(ike_y_check*0.6)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.5), y: pos_y+(ike_y_check*0.5)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.4), y: pos_y+(ike_y_check*0.4)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.3), y: pos_y+(ike_y_check*0.3)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.2), y: pos_y+(ike_y_check*0.2)}, &vector, true) == 1
+        || GroundModule::ray_check(fighter.module_accessor, &Vector2f{x: pos_x+(ike_x_check*0.1), y: pos_y+(ike_y_check*0.1)}, &vector, true) == 1;
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    if !fighter.attack_air_common_strans().get_bool() {
+        if CancelModule::is_enable_cancel(fighter.module_accessor) {
+            if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+                if fighter.sub_air_check_fall_common().get_bool() {
+                    return true.into();
+                }
+            }
+        }
+        if prev_status_kind == *FIGHTER_STATUS_KIND_PASS {
+            if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+                GroundModule::set_passable_check(fighter.module_accessor, true);
+            }
+        }
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+            }
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
+                PostureModule::reverse_lr(fighter.module_accessor);
+                PostureModule::update_rot_y_lr(fighter.module_accessor);
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+                return true.into();
+            }
+        }
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND) && (AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) || ray_check || wall_check) {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_CAN_BOUND);
+        }
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE) {
+            let mut bound_speed_x_0 = ike_bound_angle.to_radians().sin()*(ike_damage_0/5.0);
+            let mut bound_speed_y_0 = ike_bound_angle.to_radians().cos()*(ike_damage_0/5.0);
+            let mut bound_speed_x_1 = ike_bound_angle.to_radians().sin()*(ike_damage_1/5.0);
+            let mut bound_speed_y_1 = ike_bound_angle.to_radians().cos()*(ike_damage_1/5.0);
+            let mut bound_speed_x_2 = ike_bound_angle.to_radians().sin()*(ike_damage_2/5.0);
+            let mut bound_speed_y_2 = ike_bound_angle.to_radians().cos()*(ike_damage_2/5.0);
+            let mut bound_speed_x_3 = ike_bound_angle.to_radians().sin()*(ike_damage_3/5.0);
+            let mut bound_speed_y_3 = ike_bound_angle.to_radians().cos()*(ike_damage_3/5.0);
+            let mut bound_speed_x_4 = ike_bound_angle.to_radians().sin()*(ike_damage_4/5.0);
+            let mut bound_speed_y_4 = ike_bound_angle.to_radians().cos()*(ike_damage_4/5.0);
+            if ike_bound_angle > 180.0 && ike_bound_angle < 0.0 {
+                bound_speed_x_0 = -(ike_bound_angle.to_radians().sin()*(ike_damage_0/5.0));
+                bound_speed_y_0 = -(ike_bound_angle.to_radians().cos()*(ike_damage_0/5.0));
+                bound_speed_x_1 = -(ike_bound_angle.to_radians().sin()*(ike_damage_1/5.0));
+                bound_speed_y_1 = -(ike_bound_angle.to_radians().cos()*(ike_damage_1/5.0));
+                bound_speed_x_2 = -(ike_bound_angle.to_radians().sin()*(ike_damage_2/5.0));
+                bound_speed_y_2 = -(ike_bound_angle.to_radians().cos()*(ike_damage_2/5.0));
+                bound_speed_x_3 = -(ike_bound_angle.to_radians().sin()*(ike_damage_3/5.0));
+                bound_speed_y_3 = -(ike_bound_angle.to_radians().cos()*(ike_damage_3/5.0));
+                bound_speed_x_4 = -(ike_bound_angle.to_radians().sin()*(ike_damage_4/5.0));
+                bound_speed_y_4 = -(ike_bound_angle.to_radians().cos()*(ike_damage_4/5.0));
+            }
+            let bound_speed_x = (bound_speed_x_0+bound_speed_x_1+bound_speed_x_2+bound_speed_x_3+bound_speed_x_4)/5.0;
+            let bound_speed_y = (bound_speed_y_0+bound_speed_y_1+bound_speed_y_2+bound_speed_y_3+bound_speed_y_4)/5.0;
+            if motion_kind == hash40("attack_air_b") {
+                macros::SET_SPEED_EX(fighter, bound_speed_x/4.0, bound_speed_y/2.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            }
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        }
+        if MotionModule::is_end(fighter.module_accessor) {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        }
+        return false.into();
+    }
+    true.into()
+}
+
 unsafe extern "C" fn ike_special_n_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_pre_SpecialNCommon();
     StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
@@ -9,13 +124,13 @@ unsafe extern "C" fn ike_special_n_pre_status(fighter: &mut L2CFighterCommon) ->
 
 unsafe extern "C" fn ike_special_n_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     }
     else {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
         fighter.set_situation(SITUATION_KIND_GROUND.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
@@ -98,7 +213,7 @@ unsafe extern "C" fn ike_slash_shoot_init_status(weapon: &mut L2CWeaponCommon) -
 unsafe extern "C" fn ike_slash_shoot_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_slash"), hash40("speed_max"));
     let lr = PostureModule::lr(weapon.module_accessor);
-    ReflectorModule::set_status(weapon.module_accessor, WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+    ReflectorModule::set_status(weapon.module_accessor, *WEAPON_IKE_SLASH_REFLECTOR_KIND_REFLECTOR, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("shoot"), 0.0, 1.0, false, 0.0, false, false);
     if GroundModule::is_floor_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
         weapon.set_situation(SITUATION_KIND_GROUND.into());
@@ -116,7 +231,7 @@ unsafe extern "C" fn ike_slash_shoot_main_loop(weapon: &mut L2CWeaponCommon) -> 
     let owner_boma = get_owner_boma(weapon);
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
-    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
+    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
         slash_removal(weapon);
     }
     0.into()
@@ -288,6 +403,7 @@ unsafe extern "C" fn ike_special_lw_end_max_check_attack_status(fighter: &mut L2
 
 pub fn install() {
     Agent::new("ike")
+    .status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, ike_attack_air_main_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, ike_special_n_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_N, ike_special_n_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, ike_special_n_main_status)
@@ -304,11 +420,11 @@ pub fn install() {
     .install()
     ;
     Agent::new("ike_slash")
-    .status(Pre, WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_pre_status)
-    .status(Init, WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_init_status)
-    .status(Main, WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_main_status)
-    .status(Exec, WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_exec_status)
-    .status(End, WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_end_status)
+    .status(Pre, *WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_pre_status)
+    .status(Init, *WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_init_status)
+    .status(Main, *WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_main_status)
+    .status(Exec, *WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_exec_status)
+    .status(End, *WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_end_status)
     .install()
     ;
 }

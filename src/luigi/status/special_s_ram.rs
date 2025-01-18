@@ -10,7 +10,7 @@ unsafe extern "C" fn luigi_special_s_ram_end_status(fighter: &mut L2CFighterComm
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_LAST_STRANS) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_HIT);
     }
-    WorkModule::set_int(fighter.module_accessor, 9, FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
+    WorkModule::set_int(fighter.module_accessor, 9, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
     0.into()
 }
 

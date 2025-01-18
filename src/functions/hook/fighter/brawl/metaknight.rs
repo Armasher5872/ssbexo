@@ -10,8 +10,10 @@ const METAKNIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xd12be0; //Meta 
 unsafe extern "C" fn metaknight_start_initialization(vtable: u64, fighter: &mut Fighter) {
     if fighter.battle_object.kind == *FIGHTER_KIND_METAKNIGHT as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
         common_initialization_variable_reset(&mut *boma);
-        WorkModule::off_flag(boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
+        WorkModule::off_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
+        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     }
     original!()(vtable, fighter)
 }
@@ -22,7 +24,7 @@ unsafe extern "C" fn metaknight_reset_initialization(vtable: u64, fighter: &mut 
     if fighter.battle_object.kind == *FIGHTER_KIND_METAKNIGHT as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_reset_variable_reset(&mut *boma);
-        WorkModule::off_flag(boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
+        WorkModule::off_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
     }
     original!()(vtable, fighter)
 }
@@ -32,7 +34,7 @@ unsafe extern "C" fn metaknight_reset_initialization(vtable: u64, fighter: &mut 
 unsafe extern "C" fn metaknight_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
-    WorkModule::off_flag(boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
+    WorkModule::off_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S);
     original!()(vtable, fighter)
 }
 

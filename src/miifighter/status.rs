@@ -152,7 +152,7 @@ unsafe extern "C" fn miifighter_special_n3_land_main_loop(fighter: &mut L2CFight
 pub unsafe extern "C" fn miifighter_special_s1_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let s1_speed_coef = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_s"), hash40("s1_speed_coef"));
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_SHIELD_HIT);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_HIT);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_HIT_CHECK_ONOFF);
@@ -352,7 +352,7 @@ pub unsafe extern "C" fn miifighter_special_lw1_main_status(fighter: &mut L2CFig
 unsafe extern "C" fn miifighter_special_lw1_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let armor = WorkModule::get_float(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
+    let armor = WorkModule::get_float(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
     if fighter.sub_air_check_fall_common().get_bool() || fighter.sub_wait_ground_check_common(false.into()).get_bool() {
         return 1.into();
     }
@@ -370,10 +370,10 @@ unsafe extern "C" fn miifighter_special_lw1_main_loop(fighter: &mut L2CFighterCo
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw1"), -1.0, 1.0, 0.0, false, false);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR) {
         damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, armor);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL) {
         if fighter.is_cat_flag(Cat1::Dash) && situation_kind == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), false.into());
         }
@@ -420,7 +420,7 @@ unsafe extern "C" fn miifighter_special_lw1_charge_main_loop(fighter: &mut L2CFi
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let armor = WorkModule::get_float(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
+    let armor = WorkModule::get_float(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
     if fighter.sub_air_check_fall_common().get_bool() || fighter.sub_wait_ground_check_common(false.into()).get_bool() {
         return 1.into();
     }
@@ -439,11 +439,11 @@ unsafe extern "C" fn miifighter_special_lw1_charge_main_loop(fighter: &mut L2CFi
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw1_charge"), -1.0, 1.0, 0.0, false, false);
     }
     if current_frame == 30.0 {
-        WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
+        WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
     }
-    WorkModule::set_float(fighter.module_accessor, 12.0+(12.0*current_frame/60.0), FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
-    WorkModule::set_float(fighter.module_accessor, armor+1.5, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR) {
+    WorkModule::set_float(fighter.module_accessor, 12.0+(12.0*current_frame/60.0), *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
+    WorkModule::set_float(fighter.module_accessor, armor+1.5, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR) {
         if current_frame < 40.0 {
             damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, armor);
         }
@@ -451,7 +451,7 @@ unsafe extern "C" fn miifighter_special_lw1_charge_main_loop(fighter: &mut L2CFi
             damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0.0);
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_DASH_CANCEL) {
         if fighter.is_cat_flag(Cat1::Dash) && situation_kind == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), false.into());
         }
@@ -461,7 +461,7 @@ unsafe extern "C" fn miifighter_special_lw1_charge_main_loop(fighter: &mut L2CFi
         return 1.into();
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        WorkModule::set_int(fighter.module_accessor, 2, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
+        WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
         fighter.change_status(FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW1_ATTACK.into(), false.into());
         return 1.into();
     }
@@ -529,16 +529,16 @@ unsafe extern "C" fn miifighter_special_lw1_attack_main_loop(fighter: &mut L2CFi
 }
 
 pub unsafe extern "C" fn miifighter_special_lw1_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_float(fighter.module_accessor, 12.0, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
-    WorkModule::set_float(fighter.module_accessor, 10.0, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
+    WorkModule::set_float(fighter.module_accessor, 12.0, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
+    WorkModule::set_float(fighter.module_accessor, 10.0, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
     0.into()
 }
 
 pub unsafe extern "C" fn miifighter_special_lw1_attack_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_float(fighter.module_accessor, 12.0, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
-    WorkModule::set_float(fighter.module_accessor, 10.0, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
+    WorkModule::set_float(fighter.module_accessor, 12.0, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_DAMAGE);
+    WorkModule::set_float(fighter.module_accessor, 10.0, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLOAT_ARMOR_CRUSHING_THUNDER_KICK_CURRENT_ARMOR);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_ARMOR_CRUSHING_THUNDER_KICK_ATTRIBUTE);
     0.into()
 }
 
@@ -550,7 +550,7 @@ unsafe extern "C" fn miifighter_special_lw3_throw_init_status(fighter: &mut L2CF
     smash::app::KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_CONTROL, module_accessor);
     smash::app::KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_STOP, module_accessor);
     if situation_kind == *SITUATION_KIND_GROUND {
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
         }
         else {
@@ -573,7 +573,7 @@ unsafe extern "C" fn miifighter_special_lw3_throw_main_status(fighter: &mut L2CF
     let lw3_attack_max_for_enemy = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("lw3_attack_max_for_enemy"));
     let lw3_attack_power_limit = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("lw3_attack_power_limit"));
     let mut attack_power = counter_attack_power*lw3_attack_mul;
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
         fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw3_throw_toss"), L2CValue::Hash40s("special_air_lw3_throw_toss"), false.into());
     }
     else {
@@ -606,7 +606,7 @@ unsafe extern "C" fn miifighter_special_lw3_throw_main_loop(fighter: &mut L2CFig
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let attack_power = WorkModule::get_float(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_COUNTER_THROW_FLOAT_ATTACK_POWER);
-    let counter_throw_object_id = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
+    let counter_throw_object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -621,7 +621,7 @@ unsafe extern "C" fn miifighter_special_lw3_throw_main_loop(fighter: &mut L2CFig
         if prev_situation_kind != *SITUATION_KIND_GROUND {
             if situation_kind == *SITUATION_KIND_GROUND {
                 GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
                     MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw3_throw_toss"), -1.0, 1.0, 0.0, false, false);
                 }
@@ -632,7 +632,7 @@ unsafe extern "C" fn miifighter_special_lw3_throw_main_loop(fighter: &mut L2CFig
             }
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK) {
         if counter_throw_object_id != *BATTLE_OBJECT_ID_INVALID {
             if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_WEAPON {
                 let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
@@ -708,9 +708,9 @@ unsafe extern "C" fn miifighter_special_lw3_throw_main_loop(fighter: &mut L2CFig
 }
 
 unsafe extern "C" fn miifighter_special_lw3_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let counter_throw_object_id = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
+    let counter_throw_object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
     CatchModule::catch_cut(fighter.module_accessor, false, false);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
     if counter_throw_object_id != *BATTLE_OBJECT_ID_INVALID {
         if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_WEAPON {
             let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
@@ -726,14 +726,14 @@ unsafe extern "C" fn miifighter_special_lw3_throw_end_status(fighter: &mut L2CFi
                 LinkModule::unlink(counter_throw_boma, *LINK_NO_ARTICLE);
             }
         }
-        WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
+        WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
     }
     0.into()
 }
 
 unsafe extern "C" fn miifighter_special_lw3_throw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let counter_throw_object_id = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
+    let counter_throw_object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
     if counter_throw_object_id != *BATTLE_OBJECT_ID_INVALID {
         if sv_battle_object::category(counter_throw_object_id as u32) == *BATTLE_OBJECT_CATEGORY_WEAPON {
             let counter_throw_boma = sv_battle_object::module_accessor(counter_throw_object_id as u32);
@@ -749,7 +749,7 @@ unsafe extern "C" fn miifighter_special_lw3_throw_exit_status(fighter: &mut L2CF
                 LinkModule::unlink(counter_throw_boma, *LINK_NO_ARTICLE);
             }
         }
-        WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
+        WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
     }
     0.into()
 }

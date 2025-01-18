@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::robot::*,
+    crate::functions::var::{
+        consts::*,
+        robot::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -19,6 +22,7 @@ use {
 };
 
 mod aerials;
+mod grounded;
 mod other;
 mod smashes;
 mod specials;
@@ -27,6 +31,7 @@ mod tilts;
 
 pub fn install() {
     aerials::install();
+    grounded::install();
     other::install();
     smashes::install();
     specials::install();

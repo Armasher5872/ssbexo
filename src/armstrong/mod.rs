@@ -3,6 +3,7 @@ use {
     crate::functions::{
         ext::utility::misc::*,
         var::{
+            armstrong::*,
             consts::*,
             globals::*,
         }

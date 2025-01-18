@@ -3,7 +3,7 @@ use super::*;
 /*   IRON TAIL START STATUS SCRIPTS   */
 
 unsafe extern "C" fn pikachu_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
     PostureModule::update_rot_y_lr(fighter.module_accessor);
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_GROUND {
@@ -121,7 +121,7 @@ unsafe extern "C" fn pikachu_special_s_attack_init_status(_fighter: &mut L2CFigh
 }
 
 unsafe extern "C" fn pikachu_special_s_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_PIKACHU_STATUS_WORK_ID_FLAG_SKULL_BASH_HIT);
     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     fighter.set_situation(SITUATION_KIND_AIR.into());
@@ -168,7 +168,7 @@ unsafe extern "C" fn pikachu_special_s_attack_exec_status(_fighter: &mut L2CFigh
 }
 
 unsafe extern "C" fn pikachu_special_s_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     0.into()
 }
 
@@ -177,7 +177,6 @@ unsafe extern "C" fn pikachu_special_s_attack_exit_status(_fighter: &mut L2CFigh
 }
 
 /*   SKULL BASH END STATUS SCRIPTS   */
-//0'd out to prevent any Skull Bash logic from leaking into Iron Tails logic
 
 unsafe extern "C" fn pikachu_special_s_end_pre_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
@@ -225,7 +224,7 @@ unsafe extern "C" fn pikachu_special_s_end_loop(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn pikachu_special_s_end_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     0.into()
 }
 

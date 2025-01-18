@@ -55,7 +55,8 @@ unsafe extern "C" fn ssbexo_mewtwo_up_special_expression(agent: &mut L2CAgentBas
 unsafe extern "C" fn ssbexo_mewtwo_futuresight_ball_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 300.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 40.0, 361, 45, 0, 25, 20.0, 0.0, 0.0, 0.0, None, None, None, 2.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
+        AttackModule::clear_all(agent.module_accessor);
+        macros::ATTACK(agent, 0, 1, Hash40::new("top"), 40.0, 361, 45, 0, 25, 20.0, 0.0, 0.0, 0.0, None, None, None, 4.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
     }
     frame(agent.lua_state_agent, 311.0);
     if macros::is_excute(agent) {

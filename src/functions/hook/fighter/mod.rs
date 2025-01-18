@@ -30,25 +30,3 @@ pub fn install() {
     smash_64::install();
     ultimate::install();
 }
-
-/*
-VTable Notation:
-
-Fighter Vtable Location: 710529cfd0
-
-Fighters have 146 entries
-
-Weapon Vtable Location: 710529d400
-
-Weapons have 102 entries
-
-Weapon On Attack Vtable Entry: 30
-
-Item Vtable Location: Uncertain but it's likely somewhere in the 7104500000 range
-
-Item Status Location: 7100736a90
-
-Article Limit Location: 710064b730
-
-Also ordered in the same manner as article vtables
-*/

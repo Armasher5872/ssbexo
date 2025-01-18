@@ -10,8 +10,6 @@ unsafe extern "C" fn wario_attack_dash_main_status(fighter: &mut L2CFighterCommo
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_dash"), 0.0, 1.0, false, 0.0, false, false);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN);
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH);
-    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
-    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START);
     let catch_dash_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("catch_dash_frame"));
     WorkModule::set_int(fighter.module_accessor, catch_dash_frame, *FIGHTER_STATUS_ATTACK_DASH_WORK_INT_CATCH_FRAME);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_DASH_FLAG_ATTACK_HI4_DISABLE);
@@ -40,44 +38,41 @@ unsafe extern "C" fn wario_attack_dash_main_status(fighter: &mut L2CFighterCommo
 
 unsafe extern "C" fn wario_attack_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    let is_stop = fighter.global_table[IS_STOP].get_bool();
+    let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(boma);
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let const_stick_x = fighter.global_table[STICK_X].get_f32(); 
-    let lr = PostureModule::lr(boma);
-    let stick_x = const_stick_x*lr;
-    let turn_run_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("turn_run_stick_x"));
-    let turn_run_check = stick_x*lr <= turn_run_stick_x;
+    let status_attack = fighter.status_attack();
+    let status_attack_info = status_attack[0x10f40d7b92u64].get_i64();
+    let motion_kind = MotionModule::motion_kind(boma);
+    let reserve_log = WorkModule::get_int64(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     let mini_jump_attack_frame = WorkModule::get_int(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
-    let reserve_log_attack_kind = WorkModule::get_int64(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    let turn_run_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("turn_run_stick_x"));
     if CancelModule::is_enable_cancel(boma) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
         return 0.into();
     }
     if 0 < mini_jump_attack_frame {
         if !StopModule::is_stop(boma) && fighter.sub_check_button_jump().get_bool() {
-            let log = fighter.status_attack();
-            let info = log[0x10f40d7b92u64].get_i64();
-            let mot = MotionModule::motion_kind(boma);
-            MotionAnimcmdModule::call_script_single(boma, *FIGHTER_ANIMCMD_EXPRESSION, Hash40::new_raw(mot), -1);
-            WorkModule::set_int64(boma, info, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+            MotionAnimcmdModule::call_script_single(boma, *FIGHTER_ANIMCMD_EXPRESSION, Hash40::new_raw(motion_kind), -1);
+            WorkModule::set_int64(boma, status_attack_info, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
             fighter.change_status_jump_mini_attack(true.into());
             return 1.into();
         }
     }
     if 1 == mini_jump_attack_frame {
-        if !is_stop && reserve_log_attack_kind > 0 {
-            FighterStatusModuleImpl::reset_log_action_info(boma, reserve_log_attack_kind);
+        if !fighter.global_table[IS_STOP].get_bool() && reserve_log > 0 {
+            FighterStatusModuleImpl::reset_log_action_info(boma, reserve_log);
             WorkModule::set_int64(boma, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
         }
     }
-    if !ItemModule::is_have_item(boma, 0) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-        if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH) {
-            fighter.change_status(FIGHTER_STATUS_KIND_CATCH_DASH.into(), true.into());
-            return 0.into();
-        }
-        if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN) && turn_run_check {
-            fighter.change_status(FIGHTER_STATUS_KIND_CATCH_TURN.into(), true.into());
-            return 0.into();
-        }
+    if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN)
+    && stick_x <= turn_run_stick_x
+    && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD)
+    && !ItemModule::is_have_item(boma, 0) {
+        fighter.change_status(FIGHTER_STATUS_KIND_CATCH_TURN.into(), true.into());
+        return 0.into();
+    }
+    if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) && !ItemModule::is_have_item(boma, 0) {
+        fighter.change_status(FIGHTER_STATUS_KIND_CATCH_DASH.into(), true.into());
+        return 0.into();
     }
     if MotionModule::is_end(boma) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -119,7 +114,7 @@ unsafe extern "C" fn wario_attack_dash_loop_main_status(fighter: &mut L2CFighter
 
 unsafe extern "C" fn wario_attack_dash_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         AttackModule::clear_all(fighter.module_accessor);
     }
     if fighter.is_cat_flag(Cat1::Jump) || fighter.is_cat_flag(Cat1::JumpButton) {
@@ -167,7 +162,7 @@ unsafe extern "C" fn wario_attack_dash_jump_squat_main_status(fighter: &mut L2CF
 
 unsafe extern "C" fn wario_attack_dash_jump_squat_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         AttackModule::clear_all(fighter.module_accessor);
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -216,7 +211,7 @@ unsafe extern "C" fn wario_attack_dash_air_loop_main_status(fighter: &mut L2CFig
 
 unsafe extern "C" fn wario_attack_dash_air_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         AttackModule::clear_all(fighter.module_accessor);
     }
     if situation_kind == *SITUATION_KIND_GROUND {
@@ -257,7 +252,7 @@ unsafe extern "C" fn wario_attack_dash_landing_main_status(fighter: &mut L2CFigh
 
 unsafe extern "C" fn wario_attack_dash_landing_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         AttackModule::clear_all(fighter.module_accessor);
     }
     if situation_kind == *SITUATION_KIND_AIR {
@@ -332,12 +327,12 @@ unsafe extern "C" fn wario_attack_dash_end_main_loop(fighter: &mut L2CFighterCom
 }
 
 unsafe extern "C" fn wario_attack_dash_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT);
     0.into()
 }
 
 unsafe extern "C" fn wario_throw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
         StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_AIR_STOP, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLOAT, 0);
         FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, (*FIGHTER_LOG_MASK_FLAG_THROW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP) as u64, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, *FIGHTER_POWER_UP_ATTACK_BIT_THROW as u32, 0);
         0.into()
@@ -348,7 +343,7 @@ unsafe extern "C" fn wario_throw_pre_status(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn wario_throw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FREE, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -357,7 +352,7 @@ unsafe extern "C" fn wario_throw_main_status(fighter: &mut L2CFighterCommon) -> 
         sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5, 0.0);
         sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5, 0.0);
         sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.14894);
-        WorkModule::on_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         wario_throw_sub_status(fighter);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_catch"), 0.0, 1.0, false, 0.0, false, false);
         fighter.sub_shift_status_main(L2CValue::Ptr(wario_throw_main_loop as *const () as _))
@@ -417,8 +412,8 @@ unsafe extern "C" fn wario_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2
 }
 
 unsafe extern "C" fn wario_throw_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE) {
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE) {
             sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5, 0.0);
             sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5, 0.0);
             sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.14894);
@@ -432,14 +427,14 @@ unsafe extern "C" fn wario_throw_exec_status(fighter: &mut L2CFighterCommon) -> 
 }
 
 unsafe extern "C" fn wario_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
     fighter.status_end_Throw()
 }
 
 unsafe extern "C" fn wario_throw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
     fighter.sub_throw_uniq_process_exit();
     0.into()
 }
@@ -449,26 +444,26 @@ pub fn install() {
     .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_DASH, wario_attack_dash_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_DASH, wario_attack_dash_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_DASH, wario_attack_dash_end_status)
-    .status(Pre, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_pre_status)
-    .status(Init, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_init_status)
-    .status(Main, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_main_status)
-    .status(End, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_end_status)
-    .status(Pre, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_pre_status)
-    .status(Init, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_init_status)
-    .status(Main, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_main_status)
-    .status(End, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_end_status)
-    .status(Pre, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_pre_status)
-    .status(Init, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_init_status)
-    .status(Main, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_main_status)
-    .status(End, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_end_status)
-    .status(Pre, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_pre_status)
-    .status(Init, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_init_status)
-    .status(Main, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_main_status)
-    .status(End, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_end_status)
-    .status(Pre, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_pre_status)
-    .status(Init, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_init_status)
-    .status(Main, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_main_status)
-    .status(End, FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_end_status)
+    .status(Pre, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_pre_status)
+    .status(Init, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_init_status)
+    .status(Main, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_main_status)
+    .status(End, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LOOP, wario_attack_dash_loop_end_status)
+    .status(Pre, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_pre_status)
+    .status(Init, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_init_status)
+    .status(Main, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_main_status)
+    .status(End, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT, wario_attack_dash_jump_squat_end_status)
+    .status(Pre, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_pre_status)
+    .status(Init, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_init_status)
+    .status(Main, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_main_status)
+    .status(End, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_AIR_LOOP, wario_attack_dash_air_loop_end_status)
+    .status(Pre, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_pre_status)
+    .status(Init, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_init_status)
+    .status(Main, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_main_status)
+    .status(End, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_LANDING, wario_attack_dash_landing_end_status)
+    .status(Pre, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_pre_status)
+    .status(Init, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_init_status)
+    .status(Main, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_main_status)
+    .status(End, *FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_END, wario_attack_dash_end_end_status)
     .status(Pre, *FIGHTER_STATUS_KIND_THROW, wario_throw_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_THROW, wario_throw_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_THROW, wario_throw_exec_status)

@@ -30,6 +30,7 @@ use {
             robot::*,
             snake::*,
             sonic::*,
+            toonlink::*,
             variables::*,
             wario::*,
         },

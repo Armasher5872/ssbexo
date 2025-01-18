@@ -8,19 +8,21 @@ const DEMON_VTABLE_LINK_EVENT_OFFSET: usize = 0x933800; //Kazuya only
 const DEMON_VTABLE_ON_GRAB_OFFSET: usize = 0x934310; //Kazuya only
 
 unsafe extern "C" fn demon_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE);
-    WorkModule::off_flag(boma, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
-    WorkModule::off_flag(boma, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
-    WorkModule::off_flag(boma, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
-    WorkModule::off_flag(boma, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE);
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH);
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER);
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_STATURE_SMASH);
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TWIN_FANG_DOUBLE_KICK);
 }
 
 //Kazuya Startup Initialization
 #[skyline::hook(offset = DEMON_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn demon_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     demon_var(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -53,7 +55,7 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_REBOUND, false);
     }
     if status_kind == *FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-        WorkModule::on_flag(boma, FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE);
+        WorkModule::on_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE);
     }
     call_original!(vtable, fighter, log)
 }

@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::rosetta::*,
+    crate::functions::var::{
+        consts::*,
+        rosetta::*,
+    },
     smash::{
         app::{
             lua_bind::*,

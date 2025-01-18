@@ -12,7 +12,7 @@ unsafe extern "C" fn dedede_special_n_pre_status(fighter: &mut L2CFighterCommon)
 unsafe extern "C" fn dedede_special_n_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     GroundModule::set_no_cliff_stop_energy(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ID_NONE);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
     }
     0.into()
@@ -20,7 +20,7 @@ unsafe extern "C" fn dedede_special_n_end_end_status(fighter: &mut L2CFighterCom
 
 unsafe extern "C" fn dedede_special_n_swallow_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
     }
     0.into()
@@ -30,7 +30,7 @@ unsafe extern "C" fn dedede_special_n_shot_object_hit_end_status(fighter: &mut L
     let global_fighter = fighter.global_table[FIGHTER].get_ptr() as *mut Fighter;
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     end_special_n_shot_object_hit(global_fighter);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
     }
     0.into()    
@@ -41,7 +41,7 @@ unsafe extern "C" fn dedede_special_n_eat_common_end_status(fighter: &mut L2CFig
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x322aadfea5), true);
     fun_710002dd40(fighter);
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
     }
     0.into()
@@ -54,7 +54,7 @@ unsafe extern "C" fn fun_710002dd40(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 unsafe extern "C" fn dedede_special_n_spit_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
     }
     0.into()
@@ -129,9 +129,9 @@ unsafe extern "C" fn dedede_special_lw_main_loop(fighter: &mut L2CFighterCommon)
     if !StatusModule::is_changing(fighter.module_accessor) {
         fun_7100025330(fighter);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
         fighter.change_status(FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_LW_ATTACK.into(), true.into());
         return 1.into();
     }
@@ -185,12 +185,12 @@ unsafe extern "C" fn fun_71000249a0(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 unsafe extern "C" fn fun_7100022210(fighter: &mut L2CFighterCommon) -> L2CValue {
     let hold_count = WorkModule::get_float(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_WORK_FLOAT_HOLD_COUNT);
-    let charge_progress = WorkModule::get_int(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    let charge_progress = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
     let hold_max_f = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw") as u64, hash40("hold_max_f") as u64);
     let charge_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw") as u64, hash40("charge_speed") as u64);
     if hold_count < hold_max_f {
         WorkModule::add_float(fighter.module_accessor, charge_speed, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_WORK_FLOAT_HOLD_COUNT);
-        WorkModule::add_int(fighter.module_accessor, 1, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+        WorkModule::add_int(fighter.module_accessor, 1, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
     }
     if hold_max_f <= hold_count
     || hold_max_f <= charge_progress as f32 {
@@ -210,7 +210,7 @@ unsafe extern "C" fn fun_7100022210(fighter: &mut L2CFighterCommon) -> L2CValue 
 unsafe extern "C" fn dedede_special_lw_wait_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if !fighter.sub_air_check_fall_common().get_bool() {
@@ -220,27 +220,27 @@ unsafe extern "C" fn dedede_special_lw_wait_main_loop(fighter: &mut L2CFighterCo
     }
     if WorkModule::is_enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD) {
         if fighter.sub_check_command_guard().get_bool() {
-            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
             fighter.change_status(FIGHTER_STATUS_KIND_GUARD_ON.into(), false.into());
         }
     }
     if WorkModule::is_enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ESCAPE) {
         if fighter.is_cat_flag(Cat2::StickEscape) {
-            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
             fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE.into(), false.into());
         }
         if fighter.is_cat_flag(Cat2::StickEscapeF) {
-            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
             fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE_F.into(), false.into());
         }
         if fighter.is_cat_flag(Cat2::StickEscapeB) {
-            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
             fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE_B.into(), false.into());
         }
     }
     if WorkModule::is_enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP) {
         if fighter.is_cat_flag(Cat1::Jump) || fighter.is_cat_flag(Cat1::JumpButton) {
-            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
             fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), false.into());
         }
     }
@@ -248,10 +248,11 @@ unsafe extern "C" fn dedede_special_lw_wait_main_loop(fighter: &mut L2CFighterCo
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_FLAG_CONTINUE_MOT2) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_FLAG_CONTINUE_MOT2);
         }
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
-        WorkModule::set_int(fighter.module_accessor, 120, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
+        WorkModule::set_int(fighter.module_accessor, 120, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
         fighter.gimmick_flash();
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
+        EffectModule::req_common(fighter.module_accessor, Hash40::new("charge_max"), 0.0);
         if situation_kind != *SITUATION_KIND_AIR {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
@@ -266,8 +267,8 @@ unsafe extern "C" fn dedede_special_lw_wait_main_loop(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn dedede_special_lw_wait_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
-    WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
     0.into()
 }
 
@@ -296,7 +297,7 @@ unsafe extern "C" fn dedede_special_lw_fall_main_status(fighter: &mut L2CFighter
 unsafe extern "C" fn dedede_special_lw_fall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if !fighter.sub_air_check_fall_common().get_bool() {
@@ -307,7 +308,7 @@ unsafe extern "C" fn dedede_special_lw_fall_main_loop(fighter: &mut L2CFighterCo
     if WorkModule::is_enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE) {
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD)
         || fighter.is_cat_flag(Cat1::AirEscape) {
-            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+            WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
             fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE_AIR.into(), false.into());
         }
     }
@@ -315,10 +316,11 @@ unsafe extern "C" fn dedede_special_lw_fall_main_loop(fighter: &mut L2CFighterCo
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_FLAG_CONTINUE_MOT2) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_FLAG_CONTINUE_MOT2);
         }
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
-        WorkModule::set_int(fighter.module_accessor, 120, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
+        WorkModule::set_int(fighter.module_accessor, 120, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
         fighter.gimmick_flash();
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
+        EffectModule::req_common(fighter.module_accessor, Hash40::new("charge_max"), 0.0);
         if situation_kind != *SITUATION_KIND_AIR {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
@@ -333,8 +335,8 @@ unsafe extern "C" fn dedede_special_lw_fall_main_loop(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn dedede_special_lw_fall_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
-    WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
     0.into()
 }
 
@@ -369,10 +371,11 @@ unsafe extern "C" fn dedede_special_lw_landing_main_loop(fighter: &mut L2CFighte
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_FLAG_CONTINUE_MOT2) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEDEDE_STATUS_JET_HAMMER_FLAG_CONTINUE_MOT2);
         }
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
-        WorkModule::set_int(fighter.module_accessor, 120, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
+        WorkModule::set_int(fighter.module_accessor, 120, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
         fighter.gimmick_flash();
         FighterUtil::set_face_motion_by_priority(module_accessor, FighterFacial(*FIGHTER_FACIAL_SPECIAL), Hash40::new("special_lw_max_face"));
+        EffectModule::req_common(fighter.module_accessor, Hash40::new("charge_max"), 0.0);
         if situation_kind != *SITUATION_KIND_AIR {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
@@ -390,8 +393,8 @@ unsafe extern "C" fn dedede_special_lw_landing_main_loop(fighter: &mut L2CFighte
 }
 
 unsafe extern "C" fn dedede_special_lw_landing_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
-    WorkModule::set_int(fighter.module_accessor, jet_charge_progress, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    let jet_charge_progress = WorkModule::get_int(fighter.module_accessor, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    WorkModule::set_int(fighter.module_accessor, jet_charge_progress, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
     0.into()
 }
 

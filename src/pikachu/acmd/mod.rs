@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::pikachu::*,
+    crate::functions::var::{
+        consts::*,
+        pikachu::*,
+    },
     smash::{
         app::{
             lua_bind::*,

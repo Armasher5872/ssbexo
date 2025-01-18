@@ -1,25 +1,25 @@
 //Credit to Championship Edition and VinegarChicken for the source code
 use super::*;
 
-unsafe fn one_hit_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32) {
-	let got_hit = WorkModule::get_int(module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
+unsafe extern "C" fn one_hit_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32) {
+	let got_hit = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
 	if READY_GO_TIMER != 0 
     && get_player_number(module_accessor) == 0 {
 		READY_GO_TIMER -= 1;
 	}
     //When someone gets hit, start a timer
 	if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_SLIP, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FALL, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_JUMP_BOARD, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL].contains(&status_kind) {
-		WorkModule::inc_int(module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);	
+		WorkModule::inc_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);	
 	} 
 	else {
-		WorkModule::set_int(module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
+		WorkModule::set_int(module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
 	}
 	if got_hit == 2 { 
 		//If the timer reaches 2, check to see if anyone else has been hit
 		for i in 0..TOTAL_FIGHTER + 1 {
 			if got_hit != 0 {
 				if i as usize != get_player_number(module_accessor) {
-					WorkModule::set_int(module_accessor, 3, FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
+					WorkModule::set_int(module_accessor, 3, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT);
 					//If anyone has, don't do anything
 					break;
 				}
@@ -60,7 +60,7 @@ unsafe fn one_hit_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 	}
 }
 
-unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, lua_state: u64) {
+unsafe extern "C" fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, lua_state: u64) {
 	let fighter_kind = smash::app::utility::get_kind(module_accessor);
 	if fighter_kind != *FIGHTER_KIND_NANA {
 		if READY_GO_TIMER != 0 
@@ -155,7 +155,7 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 				BALL_BOUNCED = Vector3f{x: 0.0, y: 0.0, z: 9999.0};
 			}
 		}
-		if !WorkModule::is_flag(module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO) { 
+		if !WorkModule::is_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO) { 
 			//The frame the game starts, randomly pick a player to give the ball
 			READY_GO_TIMER = 0;
 			if get_player_number(module_accessor) == 0 {
@@ -166,8 +166,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 				BALL_ID = ItemModule::get_have_item_id(module_accessor, 0) as u32;
 			}
 			LAST_TO_HIT_BALL = 9;
-			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
-			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
+			WorkModule::off_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
+			WorkModule::off_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
 		}
 		if READY_GO_TIMER != 0 { 
 			//Lock everyone in place while waiting
@@ -224,8 +224,8 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 					BALL_ID = ItemModule::get_have_item_id(module_accessor, 0) as u32;
 				}
 			}
-			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
-			WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
+			WorkModule::set_flag(module_accessor, false, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
+			WorkModule::set_flag(module_accessor, false, *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE);
 		}
 		if get_player_number(module_accessor) as i32 == BALL_OWNER {
 			if ItemModule::is_have_item(module_accessor, 0) {
@@ -241,7 +241,7 @@ unsafe fn tennis_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 	}
 }
 
-unsafe fn fun_di_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn fun_di_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, fighter: &mut L2CFighterCommon) {
 	if [*FIGHTER_STATUS_KIND_THROWN, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_JUMP_BOARD, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL].contains(&status_kind) {
 		let hitstun = WorkModule::get_int(module_accessor, *FIGHTER_STATUS_DAMAGE_WORK_INT_FRAME) - WorkModule::get_int(module_accessor, *FIGHTER_STATUS_DAMAGE_WORK_INT_HIT_STOP_FRAME);
 		if hitstun == 0 {
@@ -250,7 +250,7 @@ unsafe fn fun_di_mode(module_accessor: &mut smash::app::BattleObjectModuleAccess
 	}
 }
 
-unsafe fn smash4_parry(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon, globals: &mut L2CValue) {
+unsafe extern "C" fn smash4_parry(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon, globals: &mut L2CValue) {
 	if let L2CValueType::Void = globals["perfect_shield"].val_type {
 		globals["perfect_shield"] = false.into();
 		globals["shield_health"] = 50.0.into();
@@ -278,7 +278,7 @@ unsafe fn smash4_parry(module_accessor: &mut smash::app::BattleObjectModuleAcces
 	}
 }
 
-unsafe fn basketball_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, lua_state: u64, fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn basketball_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, lua_state: u64, fighter: &mut L2CFighterCommon) {
 	//Disables Blastzones
 	let mut pos = Vector3f{x: PostureModule::pos_x(module_accessor), y: PostureModule::pos_y(module_accessor), z: PostureModule::pos_z(module_accessor)};
 	if pos.x < dead_range(lua_state).x 
@@ -319,7 +319,7 @@ unsafe fn basketball_mode(module_accessor: &mut smash::app::BattleObjectModuleAc
 	}
 }
 
-unsafe fn status_kind_damage(_fighter: &mut L2CFighterCommon, module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, _globals: &mut L2CValue) {
+unsafe extern "C" fn status_kind_damage(_fighter: &mut L2CFighterCommon, module_accessor: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, _globals: &mut L2CValue) {
 	if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FALL, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_U, *FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_D, *FIGHTER_STATUS_KIND_TREAD_DAMAGE].contains(&status_kind) {
 		if status_kind != *FIGHTER_STATUS_KIND_TREAD_DAMAGE {
             //Fast Fall during Tumble
@@ -348,14 +348,11 @@ unsafe fn status_kind_damage(_fighter: &mut L2CFighterCommon, module_accessor: &
 	}
 }
 
-unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAccessor, fighter_kind: i32, status_kind: i32, fighter: &mut L2CFighterCommon) {
 	let entry_id = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
 	let fighter_manager = *(FIGHTER_MANAGER_ADDR as *mut *mut smash::app::FighterManager);
 	let fighter_information = FighterManager::get_fighter_information(fighter_manager, app::FighterEntryID(entry_id));
 	if is_preview_mode() {
-		if fighter_kind == *FIGHTER_KIND_MARIO {
-			VisibilityModule::set_whole(module_accessor, false);
-		}
 		if PostureModule::scale(module_accessor) == 1.5 {
 			SPECIAL_SMASH_SIZE = 1;
 		}
@@ -455,7 +452,7 @@ unsafe fn special_mode(module_accessor: &mut smash::app::BattleObjectModuleAcces
 					ItemModule::remove_all(&mut *get_boma(i));
 				}
 				WorkModule::off_flag(module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_GEKIKARA);
-				WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS);
+				WorkModule::set_flag(module_accessor, false, *FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS);
 			}
 		}
 		if SPECIAL_SMASH_BODY == 3 {
@@ -526,7 +523,7 @@ unsafe extern "C" fn custom_fighter_functions(fighter: &mut L2CFighterCommon) {
 		else {
 			for i in 0..TOTAL_FIGHTER {
 				if STOCK_COUNT[i as usize] > 1 {
-					WorkModule::set_flag(module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
+					WorkModule::set_flag(module_accessor, false, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK);
 					break;
 				}
 			}

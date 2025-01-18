@@ -33,11 +33,9 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cmd_cat2 = fighter.global_table[CMD_CAT2].get_i32();
     let cmd_cat3 = fighter.global_table[CMD_CAT3].get_i32();
     let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let is_have_item = ItemModule::is_have_item(fighter.module_accessor, 0);
     let check_button_attack = ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
     let turn_run_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("turn_run_stick_x"));
-    let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
     let turn_run_stick_x_threshold = stick_x <= turn_run_stick_x;
     let check_guard_hold = fighter.check_guard_hold().get_bool();
     let item_lua_stack_no_throw = {fighter.clear_lua_stack(); lua_args!(fighter, MA_MSC_ITEM_CHECK_HAVE_ITEM_TRAIT, ITEM_TRAIT_FLAG_NO_THROW); sv_module_access::item(fighter.lua_state_agent); !fighter.pop_lua_stack(1).get_bool()};
@@ -71,7 +69,9 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
         }
         /* START OF NEW ADDITION */
         //Allows platform drops out of shield
-        if GroundModule::is_passable_ground(fighter.module_accessor) && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS) && stick_y <= squat_stick_y && situation_kind == *SITUATION_KIND_GROUND {
+        if check_guard_hold
+        && GroundModule::is_passable_ground(fighter.module_accessor) 
+        && cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_GUARD_TO_PASS != 0 {
             fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
             return true.into();
         }
@@ -121,7 +121,7 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
         if fighter_kind == *FIGHTER_KIND_NESS {
-            if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP) {
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP) {
                 fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_GUARD.into(), false.into());
             }
             else {
@@ -129,7 +129,7 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
             } 
         }
         if fighter_kind == *FIGHTER_KIND_LUCAS {
-            if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_LUCAS_INSTANCE_WORK_ID_FLAG_DEFENSE_UP) {
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUCAS_INSTANCE_WORK_ID_FLAG_DEFENSE_UP) {
                 fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_GUARD.into(), false.into());
             }
             else {
@@ -148,7 +148,7 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe fn sub_ftstatusuniqprocessguardfunc_updateshield(fighter: &mut L2CFighterCommon, _param_1: L2CValue) {
     let shield_hp = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     let scale = fighter.FighterStatusGuard__calc_shield_scale(shield_hp.into()).get_f32();
-    let shield_eff = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID) as u32;
+    let shield_eff = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID) as u32;
     let shield_max = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD_MAX);
     ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: scale, y: scale, z: scale});
     if EffectModule::is_exist_effect(fighter.module_accessor, shield_eff) {
@@ -162,7 +162,7 @@ unsafe fn sub_ftstatusuniqprocessguardfunc_updateshield(fighter: &mut L2CFighter
 unsafe fn fighterstatusguard_set_shield_scale(fighter: &mut L2CFighterCommon, _param_1: L2CValue) -> L2CValue {
     let shield_hp = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     let scale = fighter.FighterStatusGuard__calc_shield_scale(shield_hp.into()).get_f32();
-    let shield_eff = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID) as u32;
+    let shield_eff = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID) as u32;
     let shield_max = WorkModule::get_float(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD_MAX);
     ModelModule::set_joint_scale(fighter.module_accessor, Hash40::new("throw"), &Vector3f{x: scale, y: scale, z: scale});
     if EffectModule::is_exist_effect(fighter.module_accessor, shield_eff) {
@@ -216,7 +216,7 @@ unsafe fn effect_guardoncommon(fighter: &mut L2CFighterAnimcmdEffectCommon) -> L
         lua_args!(agent, 0.6);
         LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
         let effect_id = EffectModule::get_last_handle(agent.module_accessor) as u32;
-        WorkModule::set_int(agent.module_accessor, effect_id as i32, FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID);
+        WorkModule::set_int(agent.module_accessor, effect_id as i32, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID);
     }
     0.into()
 }
@@ -236,5 +236,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

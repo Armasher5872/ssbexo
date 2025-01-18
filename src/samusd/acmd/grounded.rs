@@ -141,6 +141,10 @@ unsafe extern "C" fn ssbexo_samusd_dash_attack_acmd(agent: &mut L2CAgentBase) {
         AttackModule::clear_all(agent.module_accessor);
         MotionModule::set_rate(agent.module_accessor, 0.75);
     }
+    frame(agent.lua_state_agent, 21.0);
+    if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
+    }
     frame(agent.lua_state_agent, 32.0);
     if macros::is_excute(agent) {
         MotionModule::set_rate(agent.module_accessor, 1.0);

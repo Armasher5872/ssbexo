@@ -124,13 +124,13 @@ pub unsafe extern "C" fn miiswordsman_special_n3_slash_exec_status(_fighter: &mu
 }
 
 pub unsafe extern "C" fn miiswordsman_special_n3_slash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
-    WorkModule::set_int(fighter.module_accessor, 40, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
+    WorkModule::set_int(fighter.module_accessor, 40, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
     0.into()
 }
 
 pub unsafe extern "C" fn miiswordsman_special_n3_slash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
-    WorkModule::set_int(fighter.module_accessor, 40, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
+    WorkModule::set_int(fighter.module_accessor, 40, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
     0.into()
 }

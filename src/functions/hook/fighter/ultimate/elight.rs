@@ -10,8 +10,10 @@ const ELIGHT_VTABLE_ON_ATTACK_OFFSET: usize = 0xa29ab0; //Mythra only
 #[skyline::hook(offset = ELIGHT_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn elight_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
-    WorkModule::off_flag(boma, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(boma, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)   
 }
 
@@ -20,7 +22,7 @@ unsafe extern "C" fn elight_start_initialization(vtable: u64, fighter: &mut Figh
 unsafe extern "C" fn elight_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
-    WorkModule::off_flag(boma, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(boma, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     original!()(vtable, fighter)
 }
 
@@ -29,7 +31,7 @@ unsafe extern "C" fn elight_reset_initialization(vtable: u64, fighter: &mut Figh
 unsafe extern "C" fn elight_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
-    WorkModule::off_flag(boma, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+    WorkModule::off_flag(boma, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     original!()(vtable, fighter)
 }
 
@@ -37,12 +39,12 @@ unsafe extern "C" fn elight_death_initialization(vtable: u64, fighter: &mut Figh
 #[skyline::hook(offset = ELIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn elight_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    if WorkModule::is_flag(boma, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH) {
+    if WorkModule::is_flag(boma, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH) {
         WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
     }
     if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW)
     && fighter.battle_object.is_cat_flag(Cat1::SpecialLw) {
-        WorkModule::set_flag(boma, false, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+        WorkModule::off_flag(boma, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
         StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, true);
     }
     original!()(vtable, fighter)
@@ -59,7 +61,7 @@ unsafe extern "C" fn elight_on_attack(vtable: u64, fighter: &mut Fighter, log: u
     || status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH
     || status_kind == *FIGHTER_STATUS_KIND_ATTACK_S4
     || (status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR && [hash40("attack_air_f"), hash40("attack_air_b")].contains(&motion_kind)) {
-        WorkModule::set_flag(boma, true, FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
+        WorkModule::on_flag(boma, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
     }
     call_original!(vtable, fighter, log)
 }

@@ -46,9 +46,9 @@ unsafe extern "C" fn ness_attack_s4_main_loop(fighter: &mut L2CFighterCommon) ->
         shield!(fighter, *MA_MSC_SHIELD_SET_STATUS, *COLLISION_KIND_REFLECTOR, *FIGHTER_NESS_REFLECTOR_KIND_BAT, *SHIELD_STATUS_NONE, *FIGHTER_REFLECTOR_GROUP_EXTEND);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_NESS_STATUS_ATTACK_S4_FLAG_REFLECT_END);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_ATTACK_S4_HIT_REFLECT)
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_ATTACK_S4_HIT_REFLECT)
     && fighter.global_table[CURRENT_FRAME].get_f32() < 21.0 {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_ATTACK_S4_HIT_REFLECT);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_ATTACK_S4_HIT_REFLECT);
         MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 21.0, true, false, false);
     }
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
@@ -68,8 +68,9 @@ unsafe extern "C" fn ness_attack_s4_check_attack_status(fighter: &mut L2CFighter
     let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
     if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
         if collision_kind == *COLLISION_KIND_HIT {
-            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
-                macros::EFFECT(fighter, Hash40::new("starman_smash"), Hash40::new("top"), 0, 5, 12, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, true);
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+                macros::EFFECT(fighter, Hash40::new("starman_smash"), Hash40::new("top"), 0, 16, -10, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, true);
+                SoundModule::play_se(fighter.module_accessor, Hash40::new("se_ness_smash"), false, false, false, false, enSEType(0));
             }
         }
     }
@@ -110,8 +111,8 @@ unsafe extern "C" fn ness_special_guard_main_loop(fighter: &mut L2CFighterCommon
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     if frame == 120.0 {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
-        WorkModule::set_int(fighter.module_accessor, 600, FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
+        WorkModule::set_int(fighter.module_accessor, 600, *FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
         fighter.gimmick_flash();
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -187,16 +188,16 @@ unsafe extern "C" fn ness_special_guard_burst_exec_status(_fighter: &mut L2CFigh
 }
 
 unsafe extern "C" fn ness_special_guard_burst_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("ness_pkfl_hold"), false, false);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_status_attack_up"), false, false);
     0.into()
 }
 
 unsafe extern "C" fn ness_special_guard_burst_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_NESS_INSTANCE_WORK_ID_FLAG_OFFENSE_UP);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_NESS_INSTANCE_WORK_ID_INT_OFFENSE_UP_TIMER);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("ness_pkfl_hold"), false, false);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_status_attack_up"), false, false);
     0.into()
@@ -207,18 +208,18 @@ pub fn install() {
     .status(End, *FIGHTER_STATUS_KIND_APPEAL, ness_appeal_end_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_S4, ness_attack_s4_main_status)
     .status(CheckAttack, *FIGHTER_STATUS_KIND_ATTACK_S4, ness_attack_s4_check_attack_status)
-    .status(Pre, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_pre_status)
-    .status(Init, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_init_status)
-    .status(Main, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_main_status)
-    .status(Exec, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_exec_status)
-    .status(End, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_end_status)
-    .status(Exit, FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_exit_status)
-    .status(Pre, FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_pre_status)
-    .status(Init, FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_init_status)
-    .status(Main, FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_main_status)
-    .status(Exec, FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_exec_status)
-    .status(End, FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_end_status)
-    .status(Exit, FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_exit_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_pre_status)
+    .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_init_status)
+    .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_main_status)
+    .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_exec_status)
+    .status(End, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, ness_special_guard_exit_status)
+    .status(Pre, *FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_pre_status)
+    .status(Init, *FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_init_status)
+    .status(Main, *FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_main_status)
+    .status(Exec, *FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_exec_status)
+    .status(End, *FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_end_status)
+    .status(Exit, *FIGHTER_NESS_STATUS_KIND_SPECIAL_GUARD_BURST, ness_special_guard_burst_exit_status)
     .install()
     ;
 }

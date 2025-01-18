@@ -25,7 +25,7 @@ unsafe extern "C" fn ssbexo_metaknight_neutral_special_end_acmd(agent: &mut L2CA
 unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_fire_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 16.0);
     if macros::is_excute(agent) {
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_METAKNIGHT_GENERATE_ARTICLE_GALAXIA_BEAM, false, -1);
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_METAKNIGHT_GENERATE_ARTICLE_GALAXIA_BEAM, false, -1);
     }
 }
 
@@ -159,8 +159,8 @@ unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_aerial_fire_expression(agent
 unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 361, 30, 0, 60, 5.0, 0.0, 7.0, 0.9, Some(0.0), Some(1.0), Some(3.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, -4, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_NONE);
-        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 361, 30, 0, 60, 5.0, 0.0, -3.7, 2.2, Some(0.0), Some(1.0), Some(3.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, -4, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 361, 30, 0, 60, 5.0, 0.0, 7.0, 0.9, Some(0.0), Some(1.0), Some(3.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -4, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_NONE);
+        macros::ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 361, 30, 0, 60, 5.0, 0.0, -3.7, 2.2, Some(0.0), Some(1.0), Some(3.0), 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -4, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_NONE);
     }
 }
 
@@ -168,7 +168,7 @@ unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_acmd(agent: &mut L2CAgentBas
 unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_effect(agent: &mut L2CAgentBase) {
     let owner_boma = get_owner_boma(agent);
     frame(agent.lua_state_agent, 1.0);
-    if WorkModule::is_flag(owner_boma, FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S)
+    if WorkModule::is_flag(owner_boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_S)
     || StatusModule::situation_kind(agent.module_accessor) == *SITUATION_KIND_AIR {
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("miiswordsman_final_edge_yellow"), Hash40::new("rot"), 0, 0, 0, 45, 0, 0, 500, true);

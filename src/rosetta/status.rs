@@ -19,9 +19,9 @@ unsafe extern "C" fn rosetta_special_guard_main_loop(fighter: &mut L2CFighterCom
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let transit_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
-    let start_x = WorkModule::get_float(fighter.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
-    let start_y = WorkModule::get_float(fighter.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
+    let transit_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    let start_x = WorkModule::get_float(fighter.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
+    let start_y = WorkModule::get_float(fighter.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
@@ -41,8 +41,8 @@ unsafe extern "C" fn rosetta_special_guard_main_loop(fighter: &mut L2CFighterCom
         let tico_id = smash::app::lua_bind::Article::get_battle_object_id(tico) as u32;
         let tico_boma = sv_battle_object::module_accessor(tico_id);
         let tico_status_kind = StatusModule::status_kind(tico_boma);
-        let tico_start_x = WorkModule::get_float(tico_boma, WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
-        let tico_start_y = WorkModule::get_float(tico_boma, WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
+        let tico_start_x = WorkModule::get_float(tico_boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
+        let tico_start_y = WorkModule::get_float(tico_boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
         let tico_status_check = ![*WEAPON_ROSETTA_TICO_STATUS_KIND_DEAD, *WEAPON_ROSETTA_TICO_STATUS_KIND_DOWN, *WEAPON_ROSETTA_TICO_STATUS_KIND_STANDBY, *WEAPON_ROSETTA_TICO_STATUS_KIND_NONE, *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE, *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE_AIR, *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE_FALL, *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE_FLY, *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE_FLY_REFLECT_LR, *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE_FLY_REFLECT_U].contains(&tico_status_kind);
         if transit_timer <= 0 && tico_status_check {
             if frame == 1.0 {
@@ -50,10 +50,10 @@ unsafe extern "C" fn rosetta_special_guard_main_loop(fighter: &mut L2CFighterCom
                 HitModule::set_whole(tico_boma, HitStatus(*HIT_STATUS_OFF), 0);
                 VisibilityModule::set_whole(tico_boma, false);
                 JostleModule::set_status(tico_boma, false);
-                WorkModule::set_float(fighter.module_accessor, PostureModule::pos_x(fighter.module_accessor), FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
-                WorkModule::set_float(fighter.module_accessor, PostureModule::pos_y(fighter.module_accessor), FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
-                WorkModule::set_float(tico_boma, PostureModule::pos_x(tico_boma), WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
-                WorkModule::set_float(tico_boma, PostureModule::pos_y(tico_boma), WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
+                WorkModule::set_float(fighter.module_accessor, PostureModule::pos_x(fighter.module_accessor), *FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
+                WorkModule::set_float(fighter.module_accessor, PostureModule::pos_y(fighter.module_accessor), *FIGHTER_ROSETTA_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
+                WorkModule::set_float(tico_boma, PostureModule::pos_x(tico_boma), *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_X);
+                WorkModule::set_float(tico_boma, PostureModule::pos_y(tico_boma), *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLOAT_WORMHOLE_TRANSIT_START_Y);
                 let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 0.5, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
                 EffectModule::set_alpha(tico_boma, handle as u32, 1.0);
             }
@@ -66,7 +66,7 @@ unsafe extern "C" fn rosetta_special_guard_main_loop(fighter: &mut L2CFighterCom
                 PostureModule::set_pos(tico_boma, &Vector3f{x: start_x, y: start_y, z: PostureModule::pos_z(tico_boma)});
                 PostureModule::init_pos(fighter.module_accessor, &Vector3f{x: tico_start_x, y: tico_start_y, z: PostureModule::pos_z(fighter.module_accessor)}, true, true);
                 PostureModule::init_pos(tico_boma, &Vector3f{x: start_x, y: start_y, z: PostureModule::pos_z(tico_boma)}, true, true);
-                WorkModule::set_int(fighter.module_accessor, 300, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+                WorkModule::set_int(fighter.module_accessor, 300, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
                 let handle = EffectModule::req_on_joint(tico_boma, Hash40::new("rosetta_escape_end"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
                 EffectModule::set_alpha(tico_boma, handle as u32, 1.0);
             }
@@ -99,9 +99,9 @@ unsafe extern "C" fn rosetta_special_guard_exec_status(_fighter: &mut L2CFighter
 }
 
 unsafe extern "C" fn rosetta_special_guard_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let transit_timer = WorkModule::get_int(fighter.module_accessor, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+    let transit_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     if transit_timer <= 0 {
-        WorkModule::set_int(fighter.module_accessor, 300, FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
+        WorkModule::set_int(fighter.module_accessor, 300, *FIGHTER_ROSETTA_INSTANCE_WORK_ID_INT_WORMHOLE_TRANSIT_TIMER);
     }
     0.into()
 }
@@ -112,12 +112,12 @@ unsafe extern "C" fn rosetta_special_guard_exit_status(_fighter: &mut L2CFighter
 
 pub fn install() {
     Agent::new("rosetta")
-    .status(Pre, FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_pre_status)
-    .status(Init, FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_init_status)
-    .status(Main, FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_main_status)
-    .status(Exec, FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_exec_status)
-    .status(End, FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_end_status)
-    .status(Exit, FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_exit_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_pre_status)
+    .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_init_status)
+    .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_main_status)
+    .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_exec_status)
+    .status(End, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_GUARD, rosetta_special_guard_exit_status)
     .install()
     ;
 }

@@ -1,7 +1,10 @@
 use {
     crate::functions::{
         ext::utility::misc::*,
-        var::armstrong::*,
+        var::{
+            armstrong::*,
+            consts::*,
+        }
     },
     smash::{
         app::{
@@ -11,10 +14,7 @@ use {
         },
         lib::lua_const::*,
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector2f
-        }
+        phx::Hash40
     },
     smash_script::*,
     smashline::*,

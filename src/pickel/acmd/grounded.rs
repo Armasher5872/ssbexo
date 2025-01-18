@@ -1,5 +1,6 @@
 use super::*;
 
+//Jab ACMD
 unsafe extern "C" fn ssbexo_pickel_jab_acmd(agent: &mut L2CAgentBase) {
     let situation_kind = WorkModule::get_int(agent.module_accessor, *FIGHTER_PICKEL_INSTANCE_WORK_ID_INT_SITUATION_KIND);
     let material_kind = WorkModule::get_int(agent.module_accessor, *FIGHTER_PICKEL_INSTANCE_WORK_ID_INT_HAVE_CRAFT_WEAPON_MATERIAL_KIND);
@@ -103,6 +104,7 @@ unsafe extern "C" fn ssbexo_pickel_jab_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
+//Dash Attack ACMD
 unsafe extern "C" fn ssbexo_pickel_dash_attack_acmd(agent: &mut L2CAgentBase) {
     let material_kind = WorkModule::get_int(agent.module_accessor, *FIGHTER_PICKEL_INSTANCE_WORK_ID_INT_HAVE_CRAFT_WEAPON_MATERIAL_KIND);
     let wood = *FIGHTER_PICKEL_MATERIAL_KIND_WOOD;
@@ -140,7 +142,11 @@ unsafe extern "C" fn ssbexo_pickel_dash_attack_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 0, 0, Hash40::new("top"), 8.5, 50, 66, 0, 68, 5.8, 0.0, 8.8, 4.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         }
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
+    }
+    wait(agent.lua_state_agent, 2.0);
     if macros::is_excute(agent) {
         if [wood, stone, iron, gold, diamond].contains(&material_kind) {
             match material_kind {

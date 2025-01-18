@@ -72,7 +72,7 @@ pub unsafe extern "C" fn miiswordsman_special_n2_fire_exec_status(_fighter: &mut
 }
 
 pub unsafe extern "C" fn miiswordsman_special_n2_fire_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
+    WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
     0.into()
 }
 

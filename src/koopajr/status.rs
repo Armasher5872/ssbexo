@@ -87,8 +87,8 @@ unsafe extern "C" fn koopajr_float_pre_status(fighter: &mut L2CFighterCommon) ->
 unsafe extern "C" fn koopajr_float_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
     KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_UNIQ_FLOAT);
-    WorkModule::set_int(fighter.module_accessor, 60, FIGHTER_KOOPAJR_INSTANCE_WORK_ID_INT_FLOAT_TIME);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_UNIQ_FLOAT);
+    WorkModule::set_int(fighter.module_accessor, 60, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_INT_FLOAT_TIME);
     0.into()
 }
 
@@ -103,8 +103,8 @@ unsafe extern "C" fn koopajr_float_main_status(fighter: &mut L2CFighterCommon) -
 unsafe extern "C" fn koopajr_float_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let float_time = WorkModule::get_int(fighter.module_accessor, FIGHTER_KOOPAJR_INSTANCE_WORK_ID_INT_FLOAT_TIME);
-    WorkModule::dec_int(fighter.module_accessor, FIGHTER_KOOPAJR_INSTANCE_WORK_ID_INT_FLOAT_TIME);
+    let float_time = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_INT_FLOAT_TIME);
+    WorkModule::dec_int(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_INT_FLOAT_TIME);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_air_check_fall_common().get_bool() {
             return 1.into();
@@ -151,7 +151,7 @@ unsafe extern "C" fn koopajr_cannonball_shoot_init_status(weapon: &mut L2CWeapon
     let lerp_speed = weapon.lerp(speed_min.into(), speed_max.into(), float_charge.into());
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    WorkModule::set_int(weapon.module_accessor, 28, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
+    WorkModule::set_int(weapon.module_accessor, 28, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, lerp_speed.get_f32()*lr, 0.0);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     0.into()
@@ -189,7 +189,7 @@ unsafe extern "C" fn fun_71000196c0(weapon: &mut L2CWeaponCommon, is_stop: L2CVa
 unsafe extern "C" fn koopajr_cannonball_shoot_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let float_charge = WorkModule::get_float(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLOAT_CHARGE);
     let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    let freeze_frame = WorkModule::get_int(weapon.module_accessor, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
+    let freeze_frame = WorkModule::get_int(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
     let gravity_frame = WorkModule::get_int(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_GRAVITY_FRAME);
     let brake_x = WorkModule::get_param_float(weapon.module_accessor, hash40("param_cannonball"), hash40("brake_x"));
     let gravity = WorkModule::get_param_float(weapon.module_accessor, hash40("param_cannonball"), hash40("gravity"));
@@ -203,7 +203,7 @@ unsafe extern "C" fn koopajr_cannonball_shoot_main_loop(weapon: &mut L2CWeaponCo
     let lerp_speed;
     if life > 0 {
         if freeze_frame > 0 {
-            WorkModule::dec_int(weapon.module_accessor, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
+            WorkModule::dec_int(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
             if owner_stick_x > 0.7 {
                 lerp_speed = weapon.lerp(1.4f32.into(), 3.5f32.into(), float_charge.into());
             }
@@ -214,10 +214,10 @@ unsafe extern "C" fn koopajr_cannonball_shoot_main_loop(weapon: &mut L2CWeaponCo
                 lerp_speed = weapon.lerp(speed_min.into(), speed_max.into(), float_charge.into());
             }
             if owner_stick_y > 0.5 {
-                WorkModule::on_flag(weapon.module_accessor, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT);
+                WorkModule::on_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT);
             }
             else {
-                WorkModule::off_flag(weapon.module_accessor, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT);
+                WorkModule::off_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT);
             }
             sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, lerp_speed.get_f32()*lr, 0.0);
         }
@@ -225,7 +225,7 @@ unsafe extern "C" fn koopajr_cannonball_shoot_main_loop(weapon: &mut L2CWeaponCo
             KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
         }
         if gravity_frame == 0 {
-            if WorkModule::is_flag(weapon.module_accessor, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT) {
+            if WorkModule::is_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT) {
                 sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -brake_x*lr, gravity);
                 MotionModule::change_motion(weapon.module_accessor, Hash40::new("rise"), 0.0, 1.0, false, 0.0, false, false);
             }
@@ -258,8 +258,8 @@ unsafe extern "C" fn koopajr_cannonball_shoot_main_loop(weapon: &mut L2CWeaponCo
 }
 
 unsafe extern "C" fn koopajr_cannonball_shoot_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    WorkModule::set_int(weapon.module_accessor, 0, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
-    WorkModule::off_flag(weapon.module_accessor, WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT);
+    WorkModule::set_int(weapon.module_accessor, 0, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_FREEZE_FRAME);
+    WorkModule::off_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_IS_UP_INPUT);
     0.into()
 }
 
@@ -268,10 +268,10 @@ pub fn install() {
     .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_LW4, koopajr_attack_lw4_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4, koopajr_attack_lw4_main_status)
     .status(MapCorrection, *FIGHTER_STATUS_KIND_ATTACK_LW4, koopajr_attack_lw4_map_correction_status)
-    .status(Pre, FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_pre_status)
-    .status(Init, FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_init_status)
-    .status(Main, FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_main_status)
-    .status(End, FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_end_status)
+    .status(Pre, *FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_pre_status)
+    .status(Init, *FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_init_status)
+    .status(Main, *FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_main_status)
+    .status(End, *FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_end_status)
     .install()
     ;
     Agent::new("koopajr_cannonball")

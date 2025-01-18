@@ -153,7 +153,7 @@ unsafe extern "C" fn ssbexo_wario_back_throw_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 10.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
         sv_kinetic_energy!(reset_energy, agent, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FREE, 0.0, 0.0, 0.0, 0.0, 0.0);
         KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     }
@@ -176,7 +176,7 @@ unsafe extern "C" fn ssbexo_wario_back_throw_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 47.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_REVERSE_LR_FINISH_CAMERA_THROW_ORBIT);
         macros::CHECK_FINISH_CAMERA(agent, 18, 4);
         lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);

@@ -23,7 +23,7 @@ unsafe extern "C" fn lucario_mega_evolve_main_status(fighter: &mut L2CFighterCom
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, false, -1);
     ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, false, ArticleOperationTarget(0));
-    ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, ArticleOperationTarget(0));
+    ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, *WEAPON_LUCARIO_LUCARIOM_STATUS_KIND_MEGA_EVOLVE, ArticleOperationTarget(0));
     if situation_kind == *SITUATION_KIND_AIR {
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LUCARIO_GENERATE_ARTICLE_LUCARIOM, Hash40::new("mega_evolve_air"), false, -1.0);
     }
@@ -82,12 +82,12 @@ unsafe extern "C" fn lucario_mega_evolve_exit_status(fighter: &mut L2CFighterCom
 
 pub fn install() {
     Agent::new("lucario")
-    .status(Pre, FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_pre_status)
-    .status(Init, FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_init_status)
-    .status(Main, FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_main_status)
-    .status(Exec, FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_exec_status)
-    .status(End, FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_end_status)
-    .status(Exit, FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_exit_status)
+    .status(Pre, *FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_pre_status)
+    .status(Init, *FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_init_status)
+    .status(Main, *FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_main_status)
+    .status(Exec, *FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_exec_status)
+    .status(End, *FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_end_status)
+    .status(Exit, *FIGHTER_LUCARIO_STATUS_KIND_MEGA_EVOLVE, lucario_mega_evolve_exit_status)
     .install()
     ;
 }

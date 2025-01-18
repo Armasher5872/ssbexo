@@ -40,11 +40,12 @@ unsafe extern "C" fn bayonetta_start_initialization(vtable: u64, fighter: &mut F
     let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
-    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 as usize, 2);
-    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 as usize, 2);
-    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 as usize, 2);
-    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT4_COMMAND_6N6 as usize, 2);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 as usize, 1);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 as usize, 1);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 as usize, 1);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT4_COMMAND_6N6 as usize, 0);
     agent.global_table[CHECK_SPECIAL_COMMAND].assign(&L2CValue::Ptr(bayonetta_check_special_command as *const () as _));
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -54,6 +55,10 @@ unsafe extern "C" fn bayonetta_reset_initialization(vtable: u64, fighter: &mut F
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_SPECIAL_COMMAND);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 as usize, 1);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 as usize, 1);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 as usize, 1);
+    set_command_input_button(boma, *FIGHTER_PAD_CMD_CAT4_COMMAND_6N6 as usize, 0);
     original!()(vtable, fighter)
 }
 

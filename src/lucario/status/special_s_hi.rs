@@ -73,23 +73,23 @@ unsafe extern "C" fn lucario_side_special_hi_exec_status(_fighter: &mut L2CFight
 }
 
 unsafe extern "C" fn lucario_side_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
     0.into()
 }
 
 unsafe extern "C" fn lucario_side_special_hi_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_LW_INPUT);
     0.into()
 }
 
 pub fn install() {
     Agent::new("lucario")
-    .status(Pre, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_pre_status)
-    .status(Init, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_init_status)
-    .status(Main, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_main_status)
-    .status(Exec, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_exec_status)
-    .status(End, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_end_status)
-    .status(Exit, FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_exit_status)
+    .status(Pre, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_pre_status)
+    .status(Init, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_init_status)
+    .status(Main, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_main_status)
+    .status(Exec, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_exec_status)
+    .status(End, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_end_status)
+    .status(Exit, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, lucario_side_special_hi_exit_status)
     .install()
     ;
 }

@@ -76,13 +76,13 @@ unsafe extern "C" fn purin_special_n_pre_status(fighter: &mut L2CFighterCommon) 
 
 unsafe extern "C" fn purin_special_n_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
     }
     else {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N);
         fighter.set_situation(SITUATION_KIND_GROUND.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
@@ -189,7 +189,7 @@ unsafe extern "C" fn purin_disarming_voice_shoot_main_loop(weapon: &mut L2CWeapo
     let owner_boma = get_owner_boma(weapon);
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
-    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
+    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, *FIGHTER_PURIN_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
         disarming_voice_removal(weapon);
     }
     0.into()
@@ -232,11 +232,11 @@ pub fn install() {
     .install()
     ;
     Agent::new("purin_disarmingvoice")
-    .status(Pre, WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_pre_status)
-    .status(Init, WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_init_status)
-    .status(Main, WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_main_status)
-    .status(Exec, WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_exec_status)
-    .status(End, WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_end_status)
+    .status(Pre, *WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_pre_status)
+    .status(Init, *WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_init_status)
+    .status(Main, *WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_main_status)
+    .status(Exec, *WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_exec_status)
+    .status(End, *WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT, purin_disarming_voice_shoot_end_status)
     .install()
     ;
 }

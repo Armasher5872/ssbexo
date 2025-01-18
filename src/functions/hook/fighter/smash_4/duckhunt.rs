@@ -8,7 +8,9 @@ const DUCKHUNT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x9a13f0; //Duck Hunt
 #[skyline::hook(offset = DUCKHUNT_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn duckhunt_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
 }
 
 //Duck Hunt Reset Initialization

@@ -36,15 +36,15 @@ unsafe extern "C" fn rockman_rockbuster_shoot_turn_main_loop(fighter: &mut L2CFi
             return 0.into();
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL) {
         macros::PLAY_STATUS(fighter, Hash40::new("se_rockman_smash_s02"));
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
-        let charge_frame = WorkModule::get_int(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING) {
+        let charge_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
         if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
         }
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_hold"), false, true);
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_elec"), false, true);
@@ -52,8 +52,8 @@ unsafe extern "C" fn rockman_rockbuster_shoot_turn_main_loop(fighter: &mut L2CFi
         macros::EFFECT_FOLLOW(fighter, Hash40::new("rockman_chargeshot_elec"), Hash40::new("havel"), 0, 0, -1.5, 0, 0, 0, 0.5, true);
         if charge_frame > 119 {
             fighter.gimmick_flash();
-            WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGED);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_CHARGING);
             if sit == *SITUATION_KIND_GROUND {
                 fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
             }
@@ -66,7 +66,7 @@ unsafe extern "C" fn rockman_rockbuster_shoot_turn_main_loop(fighter: &mut L2CFi
     else {
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_hold"), false, true);
         macros::EFFECT_OFF_KIND(fighter, Hash40::new("rockman_chargeshot_elec"), false, true);
-        WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCK_BUSTER_CHARGE_FRAME);
     }
     if sit == *SITUATION_KIND_AIR {
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_INT_ROCKBUSTER_STEP);
@@ -98,7 +98,7 @@ unsafe extern "C" fn rockman_rockbuster_shoot_turn_end_status(fighter: &mut L2CF
         rockman_rockbuster_end_var_reset(fighter);
     }
     else {
-        WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ROCK_BUSTER_VISUAL);
     }
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1f5b14bb65), *FIGHTER_ROCKMAN_ARM_LEFT, *FIGHTER_ROCKMAN_ARMFORM_ROCKBUSTER, 0);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1f5b14bb65), *FIGHTER_ROCKMAN_ARM_RIGHT, *FIGHTER_ROCKMAN_ARMFORM_HAND, 0);

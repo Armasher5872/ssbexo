@@ -66,7 +66,7 @@ unsafe extern "C" fn lucario_down_special_main_loop(fighter: &mut L2CFighterComm
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let aura_level = WorkModule::get_int(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+    let aura_level = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
@@ -93,7 +93,7 @@ unsafe extern "C" fn lucario_down_special_main_loop(fighter: &mut L2CFighterComm
     if smash::app::smashball::is_training_mode() {
         if current_frame > 77.0 && aura_level < 10 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             fighter.gimmick_flash();
-            WorkModule::set_int(fighter.module_accessor, 10, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
+            WorkModule::set_int(fighter.module_accessor, 10, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
             //macros::FILL_SCREEN_MODEL_COLOR(fighter, 0, 10, 0.3, 0.3, 0.3, 0, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, *EFFECT_SCREEN_PRIO_FINAL);
         }
     }

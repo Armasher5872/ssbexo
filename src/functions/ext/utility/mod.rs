@@ -27,10 +27,15 @@ use {
         lua2cpp::*,
         phx::{
             Hash40,
+            Vector2f,
             Vector3f
         }
     },
     smash_script::*,
+    std::ops::{
+        Deref,
+        DerefMut
+    }
 };
 
 pub mod boma_ext;

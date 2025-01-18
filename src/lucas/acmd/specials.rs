@@ -194,11 +194,11 @@ unsafe extern "C" fn ssbexo_lucas_shield_special_burst_expression(agent: &mut L2
 unsafe extern "C" fn ssbexo_lucas_down_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NORMAL), FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
+        ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     }
     frame(agent.lua_state_agent, 28.0);
     if macros::is_excute(agent) {
-        ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NONE), FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
+        ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     }
 }
 
@@ -377,7 +377,7 @@ unsafe extern "C" fn ssbexo_lucas_down_special_catch_expression(agent: &mut L2CA
 
 //Down Special Throw ACMD
 unsafe extern "C" fn ssbexo_lucas_down_special_throw_acmd(agent: &mut L2CAgentBase) {
-    let angle = WorkModule::get_int(agent.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
+    let angle = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     let speed_x = (angle as f32).to_radians().sin()*3.0*PostureModule::lr(agent.module_accessor);
     let speed_y = (angle as f32).to_radians().cos()*3.0;
     let inverse_angle;
@@ -405,7 +405,7 @@ unsafe extern "C" fn ssbexo_lucas_down_special_throw_acmd(agent: &mut L2CAgentBa
     }
     frame(agent.lua_state_agent, 40.0);
     if macros::is_excute(agent) {
-        WorkModule::set_flag(agent.module_accessor, true, FIGHTER_LUCAS_INSTANCE_WORK_ID_FLAG_PSI_COUNTER_THROWN);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUCAS_INSTANCE_WORK_ID_FLAG_PSI_COUNTER_THROWN);
         KineticModule::add_speed(agent.module_accessor, &Vector3f{x: 0.0, y: speed_y, z: speed_x});
     }
 }

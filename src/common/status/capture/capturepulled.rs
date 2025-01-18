@@ -1,7 +1,7 @@
 use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_pre_CapturePulled_common)]
-unsafe fn status_pre_capturepulled_common(fighter: &mut L2CFighterCommon, param_1: &mut L2CValue, param_2: &mut L2CValue) -> L2CValue {
+unsafe extern "C" fn status_pre_capturepulled_common(fighter: &mut L2CFighterCommon, param_1: &mut L2CValue, param_2: &mut L2CValue) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, SituationKind(param_1.get_i32()), *FIGHTER_KINETIC_TYPE_CAPTURE, param_2.get_u32(), GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), false, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, 0, (*FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE | *FIGHTER_STATUS_ATTR_KEEP_2NDARY) as u32, 0, 0);
     PostureModule::set_lr(fighter.module_accessor, -LinkModule::get_parent_lr(fighter.module_accessor, *LINK_NO_CAPTURE));
@@ -10,7 +10,7 @@ unsafe fn status_pre_capturepulled_common(fighter: &mut L2CFighterCommon, param_
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_CapturePulled_Main)]
-unsafe fn status_capturepulled_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_capturepulled_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.CapturePulledCommon_Main();
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CAPTURE_WAIT) {
         if !fighter.is_capture_pulled_special_fighter().get_bool() {
@@ -38,23 +38,23 @@ unsafe fn status_capturepulled_main(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_CapturePulled)]
 unsafe fn status_end_capturepulled(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
+    let flags = [
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE
+    ];
+    for x in 0..flags.len() {
+        WorkModule::off_flag(fighter.module_accessor, flags[x]);
+    }
     //Fighter Specific
-    WorkModule::sub_int(fighter.module_accessor, 1, FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
+    WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
     0.into()
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
-            status_pre_capturepulled_common,
+            //status_pre_capturepulled_common,
             status_capturepulled_main,
             status_end_capturepulled
         );
@@ -62,5 +62,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

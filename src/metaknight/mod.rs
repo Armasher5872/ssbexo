@@ -8,6 +8,7 @@ use {
             utility::misc::*,
         },
         var::{
+            consts::*,
             globals::*,
             metaknight::*,
         }

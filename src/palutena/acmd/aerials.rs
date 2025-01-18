@@ -3,9 +3,9 @@ use super::*;
 //Nair ACMD
 unsafe extern "C" fn ssbexo_palutena_nair_acmd(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
+    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
         if macros::is_excute(agent) {
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
         }
     }
     frame(agent.lua_state_agent, 4.0);
@@ -48,7 +48,7 @@ unsafe extern "C" fn ssbexo_palutena_nair_acmd(agent: &mut L2CAgentBase) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(agent.lua_state_agent, 50.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
         if macros::is_excute(agent) {
             StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
@@ -58,9 +58,9 @@ unsafe extern "C" fn ssbexo_palutena_nair_acmd(agent: &mut L2CAgentBase) {
 //Fair ACMD
 unsafe extern "C" fn ssbexo_palutena_fair_acmd(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
+    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
         if macros::is_excute(agent) {
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
         }
     }
     frame(agent.lua_state_agent, 4.0);
@@ -80,7 +80,7 @@ unsafe extern "C" fn ssbexo_palutena_fair_acmd(agent: &mut L2CAgentBase) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(agent.lua_state_agent, 43.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
         if macros::is_excute(agent) {
             StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
@@ -90,9 +90,9 @@ unsafe extern "C" fn ssbexo_palutena_fair_acmd(agent: &mut L2CAgentBase) {
 //Bair ACMD
 unsafe extern "C" fn ssbexo_palutena_bair_acmd(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
+    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
         if macros::is_excute(agent) {
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
         }
     }
     frame(agent.lua_state_agent, 3.0);
@@ -125,7 +125,7 @@ unsafe extern "C" fn ssbexo_palutena_bair_acmd(agent: &mut L2CAgentBase) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(agent.lua_state_agent, 48.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
         if macros::is_excute(agent) {
             StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
@@ -135,9 +135,9 @@ unsafe extern "C" fn ssbexo_palutena_bair_acmd(agent: &mut L2CAgentBase) {
 //Uair ACMD
 unsafe extern "C" fn ssbexo_palutena_uair_acmd(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
+    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
         if macros::is_excute(agent) {
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
         }
     }
     frame(agent.lua_state_agent, 3.0);
@@ -170,7 +170,7 @@ unsafe extern "C" fn ssbexo_palutena_uair_acmd(agent: &mut L2CAgentBase) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(agent.lua_state_agent, 50.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
         if macros::is_excute(agent) {
             StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }
@@ -180,9 +180,9 @@ unsafe extern "C" fn ssbexo_palutena_uair_acmd(agent: &mut L2CAgentBase) {
 //Dair ACMD
 unsafe extern "C" fn ssbexo_palutena_dair_acmd(agent: &mut L2CAgentBase) {
     let prev_status_kind = StatusModule::prev_status_kind(agent.module_accessor, 0);
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
+    if ![*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE, *FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN].contains(&prev_status_kind) {
         if macros::is_excute(agent) {
-            WorkModule::off_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
         }
     }
     frame(agent.lua_state_agent, 3.0);
@@ -208,7 +208,7 @@ unsafe extern "C" fn ssbexo_palutena_dair_acmd(agent: &mut L2CAgentBase) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
     frame(agent.lua_state_agent, 57.0);
-    if WorkModule::is_flag(agent.module_accessor, FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE) {
         if macros::is_excute(agent) {
             StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, false);
         }

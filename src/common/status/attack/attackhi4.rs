@@ -20,8 +20,8 @@ unsafe fn status_attackhi4hold_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[skyline::hook(replace = L2CFighterCommon_status_end_AttackHi4)]
 unsafe fn status_attackhi4_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    WorkModule::set_int(boma, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    WorkModule::set_flag(boma, false, FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 
@@ -36,5 +36,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

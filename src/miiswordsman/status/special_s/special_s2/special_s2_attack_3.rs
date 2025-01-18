@@ -12,24 +12,24 @@ pub unsafe extern "C" fn miiswordsman_special_s2_attack_3_init_status(fighter: &
     let stick_x = fighter.global_table[STICK_X].get_f32()*lr;
     match stick_y {
         _ if stick_y >= 0.25 => {
-            WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
             sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0, 3.0);
         }
         _ if stick_y <= -0.25 => {
-            WorkModule::set_int(fighter.module_accessor, 2, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
         _ => {
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
         }
     }
     if stick_x <= -0.25 {
-        WorkModule::set_int(fighter.module_accessor, 3, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+        WorkModule::set_int(fighter.module_accessor, 3, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     }
     0.into()
 }
 
 pub unsafe extern "C" fn miiswordsman_special_s2_attack_3_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     match rending_serrations_direction {
         0 => {
             if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
@@ -77,7 +77,7 @@ pub unsafe extern "C" fn miiswordsman_special_s2_attack_3_main_status(fighter: &
 unsafe extern "C" fn miiswordsman_special_s2_attack_3_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    let rending_serrations_direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
@@ -139,7 +139,7 @@ unsafe extern "C" fn miiswordsman_special_s2_attack_3_main_loop(fighter: &mut L2
 }
 
 pub unsafe extern "C" fn miiswordsman_special_s2_attack_3_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_RENDING_SERRATIONS_TRANSITION_ENABLE);
     0.into()
 }

@@ -76,13 +76,13 @@ pub unsafe extern "C" fn miiswordsman_special_s1_start_end_status(fighter: &mut 
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     match stick_y {
         _ if stick_y >= 0.5 => {
-            WorkModule::set_int(fighter.module_accessor, 30, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
+            WorkModule::set_int(fighter.module_accessor, 30, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
         }
         _ if stick_y <= -0.5 => {
-            WorkModule::set_int(fighter.module_accessor, -30, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
+            WorkModule::set_int(fighter.module_accessor, -30, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
         }
         _ => {
-            WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
         }
     }
     0.into()

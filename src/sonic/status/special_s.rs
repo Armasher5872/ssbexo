@@ -8,7 +8,7 @@ unsafe extern "C" fn sonic_special_s_pre_status(fighter: &mut L2CFighterCommon) 
 
 unsafe extern "C" fn sonic_special_s_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let boost_speed = WorkModule::get_float(fighter.module_accessor, FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
+    let boost_speed = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
     let mut speed_x: f32 = 0.0;
     match boost_speed {
         _ if boost_speed < 2.0 => {
@@ -36,13 +36,13 @@ unsafe extern "C" fn sonic_special_s_init_status(fighter: &mut L2CFighterCommon)
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, sum_speed, 0.0);
     sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.2);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-    WorkModule::set_float(fighter.module_accessor, speed_x, FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
+    WorkModule::set_float(fighter.module_accessor, speed_x, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_SPEED);
     0.into()
 }
 
 unsafe extern "C" fn sonic_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     if situation_kind != *SITUATION_KIND_GROUND {
         fighter.set_situation(SITUATION_KIND_AIR.into());
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);

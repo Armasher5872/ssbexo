@@ -81,7 +81,7 @@ unsafe extern "C" fn gaogaen_attack_lw4_map_correction_status(fighter: &mut L2CF
 unsafe extern "C" fn gaogaen_catch_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
     fighter.sub_status_Catch();
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
     fighter.sub_shift_status_main(L2CValue::Ptr(gaogaen_catch_main_loop as *const () as _))
 }
 
@@ -97,15 +97,15 @@ unsafe extern "C" fn gaogaen_catch_main_loop(fighter: &mut L2CFighterCommon) -> 
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         return 1.into();
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
     && MotionModule::motion_kind(fighter.module_accessor) == hash40("catch") {
         if stick_y >= 0.7 {
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("catch_hi"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         }
         else if stick_y <= -0.7 {
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("catch_lw"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         }
     }
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {
@@ -123,7 +123,7 @@ unsafe extern "C" fn gaogaen_catch_main_loop(fighter: &mut L2CFighterCommon) -> 
 unsafe extern "C" fn gaogaen_catch_dash_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
     fighter.sub_status_CatchDash();
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
     fighter.sub_shift_status_main(L2CValue::Ptr(gaogaen_catch_dash_main_loop as *const () as _))
 }
 
@@ -147,15 +147,15 @@ unsafe extern "C" fn gaogaen_catch_dash_main_loop(fighter: &mut L2CFighterCommon
             fighter.change_status(FIGHTER_STATUS_KIND_CATCH_TURN.into(), true.into());
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
     && MotionModule::motion_kind(fighter.module_accessor) == hash40("catch_dash") {
         if stick_y >= 0.7 {
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("catch_dash_hi"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         }
         else if stick_y <= -0.7 {
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("catch_dash_lw"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         }
     }
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {
@@ -172,7 +172,7 @@ unsafe extern "C" fn gaogaen_catch_dash_main_loop(fighter: &mut L2CFighterCommon
 unsafe extern "C" fn gaogaen_catch_turn_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
     fighter.sub_status_CatchTurn();
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
     fighter.sub_shift_status_main(L2CValue::Ptr(gaogaen_catch_turn_main_loop as *const () as _))
 }
 
@@ -188,15 +188,15 @@ unsafe extern "C" fn gaogaen_catch_turn_main_loop(fighter: &mut L2CFighterCommon
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         return 1.into();
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
     && MotionModule::motion_kind(fighter.module_accessor) == hash40("catch") {
         if stick_y >= 0.7 {
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("catch_hi"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         }
         else if stick_y <= -0.7 {
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("catch_lw"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         }
     }
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {
@@ -476,18 +476,18 @@ unsafe extern "C" fn gaogaen_throw_uniq(fighter: &mut L2CFighterCommon) -> L2CVa
 
 unsafe extern "C" fn gaogaen_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    let special_zoom_gfx = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() && fighter.sub_air_check_fall_common().get_bool() {
             return 0.into();
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM) {
-        WorkModule::set_int(fighter.module_accessor, 1, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM) {
+        WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
     }
     if special_zoom_gfx > 0 {
-        WorkModule::inc_int(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     }
     if special_zoom_gfx == 2 {
         SlowModule::set_whole(fighter.module_accessor, 8, 80);
@@ -522,8 +522,8 @@ unsafe extern "C" fn gaogaen_throw_main_loop(fighter: &mut L2CFighterCommon) -> 
 }
 
 unsafe extern "C" fn gaogaen_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
     0.into()
 }
 
@@ -719,7 +719,7 @@ unsafe extern "C" fn gaogaen_special_s_main_loop(fighter: &mut L2CFighterCommon)
     if prev_situation_kind != *SITUATION_KIND_GROUND {
         if situation_kind == *SITUATION_KIND_GROUND {
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-            if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE) {
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE) {
                 MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s_cancel"), -1.0, 1.0, 0.0, false, false);
             }
             else {
@@ -732,7 +732,7 @@ unsafe extern "C" fn gaogaen_special_s_main_loop(fighter: &mut L2CFighterCommon)
         if prev_situation_kind == *SITUATION_KIND_GROUND {
             if situation_kind != *SITUATION_KIND_GROUND {
                 GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE) {
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE) {
                     MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_cancel"), -1.0, 1.0, 0.0, false, false);
                 }
                 else {
@@ -742,10 +742,10 @@ unsafe extern "C" fn gaogaen_special_s_main_loop(fighter: &mut L2CFighterCommon)
             }
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL) {
         if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-            WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
-            WorkModule::on_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE);
             if situation_kind == *SITUATION_KIND_AIR {
                 MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_cancel"), -1.0, 1.0, 0.0, false, false);
             }
@@ -786,8 +786,8 @@ unsafe extern "C" fn fun_710001ff80(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe extern "C" fn gaogaen_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
-    WorkModule::off_flag(fighter.module_accessor, FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CANCEL);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_SPECIAL_S_FAKE);
     0.into()
 }
 

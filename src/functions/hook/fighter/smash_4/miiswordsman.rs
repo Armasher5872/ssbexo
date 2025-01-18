@@ -121,12 +121,12 @@ unsafe extern "C" fn miiswordsman_waza_customize(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn miiswordsman_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
-    WorkModule::set_int(boma, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
-    WorkModule::set_int(boma, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
-    WorkModule::set_int(boma, 0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
-    WorkModule::set_int(boma, 1, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
-    WorkModule::set_float(boma, 1.0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
+    WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
+    WorkModule::set_int(boma, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_AIRBORNE_ASSAULT_ANGLE);
+    WorkModule::set_int(boma, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
+    WorkModule::set_int(boma, 0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_DIRECTION);
+    WorkModule::set_int(boma, 1, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_LIGHT_SHURIKEN_COUNT);
+    WorkModule::set_float(boma, 1.0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
 }
 
 //Mii Swordfighter Startup Initialization
@@ -138,6 +138,7 @@ unsafe extern "C" fn miiswordsman_start_initialization(vtable: u64, fighter: &mu
     miiswordsman_var(&mut *boma);
     set_move_customizer(agent, miiswordsman_waza_customize);
     miiswordsman_waza_customize(agent);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -162,17 +163,17 @@ unsafe extern "C" fn miiswordsman_death_initialization(vtable: u64, fighter: &mu
 //Mii Swordfighter Once Per Fighter Frame
 #[skyline::hook(offset = MIISWORDSMAN_VTABLE_ONCE_PER_FIGHTER_FRAME)]
 unsafe extern "C" fn miiswordsman_opff(vtable: u64, fighter: &mut Fighter) {
-    let boma = fighter.battle_object.module_accessor;
-    let blurring_slashes_timer = WorkModule::get_int(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
-    let long_sword_scale = Vector3f{x: 1.015, y: 1.15, z: 1.045};
     if fighter.battle_object.kind == *FIGHTER_KIND_MIISWORDSMAN as u32 {
+        let boma = fighter.battle_object.module_accessor;
+        let blurring_slashes_timer = WorkModule::get_int(boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
+        let long_sword_scale = Vector3f{x: 1.015, y: 1.15, z: 1.045};
         ModelModule::set_joint_scale(boma, Hash40::new("havel"), &long_sword_scale);
         ModelModule::set_joint_scale(boma, Hash40::new("haver"), &long_sword_scale);
-        if WorkModule::is_flag(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) && blurring_slashes_timer > 0 {
-            WorkModule::dec_int(boma, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
+        if WorkModule::is_flag(boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) && blurring_slashes_timer > 0 {
+            WorkModule::dec_int(boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
         }
         if blurring_slashes_timer <= 0 {
-            WorkModule::set_flag(boma, false, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
+            WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
         }
     }
     original!()(vtable, fighter)

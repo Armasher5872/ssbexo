@@ -36,7 +36,7 @@ unsafe extern "C" fn roy_special_s_init_status(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn roy_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s"), L2CValue::Hash40s("special_air_s"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(roy_special_s_main_loop as *const () as _))
 }
@@ -165,18 +165,18 @@ unsafe extern "C" fn roy_special_lw_check_attack_status(fighter: &mut L2CFighter
         if collision_kind == *COLLISION_KIND_HIT {
             let object_id = get_table_value(table, "object_id_").try_integer().unwrap() as u32;
             let opponent_boma = sv_battle_object::module_accessor(object_id);
-            if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE) {
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE) {
                 if HitModule::get_whole(opponent_boma, *HIT_STATUS_INVINCIBLE) == 0 {
-                    WorkModule::on_flag(fighter.module_accessor, FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE);
-                    WorkModule::set_int(fighter.module_accessor, object_id as i32, FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_OBJECT_ID);
-                    WorkModule::set_int(fighter.module_accessor, 330, FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_TIMER);
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE);
+                    WorkModule::set_int(fighter.module_accessor, object_id as i32, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_OBJECT_ID);
+                    WorkModule::set_int(fighter.module_accessor, 330, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_TIMER);
                 }
             }
             else {
                 DamageModule::add_damage(fighter.module_accessor, -2.0, 0);
-                WorkModule::off_flag(fighter.module_accessor, FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE);
-                WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_OBJECT_ID);
-                WorkModule::set_int(fighter.module_accessor, 0, FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_TIMER);
+                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE);
+                WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_OBJECT_ID);
+                WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_TIMER);
             }
         }
     }

@@ -1,4 +1,4 @@
-#![allow(unused_must_use, unused_assignments, unused_parens)]
+#![allow(unused_assignments, unused_parens)]
 use {
     crate::functions::{
         ext::{
@@ -42,13 +42,6 @@ mod damagelanding;
 //mod damagesleep;
 mod damagesleepfall;
 //mod damagesong;
-mod down;
-mod downcontinue;
-mod downdamage;
-mod downeat;
-mod downspot;
-mod downwait;
-mod downwaitcontinue;
 mod furafura;
 mod saving;
 mod shieldbreakfly;
@@ -64,13 +57,6 @@ pub fn install() {
     //damagesleep::install();
     damagesleepfall::install();
     //damagesong::install();
-    down::install();
-    downcontinue::install();
-    downdamage::install();
-    downeat::install();
-    downspot::install();
-    downwait::install();
-    downwaitcontinue::install();
     furafura::install();
     saving::install();
     shieldbreakfly::install();

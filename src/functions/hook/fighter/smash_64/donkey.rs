@@ -7,8 +7,8 @@ const DONKEY_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x68d670; //Shared
 const DONKEY_VTABLE_LINK_EVENT_OFFSET: usize = 0x993ee0; //Donkey Kong only
 
 unsafe extern "C" fn donkey_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
-    WorkModule::set_int(boma, 0, FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
+    WorkModule::off_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
+    WorkModule::set_int(boma, 0, *FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
 }
 
 //Donkey Kong Startup Initialization
@@ -20,6 +20,7 @@ unsafe extern "C" fn donkey_start_initialization(vtable: u64, fighter: &mut Figh
     donkey_var(&mut *boma);
     agent.global_table[THROW_F_STATUS_KIND].assign(&FIGHTER_STATUS_KIND_THROW.into());
 	agent.global_table[THROW_HI_STATUS_KIND].assign(&FIGHTER_DONKEY_STATUS_KIND_SHOULDER_START.into());
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -48,7 +49,7 @@ unsafe extern "C" fn donkey_opff(vtable: u64, fighter: &mut Fighter) {
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
     let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
-    let timer = WorkModule::get_int(boma, FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
+    let timer = WorkModule::get_int(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
     if fighter.battle_object.kind == *FIGHTER_KIND_DONKEY as u32 {
         //DK Taunt Holding
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
@@ -79,10 +80,10 @@ unsafe extern "C" fn donkey_opff(vtable: u64, fighter: &mut Fighter) {
         }
         //Down Special
         if timer > 0 {
-            WorkModule::dec_int(boma, FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
+            WorkModule::dec_int(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
         }
-        if timer <= 0 && WorkModule::is_flag(boma, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE) {
-            WorkModule::set_flag(boma, false, FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
+        if timer <= 0 && WorkModule::is_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE) {
+            WorkModule::off_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
             fighter.battle_object.gimmick_flash();
         }
     }

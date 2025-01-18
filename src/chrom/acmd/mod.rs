@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::chrom::*,
+    crate::functions::var::{
+        chrom::*,
+        consts::*,
+    },
     smash::{
         app::{
             lua_bind::*,

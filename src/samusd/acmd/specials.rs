@@ -2,62 +2,20 @@ use super::*;
 
 //Neutral Special Start ACMD
 unsafe extern "C" fn ssbexo_samusd_neutral_special_start_acmd(agent: &mut L2CAgentBase) {
-    let entry_id = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     if macros::is_excute(agent) {
-        if HAS_FIRE_CHARGE_SHOT[entry_id] == false
-        && CHARGE_SHOT_TIMER[entry_id] <= 0 {
-            MotionModule::set_rate(agent.module_accessor, 0.6);
-        }
+        MotionModule::set_rate(agent.module_accessor, 0.6);
     }
     if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
-        if HAS_FIRE_CHARGE_SHOT[entry_id] == false
-        && CHARGE_SHOT_TIMER[entry_id] <= 0 {
-            MotionModule::set_rate(agent.module_accessor, 0.6);
-        }
-    }
-    frame(agent.lua_state_agent, 13.0);
-    if macros::is_excute(agent) {
-        if HAS_FIRE_CHARGE_SHOT[entry_id] == true
-        && CHARGE_SHOT_TIMER[entry_id] > 0 {
-            KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
-            MotionModule::change_motion(agent.module_accessor, Hash40::new("damage_n_2"), 1.0, 1.0, false, 0.0, false, false);
-        }
-    }
-    if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
-        if HAS_FIRE_CHARGE_SHOT[entry_id] == true
-        && CHARGE_SHOT_TIMER[entry_id] > 0 {
-            KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
-            MotionModule::change_motion(agent.module_accessor, Hash40::new("damage_n_2"), 1.0, 1.0, false, 0.0, false, false);
-        }
+        MotionModule::set_rate(agent.module_accessor, 0.6);
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
         MotionModule::set_rate(agent.module_accessor, 1.0);
-        ArticleModule::generate_article_enable(agent.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_CSHOT, false, 0);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_FLAG_BULLET_DISP);
     }
-}
-
-//Neutral Special Fire ACMD
-unsafe extern "C" fn ssbexo_samusd_neutral_special_fire_acmd(agent: &mut L2CAgentBase) {
-    let entry_id = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    frame(agent.lua_state_agent, 3.0);
-    if macros::is_excute(agent) {
-        ArticleModule::shoot_exist(agent.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_CSHOT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_FLAG_SHOOT);
-        if HAS_FIRE_CHARGE_SHOT[entry_id] == false
-        && CHARGE_SHOT_TIMER[entry_id] <= 0 {
-            HAS_FIRE_CHARGE_SHOT[entry_id] = true;
-            CHARGE_SHOT_TIMER[entry_id] = 180;
-        }
-    }
-    if WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_KIND) == *FIGHTER_KIND_KIRBY {
-        ArticleModule::shoot_exist(agent.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_CSHOT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_FLAG_SHOOT);
-        if HAS_FIRE_CHARGE_SHOT[entry_id] == false
-        && CHARGE_SHOT_TIMER[entry_id] <= 0 {
-            HAS_FIRE_CHARGE_SHOT[entry_id] = true;
-            CHARGE_SHOT_TIMER[entry_id] = 180;
+    if !macros::IS_EXIST_ARTICLE(agent, *FIGHTER_SAMUSD_GENERATE_ARTICLE_CSHOT) {
+        if macros::is_excute(agent) {
+            ArticleModule::generate_article_enable(agent.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_CSHOT, false, 0);
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_FLAG_BULLET_DISP);
         }
     }
 }
@@ -177,6 +135,93 @@ unsafe extern "C" fn ssbexo_samusd_up_special_expression(agent: &mut L2CAgentBas
     }
 }
 
+//Up Special Taunt ACMD
+unsafe extern "C" fn ssbexo_samusd_up_special_taunt_acmd(_fighter: &mut L2CAgentBase) {}
+
+//Up Special Taunt Effect
+unsafe extern "C" fn ssbexo_samusd_up_special_taunt_effect(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("hip"), -2, 0, 0, 0, 0, 0, 2.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonellm"), 2, 0, 0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneer"), 0, 0, -0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footr"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("armr"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonells"), 2, 0, -0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneel"), 0, 0, 0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footl"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("arml"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::BURN_COLOR(agent, 0.26, 0.71, 1.5, 0.7);
+    }
+    frame(agent.lua_state_agent, 28.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("hip"), -2, 0, 0, 0, 0, 0, 2.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonellm"), 2, 0, 0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneer"), 0, 0, -0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footr"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("armr"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonells"), 2, 0, -0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneel"), 0, 0, 0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footl"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("arml"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::BURN_COLOR(agent, 0.26, 0.71, 1.5, 0.7);
+    }
+    frame(agent.lua_state_agent, 56.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("hip"), -2, 0, 0, 0, 0, 0, 2.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonellm"), 2, 0, 0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneer"), 0, 0, -0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footr"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("armr"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonells"), 2, 0, -0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneel"), 0, 0, 0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footl"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("arml"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::BURN_COLOR(agent, 0.26, 0.71, 1.5, 0.7);
+    }
+    frame(agent.lua_state_agent, 84.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("hip"), -2, 0, 0, 0, 0, 0, 2.5, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonellm"), 2, 0, 0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneer"), 0, 0, -0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footr"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("armr"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("colonells"), 2, 0, -0.5, 0, 0, 0, 2, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("kneel"), 0, 0, 0.5, 0, 0, 0, 1.7, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("footl"), 0, 0, 0, 0, 0, 0, 2.1, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("arml"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::EFFECT_FOLLOW(agent, Hash40::new("samusd_win3_aura"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1.9, true);
+        macros::BURN_COLOR(agent, 0.26, 0.71, 1.5, 0.7);
+    }
+    frame(agent.lua_state_agent, 102.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT_OFF_KIND(agent, Hash40::new("samusd_win3_aura"), false, true);
+        macros::BURN_COLOR_FRAME(agent, 20, 1, 1, 1, 0);
+        macros::BURN_COLOR_NORMAL(agent);
+    }
+}
+
+//Up Special Taunt Sound
+unsafe extern "C" fn ssbexo_samusd_up_special_taunt_sound(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        macros::STOP_SE(agent, Hash40::new("se_samusd_appear01"));
+        macros::PLAY_SE(agent, Hash40::new("se_samusd_appeal_l02"));
+    }
+}
+
+//Up Special Taunt Expression
+unsafe extern "C" fn ssbexo_samusd_up_special_taunt_expression(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_13_floating"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 //Bomb Fall ACMD
 unsafe extern "C" fn ssbexo_samusd_bomb_fall_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 22.0);
@@ -241,10 +286,6 @@ pub fn install() {
     Agent::new("samusd")
     .game_acmd("game_specialnstart", ssbexo_samusd_neutral_special_start_acmd, Priority::Low)
     .game_acmd("game_specialairnstart", ssbexo_samusd_neutral_special_start_acmd, Priority::Low)
-    .game_acmd("game_specialnfire", ssbexo_samusd_neutral_special_fire_acmd, Priority::Low)
-    .game_acmd("game_specialairnfire", ssbexo_samusd_neutral_special_fire_acmd, Priority::Low)
-    .game_acmd("game_specialnfiremax", ssbexo_samusd_neutral_special_fire_acmd, Priority::Low)
-    .game_acmd("game_specialairnfiremax", ssbexo_samusd_neutral_special_fire_acmd, Priority::Low)
     .game_acmd("game_specialhi", ssbexo_samusd_up_special_acmd, Priority::Low)
     .game_acmd("game_specialairhi", ssbexo_samusd_up_special_acmd, Priority::Low)
     .effect_acmd("effect_specialhi", ssbexo_samusd_up_special_effect, Priority::Low)
@@ -253,6 +294,10 @@ pub fn install() {
     .sound_acmd("sound_specialairhi", ssbexo_samusd_up_special_sound, Priority::Low)
     .expression_acmd("expression_specialhi", ssbexo_samusd_up_special_expression, Priority::Low)
     .expression_acmd("expression_specialairhi", ssbexo_samusd_up_special_expression, Priority::Low)
+    .game_acmd("game_specialairhiappeal", ssbexo_samusd_up_special_taunt_acmd, Priority::Low)
+    .effect_acmd("effect_specialairhiappeal", ssbexo_samusd_up_special_taunt_effect, Priority::Low)
+    .sound_acmd("sound_specialairhiappeal", ssbexo_samusd_up_special_taunt_sound, Priority::Low)
+    .expression_acmd("expression_specialairhiappeal", ssbexo_samusd_up_special_taunt_expression, Priority::Low)
     .install()
     ;
     Agent::new("samusd_cshot")

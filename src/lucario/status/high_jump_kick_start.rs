@@ -45,12 +45,12 @@ unsafe extern "C" fn lucario_high_jump_kick_start_exit_status(_fighter: &mut L2C
 
 pub fn install() {
     Agent::new("lucario")
-    .status(Pre, FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_pre_status)
-    .status(Init, FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_init_status)
-    .status(Main, FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_main_status)
-    .status(Exec, FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_exec_status)
-    .status(End, FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_end_status)
-    .status(Exit, FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_exit_status)
+    .status(Pre, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_pre_status)
+    .status(Init, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_init_status)
+    .status(Main, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_main_status)
+    .status(Exec, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_exec_status)
+    .status(End, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_end_status)
+    .status(Exit, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, lucario_high_jump_kick_start_exit_status)
     .install()
     ;
 }

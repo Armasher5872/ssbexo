@@ -7,18 +7,20 @@ const DEDEDE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x904e70; //Dedede on
 const DEDEDE_VTABLE_ON_ATTACK_OFFSET: usize = 0x90d630; //Dedede only
 
 unsafe extern "C" fn dedede_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
-    WorkModule::off_flag(boma, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
-    WorkModule::set_int(boma, *ITEM_KIND_NONE, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
-    WorkModule::set_int(boma, 0, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
+    WorkModule::off_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
+    WorkModule::off_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE);
+    WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+    WorkModule::set_int(boma, 0, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_JET_CHARGE_PROGRESS);
 }
 
 //Dedede Startup Initialization
 #[skyline::hook(offset = DEDEDE_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn dedede_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     dedede_var(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -51,7 +53,7 @@ unsafe extern "C" fn dedede_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4
     ].contains(&status_kind)
     && frame < 1.0
-    && WorkModule::is_flag(boma, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
+    && WorkModule::is_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_HAS_JET_CHARGE) {
         ArticleModule::generate_article(boma, *FIGHTER_DEDEDE_GENERATE_ARTICLE_NEWDEDEDEHAMMER, true, -1);
         ArticleModule::set_visibility_whole(boma, *FIGHTER_DEDEDE_GENERATE_ARTICLE_NEWDEDEDEHAMMER, true, ArticleOperationTarget(0));
         VisibilityModule::set_int64(boma, hash40("hammer") as i64, hash40("hammer_disp_off") as i64);
@@ -62,40 +64,40 @@ unsafe extern "C" fn dedede_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let obj_kind = smash::app::utility::get_kind(&mut *obj_boma);
         let owner_boma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(obj_boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
         let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
-        let item = WorkModule::get_int(boma,FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+        let item = WorkModule::get_int(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
         if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
             let fused_item = if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
-                WorkModule::get_int(owner_boma, FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM)
+                WorkModule::get_int(owner_boma, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM)
             }
             else if owner_kind == *FIGHTER_KIND_KIRBY {
-                WorkModule::get_int(owner_boma, FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE)
+                WorkModule::get_int(owner_boma, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE)
             }
             else {
-                WorkModule::get_int(owner_boma, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE)
+                WorkModule::get_int(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE)
             };
-            WorkModule::set_int(boma, fused_item, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+            WorkModule::set_int(boma, fused_item, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
         }
         else if obj_kind == *WEAPON_KIND_LINK_BOOMERANG {
             let fused_item = if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
-                WorkModule::get_int(owner_boma, FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM)
+                WorkModule::get_int(owner_boma, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_BOOMERANG_FUSE_ITEM)
             }
             else {
-                WorkModule::get_int(owner_boma, FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE)
+                WorkModule::get_int(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE)
             };
-            WorkModule::set_int(boma, fused_item, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+            WorkModule::set_int(boma, fused_item, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
         }
         if WorkModule::is_flag(boma, *FIGHTER_DEDEDE_STATUS_SPECIAL_N_FLAG_SHOT_OBJECT_SHOOT) && item != *ITEM_KIND_NONE {
-            WorkModule::on_flag(boma,FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
+            WorkModule::on_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
         }
-        if WorkModule::is_flag(boma, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK) && frame >= 7.0 {
+        if WorkModule::is_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK) && frame >= 7.0 {
             if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
                 set_arrow_fuse_params(obj_boma, item, FuseKind::REFUSE, i32::MAX);
             }
             else {
-                WorkModule::on_flag(obj_boma, WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
+                WorkModule::on_flag(obj_boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
                 set_boomerang_fuse_params(obj_boma, item, FuseKind::REFUSE, i32::MAX);
             }
-            let item_id = WorkModule::get_int(obj_boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+            let item_id = WorkModule::get_int(obj_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
             let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
             LinkModule::remove_model_constraint(item_boma, true);
             if !LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
@@ -110,9 +112,9 @@ unsafe extern "C" fn dedede_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                     LinkModule::set_constraint_translate_offset(item_boma, &offset_pos);
                 }
             }
-            WorkModule::set_int(boma, *ITEM_KIND_NONE, FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
-            WorkModule::on_flag(obj_boma, WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_DEDEDE_SWALLOW);
-            WorkModule::off_flag(boma, FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
+            WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
+            WorkModule::on_flag(obj_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_DEDEDE_SWALLOW);
+            WorkModule::off_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
         }
     }
     original!()(vtable, fighter)

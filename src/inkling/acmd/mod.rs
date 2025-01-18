@@ -1,5 +1,8 @@
 use {
-    crate::functions::ext::fighter::inkling::*,
+    crate::functions::{
+        ext::fighter::inkling::*,
+        var::consts::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -15,11 +18,13 @@ use {
 };
 
 mod aerials;
+mod grounded;
 mod throws;
 mod tilts;
 
 pub fn install() {
     aerials::install();
+    grounded::install();
     throws::install();
     tilts::install();
 }

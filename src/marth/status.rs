@@ -65,13 +65,13 @@ unsafe extern "C" fn marth_special_hi_main_loop(fighter: &mut L2CFighterCommon) 
         }
     }
     if stick_x > 0.7 {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
     }
     else {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if WorkModule::is_flag(fighter.module_accessor, FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE) {
             fighter.change_status(FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F.into(), false.into());
         }
         else {
@@ -131,8 +131,7 @@ unsafe extern "C" fn marth_special_hi_hi_exec_status(fighter: &mut L2CFighterCom
     ret
 }
 
-unsafe extern "C" fn marth_special_hi_hi_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
-    /*
+unsafe extern "C" fn marth_special_hi_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame"));
     let fall_x_mul_value = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("fall_x_mul_value"));
     WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
@@ -140,7 +139,6 @@ unsafe extern "C" fn marth_special_hi_hi_end_status(_fighter: &mut L2CFighterCom
     if fighter.global_table[STATUS_KIND] == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
         WorkModule::set_float(fighter.module_accessor, fall_x_mul_value, *FIGHTER_INSTANCE_WORK_ID_FLOAT_FALL_X_MAX_MUL);
     }
-    */
     0.into()
 }
 
@@ -206,14 +204,14 @@ pub fn install() {
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, marth_special_hi_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, marth_special_hi_main_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_HI, marth_special_hi_end_status)
-    .status(Pre, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_pre_status)
-    .status(Main, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_main_status)
-    .status(Exec, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_exec_status)
-    .status(End, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_end_status)
-    .status(Pre, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_pre_status)
-    .status(Main, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_main_status)
-    .status(Exec, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_exec_status)
-    .status(End, FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_end_status)
+    .status(Pre, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_pre_status)
+    .status(Main, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_main_status)
+    .status(Exec, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_exec_status)
+    .status(End, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_HI, marth_special_hi_hi_end_status)
+    .status(Pre, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_pre_status)
+    .status(Main, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_main_status)
+    .status(Exec, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_exec_status)
+    .status(End, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_HI_F, marth_special_hi_f_end_status)
     .install()
     ;
 }

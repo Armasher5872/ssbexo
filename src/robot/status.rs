@@ -18,18 +18,18 @@ unsafe extern "C" fn robot_attack_s4_main_loop(fighter: &mut L2CFighterCommon) -
     else {
         fighter.attack_s4_mtrans();
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST) {
         if energy >= 860.0 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && current_frame < 16.0 {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && current_frame < 16.0 {
         let rate = (16.0-current_frame)/(3.0+(16.0-current_frame));
         MotionModule::set_rate(fighter.module_accessor, rate);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL) {
         if current_frame >= 40.0 {
             CancelModule::enable_cancel(fighter.module_accessor);
         }
@@ -50,9 +50,9 @@ unsafe extern "C" fn robot_attack_s4_main_loop(fighter: &mut L2CFighterCommon) -
 }
 
 unsafe extern "C" fn robot_attack_s4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
     0.into()
 }
 
@@ -89,14 +89,14 @@ unsafe extern "C" fn robot_attack_hi4_start_main_loop(fighter: &mut L2CFighterCo
             }
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST) {
         if energy > 96.0 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-            WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-            WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && current_frame < 8.0 {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && current_frame < 8.0 {
         let rate = (8.0-current_frame)/(2.0+(8.0-current_frame));
         MotionModule::set_rate(fighter.module_accessor, rate);
     }
@@ -123,15 +123,15 @@ unsafe extern "C" fn robot_attack_hi4_start_end_status(fighter: &mut L2CFighterC
     if [*FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4].contains(&fighter.global_table[STATUS_KIND].get_i32()) {
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.0, 0.0);
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
     }
     else {
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-        WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
     }
     0.into()
 }
@@ -147,7 +147,7 @@ unsafe extern "C" fn robot_attack_hi4_main_loop(fighter: &mut L2CFighterCommon) 
     && fighter.sub_wait_ground_check_common(false.into()).get_bool() {
         return true.into();
     }
-    if WorkModule::is_flag(fighter.module_accessor, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL) {
         if current_frame >= 40.0 {
             CancelModule::enable_cancel(fighter.module_accessor);
         }
@@ -164,9 +164,123 @@ unsafe extern "C" fn robot_attack_hi4_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn robot_attack_hi4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+    0.into()
+}
+
+unsafe extern "C" fn robot_attack_air_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.sub_attack_air_common(true.into());
+    fighter.sub_shift_status_main(L2CValue::Ptr(robot_attack_air_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn robot_attack_air_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
+    if !robot_attack_air_main_common(fighter).get_bool() {
+        fighter.sub_air_check_superleaf_fall_slowly();
+        if !fighter.global_table[IS_STOP].get_bool() {
+            smash::app::FighterUtil::check_cloud_through_out(module_accessor);
+        }
+    }
+    0.into()
+}
+
+unsafe extern "C" fn robot_attack_air_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let energy = WorkModule::get_float(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
+    if !fighter.attack_air_common_strans().get_bool() {
+        if CancelModule::is_enable_cancel(fighter.module_accessor) {
+            if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+                if fighter.sub_air_check_fall_common().get_bool() {
+                    return true.into();
+                }
+            }
+        }
+        if prev_status_kind == *FIGHTER_STATUS_KIND_PASS {
+            if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+                GroundModule::set_passable_check(fighter.module_accessor, true);
+            }
+        }
+        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+            }
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
+                PostureModule::reverse_lr(fighter.module_accessor);
+                PostureModule::update_rot_y_lr(fighter.module_accessor);
+                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+                return true.into();
+            }
+        }
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST) {
+            if motion_kind == hash40("attack_air_n") {
+                if energy > 72.0 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+                }
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && frame < 14.0 {
+                    let rate = (14.0-frame)/(4.0+(14.0-frame));
+                    MotionModule::set_rate(fighter.module_accessor, rate);
+                }
+            }
+            if motion_kind == hash40("attack_air_b") {
+                if energy > 120.0 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+                }
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && frame < 19.0 {
+                    let rate = (19.0-frame)/(4.0+(19.0-frame));
+                    MotionModule::set_rate(fighter.module_accessor, rate);
+                }
+            }
+            if motion_kind == hash40("attack_air_lw") {
+                if energy > 144.0 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+                    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
+                }
+                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) && frame < 20.0 {
+                    let rate = (20.0-frame)/(4.0+(20.0-frame));
+                    MotionModule::set_rate(fighter.module_accessor, rate);
+                }
+            }
+        }
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL) {
+            if motion_kind == hash40("attack_air_n") {
+                if frame >= 35.0 {
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                }
+            }
+            if motion_kind == hash40("attack_air_b") {
+                if frame >= 40.0 {
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                }
+            }
+            if motion_kind == hash40("attack_air_lw") {
+                if frame >= 45.0 {
+                    CancelModule::enable_cancel(fighter.module_accessor);
+                }
+            }
+        }
+        if MotionModule::is_end(fighter.module_accessor) {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        }
+        return false.into();
+    }
+    true.into()
+}
+
+unsafe extern "C" fn robot_attack_air_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
     0.into()
 }
 
@@ -190,6 +304,8 @@ pub fn install() {
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_S4, robot_attack_s4_end_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_HI4, robot_attack_hi4_end_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, robot_attack_hi4_start_end_status)
+    .status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, robot_attack_air_main_status)
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_AIR, robot_attack_air_end_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, robot_special_hi_pre_status)
     .status(Main, *FIGHTER_ROBOT_STATUS_KIND_SPECIAL_HI_ATTACK, robot_special_hi_attack_main_status)
     .install()

@@ -50,6 +50,6 @@ unsafe extern "C" fn miiswordsman_special_n1_start_main_loop(fighter: &mut L2CFi
 }
 
 pub unsafe extern "C" fn miiswordsman_special_n1_start_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_float(fighter.module_accessor, 1.0, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
+    WorkModule::set_float(fighter.module_accessor, 1.0, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLOAT_GUARD_BREAKER_POWER);
     0.into()
 }

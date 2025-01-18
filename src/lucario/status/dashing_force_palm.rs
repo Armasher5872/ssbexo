@@ -82,12 +82,12 @@ unsafe extern "C" fn lucario_dashing_force_palm_exit_status(_fighter: &mut L2CFi
 
 pub fn install() {
     Agent::new("lucario")
-    .status(Pre, FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_pre_status)
-    .status(Init, FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_init_status)
-    .status(Main, FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_main_status)
-    .status(Exec, FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_exec_status)
-    .status(End, FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_end_status)
-    .status(Exit, FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_exit_status)
+    .status(Pre, *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_pre_status)
+    .status(Init, *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_init_status)
+    .status(Main, *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_main_status)
+    .status(Exec, *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_exec_status)
+    .status(End, *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_end_status)
+    .status(Exit, *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, lucario_dashing_force_palm_exit_status)
     .install()
     ;
 }

@@ -8,7 +8,6 @@ pub static mut BALL_VICTIMS: [i32; 4] = [9; 4]; //Which players are to be KOd
 pub static mut COUNTERHIT_CHECK: [bool; 8] = [false; 8]; //Checks if a fighter is in the startup of an attack. Used for GGST COUNTER!
 pub static mut COUNTERHIT_SUCCESS: [bool; 8] = [false; 8]; //Checks if a fighter has landed a successful counterhit. Used for GGST COUNTER!
 pub static mut FIGHTER_MANAGER_ADDR: usize = 0;
-pub static mut FULL_HOP_ENABLE_DELAY: [i32; 65544] = [0; 65544];
 pub static mut HIGH_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the right net
 pub static mut HIT_PLAYER: i32 = -1; //Tracks which players need to be respawned
 pub static mut ITEM_MANAGER_ADDR: usize = 0;

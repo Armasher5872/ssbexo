@@ -1,4 +1,5 @@
 use {
+    crate::functions::var::consts::*,
     smash::{
         app::{
             lua_bind::*,
@@ -13,8 +14,10 @@ use {
     smashline::*,
 };
 
+mod grounded;
 mod throws;
 
 pub fn install() {
-  throws::install();
+    grounded::install();
+    throws::install();
 }

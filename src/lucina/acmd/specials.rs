@@ -295,7 +295,7 @@ unsafe extern "C" fn ssbexo_lucina_neutral_special_end_max_sound(agent: &mut L2C
 unsafe extern "C" fn ssbexo_lucina_grounded_side_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_OFF);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_OFF);
     }
     frame(agent.lua_state_agent, 24.0);
     if macros::is_excute(agent) {
@@ -303,7 +303,7 @@ unsafe extern "C" fn ssbexo_lucina_grounded_side_special_acmd(agent: &mut L2CAge
     }
     frame(agent.lua_state_agent, 25.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_ON);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_ON);
         search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
     }
     frame(agent.lua_state_agent, 26.0);
@@ -428,7 +428,7 @@ unsafe extern "C" fn ssbexo_lucina_grounded_side_special_expression(agent: &mut 
 unsafe extern "C" fn ssbexo_lucina_aerial_side_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_OFF);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_OFF);
     }
     frame(agent.lua_state_agent, 24.0);
     if macros::is_excute(agent) {
@@ -436,7 +436,7 @@ unsafe extern "C" fn ssbexo_lucina_aerial_side_special_acmd(agent: &mut L2CAgent
     }
     frame(agent.lua_state_agent, 25.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_ON);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_ON);
         search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
     }
     frame(agent.lua_state_agent, 26.0);
@@ -451,7 +451,7 @@ unsafe extern "C" fn ssbexo_lucina_aerial_side_special_acmd(agent: &mut L2CAgent
     }
     frame(agent.lua_state_agent, 35.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_GRAVITY_ON);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_GRAVITY_ON);
     }
 }
 
@@ -543,7 +543,7 @@ unsafe extern "C" fn ssbexo_lucina_up_special_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INPUT_ON);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INPUT_ON);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         AttackModule::clear_all(agent.module_accessor);
         macros::ATTACK(agent, 0, 0, Hash40::new("sword1"), 2.0, 75, 90, 120, 0, 5.0, 0.0, 0.0, 4.5, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
@@ -573,7 +573,7 @@ unsafe extern "C" fn ssbexo_lucina_up_special_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 25.0);
     if macros::is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INPUT_ON);
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INPUT_ON);
     }
 }
 
@@ -789,47 +789,47 @@ unsafe extern "C" fn ssbexo_lucina_down_special_start_expression(agent: &mut L2C
 unsafe extern "C" fn ssbexo_lucina_down_special_loop_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 15.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 1, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 1, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 30.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 2, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 2, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 45.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 3, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 3, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 60.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 4, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 4, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 75.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 5, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 5, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 90.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 6, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 6, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 105.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 7, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 7, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 120.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 8, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 8, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 135.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 9, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 9, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 150.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 10, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 10, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
     frame(agent.lua_state_agent, 165.0);
     if macros::is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 11, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 11, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
 }
 
@@ -1139,7 +1139,7 @@ unsafe extern "C" fn ssbexo_lucina_down_special_loop_expression(agent: &mut L2CA
 
 //Down Special Attack ACMD
 unsafe extern "C" fn ssbexo_lucina_down_special_attack_acmd(agent: &mut L2CAgentBase) {
-    let effect_count = WorkModule::get_int(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+    let effect_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     let distance = 13.0+(5.0*effect_count as f32);
     frame(agent.lua_state_agent, 5.0);
     if macros::is_excute(agent) {
@@ -1152,13 +1152,13 @@ unsafe extern "C" fn ssbexo_lucina_down_special_attack_acmd(agent: &mut L2CAgent
     frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::set_int(agent.module_accessor, 0, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     }
 }
 
 //Down Special Attack Effect
 unsafe extern "C" fn ssbexo_lucina_down_special_attack_effect(agent: &mut L2CAgentBase) {
-    let effect_count = WorkModule::get_int(agent.module_accessor, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+    let effect_count = WorkModule::get_int(agent.module_accessor, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
     if macros::is_excute(agent) {
         EffectModule::kill_kind(agent.module_accessor, Hash40::new("sys_damage_elec"), false, true);
         let effect_a = EffectModule::req_follow(agent.module_accessor, Hash40::new("sys_damage_elec"), Hash40::new("sword1"), &Vector3f{x: 0.0, y: 0.0, z: 2.0}, &Vector3f{x: 0.0, y: 0.0, z: 2.0}, 0.25, true, *EFFECT_SUB_ATTRIBUTE_NO_JOINT_SCALE as u32 | *EFFECT_SUB_ATTRIBUTE_FOLLOW as u32 | *EFFECT_SUB_ATTRIBUTE_CONCLUDE_STATUS as u32, 0, 0, 0, 0, true, true);

@@ -47,7 +47,7 @@ unsafe extern "C" fn miiswordsman_special_n3_start_main_loop(fighter: &mut L2CFi
     }
     if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
     && !AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD)
-    && !WorkModule::is_flag(fighter.module_accessor, FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
+    && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL) {
         fighter.change_status(FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_N3_SLASH.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {

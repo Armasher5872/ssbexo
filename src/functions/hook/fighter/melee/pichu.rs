@@ -8,15 +8,17 @@ const PICHU_VTABLE_LINK_EVENT_OFFSET: usize = 0xf2a7c0; //Shared
 
 unsafe extern "C" fn pichu_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
 
 unsafe extern "C" fn pichu_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE);
-    WorkModule::off_flag(boma, FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL);
+    WorkModule::off_flag(boma, *FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE);
+    WorkModule::off_flag(boma, *FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL);
 }
 
 //Pichu Startup Initialization
@@ -63,7 +65,7 @@ unsafe extern "C" fn pichu_on_attack(vtable: u64, fighter: &mut Fighter) -> u64 
         let boma = fighter.battle_object.module_accessor;
         let status_kind = StatusModule::status_kind(boma);
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            WorkModule::on_flag(boma, FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE);
+            WorkModule::on_flag(boma, *FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE);
         }
     }
     call_original!(vtable, fighter)
@@ -79,7 +81,7 @@ unsafe extern "C" fn pichu_link_event(vtable: u64, fighter: &mut Fighter, event:
             let offset = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CATCH_MOTION_OFFSET);
             let offset_lw = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CATCH_MOTION_OFFSET_LW);
             if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_SPECIAL_S && capture_event.status == *FIGHTER_STATUS_KIND_CAPTURE_PULLED {
-                WorkModule::on_flag(boma, FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
                 capture_event.node = smash2::phx::Hash40::new("throw");
                 capture_event.result = true;
                 capture_event.motion_offset = offset;

@@ -8,8 +8,8 @@ unsafe fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValu
     let damage_song_fall_effect_interval = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("damage_song_fall_effect_interval"));
     let hash_1 = Hash40::new_raw(0x1a786b5238);
     let sleep_effect_bone_hash = WorkModule::get_param_int64(fighter.module_accessor, hash_1.hash as u64, 0);
-    if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT) {
-        WorkModule::set_flag(fighter.module_accessor, true, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT) {
+        WorkModule::set_flag(fighter.module_accessor, true, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
     }
     asdi_check(fighter);
     asdi_function(fighter);
@@ -50,13 +50,13 @@ unsafe fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValu
 unsafe fn status_end_damagesleepfall(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
-    WorkModule::set_flag(fighter.module_accessor, false, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
+    let flags = [
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE
+    ];
+    for x in 0..flags.len() {
+        WorkModule::off_flag(fighter.module_accessor, flags[x]);
+    }
     if ![*FIGHTER_STATUS_KIND_DAMAGE_SLEEP, *FIGHTER_STATUS_KIND_SLEEP].contains(&status_kind) {
         EffectModule::remove_common(fighter.module_accessor, Hash40::new("damage_song"));
     }
@@ -76,5 +76,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

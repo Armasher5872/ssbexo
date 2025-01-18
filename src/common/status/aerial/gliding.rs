@@ -1,4 +1,4 @@
-//Credit to: Liam Estares (LKE Studios), Ben Hall (arthur!), WuBoytH
+//Credit to: Liam Estares (LKE Studios), Ben Hall (arthur!), and WuBoytH
 use super::*;
 
 unsafe extern "C" fn status_glidestart_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -295,5 +295,5 @@ pub fn install() {
     .status(Exec, *FIGHTER_STATUS_KIND_GLIDE, status_glide_exec)
     .status(Exit, *FIGHTER_STATUS_KIND_GLIDE, status_glide_exit)
     .install();
-	skyline::nro::add_hook(nro_hook).unwrap();
+	let _ = skyline::nro::add_hook(nro_hook).unwrap();
 }

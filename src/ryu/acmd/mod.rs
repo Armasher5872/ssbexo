@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::ryu::*,
+    crate::functions::var::{
+        consts::*,
+        ryu::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -15,12 +18,14 @@ use {
 };
 
 mod grounded;
+mod smashes;
 mod specials;
 mod throws;
 mod tilts;
 
 pub fn install() {
     grounded::install();
+    smashes::install();
     specials::install();
     throws::install();
     tilts::install();

@@ -7,20 +7,22 @@ const LUCINA_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x68d8a0; //Shared
 
 unsafe extern "C" fn lucina_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
 
 unsafe extern "C" fn lucina_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_OFF);
-    WorkModule::off_flag(boma, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_ON);
-    WorkModule::off_flag(boma, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_GRAVITY_ON);
-    WorkModule::off_flag(boma, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INPUT_ON);
-    WorkModule::set_float(boma, 1.0, FIGHTER_LUCINA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_POWER);
-    WorkModule::set_int(boma, 0, FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
+    WorkModule::off_flag(boma, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_OFF);
+    WorkModule::off_flag(boma, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_VIS_ON);
+    WorkModule::off_flag(boma, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_GRAVITY_ON);
+    WorkModule::off_flag(boma, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INPUT_ON);
+    WorkModule::set_float(boma, 1.0, *FIGHTER_LUCINA_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_POWER);
+    WorkModule::set_int(boma, 0, *FIGHTER_LUCINA_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_COUNT);
 }
 
 //Lucina Startup Initialization

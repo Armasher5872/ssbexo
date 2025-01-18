@@ -8,7 +8,9 @@ const PACMAN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xe29340; //Pac-Man onl
 #[skyline::hook(offset = PACMAN_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn pacman_start_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
 }
 
 //Pac-Man Reset Initialization
