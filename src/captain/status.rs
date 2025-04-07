@@ -33,18 +33,6 @@ unsafe extern "C" fn captain_attack_air_main_common(fighter: &mut L2CFighterComm
                 GroundModule::set_passable_check(fighter.module_accessor, true);
             }
         }
-        if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-            if !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
-            }
-            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP) {
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
-                PostureModule::reverse_lr(fighter.module_accessor);
-                PostureModule::update_rot_y_lr(fighter.module_accessor);
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-                return true.into();
-            }
-        }
         if motion_kind == hash40("attack_air_f")
         && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT | *COLLISION_KIND_MASK_SHIELD)
         && frame == 14.0
@@ -53,7 +41,6 @@ unsafe extern "C" fn captain_attack_air_main_common(fighter: &mut L2CFighterComm
             macros::PLAY_SE(fighter, Hash40::new("vc_captain_appeal03"));
         }
         if MotionModule::is_end(fighter.module_accessor) {
-            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
         return false.into();

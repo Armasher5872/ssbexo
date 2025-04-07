@@ -5,7 +5,7 @@ use super::*;
 extern "C" {
     #[link_name = "\u{1}_ZN3app8lua_bind28PostureModule__rot_y_lr_implEPNS_26BattleObjectModuleAccessorE"]
 	pub fn imported_rot_y_lr(boma: &mut BattleObjectModuleAccessor) -> f32;
-    
+
     #[link_name = "\u{1}_ZN3app9curryshot15is_preview_modeEv"]
 	pub fn is_preview_mode() -> bool;
     
@@ -33,6 +33,9 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app19FighterCutInManager13is_one_on_oneEv"]
     pub fn FighterCutInManager__is_one_on_one() -> bool;
     
+    #[link_name = "\u{1}_ZN3app19sv_fighter_audience20notify_event_msc_cmdEP9lua_State"]
+    pub fn sv_fighter_audience_notify_event_msc_cmd(lua_state: u64);
+
     #[link_name = "\u{1}_ZN3app22kinetic_energy_control6enableEP9lua_State"]
     pub fn kinetic_energy_control_enable(lua_state: u64);
 
@@ -68,6 +71,9 @@ extern "C" {
 
     #[link_name = "\u{1}_ZN3app25FighterSpecializer_Dedede29end_special_n_shot_object_hitERNS_7FighterE"]
 	pub fn end_special_n_shot_object_hit(fighter: *mut smash::app::Fighter) -> u64;
+
+    #[link_name = "\u{1}_ZN3app24FighterSpecializer_Cloud20display_final_windowEb"]
+	pub fn display_final_window(param_1: bool);
 
     #[link_name = "\u{1}_ZN3app26kinetic_energy_control_rot12set_rotationEP9lua_StateRKN3phx8Vector3fE"]
     pub fn kinetic_energy_control_rot_set_rotation(lua_state: u64, rotation: *const Vector3f);
@@ -175,23 +181,26 @@ pub unsafe extern "C" fn grabbed_anim_selector(fighter: &mut L2CFighterCommon, a
 
 //Condenses the initial reseting of variables into one function
 pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleObjectModuleAccessor) {
-    let jump_speed_x_max = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), hash40("jump_speed_x_max"));
-    let run_speed_max = WorkModule::get_param_float(boma, hash40("run_speed_max"), hash40("run_speed_max"));
-    let ratio = jump_speed_x_max/run_speed_max;
+    let jump_speed_x = WorkModule::get_param_float(boma, hash40("jump_speed_x"), 0);
+    let jump_speed_x_max = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0);
+    let run_speed_max = WorkModule::get_param_float(boma, hash40("run_speed_max"), 0);
+    let ratio = (jump_speed_x_max/run_speed_max)*jump_speed_x;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let entry_id_i32 = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+    let fighter_info = smash::app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), FighterEntryID(entry_id_i32));
     let flags = [
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED, *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE,
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_LANDING, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED,
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE, *FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS
     ];
-    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DASH_GRAB_SPEED];
+    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_SMASH_ATTACK_CHARGE_FRAME];
     let ints = [
         *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY, 
         *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, 
-        *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
+        *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
@@ -205,8 +214,7 @@ pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleO
     WorkModule::set_flag(boma, sv_information::is_ready_go(), *FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO);
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     WorkModule::set_float(boma, ratio, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    BALL_ID = 0;
-    BALL_OWNER = 9;
+    WorkModule::set_int(boma, -1, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_ID);
     BALL_VICTIMS[entry_id] = 0;
     COUNTERHIT_CHECK[entry_id] = false;
     COUNTERHIT_SUCCESS[entry_id] = false;
@@ -223,36 +231,31 @@ pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleO
     SIZE0[entry_id] = 0.0;
     SIZE1[entry_id] = 0.0;
     SPAWN_SIDE[entry_id] = false;
-    SPECIAL_SMASH_BODY = 0;
-    SPECIAL_SMASH_GRAVITY = 0;
-    SPECIAL_SMASH_HEAD = 0;
-    SPECIAL_SMASH_RATE = 0;
-    SPECIAL_SMASH_SIZE = 0;
-    SPECIAL_SMASH_STATUS = 0;
-    SPECIAL_WALL_JUMP = false;
-    STOCK_COUNT[entry_id] = 99;
-    TOTAL_FIGHTER = 1;
+    STOCK_COUNT[entry_id] = smash::app::lua_bind::FighterInformation::stock_count(fighter_info);
 }
 
 //Condenses the reset event reseting of variables into one function
 pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModuleAccessor) {
+    let jump_speed_x = WorkModule::get_param_float(boma, hash40("jump_speed_x"), 0);
     let jump_speed_x_max = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0);
     let run_speed_max = WorkModule::get_param_float(boma, hash40("run_speed_max"), 0);
-    let ratio = jump_speed_x_max/run_speed_max;
+    let ratio = (jump_speed_x_max/run_speed_max)*jump_speed_x;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+    let entry_id_i32 = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+    let fighter_info = smash::app::lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), FighterEntryID(entry_id_i32));
     let flags = [
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ALL_LAST_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED, *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE,
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_LANDING, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED,
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE, *FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS
     ];
-    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DASH_GRAB_SPEED];
+    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_SMASH_ATTACK_CHARGE_FRAME];
     let ints = [
         *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY, 
         *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, 
-        *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
+        *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
@@ -266,8 +269,7 @@ pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModu
     WorkModule::set_flag(boma, sv_information::is_ready_go(), *FIGHTER_INSTANCE_WORK_ID_FLAG_READY_GO);
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     WorkModule::set_float(boma, ratio, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    BALL_ID = 0;
-    BALL_OWNER = 9;
+    WorkModule::set_int(boma, -1, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_ID);
     BALL_VICTIMS[entry_id] = 0;
     COUNTERHIT_CHECK[entry_id] = false;
     COUNTERHIT_SUCCESS[entry_id] = false;
@@ -284,36 +286,28 @@ pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModu
     SIZE0[entry_id] = 0.0;
     SIZE1[entry_id] = 0.0;
     SPAWN_SIDE[entry_id] = false;
-    SPECIAL_SMASH_BODY = 0;
-    SPECIAL_SMASH_GRAVITY = 0;
-    SPECIAL_SMASH_HEAD = 0;
-    SPECIAL_SMASH_RATE = 0;
-    SPECIAL_SMASH_SIZE = 0;
-    SPECIAL_SMASH_STATUS = 0;
-    SPECIAL_WALL_JUMP = false;
-    STOCK_COUNT[entry_id] = 99;
-    TOTAL_FIGHTER = 1;
+    STOCK_COUNT[entry_id] = smash::app::lua_bind::FighterInformation::stock_count(fighter_info);
 }
 
 //Condenses the reseting of variables on death into one function
 pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModuleAccessor) {
+    let jump_speed_x = WorkModule::get_param_float(boma, hash40("jump_speed_x"), 0);
     let jump_speed_x_max = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0);
     let run_speed_max = WorkModule::get_param_float(boma, hash40("run_speed_max"), 0);
-    let ratio = jump_speed_x_max/run_speed_max;
+    let ratio = (jump_speed_x_max/run_speed_max)*jump_speed_x;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     let flags = [
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED, *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL, 
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_LANDING, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE, *FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, *FIGHTER_INSTANCE_WORK_ID_FLAG_DID_MAX_JUMP_COUNT, *FIGHTER_INSTANCE_WORK_ID_FLAG_FIRST_BOUNCE, 
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, *FIGHTER_INSTANCE_WORK_ID_FLAG_IS_CC, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH,
+        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_USED_FS
     ];
-    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DASH_GRAB_SPEED];
+    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_SMASH_ATTACK_CHARGE_FRAME];
     let ints = [
         *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY, 
         *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, 
-        *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
+        *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
@@ -326,6 +320,7 @@ pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModu
     }
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     WorkModule::set_float(boma, ratio, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
+    WorkModule::set_int(boma, -1, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_ID);
     COUNTERHIT_CHECK[entry_id] = false;
     COUNTERHIT_SUCCESS[entry_id] = false;
     LAST_ALT_STICK[0] = 0.0;
@@ -340,7 +335,6 @@ pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModu
     SIZE0[entry_id] = 0.0;
     SIZE1[entry_id] = 0.0;
     SPAWN_SIDE[entry_id] = false;
-    SPECIAL_WALL_JUMP = false;
 }
 
 //Credited to WuBoyTH, enables characters having command inputs buttons to work properly, and assigns them to a single button type
@@ -359,9 +353,8 @@ pub unsafe extern "C" fn clone_command_input(boma: *mut BattleObjectModuleAccess
 }
 
 pub unsafe extern "C" fn common_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }

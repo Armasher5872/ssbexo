@@ -3,6 +3,7 @@ use super::*;
 const LUIGI_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xca0ce0; //Luigi only
 const LUIGI_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const LUIGI_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xca0cf0; //Luigi only
+const LUIGI_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xca0e40; //Luigi only
 const LUIGI_VTABLE_LINK_EVENT_OFFSET: usize = 0xca0e70; //Luigi only
 const LUIGI_VTABLE_CHANGE_MOTION_CALLBACK_OFFSET: usize = 0xca1510; //Luigi only
 
@@ -42,6 +43,39 @@ unsafe extern "C" fn luigi_death_initialization(vtable: u64, fighter: &mut Fight
     original!()(vtable, fighter)
 }
 
+//Luigi Once Per Fighter Frame
+#[skyline::hook(offset = LUIGI_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn luigi_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_luigi_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    }
+    original!()(vtable, fighter)
+}
+
 //Link Event for Luigi
 #[skyline::hook(offset = LUIGI_VTABLE_LINK_EVENT_OFFSET)]
 unsafe extern "C" fn luigi_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
@@ -73,6 +107,7 @@ pub fn install() {
         luigi_start_initialization,
         luigi_reset_initialization,
         luigi_death_initialization,
+        luigi_opff,
         luigi_link_event,
         luigi_change_motion_callback
     );

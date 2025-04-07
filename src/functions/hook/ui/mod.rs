@@ -1,6 +1,7 @@
 use {
     crate::functions::{
         hook::ui::{
+            cloud_meter::*,
             ice_climber_meter::*,
             lucario_meter::*,
             mariod_meter::*,
@@ -16,6 +17,7 @@ use {
     parking_lot::RwLock
 };
 
+pub mod cloud_meter;
 pub mod ice_climber_meter;
 pub mod lucario_meter;
 pub mod mariod_meter;

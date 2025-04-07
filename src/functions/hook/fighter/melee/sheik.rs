@@ -16,6 +16,7 @@ unsafe extern "C" fn sheik_var(boma: &mut BattleObjectModuleAccessor) {
     ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_eye"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_facen"), true);
     ModelModule::set_mesh_visibility(boma, Hash40::new("sheik_openblink"), true);
+    CameraModule::set_status(boma, CameraStatus{ _address: *CAMERA_STATUS_NORMAL as u8 }, 0);
 }
 
 //Sheik Startup Initialization
@@ -50,7 +51,10 @@ unsafe extern "C" fn sheik_death_initialization(vtable: u64, fighter: &mut Fight
 #[skyline::hook(offset = SHEIK_VTABLE_ONCE_PER_FIGHTER_FRAME)]
 unsafe extern "C" fn sheik_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     let status_kind = StatusModule::status_kind(boma);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     let vanish_timer = WorkModule::get_int(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_VANISH_TIMER);
     let sheikah_eye_timer = WorkModule::get_int(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SHEIKAH_EYE_TIMER);
     let transition_terms = [
@@ -169,6 +173,29 @@ unsafe extern "C" fn sheik_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HAS_VANISHED);
             StatusModule::change_status_request_from_script(boma, *FIGHTER_SHEIK_STATUS_KIND_SPECIAL_LW_VANISH_ATTACK, false);
         }
+    }
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_sheik_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     }
     original!()(vtable, fighter)
 }

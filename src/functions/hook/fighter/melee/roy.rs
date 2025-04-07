@@ -6,10 +6,9 @@ const ROY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10bb700; //Shared
 const ROY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x10bbaa0; //Shared
 
 unsafe extern "C" fn roy_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
@@ -60,6 +59,9 @@ unsafe extern "C" fn roy_death_initialization(vtable: u64, fighter: &mut Fighter
 unsafe extern "C" fn roy_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_ROY as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
+        let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
         let sol_object_id = WorkModule::get_int(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_OBJECT_ID);
         let sol_timer = WorkModule::get_int(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_TIMER);
         if WorkModule::is_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE) && sol_object_id != *BATTLE_OBJECT_ID_INVALID {
@@ -89,6 +91,33 @@ unsafe extern "C" fn roy_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                 macros::EFFECT_OFF_KIND(opponent_agent, Hash40::new("roy_attack_fire"), false, false);
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SOL_OBJECT_ID);
             }
+        }
+        //Final Zoom Effect Clearing
+        if counter > 0 {
+            if counter == 40 {
+                if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                    EffectModule::set_rate(boma, handle as u32, 1.0);
+                }
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            if counter == 20 {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                }
+                else {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_roy_final"), -1);
+                }
+                macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+                macros::CAM_ZOOM_OUT(agent);
+            }
+            if counter == 10 {
+                SlowModule::clear_whole(boma);
+            }
+            WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        }
+        else {
+            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
         }
     }
     original!()(vtable, fighter)

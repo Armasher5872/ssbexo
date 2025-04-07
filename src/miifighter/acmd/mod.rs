@@ -1,7 +1,7 @@
 use {
     crate::functions::var::{
-        miifighter::*,
         consts::*,
+        miifighter::*,
     },
     smash::{
         app::{

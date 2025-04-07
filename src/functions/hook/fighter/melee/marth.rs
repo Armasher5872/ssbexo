@@ -43,11 +43,37 @@ unsafe extern "C" fn marth_death_initialization(vtable: u64, fighter: &mut Fight
 //Marth Once Per Fighter Frame
 #[skyline::hook(offset = MARTH_VTABLE_ONCE_PER_FIGHTER_FRAME)]
 unsafe extern "C" fn marth_opff(vtable: u64, fighter: &mut Fighter) {
-    let boma = fighter.battle_object.module_accessor;
-    let long_sword_scale = Vector3f{x: 1.0, y: 1.2, z: 1.0};
     if fighter.battle_object.kind == *FIGHTER_KIND_MARTH as u32 {
+        let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
+        let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        let long_sword_scale = Vector3f{x: 1.0, y: 1.2, z: 1.0};
         ModelModule::set_joint_scale(boma, Hash40::new("havel"), &long_sword_scale);
         ModelModule::set_joint_scale(boma, Hash40::new("haver"), &long_sword_scale);
+        //Final Zoom Effect Clearing
+        if counter > 0 {
+            if counter == 20 {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                    set_stage_visibility(boma, 1);
+                    set_vis_hud(true);
+                }
+                else {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_marth_final"), -1);
+                    EffectModule::set_rate(boma, handle as u32, 1.0);
+                }
+                macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+                macros::CAM_ZOOM_OUT(agent);
+            }
+            if counter == 10 {
+                SlowModule::clear_whole(boma);
+            }
+            WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        }
+        else {
+            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        }
     }
     original!()(vtable, fighter)
 }

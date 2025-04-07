@@ -185,7 +185,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             let handle = EffectModule::req_screen(defender_boma, Hash40::new("bg_finishhit"), false, true, true);
             EffectModule::set_billboard(defender_boma, handle as u32, true);
             EffectModule::set_disable_render_offset_last(defender_boma);
-            WorkModule::set_int(attacker_boma, 20, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+            WorkModule::set_int(attacker_boma, 50, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
             SoundModule::play_se(attacker_boma, Hash40::new("se_common_finishhit"), false, false, false, false, enSEType(0));
             SlowModule::set_whole(attacker_boma, 8, 25);
             StopModule::set_hit_stop_frame(defender_boma, 20, true);
@@ -243,6 +243,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
                 _ if [*FIGHTER_KIND_LUCARIO, *WEAPON_KIND_LUCARIO_AURABALL, *WEAPON_KIND_LUCARIO_QIGONG].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_lucario_final"), false, true, true),
                 _ if [*FIGHTER_KIND_ROBOT, *WEAPON_KIND_ROBOT_BEAM].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_robot_final"), false, true, true),
                 _ if [*FIGHTER_KIND_TOONLINK, *WEAPON_KIND_TOONLINK_HOOKSHOT, *WEAPON_KIND_TOONLINK_BOWARROW, *WEAPON_KIND_TOONLINK_BOOMERANG].contains(&attacker_kind)  => EffectModule::req_screen(attacker_boma, Hash40::new("bg_toonlink_final"), false, true, true),
+                _ if attacker_kind == *FIGHTER_KIND_WOLF => EffectModule::req_screen(attacker_boma, Hash40::new("bg_criticalhit"), false, true, true),
                 _ if [*FIGHTER_KIND_MURABITO, *WEAPON_KIND_MURABITO_WEEDS, *WEAPON_KIND_MURABITO_FLOWERPOT, *WEAPON_KIND_MURABITO_BOWLING_BALL, *WEAPON_KIND_MURABITO_FIREWORK, *WEAPON_KIND_MURABITO_BULLET, *WEAPON_KIND_MURABITO_CLAYROCKET, *WEAPON_KIND_MURABITO_TREE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_murabito_final"), false, true, true),
                 _ if [*FIGHTER_KIND_ROCKMAN, *WEAPON_KIND_ROCKMAN_CHARGESHOT, *WEAPON_KIND_ROCKMAN_AIRSHOOTER, *WEAPON_KIND_ROCKMAN_HARDKNUCKLE, *WEAPON_KIND_ROCKMAN_CRASHBOMB, *WEAPON_KIND_ROCKMAN_LEAFSHIELD].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_rockman_final"), false, true, true),
                 _ if [*FIGHTER_KIND_WIIFIT, *WEAPON_KIND_WIIFIT_SUNBULLET, *WEAPON_KIND_WIIFIT_HULAHOOP].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_wiifit_final"), false, true, true),
@@ -274,7 +275,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
                 _ if [*FIGHTER_KIND_DOLLY, *WEAPON_KIND_DOLLY_WAVE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_dolly_final"), false, true, true),
                 _ if [*FIGHTER_KIND_MASTER, *WEAPON_KIND_MASTER_ARROW1, *WEAPON_KIND_MASTER_ARROW2, *WEAPON_KIND_MASTER_AXE, *WEAPON_KIND_MASTER_BOW, *WEAPON_KIND_MASTER_SPEAR, *WEAPON_KIND_MASTER_SWORD, *WEAPON_KIND_MASTER_SWORD2].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_master_final"), false, true, true),
                 _ if [*FIGHTER_KIND_TANTAN, *WEAPON_KIND_TANTAN_BEAM, *WEAPON_KIND_TANTAN_PUNCH1, *WEAPON_KIND_TANTAN_PUNCH2, *WEAPON_KIND_TANTAN_PUNCH3, *WEAPON_KIND_TANTAN_RING, *WEAPON_KIND_TANTAN_SPIRALLEFT, *WEAPON_KIND_TANTAN_SPIRALLEFTLOUPE, *WEAPON_KIND_TANTAN_SPIRALRIGHT, *WEAPON_KIND_TANTAN_SPIRALRIGHTLOUPE, *WEAPON_KIND_TANTAN_SPIRALSIMPLE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_tantan_final_l"), false, true, true),
-                _ if [*FIGHTER_KIND_PICKEL, *WEAPON_KIND_PICKEL_AXE, *WEAPON_KIND_PICKEL_FIRE, *WEAPON_KIND_PICKEL_MELT, *WEAPON_KIND_PICKEL_PICK, *WEAPON_KIND_PICKEL_PUSHOBJECT, *WEAPON_KIND_PICKEL_STUFF, *WEAPON_KIND_PICKEL_SWORD, *WEAPON_KIND_PICKEL_TROLLEY].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pickel_final"), false, true, true),
+                _ if [*FIGHTER_KIND_PICKEL, *WEAPON_KIND_PICKEL_AXE, *WEAPON_KIND_PICKEL_FIRE, *WEAPON_KIND_PICKEL_MELT, *WEAPON_KIND_PICKEL_PICK, *WEAPON_KIND_PICKEL_PUSHOBJECT, *WEAPON_KIND_PICKEL_STUFF, *WEAPON_KIND_PICKEL_SWORD, *WEAPON_KIND_PICKEL_TROLLEY].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pickel_final_l"), false, true, true),
                 _ if [*FIGHTER_KIND_EDGE, *WEAPON_KIND_EDGE_FIRE, *WEAPON_KIND_EDGE_FLARE2, *WEAPON_KIND_EDGE_FLASH].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_edge_final"), false, true, true),
                 _ if [*FIGHTER_KIND_EFLAME, *WEAPON_KIND_EFLAME_ESWORD].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_eflame_final"), false, true, true),
                 _ if [*FIGHTER_KIND_ELIGHT, *WEAPON_KIND_ELIGHT_EXPROSIVESHOT, *WEAPON_KIND_ELIGHT_METEOR, *WEAPON_KIND_ELIGHT_SPREADBULLET].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_eelight_final"), false, true, true),
@@ -288,7 +289,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             EffectModule::set_billboard(attacker_boma, handle as u32, true);
             EffectModule::set_disable_render_offset_last(attacker_boma);
             EffectModule::set_rate(attacker_boma, handle as u32, 8.0);
-            WorkModule::set_int(attacker_boma, 20, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+            WorkModule::set_int(attacker_boma, 80, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
             WorkModule::set_int(attacker_boma, handle as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
             SoundModule::play_se(attacker_boma, Hash40::new("se_common_boss_down"), false, false, false, false, enSEType(0));
             SlowModule::set_whole(attacker_boma, 8, 25);
@@ -313,11 +314,7 @@ unsafe extern "C" fn is_invalid_finishing_hit(boma: &mut BattleObjectModuleAcces
     for id in 0..8 {
         let attack_data = AttackModule::attack_data(boma, id, false);
         let attribute = (*attack_data).attr;
-        let fixed_knockback = (*attack_data).r_fix;
         if [hash40("collision_attr_saving"), hash40("collision_attr_lay"), hash40("collision_attr_bury")].contains(&attribute) {
-            return true;
-        }
-        if fixed_knockback > 0 {
             return true;
         }
     }

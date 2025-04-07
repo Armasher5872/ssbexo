@@ -55,11 +55,14 @@ unsafe extern "C" fn status_end_furafura(fighter: &mut L2CFighterCommon) -> L2CV
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("sys_piyopiyo"), false, false);
     macros::CAM_ZOOM_OUT(fighter);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER);
     0.into()
 }
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_FuraFuraEnd)]
 unsafe fn status_furafuraend(fighter: &mut L2CFighterCommon) -> L2CValue {
+    macros::PLAY_SE(fighter, Hash40::new("se_common_guardbreak"));
+    macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_M);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("furafura_end"), 0.0, 0.6, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_FuraFuraEnd_Main as *const () as _))
 }

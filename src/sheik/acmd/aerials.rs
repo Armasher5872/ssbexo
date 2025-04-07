@@ -117,9 +117,6 @@ unsafe extern "C" fn ssbexo_sheik_uair_acmd(agent: &mut L2CAgentBase) {
 
 //Dair ACMD
 unsafe extern "C" fn ssbexo_sheik_dair_acmd(agent: &mut L2CAgentBase) {
-    if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-    }
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);

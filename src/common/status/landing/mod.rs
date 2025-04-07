@@ -12,8 +12,7 @@ use {
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::L2CFighterCommon,
-        phx::Hash40
+        lua2cpp::L2CFighterCommon
     }
 };
 

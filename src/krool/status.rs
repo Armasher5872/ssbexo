@@ -41,7 +41,7 @@ unsafe extern "C" fn krool_attack_lw4_map_correction_status(fighter: &mut L2CFig
     if frame <= fall_start_frame {
         return 0.into()
     }
-    if prev_frame < start_air_frame  && frame >= start_air_frame {
+    if prev_frame < start_air_frame && frame >= start_air_frame {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_THROW_FLAG_START_AIR);
     }
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {

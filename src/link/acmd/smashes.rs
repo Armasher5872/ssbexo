@@ -35,6 +35,7 @@ unsafe extern "C" fn ssbexo_link_forward_smash_acmd(agent: &mut L2CAgentBase) {
         }
         macros::ATK_SET_SHIELD_SETOFF_MUL_arg4(agent, 0, 1, 2, 1.4);
         AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_HIGH), false);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
     }
     wait(agent.lua_state_agent, 3.0);
     if macros::is_excute(agent) {
@@ -459,7 +460,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
         if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("sword2"), 14.0, 45, 88, 0, 60, 4.0, -2.0, 0.0, 0.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -472,7 +473,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("sword2"), 11.2, 45, 88, 0, 60, 2.8, 8.0, 0.0, 1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         }
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(agent.lua_state_agent, 19.0);
     if macros::is_excute(agent) {
         if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
             macros::ATTACK(agent, 0, 0, Hash40::new("sword2"), 9.0, 43, 84, 0, 48, 4.0, -2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
@@ -486,7 +487,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_acmd(agent: &mut L2CAgentBase) {
             macros::ATTACK(agent, 2, 0, Hash40::new("sword2"), 7.2, 43, 84, 0, 48, 2.8, 8.0, 0.0, 1.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         }
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(agent.lua_state_agent, 22.0);
     if macros::is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
         AttackModule::clear_all(agent.module_accessor);
@@ -500,13 +501,13 @@ unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
         if macros::is_excute(agent) {
             macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword1"), 13, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         }
-        frame(agent.lua_state_agent, 5.0);
+        frame(agent.lua_state_agent, 8.0);
         if macros::is_excute(agent) {
             macros::AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_brave_lightningsword1"), Hash40::new("tex_brave_sword2"), 16, Hash40::new("sword1"), 3.0, 0.0, 0.0, Hash40::new("sword1"), 14.0, 0.0, 0.0, true, Hash40::new("null"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, -90.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
             macros::EFFECT_FOLLOW(agent, Hash40::new("link_sword_flare"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
             macros::FLASH(agent, 1, 1.0, 1.0, 0.0);
         }
-        frame(agent.lua_state_agent, 6.0);
+        frame(agent.lua_state_agent, 10.0);
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 11, 0, -10, -120, 0, 1, true);
             macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 0.0);
@@ -515,7 +516,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
             macros::LAST_EFFECT_SET_RATE(agent, 1.3);
             macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 0.0);
         }
-        frame(agent.lua_state_agent, 13.0);
+        frame(agent.lua_state_agent, 16.0);
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("brave_lightning3_rolllightning"), Hash40::new("top"), 0, 10, 0, 0, 0, 4, 1, true);
             macros::EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 10, 0, 10, 180, 0, 1, true);
@@ -525,7 +526,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
             macros::LAST_EFFECT_SET_RATE(agent, 1.3);
             macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 0.0);
         }
-        frame(agent.lua_state_agent, 18.0);
+        frame(agent.lua_state_agent, 23.0);
         if macros::is_excute(agent) {
             macros::FLASH_FRM(agent, 5, 0, 0, 0, 0);
             macros::AFTER_IMAGE_OFF(agent, 6);
@@ -533,11 +534,11 @@ unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
             macros::LANDING_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
             macros::LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 0.0);
         }
-        frame(agent.lua_state_agent, 21.0);
+        frame(agent.lua_state_agent, 26.0);
         if macros::is_excute(agent) {
             macros::COL_NORMAL(agent);
         }
-        frame(agent.lua_state_agent, 26.0);
+        frame(agent.lua_state_agent, 30.0);
         if macros::is_excute(agent) {
             macros::EFFECT_OFF_KIND(agent, Hash40::new("link_sword_flare"), false, false);
         }
@@ -547,38 +548,38 @@ unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
         if macros::is_excute(agent) {
             macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword1"), 13, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         }
-        frame(agent.lua_state_agent, 5.0);
+        frame(agent.lua_state_agent, 8.0);
         if macros::is_excute(agent) {
             macros::AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_link_sword1"), Hash40::new("tex_link_sword2"), 4, Hash40::new("sword1"), 1.0, 0.0, 0.0, Hash40::new("sword1"), 14.6, 0.2, -0.2, true, Hash40::new("null"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.6, 0.2);
             macros::EFFECT_FOLLOW(agent, Hash40::new("link_sword_flare"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
             macros::FLASH(agent, 1, 0.6, 0, 0.1);
         }
-        frame(agent.lua_state_agent, 6.0);
+        frame(agent.lua_state_agent, 9.0);
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 11, 0, -10, -120, 0, 1, true);
             macros::FOOT_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
             macros::LAST_EFFECT_SET_ALPHA(agent, 0.6);
             macros::LAST_EFFECT_SET_RATE(agent, 1.3);
         }
-        frame(agent.lua_state_agent, 13.0);
+        frame(agent.lua_state_agent, 18.0);
         if macros::is_excute(agent) {
             macros::EFFECT_FOLLOW(agent, Hash40::new("link_kaiten"), Hash40::new("top"), 0, 10, 0, 10, 180, 0, 1, true);
             macros::FOOT_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
             macros::LAST_EFFECT_SET_ALPHA(agent, 0.6);
             macros::LAST_EFFECT_SET_RATE(agent, 1.3);
         }
-        frame(agent.lua_state_agent, 18.0);
+        frame(agent.lua_state_agent, 23.0);
         if macros::is_excute(agent) {
             macros::FLASH_FRM(agent, 5, 0, 0, 0, 0);
             macros::AFTER_IMAGE_OFF(agent, 6);
             macros::EFFECT_OFF_KIND(agent, Hash40::new("link_kaiten"), false, false);
             macros::LANDING_EFFECT(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
         }
-        frame(agent.lua_state_agent, 21.0);
+        frame(agent.lua_state_agent, 26.0);
         if macros::is_excute(agent) {
             macros::COL_NORMAL(agent);
         }
-        frame(agent.lua_state_agent, 26.0);
+        frame(agent.lua_state_agent, 31.0);
         if macros::is_excute(agent) {
             macros::EFFECT_OFF_KIND(agent, Hash40::new("link_sword_flare"), false, false);
         }
@@ -623,11 +624,11 @@ unsafe extern "C" fn ssbexo_link_down_smash_expression(agent: &mut L2CAgentBase)
     if macros::is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(agent.lua_state_agent, 9.0);
     if macros::is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitll"), 8, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(agent.lua_state_agent, 11.0);
     if macros::is_excute(agent) {
         macros::RUMBLE_HIT(agent, Hash40::new("rbkind_slashl"), 0);
     }

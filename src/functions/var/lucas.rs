@@ -8,4 +8,5 @@ pub const FIGHTER_LUCAS_INSTANCE_WORK_ID_INT_DEFENSE_UP_EFFECT_TIMER: smash::lib
 pub const FIGHTER_LUCAS_STATUS_KIND_SPECIAL_GUARD_BURST: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1EE);
 pub const FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_CATCH: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1EF);
 pub const FIGHTER_LUCAS_STATUS_KIND_SPECIAL_LW_THROW: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1F0);
+pub const FIGHTER_LUCAS_SHIELD_KIND_SPECIAL_LW_GUARD: smash::lib::LuaConst = smash::lib::LuaConst::new(0x0);
 pub const FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD: smash::lib::LuaConst = smash::lib::LuaConst::new(0x2);

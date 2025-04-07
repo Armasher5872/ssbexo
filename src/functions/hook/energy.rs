@@ -1,4 +1,5 @@
 //The following code is credited to HDR
+#![allow(dead_code)]
 use super::*;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -42,7 +43,7 @@ unsafe extern "C" fn control_update(energy: &mut FighterKineticEnergyControl, bo
     let get_sub_stick_y = ControlModule::get_sub_stick_y(boma);
     let lr = PostureModule::lr(boma);
     let reset_type = std::mem::transmute(energy.energy_reset_type);
-    let mut stick = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {Vector2f {x: get_sub_stick_x, y: get_sub_stick_y}} else {Vector2f {x: get_stick_x, y: get_stick_y}};
+    let mut stick = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {Vector2f {x: get_sub_stick_x, y: get_sub_stick_y}} else {Vector2f {x: get_stick_x, y: get_stick_y}};
     let damage_reaction_frame = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_DAMAGE_REACTION_FRAME);
     let stick_rate = WorkModule::get_float(boma, *FIGHTER_STATUS_ITEM_LIFT_WORK_FLOAT_STICK_RATE);
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
@@ -66,9 +67,7 @@ unsafe extern "C" fn control_update(energy: &mut FighterKineticEnergyControl, bo
     let turn_dash_from_dash_count = WorkModule::get_int(boma, *FIGHTER_STATUS_DASH_WORK_INT_TURN_DASH_FROM_DASH_COUNT);
     let backup_max = energy.speed_max;
     let backup_brake = energy.speed_brake;
-    if damage_reaction_frame > 0.0 {
-        stick.x = 0.0;
-    }
+    let jump_speed_x_max = run_speed_max*ratio;
     let accel_add_x = if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR 
     && WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) 
     && !WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL) {
@@ -83,6 +82,9 @@ unsafe extern "C" fn control_update(energy: &mut FighterKineticEnergyControl, bo
     };
     let accel_add_y = if stick.y != 0.0 {energy.accel_add_y} else {0.0};
     let mut do_standard_accel = true;
+    if damage_reaction_frame > 0.0 {
+        stick.x = 0.0;
+    }
     use EnergyControllerResetType::*;
     let accel_diff = match reset_type {
         FallAdjust | FallAdjustNoCap | FlyAdjust | ShootDash | ShootBackDash | RevolveSlashAir | MoveGround | MoveAir => {
@@ -237,15 +239,12 @@ unsafe extern "C" fn control_update(energy: &mut FighterKineticEnergyControl, bo
         }
         energy.speed_max.x = speed_max;
     }
-    /*
-    //Double air brake value when above max horizontal jump speed
+    //Quadruple air brake value when above max horizontal jump speed
     if current_frame > 0.0 {
-        let jump_speed_x_max = run_speed_max*ratio;
         if situation_kind == *SITUATION_KIND_AIR && energy.speed.x.abs() >= jump_speed_x_max {
-            energy.speed_brake.x *= 2.0;
+            energy.speed_brake.x *= 4.0;
         }
     }
-    */
     energy.process(boma);
     if !*(status_module as *const bool).add(0x12a) {
         if situation_kind == *SITUATION_KIND_AIR {
@@ -271,6 +270,7 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
     let kind = utility::get_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
     let scale = PostureModule::scale(boma);
+    let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
     let walk_accel_mul = WorkModule::get_param_float(boma, hash40("walk_accel_mul"), 0);
     let walk_accel_add = WorkModule::get_param_float(boma, hash40("walk_accel_add"), 0);
     let walk_speed_max = WorkModule::get_param_float(boma, hash40("walk_speed_max"), 0);
@@ -282,7 +282,8 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
     let air_accel_x_add = WorkModule::get_param_float(boma, hash40("air_accel_x_add"), 0);
     let air_brake_x = WorkModule::get_param_float(boma, hash40("air_brake_x"), 0);
     let stop_ceil_speed_x_stable_mul = WorkModule::get_param_float(boma, hash40("common"), hash40("stop_ceil_speed_x_stable_mul"));
-    let mut air_speed_x_stable = WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0);
+    let air_speed_x_stable = WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0);
+    let mut speed_x_stable = air_speed_x_stable;
     let air_speed_x_limit = WorkModule::get_param_float(boma, hash40("common"), hash40("air_speed_x_limit"));
     let brake = WorkModule::get_param_float(boma, hash40("ground_brake"), 0)*WorkModule::get_param_float(boma, hash40("common"), hash40("run_brake_brake_mul"));
     let rslash_air_max_x_mul = WorkModule::get_param_float(boma, hash40("param_special_hi"), hash40("rslash_air_max_x_mul"));
@@ -295,15 +296,14 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
     let ladder_speed_u_max = WorkModule::get_param_float(boma, hash40("common"), hash40("ladder_speed_u_max"));
     let ladder_speed_d_max = WorkModule::get_param_float(boma, hash40("common"), hash40("ladder_speed_d_max"));
     let reset_type = std::mem::transmute(energy.energy_reset_type);
+    let jump_speed_x_max = run_speed_max*ratio;
     use EnergyControllerResetType::*;
     match reset_type {
         FallAdjust | FallAdjustNoCap | StopCeil | WallJump => {
             if reset_type == StopCeil {
-                air_speed_x_stable *= stop_ceil_speed_x_stable_mul;
+                speed_x_stable *= stop_ceil_speed_x_stable_mul;
             }
-            let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-            let jump_speed_x_max = run_speed_max*ratio;
-            energy.speed_max = PaddedVec2::new(air_speed_x_stable, -1.0);
+            energy.speed_max = PaddedVec2::new(speed_x_stable, -1.0);
             energy.speed_brake = PaddedVec2::new(air_brake_x, 0.0);
             let air_x_speed_max = if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT) && energy.unk[2] == 0 {
                 air_speed_x_limit
@@ -327,7 +327,7 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
             else {
                 return;
             };
-            energy.speed_max = PaddedVec2::new(WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0), -1.0);
+            energy.speed_max = PaddedVec2::new(air_speed_x_stable, -1.0);
             energy.speed_brake = PaddedVec2::new(air_brake_x, 0.0);
             energy.speed_limit = PaddedVec2::new(air_speed_x_limit, 0.0);
             energy.accel_mul_x = air_accel_x_mul*fly_data.speed_x_mul;
@@ -346,7 +346,7 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
             energy.speed_brake = PaddedVec2::new(brake, 0.0);
         },
         RevolveSlashAir => {
-            let speed_max = WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0)*rslash_air_max_x_mul;
+            let speed_max = air_speed_x_stable*rslash_air_max_x_mul;
             energy.speed_max = PaddedVec2::new(speed_max, -1.0);
             energy.speed_brake = PaddedVec2::new(air_brake_x, 0.0);
             energy.speed_limit = PaddedVec2::new(air_speed_x_limit, 0.0);
@@ -360,7 +360,7 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
             energy.accel_add_x = walk_accel_add;
         },
         Free => {
-            energy.speed_max = PaddedVec2::new(WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0), WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0));
+            energy.speed_max = PaddedVec2::new(air_speed_x_stable, air_speed_x_stable);
             energy.speed_brake = PaddedVec2::new(air_brake_x, air_brake_x);
             energy.speed_limit = PaddedVec2::new(air_speed_x_limit, air_speed_x_limit);
             energy.accel_mul_x = air_accel_x_mul;
@@ -384,7 +384,7 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
             energy.accel_mul_x = swim_accel_mul*swim_drown_speed_x_mul;
         },
         TurnNoStopAir => {
-            energy.speed_max = PaddedVec2::new(WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0), -1.0);
+            energy.speed_max = PaddedVec2::new(air_speed_x_stable, -1.0);
             energy.speed_limit = PaddedVec2::new(air_speed_x_limit, 0.0);
             energy.speed_brake = PaddedVec2::new(air_brake_x, 0.0);
             energy.accel_mul_x = air_accel_x_mul;
@@ -398,7 +398,7 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
 }
 
 #[skyline::hook(offset = 0x6d4bc0)]
-unsafe extern "C" fn control_setup(energy: &mut FighterKineticEnergyControl, reset_type: EnergyControllerResetType, initial_speed: &Vector3f, unk: u64, boma: &mut BattleObjectModuleAccessor) {
+unsafe extern "C" fn control_setup(energy: &mut FighterKineticEnergyControl, reset_type: EnergyControllerResetType, initial_speed: &Vector3f, _unk: u64, boma: &mut BattleObjectModuleAccessor) {
     let fighter = get_fighter_common_from_accessor(&mut *boma);
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
@@ -499,6 +499,7 @@ unsafe extern "C" fn control_setup(energy: &mut FighterKineticEnergyControl, res
     }
     energy.initialize(boma);
 }
+
 
 pub fn install() {
     skyline::install_hooks!(

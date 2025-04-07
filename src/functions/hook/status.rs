@@ -27,7 +27,23 @@ unsafe extern "C" fn is_enable_transition_term_replace(module_accessor: &mut sma
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::change_status_request)]
 unsafe extern "C" fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
 	let mut next_status = status_kind;
-    if (boma.is_weapon() && boma.kind() == *WEAPON_KIND_DEDEDE_GORDO) {
+	if boma.is_fighter() {
+		if next_status == *FIGHTER_STATUS_KIND_CLIFF_WAIT {
+            let cliff_id = GroundModule::get_cliff_id_uint32(boma);
+            for object_id in get_all_active_battle_object_ids() {
+                let object = get_battle_object_from_id(object_id);
+                if !object.is_null() {
+                    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == WorkModule::get_int(&mut *(*object).module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) {
+                        continue;
+                    }
+                    if WorkModule::get_int(&mut *(*object).module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_ID) == cliff_id as i32 {
+                        next_status = *FIGHTER_STATUS_KIND_CLIFF_ROBBED;
+                    }
+                }
+            }
+		}
+	}
+	else if (boma.is_weapon() && boma.kind() == *WEAPON_KIND_DEDEDE_GORDO) {
         if next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_ATTACK || next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_HOP {
             HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
             HitModule::set_no_team(boma, true);
@@ -43,6 +59,29 @@ unsafe extern "C" fn change_status_request_hook(boma: &mut smash::app::BattleObj
 				next_status = *ITEM_STATUS_KIND_FALL;
 				TeamModule::set_hit_team(boma, *TEAM_NONE);
 			}
+		}
+	}
+	original!()(boma, next_status, arg3)
+}
+
+//Change Status Request From Script
+#[skyline::hook(replace = smash::app::lua_bind::StatusModule::change_status_request_from_script)]
+unsafe extern "C" fn change_status_request_from_script_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
+	let mut next_status = status_kind;
+	if boma.is_fighter() {
+		if next_status == *FIGHTER_STATUS_KIND_CLIFF_WAIT {
+            let cliff_id = GroundModule::get_cliff_id_uint32(boma);
+            for object_id in get_all_active_battle_object_ids() {
+                let object = get_battle_object_from_id(object_id);
+                if !object.is_null() {
+                    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == WorkModule::get_int(&mut *(*object).module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) {
+                        continue;
+                    }
+                    if WorkModule::get_int(&mut *(*object).module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_ID) == cliff_id as i32 {
+                        next_status = *FIGHTER_STATUS_KIND_CLIFF_ROBBED;
+                    }
+                }
+            }
 		}
 	}
 	original!()(boma, next_status, arg3)
@@ -104,7 +143,7 @@ pub unsafe extern "C" fn init_settings_edges(boma: &mut BattleObjectModuleAccess
 	return fix
 }
 
-//(Credit to HDR)
+//Credit to HDR
 #[skyline::hook(replace=StatusModule::init_settings)]
 unsafe extern "C" fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, situation: smash::app::SituationKind, kinetic_type: i32, arg4: u32, ground_cliff_check_kind: smash::app::GroundCliffCheckKind, jostle: bool, keep_flag: i32, keep_int: i32, keep_float: i32, arg10: i32) -> u64 {
     let mut cliff_check_kind = ground_cliff_check_kind;                     
@@ -116,6 +155,11 @@ unsafe extern "C" fn init_settings_hook(boma: &mut BattleObjectModuleAccessor, s
         || ([*FIGHTER_KIND_FALCO, *FIGHTER_KIND_WOLF, *FIGHTER_KIND_REFLET].contains(&boma.kind()) && boma.is_status(*FIGHTER_STATUS_KIND_SPECIAL_HI)) {
             cliff_check_kind = smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
         }
+		//Assign Ledge ID
+		if boma.is_status_one_of(&[*FIGHTER_STATUS_KIND_CLIFF_CATCH, *FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE, *FIGHTER_STATUS_KIND_CLIFF_WAIT]) {
+			let cliff_id = GroundModule::get_cliff_id_uint32(boma);
+			WorkModule::set_int(boma, cliff_id as i32, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_ID);
+		}
     }
     original!()(boma, situation, kinetic_type, fix, cliff_check_kind, jostle, keep_flag, keep_int, keep_float, arg10)
 }
@@ -182,6 +226,7 @@ pub fn install() {
 	skyline::install_hooks!(
 		is_enable_transition_term_replace,
 		change_status_request_hook,
+		change_status_request_from_script_hook,
 		init_settings_hook,
         correct_hook,
         get_ground_correct_kind_air_trans_hook,

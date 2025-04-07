@@ -491,7 +491,7 @@ unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
     let rstick_x = ((packet >> 0x30) & 0xFF) as i8;
     let rstick_y = ((packet >> 0x38) & 0xFF) as i8;
 
-    inputs.buttons = Buttons::from_bits_unchecked(raw_buttons as _);
+    inputs.buttons = Buttons::from_bits_retain(raw_buttons as _);
     inputs.lstick_x = lstick_x;
     inputs.lstick_y = lstick_y;
     inputs.rstick_x = rstick_x;
@@ -500,9 +500,82 @@ unsafe fn handle_incoming_packet(ctx: &mut skyline::hooks::InlineCtx) {
     *ctx.registers[13].x.as_mut() = std::mem::transmute(inputs);
 }
 
+//The following section is credited to WuBoyTH, and is utilized to handle held buffer
+
+const PRECEDE_EXTENSION: u8 = 15;
+
+#[skyline::hook(offset = 0x6bd5b4, inline)]
+unsafe fn set_hold_buffer_value(ctx: &mut skyline::hooks::InlineCtx) {
+    let current_buffer = *ctx.registers[8].w.as_ref();
+    let threshold = u8::MAX - PRECEDE_EXTENSION;
+    let buffer = if current_buffer == 1 {u8::MAX as u32} else if current_buffer == threshold as u32 {1} else {current_buffer};
+    *ctx.registers[8].w.as_mut() = buffer;
+}
+
+#[skyline::hook(offset = 0x6bd51c, inline)]
+unsafe fn set_release_value_in_hitstop(ctx: &mut skyline::hooks::InlineCtx) {
+    set_release_value_internal(ctx);
+}
+
+#[skyline::hook(offset = 0x6bd5d8, inline)]
+unsafe fn set_release_value(ctx: &mut skyline::hooks::InlineCtx) {
+    set_release_value_internal(ctx);
+}
+
+unsafe fn set_release_value_internal(ctx: &mut skyline::hooks::InlineCtx) {
+    let threshold = u8::MAX - PRECEDE_EXTENSION;
+    let current_buffer = ctx.registers[9].w.as_ref();
+    let buffer = if *current_buffer < threshold as u32 {*current_buffer} else {1};
+    *ctx.registers[8].w.as_mut() = buffer as u32;
+}
+
+//Fix throws not respecting the cstick, especially dk cargo throw
+#[skyline::hook(replace = L2CFighterCommon_IsThrowStick)]
+unsafe extern "C" fn is_throw_stick(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let mut out = fighter.local_func__fighter_status_catch_1();
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let stick_x;
+    let stick_y;
+    if Buttons::from_bits_retain(ControlModule::get_button(fighter.module_accessor)).intersects(Buttons::CStickOverride) {
+        stick_x = ControlModule::get_sub_stick_x(fighter.module_accessor);
+        stick_y = ControlModule::get_sub_stick_y(fighter.module_accessor);
+    }
+    else {
+        stick_x = ControlModule::get_stick_x(fighter.module_accessor);
+        stick_y = ControlModule::get_stick_y(fighter.module_accessor);
+    }
+    let stick_x = stick_x*lr;
+    let throw_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("attack_lw3_stick_x"));
+    let throw_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("attack_hi4_stick_y"));
+    if stick_x > throw_stick_x {
+        out["f"].assign(&true.into());
+    } 
+    else if stick_x < -throw_stick_x {
+        out["b"].assign(&true.into());
+    }
+    if stick_y > throw_stick_y {
+        out["hi"].assign(&true.into());
+    } 
+    else if stick_y < -throw_stick_y {
+        out["lw"].assign(&true.into());
+    }
+    out
+}
+
+/*
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hook!(is_throw_stick);
+    }
+}
+*/
+
 pub fn install() {
-    //Replaces the vanilla function in favor of the updated one
-    let _ = skyline::patching::Patch::in_text(0x1D3594C).nop();
+    let _ = skyline::patching::Patch::in_text(0x1D3594C).nop(); //Replaces the vanilla function in favor of the updated one
+    let _ = skyline::patching::Patch::in_text(0x6bd5b0).nop(); //Stubs the check if the buffer value is 1 and the button is held
+    let _ = skyline::patching::Patch::in_text(0x6bd53c).nop(); //Stubs setting the buffer lifetime to 2 if held
+    let _ = skyline::patching::Patch::in_text(0x6bd5b4).nop(); //Changes the held buffer assignment
+    //let _ = skyline::nro::add_hook(nro_hook);
 	skyline::install_hooks!(
 		get_button_label_by_operation_kind,
         add_footstool_to_gc,
@@ -516,6 +589,9 @@ pub fn install() {
         write_packet,
         parse_inputs,
         handle_incoming_packet,
-        after_exec
+        after_exec,
+        set_hold_buffer_value,
+        set_release_value_in_hitstop,
+        set_release_value
     );
 }

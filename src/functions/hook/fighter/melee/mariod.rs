@@ -46,10 +46,36 @@ unsafe extern "C" fn mariod_death_initialization(vtable: u64, fighter: &mut Figh
 #[skyline::hook(offset = MARIOD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn mariod_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     WorkModule::off_flag(boma, *FIGHTER_MARIOD_INSTANCE_WORK_ID_FLAG_SPECIAL_S_REFLECTOR);
     WorkModule::off_flag(boma, *FIGHTER_MARIOD_INSTANCE_WORK_ID_FLAG_SEPCIAL_S_REFLECTOR_BREAK);
     UiManager::set_mariod_meter_enable(entry_id, true);
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_mariod_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    }
 }
 
 pub fn install() {

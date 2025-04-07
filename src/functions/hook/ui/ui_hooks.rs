@@ -26,6 +26,7 @@ unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
     manager.ice_climber_meter[index] = IceClimberMeter::new(layout_udata);
     manager.mariod_meter[index] = MarioDMeter::new(layout_udata);
     manager.lucario_meter[index] = LucarioMeter::new(layout_udata);
+    manager.cloud_meter[index] = CloudMeter::new(layout_udata);
 }
 
 #[skyline::hook(offset = 0x138a710, inline)]
@@ -68,6 +69,11 @@ fn hud_update(_: &skyline::hooks::InlineCtx) {
     for lucario_meter in mgr.lucario_meter.iter_mut() {
         if lucario_meter.is_valid() && lucario_meter.is_enabled() {
             lucario_meter.update();
+        }
+    }
+    for cloud_meter in mgr.cloud_meter.iter_mut() {
+        if cloud_meter.is_valid() && cloud_meter.is_enabled() {
+            cloud_meter.update();
         }
     }
 }

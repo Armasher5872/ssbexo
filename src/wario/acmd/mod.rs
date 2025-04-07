@@ -1,5 +1,8 @@
 use {
-    crate::functions::var::wario::*,
+    crate::functions::var::{
+        consts::*,
+        wario::*,
+    },
     smash::{
         app::{
             lua_bind::*,

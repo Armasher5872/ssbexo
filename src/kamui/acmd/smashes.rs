@@ -1,5 +1,28 @@
 use super::*;
 
+//Forward Smash ACMD
+unsafe extern "C" fn ssbexo_kamui_forward_smash_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 9.0);
+    execute(agent.lua_state_agent, 9.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+    }
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK) {
+        if macros::is_excute(agent) {
+            ArticleModule::generate_article(agent.module_accessor, *FIGHTER_KAMUI_GENERATE_ARTICLE_SPEARHAND, false, -1);
+            ArticleModule::change_motion(agent.module_accessor, *FIGHTER_KAMUI_GENERATE_ARTICLE_SPEARHAND, Hash40::new("attack_s4_s"), false, -1.0);
+            ArticleModule::set_frame(agent.module_accessor, *FIGHTER_KAMUI_GENERATE_ARTICLE_SPEARHAND, 8.0);
+        }
+    }
+    macros::FT_MOTION_RATE(agent, 0.8);
+    frame(agent.lua_state_agent, 18.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
+    }
+    frame(agent.lua_state_agent, 35.0);
+    macros::FT_MOTION_RATE(agent, 1.2);
+}
+
 //Down Smash Charge Effect
 unsafe extern "C" fn ssbexo_kamui_down_smash_charge_effect(agent: &mut L2CAgentBase) {
     for _ in 0..i32::MAX {
@@ -247,6 +270,9 @@ unsafe extern "C" fn ssbexo_kamui_down_smash_expression(agent: &mut L2CAgentBase
 
 pub fn install() {
     Agent::new("kamui")
+    .game_acmd("game_attacks4", ssbexo_kamui_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attacks4hi", ssbexo_kamui_forward_smash_acmd, Priority::Low)
+    .game_acmd("game_attacks4lw", ssbexo_kamui_forward_smash_acmd, Priority::Low)
     .effect_acmd("effect_attacklw4charge", ssbexo_kamui_down_smash_charge_effect, Priority::Low)
     .expression_acmd("expression_attacklw4charge", ssbexo_kamui_down_smash_charge_expression, Priority::Low)
     .game_acmd("game_attacklw4", ssbexo_kamui_down_smash_acmd, Priority::Low)

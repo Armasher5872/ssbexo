@@ -40,8 +40,7 @@ unsafe extern "C" fn ridley_attack_lw4_map_correction_status(fighter: &mut L2CFi
     if frame <= fall_start_frame {
         return 0.into()
     }
-    if prev_frame < start_air_frame 
-    && frame >= start_air_frame {
+    if prev_frame < start_air_frame && frame >= start_air_frame {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_THROW_FLAG_START_AIR);
     }
     if fighter.global_table[SITUATION_KIND] != SITUATION_KIND_GROUND {
@@ -62,8 +61,7 @@ unsafe extern "C" fn ridley_attack_lw4_map_correction_status(fighter: &mut L2CFi
             else {
                 GroundModule::set_passable_check(fighter.module_accessor, false);
             }
-            if GroundModule::is_passable_check(fighter.module_accessor)
-            && GroundModule::is_passable_ground(fighter.module_accessor) {
+            if GroundModule::is_passable_check(fighter.module_accessor) && GroundModule::is_passable_ground(fighter.module_accessor) {
                 fighter.set_situation(SITUATION_KIND_AIR.into());
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
                 GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));

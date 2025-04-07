@@ -1,6 +1,5 @@
 use {
   crate::functions::var::{
-    consts::*,
     globals::*,
     robot::*,
   },

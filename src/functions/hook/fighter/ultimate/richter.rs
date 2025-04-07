@@ -3,13 +3,13 @@ use super::*;
 const RICHTER_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x1194120; //Shared
 const RICHTER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x1194130; //Shared
 const RICHTER_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11944e0; //Shared
+const RICHTER_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11948d0; //Shared
 pub static mut RICHTER_HOLYWATER: usize = 0x758e00;
 
 unsafe extern "C" fn richter_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
@@ -43,6 +43,41 @@ unsafe extern "C" fn richter_death_initialization(vtable: u64, fighter: &mut Fig
     if fighter.battle_object.kind == *FIGHTER_KIND_RICHTER as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_death_variable_reset(&mut *boma);
+    }
+    original!()(vtable, fighter)
+}
+
+//Richter Once Per Fighter Frame
+#[skyline::hook(offset = RICHTER_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn richter_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+    if fighter.battle_object.kind == *FIGHTER_KIND_RICHTER as u32 {
+        let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
+        let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        //Final Zoom Effect Clearing
+        if counter > 0 {
+            if counter == 20 {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                    set_stage_visibility(boma, 1);
+                    set_vis_hud(true);
+                }
+                else {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_richter_final"), -1);
+                    EffectModule::set_rate(boma, handle as u32, 1.0);
+                }
+                macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+                macros::CAM_ZOOM_OUT(agent);
+            }
+            if counter == 10 {
+                SlowModule::clear_whole(boma);
+            }
+            WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        }
+        else {
+            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        }
     }
     original!()(vtable, fighter)
 }
@@ -121,6 +156,7 @@ pub fn install() {
 	skyline::install_hooks!(
         richter_start_initialization,
         richter_reset_initialization,
-        richter_death_initialization
+        richter_death_initialization,
+        richter_opff
     );
 }

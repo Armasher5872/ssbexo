@@ -1,13 +1,18 @@
 use {
-    crate::functions::ext::{
-        fighter::common::*,
-        utility::controls::*,
+    crate::functions::{
+        ext::{
+            fighter::common::*,
+            utility::controls::*,
+        },
+        hook::misc::*,
     },
     smash::{
         app::{
             BattleObject,
-            BattleObjectModuleAccessor
+            BattleObjectModuleAccessor,
+            lua_bind::*,
         },
+        lib::lua_const::*,
         lua2cpp::{
             L2CFighterCommon,
             L2CWeaponCommon

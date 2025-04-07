@@ -40,7 +40,8 @@ use {
     smash2::app::{
         LinkEvent,
         LinkEventCapture
-    }
+    },
+    smash_script::*,
 };
 
 mod armstrong;

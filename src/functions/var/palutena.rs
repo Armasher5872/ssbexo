@@ -9,4 +9,3 @@ pub const FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_METER_TIMER: smash
 pub const FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_BURNOUT_METER_TIMER: smash::lib::LuaConst = smash::lib::LuaConst::new(0x14F);
 pub const FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_GLIDE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1EA);
 pub const FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_HI_TURN: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1EB);
-pub const WEAPON_PALUTENA_REFLECTIONBOARD_INSTANCE_WORK_ID_INT_HIT_COUNT: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1000000B);

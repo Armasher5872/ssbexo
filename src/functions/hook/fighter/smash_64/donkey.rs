@@ -44,13 +44,16 @@ unsafe extern "C" fn donkey_death_initialization(vtable: u64, fighter: &mut Figh
 //Donkey Kong Once Per Fighter Frame
 #[skyline::hook(offset = DONKEY_VTABLE_ONCE_PER_FIGHTER_FRAME)]
 unsafe extern "C" fn donkey_opff(vtable: u64, fighter: &mut Fighter) {
-    let boma = fighter.battle_object.module_accessor;
-    let frame = MotionModule::frame(boma);
-    let motion_kind = MotionModule::motion_kind(boma);
-    let status_kind = StatusModule::status_kind(boma);
-    let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
-    let timer = WorkModule::get_int(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
     if fighter.battle_object.kind == *FIGHTER_KIND_DONKEY as u32 {
+        let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
+        let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+        let frame = MotionModule::frame(boma);
+        let motion_kind = MotionModule::motion_kind(boma);
+        let status_kind = StatusModule::status_kind(boma);
+        let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
+        let timer = WorkModule::get_int(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_INT_BARREL_TIMER);
         //DK Taunt Holding
         if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
             if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind)
@@ -85,6 +88,29 @@ unsafe extern "C" fn donkey_opff(vtable: u64, fighter: &mut Fighter) {
         if timer <= 0 && WorkModule::is_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE) {
             WorkModule::off_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE);
             fighter.battle_object.gimmick_flash();
+        }
+        //Final Zoom Effect Clearing
+        if counter > 0 {
+            if counter == 20 {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                    set_stage_visibility(boma, 1);
+                    set_vis_hud(true);
+                }
+                else {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_donkey_final"), -1);
+                    EffectModule::set_rate(boma, handle as u32, 1.0);
+                }
+                macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+                macros::CAM_ZOOM_OUT(agent);
+            }
+            if counter == 10 {
+                SlowModule::clear_whole(boma);
+            }
+            WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        }
+        else {
+            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
         }
     }
     original!()(vtable, fighter)

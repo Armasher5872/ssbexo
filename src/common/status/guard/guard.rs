@@ -32,10 +32,13 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let cmd_cat2 = fighter.global_table[CMD_CAT2].get_i32();
     let cmd_cat3 = fighter.global_table[CMD_CAT3].get_i32();
-    let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
+    let global_stick_x = fighter.global_table[STICK_X].get_f32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+    let stick_x = global_stick_x*PostureModule::lr(fighter.module_accessor);
     let is_have_item = ItemModule::is_have_item(fighter.module_accessor, 0);
     let check_button_attack = ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
     let turn_run_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("turn_run_stick_x"));
+    let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
     let turn_run_stick_x_threshold = stick_x <= turn_run_stick_x;
     let check_guard_hold = fighter.check_guard_hold().get_bool();
     let item_lua_stack_no_throw = {fighter.clear_lua_stack(); lua_args!(fighter, MA_MSC_ITEM_CHECK_HAVE_ITEM_TRAIT, ITEM_TRAIT_FLAG_NO_THROW); sv_module_access::item(fighter.lua_state_agent); !fighter.pop_lua_stack(1).get_bool()};
@@ -67,16 +70,17 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
             fighter.change_status(FIGHTER_STATUS_KIND_ESCAPE_B.into(), true.into());
             return true.into();
         }
-        /* START OF NEW ADDITION */
-        //Allows platform drops out of shield
-        if check_guard_hold
-        && GroundModule::is_passable_ground(fighter.module_accessor) 
-        && cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_GUARD_TO_PASS != 0 {
-            fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
-            return true.into();
-        }
-        /* END OF NEW ADDITION */
     }
+    /* START OF NEW ADDITION */
+    //Allows platform drops out of shield
+    if GroundModule::is_passable_ground(fighter.module_accessor)
+    && WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS) 
+    && stick_y <= squat_stick_y
+    && situation_kind == *SITUATION_KIND_GROUND {
+        fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
+        return true.into();
+    }
+    /* END OF NEW ADDITION */
     if is_shield_stop {
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN) && turn_run_stick_x_threshold && check_button_attack && situation_kind == *SITUATION_KIND_GROUND && !is_have_item {
             fighter.change_status(FIGHTER_STATUS_KIND_CATCH_TURN.into(), true.into());
@@ -104,6 +108,23 @@ unsafe fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
     else {
         true.into()
     }
+}
+
+//Status Guard On Main, makes shield effects show up frame 1 instead of 2
+#[skyline::hook(replace = L2CFighterCommon_status_GuardOn_Main)]
+unsafe extern "C" fn status_guardon_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_EFFECT) {
+        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x262a7a102d));
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_EFFECT);
+    }
+    if !fighter.sub_status_guard_on_main_air_common().get_bool()
+    && !fighter.sub_guard_cont().get_bool()
+    && !fighter.status_guard_main_common().get_bool()  {
+        if MotionModule::is_end(fighter.module_accessor) {
+            fighter.change_status(FIGHTER_STATUS_KIND_GUARD.into(), false.into());
+        }
+    }
+    0.into()
 }
 
 //Status Guard Main Common, handles shield special transitioning
@@ -203,7 +224,7 @@ unsafe fn effect_guardoncommon(fighter: &mut L2CFighterAnimcmdEffectCommon) -> L
         lua_args!(agent, Hash40::new("sys_shield"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.1, false, 0, color);
         EFFECT_FOLLOW_arg12(agent.lua_state_agent);
         agent.clear_lua_stack();
-        lua_args!(agent, 0.2);
+        lua_args!(agent, 0.22);
         LAST_EFFECT_SET_ALPHA(agent.lua_state_agent);
         //Internal Shield, demonstrates shield health
         let shield_hp = WorkModule::get_float(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
@@ -226,6 +247,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
         skyline::install_hooks!(
             sub_guard_cont_pre,
             sub_guard_cont,
+            status_guardon_main,
             status_guard_main_common,
             sub_ftstatusuniqprocessguardfunc_updateshield,
             fighterstatusguard_set_shield_scale,

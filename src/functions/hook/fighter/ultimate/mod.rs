@@ -12,6 +12,7 @@ use {
                     misc::*,
                 }
             },
+            hook::misc::*,
             var::{
                 consts::*,
                 demon::*,

@@ -6,10 +6,9 @@ const SONIC_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11d5820; //Sonic only
 const SONIC_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11d7b20; //Sonic only
 
 unsafe extern "C" fn sonic_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
@@ -59,13 +58,15 @@ unsafe extern "C" fn sonic_death_initialization(vtable: u64, fighter: &mut Fight
 #[skyline::hook(offset = SONIC_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
     let frame = MotionModule::frame(boma);
     let rand_num_10 = sv_math::rand(hash40("fighter"), 10);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     let boost_gauge = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
     let boost_effect_counter = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_EFFECT_COUNTER);
-    let lua_module_fighter = get_fighter_common_from_accessor(&mut *boma);
     let magic_series = fighter.battle_object.magic_series();
     if ![*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD_OFF, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_END, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_TURN, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_REBOUND, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_HOLD_JUMP, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING_START, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
         EffectModule::kill_kind(boma, Hash40::new("sonic_spintrace_homing"), false, true);
@@ -122,35 +123,35 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_SONIC_DASH);
         if (1.0..5.0).contains(&frame)
         && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            macros::SET_SPEED_EX(lua_module_fighter, 4.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 4.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         else if (1.0..5.0).contains(&frame)
         && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD){
-            macros::SET_SPEED_EX(lua_module_fighter, 0.15, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 0.15, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         if (6.0..11.0).contains(&frame)
         && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            macros::SET_SPEED_EX(lua_module_fighter, 3.25, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 3.25, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         else if (6.0..11.0).contains(&frame)
         && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            macros::SET_SPEED_EX(lua_module_fighter, 0.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 0.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         if (11.0..=20.0).contains(&frame)
         && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD){
-            macros::SET_SPEED_EX(lua_module_fighter, 1.05, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 1.05, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         else if (11.0..=20.0).contains(&frame)
         && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            macros::SET_SPEED_EX(lua_module_fighter, 0.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 0.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         if frame >= 21.0
         && !AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            macros::SET_SPEED_EX(lua_module_fighter, 0.45, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 0.45, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         else if frame >= 21.0
         && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-            macros::SET_SPEED_EX(lua_module_fighter, 0.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            macros::SET_SPEED_EX(agent, 0.0, 0.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
     }
     //Boost Effect
@@ -176,6 +177,29 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     else {
         EffectModule::kill_kind(boma, Hash40::new("sys_aura_light"), false, false);
     };
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_sonic_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    }
     original!()(vtable, fighter)
 }
 

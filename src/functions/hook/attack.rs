@@ -6,8 +6,8 @@ unsafe extern "C" fn hit_module_handle_attack_event(ctx: &InlineCtx) {
     let data = *ctx.registers[1].x.as_ref() as *mut u32;
     let attacker_id = *data;
     let collision_id = *data.add(1);
-    let battle_object = &mut *crate::functions::hook::misc::get_battle_object_from_id(attacker_id);
-    if !battle_object.is_fighter() && !battle_object.is_weapon() {
+    let battle_object = &mut *get_battle_object_from_id(attacker_id);
+    if !battle_object.is_fighter() && !battle_object.is_weapon() && !battle_object.is_item() {
         return;
     }
     let collision_data = *ctx.registers[27].x.as_ref() as *mut f32;
@@ -20,19 +20,12 @@ unsafe extern "C" fn hit_module_handle_attack_event(ctx: &InlineCtx) {
     LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
 }
 
-//Shield Module Send Shield Attack Collision Event, basically does the same thing as 0x46ae64, but on shield. Also dictates hard shield breaks
+//Shield Module Send Shield Attack Collision Event, basically does the same thing as 0x46ae64, but on shield
 #[skyline::hook(offset = 0x4c7080)]
 unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_module: *mut u64, opp_attack_module: *mut u64, collision: *mut u8, group_index: i32, raw_power: f32, real_power: f32, pos_x: f32, lr: f32) {
-    let defender_boma = *(shield_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let defender_status_kind = StatusModule::status_kind(defender_boma);
     let attacker_id = *(collision.add(0x24) as *const u32);
-	let attacker_battle_object = &mut *crate::functions::hook::misc::get_battle_object_from_id(attacker_id);
-    let attacker_boma = attacker_battle_object.module_accessor;
-    let attacker_shield_damage = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE) as f32;
-    let defender_shield_hp = WorkModule::get_float(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
-    let motion_rate: f32;
-    let damage = defender_shield_hp+10.0;
-    if !attacker_battle_object.is_fighter() && !attacker_battle_object.is_weapon() {
+	let attacker_battle_object = &mut *get_battle_object_from_id(attacker_id);
+    if !attacker_battle_object.is_fighter() && !attacker_battle_object.is_weapon() && !attacker_battle_object.is_item() {
         return;
     }
     let hitbox_id = *(collision.add(0x33) as *const u8);
@@ -43,24 +36,6 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
     LAST_ATTACK_HITBOX_LOCATION_X = loc_x;
     LAST_ATTACK_HITBOX_LOCATION_Y = loc_y;
     LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
-    if (real_power+attacker_shield_damage) >= damage && [*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD].contains(&defender_status_kind) {
-        StatusModule::change_status_request_from_script(defender_boma, *FIGHTER_STATUS_KIND_FURAFURA, false);
-    }
-    if real_power == 0.0 {
-        motion_rate = 1.0;
-    }
-    else {
-        motion_rate = (1.0-(0.02*real_power)).clamp(0.5, 1.0);
-    };
-    if defender_status_kind == *FIGHTER_STATUS_KIND_GUARD_OFF && FighterUtil::is_valid_just_shield(defender_boma) {
-        if attacker_battle_object.is_situation(*SITUATION_KIND_AIR) {
-            StatusModule::change_status_request_from_script(attacker_boma, *FIGHTER_STATUS_KIND_TREAD_DAMAGE_AIR, false);
-        }
-        else {
-            WorkModule::set_float(attacker_boma, motion_rate, *FIGHTER_STATUS_WORK_ID_FLOAT_REBOUND_MOTION_RATE);
-            StatusModule::change_status_request_from_script(attacker_boma, *FIGHTER_STATUS_KIND_REBOUND, false);
-        }
-    }
     call_original!(shield_module, opp_attack_module, collision, group_index, raw_power, real_power, pos_x, lr);
 }
 
@@ -70,12 +45,6 @@ unsafe extern "C" fn attack_module_set_attack(module: u64, id: i32, group: i32, 
     let boma = *(module as *mut *mut BattleObjectModuleAccessor).add(1);
     if data.slip < 1.0 {
         data.slip = -1.0;
-    }
-    if (data.power+(data.sub_shield as f32)) < 0.0 || (data.power+(data.sub_shield as f32)) > 200.0 {
-        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
-    }
-    else {
-        WorkModule::set_int(boma, data.sub_shield as i32, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_DAMAGE);
     }
     WorkModule::set_int(boma, data.vector, *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     call_original!(module, id, group, data);

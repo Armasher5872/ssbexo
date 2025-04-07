@@ -1,7 +1,18 @@
 use {
-    crate::functions::var::globals::*,
+    crate::functions::{
+        ext::fighter::common::*,
+        var::{
+            consts::*,
+            globals::*,
+            mario::*,
+        }
+    },
     smash::{
-        app::lua_bind::*,
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,
@@ -18,4 +29,5 @@ mod status;
 pub fn install() {
     acmd::install();
     status::install();
+    clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "mario", "hammer", false);
 }

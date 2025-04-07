@@ -6,6 +6,7 @@ use {
             globals::*,
         }
     },
+    interpolation::Lerp,
     smash::{
         app::{
             lua_bind::{
@@ -14,6 +15,7 @@ use {
             },
             *
         },
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,

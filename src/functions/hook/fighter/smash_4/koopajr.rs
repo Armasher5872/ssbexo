@@ -26,11 +26,10 @@ unsafe extern "C" fn koopajr_check_air_jump_aerial_uniq(fighter: &mut L2CFighter
 }
 
 unsafe extern "C" fn koopajr_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_UNIQ_FLOAT);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_INT_FLOAT_TIME);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
@@ -74,11 +73,37 @@ unsafe extern "C" fn koopajr_death_initialization(vtable: u64, fighter: &mut Fig
 #[skyline::hook(offset = KOOPAJR_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn koopajr_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     let status_kind = StatusModule::status_kind(boma);
     if status_kind == *FIGHTER_STATUS_KIND_DAMAGE_AIR {
         if WorkModule::is_flag(boma, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION) && WorkModule::is_flag(boma, *FIGHTER_KOOPAJR_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_INTERRUPT) {
             StatusModule::change_status_request_from_script(boma, *FIGHTER_KOOPAJR_STATUS_KIND_SPECIAL_HI_DAMAGE_END, false);
         }
+    }
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_koopajr_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     }
     original!()(vtable, fighter)
 }

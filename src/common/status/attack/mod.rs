@@ -3,8 +3,9 @@ use {
     crate::functions::{
         ext::{
             status::{
-                attack::*,
+                attack_dash::*,
                 attack_xx4::*,
+                attack::*,
             },
             utility::{
                 boma_ext::*,
@@ -38,6 +39,7 @@ use {
         phx::Hash40
     },
     smash_script::*,
+    smashline::*,
 };
 
 mod attack;
@@ -47,6 +49,7 @@ mod attackhi4;
 mod attacklw3;
 mod attacklw4;
 mod attacks4;
+mod attackxx4;
 
 pub fn install() {
     attack::install();
@@ -56,4 +59,5 @@ pub fn install() {
     attacklw3::install();
     attacklw4::install();
     attacks4::install();
+    attackxx4::install();
 }

@@ -1,25 +1,5 @@
 use super::*;
 
-//Param Adjustments
-#[skyline::hook(offset = INT_OFFSET)]
-unsafe extern "C" fn get_param_int_impl_hook(module_accessor: u64, param_type: u64, param_hash: u64) -> i32 {
-	let boma = *((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor;
-	let boma_reference = &mut *boma;
-	let fighter_kind = boma_reference.kind();
-	if boma_reference.is_fighter() {
-		if fighter_kind == *FIGHTER_KIND_DONKEY
-		&& (param_type == hash40("wall_jump_type") || param_type == hash40("attach_wall_type")) {
-			if boma_reference.is_status_one_of(&[*FIGHTER_STATUS_KIND_AIR_LASSO, *FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_SPECIAL_S]) {
-				return 0;
-			}
-			else {
-				return 1;
-			}
-		}
-	}
-	original!()(module_accessor, param_type, param_hash)
-}
-
 #[skyline::hook(offset=FLOAT_OFFSET)]
 unsafe extern "C" fn get_param_float_impl_hook(module_accessor: u64, param_type: u64, param_hash: u64) -> f32 {
 	let boma = *((module_accessor as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor;
@@ -33,7 +13,7 @@ unsafe extern "C" fn get_param_float_impl_hook(module_accessor: u64, param_type:
 				return original!()(module_accessor, param_type, param_hash)*1.5;
 			}
 		}
-        if fighter_kind == *FIGHTER_KIND_DONKEY
+        if fighter_kind == *FIGHTER_KIND_DONKEY 
 		&& param_type == hash40("damage_level3") {
             if status_kind >= 481 && status_kind <= 489 {
                 return original!()(module_accessor, param_type, param_hash)*0.5;
@@ -46,17 +26,6 @@ unsafe extern "C" fn get_param_float_impl_hook(module_accessor: u64, param_type:
 			let min = 10.0;
 			return (max*sticky).abs().clamp(min, max);
 		}
-		/*
-		if fighter_kind == *FIGHTER_KIND_SONIC
-		&& param_type == hash40("ground_brake") {
-			if status_kind == *FIGHTER_STATUS_KIND_TURN_RUN {
-				return 1.0;
-			}
-			else {
-				return 0.0655;
-			}
-		}
-		*/
 		if fighter_kind == *FIGHTER_KIND_MIIFIGHTER
 		&& param_type == hash40("param_special_n")
 		&& param_hash == hash40("n1_throw_angle") {
@@ -297,13 +266,112 @@ unsafe extern "C" fn get_param_float_impl_hook(module_accessor: u64, param_type:
 				}
 			}
 		}
+		if fighter_kind == *FIGHTER_KIND_CLOUD {
+			if param_type == hash40("walk_speed_max") {
+				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+					return 0.4;
+				}
+				else {
+					return original!()(module_accessor, param_type, param_hash);
+				}
+			}
+			if param_type == hash40("dash_speed") {
+				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+					return 0.8;
+				}
+				else {
+					return original!()(module_accessor, param_type, param_hash);
+				}
+			}
+			if param_type == hash40("run_speed_max") {
+				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+					return 1.1;
+				}
+				else {
+					return original!()(module_accessor, param_type, param_hash);
+				}
+			}
+			if param_type == hash40("air_speed_x_stable") {
+				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+					return 1.045;
+				}
+				else {
+					return original!()(module_accessor, param_type, param_hash);
+				}
+			}
+			if param_type == hash40("air_accel_y") {
+				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+					return 0.12;
+				}
+				else {
+					return original!()(module_accessor, param_type, param_hash);
+				}
+			}
+			if param_type == hash40("air_speed_y_stable") {
+				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+					return 1.88;
+				}
+				else {
+					return original!()(module_accessor, param_type, param_hash);
+				}
+			}
+			if param_type == hash40("dive_speed_y") {
+				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+					return 2.9;
+				}
+				else {
+					return original!()(module_accessor, param_type, param_hash);
+				}
+			}
+			if param_type == hash40("param_private") {
+				let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
+				let gauge;
+				if param_hash == hash40("limit_gauge_damage_add") {
+					match limit_level {
+						0 => {
+							gauge = 5.0;
+						},
+						1 => {
+							gauge = 3.333;
+						},
+						2 => {
+							gauge = 2.222;
+						},
+						3 => {
+							gauge = 1.667;
+						},
+						_ => {
+							gauge = 1.0;
+						}
+					}
+					return gauge;
+				}
+				if param_hash == hash40("limit_gauge_attack_add") {
+					match limit_level {
+						0 => {
+							gauge = 3.333;
+						},
+						1 => {
+							gauge = 2.5;
+						},
+						2 => {
+							gauge = 1.667;
+						},
+						3 => {
+							gauge = 1.25;
+						},
+						_ => {
+							gauge = 1.0;
+						}
+					}	
+					return gauge;
+				}
+			}
+		}
 	}
 	original!()(module_accessor, param_type, param_hash)
 }
 
 pub fn install() {
-	skyline::install_hooks!(
-		get_param_int_impl_hook,
-		get_param_float_impl_hook,
-	);
+	skyline::install_hook!(get_param_float_impl_hook);
 }

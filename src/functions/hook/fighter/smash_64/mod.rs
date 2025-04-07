@@ -8,6 +8,7 @@ use {
                 misc::*,
             }
         },
+        hook::misc::*,
         var::{
             captain::*,
             consts::*,
@@ -16,6 +17,7 @@ use {
             kirby::*,
             link::*,
             luigi::*,
+            mario::*,
             ness::*,
             pikachu::*,
             purin::*,
@@ -42,7 +44,8 @@ use {
             Hash40,
             Vector3f
         }
-    }
+    },
+    smash_script::*,
 };
 
 mod captain;

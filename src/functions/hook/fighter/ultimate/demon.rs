@@ -3,6 +3,7 @@ use super::*;
 const DEMON_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x930d60; //Kazuya only
 const DEMON_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x930ff0; //Kazuya only
 const DEMON_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x931680; //Kazuya only
+const DEMON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x9325e0; //Kazuya only
 const DEMON_VTABLE_ON_ATTACK_OFFSET: usize = 0x932f50; //Kazuya only
 const DEMON_VTABLE_LINK_EVENT_OFFSET: usize = 0x933800; //Kazuya only
 const DEMON_VTABLE_ON_GRAB_OFFSET: usize = 0x934310; //Kazuya only
@@ -44,6 +45,39 @@ unsafe extern "C" fn demon_death_initialization(vtable: u64, fighter: &mut Fight
     original!()(vtable, fighter)
 }
 
+//Kazuya Once Per Fighter Frame
+#[skyline::hook(offset = DEMON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn demon_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_demon_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    }
+    original!()(vtable, fighter)
+}
+
 //Kazuya On Attack
 #[skyline::hook(offset = DEMON_VTABLE_ON_ATTACK_OFFSET)]
 unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
@@ -82,12 +116,12 @@ unsafe extern "C" fn demon_on_grab(_vtable: u64, _fighter: &mut Fighter, catch_s
 
 pub fn install() {
     //Removes the call_script_single that creates the EWGF Unblockable Windbox
-    let _ = skyline::patching::Patch::in_text(0x933434).nop();
     let _ = skyline::patching::Patch::in_text(0x933454).nop();
     skyline::install_hooks!(
         demon_start_initialization,
         demon_reset_initialization,
         demon_death_initialization,
+        demon_opff,
         demon_on_attack,
         demon_link_event,
         demon_on_grab

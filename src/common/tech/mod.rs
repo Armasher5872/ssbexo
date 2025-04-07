@@ -7,7 +7,6 @@ use {
                 misc::*,
             }
         },
-        hook::misc::*,
         var::{
             consts::*,
             globals::*,
@@ -18,7 +17,8 @@ use {
         app::{
             lua_bind::*,
             self,
-            sv_information
+            sv_information,
+            *
         },
         hash40,
         lib::{
@@ -30,8 +30,7 @@ use {
         phx::{
             Hash40,
             Vector2f,
-            Vector3f,
-            Vector4f
+            Vector3f
         }
     },
     smashline::*,

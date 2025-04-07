@@ -1,15 +1,6 @@
 #![allow(unused_must_use)]
 use {
-    crate::functions::{
-        ext::utility::{
-            boma_ext::*,
-            commandcat::*,
-        },
-        var::{
-            globals::*,
-            variables::*,
-        }
-    },
+    crate::functions::var::globals::*,
     smash::{
         app::{
             lua_bind::*,
@@ -28,10 +19,8 @@ use {
     smash_script::*,
 };
 
-mod specialhi;
 mod sub_transition_check_special;
 
 pub fn install() {
-    specialhi::install();
     sub_transition_check_special::install();
 }

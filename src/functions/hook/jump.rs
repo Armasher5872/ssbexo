@@ -17,7 +17,7 @@ unsafe extern "C" fn fullhop_initial_y_speed_hook(ctx: &mut skyline::hooks::Inli
 unsafe extern "C" fn jump1_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 
@@ -25,7 +25,7 @@ unsafe extern "C" fn jump1_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe extern "C" fn jump2_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 
@@ -33,7 +33,7 @@ unsafe extern "C" fn jump2_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe extern "C" fn jump3_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 
@@ -41,7 +41,7 @@ unsafe extern "C" fn jump3_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe extern "C" fn jump4_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 
@@ -49,7 +49,7 @@ unsafe extern "C" fn jump4_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
 unsafe extern "C" fn jump_aerial_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 
@@ -57,7 +57,7 @@ unsafe extern "C" fn jump_aerial_stick_x_hook(ctx: &mut skyline::hooks::InlineCt
 unsafe extern "C" fn jump_aerial_2_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 
@@ -65,7 +65,7 @@ unsafe extern "C" fn jump_aerial_2_stick_x_hook(ctx: &mut skyline::hooks::Inline
 unsafe extern "C" fn jump_aerial_3_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 
@@ -73,7 +73,7 @@ unsafe extern "C" fn jump_aerial_3_stick_x_hook(ctx: &mut skyline::hooks::Inline
 unsafe extern "C" fn jump_aerial_4_stick_x_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let control_module = *ctx.registers[0].x.as_ref();
     let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let left_stick_x = if Buttons::from_bits_unchecked(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
+    let left_stick_x = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     asm!("fmov s0, w8", in("w8") left_stick_x)
 }
 

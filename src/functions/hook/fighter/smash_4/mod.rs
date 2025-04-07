@@ -16,9 +16,13 @@ use {
                     get_objects::*,
                 }
             },
-            hook::ui::ui_manager::UiManager,
+            hook::{
+                misc::*,
+                ui::ui_manager::UiManager
+            },
             var::{
                 bayonetta::*,
+                cloud::*,
                 consts::*,
                 gekkouga::*,
                 globals::*,

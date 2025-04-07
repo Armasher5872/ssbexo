@@ -121,17 +121,21 @@ unsafe extern "C" fn donkey_special_s_init_status(fighter: &mut L2CFighterCommon
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let sum_speed = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if situation_kind != *SITUATION_KIND_GROUND {
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, *ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, 0.0, 0.0, 0.0, 0.0, 0.0);
         sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.05/*Maximum Horizontal Air Acceleration*/);
         sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.7/*Maximum Horizontal Air Speed*/, 0.0);
         sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.7/*Maximum Horizontal Air Speed*/, 0.0);
-        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.9/*Maximum Vertical Air Speed*/);
-        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.0085);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.9, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.02);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
     else {
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, *ENERGY_CONTROLLER_RESET_TYPE_DASH, 0.0, 0.0, 0.0, 0.0, 0.0);
         sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.034/*Maximum Horizontal Ground Acceleration*/);
-        sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5/*Maximum Horizontal Ground Speed*/, 0.0);
-        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5/*Maximum Horizontal Ground Speed*/, 0.0);
+        sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.1/*Maximum Horizontal Ground Speed*/, 0.0);
+        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.1/*Maximum Horizontal Ground Speed*/, 0.0);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.00595);
     }
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, sum_speed, 0.0);
     sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.0);
@@ -147,13 +151,14 @@ unsafe extern "C" fn donkey_special_s_main_status(fighter: &mut L2CFighterCommon
 unsafe extern "C" fn donkey_special_s_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            return 1.into();
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 0.into();
+            }
         }
     }
-    if fighter.sub_air_check_fall_common().get_bool() {
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
     if situation_kind == *SITUATION_KIND_GROUND
@@ -161,7 +166,7 @@ unsafe extern "C" fn donkey_special_s_loop(fighter: &mut L2CFighterCommon) -> L2
         fighter.sub_fighter_cliff_check(GROUND_CLIFF_CHECK_KIND_NONE.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s"), -1.0, 1.0, 0.0, false, false);
+        fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
     }
     if situation_kind == *SITUATION_KIND_AIR
     && prev_situation_kind == *SITUATION_KIND_GROUND {
@@ -173,9 +178,6 @@ unsafe extern "C" fn donkey_special_s_loop(fighter: &mut L2CFighterCommon) -> L2
         lua_args!(fighter, *MA_MSC_CMD_EFFECT_EFFECT_OFF_KIND, Hash40::new("sys_spin_wind"), false, false);
         sv_module_access::effect(fighter.lua_state_agent);
         fighter.pop_lua_stack(1);
-    }
-    if frame > 38.0 {
-        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -frame/750.0);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -189,7 +191,11 @@ unsafe extern "C" fn donkey_special_s_loop(fighter: &mut L2CFighterCommon) -> L2
     0.into()
 }
 
-unsafe extern "C" fn donkey_special_s_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn donkey_special_s_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[CURRENT_FRAME].get_f32() >= 80.0 && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FREE, 0.0, 0.0, 0.0, 0.0, 0.0);
+        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+    }
     0.into()
 }
 

@@ -165,6 +165,9 @@ unsafe extern "C" fn miiswordsman_death_initialization(vtable: u64, fighter: &mu
 unsafe extern "C" fn miiswordsman_opff(vtable: u64, fighter: &mut Fighter) {
     if fighter.battle_object.kind == *FIGHTER_KIND_MIISWORDSMAN as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
+        let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
         let blurring_slashes_timer = WorkModule::get_int(boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_INT_BLURRING_SLASHES_TIMER);
         let long_sword_scale = Vector3f{x: 1.015, y: 1.15, z: 1.045};
         ModelModule::set_joint_scale(boma, Hash40::new("havel"), &long_sword_scale);
@@ -174,6 +177,29 @@ unsafe extern "C" fn miiswordsman_opff(vtable: u64, fighter: &mut Fighter) {
         }
         if blurring_slashes_timer <= 0 {
             WorkModule::off_flag(boma, *FIGHTER_MIISWORDSMAN_INSTANCE_WORK_ID_FLAG_BLURRING_SLASHES_CANCEL);
+        }
+        //Final Zoom Effect Clearing
+        if counter > 0 {
+            if counter == 20 {
+                if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                    set_stage_visibility(boma, 1);
+                    set_vis_hud(true);
+                }
+                else {
+                    EffectModule::remove_screen(boma, Hash40::new("bg_miiswordsman_final"), -1);
+                    EffectModule::set_rate(boma, handle as u32, 1.0);
+                }
+                macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+                macros::CAM_ZOOM_OUT(agent);
+            }
+            if counter == 10 {
+                SlowModule::clear_whole(boma);
+            }
+            WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        }
+        else {
+            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
         }
     }
     original!()(vtable, fighter)

@@ -22,24 +22,9 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
                 GroundModule::set_passable_check(boma, true);
             }
         }
-        if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_SHIELD) {
-                WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
-            }
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) && !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP) {
-                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
-                PostureModule::reverse_lr(boma);
-                PostureModule::update_rot_y_lr(boma);
-                WorkModule::unable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
-                WorkModule::unable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LASSO);
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-                return true.into();
-            }
-        }
         /* END OF NEW ADDITIONS */
         if !CancelModule::is_enable_cancel(boma) {
             if MotionModule::is_end(boma) {
-                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
             return false.into();
@@ -52,7 +37,6 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
                 if !MotionModule::is_end(boma) {
                     return false.into();
                 }
-                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HIT_MOVE);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }
         }

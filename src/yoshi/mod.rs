@@ -1,9 +1,6 @@
 #![allow(unused_parens)]
 use {
-    crate::functions::var::{
-        consts::*,
-        globals::*,
-    },
+    crate::functions::var::globals::*,
     smash::{
         app::{
             lua_bind::*,

@@ -1,9 +1,5 @@
 use {
-    crate::functions::{
-        ext::utility::misc::*,
-        var::globals::*,
-        util::*,
-    },
+    crate::functions::var::globals::*,
     smash::{
         app::{
             lua_bind::*,
@@ -16,7 +12,6 @@ use {
         },
         phx::{
             Hash40,
-            Vector2f,
             Vector3f
         }
     },

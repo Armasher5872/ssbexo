@@ -4,10 +4,7 @@ use {
         globals::*,
     },
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::lua_bind::*,
         hash40,
         lib::{
             L2CValue,

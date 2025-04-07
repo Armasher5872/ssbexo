@@ -194,11 +194,11 @@ unsafe extern "C" fn ssbexo_lucas_shield_special_burst_expression(agent: &mut L2
 unsafe extern "C" fn ssbexo_lucas_down_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
-        ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
+        ShieldModule::set_status(agent.module_accessor, *FIGHTER_LUCAS_SHIELD_KIND_SPECIAL_LW_GUARD, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     }
     frame(agent.lua_state_agent, 28.0);
     if macros::is_excute(agent) {
-        ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
+        ShieldModule::set_status(agent.module_accessor, *FIGHTER_LUCAS_SHIELD_KIND_SPECIAL_LW_GUARD, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_LUCAS_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     }
 }
 

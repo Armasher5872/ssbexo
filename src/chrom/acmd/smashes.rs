@@ -223,53 +223,67 @@ unsafe extern "C" fn ssbexo_chrom_down_smash_effect(agent: &mut L2CAgentBase) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("chrom_attack_hi4_slash_finish"), Hash40::new("sword1"), 0, 0, 10, 90, 0, 0, 0.5, true);
     }
     frame(agent.lua_state_agent, 16.0);
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -15, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -15, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+    if macros::is_excute(agent) {
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -15, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -15, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
     }
     frame(agent.lua_state_agent, 17.0);
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -13, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -13, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+    if macros::is_excute(agent) {
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -13, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -13, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }   
     }
     frame(agent.lua_state_agent, 18.0);
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -11, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -11, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+    if macros::is_excute(agent) {
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -11, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -11, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }   
     }
     frame(agent.lua_state_agent, 19.0);
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -10, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -10, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+    if macros::is_excute(agent) {
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -10, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -10, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }   
     }
     frame(agent.lua_state_agent, 20.0);
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -9, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -9, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+    if macros::is_excute(agent) {
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -9, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -9, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }   
     }
     frame(agent.lua_state_agent, 21.0);
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -8, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -8, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+    if macros::is_excute(agent) {
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -8, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -8, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }   
     }
     frame(agent.lua_state_agent, 22.0);
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -6, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -6, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+    if macros::is_excute(agent) {
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -6, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -6, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }   
     }
     frame(agent.lua_state_agent, 23.0);
     if macros::is_excute(agent) {
@@ -277,24 +291,24 @@ unsafe extern "C" fn ssbexo_chrom_down_smash_effect(agent: &mut L2CAgentBase) {
         macros::EFFECT_FOLLOW(agent, Hash40::new("chrom_attack_hi4_slash"), Hash40::new("sword1"), 0, 0, 5, 90, 0, 0, 0.5, true);
         macros::EFFECT_FOLLOW(agent, Hash40::new("chrom_attack_hi4_slash"), Hash40::new("sword1"), 0, 0, 10, 90, 0, 0, 0.5, true);
         macros::AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_chrom_sword1"), Hash40::new("tex_chrom_sword2"), 4, Hash40::new("sword1"), 0, 0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, true, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
-    }
-    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -4, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -2, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 0, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 2, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 4, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 6, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 8, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
-    }
-    else {
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -4, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -2, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 0, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 2, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 4, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 6, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
-        macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 8, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -4, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -2, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 0, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 2, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 4, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 6, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 8, 0, 3.0, 0, 0, 120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+        else {
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -4, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), -2, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 0, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 2, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 4, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 6, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(agent, Hash40::new("sys_damage_spark_s"), Hash40::new("top"), 8, 0, 3.0, 0, 0, -120, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
     }
     frame(agent.lua_state_agent, 29.0);
     if macros::is_excute(agent) {

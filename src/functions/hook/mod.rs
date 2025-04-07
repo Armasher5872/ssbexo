@@ -14,6 +14,7 @@ use {
         },
         hook::misc::*,
         var::{
+            cloud::*,
             consts::*,
             globals::*,
             palutena::*,
@@ -31,7 +32,6 @@ use {
         app::{
             BattleObject,
             BattleObjectModuleAccessor,
-            FighterUtil,
             GroundCorrectKind,
             HitStatus,
             lua_bind::{
@@ -46,6 +46,10 @@ use {
             L2CAgent,
             L2CValue,
             lua_const::*,
+        },
+        lua2cpp::{
+            L2CFighterCommon,
+            *
         },
         phx::{
             Hash40,
@@ -69,8 +73,10 @@ pub mod controls;
 pub mod effect;
 pub mod energy;
 pub mod fighter;
+mod guard;
 pub mod jump;
 pub mod knockback;
+mod ledge;
 pub mod menu;
 pub mod misc;
 pub mod music;
@@ -86,8 +92,10 @@ pub fn install() {
     effect::install();
     energy::install();
     fighter::install();
+    guard::install();
     jump::install();
     knockback::install();
+    ledge::install();
     menu::install();
     misc::install();
     music::install();

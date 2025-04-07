@@ -1,11 +1,5 @@
 use {
-    crate::functions::{
-        ext::utility::boma_ext::*,
-        var::{
-            consts::*,
-            globals::*,
-        }
-    },
+    crate::functions::var::globals::*,
     smash::{
         app::{
             lua_bind::*,

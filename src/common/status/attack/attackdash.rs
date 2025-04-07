@@ -3,7 +3,7 @@ use super::*;
 
 //Dash Attack
 #[skyline::hook(replace = L2CFighterCommon_status_AttackDash)]
-unsafe fn status_attackdash(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_attackdash(fighter: &mut L2CFighterCommon) -> L2CValue {
     let catch_dash_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("catch_dash_frame"));
     let jump_mini_attack_enable_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("jump_mini_attack_enable_frame"));
     let log_attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
@@ -14,7 +14,6 @@ unsafe fn status_attackdash(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH);
     WorkModule::set_int(fighter.module_accessor, catch_dash_frame, *FIGHTER_STATUS_ATTACK_DASH_WORK_INT_CATCH_FRAME);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_DASH_FLAG_ATTACK_HI4_DISABLE);
     WorkModule::set_int64(fighter.module_accessor, log_infos as i64, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
         WorkModule::set_int(fighter.module_accessor, jump_mini_attack_enable_frame+1, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
@@ -33,6 +32,47 @@ unsafe fn status_attackdash(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_AttackDash_Main as *const () as _))
 }
 
+//Sub Attack Dash Uniq
+#[skyline::hook(replace = L2CFighterCommon_sub_attack_dash_uniq)]
+unsafe extern "C" fn sub_attack_dash_uniq(fighter: &mut L2CFighterCommon, bool_check: L2CValue) -> L2CValue {
+    let catch_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_DASH_WORK_INT_CATCH_FRAME);
+    let dash_attack_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_DASH_WORK_INT_FRAME);
+    let item_catch_frame_attack_dash = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("item_catch_frame_attack_dash"));
+    if bool_check.get_bool() {
+        if 0 <= catch_frame {
+            WorkModule::dec_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_DASH_WORK_INT_CATCH_FRAME);
+            if catch_frame == 0 {
+                WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN);
+                WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH);
+            }
+        }
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) || WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0) {
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK);
+            WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+        }
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_DASH_WORK_INT_FRAME);
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING) {
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START);
+        }
+        else if CancelModule::is_enable_cancel(fighter.module_accessor) {
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START);
+        }
+        else {
+            WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+            WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START);
+        }
+    }
+    else {
+        if dash_attack_frame <= item_catch_frame_attack_dash {
+            fighter.sub_GetLightItemImm(false.into());
+        }
+    }
+    0.into()
+}
+
 //Dash Attack Main
 #[skyline::hook(replace = L2CFighterCommon_status_AttackDash_Main)]
 unsafe extern "C" fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -41,7 +81,6 @@ unsafe extern "C" fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L
     let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(boma);
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let status_attack = fighter.status_attack();
     let status_attack_info = status_attack[0x10f40d7b92u64].get_i64();
     let motion_kind = MotionModule::motion_kind(boma);
@@ -69,21 +108,6 @@ unsafe extern "C" fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L
         }
     }
     /* START OF NEW ADDITIONS */
-    //Gatlings (DACUS/DACDS)
-    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING) {
-        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
-        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START);
-        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 != 0
-        && WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START) {
-            fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI4_START.into(), true.into());
-            return 1.into();
-        }
-        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 != 0
-        && WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4_START) {
-            fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4_START.into(), true.into());
-            return 1.into();
-        }
-    }
     //Adjusts the ground correct depending on if the Dash Attack edge cancels or goes off ledges.
     if situation_kind == *SITUATION_KIND_GROUND {
         if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL) {
@@ -148,6 +172,15 @@ unsafe extern "C" fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L
             }
         }
     }
+    //Gatlings (DACUS/DACDS)
+    if attack_hi4_cancel(fighter) {
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI4_START.into(), true.into());
+        return 1.into();
+    }
+    if attack_lw4_cancel(fighter) {
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4_START.into(), true.into());
+        return 1.into();
+    }
     //Link Dash Attack Bound
     if fighter_kind == *FIGHTER_KIND_LINK && (14.0..24.0).contains(&frame) && AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND.into(), false.into());
@@ -169,7 +202,9 @@ unsafe extern "C" fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L
         fighter.change_status(FIGHTER_STATUS_KIND_CATCH_TURN.into(), true.into());
         return 0.into();
     }
-    if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) && !ItemModule::is_have_item(boma, 0) {
+    if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH) 
+    && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) 
+    && !ItemModule::is_have_item(boma, 0) {
         fighter.change_status(FIGHTER_STATUS_KIND_CATCH_DASH.into(), true.into());
         return 0.into();
     }
@@ -206,6 +241,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
             status_attackdash,
+            sub_attack_dash_uniq,
             status_attackdash_main,
             status_end_attackdash
         );

@@ -8,7 +8,6 @@ use {
       utility::misc::*,
     },
     var::{
-      consts::*,
       globals::*,
       ike::*,
     }
@@ -21,7 +20,10 @@ use {
     hash40,
     lib::lua_const::*,
     lua2cpp::L2CFighterCommon,
-    phx::Vector2f
+    phx::{
+      Hash40,
+      Vector3f
+    }
   },
   smash_script::*,
   smashline::*,

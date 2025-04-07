@@ -8,6 +8,7 @@ unsafe extern "C" fn ssbexo_wiifit_forward_smash_acmd(agent: &mut L2CAgentBase) 
     }
     frame(agent.lua_state_agent, 16.0);
     if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         macros::ATTACK(agent, 0, 0, Hash40::new("arml"), 15.5, 361, 106, 0, 26, 4.3, 4.0, 0.0, 1.3, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         macros::ATTACK(agent, 1, 0, Hash40::new("armr"), 15.5, 361, 106, 0, 26, 4.3, 4.0, 0.0, -1.3, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         macros::ATTACK(agent, 2, 0, Hash40::new("arml"), 14.0, 361, 106, 0, 26, 3.1, 0.0, 0.0, 1.3, Some(-1.5), Some(0.0), Some(1.3), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -91,7 +92,6 @@ pub fn install() {
     Agent::new("wiifit")
     .game_acmd("game_attacks4", ssbexo_wiifit_forward_smash_acmd, Priority::Low)
     .effect_acmd("effect_attacks4", ssbexo_wiifit_forward_smash_effect, Priority::Low)
-    .effect_acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect, Priority::Low)
     .effect_acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect, Priority::Low)
     .effect_acmd("effect_attacklw4", ssbexo_wiifit_down_smash_effect, Priority::Low)
     .install()

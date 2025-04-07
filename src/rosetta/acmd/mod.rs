@@ -19,12 +19,14 @@ use {
 
 mod aerials;
 mod grounded;
+mod smashes;
 mod specials;
 mod throws;
 
 pub fn install() {
     aerials::install();
     grounded::install();
+    smashes::install();
     specials::install();
     throws::install();
 }

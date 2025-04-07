@@ -3,14 +3,14 @@ use super::*;
 const WARIO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x1285a70; //Wario only
 const WARIO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12864e0; //Wario only
 const WARIO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x12868c0; //Wario only
+const WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x1286ae0; //Wario only
 const WARIO_VTABLE_ON_ATTACK_OFFSET: usize = 0x1287320; //Wario only
 const WARIO_VTABLE_LINK_EVENT_OFFSET: usize = 0x12876c0; //Wario only
 
 unsafe extern "C" fn wario_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_AIR_FLIP);
     }
     0.into()
 }
@@ -47,6 +47,45 @@ unsafe extern "C" fn wario_death_initialization(vtable: u64, fighter: &mut Fight
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
     wario_var(&mut *boma);
+    original!()(vtable, fighter)
+}
+
+//Wario Once Per Fighter Frame
+#[skyline::hook(offset = WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn wario_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    let head_scale = &Vector3f{x: 0.9, y: 0.9, z: 0.9};
+    let arm_scale = &Vector3f{x: 1.2, y: 1.2, z: 1.2};
+    //Wario Scaling
+    ModelModule::set_joint_scale(boma, Hash40::new("neck"), head_scale);
+    ModelModule::set_joint_scale(boma, Hash40::new("clavicler"), arm_scale);
+    ModelModule::set_joint_scale(boma, Hash40::new("claviclel"), arm_scale);
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_wario_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    }
     original!()(vtable, fighter)
 }
 
@@ -92,6 +131,7 @@ pub fn install() {
         wario_start_initialization,
         wario_reset_initialization,
         wario_death_initialization,
+        wario_opff,
         wario_on_attack,
         wario_link_event
     );

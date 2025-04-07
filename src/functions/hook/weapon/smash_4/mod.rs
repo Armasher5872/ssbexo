@@ -2,10 +2,7 @@ use {
     crate::functions::{
         ext::utility::misc::*,
         hook::weapon::common::*,
-        var::{
-            palutena::*,
-            reflet::*,
-        },
+        var::reflet::*,
         util::*,
     },
     smash::{
@@ -24,13 +21,11 @@ use {
 };
 
 mod koopajr;
-mod palutena;
 mod reflet;
 mod rockman;
 
 pub fn install() {
     koopajr::install();
-    palutena::install();
     reflet::install();
     rockman::install();
 }

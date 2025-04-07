@@ -1,5 +1,6 @@
 use {
   crate::functions::var::{
+    consts::*,
     globals::*,
     palutena::*,
   },

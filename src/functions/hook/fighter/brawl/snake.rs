@@ -3,6 +3,7 @@ use super::*;
 const SNAKE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x11b5710; //Snake only
 const SNAKE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x11b5720; //Snake only
 const SNAKE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11b5890; //Snake only
+const SNAKE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11b59f0; //Snake only
 pub static mut SNAKE_GRENADE_STATUS_FALL_STATUS: usize = 0x7c9ae0;
 pub static mut SNAKE_GRENADE_STATUS_LANDING_STATUS: usize = 0x7c9d10;
 pub static mut SNAKE_GRENADE_STATUS_THROWN_STATUS: usize = 0x7c9fc0;
@@ -33,6 +34,39 @@ unsafe extern "C" fn snake_death_initialization(vtable: u64, fighter: &mut Fight
     let boma = fighter.battle_object.module_accessor;
     common_initialization_variable_reset(&mut *boma);
     WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    original!()(vtable, fighter)
+}
+
+//Snake Once Per Fighter Frame
+#[skyline::hook(offset = SNAKE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn snake_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
+    let counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    let handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    //Final Zoom Effect Clearing
+    if counter > 0 {
+        if counter == 20 {
+            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
+                EffectModule::remove_screen(boma, Hash40::new("bg_finishhit"), -1);
+                set_stage_visibility(boma, 1);
+                set_vis_hud(true);
+            }
+            else {
+                EffectModule::remove_screen(boma, Hash40::new("bg_snake_final"), -1);
+                EffectModule::set_rate(boma, handle as u32, 1.0);
+            }
+            macros::EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), false, false);
+            macros::CAM_ZOOM_OUT(agent);
+        }
+        if counter == 10 {
+            SlowModule::clear_whole(boma);
+        }
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+    }
+    else {
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+    }
     original!()(vtable, fighter)
 }
 
@@ -80,6 +114,7 @@ pub fn install() {
     skyline::install_hooks!(
         snake_start_initialization,
         snake_reset_initialization,
-        snake_death_initialization
+        snake_death_initialization,
+        snake_opff
     );
 }

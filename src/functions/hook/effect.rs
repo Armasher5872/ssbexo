@@ -80,9 +80,27 @@ unsafe extern "C" fn effect_follow_replace(lua_state: u64) {
 	}
 }
 
+//EffectModule::req_follow
+#[skyline::hook(offset = 0x44f880)]
+unsafe extern "C" fn effectmodule_req_follow(effect_module: u64, effect_hash: Hash40, bone_hash: Hash40, pos: *mut Vector3f, rot: *mut Vector3f, size: f32, arg7: bool, arg8: u32, arg9: i32, arg10: i32, arg11: i32, arg12: i32, arg13: bool, arg14: bool) -> u64 {
+    let boma = *(effect_module as *mut *mut BattleObjectModuleAccessor).add(1);
+    let mut effect_size = size;
+	let mut new_effect_hash = effect_hash;
+    if effect_hash.hash == hash40("sys_falling_smoke") {
+        effect_size = size*1.5;
+		new_effect_hash = Hash40::new("sys_steam2");
+    }
+    let ret = original!()(effect_module, new_effect_hash, bone_hash, pos, rot, effect_size, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14);
+    if effect_hash.hash == hash40("sys_falling_smoke") {
+        EffectModule::set_alpha(boma, ret as u32, 1.0);
+    }
+    ret
+}
+
 pub fn install() {
 	skyline::install_hooks!(
         after_image4_on_arg29_replace,
-		effect_follow_replace
+		effect_follow_replace,
+		effectmodule_req_follow
     );
 }

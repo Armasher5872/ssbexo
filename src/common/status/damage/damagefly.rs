@@ -1,8 +1,13 @@
 use super::*;
 
+//static mut FIGHTER_STATUS_DAMAGE_CORRECT_DAMAGE_VECTOR_COMMON_INLINE: usize = 0x16344;
+
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageFly_Main)]
 unsafe fn status_damagefly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
+    let get_sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     asdi_check(fighter);
     asdi_function(fighter);
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT) {
@@ -33,6 +38,11 @@ unsafe fn status_damagefly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
                 if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION) {
                     fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FALL.into(), false.into());
                 }
+            }
+        }
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR) {
+            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP != 0 && stick_y < -0.66 && get_sum_speed_y <= -0.5 {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
             }
         }
         if fighter.sub_DamageFlyCommon().get_bool() {
@@ -72,8 +82,24 @@ unsafe fn status_end_damagefly(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
+/*
+unsafe extern "C" fn fighter_status_damage_correct_damage_vector_common_inline(fighter: &mut L2CFighterCommon) -> f32 {
+    WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("damage_fly_correction_max"))
+}
+*/
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
+        /*
+        unsafe {
+            let common_offset = (*info.module.ModuleObject).module_base as usize;
+            FIGHTER_STATUS_DAMAGE_CORRECT_DAMAGE_VECTOR_COMMON_INLINE += common_offset;
+            skyline::hooks::A64InlineHook(
+                FIGHTER_STATUS_DAMAGE_CORRECT_DAMAGE_VECTOR_COMMON_INLINE as u64 as _,
+                fighter_status_damage_correct_damage_vector_common_inline as _
+            );
+        }
+        */
         skyline::install_hooks!(
             status_damagefly_main,
             status_end_damagefly

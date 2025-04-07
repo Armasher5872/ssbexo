@@ -50,6 +50,7 @@ unsafe extern "C" fn ssbexo_sheik_up_smash_acmd(agent: &mut L2CAgentBase) {
         else {
             macros::ATTACK(agent, 0, 0, Hash40::new("armr"), 15.0, 93, 88, 0, 52, 6.1, 2.9, 0.0, 0.0, None, None, None, 1.3, 1.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
         }
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
     }
     wait(agent.lua_state_agent, 1.0);
     if macros::is_excute(agent) {

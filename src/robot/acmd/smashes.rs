@@ -17,6 +17,7 @@ unsafe extern "C" fn ssbexo_robot_forward_smash_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 16.0);
     if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
             WorkModule::set_float(agent.module_accessor, 0.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BEAM_ENERGY_VALUE);
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
             MotionModule::set_rate(agent.module_accessor, 1.0);
@@ -82,6 +83,7 @@ unsafe extern "C" fn ssbexo_robot_forward_smash_hi_acmd(agent: &mut L2CAgentBase
     frame(agent.lua_state_agent, 16.0);
     if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
             WorkModule::set_float(agent.module_accessor, 0.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BEAM_ENERGY_VALUE);
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
             MotionModule::set_rate(agent.module_accessor, 1.0);
@@ -147,6 +149,7 @@ unsafe extern "C" fn ssbexo_robot_forward_smash_lw_acmd(agent: &mut L2CAgentBase
     frame(agent.lua_state_agent, 16.0);
     if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST) {
         if macros::is_excute(agent) {
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
             WorkModule::set_float(agent.module_accessor, 0.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BEAM_ENERGY_VALUE);
             WorkModule::off_flag(agent.module_accessor, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
             MotionModule::set_rate(agent.module_accessor, 1.0);

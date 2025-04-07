@@ -7,26 +7,18 @@ unsafe extern "C" fn inkling_special_s_pre_status(fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn inkling_splashbomb_explode_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_boma = get_owner_boma(weapon);
-    let owner_agent = get_fighter_common_from_accessor(&mut *owner_boma);
-    let owner_fighter = owner_agent.global_table[FIGHTER].get_ptr() as *mut Fighter;
     let r = WorkModule::get_float(weapon.module_accessor, *WEAPON_INKLING_SPLASHBOMB_INSTANCE_WORK_ID_FLOAT_R);
     let g = WorkModule::get_float(weapon.module_accessor, *WEAPON_INKLING_SPLASHBOMB_INSTANCE_WORK_ID_FLOAT_G);
     let b = WorkModule::get_float(weapon.module_accessor, *WEAPON_INKLING_SPLASHBOMB_INSTANCE_WORK_ID_FLOAT_B);
     let pos = PostureModule::pos(weapon.module_accessor);
     let get_touch_pos = GroundModule::get_touch_pos(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
     let get_touch_normal = GroundModule::get_touch_normal(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32);
-    let get_ink_work_id = WorkModule::get_float(owner_boma, FighterSpecializer_Inkling::get_ink_work_id(owner_fighter, 0));
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("explode"), 0.0, 1.0, true, 0.0, false, false);
     VisibilityModule::set_whole(weapon.module_accessor, false);
     EffectModule::detach_all(weapon.module_accessor, 5);
     if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
         EffectModule::req(weapon.module_accessor, Hash40::new_raw(0x18c19c7ee8), &Vector3f{x: get_touch_pos.x, y: get_touch_pos.y, z: (*pos).z}, &Vector3f{x: (get_touch_normal.x).atan(), y: (get_touch_normal.y).atan().to_degrees(), z: (*pos).z}, 1.0, 0u32, -1, false, 0);
         EffectModule::set_rgb_partial_last(weapon.module_accessor, r, g, b);
-        if get_ink_work_id > 0.0 {
-            FighterSpecializer_Inkling::generate_rollerink(owner_fighter);
-            FighterSpecializer_Inkling::request_paint(owner_fighter, Hash40::new("top"), &Vector3f{x: 0.0, y: 0.01, z: 0.0}, &Vector2f{x: 0.0, y: 0.01}, 1.0);
-        }
     }
     ControlModule::set_rumble(weapon.module_accessor, Hash40::new("rbkind_explosion"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     weapon.fastshift(L2CValue::Ptr(inkling_splashbomb_explode_main_loop as *const () as _))
