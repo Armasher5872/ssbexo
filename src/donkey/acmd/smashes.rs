@@ -30,24 +30,15 @@ unsafe extern "C" fn ssbexo_donkey_forward_smash_acmd(agent: &mut L2CAgentBase) 
 
 //Up Smash ACMD
 unsafe extern "C" fn ssbexo_donkey_up_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(agent.lua_state_agent, 11.0);
-    if macros::is_excute(agent) {
-        macros::ATTACK(agent, 0, 0, Hash40::new("handr"), 1.0, 80, 90, 120, 0, 3.0, 0.0, 0.0, 0.0, Some(3.0), Some(0.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        macros::ATTACK(agent, 1, 0, Hash40::new("handl"), 1.0, 80, 90, 120, 0, 3.0, 0.0, 0.0, 0.0, Some(3.0), Some(0.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-    }
-    frame(agent.lua_state_agent, 12.0);
+    frame(agent.lua_state_agent, 8.0);
     if macros::is_excute(agent) {
         macros::HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_XLU);
         macros::HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         macros::HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
-    }
-    frame(agent.lua_state_agent, 13.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
     }
     frame(agent.lua_state_agent, 14.0);
     if macros::is_excute(agent) {
@@ -58,6 +49,27 @@ unsafe extern "C" fn ssbexo_donkey_up_smash_acmd(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
         HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+    }
+}
+
+//Up Smash Effect
+unsafe extern "C" fn ssbexo_donkey_up_smash_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 5.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("havel"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        macros::EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(agent.lua_state_agent, 12.0);
+    if macros::is_excute(agent) {
+        macros::LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("donkey_smash_slap"), Hash40::new("donkey_smash_slap"), Hash40::new("top"), 0, 22, 5, -20, 150, 80, 1.4, true, *EF_FLIP_YZ);
+        macros::LAST_EFFECT_SET_RATE(agent, 2.6);
+        macros::EFFECT_FOLLOW_FLIP(agent, Hash40::new("donkey_smash_slap"), Hash40::new("donkey_smash_slap"), Hash40::new("top"), 0, 22, -5, -150, -150, 77, 1.4, true, *EF_FLIP_YZ);
+        macros::LAST_EFFECT_SET_RATE(agent, 2.6);
+    }
+    frame(agent.lua_state_agent, 14.0);
+    if macros::is_excute(agent) {
+        macros::EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 30, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 360, false);
     }
 }
 
@@ -97,6 +109,7 @@ pub fn install() {
     Agent::new("donkey")
     .game_acmd("game_attacks4", ssbexo_donkey_forward_smash_acmd, Priority::Low)
     .game_acmd("game_attackhi4", ssbexo_donkey_up_smash_acmd, Priority::Low)
+    .effect_acmd("effect_attackhi4", ssbexo_donkey_up_smash_effect, Priority::Low)
     .game_acmd("game_attacklw4", ssbexo_donkey_down_smash_acmd, Priority::Low)
     .install()
     ;

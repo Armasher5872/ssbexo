@@ -307,7 +307,7 @@ unsafe extern "C" fn edge_fire_s_fly_main_status(weapon: &mut L2CWeaponCommon) -
     let speed_x_s = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("speed_x_s"));
     let accel_x_s = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("accel_x_s"));
     let max_speed_x_s = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("max_speed_x_s"));
-    let angle: f32 = 45.0;
+    let angle: f32 = 20.0;
     let speed_x = angle.to_radians().sin()*speed_x_s*lr;
     let speed_y = angle.to_radians().cos()*speed_x_s;
     if WorkModule::is_flag(owner_boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
@@ -352,9 +352,7 @@ unsafe extern "C" fn edge_fire_s_fly_exec_status(weapon: &mut L2CWeaponCommon) -
             weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_BURST_S.into(), false.into());
         }
     }
-    else {
-        WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    }
+    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()
 }
 
@@ -413,9 +411,7 @@ unsafe extern "C" fn edge_fire_m_fly_exec_status(weapon: &mut L2CWeaponCommon) -
             weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_BURST_M.into(), false.into());
         }
     }
-    else {
-        WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    }
+    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()
 }
 
@@ -474,9 +470,7 @@ unsafe extern "C" fn edge_fire_l_fly_exec_status(weapon: &mut L2CWeaponCommon) -
             weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_BURST_L.into(), false.into());
         }
     }
-    else {
-        WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    }
+    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()
 }
 
