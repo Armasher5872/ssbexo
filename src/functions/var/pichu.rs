@@ -1,2 +1,0 @@
-pub const FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE: smash::lib::LuaConst = smash::lib::LuaConst::new(0x200000EA);
-pub const FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL: smash::lib::LuaConst = smash::lib::LuaConst::new(0x200000EB);

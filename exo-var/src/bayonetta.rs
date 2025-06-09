@@ -1,0 +1,6 @@
+use super::*;
+
+pub const FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F_DASH: LuaConst = LuaConst::new(0x1F3);
+pub const FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F_SMASH: LuaConst = LuaConst::new(0x1F4);
+pub const FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_U_SMASH: LuaConst = LuaConst::new(0x1F5);
+pub const FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_D_SMASH: LuaConst = LuaConst::new(0x1F6);

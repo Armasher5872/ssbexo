@@ -1,2 +1,0 @@
-pub const FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION: smash::lib::LuaConst = smash::lib::LuaConst::new(0x200000EF);
-pub const FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH: smash::lib::LuaConst = smash::lib::LuaConst::new(0x100000C4);

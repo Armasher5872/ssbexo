@@ -1,2 +1,0 @@
-pub const FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI: smash::lib::LuaConst = smash::lib::LuaConst::new(0x200000EC);
-pub const WEAPON_RYU_HADOKEN_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI: smash::lib::LuaConst = smash::lib::LuaConst::new(0x2000000D);

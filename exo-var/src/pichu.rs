@@ -1,0 +1,4 @@
+use super::*;
+
+pub const FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE: LuaConst = LuaConst::new(0x200000EA);
+pub const FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_AGILITY_CAN_CANCEL: LuaConst = LuaConst::new(0x200000EB);

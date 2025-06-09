@@ -1,192 +1,32 @@
 #![feature(concat_idents, proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
 #![allow(static_mut_refs)]
 
-mod armstrong;
-mod bayonetta;
-mod brave;
-mod buddy;
-mod captain;
-mod chrom;
-mod cloud;
-mod common;
-mod daisy;
-mod dedede;
-mod demon;
-mod diddy;
-mod dolly;
-mod donkey;
-mod duckhunt;
-mod edge;
-mod eflame;
-mod elight;
-mod falco;
-mod fox;
-mod functions;
-mod gamewatch;
-mod gaogaen;
-mod gekkouga;
-mod ike;
-mod inkling;
-mod jack;
-mod kamui;
-mod ken;
-mod kirby;
-mod koopa;
-mod koopajr;
-mod krool;
-mod link;
-mod littlemac;
-mod lucario;
-mod lucas;
-mod lucina;
-mod luigi;
-mod mario;
-mod mariod;
-mod marth;
-mod master;
-mod metaknight;
-mod mewtwo;
-mod miifighter;
-mod miigunner;
-mod miiswordsman;
-mod murabito;
-mod nana;
-mod ness;
-mod packun;
-mod pacman;
-mod palutena;
-mod peach;
-mod pfushigisou;
-mod pichu;
-mod pickel;
-mod pikachu;
-mod pikmin;
-mod pit;
-mod pitb;
-mod plizardon;
-mod popo;
-mod purin;
-mod pzenigame;
-mod reflet;
-mod richter;
-mod ridley;
-mod robot;
-mod rockman;
-mod rosetta;
-mod roy;
-mod ryu;
-mod samus;
-mod samusd;
-mod sheik;
-mod shizue;
-mod shulk;
-mod simon;
-mod snake;
-mod sonic;
-mod szerosuit;
-mod tantan;
-mod toonlink;
-mod trail;
-mod wario;
-mod wiifit;
-mod wolf;
-mod yoshi;
-mod younglink;
-mod zelda;
+#[cfg(feature = "skyline-web")]
+extern crate skyline_web;
+
+mod fighters;
+
+#[no_mangle]
+pub fn smashline_install() {
+    fighters::install();
+}
 
 #[skyline::main(name = "ssbexo")]
 pub fn main() {
-    armstrong::install();
-    bayonetta::install();
-    brave::install();
-    buddy::install();
-    captain::install();
-    chrom::install();
-    cloud::install();
-    common::install();
-    daisy::install();
-    dedede::install();
-    demon::install();
-    diddy::install();
-    dolly::install();
-    donkey::install();
-    duckhunt::install();
-    edge::install();
-    eflame::install();
-    elight::install();
-    falco::install();
-    fox::install();
-    functions::install();
-    gamewatch::install();
-    gaogaen::install();
-    gekkouga::install();
-    ike::install();
-    inkling::install();
-    jack::install();
-    kamui::install();
-    ken::install();
-    kirby::install();
-    koopa::install();
-    koopajr::install();
-    krool::install();
-    link::install();
-    littlemac::install();
-    lucario::install();
-    lucas::install();
-    lucina::install();
-    luigi::install();
-    mario::install();
-    mariod::install();
-    marth::install();
-    master::install();
-    metaknight::install();
-    mewtwo::install();
-    miifighter::install();
-    miigunner::install();
-    miiswordsman::install();
-    murabito::install();
-    nana::install();
-    ness::install();
-    packun::install();
-    pacman::install();
-    palutena::install();
-    peach::install();
-    pfushigisou::install();
-    pichu::install();
-    pickel::install();
-    pikachu::install();
-    pikmin::install();
-    pit::install();
-    pitb::install();
-    plizardon::install();
-    popo::install();
-    purin::install();
-    pzenigame::install();
-    reflet::install();
-    richter::install();
-    ridley::install();
-    robot::install();
-    rockman::install();
-    rosetta::install();
-    roy::install();
-    ryu::install();
-    samus::install();
-    samusd::install();
-    sheik::install();
-    shizue::install();
-    shulk::install();
-    simon::install();
-    snake::install();
-    sonic::install();
-    szerosuit::install();
-    tantan::install();
-    toonlink::install();
-    trail::install();
-    wario::install();
-    wiifit::install();
-    wolf::install();
-    yoshi::install();
-    younglink::install();
-    zelda::install();
+    fighters::install();
+    std::panic::set_hook(Box::new(|info: &std::panic::PanicHookInfo<'_>| {
+        let location: &std::panic::Location<'_> = info.location().unwrap();
+        let message: &str = match info.payload().downcast_ref::<&'static str>() {
+            Some(s) => *s,
+            None => match info.payload().downcast_ref::<String>() {
+                Some(s) => &s[..],
+                None => "Box<Any>"
+            }
+        };
+        skyline::error::show_error(
+            69,
+            "Super Smash Bros: EXO has panicked! Please open the details and send a screenshot to PhazoGanon on Discord, and explain what you were doing.\0",
+            &format!("Super Smash Bros: EXO has panicked with \"{message}\"\n\n{location}\0")
+        );
+    }));
 }
-//cargo skyline build --no-default-features --release -- --offline

@@ -1,1 +1,0 @@
-pub const FIGHTER_PEACH_STATUS_KIND_SPECIAL_LW_THROW: smash::lib::LuaConst = smash::lib::LuaConst::new(0x1EB);

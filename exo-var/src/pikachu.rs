@@ -1,0 +1,4 @@
+use super::*;
+
+pub const FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT: LuaConst = LuaConst::new(0x100000C3);
+pub const FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH: LuaConst = LuaConst::new(0x200000E9);

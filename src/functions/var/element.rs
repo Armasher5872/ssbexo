@@ -1,1 +1,0 @@
-pub const FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH: smash::lib::LuaConst = smash::lib::LuaConst::new(0x200000E8);

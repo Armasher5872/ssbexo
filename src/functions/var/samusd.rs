@@ -1,1 +1,0 @@
-pub const FIGHTER_SAMUSD_INSTANCE_WORK_ID_INT_FLOAT_TIME: smash::lib::LuaConst = smash::lib::LuaConst::new(0x100000C4);
