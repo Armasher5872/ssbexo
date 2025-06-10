@@ -68,6 +68,7 @@ unsafe extern "C" fn link_special_hi_glide_end_status(_fighter: &mut L2CFighterC
 
 pub fn install() {
     Agent::new("link")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_pre_status)
     .status(Init, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_init_status)
     .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE, link_special_hi_glide_main_status)

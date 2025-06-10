@@ -74,6 +74,7 @@ unsafe extern "C" fn link_special_hi_end_status(fighter: &mut L2CFighterCommon) 
 
 pub fn install() {
     Agent::new("link")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, link_special_hi_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, link_special_hi_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_HI, link_special_hi_exec_status)

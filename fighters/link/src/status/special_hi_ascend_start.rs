@@ -31,6 +31,7 @@ unsafe extern "C" fn link_special_hi_ascend_start_main_loop(fighter: &mut L2CFig
 
 pub fn install() {
     Agent::new("link")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START, link_special_hi_ascend_start_pre_status)
     .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START, link_special_hi_ascend_start_main_status)
     .install()

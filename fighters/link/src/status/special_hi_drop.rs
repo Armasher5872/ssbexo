@@ -34,6 +34,7 @@ unsafe extern "C" fn link_special_hi_glide_drop_end_status(_fighter: &mut L2CFig
 
 pub fn install() {
     Agent::new("link")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_pre_status)
     .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_main_status)
     .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_end_status)
