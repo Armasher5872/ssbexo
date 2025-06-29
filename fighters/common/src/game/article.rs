@@ -34,7 +34,6 @@ unsafe extern "C" fn article_module_generate_article(module: u64, article_kind: 
 
 //Installation
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x60eb08).data(0x52800001u32); //Removes Jostle
 	skyline::install_hooks!(
         get_article_use_type_mask,
         article_module_generate_article

@@ -33,7 +33,7 @@ unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
 #[skyline::hook(offset = 0x138a710, inline)]
 fn hud_update(_: &skyline::hooks::InlineCtx) {
     unsafe {
-        let mode = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64 + 0x53050f0) as *const u64;
+        let mode = (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64 + 0x53040f0) as *const u64;
         if [0x6020000, 0x4050000].contains(&*mode) {
             return;
         }

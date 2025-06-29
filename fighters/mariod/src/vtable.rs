@@ -53,8 +53,8 @@ unsafe extern "C" fn mariod_opff(_vtable: u64, fighter: &mut Fighter) {
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x3441a18).nop(); //The following removes a horizontal speed initialization so it can be assigned dynamically in a weapon init status
-    let _ = skyline::patching::Patch::in_text(0x3441a3c).nop(); //The following removes the initial gravity acceleration so it can be assigned dynamically in a weapon init status
+    let _ = skyline::patching::Patch::in_text(0x34417a8).nop(); //The following removes a horizontal speed initialization so it can be assigned dynamically in a weapon init status
+    let _ = skyline::patching::Patch::in_text(0x34417cc).nop(); //The following removes the initial gravity acceleration so it can be assigned dynamically in a weapon init status
     skyline::install_hooks!(
         mariod_start_initialization,
         mariod_reset_initialization,

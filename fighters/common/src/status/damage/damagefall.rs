@@ -3,7 +3,6 @@ use super::*;
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_DamageFall_common)]
 unsafe extern "C" fn sub_damagefall_common(fighter: &mut L2CFighterCommon) {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     let rate_counter = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), 0x2f136d6218u64);
     let damage_fly_meteor_reverse_motion = WorkModule::get_param_int(fighter.module_accessor, hash40("param_motion"), hash40("damage_fly_meteor_reverse_motion"));
@@ -17,10 +16,8 @@ unsafe extern "C" fn sub_damagefall_common(fighter: &mut L2CFighterCommon) {
         }
     }
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DOWN);
-    if prev_status_kind != *FIGHTER_STATUS_KIND_CATCHED_AIR_END_GANON {
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
-    }
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
+    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
     if !MotionModule::is_no_comp(fighter.module_accessor) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FALL_FLAG_PREV_NO_COMP);
     }

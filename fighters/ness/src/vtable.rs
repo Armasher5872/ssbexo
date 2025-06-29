@@ -127,7 +127,7 @@ unsafe extern "C" fn ness_pk_fire_on_attack(vtable: u64, weapon: *mut smash::app
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x51f4c90).data(ness_pk_fire_on_attack as u64);
+    let _ = skyline::patching::Patch::in_text(0x51f3c90).data(ness_pk_fire_on_attack as u64);
     skyline::install_hooks!(
         ness_start_initialization,
         ness_reset_initialization,

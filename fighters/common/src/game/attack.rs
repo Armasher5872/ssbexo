@@ -112,7 +112,6 @@ unsafe extern "C" fn attack_abs_replace(lua_state: u64) {
 unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
 	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
 	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
-    let attacker_category = smash::app::utility::get_category(attacker_boma);
 	let attacker_kind = smash::app::utility::get_kind(attacker_boma);
 	let defender_kind = smash::app::utility::get_kind(defender_boma);
 	let attacker_status_kind = StatusModule::status_kind(attacker_boma);
@@ -128,16 +127,6 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
 		LAST_TO_HIT_BALL = get_player_number(attacker_boma);
         WorkModule::off_flag(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
 	}
-	//GGST COUNTER!/Little Mac Star Punch Counterhit Detection
-	if COUNTERHIT_CHECK[get_player_number(defender_boma)]
-	&& attacker_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-		if attacker_kind != *FIGHTER_KIND_LITTLEMAC 
-		&& [*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&attacker_status_kind) {
-			//Counterhit Detection
-			COUNTERHIT_SUCCESS[get_player_number(attacker_boma)] = true;
-			COUNTERHIT_CHECK[get_player_number(defender_boma)] = false;
-		}
-	}
 	LAST_DAMAGE[get_player_number(defender_boma)] = DamageModule::damage(defender_boma, 0);
     if attacker_status_kind == WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT {
         ItemModule::drop_item(defender_boma, 0.0, 0.0, 0);
@@ -148,7 +137,7 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32); //Removes phantoms
     //Nops functions related to final smash meter gain
-    let _ = skyline::patching::Patch::in_text(0x61552c).nop(); //Handles passive gain
+    let _ = skyline::patching::Patch::in_text(0x61552c).nop();
     let _ = skyline::patching::Patch::in_text(0x6209a0).nop();
     let _ = skyline::patching::Patch::in_text(0x633db8).nop();
 	skyline::install_hooks!(

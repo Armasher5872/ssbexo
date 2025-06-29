@@ -9,7 +9,7 @@ pub unsafe extern "C" fn set_stage_visibility(module_accessor: *mut smash::app::
 #[skyline::from_offset(0x6dd2a0)]
 pub unsafe extern "C" fn waza_customize(lua_module: u64, status: i32, customize_to: i32);
 
-#[skyline::from_offset(0x37addc0)]
+#[skyline::from_offset(0x37ae1a0)]
 pub unsafe extern "C" fn kill_dead_event_listeners(arg: *mut u32);
 
 #[skyline::from_offset(0x6924e0)]
@@ -33,5 +33,5 @@ pub unsafe extern "C" fn create_item(item_manager: *mut smash::app::ItemManager,
 #[skyline::from_offset(0x696720)]
 pub unsafe extern "C" fn call_special_zoom(boma: *mut BattleObjectModuleAccessor, collision_log: u64, fighter_kind: i32, vl_params: u64, param_5: i32, param_6: i32, param_7: i32, param_8: i32, param_9: i32) -> u64;
 
-#[skyline::from_offset(0x33bdc30)]
+#[skyline::from_offset(0x33bd9c0)]
 pub unsafe extern "C" fn normal_weapon_hit_handler(vtable: u64, weapon: *mut smash::app::Weapon, log: u32) -> u64;

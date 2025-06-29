@@ -96,7 +96,7 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
             ModelModule::set_scale(weapon.module_accessor, 0.001);
         }
     }
-    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+10.0, y: owner_pos_y+8.0, z: owner_pos_z});
+    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(10.0*lr), y: owner_pos_y+8.0, z: owner_pos_z});
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x-reduction, speed_y);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -accel_y-reduction);
     0.into()

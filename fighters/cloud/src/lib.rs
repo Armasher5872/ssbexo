@@ -1,5 +1,6 @@
 use {
   exo_utils::{
+    cloud::*,
     collision_struct::*,
     fighter_common::*,
     shielddata_struct::*,

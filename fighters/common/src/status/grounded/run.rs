@@ -406,8 +406,8 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
         skyline::install_hooks!(
             status_run_sub,
             status_run_main,
-            status_runbrake_main,
-            status_turnrunbrake_main
+            status_runbrake_main//,
+            //status_turnrunbrake_main
         );
     }
 }

@@ -2,6 +2,7 @@ use {
   exo_utils::{
     donkey::*,
     fighter_common::*,
+    gekkouga::*,
     ike::*,
     metaknight::*,
     pfushigisou::*,

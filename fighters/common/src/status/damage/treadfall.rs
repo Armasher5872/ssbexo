@@ -14,9 +14,13 @@ unsafe extern "C" fn status_treadfall(fighter: &mut L2CFighterCommon) -> L2CValu
     if !bool_check {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0x9b5c6425d), 0.0, 1.0, false, 0.0, false, false);
     }
-    if prev_status_kind == *FIGHTER_STATUS_KIND_TREAD_DAMAGE {
+    if prev_status_kind == *FIGHTER_STATUS_KIND_TREAD_DAMAGE_AIR {
         WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
         WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
+    }
+    else {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE_FB);
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_PASSIVE);
     }
     if !StopModule::is_stop(fighter.module_accessor) {
         fighter.sub_tread_fall_uniq_check();

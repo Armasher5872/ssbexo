@@ -1,5 +1,6 @@
 use {
     exo_utils::{
+        attack_xx4::*,
         fighter_common::*,
         status_end_control::*,
     },

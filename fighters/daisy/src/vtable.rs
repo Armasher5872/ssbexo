@@ -3,7 +3,6 @@ use super::*;
 const DAISY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xe88ca0; //Shared
 const DAISY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const DAISY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xe89090; //Shared
-//const DAISY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x68d670; //Shared
 
 //Daisy Startup Initialization
 #[skyline::hook(offset = DAISY_VTABLE_START_INITIALIZATION_OFFSET)]
@@ -45,7 +44,7 @@ unsafe extern "C" fn daisy_kassar_vtable_on_despawn_event_offset(_vtable: u64, w
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x51fbce0).data(daisy_kassar_vtable_on_despawn_event_offset as u64);
+    let _ = skyline::patching::Patch::in_text(0x51face0).data(daisy_kassar_vtable_on_despawn_event_offset as u64);
     skyline::install_hooks!(
         daisy_start_initialization,
         daisy_reset_initialization,

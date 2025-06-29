@@ -61,7 +61,6 @@ unsafe fn status_end_damageflyroll(fighter: &mut L2CFighterCommon) -> L2CValue {
         WorkModule::off_flag(fighter.module_accessor, flags[x]);
     }
     //Fighter Specific
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
     if status_kind == *FIGHTER_STATUS_KIND_DEAD {
         fighter.sub_end_damage_fly_roll_to_dead();
     }

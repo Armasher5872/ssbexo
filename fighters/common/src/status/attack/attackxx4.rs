@@ -324,8 +324,7 @@ unsafe fn sub_attack_xx4_common_uniq_process_exit(fighter: &mut L2CFighterCommon
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         SlowModule::clear_whole(boma);
         CameraModule::reset_all(boma);
-        macros::CAM_ZOOM_OUT(fighter);
-        COUNTERHIT_SUCCESS[get_player_number(boma)] = false;
+        CAM_ZOOM_OUT(fighter);
         return 0.into();
     }
     if [*FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4].contains(&status_kind_interrupt) {

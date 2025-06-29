@@ -131,7 +131,7 @@ unsafe extern "C" fn rockman_leafshield_on_attack(vtable: u64, weapon: *mut smas
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x107eaa4).data(0x1400001Eu32); //The following patch disables the original function that forced Mega Man into Leaf Shield Throw. This is so that the custom function can be used. This offset is located in Mega-Man's OPFF
     let _ = skyline::patching::Patch::in_text(0x107ff6c).data(0x14000007u32); //The following patch disables the removal of Leaf Shield if Mega Man enters certain statuses
-    let _ = skyline::patching::Patch::in_text(0x5211270).data(rockman_leafshield_on_attack as u64);
+    let _ = skyline::patching::Patch::in_text(0x5210270).data(rockman_leafshield_on_attack as u64);
     skyline::install_hooks!(
         rockman_start_initialization,
         rockman_reset_initialization,

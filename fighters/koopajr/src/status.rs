@@ -1,11 +1,5 @@
 use super::*;
 
-unsafe extern "C" fn koopajr_attack_lw4_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_MOTION, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_ATTACK_4_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_ATTACK_4_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_ATTACK_4_FLOAT, *FS_SUCCEEDS_KEEP_HIT | *FS_SUCCEEDS_KEEP_VISIBILITY | *FS_SUCCEEDS_KEEP_NO_REACTION);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_LW4 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_HAJIKI) as u64, 0, *FIGHTER_POWER_UP_ATTACK_BIT_ATTACK_4 as u32, 0);
-    0.into()
-}
-
 unsafe extern "C" fn koopajr_attack_lw4_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
     fighter.attack_lw4_mtrans();
@@ -24,8 +18,7 @@ unsafe extern "C" fn koopajr_attack_lw4_main_loop(fighter: &mut L2CFighterCommon
         fighter.sub_status_uniq_process_ThrowKirby_execFixPos();
         return 0.into()
     }
-    fighter.status_AttackLw4_Main_param(FIGHTER_STATUS_KIND_WAIT.into());
-    0.into()
+    fighter.status_AttackLw4_Main()
 }
 
 unsafe extern "C" fn koopajr_attack_lw4_map_correction_status(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -266,7 +259,6 @@ unsafe extern "C" fn koopajr_cannonball_shoot_end_status(weapon: &mut L2CWeaponC
 pub fn install() {
     Agent::new("koopajr")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_LW4, koopajr_attack_lw4_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4, koopajr_attack_lw4_main_status)
     .status(MapCorrection, *FIGHTER_STATUS_KIND_ATTACK_LW4, koopajr_attack_lw4_map_correction_status)
     .status(Pre, *FIGHTER_KOOPAJR_STATUS_KIND_FLOAT, koopajr_float_pre_status)

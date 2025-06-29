@@ -2,13 +2,13 @@ use {
   exo_utils::{
     collision_struct::*,
     fighter_common::*,
-    status_end_control::*,
-    vector::*,
+    hook::*,
+    littlemac::*,
   },
   exo_var::{
+    consts::*,
     globals::*,
     littlemac::*,
-    variables::*,
   },
   smash::{
     app::{
@@ -17,10 +17,7 @@ use {
     },
     hash40,
     lib::lua_const::*,
-    lua2cpp::*,
-    phx::Vector3f
   },
-  smash_script::*,
   smashline::*,
 };
 

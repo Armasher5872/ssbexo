@@ -4,12 +4,10 @@ use {
         attack_dash::*,
         attack_xx4::*,
         attack::*,
-        fighter_common::*,
     },
     exo_var::{
         consts::*,
         globals::*,
-        variables::*,
     },
     smash::{
         app::{
@@ -30,7 +28,10 @@ use {
         },
         phx::Hash40
     },
-    smash_script::*,
+    smash_script::{
+        macros::*,
+        *
+    },
     smashline::*,
 };
 

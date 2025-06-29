@@ -19,6 +19,21 @@ unsafe extern "C" fn sheik_var(boma: &mut BattleObjectModuleAccessor) {
     CameraModule::set_status(boma, CameraStatus{ _address: *CAMERA_STATUS_NORMAL as u8 }, 0);
 }
 
+unsafe extern "C" fn sheik_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    }
+    0.into()
+}
+
+unsafe extern "C" fn sheik_should_use_special_s_callback(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_LW) {
+        return 0.into();
+    }
+    1.into()
+}
+
 //Sheik Startup Initialization
 #[skyline::hook(offset = SHEIK_VTABLE_START_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn sheik_start_initialization(_vtable: u64, fighter: &mut Fighter) {
@@ -26,7 +41,8 @@ unsafe extern "C" fn sheik_start_initialization(_vtable: u64, fighter: &mut Figh
     let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     sheik_var(&mut *boma);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
+    agent.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(sheik_should_use_special_s_callback as *const () as _));
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(sheik_end_control as *const () as _));
 }
 
 //Sheik Reset Initialization

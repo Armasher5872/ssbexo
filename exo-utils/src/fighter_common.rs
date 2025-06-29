@@ -45,8 +45,6 @@ pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleO
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
     BALL_VICTIMS[entry_id] = 0;
-    COUNTERHIT_CHECK[entry_id] = false;
-    COUNTERHIT_SUCCESS[entry_id] = false;
     LAST_ATTACK_HITBOX_ID = 0;
     LAST_ATTACK_HITBOX_LOCATION_X = 0.0;
     LAST_ATTACK_HITBOX_LOCATION_Y = 0.0;
@@ -99,8 +97,6 @@ pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModu
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
     BALL_VICTIMS[entry_id] = 0;
-    COUNTERHIT_CHECK[entry_id] = false;
-    COUNTERHIT_SUCCESS[entry_id] = false;
     LAST_ATTACK_HITBOX_ID = 0;
     LAST_ATTACK_HITBOX_LOCATION_X = 0.0;
     LAST_ATTACK_HITBOX_LOCATION_Y = 0.0;
@@ -148,8 +144,6 @@ pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModu
     WorkModule::set_int(boma, -1, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_ID);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
-    COUNTERHIT_CHECK[entry_id] = false;
-    COUNTERHIT_SUCCESS[entry_id] = false;
     LAST_ATTACK_HITBOX_ID = 0;
     LAST_ATTACK_HITBOX_LOCATION_X = 0.0;
     LAST_ATTACK_HITBOX_LOCATION_Y = 0.0;
@@ -200,7 +194,6 @@ pub unsafe fn get_article_boma(boma: *mut BattleObjectModuleAccessor, article_ty
     return sv_battle_object::module_accessor(object_id);
 }
 
-/*
 //Used for GGST COUNTER!
 pub unsafe fn estimate_frame(module_accessor: &mut smash::app::BattleObjectModuleAccessor, frame: f32) -> bool {
     let motion_frame = MotionModule::frame(module_accessor);
@@ -211,7 +204,6 @@ pub unsafe fn estimate_frame(module_accessor: &mut smash::app::BattleObjectModul
 		return false;
 	}
 }
-*/
 
 //Gets the article owner boma
 pub unsafe fn get_owner_boma(weapon: &mut L2CAgentBase) -> *mut BattleObjectModuleAccessor {

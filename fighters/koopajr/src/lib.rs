@@ -11,6 +11,7 @@ use {
   exo_var::{
     consts::*,
     donkey::*,
+    gekkouga::*,
     globals::*,
     ike::*,
     koopajr::*,

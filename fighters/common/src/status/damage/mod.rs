@@ -8,7 +8,6 @@ use {
     exo_var::{
         consts::*,
         globals::*,
-        littlemac::*,
     },
     skyline::hooks::InlineCtx,
     smash::{

@@ -9,6 +9,7 @@ use {
         donkey::*,
         extern_func::*,
         fighter_common::*,
+        gekkouga::*,
         hook::*,
         ice_climber_meter::*,
         ike::*,
@@ -34,6 +35,7 @@ use {
         globals::*,
         kirby::*,
         link::*,
+        littlemac::*,
         murabito::*,
         rockman::*,
         variables::*,
@@ -94,6 +96,7 @@ pub mod donkey;
 pub mod extern_func;
 pub mod fighter_common;
 pub mod flydata;
+pub mod gekkouga;
 pub mod hook;
 pub mod ice_climber_meter;
 pub mod ike;
@@ -101,6 +104,7 @@ pub mod inkling;
 pub mod kinetic_energy;
 pub mod knockback;
 pub mod link;
+pub mod littlemac;
 pub mod lucario_meter;
 pub mod mariod_meter;
 pub mod metaknight;

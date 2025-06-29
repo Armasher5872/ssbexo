@@ -119,6 +119,7 @@ unsafe extern "C" fn cloud_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             UiManager::set_cloud_meter_enable(entry_id, false);
             UiManager::set_cloud_meter_info(entry_id, 0);
         }
+        cloud_training_mode_features(boma);
     }
     original!()(vtable, fighter)
 }

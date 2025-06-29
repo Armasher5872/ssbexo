@@ -1,4 +1,5 @@
 use {
+    exo_utils::vector::*,
     exo_var::{
         consts::*,
         gaogaen::*,

@@ -1,12 +1,12 @@
 use {
   exo_utils::{
-    collision_struct::*,
+    check_attack::*,
+    extern_func::*,
     fighter_common::*,
-    status_end_control::*,
-    vector::*,
+    gekkouga::*,
+    weapon::*,
   },
   exo_var::{
-    consts::*,
     gekkouga::*,
     globals::*,
   },
@@ -37,6 +37,7 @@ mod vtable;
 
 pub fn install() {
   acmd::install();
+  clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "gekkouga", "mat", false);
   status::install();
   vtable::install();
 }

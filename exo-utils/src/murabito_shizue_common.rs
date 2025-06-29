@@ -16,25 +16,30 @@ pub unsafe extern "C" fn ac_common(boma: *mut BattleObjectModuleAccessor) {
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
                 barrel_removal(weapon);
             }
-            if is_slash(obj_boma) {
+            if is_disarming_voice(obj_boma) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
-                slash_removal(weapon);
+                disarming_voice_removal(weapon);
             }
             if is_galaxia(obj_boma) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
                 galaxia_beam_removal(weapon);
             }
+            if is_slash(obj_boma) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
+                WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
+                slash_removal(weapon);
+            }
             if is_sludge(obj_boma) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
                 sludge_removal(weapon);
             }
-            if is_disarming_voice(obj_boma) {
+            if is_mat(obj_boma) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
-                disarming_voice_removal(weapon);
+                mat_removal(weapon);
             }
             if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
                 let item_id = WorkModule::get_int64(obj_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;

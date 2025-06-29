@@ -17,3 +17,13 @@ pub unsafe extern "C" fn cloud_can_limit_break(fighter: &mut L2CFighterCommon, r
     }
     false.into()
 }
+
+pub unsafe extern "C" fn cloud_training_mode_features(boma: *mut BattleObjectModuleAccessor) {
+    let status_kind = StatusModule::status_kind(boma);
+    if smashball::is_training_mode()
+    && status_kind == *FIGHTER_STATUS_KIND_APPEAL
+    && ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_GUARD) {
+        WorkModule::set_int(boma, 4, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
+        WorkModule::set_float(boma, 100.0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLOAT_LIMIT_GAUGE);
+    }
+}

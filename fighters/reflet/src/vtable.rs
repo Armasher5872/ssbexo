@@ -3,7 +3,7 @@ use super::*;
 const REFLET_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x10058d0; //Robin only
 const REFLET_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const REFLET_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x1005b20; //Robin only
-const REFLET_GIGAFIRE_VTABLE_ON_ATTACK_OFFSET: usize = 0x34d2180;
+const REFLET_GIGAFIRE_VTABLE_ON_ATTACK_OFFSET: usize = 0x34d1f10; //Robin only
 
 unsafe extern "C" fn reflet_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
@@ -68,8 +68,8 @@ unsafe extern "C" fn reflet_gigafire_on_attack(vtable: u64, weapon: *mut smash::
 
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x1005d30).nop(); //Starts the match with Levin Sword fully charged
-    let _ = skyline::patching::Patch::in_text(0x34d20b8).nop(); //Removes the vanila effect call
-    let _ = skyline::patching::Patch::in_text(0x34d20d4).nop(); //Removes the set int for the effect
+    let _ = skyline::patching::Patch::in_text(0x34d1e48).nop(); //Removes the vanila effect call
+    let _ = skyline::patching::Patch::in_text(0x34d1e64).nop(); //Removes the set int for the effect
     skyline::install_hooks!(
         reflet_start_initialization,
         reflet_reset_initialization,

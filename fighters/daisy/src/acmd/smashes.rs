@@ -82,33 +82,32 @@ unsafe extern "C" fn ssbexo_daisy_forward_smash_expression(agent: &mut L2CAgentB
 
 //Up Smash ACMD
 unsafe extern "C" fn ssbexo_daisy_up_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+        spawn_glove(agent.module_accessor, 0);
+        swap_glove_lr(agent.module_accessor);
     }
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
-        HIT_NODE(agent, Hash40::new("hip"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("legr"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_XLU);
-        ATTACK(agent, 0, 0, Hash40::new("hip"), 12.0, 90, 90, 0, 25, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("legr"), 13.0, 90, 90, 0, 25, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 2, 0, Hash40::new("kneer"), 15.0, 90, 90, 0, 25, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 3, 0, Hash40::new("footr"), 17.0, 90, 90, 0, 25, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_KICK);
-        ATTACK(agent, 4, 0, Hash40::new("top"), 12.0, 90, 90, 0, 25, 6.0, 0.0, 5.0, 6.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        HIT_NODE(agent, Hash40::new("shoulderl"), *HIT_STATUS_XLU);
+        HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 90, 75, 0, 45, 5.0, 0.0, 13.0, 2.0, Some(0.0), Some(13.0), Some(-2.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 16.0, 90, 75, 0, 45, 8.0, 0.0, 24.0, 0.0, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
-        AttackModule::clear(agent.module_accessor, 0, false);
-        AttackModule::clear(agent.module_accessor, 1, false);
-        AttackModule::clear(agent.module_accessor, 2, false);
-        AttackModule::clear(agent.module_accessor, 4, false);
-        ATTACK(agent, 3, 0, Hash40::new("footr"), 10.0, 90, 90, 0, 25, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_KICK);
         HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 90, 75, 0, 45, 5.0, 0.0, 13.0, 2.0, Some(0.0), Some(13.0), Some(-2.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 11.0, 90, 75, 0, 45, 8.0, 0.0, 24.0, 0.0, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(agent.lua_state_agent, 18.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+    }
+    frame(agent.lua_state_agent, 30.0);
+    if is_excute(agent) {
+        despawn_glove(agent.module_accessor);
     }
 }
 
@@ -116,13 +115,12 @@ unsafe extern "C" fn ssbexo_daisy_up_smash_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_daisy_up_smash_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("footr"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("havel"), 0, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.4);
     }
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 10, 1, 0, 0, 90, 1, true, *EF_FLIP_YZ);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 0.0);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("daisy_smash_ribbon"), Hash40::new("daisy_smash_ribbonl"), Hash40::new("top"), 1, 0, 0, 0, 0, 0, 1, true, *EF_FLIP_ZX);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(agent.lua_state_agent, 12.0);
@@ -130,15 +128,15 @@ unsafe extern "C" fn ssbexo_daisy_up_smash_effect(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW(agent, Hash40::new("daisy_attack_hi3"), Hash40::new("top"), 0, 24, 0, 0, 90, 0, 1, true);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("daisy_flower_petals"), Hash40::new("top"), 0, 24, 0, 0, 90, 0, 1.2, true);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(agent.lua_state_agent, 26.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("daisy_smash_heart"), false, false);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_hit_ice_s"), Hash40::new("havel"), 0, 0.0, 0, 0, 0, 0, 0.5, false);
     }
 }
 
 //Up Smash Sound
 unsafe extern "C" fn ssbexo_daisy_up_smash_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_smash_start_03"));
     }
@@ -157,7 +155,7 @@ unsafe extern "C" fn ssbexo_daisy_up_smash_expression(agent: &mut L2CAgentBase) 
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 4.0);
+    frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
         AttackModule::set_attack_reference_joint_id(agent.module_accessor, Hash40::new("top"), AttackDirectionAxis(*ATTACK_DIRECTION_Y), AttackDirectionAxis(*ATTACK_DIRECTION_NONE), AttackDirectionAxis(*ATTACK_DIRECTION_NONE));
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 3);

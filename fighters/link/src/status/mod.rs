@@ -5,7 +5,6 @@ use {
         extern_func::*,
         fighter_common::*,
         link::*,
-        vector::*,
     },
     exo_var::{
         consts::*,

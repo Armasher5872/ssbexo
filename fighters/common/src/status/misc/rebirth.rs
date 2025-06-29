@@ -616,6 +616,13 @@ unsafe extern "C" fn status_end_rebirth(fighter: &mut L2CFighterCommon) -> L2CVa
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_rebirth_uniq_process_exit)]
 unsafe extern "C" fn sub_rebirth_uniq_process_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_LITTLEMAC {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BACKSHIELD_INVISIBLE);
+        VisibilityModule::set_whole(fighter.module_accessor, true);
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("swet") as i64, hash40("swet_off") as i64);
+        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1f20a9d549), true);
+        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24772eddef), true);
+    }
     fighter.sub_entry_remove_article();
     original!()(fighter)
 }

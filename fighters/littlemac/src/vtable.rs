@@ -1,4 +1,6 @@
 #![allow(improper_ctypes_definitions)]
+use std::ops::Add;
+
 use super::*;
 
 const LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET: usize = 0x68cda0; //Little Mac only
@@ -7,6 +9,7 @@ const LITTLEMAC_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc44830; //Little M
 const LITTLEMAC_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc448c0; //Little Mac only
 const LITTLEMAC_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0xc44b80; //Little Mac only
 const LITTLEMAC_VTABLE_ON_ATTACK_OFFSET: usize = 0xc456a0; //Little Mac only
+const LITTLEMAC_VTABLE_ON_SEARCH_OFFSET: usize = 0xc463d0; //Little Mac only
 const LITTLEMAC_VTABLE_ON_DAMAGE_OFFSET: usize = 0xc45d70; //Little Mac only
 
 #[skyline::from_offset(LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET)]
@@ -15,13 +18,24 @@ fn update_littlemac_ui_internal(manager_offset: *mut u32, total_gauge: i32);
 //Updates Battle UI, credit to HDR
 unsafe extern "C" fn update_littlemac_ui(entry_id: i32, total_gauge: f32) {
     let manager = singletons::FighterManager() as *mut u64;
-    let offset = (*manager + (entry_id as u64 * 8) + 0x20) as *mut u64;
-    update_littlemac_ui_internal((*offset + 0x41e4) as *mut u32, total_gauge as i32);
+    let fighter_entry = (*manager + (entry_id as u64 * 8) + 0x20) as *mut u64;
+    update_littlemac_ui_internal((*fighter_entry + 0x41e4) as *mut u32, total_gauge as i32);
+}
+
+unsafe extern "C" fn littlemac_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_USED_AIR_SPECIAL_N);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    }
+    0.into()
 }
 
 unsafe extern "C" fn littlemac_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
+    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_HAS_STAR);
+    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_USED_AIR_SPECIAL_N);
+    WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_STAR_DAMAGE);
     WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_HELD_TIMER);
 }
 
 //Little Mac Startup Initialization
@@ -31,7 +45,7 @@ unsafe extern "C" fn littlemac_start_initialization(vtable: u64, fighter: &mut F
     let agent = get_fighter_common_from_accessor(&mut *boma);
     common_initialization_variable_reset(&mut *boma);
     littlemac_var(&mut *boma);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
+    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(littlemac_end_control as *const () as _));
     original!()(vtable, fighter)
 }
 
@@ -58,10 +72,7 @@ unsafe extern "C" fn littlemac_death_initialization(vtable: u64, fighter: &mut F
 unsafe extern "C" fn littlemac_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
-    let status_kind = StatusModule::status_kind(boma);
-    let frame = MotionModule::frame(boma);
     let ko_gauge = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-    let strength = WorkModule::get_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
     //Resets the meter to 0 if the values are invalid
     if ko_gauge < 0.0 || ko_gauge.is_nan() {
         WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
@@ -79,107 +90,66 @@ unsafe extern "C" fn littlemac_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if ko_gauge > 100.0 {
         WorkModule::set_float(boma, 100.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
     }
-    update_littlemac_ui(entry_id, ko_gauge);
-    //Different Cancel Frames for Star Punch
-    if status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2 {
-        if frame < 1.0 {
-            match ko_gauge {
-                _ if ko_gauge == 0.0 => {
-                    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-                _ if ko_gauge == 34.0 => {
-                    WorkModule::set_int(boma, 1, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-                _ if ko_gauge == 68.0 => {
-                    WorkModule::set_int(boma, 2, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-                _ => {
-                    WorkModule::set_int(boma, 3, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-            }
-        }
-        match strength {
-            _ if strength == 0 => {
-                if frame > 40.0 {
-                    CancelModule::enable_cancel(boma);
-                    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-            }
-            _ if strength == 1 => {
-                if frame > 55.0 {
-                    CancelModule::enable_cancel(boma);
-                    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-            }
-            _ if strength == 2 => {
-                if frame > 65.0 {
-                    CancelModule::enable_cancel(boma);
-                    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-            }
-            _ => {
-                if CancelModule::is_enable_cancel(boma) {
-                    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-                }
-            }
-        }
+    //Used to check if Little Mac has a star
+    if ko_gauge > 0.0 {
+        WorkModule::on_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_HAS_STAR);
     }
+    //Updates his UI accordingly
+    update_littlemac_ui(entry_id, ko_gauge);
+    //Used for training mode purposes
+    littlemac_training_mode_features(boma);
     original!()(vtable, fighter)
 }
 
 //Little Mac On Attack
 #[skyline::hook(offset = LITTLEMAC_VTABLE_ON_ATTACK_OFFSET)]
-unsafe extern "C" fn littlemac_on_attack(vtable: u64, battle_object: *mut BattleObject, collision_log: CollisionLog, _damage: f32) -> u64 {
+unsafe extern "C" fn littlemac_on_attack(meter: f32, vtable: u64, battle_object: *mut BattleObject, log: u64) -> u64 {
     let boma = &mut (*(*battle_object).module_accessor);
+    let collision_log = log as *mut CollisionLogScuffed;
+    let collision_kind = (*collision_log).collision_kind as i32;
     let status_kind = StatusModule::status_kind(boma);
-    let opponent_boma = &mut *(sv_battle_object::module_accessor(collision_log.opponent_battle_object_id));
-    let opponent_status_kind = StatusModule::status_kind(opponent_boma);
-    let mut meter_gain = 0.0;
-    let meter = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-    let status_checks = [
-		*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, 
-		*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, 
-		*FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F, 
-		*FIGHTER_RYU_STATUS_KIND_ATTACK_NEAR, *FIGHTER_SIMON_STATUS_KIND_ATTACK_HOLD_START, *FIGHTER_SIMON_STATUS_KIND_ATTACK_HOLD, *FIGHTER_SIMON_STATUS_KIND_ATTACK_LW32, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_FALL, 
-		*FIGHTER_PICKEL_STATUS_KIND_ATTACK_FALL_AERIAL, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_JUMP, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_WAIT, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_WALK, *FIGHTER_PICKEL_STATUS_KIND_ATTACK_LANDING, 
-		*FIGHTER_PICKEL_STATUS_KIND_ATTACK_WALK_BACK, *FIGHTER_RYU_STATUS_KIND_ATTACK_COMMAND1, *FIGHTER_RYU_STATUS_KIND_ATTACK_COMMAND2, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WAIT, 
-		*FIGHTER_TANTAN_STATUS_KIND_ATTACK_WALK, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_RV, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LANDING, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_LADDER, 
-		*FIGHTER_METAKNIGHT_STATUS_KIND_ATTACK_S3, *FIGHTER_METAKNIGHT_STATUS_KIND_ATTACK_LW3
-	];
-	let smashes = [*FIGHTER_STATUS_KIND_ATTACK_S4_START, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4];
-    //Removes critical zoom if meter isn't full
-    if status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_N2
-    && meter != 100.0 {
-        EffectModule::req_on_joint(boma, Hash40::new("sys_hit_normal_l"), Hash40::new("handr"), &Vector3f::zero(), &Vector3f::zero(), 0.8, &Vector3f::zero(), &Vector3f::zero(), false, 0, 0, 0);
-        return 1;
+    let ko_gauge = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+    let star_punch_strength = WorkModule::get_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N && ko_gauge == 100.0 && star_punch_strength == 3 && collision_kind == *COLLISION_KIND_HIT {
+        call_special_zoom(boma, log, *FIGHTER_KIND_LITTLEMAC, hash40("param_special_n"), 1, 0, 0, 0, 0);
     }
-    //Adds a third of the meter if Little Mac lands a counterhit
-    for i in 0..TOTAL_FIGHTER {
-        if COUNTERHIT_CHECK[get_player_number(&mut *get_boma(i))] && get_attacker_number(&mut *get_boma(i)) == get_player_number(boma) && status_checks.contains(&opponent_status_kind) {
-            if smashes.contains(&status_kind) {
-                COUNTERHIT_SUCCESS[get_player_number(boma)] = true;
-            }
-            COUNTERHIT_CHECK[get_player_number(&mut *get_boma(i))] = false;
-            meter_gain = 34.0;
+    original!()(meter, vtable, battle_object, log)
+}
+
+//Little Mac On Search
+#[skyline::hook(offset = LITTLEMAC_VTABLE_ON_SEARCH_OFFSET)]
+unsafe extern "C" fn littlemac_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let collision_log = *(log as *const u64).add(0x10 / 0x8);
+    let collision_log = collision_log as *const CollisionLog;
+    let opponent_boma = &mut *(sv_battle_object::module_accessor((*collision_log).opponent_battle_object_id));
+    let slow_frame = SlowModule::frame(opponent_boma, 0);
+    let status_kind = StatusModule::status_kind(boma);
+    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+        //Adds a third of the meter if Little Mac lands Down Special
+        WorkModule::add_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+        //Slows the opponent down
+        if slow_frame < 20 {
+            SlowModule::set(opponent_boma, 0, 8, 20, false, *BATTLE_OBJECT_ID_INVALID as u32);
         }
     }
-    //Adds a third of the meter if Little Mac lands Down Special
-    if status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_LW_HIT {
-        meter_gain = 34.0;
-    }
-    call_original!(vtable, battle_object, collision_log, meter_gain)
+    original!()(vtable, fighter, log)
 }
 
 //Little Mac On Damage
 #[skyline::hook(offset = LITTLEMAC_VTABLE_ON_DAMAGE_OFFSET)]
 unsafe extern "C" fn littlemac_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    let status_kind = StatusModule::status_kind(boma);
-    if [*FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL].contains(&status_kind) {
-        if !WorkModule::is_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION) {
-            WorkModule::sub_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-            WorkModule::on_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_IS_KO_GAUGE_TUMBLE_REDUCTION);
-        }
+    let log = *(on_damage as *const u64).add(0x10/0x8);
+    let damage = *(log.add(0x4) as *const f32);
+    let ko_gauge = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+    if ko_gauge > 0.0 {
+        WorkModule::add_float(boma, damage, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_STAR_DAMAGE);
+    }
+    //Removes a star for each 40% Little Mac takes
+    if WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_STAR_DAMAGE) >= 40.0 && ko_gauge > 0.0 {
+        WorkModule::sub_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+        WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_STAR_DAMAGE);
     }
     //Allows Little Mac to do Side Special multiple times if he's hit
     if WorkModule::is_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_S) {
@@ -189,12 +159,14 @@ unsafe extern "C" fn littlemac_on_damage(vtable: u64, fighter: &mut Fighter, on_
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0xc45938).nop(); //Removes the vanilla special zoom call on Neutral Special
 	skyline::install_hooks!(
         littlemac_start_initialization,
         littlemac_reset_initialization,
         littlemac_death_initialization,
         littlemac_opff,
         littlemac_on_attack,
+        littlemac_on_search,
         littlemac_on_damage
     );
 }

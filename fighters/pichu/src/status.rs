@@ -146,7 +146,7 @@ unsafe extern "C" fn pichu_throw_end_status(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn pichu_throw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_PICHU_INSTANCE_WORK_ID_FLAG_IS_VALID_NUZZLE);
     JostleModule::set_status(fighter.module_accessor, true);
     fighter.sub_throw_uniq_process_exit();

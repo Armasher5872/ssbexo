@@ -3,7 +3,6 @@ use {
   exo_utils::{
     check_attack::*,
     fighter_common::*,
-    status_end_control::*,
     vector::*,
   },
   exo_var::{

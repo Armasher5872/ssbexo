@@ -2,7 +2,7 @@
 use super::*;
 
 //A variety of extern C functions mainly regarding custom game modes and other offsets in Main
-extern "C" {
+unsafe extern "C" {
     #[link_name = "\u{1}_ZN3app4item12disable_areaEP9lua_Statei"]
     pub fn disable_area(lua_state: u64, area_kind: i32);
 
@@ -77,6 +77,9 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app22kinetic_energy_gravity15set_limit_speedEP9lua_Statef"]
     pub fn kinetic_energy_gravity_set_limit_speed(lua_state: u64, accel: f32);
 
+    #[link_name = "\u{1}_ZN3app24FighterSpecializer_Cloud20display_final_windowEb"]
+	pub fn display_final_window(param_1: bool);
+
     #[link_name = "\u{1}_ZN3app24FighterSpecializer_Luigi14delete_plungerERNS_7FighterEb"]
 	pub fn delete_plunger(fighter: *mut smash::app::Fighter, param: bool) -> u64;
 
@@ -89,11 +92,11 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app25FighterSpecializer_Dedede29end_special_n_shot_object_hitERNS_7FighterE"]
 	pub fn end_special_n_shot_object_hit(fighter: *mut smash::app::Fighter) -> u64;
 
-    #[link_name = "\u{1}_ZN3app24FighterSpecializer_Cloud20display_final_windowEb"]
-	pub fn display_final_window(param_1: bool);
-
     #[link_name = "\u{1}_ZN3app26kinetic_energy_control_rot12set_rotationEP9lua_StateRKN3phx8Vector3fE"]
     pub fn kinetic_energy_control_rot_set_rotation(lua_state: u64, rotation: *const Vector3f);
+
+    #[link_name = "\u{1}_ZN3app27FighterSpecializer_Gekkouga42set_special_s_transition_term_forbid_groupERNS_21FighterModuleAccessorEb"]
+    pub unsafe fn FighterSpecializer_Gekkouga__set_special_s_transition_term_forbid_group(boma: *mut smash::app::FighterModuleAccessor, bool_check: bool);
 
     #[link_name = "\u{1}_ZN3app28FighterInklingLinkEventPaint13new_l2c_tableEv"]
     pub fn FighterInklingLinkEventPaint__new_l2c_table() -> smash::lib::L2CValue;

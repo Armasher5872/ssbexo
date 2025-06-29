@@ -80,7 +80,7 @@ mod music;
 mod parammodule;
 mod status;
 mod ui;
-mod workmodule;
+//mod workmodule;
 
 pub fn install() {
     article::install();
@@ -96,5 +96,5 @@ pub fn install() {
     parammodule::install();
     status::install();
     ui::install();
-    workmodule::install();
+    //workmodule::install();
 }

@@ -64,21 +64,25 @@ unsafe extern "C" fn rosetta_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
             barrel_removal(weapon);
         }
-        if is_slash(obj_boma) {
+        if is_disarming_voice(obj_boma) {
             WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            slash_removal(weapon);
+            disarming_voice_removal(weapon);
         }
         if is_galaxia(obj_boma) {
             WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
             galaxia_beam_removal(weapon);
         }
+        if is_slash(obj_boma) {
+            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
+            slash_removal(weapon);
+        }
         if is_sludge(obj_boma) {
             WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
             sludge_removal(weapon);
         }
-        if is_disarming_voice(obj_boma) {
+        if is_mat(obj_boma) {
             WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            disarming_voice_removal(weapon);
+            mat_removal(weapon);
         }
         let item_id = if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
             WorkModule::get_int64(obj_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32

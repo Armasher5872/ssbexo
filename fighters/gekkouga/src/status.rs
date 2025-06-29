@@ -1,5 +1,29 @@
 use super::*;
 
+unsafe extern "C" fn gekkouga_landing_fall_special_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.026);
+    fighter.sub_landing_fall_special_init(hash40("landing_fall_special").into());
+    0.into()
+}
+
+unsafe extern "C" fn gekkouga_attack_air_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    let table = param_3.get_table() as *mut smash2::lib::L2CTable;
+    let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
+    let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
+    let get_attack_air_kind = ControlModule::get_attack_air_kind(fighter.module_accessor);
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        if collision_kind == *COLLISION_KIND_HIT && collision_kind != *COLLISION_KIND_SHIELD {
+            if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_LW || motion_kind == hash40("attack_air_lw") {
+                let object_id = get_table_value(table, "object_id_").try_integer().unwrap() as u32;
+                let opponent_boma = sv_battle_object::module_accessor(object_id);
+                StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_TREAD_DAMAGE_AIR, false);  
+            }
+        }
+    }
+    0.into()
+}
+
 unsafe extern "C" fn gekkouga_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let chance = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("chance"));
@@ -85,11 +109,6 @@ unsafe extern "C" fn gekkouga_special_s_exec_status(fighter: &mut L2CFighterComm
     let pos_x = PostureModule::pos_y(fighter.module_accessor);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let pos_z = PostureModule::pos_z(fighter.module_accessor);
-    let doll_id = WorkModule::get_int(fighter.module_accessor, 0x100000C2);
-    let doll_boma = sv_battle_object::module_accessor(doll_id as u32);
-    let doll_pos_x = PostureModule::pos_x(doll_boma);
-    let doll_pos_y = PostureModule::pos_y(doll_boma);
-    let doll_pos_z = PostureModule::pos_z(doll_boma);
     WorkModule::inc_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_INT_SPECIAL_S_WARP_COUNT);
     WorkModule::inc_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_INT_WARP_FRAME);
     if chance > warp_count {
@@ -102,24 +121,12 @@ unsafe extern "C" fn gekkouga_special_s_exec_status(fighter: &mut L2CFighterComm
     }
     if warp_frame <= work_warp_frame {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_WARP_GIMMICK) {
-            if sv_battle_object::is_active(doll_id as u32) && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL) {
-                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
-                GroundModule::set_shape_safe_pos(fighter.module_accessor, &Vector2f{x: doll_pos_x, y: doll_pos_y});
-            }
-            else {
-                GroundModule::set_shape_safe_pos(fighter.module_accessor, &Vector2f{x: shadow_x_pos, y: shadow_y_pos});
-            }
+            GroundModule::set_shape_safe_pos(fighter.module_accessor, &Vector2f{x: shadow_x_pos, y: shadow_y_pos});
         }
         else {
             GroundModule::set_shape_safe_pos(fighter.module_accessor, &Vector2f{x: pos_x, y: pos_y+0.1});
         }
-        if sv_battle_object::is_active(doll_id as u32) && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL) {
-            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_FOUND_DOLL);
-            PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: doll_pos_x-(3.0*PostureModule::lr(fighter.module_accessor)), y: doll_pos_y, z: doll_pos_z});
-        }
-        else {
-            PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: shadow_x_pos, y: shadow_y_pos, z: pos_z});
-        }
+        PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: shadow_x_pos, y: shadow_y_pos, z: pos_z});
         if situation_kind != *SITUATION_KIND_GROUND {
             if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_WARP_AIR) {
                 fighter.set_situation(SITUATION_KIND_GROUND.into());
@@ -140,10 +147,9 @@ unsafe extern "C" fn gekkouga_special_s_exec_status(fighter: &mut L2CFighterComm
 unsafe extern "C" fn gekkouga_special_s_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24b1b29e66));
-    fighter.pop_lua_stack(1);
     PostureModule::update_rot_y_lr(fighter.module_accessor);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOLD_FRONT) || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_FIND_ENEMY) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_FRONT) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
@@ -184,7 +190,7 @@ unsafe extern "C" fn gekkouga_special_s_attack_main_status(fighter: &mut L2CFigh
             fighter.set_situation(SITUATION_KIND_AIR.into());
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            SET_SPEED_EX(fighter, 0.0, 5.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+            SET_SPEED_EX(fighter, 0.0, 1.3, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         }
         else {
             fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s_attack_lw"), L2CValue::Hash40s("special_air_s_attack_lw"), false.into());
@@ -304,8 +310,10 @@ unsafe extern "C" fn gekkouga_special_s_end_main_loop(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn gekkouga_special_lw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let status_attr = if situation_kind == *SITUATION_KIND_AIR {*FIGHTER_STATUS_ATTR_START_TURN} else {0};
     StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, status_attr as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
     0.into()
 }
 
@@ -316,26 +324,22 @@ unsafe extern "C" fn gekkouga_special_lw_init_status(fighter: &mut L2CFighterCom
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     }
     else {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
     0.into()
 }
 
 unsafe extern "C" fn gekkouga_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw"), L2CValue::Hash40s("special_air_lw"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(gekkouga_special_lw_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn gekkouga_special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let doll_id = WorkModule::get_int(fighter.module_accessor, 0x100000C2);
-    let doll_boma = sv_battle_object::module_accessor(doll_id as u32);
-    let doll_pos_x = PostureModule::pos_x(doll_boma);
-    let doll_pos_y = PostureModule::pos_y(doll_boma);
-    let doll_pos_z = PostureModule::pos_z(doll_boma);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
@@ -344,42 +348,24 @@ unsafe extern "C" fn gekkouga_special_lw_main_loop(fighter: &mut L2CFighterCommo
     if fighter.sub_air_check_fall_common().get_bool() {
         return 1.into();
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw"), -1.0, 1.0, 0.0, false, false);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw"), -1.0, 1.0, 0.0, false, false);
-    }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LINK) {
-        LinkModule::remove_model_constraint(doll_boma, true);
-        if LinkModule::is_link(doll_boma, *ITEM_LINK_NO_HAVE) {
-            LinkModule::unlink(doll_boma, *ITEM_LINK_NO_HAVE);
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         }
-        if !LinkModule::is_link(doll_boma, *ITEM_LINK_NO_HAVE) {
-            VisibilityModule::set_whole(doll_boma, true);
-            LinkModule::link(doll_boma, *ITEM_LINK_NO_HAVE, (*(fighter.module_accessor)).battle_object_id);
-            LinkModule::set_model_constraint_pos_ort(doll_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("haver"), *CONSTRAINT_FLAG_ORIENTATION as u32 | *CONSTRAINT_FLAG_POSITION as u32 | *CONSTRAINT_FLAG_OFFSET_TRANSLATE as u32, true);
-            LinkModule::set_constraint_translate_offset(doll_boma, &Vector3f::zero());
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
     }
-    else {
-        LinkModule::remove_model_constraint(doll_boma, true);
-        if LinkModule::is_link(doll_boma, *ITEM_LINK_NO_HAVE) {
-            LinkModule::unlink(doll_boma, *ITEM_LINK_NO_HAVE);
+    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+        if frame >= 40.0 {
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
-        HitModule::set_whole(doll_boma, HitStatus(*HIT_STATUS_NORMAL), 0);
-    }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH) {
-        PostureModule::set_pos(doll_boma, &Vector3f{x: doll_pos_x, y: doll_pos_y+3.0, z: doll_pos_z});
-        KineticModule::change_kinetic(doll_boma, *ITEM_KINETIC_TYPE_NORMAL);
-        KineticModule::add_speed(doll_boma, &Vector3f{x: 1.5*PostureModule::lr(fighter.module_accessor), y: 1.5, z: 0.0});
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_DOLL_LAUNCH);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -398,30 +384,110 @@ unsafe extern "C" fn gekkouga_special_lw_exec_status(_fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn gekkouga_special_lw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let doll_id = WorkModule::get_int(fighter.module_accessor, 0x100000C2);
-    let doll_boma = sv_battle_object::module_accessor(doll_id as u32);
-    LinkModule::remove_model_constraint(doll_boma, true);
-    if LinkModule::is_link(doll_boma, *ITEM_LINK_NO_HAVE) {
-        LinkModule::unlink(doll_boma, *ITEM_LINK_NO_HAVE);
+    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
+        let article_boma = get_article_boma(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
+        let article_motion_kind = MotionModule::motion_kind(article_boma);
+        if article_motion_kind == hash40("special_lw") {
+            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        }
     }
-    HitModule::set_whole(doll_boma, HitStatus(*HIT_STATUS_NORMAL), 0);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
     0.into()
 }
 
 unsafe extern "C" fn gekkouga_special_lw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let doll_id = WorkModule::get_int(fighter.module_accessor, 0x100000C2);
-    let doll_boma = sv_battle_object::module_accessor(doll_id as u32);
-    LinkModule::remove_model_constraint(doll_boma, true);
-    if LinkModule::is_link(doll_boma, *ITEM_LINK_NO_HAVE) {
-        LinkModule::unlink(doll_boma, *ITEM_LINK_NO_HAVE);
+    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
+        let article_boma = get_article_boma(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
+        let article_motion_kind = MotionModule::motion_kind(article_boma);
+        if article_motion_kind == hash40("special_lw") {
+            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        }
     }
-    HitModule::set_whole(doll_boma, HitStatus(*HIT_STATUS_NORMAL), 0);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
+    0.into()
+}
+
+unsafe extern "C" fn gekkouga_mat_fall_pre_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    StatusModule::init_settings(weapon.module_accessor, SituationKind(*SITUATION_KIND_NONE), *WEAPON_KINETIC_TYPE_NONE, *GROUND_CORRECT_KIND_NONE as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
+    0.into()
+}
+
+unsafe extern "C" fn gekkouga_mat_fall_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let owner_boma = get_owner_boma(weapon);
+    let owner_situation_kind = StatusModule::situation_kind(owner_boma);
+    if !StatusModule::is_changing(owner_boma) || !StatusModule::is_situation_changed(owner_boma) {
+        if owner_situation_kind == *SITUATION_KIND_AIR {
+            GroundModule::correct(weapon.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            weapon.set_situation(SITUATION_KIND_AIR.into());
+        }
+        else {
+            GroundModule::correct(weapon.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            weapon.set_situation(SITUATION_KIND_GROUND.into());
+        }
+    }
+    WorkModule::set_int(weapon.module_accessor, 45, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+    WorkModule::set_int(weapon.module_accessor, 45, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    0.into()
+}
+
+unsafe extern "C" fn gekkouga_mat_fall_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
+    if situation_kind == *SITUATION_KIND_AIR {
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_air_lw_start"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    weapon.fastshift(L2CValue::Ptr(gekkouga_mat_fall_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn gekkouga_mat_fall_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let frame = weapon.global_table[CURRENT_FRAME].get_f32();
+    let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
+    let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
+    let motion_kind = MotionModule::motion_kind(weapon.module_accessor);
+    let owner_boma = get_owner_boma(weapon);
+    let owner_status_kind = StatusModule::status_kind(owner_boma);
+    let owner_frame = MotionModule::frame(owner_boma);
+    if should_remove_projectile(weapon) 
+    || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR) {
+        mat_removal(weapon);
+    }
+    if motion_kind == hash40("special_air_lw_start") && frame == 28.0 {
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_air_lw"), 0.0, 1.0, false, 0.0, false, false);
+        KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
+        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
+        sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
+        sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
+    }
+    if [hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind) {
+        if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if owner_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                if owner_frame >= 40.0 {
+                    CancelModule::enable_cancel(owner_boma);
+                }
+            }
+        }
+    }
+    0.into()
+}
+
+unsafe extern "C" fn gekkouga_mat_fall_exec_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    if !StopModule::is_stop(weapon.module_accessor) {
+        WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    }
+    0.into()
+}
+
+unsafe extern "C" fn gekkouga_mat_fall_end_status(_weapon: &mut L2CWeaponCommon) -> L2CValue {
     0.into()
 }
 
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .status(Init, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, gekkouga_landing_fall_special_init_status)
+    .status(CheckAttack, *FIGHTER_STATUS_KIND_ATTACK_AIR, gekkouga_attack_air_check_attack_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, gekkouga_special_s_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_S, gekkouga_special_s_exec_status)
     .status(Main, *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_S_ATTACK, gekkouga_special_s_attack_main_status)
@@ -432,6 +498,15 @@ pub fn install() {
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_LW, gekkouga_special_lw_exec_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_LW, gekkouga_special_lw_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_LW, gekkouga_special_lw_exit_status)
+    .install()
+    ;
+    Agent::new("gekkouga_mat")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .status(Pre, *WEAPON_GEKKOUGA_MAT_STATUS_KIND_FALL, gekkouga_mat_fall_pre_status)
+    .status(Init, *WEAPON_GEKKOUGA_MAT_STATUS_KIND_FALL, gekkouga_mat_fall_init_status)
+    .status(Main, *WEAPON_GEKKOUGA_MAT_STATUS_KIND_FALL, gekkouga_mat_fall_main_status)
+    .status(Exec, *WEAPON_GEKKOUGA_MAT_STATUS_KIND_FALL, gekkouga_mat_fall_exec_status)
+    .status(End, *WEAPON_GEKKOUGA_MAT_STATUS_KIND_FALL, gekkouga_mat_fall_end_status)
     .install()
     ;
 }
