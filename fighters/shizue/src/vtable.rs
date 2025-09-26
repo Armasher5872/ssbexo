@@ -2,8 +2,8 @@ use super::*;
 
 const SHIZUE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xdba810; //Shared
 const SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
-const SHIZUE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xdbad80; //Shared
-const SHIZUE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xdbb940; //Shared
+const SHIZUE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x114c130; //Isabelle Only
+const SHIZUE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x114c210; //Isabelle Only
 
 unsafe extern "C" fn shizue_var(boma: &mut BattleObjectModuleAccessor) {
     let team_no = TeamModule::team_no(boma) as i32;
@@ -44,11 +44,9 @@ unsafe extern "C" fn shizue_reset_initialization(vtable: u64, fighter: &mut Figh
 //Isabelle Death Initialization
 #[skyline::hook(offset = SHIZUE_VTABLE_DEATH_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn shizue_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_SHIZUE as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_death_variable_reset(&mut *boma);
-        shizue_var(&mut *boma);
-    }
+    let boma = fighter.battle_object.module_accessor;
+    common_death_variable_reset(&mut *boma);
+    shizue_var(&mut *boma);
     original!()(vtable, fighter)
 }
 

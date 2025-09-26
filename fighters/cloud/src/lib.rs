@@ -3,6 +3,7 @@ use {
     cloud::*,
     collision_struct::*,
     fighter_common::*,
+    hook::*,
     shielddata_struct::*,
     status_end_control::*,
     ui_manager::*,
@@ -14,6 +15,7 @@ use {
     consts::*,
     globals::*,
   },
+  param_config::*,
   smash::{
     app::{
       lua_bind::*,
@@ -29,7 +31,9 @@ use {
       Hash40,
       Vector3f
     }
-  }
+  },
+  smash_script::macros::*,
+  std::ops::Add
 };
 
 mod acmd;

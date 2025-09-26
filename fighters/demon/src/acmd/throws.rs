@@ -8,7 +8,7 @@ unsafe extern "C" fn ssbexo_demon_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);
@@ -49,7 +49,7 @@ unsafe extern "C" fn ssbexo_demon_dash_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.6, 5.0, Some(0.0), Some(6.6), Some(10.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.6, 5.0, Some(0.0), Some(6.6), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);
@@ -68,7 +68,7 @@ unsafe extern "C" fn ssbexo_demon_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -5.0, Some(0.0), Some(6.6), Some(-12.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -5.0, Some(0.0), Some(6.6), Some(-13.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);

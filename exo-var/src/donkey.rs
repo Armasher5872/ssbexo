@@ -1,6 +1,7 @@
 use super::*;
 
 pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL: LuaConst = LuaConst::new(0x1);
+pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON: LuaConst = LuaConst::new(0x2);
 pub const FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_ACTIVE: LuaConst = LuaConst::new(0x200000E3);
 pub const FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED: LuaConst = LuaConst::new(0x200000E4);
 pub const FIGHTER_DONKEY_STATUS_KIND_AIR_LASSO_LANDING: LuaConst = LuaConst::new(0x203);

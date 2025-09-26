@@ -635,7 +635,7 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_effect(agent: &mut L2C
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
     .game_acmd("game_specialn", ssbexo_armstrong_neutral_special_acmd, Low)
     .effect_acmd("effect_specialn", ssbexo_armstrong_neutral_special_effect, Low)
     .sound_acmd("sound_specialn", ssbexo_armstrong_neutral_special_sound, Low)

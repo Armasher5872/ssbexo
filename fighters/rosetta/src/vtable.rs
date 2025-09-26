@@ -68,6 +68,10 @@ unsafe extern "C" fn rosetta_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
             disarming_voice_removal(weapon);
         }
+        if is_volley(obj_boma) {
+            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
+            volley_removal(weapon);
+        }
         if is_galaxia(obj_boma) {
             WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
             galaxia_beam_removal(weapon);

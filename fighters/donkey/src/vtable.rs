@@ -94,7 +94,7 @@ unsafe extern "C" fn donkey_opff(vtable: u64, fighter: &mut Fighter) {
             *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_WAIT, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_WALK, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_TURN, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_JUMP_SQUAT, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_JUMP_SQUAT_B, 
             *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_JUMP, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_FALL, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_LANDING, *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_PASS
         ].contains(&status_kind) {
-            if WorkModule::is_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED) {
+            if WorkModule::is_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED) || LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE) == *BATTLE_OBJECT_ID_INVALID as u64 {
                 if stick_x >= 0.4 {
                     StatusModule::change_status_force(boma, *FIGHTER_DONKEY_STATUS_KIND_THROW_F_F, false);
                 }

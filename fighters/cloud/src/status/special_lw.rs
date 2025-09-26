@@ -33,10 +33,6 @@ unsafe extern "C" fn cloud_special_lw_main_status(fighter: &mut L2CFighterCommon
 unsafe extern "C" fn cloud_special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let lr_1on1 = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SPECIAL_COMMAND_USER_INSTANCE_WORK_ID_FLOAT_OPPONENT_LR_1ON1);
-    let lw2_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("lw2_accel_y"));
-    let lw2_speed_max_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_lw"), hash40("lw2_speed_max_y"));
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -45,59 +41,27 @@ unsafe extern "C" fn cloud_special_lw_main_loop(fighter: &mut L2CFighterCommon) 
         }
     }
     if !StatusModule::is_changing(fighter.module_accessor) {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK) {
-            if situation_kind == *SITUATION_KIND_GROUND
-            && prev_situation_kind == *SITUATION_KIND_AIR {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw"), -1.0, 1.0, 0.0, false, false);
+                fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
             }
-            if situation_kind == *SITUATION_KIND_AIR
-            && prev_situation_kind == *SITUATION_KIND_GROUND {
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-                sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -lw2_accel_y);
-                sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, lw2_speed_max_y);
-                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw"), -1.0, 1.0, 0.0, false, false);
+            else {
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_start"), -1.0, 1.0, 0.0, false, false);
             }
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
         }
-        else {
-            if situation_kind == *SITUATION_KIND_GROUND
-            && prev_situation_kind == *SITUATION_KIND_AIR {
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-                    fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
-                }
-                else {
-                    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER) {
-                        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("punish_counter_attack"), -1.0, 1.0, 0.0, false, false);
-                    }
-                    else {
-                        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_start"), -1.0, 1.0, 0.0, false, false);
-                    }
-                }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("punish_special_air_lw"), -1.0, 1.0, 0.0, false, false);
             }
-            if situation_kind == *SITUATION_KIND_AIR
-            && prev_situation_kind == *SITUATION_KIND_GROUND {
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("punish_special_air_lw"), -1.0, 1.0, 0.0, false, false);
-                }
-                else {
-                    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER) {
-                        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -lw2_accel_y);
-                        sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, lw2_speed_max_y);
-                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("punish_aerial_counter_attack"), -1.0, 1.0, 0.0, false, false);
-                    }
-                    else {
-                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_start"), -1.0, 1.0, 0.0, false, false);
-                    }
-                }
+            else {
+               MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_start"), -1.0, 1.0, 0.0, false, false);
             }
         }
     }
@@ -105,29 +69,7 @@ unsafe extern "C" fn cloud_special_lw_main_loop(fighter: &mut L2CFighterCommon) 
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
-        if situation_kind == *SITUATION_KIND_GROUND {
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw"), 0.0, 1.0, false, 0.0, false, false);
-        }
-        else {
-            sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -lw2_accel_y);
-            sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, lw2_speed_max_y);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw"), 0.0, 1.0, false, 0.0, false, false);
-        }
-    }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER) && ![hash40("punish_counter_attack"), hash40("punish_aerial_counter_attack")].contains(&motion_kind) {
-        if lr_1on1 != 0.0 {
-            PostureModule::reverse_lr(fighter.module_accessor);
-            PostureModule::update_rot_y_lr(fighter.module_accessor);
-        }
-        if situation_kind == *SITUATION_KIND_GROUND {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("punish_counter_attack"), 0.0, 1.0, false, 0.0, false, false);
-        }
-        else {
-            sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -lw2_accel_y);
-            sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, lw2_speed_max_y);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("punish_aerial_counter_attack"), 0.0, 1.0, false, 0.0, false, false);
-        }
+        fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_LW_LIMIT_BREAK.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -141,22 +83,21 @@ unsafe extern "C" fn cloud_special_lw_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn cloud_special_lw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let limit_level = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
-    if limit_level >= 3 && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
-        WorkModule::set_int(fighter.module_accessor, limit_level-3, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if status_kind != *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_LW_LIMIT_BREAK {
+        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
+        }
+        else {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
+        }
     }
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
-    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
-    }
-    else {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
-    }
-    WorkModule::set_float(fighter.module_accessor, 0.73, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
+    0.into()
+}
+
+unsafe extern "C" fn cloud_special_lw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
     0.into()
 }
 
@@ -166,6 +107,7 @@ pub fn install() {
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, cloud_special_lw_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, cloud_special_lw_main_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_LW, cloud_special_lw_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_LW, cloud_special_lw_exit_status)
     .install()
     ;
 }

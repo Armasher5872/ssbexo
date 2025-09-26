@@ -23,7 +23,10 @@ use {
             Vector3f
         }
     },
-    smash_script::*,
+    smash_script::{
+        macros::*,
+        *
+    },
 };
 
 mod dead;

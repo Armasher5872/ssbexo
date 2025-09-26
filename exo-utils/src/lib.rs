@@ -2,13 +2,14 @@
 use {
     bitflags::bitflags,
     crate::{
+        armstrong::*,
         battle_object::*,
         cloud_meter::*,
-        common_ui_enable_disable::*,
         create_item_param::*,
         donkey::*,
         extern_func::*,
         fighter_common::*,
+        ganon::*,
         gekkouga::*,
         hook::*,
         ice_climber_meter::*,
@@ -22,7 +23,6 @@ use {
         rect::*,
         robot_meter::*,
         shielddata_struct::*,
-        ui_manager::*,
         ui_object::*,
         ui_utility::*,
         vector::*,
@@ -32,6 +32,7 @@ use {
         cloud::*,
         consts::*,
         donkey::*,
+        ganon::*,
         globals::*,
         kirby::*,
         link::*,
@@ -67,28 +68,31 @@ use {
         macros::*
     },
     std::{
+        ffi::c_uint,
         os::raw::c_char,
         ops::{
             Deref,
             DerefMut
-        }
+        },
+        path::Path
     }
 };
 
 //A majority of the code found in these files originated from HDR, WuBor Patch, or Championship Edition
+pub mod armstrong;
 pub mod attack_dash;
 pub mod attack_xx4;
 pub mod attack;
 pub mod attackinfo_struct;
 pub mod battle_object;
 pub mod buttons;
+pub mod cancel;
 pub mod catch;
 pub mod check_attack;
 pub mod cloud_meter;
 pub mod cloud;
 pub mod collision_struct;
 pub mod command_input;
-pub mod common_ui_enable_disable;
 pub mod create_item_param;
 pub mod daisy;
 pub mod damage;
@@ -96,12 +100,14 @@ pub mod donkey;
 pub mod extern_func;
 pub mod fighter_common;
 pub mod flydata;
+pub mod ganon;
 pub mod gekkouga;
 pub mod hook;
 pub mod ice_climber_meter;
 pub mod ike;
 pub mod inkling;
 pub mod kinetic_energy;
+pub mod kirby;
 pub mod knockback;
 pub mod link;
 pub mod littlemac;

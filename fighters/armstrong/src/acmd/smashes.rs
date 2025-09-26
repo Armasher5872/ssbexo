@@ -184,7 +184,7 @@ unsafe extern "C" fn ssbexo_armstrong_down_smash_sound(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
     .effect_acmd("effect_attacks4charge", ssbexo_armstrong_forward_smash_charge_effect, Low)
     .game_acmd("game_attacks4", ssbexo_armstrong_forward_smash_acmd, Low)
     .effect_acmd("effect_attacks4", ssbexo_armstrong_forward_smash_effect, Low)

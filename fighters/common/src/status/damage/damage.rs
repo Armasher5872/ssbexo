@@ -117,9 +117,9 @@ unsafe fn status_end_damage(fighter: &mut L2CFighterCommon) -> L2CValue {
 //Related to the updated finishing zoom function
 #[skyline::hook(offset = 0x402f00, inline)]
 unsafe extern "C" fn calculate_knockback(ctx: &InlineCtx) {
-    let damage_module = *ctx.registers[19].x.as_ref();
+    let damage_module = ctx.registers[19].x();
     let our_boma = *((damage_module + 0x8) as *mut *mut smash::app::BattleObjectModuleAccessor);
-    let ptr = *ctx.registers[20].x.as_ref() as *mut u8;
+    let ptr = ctx.registers[20].x() as *mut u8;
     let id = *(ptr.add(0x24) as *const u32);
     IS_CALCULATING = Some(((*our_boma).battle_object_id, id));
 }
@@ -127,9 +127,9 @@ unsafe extern "C" fn calculate_knockback(ctx: &InlineCtx) {
 #[skyline::hook(offset = 0x403950, inline)]
 unsafe extern "C" fn process_knockback(ctx: &InlineCtx) {
     if let Some((defender, attacker)) = IS_CALCULATING {
-        let boma = *ctx.registers[20].x.as_ref() as *mut smash::app::BattleObjectModuleAccessor;
+        let boma = ctx.registers[20].x() as *mut smash::app::BattleObjectModuleAccessor;
         if (*boma).battle_object_id == defender {
-            calculate_finishing_hit(defender, attacker, *ctx.registers[19].x.as_ref() as *const f32);
+            calculate_finishing_hit(defender, attacker, ctx.registers[19].x() as *const f32);
         }
     }
 }

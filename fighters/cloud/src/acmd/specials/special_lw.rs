@@ -2,7 +2,7 @@ use super::*;
 
 //Operator Down Special ACMD
 unsafe extern "C" fn ssbexo_cloud_operator_down_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
+    frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
         ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_CLOUD_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     }
@@ -15,7 +15,7 @@ unsafe extern "C" fn ssbexo_cloud_operator_down_special_acmd(agent: &mut L2CAgen
 //Grounded Operator Down Special Effect
 unsafe extern "C" fn ssbexo_cloud_grounded_operator_down_special_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_muzzleflash"), Hash40::new("waist"), 0, 0, 0, 0, 0, 90, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_muzzleflash"), Hash40::new("waist"), 0, 0, 0, 90, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
     frame(agent.lua_state_agent, 25.0);
     if is_excute(agent) {
@@ -31,7 +31,7 @@ unsafe extern "C" fn ssbexo_cloud_grounded_operator_down_special_effect(agent: &
 //Aerial Operator Down Special Effect
 unsafe extern "C" fn ssbexo_cloud_aerial_operator_down_special_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_muzzleflash"), Hash40::new("waist"), 0, 0, 0, 0, 0, 90, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_muzzleflash"), Hash40::new("waist"), 0, 0, 0, 90, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
     frame(agent.lua_state_agent, 25.0);
     if is_excute(agent) {

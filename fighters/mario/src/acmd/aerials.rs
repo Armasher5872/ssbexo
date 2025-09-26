@@ -37,7 +37,7 @@ unsafe extern "C" fn ssbexo_mario_nair_acmd(agent: &mut L2CAgentBase) {
 
 //Nair Effect
 unsafe extern "C" fn ssbexo_mario_nair_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), -1, 8.5, 4.5, 0, -25, 80, 0.85, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 0.5);

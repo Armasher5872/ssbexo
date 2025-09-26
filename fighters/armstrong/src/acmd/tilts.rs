@@ -237,7 +237,7 @@ unsafe extern "C" fn ssbexo_armstrong_down_tilt_effect(agent: &mut L2CAgentBase)
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
     .game_acmd("game_attacks3", ssbexo_armstrong_forward_tilt_acmd, Low)
     .game_acmd("game_attacks3hi", ssbexo_armstrong_forward_tilt_acmd, Low)
     .game_acmd("game_attacks3lw", ssbexo_armstrong_forward_tilt_acmd, Low)

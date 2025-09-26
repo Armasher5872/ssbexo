@@ -60,6 +60,7 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
     call_original!(vtable, fighter, log)
 }
 
+//Kazuya Link Event
 #[skyline::hook(offset = DEMON_VTABLE_LINK_EVENT_OFFSET)]
 unsafe extern "C" fn demon_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
     let boma = fighter.battle_object.module_accessor;

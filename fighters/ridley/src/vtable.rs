@@ -67,7 +67,7 @@ unsafe extern "C" fn ridley_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     }
     if POGO_OPPONENT_BOUNCE[entry_id] {
         let velocity_x = lr*KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        macros::SET_SPEED_EX(agent, velocity_x*0.5, 1.8, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        SET_SPEED_EX(agent, velocity_x*0.5, 1.8, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         POGO_OPPONENT_BOUNCE[entry_id] = false;
     }
     if POGO_GROUND_BOUNCE[entry_id] {
@@ -98,7 +98,7 @@ unsafe extern "C" fn ridley_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             velocity_y = bounce_vel_min;
         }
         let velocity_x = PostureModule::lr(boma) * KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        macros::SET_SPEED_EX(agent, velocity_x*0.5, velocity_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        SET_SPEED_EX(agent, velocity_x*0.5, velocity_y, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         POGO_GROUND_BOUNCE[entry_id] = false;
     }
     original!()(vtable, fighter)

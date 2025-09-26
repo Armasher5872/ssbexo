@@ -13,6 +13,8 @@ unsafe extern "C" fn bayonetta_attack_air_f_dash_init_status(fighter: &mut L2CFi
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
         fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_DASH.into(), false.into());
     }
     0.into()
@@ -83,12 +85,15 @@ unsafe extern "C" fn bayonetta_attack_air_f_smash_init_status(fighter: &mut L2CF
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
         fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_S4.into(), false.into());
     }
     0.into()
 }
 
 unsafe extern "C" fn bayonetta_attack_air_f_smash_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("butterflywing") as i64, hash40("butterflywing_hide") as i64);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f_smash"), 0.0, 1.0, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(bayonetta_attack_air_f_smash_main_loop as *const () as _))
 }
@@ -132,11 +137,13 @@ unsafe extern "C" fn bayonetta_attack_air_f_smash_exec_status(_fighter: &mut L2C
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_smash_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_f_smash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x25fd66ecef), 30, 0, 1);
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_f_smash_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_f_smash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x25fd66ecef), 30, 0, 1);
     0.into()
 }
 
@@ -153,12 +160,15 @@ unsafe extern "C" fn bayonetta_attack_air_hi_smash_init_status(fighter: &mut L2C
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
         fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI4.into(), false.into());
     }
     0.into()
 }
 
 unsafe extern "C" fn bayonetta_attack_air_hi_smash_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("butterflywing") as i64, hash40("butterflywing_hide") as i64);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f_hi_smash"), 0.0, 1.0, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(bayonetta_attack_air_hi_smash_main_loop as *const () as _))
 }
@@ -202,11 +212,13 @@ unsafe extern "C" fn bayonetta_attack_air_hi_smash_exec_status(_fighter: &mut L2
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_hi_smash_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_hi_smash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x25fd66ecef), 30, 0, 1);
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_hi_smash_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_hi_smash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x25fd66ecef), 30, 0, 1);
     0.into()
 }
 
@@ -223,12 +235,15 @@ unsafe extern "C" fn bayonetta_attack_air_lw_smash_init_status(fighter: &mut L2C
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_GROUND, 0.0, 0.0, 0.0, 0.0, 0.0);
         fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4.into(), false.into());
     }
     0.into()
 }
 
 unsafe extern "C" fn bayonetta_attack_air_lw_smash_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("butterflywing") as i64, hash40("butterflywing_hide") as i64);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_f_lw_smash"), 0.0, 1.0, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(bayonetta_attack_air_lw_smash_main_loop as *const () as _))
 }
@@ -272,11 +287,13 @@ unsafe extern "C" fn bayonetta_attack_air_lw_smash_exec_status(_fighter: &mut L2
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_lw_smash_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_lw_smash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x25fd66ecef), 30, 0, 1);
     0.into()
 }
 
-unsafe extern "C" fn bayonetta_attack_air_lw_smash_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn bayonetta_attack_air_lw_smash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x25fd66ecef), 30, 0, 1);
     0.into()
 }
 

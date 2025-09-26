@@ -2,7 +2,7 @@
 use super::*;
 
 //A variety of extern C functions mainly regarding custom game modes and other offsets in Main
-unsafe extern "C" {
+extern "C" {
     #[link_name = "\u{1}_ZN3app4item12disable_areaEP9lua_Statei"]
     pub fn disable_area(lua_state: u64, area_kind: i32);
 
@@ -23,6 +23,9 @@ unsafe extern "C" {
     #[link_name = "\u{1}_ZN3app8lua_bind39ArticleModule__get_article_from_no_implEPNS_26BattleObjectModuleAccessorEii"]
     pub fn get_article_from_no(boma: *mut smash::app::BattleObjectModuleAccessor, article_kind: i32, article_id: i32) -> *mut smash::app::Article;
 
+    #[link_name = "\u{1}_ZN3app8lua_bind53FighterControlModuleImpl__set_command_life_count_implEPNS_26BattleObjectModuleAccessorEiih"]
+    pub fn set_command_life_count(boma: *mut smash::app::BattleObjectModuleAccessor, command_category: i32, command_pad: i32, life: u32);
+
     #[link_name = "\u{1}_ZN3app9holywater35HOLYWATER_FIRE_PILLAR_GRAVITY_ACCELENS_11FighterKindE"]
     pub fn fire_pillar_gravity_accel(kind: FighterKind) -> f32;
 
@@ -37,6 +40,9 @@ unsafe extern "C" {
 
     #[link_name = "\u{1}_ZN3app11FighterUtil33get_ground_correct_kind_air_transERNS_26BattleObjectModuleAccessorEi"]
     pub fn get_ground_correct_kind_air_trans(boma: &mut smash::app::BattleObjectModuleAccessor, something: i32) -> i32;
+
+    #[link_name = "\u{1}_ZN3app16kiiladarzmanager15set_visible_hudEb"]
+    pub fn set_vis_hud(param_1: bool);
 
     #[link_name = "\u{1}_ZN3app17sv_camera_manager10dead_rangeEP9lua_State"]
 	pub fn dead_range(lua_state: u64) -> Vector4f;
@@ -96,7 +102,7 @@ unsafe extern "C" {
     pub fn kinetic_energy_control_rot_set_rotation(lua_state: u64, rotation: *const Vector3f);
 
     #[link_name = "\u{1}_ZN3app27FighterSpecializer_Gekkouga42set_special_s_transition_term_forbid_groupERNS_21FighterModuleAccessorEb"]
-    pub unsafe fn FighterSpecializer_Gekkouga__set_special_s_transition_term_forbid_group(boma: *mut smash::app::FighterModuleAccessor, bool_check: bool);
+    pub fn FighterSpecializer_Gekkouga__set_special_s_transition_term_forbid_group(boma: *mut smash::app::FighterModuleAccessor, bool_check: bool);
 
     #[link_name = "\u{1}_ZN3app28FighterInklingLinkEventPaint13new_l2c_tableEv"]
     pub fn FighterInklingLinkEventPaint__new_l2c_table() -> smash::lib::L2CValue;
@@ -107,7 +113,6 @@ unsafe extern "C" {
     pub fn change_version_string(arg: u64, string: *const c_char);
 }
 
-/*
 pub fn is_on_ryujinx() -> bool {
     unsafe {
         //Ryujinx skip based on text addr
@@ -122,4 +127,3 @@ pub fn is_on_ryujinx() -> bool {
         }
     }
 }
-*/

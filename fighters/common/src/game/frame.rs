@@ -11,6 +11,7 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 	let mashing = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
 	let final_zoom_attacker_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
 	let final_zoom_defender_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
+	//Zair Platform Falling
 	if status_kind == *FIGHTER_STATUS_KIND_AIR_LASSO && prev_status_kind == *FIGHTER_STATUS_KIND_PASS && !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
         GroundModule::set_passable_check(boma, true);
     }
@@ -45,7 +46,7 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 				if counter == 80 {
 					if WorkModule::is_flag(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
 						set_stage_visibility(attacker_boma, 1);
-						UiManager::set_ui_state(0, true);
+						set_vis_hud(true);
 					}
 				}
 				if counter <= 40 {

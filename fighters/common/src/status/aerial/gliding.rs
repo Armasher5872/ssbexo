@@ -138,6 +138,7 @@ unsafe extern "C" fn status_glide_exec(fighter: &mut L2CFighterCommon) -> L2CVal
     let radial_stick_sensitivity = WorkModule::get_param_float(fighter.module_accessor, hash40("param_glide"), hash40("radial_stick_sensitivity"));
     let angle_speed_max = WorkModule::get_param_float(fighter.module_accessor, hash40("param_glide"), hash40("angle_speed_max"));
     let angle_speed_stick_add = WorkModule::get_param_float(fighter.module_accessor, hash40("param_glide"), hash40("angle_speed_stick_add"));
+    let glide_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
     if stick_magnitude <= radial_stick_sensitivity {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_GLIDE_FLAG_STOP) {
             if angle_speed < 0.0 {
@@ -226,7 +227,7 @@ unsafe extern "C" fn status_glide_exec(fighter: &mut L2CFighterCommon) -> L2CVal
             angled.y *= ratio;
         }
         let end_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("param_glide"), hash40("end_speed"));
-        if speed < end_speed || power <= 0.0 {
+        if speed < end_speed || power <= 0.0 || glide_timer > 300 {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_GLIDE_FLAG_STOP);
             WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_STATUS_GLIDE_WORK_FLOAT_ANGLE_SPEED);
         }
@@ -253,6 +254,9 @@ unsafe extern "C" fn status_glide_exec(fighter: &mut L2CFighterCommon) -> L2CVal
                 WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_GLIDE_FLAG_STOP);
             }
         }
+    }
+    if glide_timer < 300 {
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
     }
     MotionModule::set_frame(fighter.module_accessor, 90.0 - angle, false);
     WorkModule::set_float(fighter.module_accessor, angle, *FIGHTER_STATUS_GLIDE_WORK_FLOAT_ANGLE);

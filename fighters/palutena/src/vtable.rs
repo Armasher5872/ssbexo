@@ -9,6 +9,7 @@ unsafe extern "C" fn palutena_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT);
     WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT);
     WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_JUMP_GLIDE_ACTIVE);
+    WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
     WorkModule::set_float(boma, 100.0, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_METER_TIMER);
     WorkModule::set_float(boma, 100.0, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_BURNOUT_METER_TIMER);
     WorkModule::set_int(boma, 0, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_TIMER);
@@ -48,6 +49,23 @@ unsafe extern "C" fn palutena_reset_initialization(vtable: u64, fighter: &mut Fi
         let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
         common_reset_variable_reset(&mut *boma);
         palutena_var(&mut *boma);
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("walk_speed_max"), 0, 1.271));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dash_speed"), 0, 1.768));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_mul"), 0, 0.12991));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_add"), 0, 0.044));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 2.077));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.67));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 2.077));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_y"), 0, 35.0));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("mini_jump_y"), 0, 17.3));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_aerial_y"), 0, 35.9));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_mul"), 0, 0.105));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_add"), 0, 0.01));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.0));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.55));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("damage_fly_top_speed_y_stable"), 0, 1.55));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dive_speed_y"), 0, 2.48));
+        update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("weight"), 0, 91.0));
         UiManager::set_palutena_meter_info(entry_id, 100.0, 100.0, 50.0);
     }
     original!()(vtable, fighter)
@@ -76,7 +94,7 @@ unsafe extern "C" fn palutena_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let lightweight_meter_timer = WorkModule::get_float(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_METER_TIMER);
     let lightweight_burnout_meter_timer = WorkModule::get_float(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_BURNOUT_METER_TIMER);
     if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-        WorkModule::set_int(boma, 720, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_BURNOUT_TIMER);
+        WorkModule::set_int(boma, 1080, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_BURNOUT_TIMER);
         //Timer
         if lightweight_timer > 0 {
             WorkModule::dec_int(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_TIMER);
@@ -87,6 +105,7 @@ unsafe extern "C" fn palutena_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         }
         else {
             WorkModule::on_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT);
+            WorkModule::on_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
         }
         //Effects
         WorkModule::inc_int(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_EFFECT_TIMER);
@@ -100,8 +119,30 @@ unsafe extern "C" fn palutena_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_speed_up"), false, false);
             EffectModule::req_follow(boma, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
         }
+        //UI
         UiManager::change_palutena_meter_color_green(entry_id);
         UiManager::set_palutena_meter_info(entry_id, lightweight_meter_timer, 100.0, 50.0);
+        //Param Changes
+        if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE) && lightweight_timer > 0 {
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("walk_speed_max"), 0, 1.9065));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dash_speed"), 0, 3.0525));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_mul"), 0, 0.168883));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_add"), 0, 0.0572));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 3.1155));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.709));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 3.1155));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_y"), 0, 44.875));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("mini_jump_y"), 0, 21.625));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_aerial_y"), 0, 44.875));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_mul"), 0, 0.1365));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_add"), 0, 0.013));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.7));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.24));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("damage_fly_top_speed_y_stable"), 0, 1.24));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dive_speed_y"), 0, 3.72));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("weight"), 0, 50.0));
+            WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
+        }
     }
     if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
         WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT);
@@ -109,7 +150,7 @@ unsafe extern "C" fn palutena_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         //Timer
         if lightweight_burnout_timer > 0 {
             WorkModule::dec_int(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_BURNOUT_TIMER);
-            WorkModule::sub_float(boma, 0.138, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_BURNOUT_METER_TIMER);
+            WorkModule::sub_float(boma, 0.09259, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_BURNOUT_METER_TIMER);
             if lightweight_burnout_timer <= 10 {
                 EffectModule::kill_kind(boma, Hash40::new("sys_status_down"), false, false);
             }
@@ -117,6 +158,7 @@ unsafe extern "C" fn palutena_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         else {
             WorkModule::set_float(boma, 100.0, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLOAT_LIGHTWEIGHT_BURNOUT_METER_TIMER);
             WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT);
+            WorkModule::on_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
         }
         //Effects
         WorkModule::inc_int(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_BURNOUT_EFFECT_TIMER);
@@ -130,10 +172,53 @@ unsafe extern "C" fn palutena_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             EffectModule::kill_kind(boma, Hash40::new("sys_status_down"), false, false);
             EffectModule::req_follow(boma, Hash40::new("sys_status_down"), Hash40::new("hip"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 0.3, true, 0, 0, 0, 0, 0, true, true) as u32;
         }
+        //UI
         UiManager::change_palutena_meter_color_purple(entry_id);
         UiManager::set_palutena_meter_info(entry_id, lightweight_burnout_meter_timer, 100.0, 50.0);
+        //Param Changes
+        if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE) && lightweight_burnout_timer > 0 {
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("walk_speed_max"), 0, 0.847));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dash_speed"), 0, 1.356));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_mul"), 0, 0.099));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_add"), 0, 0.033));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 1.384));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.67));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 2.077));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_y"), 0, 28.0));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("mini_jump_y"), 0, 13.84));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_aerial_y"), 0, 28.0));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_mul"), 0, 0.0807));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_add"), 0, 0.007));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 0.588));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.9375));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("damage_fly_top_speed_y_stable"), 0, 1.9375));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dive_speed_y"), 0, 3.1));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("weight"), 0, 83.0));
+            WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
+        }
     }
     if !WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) && !WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
+        //Param Changes
+        if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE) {
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("walk_speed_max"), 0, 1.271));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dash_speed"), 0, 1.768));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_mul"), 0, 0.12991));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_accel_add"), 0, 0.044));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 2.077));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.67));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 2.077));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_y"), 0, 35.0));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("mini_jump_y"), 0, 17.3));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_aerial_y"), 0, 35.9));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_mul"), 0, 0.105));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_x_add"), 0, 0.01));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.0));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.55));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("damage_fly_top_speed_y_stable"), 0, 1.55));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dive_speed_y"), 0, 2.48));
+            update_float_2(*FIGHTER_KIND_PALUTENA, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("weight"), 0, 91.0));
+            WorkModule::off_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
+        }
         UiManager::change_palutena_meter_color_green(entry_id);
         UiManager::set_palutena_meter_info(entry_id, 100.0, 100.0, 50.0);
     }

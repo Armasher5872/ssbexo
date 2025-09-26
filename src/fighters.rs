@@ -1,3 +1,7 @@
+use exo_var::variables::*;
+use std::collections::HashMap;
+use smash::lib::lua_const::*;
+
 macro_rules! install_fighters {
     ($func:ident; $($name:ident = $feature:expr),*) => {{
         $(
@@ -5,6 +9,227 @@ macro_rules! install_fighters {
             { $name::$func() }
         )*
     }}
+}
+
+pub extern "C" fn mods_mounted(_ev: arcropolis_api::Event) {
+    const MARKER_FILE: &str = "armstrong.marker";
+    let mut lowest_color: i32 = -1;
+    let mut marked_slots: Vec<i32> = vec![];
+    for x in 0..256 {
+        if let Ok(_) = std::fs::read(format!(
+            "mods:/fighter/ganon/model/body/c{:02}/{}",
+            x, MARKER_FILE
+        )) {
+            unsafe {
+                marked_slots.push(x as _);
+                MARKED_COLORS[x as usize] = true;
+                if lowest_color == -1 {
+                    lowest_color = x as _ ;
+                }
+            }
+        }
+    }
+    if lowest_color == -1 {
+        // if no marker exist, leave
+        return;
+    }
+    param_config::disable_kirby_copy(*FIGHTER_KIND_GANON, marked_slots.clone());
+    param_config::disable_villager_pocket(*FIGHTER_KIND_GANON, marked_slots.clone(), 0);
+    let color_num = {
+        unsafe {
+            let mut index = lowest_color;
+            while index < 256 && MARKED_COLORS[index as usize] {
+                index += 1;
+            }
+            index - lowest_color
+        }
+    };
+    println!("LOWEST: {} - COLOR NUM: {}", lowest_color, color_num);
+    the_csk_collection_api::add_chara_db_entry_info(
+        the_csk_collection_api::CharacterDatabaseEntry {
+            ui_chara_id: smash::hash40("ui_chara_armstrong"), 
+            fighter_kind: the_csk_collection_api::Hash40Type::Overwrite(0x122AF1B944 /* Hash40 of fighter_kind_ganon */), 
+            fighter_kind_corps: the_csk_collection_api::Hash40Type::Overwrite(0x122AF1B944 /* Hash40 of fighter_kind_ganon */), 
+            ui_series_id: the_csk_collection_api::Hash40Type::Overwrite(0x130D25A5D0 /* Hash40 of ui_series_metalgear */), 
+            fighter_type: the_csk_collection_api::Hash40Type::Overwrite(0x1353795179 /* Hash40 of fighter_type_normal */), 
+            alt_chara_id: the_csk_collection_api::Hash40Type::Overwrite(0x2302D482A /* Hash40 of -1 */), 
+            shop_item_tag: the_csk_collection_api::Hash40Type::Overwrite(0x2302D482A /* Hash40 of -1 */), 
+            name_id: the_csk_collection_api::StringType::Overwrite(the_csk_collection_api::CStrCSK::new("armstrong")), 
+            exhibit_year: the_csk_collection_api::ShortType::Overwrite(2013), 
+            exhibit_day_order: the_csk_collection_api::IntType::Overwrite(112103), 
+            extra_flags: the_csk_collection_api::IntType::Overwrite(0), 
+            ext_skill_page_num: the_csk_collection_api::SignedByteType::Overwrite(0), 
+            skill_list_order: the_csk_collection_api::SignedByteType::Overwrite(70), 
+            disp_order: the_csk_collection_api::SignedByteType::Optional(Some(88)), 
+            save_no: the_csk_collection_api::SignedByteType::Overwrite(25), 
+            chara_count: the_csk_collection_api::SignedByteType::Overwrite(1), 
+            is_img_ext_skill_page0: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_img_ext_skill_page1: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_img_ext_skill_page2: the_csk_collection_api::BoolType::Overwrite(false), 
+            can_select: the_csk_collection_api::BoolType::Overwrite(true), 
+            is_usable_soundtest: the_csk_collection_api::BoolType::Overwrite(true), 
+            is_called_pokemon: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_mii: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_boss: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_hidden_boss: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_dlc: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_patch: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_plural_message: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_plural_narration: the_csk_collection_api::BoolType::Overwrite(false), 
+            is_article: the_csk_collection_api::BoolType::Overwrite(false), 
+            has_multiple_face: the_csk_collection_api::BoolType::Overwrite(false), 
+            result_pf0: the_csk_collection_api::BoolType::Overwrite(true), 
+            result_pf1: the_csk_collection_api::BoolType::Overwrite(true), 
+            result_pf2: the_csk_collection_api::BoolType::Overwrite(true), 
+            color_num: the_csk_collection_api::UnsignedByteType::Overwrite(color_num as _),
+            extra_hash_maps: the_csk_collection_api::Hash40Map::Overwrite(HashMap::from([
+                (0x1337FC912E /* Hash40 of characall_label_c00 */, the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("vc_narration_characall_armstrong"))),
+                (0x1340FBA1B8 /* Hash40 of characall_label_c01 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x13D9F2F002 /* Hash40 of characall_label_c02 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x13AEF5C094 /* Hash40 of characall_label_c03 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1330915537 /* Hash40 of characall_label_c04 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x13479665A1 /* Hash40 of characall_label_c05 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x13DE9F341B /* Hash40 of characall_label_c06 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x13A998048D /* Hash40 of characall_label_c07 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1B8B13E500 /* Hash40 of characall_label_article_c00 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1BFC14D596 /* Hash40 of characall_label_article_c01 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1B651D842C /* Hash40 of characall_label_article_c02 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1B121AB4BA /* Hash40 of characall_label_article_c03 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1B8C7E2119 /* Hash40 of characall_label_article_c04 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1BFB79118F /* Hash40 of characall_label_article_c05 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1B62704035 /* Hash40 of characall_label_article_c06 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x1B157770A3 /* Hash40 of characall_label_article_c07 */, the_csk_collection_api::Hash40Type::Overwrite(0x0)),
+                (0x160ab9eb98, the_csk_collection_api::Hash40Type::Overwrite(0xea4221dc6)),
+            ])), 
+            extra_index_maps: the_csk_collection_api::UnsignedByteMap::Overwrite(HashMap::from([
+                (0x915C075DE /* Hash40 of c00_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9B3B77E6A /* Hash40 of c01_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9825F64F7 /* Hash40 of c02_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x924286F43 /* Hash40 of c03_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9E18F51CD /* Hash40 of c04_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x947F85A79 /* Hash40 of c05_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9761040E4 /* Hash40 of c06_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9D0674B50 /* Hash40 of c07_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9E48F9289 /* Hash40 of n00_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x942F8993D /* Hash40 of n01_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9731083A0 /* Hash40 of n02_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9D5678814 /* Hash40 of n03_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x910C0B69A /* Hash40 of n04_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9B6B7BD2E /* Hash40 of n05_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9875FA7B3 /* Hash40 of n06_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x92128AC07 /* Hash40 of n07_index */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9F873561A /* Hash40 of c00_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x95E045DAE /* Hash40 of c01_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x96FEC4733 /* Hash40 of c02_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9C99B4C87 /* Hash40 of c03_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x90C3C7209 /* Hash40 of c04_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x9AA4B79BD /* Hash40 of c05_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x99BA36320 /* Hash40 of c06_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (0x93DD46894 /* Hash40 of c07_group */, the_csk_collection_api::UnsignedByteType::Overwrite(0)),
+                (smash::hash40("color_start_index"), the_csk_collection_api::UnsignedByteType::Overwrite(lowest_color as _)),
+            ])), 
+            ..Default::default()
+        },
+    );
+    the_csk_collection_api::add_chara_layout_db_entry_info(the_csk_collection_api::CharacterLayoutDatabaseEntry {
+        ui_layout_id: smash::hash40("ui_chara_armstrong_00"), 
+        ui_chara_id: the_csk_collection_api::Hash40Type::Overwrite(smash::hash40("ui_chara_armstrong")), 
+        chara_color: the_csk_collection_api::UnsignedByteType::Overwrite(0), 
+        eye_0_flash_count: the_csk_collection_api::UnsignedByteType::Overwrite(1), 
+        eye_1_flash_count: the_csk_collection_api::UnsignedByteType::Overwrite(1), 
+        eye_2_flash_count: the_csk_collection_api::UnsignedByteType::Overwrite(1), 
+        eye_0_flash0_pos_x: the_csk_collection_api::FloatType::Overwrite(8.0), 
+        eye_0_flash0_pos_y: the_csk_collection_api::FloatType::Overwrite(242.0), 
+        eye_0_flash1_pos_x: the_csk_collection_api::FloatType::Overwrite(34.0), 
+        eye_0_flash1_pos_y: the_csk_collection_api::FloatType::Overwrite(-62.0), 
+        eye_0_flash2_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_0_flash2_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_0_flash3_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_0_flash3_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_0_flash4_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_0_flash4_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_1_flash0_pos_x: the_csk_collection_api::FloatType::Overwrite(4.0), 
+        eye_1_flash0_pos_y: the_csk_collection_api::FloatType::Overwrite(230.0), 
+        eye_1_flash1_pos_x: the_csk_collection_api::FloatType::Overwrite(34.0), 
+        eye_1_flash1_pos_y: the_csk_collection_api::FloatType::Overwrite(-62.0), 
+        eye_1_flash2_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_1_flash2_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_1_flash3_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_1_flash3_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_1_flash4_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_1_flash4_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash0_pos_x: the_csk_collection_api::FloatType::Overwrite(16.0), 
+        eye_2_flash0_pos_y: the_csk_collection_api::FloatType::Overwrite(104.0), 
+        eye_2_flash1_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash1_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash2_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash2_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash3_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash3_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash4_pos_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_2_flash4_pos_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        eye_flash_info_pos_x: the_csk_collection_api::FloatType::Overwrite(3.0), 
+        eye_flash_info_pos_y: the_csk_collection_api::FloatType::Overwrite(4.0), 
+        chara_1_offset_x: the_csk_collection_api::FloatType::Overwrite(-5.0), 
+        chara_1_offset_y: the_csk_collection_api::FloatType::Overwrite(-76.0), 
+        chara_1_scale: the_csk_collection_api::FloatType::Overwrite(1.17), 
+        chara_1_1_offset_x: the_csk_collection_api::FloatType::Overwrite(-5.0), 
+        chara_1_1_offset_y: the_csk_collection_api::FloatType::Overwrite(-80.0), 
+        chara_1_1_scale: the_csk_collection_api::FloatType::Overwrite(1.65), 
+        chara_1_2_offset_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_1_2_offset_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_1_2_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_1_3_offset_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_1_3_offset_y: the_csk_collection_api::FloatType::Overwrite(-47.0), 
+        chara_1_3_scale: the_csk_collection_api::FloatType::Overwrite(1.65), 
+        chara_1_4_offset_x: the_csk_collection_api::FloatType::Overwrite(-5.0), 
+        chara_1_4_offset_y: the_csk_collection_api::FloatType::Overwrite(-47.0), 
+        chara_1_4_scale: the_csk_collection_api::FloatType::Overwrite(1.65), 
+        chara_1_5_offset_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_1_5_offset_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_1_5_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_3_0_offset_x: the_csk_collection_api::FloatType::Overwrite(95.0), 
+        chara_3_0_offset_y: the_csk_collection_api::FloatType::Overwrite(-215.0), 
+        chara_3_0_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_3_1_offset_x: the_csk_collection_api::FloatType::Overwrite(92.0), 
+        chara_3_1_offset_y: the_csk_collection_api::FloatType::Overwrite(-250.0), 
+        chara_3_1_scale: the_csk_collection_api::FloatType::Overwrite(1.05), 
+        chara_3_2_offset_x: the_csk_collection_api::FloatType::Overwrite(150.0), 
+        chara_3_2_offset_y: the_csk_collection_api::FloatType::Overwrite(-100.0), 
+        chara_3_2_scale: the_csk_collection_api::FloatType::Overwrite(0.8), 
+        chara_3_3_offset_x: the_csk_collection_api::FloatType::Overwrite(95.0), 
+        chara_3_3_offset_y: the_csk_collection_api::FloatType::Overwrite(-215.0), 
+        chara_3_3_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_3_4_offset_x: the_csk_collection_api::FloatType::Overwrite(95.0), 
+        chara_3_4_offset_y: the_csk_collection_api::FloatType::Overwrite(-215.0), 
+        chara_3_4_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_3_5_offset_x: the_csk_collection_api::FloatType::Overwrite(60.0), 
+        chara_3_5_offset_y: the_csk_collection_api::FloatType::Overwrite(-240.0), 
+        chara_3_5_scale: the_csk_collection_api::FloatType::Overwrite(1.01), 
+        chara_3_6_offset_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_3_6_offset_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_3_6_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_3_7_offset_x: the_csk_collection_api::FloatType::Overwrite(95.0), 
+        chara_3_7_offset_y: the_csk_collection_api::FloatType::Overwrite(-215.0), 
+        chara_3_7_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_5_offset_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_5_offset_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_5_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_select_icon_list_offset_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_select_icon_list_offset_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_select_icon_list_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        chara_7_0_offset_x: the_csk_collection_api::FloatType::Overwrite(-2.0), 
+        chara_7_0_offset_y: the_csk_collection_api::FloatType::Overwrite(4.0), 
+        chara_7_0_scale: the_csk_collection_api::FloatType::Overwrite(0.96), 
+        chara_7_1_offset_x: the_csk_collection_api::FloatType::Overwrite(-2.0), 
+        chara_7_1_offset_y: the_csk_collection_api::FloatType::Overwrite(4.0), 
+        chara_7_1_scale: the_csk_collection_api::FloatType::Overwrite(0.96), 
+        chara_0_offset_x: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_0_offset_y: the_csk_collection_api::FloatType::Overwrite(0.0), 
+        chara_0_scale: the_csk_collection_api::FloatType::Overwrite(1.0), 
+        spirits_eye_visible: the_csk_collection_api::BoolType::Overwrite(true), 
+        ..Default::default()
+    });
 }
 
 pub fn install() {
@@ -31,7 +256,7 @@ pub fn install() {
         falco = "falco",
         fox = "fox",
         gamewatch = "gamewatch",
-        //ganon = "ganon",
+        ganon = "ganon",
         gaogaen = "gaogaen",
         gekkouga = "gekkouga",
         ike = "ike",

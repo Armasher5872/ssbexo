@@ -91,12 +91,12 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
     }
     if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {
         if WorkModule::is_flag(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE) {
-            EFFECT(weapon, Hash40::new("pitb_final_beam"), Hash40::new("top"), 0, 0, 0, -shot_angle, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            LAST_EFFECT_SET_COLOR(weapon, 1.0, 1.0, 1.0);
+            EFFECT_FOLLOW(weapon, Hash40::new("link_light_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, -shot_angle, 0, 0, 1.0, true);
+            EFFECT(weapon, Hash40::new("link_light_arrow"), Hash40::new("top"), 0, 0, 0, -shot_angle, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
             ModelModule::set_scale(weapon.module_accessor, 0.001);
         }
     }
-    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(10.0*lr), y: owner_pos_y+8.0, z: owner_pos_z});
+    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(10.0*lr), y: owner_pos_y+11.0, z: owner_pos_z});
     sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x-reduction, speed_y);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -accel_y-reduction);
     0.into()
@@ -134,9 +134,16 @@ unsafe extern "C" fn link_bowarrow_fly_sub_status(weapon: &mut L2CWeaponCommon, 
 }
 
 unsafe extern "C" fn link_bowarrow_fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let arrow_type = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
     let ret = GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32);
     if ret {
-        weapon.change_status(WN_LINK_BOWARROW_STATUS_KIND_STICK.into(), false.into());
+        if arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
+            weapon.change_status(WN_LINK_BOWARROW_STATUS_KIND_STICK.into(), false.into());
+        }
+        else {
+            notify_event_msc_cmd!(weapon, Hash40::new_raw(0x2b8a2bd943));
+            notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
+        }
     }
     if AttackModule::is_infliction(weapon.module_accessor, *COLLISION_KIND_MASK_REFLECTOR) && WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
         WorkModule::on_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT);

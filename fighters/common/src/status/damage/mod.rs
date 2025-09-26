@@ -45,7 +45,6 @@ mod damagesleepfall;
 //mod damagesong;
 mod furafura;
 mod saving;
-mod treadfall;
 
 pub fn install() {
     damage::install();
@@ -58,5 +57,4 @@ pub fn install() {
     //damagesong::install();
     furafura::install();
     saving::install();
-    treadfall::install();
 }

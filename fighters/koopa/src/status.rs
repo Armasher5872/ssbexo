@@ -1,9 +1,6 @@
 use super::*;
 
-unsafe extern "C" fn koopa_attack_air_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fighter.sub_attack_air_common(true.into());
-    fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_AttackAir_Main as *const () as _))
-}
+//Neutral Special
 
 unsafe extern "C" fn koopa_special_n_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_pre_SpecialNCommon();
@@ -46,15 +43,12 @@ unsafe extern "C" fn koopa_special_n_init_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn koopa_special_n_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_CONTINUE_START);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_CONTINUE);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_FLAG_CONTINUE_END);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n"), L2CValue::Hash40s("special_air_n"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(koopa_special_n_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn koopa_special_n_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let step = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_STEP);
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -76,10 +70,6 @@ unsafe extern "C" fn koopa_special_n_main_loop(fighter: &mut L2CFighterCommon) -
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_n"), -1.0, 1.0, 0.0, false, false);
-    }
-    if step == *FIGHTER_KOOPA_STATUS_BREATH_STEP_START {
-        WorkModule::set_int(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_BREATH_STEP_END, *FIGHTER_KOOPA_STATUS_BREATH_WORK_INT_STEP);
-        ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH, false, -1);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -108,6 +98,8 @@ unsafe extern "C" fn koopa_special_n_end_status(_fighter: &mut L2CFighterCommon)
 unsafe extern "C" fn koopa_special_n_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
+
+//Fireball
 
 unsafe extern "C" fn koopa_firebreath_move_pre_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     StatusModule::init_settings(weapon.module_accessor, SituationKind(*SITUATION_KIND_AIR), *WEAPON_KINETIC_TYPE_NORMAL, 0, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
@@ -152,6 +144,8 @@ unsafe extern "C" fn koopa_firebreath_move_main_loop(weapon: &mut L2CWeaponCommo
     0.into()
 }
 
+//Up Special
+
 unsafe extern "C" fn koopa_special_hi_a_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut log_mask_flag = (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64;
     if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G {
@@ -161,6 +155,85 @@ unsafe extern "C" fn koopa_special_hi_a_pre_status(fighter: &mut L2CFighterCommo
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, log_mask_flag, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
 }
+
+unsafe extern "C" fn koopa_special_hi_a_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let special_hi_use_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KOOPA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USE_COUNT);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_HI_FLAG_MOT_RESTART) {
+        if special_hi_use_count == 1 {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi_fall"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_HI_FLAG_MOT_RESTART);
+    }
+    else {
+        if special_hi_use_count == 1 {
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_hi_fall"), -1.0, 1.0, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_hi"), -1.0, 1.0, 0.0, false, false);
+        }
+    }
+    GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_CLIFF);
+    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_KOOPA_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_RESTART_FRAME);
+    fighter.sub_shift_status_main(L2CValue::Ptr(koopa_special_hi_a_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn koopa_special_hi_a_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let special_hi_use_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KOOPA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USE_COUNT);
+    let jump_restart_frame = WorkModule::get_float(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_RESTART_FRAME);
+    let special_hi_jump_restart_start_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("special_hi_jump_restart_start_frame"));
+    let special_hi_jump_restart_end_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("special_hi_jump_restart_end_frame"));
+    let special_hi_jump_speed_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("special_hi_jump_speed_y"));
+    let special_hi_jump_restart_prohibition_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("special_hi_jump_restart_prohibition_frame"));
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 1.into();
+            }
+        }
+    }
+    if situation_kind != *SITUATION_KIND_GROUND {
+        if current_frame >= special_hi_jump_restart_start_frame && current_frame <= special_hi_jump_restart_end_frame {
+            if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && special_hi_jump_restart_prohibition_frame < current_frame-jump_restart_frame {
+                WorkModule::set_float(fighter.module_accessor, current_frame, *FIGHTER_KOOPA_STATUS_SPECIAL_HI_WORK_FLOAT_JUMP_RESTART_FRAME);
+                sv_kinetic_energy!(add_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_hi_jump_speed_y);
+                sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, special_hi_jump_speed_y);
+            }
+        }
+    }
+    else {
+        fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+        return 1.into();
+    }
+    if MotionModule::is_end(fighter.module_accessor) {
+        if special_hi_use_count == 1 {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
+        }
+        else {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        }
+        return 1.into();
+    }
+    0.into()
+}
+
+unsafe extern "C" fn koopa_special_hi_a_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let special_hi_use_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KOOPA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USE_COUNT);
+    if special_hi_use_count < 1 {
+        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_KOOPA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USE_COUNT);
+    }
+    original_status(End, fighter, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A)(fighter)
+}
+
+//Down Special
 
 unsafe extern "C" fn koopa_special_lw_a_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut log_mask_flag = (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64;
@@ -172,10 +245,54 @@ unsafe extern "C" fn koopa_special_lw_a_pre_status(fighter: &mut L2CFighterCommo
     0.into()
 }
 
+unsafe extern "C" fn koopa_special_lw_a_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_LW_FLAG_FROM_GR) {
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw"), 30.0, 1.0, false, 0.0, false, false);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_LW_FLAG_FROM_GR);
+    }
+    else {
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_CLIFF);
+    GroundModule::set_passable_check(fighter.module_accessor, true);
+    fighter.sub_shift_status_main(L2CValue::Ptr(koopa_special_lw_a_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn koopa_special_lw_a_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 1.into();
+            }
+        }
+    }
+    if situation_kind != *SITUATION_KIND_AIR {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KOOPA_STATUS_SPECIAL_LW_FLAG1) {
+            fun_7100006150(fighter);
+            fighter.change_status(FIGHTER_KOOPA_STATUS_KIND_SPECIAL_LW_L.into(), false.into());
+            return 1.into();
+        }
+        fighter.set_situation(SITUATION_KIND_AIR.into());
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+    }
+    0.into()
+}
+
+unsafe extern "C" fn fun_7100006150(fighter: &mut L2CFighterCommon) {
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+    KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
+}
+
 pub fn install() {
     Agent::new("koopa")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, koopa_attack_air_main_status)
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_N, koopa_special_n_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_N, koopa_special_n_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, koopa_special_n_main_status)
@@ -184,7 +301,10 @@ pub fn install() {
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_N, koopa_special_n_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_N, koopa_special_n_exit_status)
     .status(Pre, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A, koopa_special_hi_a_pre_status)
+    .status(Main, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A, koopa_special_hi_a_main_status)
+    .status(End, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_A, koopa_special_hi_a_end_status)
     .status(Pre, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_LW_A, koopa_special_lw_a_pre_status)
+    .status(Main, *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_LW_A, koopa_special_lw_a_main_status)
     .install()
     ;
     Agent::new("koopa_breath")

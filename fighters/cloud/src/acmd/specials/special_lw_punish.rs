@@ -7,7 +7,7 @@ unsafe extern "C" fn ssbexo_cloud_punisher_down_special_acmd(agent: &mut L2CAgen
     }
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 60, 55, 0, 45, 10.0, 0.0, 9.0, 16.5, Some(0.0), Some(9.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CLOUD_HIT, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 60, 55, 0, 45, 9.5, 0.0, 9.0, 16.5, Some(0.0), Some(9.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CLOUD_HIT, *ATTACK_REGION_SWORD);
     }
     wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
@@ -20,19 +20,18 @@ unsafe extern "C" fn ssbexo_cloud_grounded_punisher_down_special_effect(agent: &
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 21.0);
+    frame(agent.lua_state_agent, 19.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, 0.4);
-        EFFECT_FOLLOW(agent, Hash40::new("cloud_smash_slash"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
-        EffectModule::set_disable_render_offset_last(agent.module_accessor);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_cloud_sword1"), Hash40::new("tex_cloud_sword2"), 4, Hash40::new("haver"), 0, 1.5, -1.2, Hash40::new("haver"), 0, 20.5, -1.19, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
     }
-    frame(agent.lua_state_agent, 23.0);
+    wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
         FLASH(agent, 1, 1, 1, 0);
         AFTER_IMAGE_OFF(agent, 4);
     }
-    frame(agent.lua_state_agent, 27.0);
+    wait(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
         COL_NORMAL(agent);
         EFFECT_OFF_KIND_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, false, true);
@@ -41,19 +40,18 @@ unsafe extern "C" fn ssbexo_cloud_grounded_punisher_down_special_effect(agent: &
 
 //Aerial Punisher Down Special Effect
 unsafe extern "C" fn ssbexo_cloud_aerial_punisher_down_special_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 21.0);
+    frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, 0.4);
-        EFFECT_FOLLOW(agent, Hash40::new("cloud_smash_slash"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
-        EffectModule::set_disable_render_offset_last(agent.module_accessor);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_cloud_sword1"), Hash40::new("tex_cloud_sword2"), 4, Hash40::new("haver"), 0, 1.5, -1.2, Hash40::new("haver"), 0, 20.5, -1.19, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
     }
-    frame(agent.lua_state_agent, 23.0);
+    wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
         FLASH(agent, 1, 1, 1, 0);
         AFTER_IMAGE_OFF(agent, 4);
     }
-    frame(agent.lua_state_agent, 27.0);
+    wait(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
         COL_NORMAL(agent);
         EFFECT_OFF_KIND_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, false, true);

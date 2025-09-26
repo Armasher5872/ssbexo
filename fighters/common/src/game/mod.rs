@@ -1,9 +1,9 @@
 use {
     exo_utils::{
+        armstrong::*,
         battle_object::*,
         buttons::*,
         cloud_meter::*,
-        common_ui_enable_disable::*,
         extern_func::*,
         fighter_common::*,
         flydata::*,
@@ -19,22 +19,16 @@ use {
         vector::*,
     },
     exo_var::{
-        cloud::*,
         consts::*,
         globals::*,
-        inkling::*,
-        palutena::*,
         purin::*,
         variables::*,
     },
+    param_config::*,
     skyline::{
         c_str,
         from_c_str,
-        hooks::InlineCtx,
-        nn::ui2d::{
-            Layout,
-            PaneFlag
-        }
+        hooks::InlineCtx
     },
     smash::{
         app::{
@@ -63,21 +57,26 @@ use {
     smash_script::macros::*,
     std::{
         ffi::CStr,
-        os::raw::c_char
+        os::raw::c_char,
+        sync::atomic::{
+            AtomicBool,
+            Ordering
+        }
     }
 };
 
 mod article;
 mod attack;
 mod control;
+mod delay;
 mod effect;
 mod energy;
 //mod fighterutil;
 mod frame;
 mod menu;
-mod misc;
+pub mod misc;
 mod music;
-mod parammodule;
+//mod parammodule;
 mod status;
 mod ui;
 //mod workmodule;
@@ -86,6 +85,7 @@ pub fn install() {
     article::install();
     attack::install();
     control::install();
+    delay::install();
     effect::install();
     energy::install();
     //fighterutil::install();
@@ -93,7 +93,7 @@ pub fn install() {
     menu::install();
     misc::install();
     music::install();
-    parammodule::install();
+    //parammodule::install();
     status::install();
     ui::install();
     //workmodule::install();

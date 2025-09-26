@@ -83,9 +83,9 @@ unsafe extern "C" fn ssbexo_link_forward_smash_effect(agent: &mut L2CAgentBase) 
         if is_excute(agent) {
             AFTER_IMAGE_OFF(agent, 5);
             EFFECT_OFF_KIND(agent, Hash40::new("link_sword"), false, false);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 8, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 13, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 18, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 8, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 13, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 18, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         }
     }
     else {
@@ -96,7 +96,7 @@ unsafe extern "C" fn ssbexo_link_forward_smash_effect(agent: &mut L2CAgentBase) 
     }
     frame(agent.lua_state_agent, 36.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_lightning"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("link_urbosa_fury"), false, false);
     }
 }
 
@@ -284,11 +284,11 @@ unsafe extern "C" fn ssbexo_link_up_smash_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 48.0);
     if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
         if is_excute(agent) {
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, -6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, -12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, -6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, -12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         }
     }
     frame(agent.lua_state_agent, 49.0);
@@ -297,7 +297,7 @@ unsafe extern "C" fn ssbexo_link_up_smash_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 53.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_lightning"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("link_urbosa_fury"), false, false);
     }
     frame(agent.lua_state_agent, 55.0);
     if is_excute(agent) {
@@ -542,11 +542,11 @@ unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 27.0);
     if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
         if is_excute(agent) {
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, -6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, -12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-            EFFECT(agent, Hash40::new("brave_lightning3_lightning"), Hash40::new("top"), 0, 12, 12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, -6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, -12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(agent, Hash40::new("link_urbosa_fury"), Hash40::new("top"), 0, 12, 12, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         }
     }
     frame(agent.lua_state_agent, 30.0);
@@ -555,7 +555,7 @@ unsafe extern "C" fn ssbexo_link_down_smash_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 32.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("brave_lightning3_lightning"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("link_urbosa_fury"), false, false);
     }
 }
 

@@ -353,6 +353,7 @@ unsafe extern "C" fn ssbexo_palutena_down_special_acmd(agent: &mut L2CAgentBase)
     if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) && !WorkModule::is_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
         if is_excute(agent) {
             WorkModule::on_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT);
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
             WorkModule::set_int(agent.module_accessor, 735, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_INT_LIGHTWEIGHT_TIMER);
         }
     }

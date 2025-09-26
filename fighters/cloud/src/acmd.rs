@@ -1,5 +1,8 @@
 use {
-    exo_var::consts::*,
+    exo_var::{
+        cloud::*,
+        consts::*,
+    },
     smash::{
         app::{
             lua_bind::*,

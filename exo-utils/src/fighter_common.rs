@@ -26,8 +26,9 @@ pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleO
     ];
     let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_SMASH_ATTACK_CHARGE_FRAME];
     let ints = [
-        *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, 
-        *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
+        *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, 
+        *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, 
+        *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
@@ -56,7 +57,6 @@ pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleO
     SIZE1[entry_id] = 0.0;
     SPAWN_SIDE[entry_id] = false;
     STOCK_COUNT[entry_id] = smash::app::lua_bind::FighterInformation::stock_count(fighter_info);
-    UiManager::set_ui_state(0, true);
 }
 
 //Condenses the reset event reseting of variables into one function
@@ -78,8 +78,9 @@ pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModu
     ];
     let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_SMASH_ATTACK_CHARGE_FRAME];
     let ints = [
-        *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, 
-        *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
+        *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, 
+        *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, 
+        *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
@@ -108,7 +109,6 @@ pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModu
     SIZE1[entry_id] = 0.0;
     SPAWN_SIDE[entry_id] = false;
     STOCK_COUNT[entry_id] = smash::app::lua_bind::FighterInformation::stock_count(fighter_info);
-    UiManager::set_ui_state(0, true);
 }
 
 //Condenses the reseting of variables on death into one function
@@ -127,8 +127,9 @@ pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModu
     ];
     let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL, *FIGHTER_INSTANCE_WORK_ID_FLOAT_SMASH_ATTACK_CHARGE_FRAME];
     let ints = [
-        *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, 
-        *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
+        *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_GOT_HIT, 
+        *FIGHTER_INSTANCE_WORK_ID_INT_MASHING, *FIGHTER_INSTANCE_WORK_ID_INT_PARRIED, *FIGHTER_INSTANCE_WORK_ID_INT_PARRY_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_BREAK_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, 
+        *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
@@ -153,7 +154,6 @@ pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModu
     SIZE0[entry_id] = 0.0;
     SIZE1[entry_id] = 0.0;
     SPAWN_SIDE[entry_id] = false;
-    UiManager::set_ui_state(0, true);
 }
 
 //Checks what alt you are
@@ -173,12 +173,6 @@ pub unsafe fn get_player_number(module_accessor:  &mut smash::app::BattleObjectM
         player_number = WorkModule::get_int(owner_module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
     }
     return player_number;
-}
-
-//Gets attacker number
-pub unsafe fn get_attacker_number(module_accessor: &mut smash::app::BattleObjectModuleAccessor) -> usize {
-	let attacker_number = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ATTACKER_COLOR) as usize;
-	return attacker_number;
 }
 
 //Gets the boma

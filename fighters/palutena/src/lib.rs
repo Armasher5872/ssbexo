@@ -9,6 +9,7 @@ use {
     globals::*,
     palutena::*,
   },
+  param_config::*,
   smash::{
     app::{
       lua_bind::*,

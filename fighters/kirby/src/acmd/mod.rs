@@ -5,17 +5,14 @@ use {
     },
     smash::{
         app::{
-            lua_bind::{
-                FighterCutInManager,
-                *
-            },
+            lua_bind::*,
             sv_animcmd::{
                 frame,
+                execute,
                 wait
             },
             *
         },
-        hash40,
         lib::lua_const::*,
         lua2cpp::*,
         phx::{

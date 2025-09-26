@@ -17,13 +17,8 @@ unsafe extern "C" fn ssbexo_cloud_up_special_combo_2_land_acmd(agent: &mut L2CAg
 unsafe extern "C" fn ssbexo_cloud_up_special_combo_2_land_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("cloud_climhazzard_slash2"), true, true);
-        EFFECT_FOLLOW_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_CLIMHAZZARD_SWORD, Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
-        EFFECT(agent, Hash40::new("cloud_climhazzard_slash3"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 5, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(agent.lua_state_agent, 2.0);
-    if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 5, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, false);
+        EFFECT(agent, Hash40::new("cloud_special_hi_impact"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("ganon_ground_crack"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
     frame(agent.lua_state_agent, 3.0);
     if is_excute(agent) {

@@ -339,7 +339,7 @@ unsafe extern "C" fn status_rebirth_main(fighter: &mut L2CFighterCommon) -> L2CV
     else {
         fighter.sub_wait_motion(false.into());
     }
-    if cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0 && [hash40("wait"), hash40("wait_2"), hash40("wait_3"), hash40("wait_4")].contains(&motion_kind) {
+    if cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0 && ![hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind) {
         if lr >= 0.0 {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_hi_r"), 0.0, 1.0, false, 0.0, false, false);
         }
@@ -347,15 +347,18 @@ unsafe extern "C" fn status_rebirth_main(fighter: &mut L2CFighterCommon) -> L2CV
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_hi_l"), 0.0, 1.0, false, 0.0, false, false);
         }
     }
-    if (cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_L != 0 || cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_R != 0) && [hash40("wait"), hash40("wait_2"), hash40("wait_3"), hash40("wait_4")].contains(&motion_kind) {
+    if (cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_L != 0 || cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_R != 0) && ![hash40("appeal_s_r"), hash40("appeal_s_l")].contains(&motion_kind) {
         if lr >= 0.0 {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_s_r"), 0.0, 1.0, false, 0.0, false, false);
         }
         else {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_s_l"), 0.0, 1.0, false, 0.0, false, false);
         }
+        if kind == 0x34 {
+            DamageModule::add_damage(fighter.module_accessor, 50.0, 0);
+        }
     }
-    if cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 && [hash40("wait"), hash40("wait_2"), hash40("wait_3"), hash40("wait_4")].contains(&motion_kind) {
+    if cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0 && ![hash40("appeal_lw_r"), hash40("appeal_lw_l")].contains(&motion_kind) {
         if lr >= 0.0 {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_lw_r"), 0.0, 1.0, false, 0.0, false, false);
         }
@@ -616,12 +619,92 @@ unsafe extern "C" fn status_end_rebirth(fighter: &mut L2CFighterCommon) -> L2CVa
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_rebirth_uniq_process_exit)]
 unsafe extern "C" fn sub_rebirth_uniq_process_exit(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_LITTLEMAC {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BACKSHIELD_INVISIBLE);
-        VisibilityModule::set_whole(fighter.module_accessor, true);
+    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1f20a9d549), true);
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24772eddef), true);
+    VisibilityModule::set_whole(fighter.module_accessor, true);
+    ItemModule::set_attach_item_visibility(fighter.module_accessor, true, *ATTACH_ITEM_GROUP_ALL as u8);
+    ItemModule::set_attach_item_visibility(fighter.module_accessor, false, *ATTACH_ITEM_GROUP_HAT as u8);
+    ItemModule::set_attach_item_visibility(fighter.module_accessor, false, *ATTACH_ITEM_GROUP_BACK as u8);
+    ItemModule::set_attach_item_visibility(fighter.module_accessor, true, *ATTACH_ITEM_GROUP_BADGE as u8);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BACKSHIELD_INVISIBLE);
+    if fighter_kind == *FIGHTER_KIND_LINK {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_YOSHI {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("body") as i64, hash40("body_normal") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_CAPTAIN {
+        ShadowModule::set_draw_status(fighter.module_accessor, true);
+    }
+    if fighter_kind == *FIGHTER_KIND_FALCO {
+        ShadowModule::set_draw_status(fighter.module_accessor, true);
+    }
+    if fighter_kind == *FIGHTER_KIND_YOUNGLINK {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_ROY {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_rhand") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_GAMEWATCH {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("hand") as i64, hash40("hand_hold_lr") as i64);
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("head") as i64, hash40("head_close") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_METAKNIGHT {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("body") as i64, hash40("body_normal") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_SNAKE {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SNAKE_STATUS_ENTRY_FLAG_SPYCLOAK);
+    }
+    if fighter_kind == *FIGHTER_KIND_SONIC {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("body") as i64, hash40("body_normal") as i64);
+        HIT_NODE(fighter, Hash40::new("waist"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("s_stingd1"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("shoulderr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("shoulderl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("armr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("arml"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("legr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("legl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("kneer"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("footr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("footl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("rot"), *HIT_STATUS_OFF);
+    }
+    if fighter_kind == *FIGHTER_KIND_TOONLINK {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_LITTLEMAC {
         VisibilityModule::set_int64(fighter.module_accessor, hash40("swet") as i64, hash40("swet_off") as i64);
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1f20a9d549), true);
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24772eddef), true);
+    }
+    if fighter_kind == *FIGHTER_KIND_PACMAN {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("body") as i64, hash40("body_normal") as i64);
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("pizza") as i64, hash40("pizza_none") as i64);
+        HIT_NODE(fighter, Hash40::new("waist"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("shoulderr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("shoulderl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("handr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("handl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("legr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("legl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("kneer"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
+        HIT_NODE(fighter, Hash40::new("pizzapacman"), *HIT_STATUS_OFF);
+    }
+    if fighter_kind == *FIGHTER_KIND_KAMUI {
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("front_hair") as i64, hash40("front_hair_normal") as i64);
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("hair") as i64, hash40("hair_normal") as i64);
+        VisibilityModule::set_int64(fighter.module_accessor, hash40("dragon") as i64, hash40("dragon_none") as i64);
+    }
+    if fighter_kind == *FIGHTER_KIND_INKLING {
+        InkPaintModule::set_special_paint(fighter.module_accessor, SpecialPaintKind{_address: *SPECIAL_PAINT_SQUID_TO_HUMAN as u8});
+    }
+    if fighter_kind == *FIGHTER_KIND_MIISWORDSMAN {
+        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x26769bd1de), 0, 30, 10);
     }
     fighter.sub_entry_remove_article();
     original!()(fighter)

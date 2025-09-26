@@ -31,7 +31,7 @@ unsafe extern "C" fn link_special_hi_ascend_main_loop(fighter: &mut L2CFighterCo
     let mut max_y = target_y+height+20.0;
     let modulo = current_frame % 10.0;
     WorkModule::add_float(fighter.module_accessor, 1.0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
-    macros::SET_SPEED_EX(fighter, 0.0, 3.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    SET_SPEED_EX(fighter, 0.0, 3.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x: pos_x, y: pos_y+4.0}, &Vector2f{x: 0.0, y: -height/1.5}, ground_hit_pos, true) && pos_y >= max_y-(height*2.0) {
         PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: pos_x, y: ground_hit_pos.y, z: 0.0});
         GroundModule::set_attach_ground(fighter.module_accessor, true);
@@ -51,8 +51,8 @@ unsafe extern "C" fn link_special_hi_ascend_main_loop(fighter: &mut L2CFighterCo
     }
     if pos_y > max_y {
         ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_damage_paralyze"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        macros::PLAY_SE(fighter, Hash40::new("vc_link_damage01"));
-        macros::SET_SPEED_EX(fighter, 0.0, 2.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        PLAY_SE(fighter, Hash40::new("vc_link_damage01"));
+        SET_SPEED_EX(fighter, 0.0, 2.5, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         fighter.change_status(FIGHTER_STATUS_KIND_TREAD_FALL.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -69,9 +69,9 @@ unsafe extern "C" fn link_special_hi_ascend_exec_status(_fighter: &mut L2CFighte
 unsafe extern "C" fn link_special_hi_ascend_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
     GroundModule::set_rhombus_offset(fighter.module_accessor, &Vector2f{ x: 0.0, y: 0.0});
-    macros::COL_NORMAL(fighter);
-    macros::BURN_COLOR_NORMAL(fighter);
-    macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"),false,false);
+    COL_NORMAL(fighter);
+    BURN_COLOR_NORMAL(fighter);
+    EFFECT_OFF_KIND(fighter, Hash40::new("sys_aura_light"),false,false);
     0.into()
 }
 

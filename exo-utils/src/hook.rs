@@ -35,3 +35,6 @@ pub unsafe extern "C" fn call_special_zoom(boma: *mut BattleObjectModuleAccessor
 
 #[skyline::from_offset(0x33bd9c0)]
 pub unsafe extern "C" fn normal_weapon_hit_handler(vtable: u64, weapon: *mut smash::app::Weapon, log: u32) -> u64;
+
+#[skyline::from_offset(0x138b020)]
+pub unsafe extern "C" fn msbt_vtable_validator(vtable_instance: u64) -> bool;

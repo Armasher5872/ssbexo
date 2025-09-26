@@ -9,6 +9,7 @@ unsafe extern "C" fn donkey_barrel_pull_pre_status(weapon: &mut L2CWeaponCommon)
 //Barrel Pull Init Status
 unsafe extern "C" fn donkey_barrel_pull_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_barrel"), hash40("life"));
+    ReflectorModule::set_status_all(weapon.module_accessor, ShieldStatus(*SHIELD_STATUS_NONE), 0);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     WorkModule::set_int(weapon.module_accessor, 0, *WEAPON_DONKEY_BARREL_INSTANCE_WORK_ID_INT_BOUND_COUNT);

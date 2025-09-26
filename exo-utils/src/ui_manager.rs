@@ -8,8 +8,7 @@ pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
             ice_climber_meter: [IceClimberMeter::default(); 8],
             mariod_meter: [MarioDMeter::default(); 8],
             lucario_meter: [LucarioMeter::default(); 8],
-            cloud_meter: [CloudMeter::default(); 8],
-            common_ui_enable_disable: [CommonUiEnableDisable::default(); 1]
+            cloud_meter: [CloudMeter::default(); 8]
         }
     )}
 );
@@ -21,8 +20,7 @@ pub struct UiManager {
     pub ice_climber_meter: [IceClimberMeter; 8],
     pub mariod_meter: [MarioDMeter; 8],
     pub lucario_meter: [LucarioMeter; 8],
-    pub cloud_meter: [CloudMeter; 8],
-    pub common_ui_enable_disable: [CommonUiEnableDisable; 1]
+    pub cloud_meter: [CloudMeter; 8]
 }
 
 impl UiManager {
@@ -155,11 +153,5 @@ impl UiManager {
     pub extern "C" fn set_cloud_meter_info(entry_id: u32, value: i32) {
         let mut manager = UI_MANAGER.write();
         manager.cloud_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_meter_info(value);
-    }
-    //Common
-    #[export_name = "UiManager__set_ui_state"]
-    pub extern "C" fn set_ui_state(entry_id: u32, enable: bool) {
-        let mut manager = UI_MANAGER.write();
-        manager.common_ui_enable_disable[entry_id as usize].set_enable(enable);
     }
 }

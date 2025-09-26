@@ -19,14 +19,10 @@ unsafe extern "C" fn link_special_hi_ascend_end_main_status(fighter: &mut L2CFig
 }
 
 unsafe extern "C" fn link_special_hi_ascend_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 0.into();
         }
-    }
-    if situation_kind == *SITUATION_KIND_AIR {
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());

@@ -59,7 +59,7 @@ unsafe extern "C" fn ssbexo_link_forward_tilt_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword1"), 25, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("sword1"), 15, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.4);
     }
     frame(agent.lua_state_agent, 16.0);

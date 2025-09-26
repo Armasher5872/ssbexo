@@ -179,7 +179,7 @@ unsafe extern "C" fn correct_hook(boma: &mut BattleObjectModuleAccessor, kind: G
 		|| (([*FIGHTER_KIND_PEACH, *FIGHTER_KIND_DAISY].contains(&fighter_kind)) && status_kind == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_S_AWAY_END)
 		|| (fighter_kind == *FIGHTER_KIND_KOOPA && status_kind == *FIGHTER_KOOPA_STATUS_KIND_SPECIAL_HI_G)
         || (fighter_kind == *FIGHTER_KIND_PICHU && [*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_WEAK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_S_END].contains(&status_kind))
-        || (fighter_kind == *FIGHTER_KIND_GANON && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S)
+        || (fighter_kind == *FIGHTER_KIND_GANON && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S && !is_armstrong_slots(boma))
 		|| (fighter_kind == *FIGHTER_KIND_GAOGAEN && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N)
         || (fighter_kind == *FIGHTER_KIND_EDGE && status_kind == *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH)
         || (fighter_kind == *FIGHTER_KIND_MIISWORDSMAN && ([*FIGHTER_MIISWORDSMAN_STATUS_KIND_SPECIAL_LW3_END].contains(&status_kind) || (WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO) == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW))) {

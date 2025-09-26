@@ -6,6 +6,7 @@ use {
     littlemac::*,
   },
   exo_var::{
+    consts::*,
     globals::*,
     littlemac::*,
   },
@@ -40,6 +41,7 @@ mod attack_s4_start;
 mod attack_s4;
 mod attack;
 mod common_func;
+mod guard_damage;
 mod special_hi_jump;
 mod special_hi_start;
 mod special_lw_hit;
@@ -65,6 +67,7 @@ pub fn install() {
   attack_s4_start::install();
   attack_s4::install();
   attack::install();
+  guard_damage::install();
   special_hi_jump::install();
   special_hi_start::install();
   special_lw::install();

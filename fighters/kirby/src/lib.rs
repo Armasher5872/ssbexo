@@ -4,9 +4,9 @@ use {
     status_end_control::*,
   },
   exo_var::{
+    consts::*,
     globals::*,
     kirby::*,
-    link::*,
   },
   smash::{
     app::{
@@ -21,10 +21,7 @@ use {
     lua2cpp::*,
     phx::Hash40
   },
-  smash_script::{
-    *,
-    macros::*
-  },
+  smash_script::*,
   smashline::*,
 };
 

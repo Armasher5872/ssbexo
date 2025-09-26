@@ -21,6 +21,11 @@ pub unsafe extern "C" fn ac_common(boma: *mut BattleObjectModuleAccessor) {
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
                 disarming_voice_removal(weapon);
             }
+            if is_volley(obj_boma) {
+                StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
+                WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
+                volley_removal(weapon);
+            }
             if is_galaxia(obj_boma) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);

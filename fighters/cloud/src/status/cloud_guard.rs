@@ -23,19 +23,19 @@ unsafe extern "C" fn cloud_guard_main_status(fighter: &mut L2CFighterCommon) -> 
 
 unsafe extern "C" fn cloud_guard_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let min_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME);
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     if !fighter.sub_guard_cont().get_bool() {
         if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-            if min_frame <= 0 {
-                if situation_kind == *SITUATION_KIND_GROUND {
-                    fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_GUARD_OFF.into(), true.into());
-                    return 1.into();
-                }
+            if situation_kind == *SITUATION_KIND_GROUND {
+                fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_GUARD_OFF.into(), true.into());
+                return 1.into();
             }
         }
+    }
+    if MotionModule::is_end(fighter.module_accessor) {
+        fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_GUARD.into(), true.into());
     }
     0.into()
 }

@@ -12,9 +12,11 @@ unsafe extern "C" fn cloud_attack_s3_main_loop(fighter: &mut L2CFighterCommon) -
 
 unsafe extern "C" fn cloud_attack_s3_main_loop_inner(fighter: &mut L2CFighterCommon, combo_kind: L2CValue) -> L2CValue {
     let global_is_stop = fighter.global_table[IS_STOP].get_bool();
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let combo_count = ComboModule::count(fighter.module_accessor) as i32;
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_ATTACK_COUNT);
     let mini_jump_attack_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
     let reserve_log_attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     let s3_combo_max = WorkModule::get_param_int(fighter.module_accessor, hash40("s3_combo_max"), 0);
@@ -44,6 +46,26 @@ unsafe extern "C" fn cloud_attack_s3_main_loop_inner(fighter: &mut L2CFighterCom
             if !global_is_stop && reserve_log_attack_kind > 0 {
                 FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, reserve_log_attack_kind);
                 WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+            }
+        }
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
+                if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+                    if !StatusModule::is_changing(fighter.module_accessor) {
+                        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_ATTACK_COUNT);
+                    }
+                }
+            }
+            if count == 1 && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
+                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+                MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 97.0, true, false, false);
+            }
+            if (frame == 41.0 && count < 1) || (frame == 123.0 && count == 1) {
+                CancelModule::enable_cancel(fighter.module_accessor);
+            }
+            if frame == 96.0 {
+                KineticModule::clear_speed_all(fighter.module_accessor);
+                fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
             }
         }
         if MotionModule::is_end(fighter.module_accessor) {
@@ -116,10 +138,21 @@ unsafe extern "C" fn cloud_attack_s3_mtrans_param(fighter: &mut L2CFighterCommon
     }
 }
 
+unsafe extern "C" fn cloud_attack_s3_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let reserve_log_attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    if 0 < reserve_log_attack_kind {
+        FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, reserve_log_attack_kind);
+        WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    }
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_ATTACK_COUNT);
+    0.into()
+}
+
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_S3, cloud_attack_s3_main_status)
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_S3, cloud_attack_s3_end_status)
     .install()
     ;
 }

@@ -1,4 +1,5 @@
 use {
+  crate::status::*,
   exo_utils::{
     collision_struct::*,
     fighter_common::*,

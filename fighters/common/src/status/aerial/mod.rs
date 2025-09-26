@@ -1,5 +1,9 @@
 use {
-    exo_var::globals::*,
+    exo_var::{
+        bayonetta::*,
+        consts::*,
+        globals::*,
+    },
     smash::{
         app::{
             lua_bind::{
@@ -30,7 +34,9 @@ use {
 };
 
 pub mod gliding;
+mod sub_transition_group_check_air_attack;
 
 pub fn install() {
     gliding::install();
+    sub_transition_group_check_air_attack::install();
 }

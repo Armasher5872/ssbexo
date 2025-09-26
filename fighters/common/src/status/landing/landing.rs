@@ -37,8 +37,7 @@ unsafe fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> L2CValue {
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
 			ControlModule::reset_main_stick_x(boma);
             if GroundModule::is_passable_ground(boma)
-            && fighter.global_table[FLICK_Y].get_i32() < pass_flick_y
-            && fighter.global_table[STICK_Y].get_f32() < pass_stick_y {
+            && (fighter.global_table[FLICK_Y].get_i32() < pass_flick_y || fighter.global_table[STICK_Y].get_f32() < pass_stick_y) {
                 fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
                 return 1.into();
             }

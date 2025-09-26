@@ -13,6 +13,7 @@ unsafe extern "C" fn link_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_DEGREE);
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_START_Y);
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
+    WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
     WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ASCEND_FRAME);
 }
 
@@ -65,6 +66,10 @@ unsafe extern "C" fn link_death_initialization(vtable: u64, fighter: &mut Fighte
 unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_LINK as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let agent = get_fighter_common_from_accessor(&mut *boma);
+        let status_kind = agent.global_table[STATUS_KIND].get_i32();
+        let frame = agent.global_table[CURRENT_FRAME].get_f32();
+        let motion_kind = MotionModule::motion_kind(boma);
         if WorkModule::is_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_BOMB_FUSED) {
             let item_id = WorkModule::get_int(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
             if !sv_battle_object::is_active(item_id) {
@@ -72,7 +77,13 @@ unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                 WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_BOMB_FUSED);
             }
         }
-        println!("Current Status Kind: {}", StatusModule::status_kind(boma));
+        if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
+            if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind) && (80.0..=95.0).contains(&frame) {
+                if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_LINK_STATUS_KIND_MORTAL_DRAW_LOOP, false);
+                }
+            }
+        }
     }
     original!()(vtable, fighter)
 }

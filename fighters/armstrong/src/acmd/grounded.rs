@@ -37,7 +37,7 @@ unsafe extern "C" fn ssbexo_armstrong_dash_attack_acmd(agent: &mut L2CAgentBase)
     if is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 80, 60, 0, 45, 4.0, 0.0, 9.0, 7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
         ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 1.3);
@@ -74,7 +74,7 @@ unsafe extern "C" fn ssbexo_armstrong_dash_attack_effect(agent: &mut L2CAgentBas
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
     .game_acmd("game_attack11", ssbexo_armstrong_jab_acmd, Low)
     .effect_acmd("effect_attack11", ssbexo_armstrong_jab_effect, Low)
     .game_acmd("game_attackdash", ssbexo_armstrong_dash_attack_acmd, Low)

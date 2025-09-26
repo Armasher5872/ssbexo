@@ -29,6 +29,7 @@ unsafe extern "C" fn ssbexo_gaogaen_down_smash_acmd(agent: &mut L2CAgentBase) {
         JostleModule::set_status(agent.module_accessor, false);
     }
     frame(agent.lua_state_agent, 2.0);
+    execute(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
         JostleModule::set_status(agent.module_accessor, false);
@@ -36,15 +37,6 @@ unsafe extern "C" fn ssbexo_gaogaen_down_smash_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
-        ModelModule::joint_global_position(agent.module_accessor, Hash40::new("top"), &mut Vector3f::zero(), false);
-        ModelModule::joint_global_position(agent.module_accessor, Hash40::new("hip"), &mut Vector3f::zero(), false);
-        ATTACK(agent, 0, 0, Hash40::new("hip"), 17.0, 361, 71, 0, 73, 5.4, -4.0, -3.0, 0.0, None, None, None, 0.8, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 6, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-        ATTACK(agent, 1, 0, Hash40::new("hip"), 17.0, 361, 71, 0, 73, 5.4, 1.5, -5.5, 3.5, None, None, None, 0.8, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 6, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-        ATTACK(agent, 2, 0, Hash40::new("hip"), 17.0, 361, 71, 0, 73, 5.4, 7.0, -8.0, 7.0, None, None, None, 0.8, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 6, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-        AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_HIGH), false);
-    }
-    frame(agent.lua_state_agent, 18.0);
-    if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 17.0, 361, 71, 0, 73, 5.4, 0.0, 10.0, 9.0, Some(0.0), Some(10.0), Some(-4.0), 1.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 6, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
         AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_HIGH), false);
     }

@@ -21,8 +21,7 @@ unsafe extern "C" fn ssbexo_cloud_up_special_combo_2_acmd(agent: &mut L2CAgentBa
 unsafe extern "C" fn ssbexo_cloud_up_special_combo_2_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 45.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_CLIMHAZZARD_SWORD, Hash40::new("haver"), -0.04, 0.1, 0, 0, 0, 0, 1, true);
-        EFFECT_FOLLOW(agent, Hash40::new("cloud_climhazzard_slash2"), Hash40::new("haver"), 0, 0, 0, 0, 90, 0, 1, true);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_cloud_sword1_purple"), Hash40::new("tex_cloud_sword2"), 12, Hash40::new("haver"), 0, 1.5, -1.2, Hash40::new("haver"), 0, 20.5, -1.2, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.1);
     }
 }
 

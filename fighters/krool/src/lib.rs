@@ -1,6 +1,5 @@
 use {
     exo_utils::{
-        attack_xx4::*,
         fighter_common::*,
         status_end_control::*,
     },
@@ -14,7 +13,10 @@ use {
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon
     },
-    smash_script::*,
+    smash_script::{
+        macros::*,
+        *
+    },
     smashline::*,
 };
 

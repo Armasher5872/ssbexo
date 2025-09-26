@@ -2,20 +2,20 @@ use super::*;
 
 //Down Tilt ACMD
 unsafe extern "C" fn ssbexo_koopa_down_tilt_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 7.0);
+    if is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 4.0);
+    }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
-        HIT_NODE(agent, Hash40::new("tail1"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("tail2"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("tail3"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("tail4"), *HIT_STATUS_XLU);
-        ATTACK(agent, 0, 0, Hash40::new("tail1"), 10.0, 80, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        ATTACK(agent, 1, 0, Hash40::new("tail2"), 10.0, 80, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        ATTACK(agent, 2, 0, Hash40::new("tail3"), 10.0, 80, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-        ATTACK(agent, 3, 0, Hash40::new("tail4"), 10.0, 80, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BODY);
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
+        ATTACK(agent, 0, 0, Hash40::new("tail1"), 12.0, 65, 55, 0, 30, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        ATTACK(agent, 1, 0, Hash40::new("tail2"), 12.0, 65, 55, 0, 30, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        ATTACK(agent, 2, 0, Hash40::new("tail3"), 12.0, 65, 55, 0, 30, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        ATTACK(agent, 3, 0, Hash40::new("tail4"), 12.0, 65, 55, 0, 30, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
     wait(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
         AttackModule::clear_all(agent.module_accessor);
     }
 }
@@ -24,18 +24,34 @@ unsafe extern "C" fn ssbexo_koopa_down_tilt_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_koopa_down_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("tail4"), 0, 0, 0, 0, 0, 0, 0.7, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("tail4"), 0, 0, 2, 0, 0, 0, 0.7, true);
         EFFECT_FLIP(agent, Hash40::new("koopa_atk_arc"), Hash40::new("koopa_atk_arc"), Hash40::new("top"), 0, 6, 6, 7, -34, -20, 1.85, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_YZ);
     }
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 11.0);
+}
+
+//Down Tilt Sound
+unsafe extern "C" fn ssbexo_koopa_down_tilt_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("tail4"), 0, 0, 0, 0, 0, 0, 0.7, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("tail4"), 0, 0, 2, 0, 0, 0, 0.7, true);
+        PLAY_SE(agent, Hash40::new("se_koopa_attackhard_l02"));
+    }
+}
+
+//Down Tilt Expression
+unsafe extern "C" fn ssbexo_koopa_down_tilt_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 6, true);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 10.0);
+    if is_excute(agent) {
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
     }
 }
 
@@ -44,6 +60,8 @@ pub fn install() {
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_attacklw3", ssbexo_koopa_down_tilt_acmd, Low)
     .effect_acmd("effect_attacklw3", ssbexo_koopa_down_tilt_effect, Low)
+    .sound_acmd("sound_attacklw3", ssbexo_koopa_down_tilt_sound, Low)
+    .expression_acmd("expression_attacklw3", ssbexo_koopa_down_tilt_expression, Low)
     .install()
     ;
 }

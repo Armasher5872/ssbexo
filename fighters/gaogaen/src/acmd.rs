@@ -1,5 +1,4 @@
 use {
-    exo_utils::vector::*,
     exo_var::{
         consts::*,
         gaogaen::*,
@@ -8,6 +7,7 @@ use {
         app::{
             lua_bind::*,
             sv_animcmd::{
+                execute,
                 frame,
                 wait
             },
@@ -15,10 +15,7 @@ use {
         },
         lib::lua_const::*,
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        phx::Hash40
     },
     smash_script::{
         *,

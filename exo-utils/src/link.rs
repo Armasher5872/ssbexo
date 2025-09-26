@@ -1,3 +1,4 @@
+#![allow(improper_ctypes_definitions)]
 use super::*;
 
 pub struct FuseKind();
@@ -162,9 +163,37 @@ pub unsafe extern "C" fn set_boomerang_fuse_params(boma: *mut BattleObjectModule
     }
 }
 
+pub unsafe extern "C" fn link_change_angle(fighter: &mut L2CFighterCommon, current_degree: f32, max_degree: f32, motion_kind_max: &str, motion_kind_min: &str) {
+    let frame = MotionModule::frame(fighter.module_accessor);
+    let motion_kind_2nd = MotionModule::motion_kind_2nd(fighter.module_accessor);
+    let rate = MotionModule::rate(fighter.module_accessor);
+    let motion = if current_degree <= 0.0 {hash40(motion_kind_min)} else {hash40(motion_kind_max)};
+    if motion_kind_2nd != motion {
+        if current_degree <= 0.0 {
+            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_min), frame, rate, true, -(current_degree/max_degree));
+            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
+        }
+        else {
+            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_max), frame, rate, true, current_degree/max_degree);
+            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
+        }
+    }
+    else {
+        if current_degree < 0.0 {
+            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
+        }
+        else if current_degree > 0.0 {
+            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
+        }
+        else {
+            MotionModule::set_weight(fighter.module_accessor, 1.0, true);
+        }
+    }
+}
+
 pub unsafe extern "C" fn find_ascendable_ground(boma: *mut BattleObjectModuleAccessor, pos_x: f32, min_pos_y: f32, pos_y: f32, height: f32) -> f32 {
     let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
-    if GroundModule::ray_check_hit_pos(boma, &smash::phx::Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: -100.0}, ground_hit_pos, true) {
+    if GroundModule::ray_check_hit_pos(boma, &Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: -100.0}, ground_hit_pos, true) {
         if ground_hit_pos.y < min_pos_y {
             return pos_y;
         }

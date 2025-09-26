@@ -2,9 +2,11 @@ use {
     exo_utils::{
         attack_dash::*,
         attack_xx4::*,
+        check_attack::*,
         extern_func::*,
         fighter_common::*,
         link::*,
+        weapon::*,
     },
     exo_var::{
         consts::*,
@@ -39,6 +41,7 @@ mod arrow_fly;
 mod arrow_haved;
 mod arrow_hit_stick;
 mod arrow_stick;
+mod attach_wall;
 mod attack_dash_bound;
 mod attack_dash;
 mod attack_hi4_hold;
@@ -47,6 +50,8 @@ mod attack_lw4_hold;
 mod attack_lw4;
 mod attack_s4_hold;
 mod attack_s4;
+mod mortal_draw_attack;
+mod mortal_draw_loop;
 mod special_hi_ascend_end;
 mod special_hi_ascend_start;
 mod special_hi_ascend;
@@ -54,16 +59,17 @@ mod special_hi_drop;
 mod special_hi_end;
 mod special_hi_glide;
 mod special_hi_land;
-mod special_hi_turn;
 mod special_hi;
 mod special_lw_blast;
 mod special_n;
+mod swordbeam_fly;
 
 pub fn install() {
     arrow_fly::install();
     arrow_haved::install();
     arrow_hit_stick::install();
     arrow_stick::install();
+    attach_wall::install();
     attack_dash_bound::install();
     attack_dash::install();
     attack_hi4_hold::install();
@@ -72,6 +78,8 @@ pub fn install() {
     attack_lw4::install();
     attack_s4_hold::install();
     attack_s4::install();
+    mortal_draw_attack::install();
+    mortal_draw_loop::install();
     special_hi_ascend_end::install();
     special_hi_ascend_start::install();
     special_hi_ascend::install();
@@ -79,8 +87,8 @@ pub fn install() {
     special_hi_end::install();
     special_hi_glide::install();
     special_hi_land::install();
-    special_hi_turn::install();
     special_hi::install();
     special_lw_blast::install();
     special_n::install();
+    swordbeam_fly::install();
 }

@@ -1,5 +1,27 @@
 use super::*;
 
+//On Flag Hook (Credit to Chrispo)
+#[skyline::hook(replace = smash::app::lua_bind::WorkModule::on_flag)]
+unsafe extern "C" fn on_flag_hook(boma: &mut smash::app::BattleObjectModuleAccessor, int: c_int) -> () {
+	let category = utility::get_category(boma);
+	if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+		if int == *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI {
+			if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FULL_HOP_ENABLE_DELAY) <= 0 {
+				original!()(boma, int)
+			}
+			else {
+				return;
+			}
+		}
+		else {
+			original!()(boma, int)
+		}
+	}
+	else {
+		original!()(boma, int)
+	}
+}
+
 #[skyline::hook(replace=smash::app::lua_bind::WorkModule::get_int)]
 unsafe extern "C" fn get_int_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, int: i32) -> u64 {
 	let fighter_kind = smash::app::utility::get_kind(module_accessor);
@@ -34,5 +56,7 @@ unsafe extern "C" fn get_int_replace(module_accessor: &mut smash::app::BattleObj
 
 //Installation
 pub fn install() {
-	skyline::install_hook!(get_int_replace);
+	skyline::install_hooks!(
+		get_int_replace
+	);
 }

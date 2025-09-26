@@ -84,22 +84,18 @@ unsafe extern "C" fn jack_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 #[skyline::hook(offset = JACK_VTABLE_ON_ATTACK_OFFSET)]
 unsafe extern "C" fn jack_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
     let collision_log = log as *mut CollisionLogScuffed;
     let collision_kind = (*collision_log).collision_kind;
     let opponent_object_id = (*collision_log).opponent_object_id;
     let opponent_object = get_battle_object_from_id(opponent_object_id);
     let opponent_battle_object_id = (*opponent_object).battle_object_id;
-    let battle_object = sv_system::battle_object(agent.lua_state_agent);
-    let mut_fighter: *mut Fighter = std::mem::transmute(battle_object);
     if [1, 2].contains(&collision_kind) {
         let attack_data = AttackModule::attack_data(boma, (*collision_log).collider_id as i32, (*collision_log).x35);
         let power = (*attack_data).power;
         if opponent_battle_object_id >> 0x1C == 0
         && HitModule::get_status((*opponent_object).module_accessor, (*collision_log).receiver_id as i32, 0) == 0 {
             FighterSpecializer_Jack::add_rebel_gauge(boma, FighterEntryID(entry_id), power);
-            add_final_smash_meter(power*2.0, mut_fighter);
         }
     }
     call_original!(vtable, fighter, log)
@@ -107,7 +103,7 @@ unsafe extern "C" fn jack_on_attack(vtable: u64, fighter: &mut Fighter, log: u64
 
 #[skyline::hook(offset = JACK_FIGHTERSPECIALIZER_CHECK_DOYLE_SUMMON_DISPATCH_OFFSET, inline)]
 unsafe fn jack_fighterspecializer_check_doyle_summon_dispatch_hook(ctx: &mut skyline::hooks::InlineCtx) {
-    let boma = *ctx.registers[21].x.as_ref() as *mut BattleObjectModuleAccessor;
+    let boma = ctx.registers[21].x() as *mut BattleObjectModuleAccessor;
     WorkModule::off_flag(boma, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE_EXIST);
     jack_customizer(boma, 0);
 }

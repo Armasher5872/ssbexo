@@ -28,163 +28,118 @@ unsafe extern "C" fn ssbexo_cloud_punisher_turn_expression(agent: &mut L2CAgentB
 
 //Punisher Slow Walk Effect
 unsafe extern "C" fn ssbexo_cloud_punisher_slow_walk_effect(agent: &mut L2CAgentBase) {
-    loop {
-        frame(agent.lua_state_agent, 51.0);
-        if is_excute(agent) {
-            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        }
-        wait(agent.lua_state_agent, 36.0);
-        if is_excute(agent) {
-            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    frame(agent.lua_state_agent, 51.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+    }
+    wait(agent.lua_state_agent, 36.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
 //Punisher Slow Walk Sound
 unsafe extern "C" fn ssbexo_cloud_punisher_slow_walk_sound(agent: &mut L2CAgentBase) {
-    loop {
-        frame(agent.lua_state_agent, 47.0);
-        if is_excute(agent) {
-            PLAY_STEP(agent, Hash40::new("se_cloud_step_left_s"));
-        }
-        wait(agent.lua_state_agent, 36.0);
-        if is_excute(agent) {
-            PLAY_STEP(agent, Hash40::new("se_cloud_step_right_s"));
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    frame(agent.lua_state_agent, 47.0);
+    if is_excute(agent) {
+        PLAY_STEP(agent, Hash40::new("se_cloud_step_left_s"));
+    }
+    wait(agent.lua_state_agent, 36.0);
+    if is_excute(agent) {
+        PLAY_STEP(agent, Hash40::new("se_cloud_step_right_s"));
     }
 }
 
 //Punisher Slow Walk Expression
 unsafe extern "C" fn ssbexo_cloud_punisher_slow_walk_expression(agent: &mut L2CAgentBase) {
-    loop {
-        if is_excute(agent) {
-            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
-        }
-        frame(agent.lua_state_agent, 37.0);
-        if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        }
-        wait(agent.lua_state_agent, 21.0);
-        if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
+    }
+    frame(agent.lua_state_agent, 37.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    wait(agent.lua_state_agent, 21.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 //Punisher Middle Walk Effect
 unsafe extern "C" fn ssbexo_cloud_punisher_middle_walk_effect(agent: &mut L2CAgentBase) {
-    loop {
-        frame(agent.lua_state_agent, 35.0);
-        if is_excute(agent) {
-            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        }
-        wait(agent.lua_state_agent, 27.0);
-        if is_excute(agent) {
-            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    frame(agent.lua_state_agent, 35.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+    }
+    wait(agent.lua_state_agent, 27.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
 //Punisher Middle Walk Sound
 unsafe extern "C" fn ssbexo_cloud_punisher_middle_walk_sound(agent: &mut L2CAgentBase) {
-    loop {
-        frame(agent.lua_state_agent, 34.0);
-        if is_excute(agent) {
-            PLAY_STEP(agent, Hash40::new("se_cloud_step_left_s"));
-        }
-        wait(agent.lua_state_agent, 26.0);
-        if is_excute(agent) {
-            PLAY_STEP(agent, Hash40::new("se_cloud_step_right_s"));
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    frame(agent.lua_state_agent, 34.0);
+    if is_excute(agent) {
+        PLAY_STEP(agent, Hash40::new("se_cloud_step_left_s"));
+    }
+    wait(agent.lua_state_agent, 26.0);
+    if is_excute(agent) {
+        PLAY_STEP(agent, Hash40::new("se_cloud_step_right_s"));
     }
 }
 
 //Punisher Middle Walk Expression
 unsafe extern "C" fn ssbexo_cloud_punisher_middle_walk_expression(agent: &mut L2CAgentBase) {
-    loop {
-        if is_excute(agent) {
-            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
-        }
-        frame(agent.lua_state_agent, 15.0);
-        if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        }
-        wait(agent.lua_state_agent, 20.0);
-        if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
+    }
+    frame(agent.lua_state_agent, 15.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    wait(agent.lua_state_agent, 20.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 //Punisher Fast Walk Effect
 unsafe extern "C" fn ssbexo_cloud_punisher_fast_walk_effect(agent: &mut L2CAgentBase) {
-    loop {
-        frame(agent.lua_state_agent, 21.0);
-        if is_excute(agent) {
-            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        }
-        wait(agent.lua_state_agent, 43.0);
-        if is_excute(agent) {
-            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    frame(agent.lua_state_agent, 21.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+    }
+    wait(agent.lua_state_agent, 43.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
 //Punisher Fast Walk Sound
 unsafe extern "C" fn ssbexo_cloud_punisher_fast_walk_sound(agent: &mut L2CAgentBase) {
-    loop {
-        frame(agent.lua_state_agent, 23.0);
-        if is_excute(agent) {
-            PLAY_STEP(agent, Hash40::new("se_cloud_step_left_s"));
-        }
-        wait(agent.lua_state_agent, 17.0);
-        if is_excute(agent) {
-            PLAY_STEP(agent, Hash40::new("se_cloud_step_right_s"));
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    frame(agent.lua_state_agent, 23.0);
+    if is_excute(agent) {
+        PLAY_STEP(agent, Hash40::new("se_cloud_step_left_s"));
+    }
+    wait(agent.lua_state_agent, 17.0);
+    if is_excute(agent) {
+        PLAY_STEP(agent, Hash40::new("se_cloud_step_right_s"));
     }
 }
 
 //Punisher Fast Walk Expression
 unsafe extern "C" fn ssbexo_cloud_punisher_fast_walk_expression(agent: &mut L2CAgentBase) {
-    loop {
-        if is_excute(agent) {
-            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
-        }
-        frame(agent.lua_state_agent, 9.0);
-        if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        }
-        wait(agent.lua_state_agent, 16.0);
-        if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        }
-        agent.clear_lua_stack();
-        sv_animcmd::wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
+    }
+    frame(agent.lua_state_agent, 9.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    wait(agent.lua_state_agent, 16.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
@@ -341,7 +296,7 @@ unsafe extern "C" fn ssbexo_cloud_punisher_squat_expression(agent: &mut L2CAgent
     }
     frame(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_l") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_r") as i64);
     }
 }
 
@@ -359,7 +314,7 @@ unsafe extern "C" fn ssbexo_cloud_punisher_squat_wait_sound(agent: &mut L2CAgent
 //Punisher Squat Wait Expression
 unsafe extern "C" fn ssbexo_cloud_punisher_squat_wait_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_l") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_r") as i64);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
 }
@@ -375,12 +330,8 @@ unsafe extern "C" fn ssbexo_cloud_punisher_squat_rv_sound(agent: &mut L2CAgentBa
 //Punisher Squat Rv Expression
 unsafe extern "C" fn ssbexo_cloud_punisher_squat_rv_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_l") as i64);
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-    }
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
         VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_r") as i64);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
 }
 
@@ -399,7 +350,7 @@ unsafe extern "C" fn ssbexo_cloud_punisher_guard_on_expression(agent: &mut L2CAg
     }
     frame(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_l") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_r") as i64);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 3);
     }
 }
@@ -407,7 +358,7 @@ unsafe extern "C" fn ssbexo_cloud_punisher_guard_on_expression(agent: &mut L2CAg
 //Punisher Guard Expression
 unsafe extern "C" fn ssbexo_cloud_punisher_guard_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_l") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_r") as i64);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
 }
@@ -428,6 +379,16 @@ unsafe extern "C" fn ssbexo_cloud_punisher_guard_off_expression(agent: &mut L2CA
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {
         VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_r") as i64);
+    }
+}
+
+//Omnislash Dash ACMD
+unsafe extern "C" fn ssbexo_cloud_omnislash_dash_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        WHOLE_HIT(agent, *HIT_STATUS_XLU);
+        CAM_ZOOM_OUT(agent);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 361, 130, 50, 0, 8.0, 0.0, 6.0, 8.0, Some(0.0), Some(6.0), Some(16.0), 0.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+        AttackModule::set_no_dead_all(agent.module_accessor, true, false);
     }
 }
 
@@ -471,6 +432,8 @@ pub fn install() {
     .expression_acmd("expression_punishguard", ssbexo_cloud_punisher_guard_expression, Low)
     .sound_acmd("sound_punishguardoff", ssbexo_cloud_punisher_guard_off_sound, Low)
     .expression_acmd("expression_punishguardoff", ssbexo_cloud_punisher_guard_off_expression, Low)
+    .game_acmd("game_finaldash", ssbexo_cloud_omnislash_dash_acmd, Low)
+    .game_acmd("game_final2dash", ssbexo_cloud_omnislash_dash_acmd, Low)
     .install()
     ;
 }

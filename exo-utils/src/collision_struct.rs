@@ -5,7 +5,7 @@ use super::*;
 pub struct CollisionLog {
     pub _next: *mut CollisionLog,
     pub _end: *mut CollisionLog,
-    pub _location: Vector3f,
+    pub location: Vector3f,
     pub _padding_0: u32,
     pub _padding_1: u32,
     pub opponent_battle_object_id: u32,

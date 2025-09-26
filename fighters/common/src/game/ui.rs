@@ -2,7 +2,7 @@ use super::*;
 
 #[skyline::hook(offset = 0x1b6cc08, inline)]
 unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
-    let layout_udata = *ctx.registers[0].x.as_ref();
+    let layout_udata = ctx.registers[0].x();
     let layout_view = *(layout_udata as *const u64).add(1);
     let layout_pane = *(layout_view as *const u64).add(3);
     let ui2d_pane = *(layout_pane as *const u64);
@@ -27,7 +27,6 @@ unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
     manager.mariod_meter[index] = MarioDMeter::new(layout_udata);
     manager.lucario_meter[index] = LucarioMeter::new(layout_udata);
     manager.cloud_meter[index] = CloudMeter::new(layout_udata);
-    manager.common_ui_enable_disable[0] = CommonUiEnableDisable::new(layout_udata);
 }
 
 #[skyline::hook(offset = 0x138a710, inline)]
@@ -79,28 +78,9 @@ fn hud_update(_: &skyline::hooks::InlineCtx) {
     }
 }
 
-#[skyline::hook(offset = 0x4b644, inline)]
-unsafe fn handle_draw(ctx: &mut skyline::hooks::InlineCtx) {
-    let layout = *ctx.registers[20].x.as_ref() as *mut Layout;
-    handle_layout(layout);
-}
-
-unsafe fn handle_layout(layout: *mut Layout) {
-    let layout_name = skyline::from_c_str((*layout).layout_name);
-    let root_pane = &mut *(*layout).root_pane;
-    let mut mgr = UI_MANAGER.write();
-    if ["info_playercursor", "info_playercursor_item", "info_melee", "info_radar_a", "info_radar_b"].contains(&layout_name.as_str()) {
-        root_pane.flags |= 1 << PaneFlag::InfluencedAlpha as u8;
-        for common_ui_enable_disable in mgr.common_ui_enable_disable.iter_mut() {
-            root_pane.set_visible(common_ui_enable_disable.is_enabled());
-        }
-    }
-}
-
 pub fn install() {
     skyline::install_hooks!(
         get_set_info_alpha, 
-        hud_update,
-        handle_draw
+        hud_update
     );
 }

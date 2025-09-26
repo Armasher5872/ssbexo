@@ -49,25 +49,9 @@ unsafe extern "C" fn link_bowarrow_haved_main_loop(weapon: &mut L2CWeaponCommon)
             }
         }
     }
-    if arrow_type == *WN_LINK_BOWARROW_FIRE_ARROW {
-        if frame % 15.0 == 0.0 {
-            EFFECT_FOLLOW(weapon, Hash40::new("sys_damage_fire_fly"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
-        }
-    }
-    if arrow_type == *WN_LINK_BOWARROW_SHOCK_ARROW {
-        if frame % 15.0 == 0.0 {
-            EFFECT_FOLLOW(weapon, Hash40::new("sys_damage_elec"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
-        }
-    }
-    if arrow_type == *WN_LINK_BOWARROW_ICE_ARROW {
-        if frame % 15.0 == 0.0 {
-            EFFECT_FOLLOW(weapon, Hash40::new("sys_hit_ice"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
-        }
-    }
     if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {
         if frame % 15.0 == 0.0 {
-            EFFECT_FOLLOW(weapon, Hash40::new("pitb_final_muzzle"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
-            LAST_EFFECT_SET_COLOR(weapon, 0.0, 0.0, 1.0);
+            EFFECT_FOLLOW(weapon, Hash40::new("link_light_arrow_charge"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
         }
     }
     0.into()

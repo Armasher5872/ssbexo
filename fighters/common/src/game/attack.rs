@@ -3,7 +3,7 @@ use super::*;
 //Hit Module Handle Attack Event, determines where you hit and with what hitbox id
 #[skyline::hook(offset = 0x46ae84, inline)]
 unsafe extern "C" fn hit_module_handle_attack_event(ctx: &InlineCtx) {
-    let data = *ctx.registers[1].x.as_ref() as *mut u32;
+    let data = ctx.registers[1].x() as *mut u32;
     let attacker_id = *data;
     let collision_id = *data.add(1);
     let battle_object = &mut *get_battle_object_from_id(attacker_id);
@@ -11,7 +11,7 @@ unsafe extern "C" fn hit_module_handle_attack_event(ctx: &InlineCtx) {
     if ![*BATTLE_OBJECT_CATEGORY_FIGHTER, *BATTLE_OBJECT_CATEGORY_WEAPON, *BATTLE_OBJECT_CATEGORY_ITEM].contains(&category) {
         return;
     }
-    let collision_data = *ctx.registers[27].x.as_ref() as *mut f32;
+    let collision_data = ctx.registers[27].x() as *mut f32;
     let loc_x = *collision_data.add(4);
     let loc_y = *collision_data.add(5);
     let loc_z = *collision_data.add(6);
@@ -136,13 +136,15 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
 
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32); //Removes phantoms
+    /*
     //Nops functions related to final smash meter gain
     let _ = skyline::patching::Patch::in_text(0x61552c).nop();
     let _ = skyline::patching::Patch::in_text(0x6209a0).nop();
     let _ = skyline::patching::Patch::in_text(0x633db8).nop();
+    */
 	skyline::install_hooks!(
-        attack_replace,
-        attack_abs_replace,
+        //attack_replace,
+        //attack_abs_replace,
         notify_log_event_collision_hit,
         hit_module_handle_attack_event,
         shield_module_send_shield_attack_collision_event,

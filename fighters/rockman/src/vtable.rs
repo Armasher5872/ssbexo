@@ -79,13 +79,13 @@ unsafe extern "C" fn rockman_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 
 #[skyline::hook(offset = 0x1083bec, inline)]
 unsafe extern "C" fn rockman_link_event_disable(ctx: &mut skyline::hooks::InlineCtx) {
-    let boma = *ctx.registers[19].x.as_ref() as *mut BattleObjectModuleAccessor;
+    let boma = ctx.registers[19].x() as *mut BattleObjectModuleAccessor;
     FighterSpecializer_Rockman::set_leafshield(boma, false);
 }
 
 #[skyline::hook(offset = 0x10838e0, inline)]
 unsafe extern "C" fn rockman_link_event_enable(ctx: &mut skyline::hooks::InlineCtx) {
-    let boma = *ctx.registers[19].x.as_ref() as *mut BattleObjectModuleAccessor;
+    let boma = ctx.registers[19].x() as *mut BattleObjectModuleAccessor;
     FighterSpecializer_Rockman::set_leafshield(boma, true);
 }
 

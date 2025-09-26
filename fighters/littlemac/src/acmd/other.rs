@@ -1,5 +1,6 @@
 use super::*;
 
+//Dash ACMD
 unsafe extern "C" fn ssbexo_littlemac_dash_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {

@@ -7,11 +7,11 @@ unsafe extern "C" fn ssbexo_koopa_wait_2_expression(agent: &mut L2CAgentBase) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
     }
     frame(agent.lua_state_agent, 56.0);
-    for _ in 0..10 {
+    for _ in 0..5 {
         if is_excute(agent) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
-        wait(agent.lua_state_agent, 5.0);
+        wait(agent.lua_state_agent, 10.0);
     }
 }
 
@@ -30,11 +30,11 @@ unsafe extern "C" fn ssbexo_koopa_wait_3_expression(agent: &mut L2CAgentBase) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
     frame(agent.lua_state_agent, 106.0);
-    for _ in 0..14 {
+    for _ in 0..7 {
         if is_excute(agent) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
-        wait(agent.lua_state_agent, 5.0);
+        wait(agent.lua_state_agent, 10.0);
     }
 }
 
@@ -69,11 +69,11 @@ unsafe extern "C" fn ssbexo_koopa_up_taunt_expression(agent: &mut L2CAgentBase) 
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
     }
     frame(agent.lua_state_agent, 45.0);
-    for _ in 0..8 {
+    for _ in 0..4 {
         if is_excute(agent) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
-        wait(agent.lua_state_agent, 5.0);
+        wait(agent.lua_state_agent, 10.0);
     }
 }
 
@@ -123,7 +123,7 @@ unsafe extern "C" fn ssbexo_koopa_side_taunt_expression(agent: &mut L2CAgentBase
     frame(agent.lua_state_agent, 73.0);
     if is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
-        QUAKE(agent, *CAMERA_QUAKE_KIND_M);
+        QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
 }
 
@@ -131,29 +131,13 @@ unsafe extern "C" fn ssbexo_koopa_side_taunt_expression(agent: &mut L2CAgentBase
 unsafe extern "C" fn ssbexo_koopa_dash_attack_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 30, 80, 60, 0, 10.0, 0.0, 8.0, 2.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 361, 45, 0, 95, 7.0, 0.0, 8.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
     }
     wait(agent.lua_state_agent, 1.0);
     if is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
-        AttackModule::clear_all(agent.module_accessor);
     }  
-    wait(agent.lua_state_agent, 1.0);
-    for _ in 0..3 {
-        if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 30, 80, 60, 0, 10.0, 0.0, 8.0, 2.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
-        }
-        wait(agent.lua_state_agent, 1.0);
-        if is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
-        }  
-        wait(agent.lua_state_agent, 1.0);
-    }
-    frame(agent.lua_state_agent, 23.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 30, 100, 0, 70, 10.0, 0.0, 8.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
-    }
-    frame(agent.lua_state_agent, 25.0);
+    frame(agent.lua_state_agent, 26.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }

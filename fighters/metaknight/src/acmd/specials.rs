@@ -90,7 +90,6 @@ unsafe extern "C" fn ssbexo_metaknight_galaxia_beam_grounded_fire_expression(age
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_METAKNIGHT_GENERATE_ARTICLE_MANTLE, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        VisibilityModule::set_whole(agent.module_accessor, true);
     }
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {

@@ -4,6 +4,7 @@ use {
     fighter_common::*,
     hook::*,
     littlemac::*,
+    status_end_control::*,
   },
   exo_var::{
     consts::*,

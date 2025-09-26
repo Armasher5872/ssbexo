@@ -53,11 +53,6 @@ pub trait CloudUiObject {
     fn is_enabled(&self) -> bool;
 }
 
-pub trait CommonUiObject {
-    fn set_enable(&mut self, enable: bool);
-    fn is_enabled(&self) -> bool;
-}
-
 impl UiObject for PalutenaMeter {
     fn update(&mut self) {
         self.set_tex_coords();
@@ -276,14 +271,5 @@ impl CloudUiObject for CloudMeter {
     }
     fn is_enabled(&self) -> bool {
         self.enabled
-    }
-}
-
-impl CommonUiObject for CommonUiEnableDisable {
-    fn set_enable(&mut self, enable: bool) {
-        self.is_enabled = enable;
-    }
-    fn is_enabled(&self) -> bool {
-        return self.is_enabled;
     }
 }

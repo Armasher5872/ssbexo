@@ -15,7 +15,6 @@ pub unsafe fn add_shield_group(boma: *mut BattleObjectModuleAccessor, resource: 
 }
 
 //Adds a new reflector type, used for making new reflectors
-/*
 pub unsafe fn add_reflector_group(boma: *mut BattleObjectModuleAccessor, resource: *mut ShieldGroupResource2, group_id: i32) {
     let ptr = get_module_vtable_func(boma, 0x108, 0x60);
     let set_shield_group2: extern "C" fn(*mut u64, *mut ShieldGroupResource2, i32) = std::mem::transmute(ptr);
@@ -28,7 +27,6 @@ pub unsafe fn add_reflector_group(boma: *mut BattleObjectModuleAccessor, resourc
         }
     }
 }
-*/
 
 //Used to get the pointer for a vtable function within a specific module.
 pub unsafe fn get_module_vtable_func(boma: *mut BattleObjectModuleAccessor, module_offset: usize, func_offset: u64) -> u64 {

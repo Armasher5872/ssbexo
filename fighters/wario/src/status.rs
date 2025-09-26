@@ -117,7 +117,7 @@ unsafe extern "C" fn wario_attack_dash_loop_main_loop(fighter: &mut L2CFighterCo
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT) {
         AttackModule::clear_all(fighter.module_accessor);
     }
-    if fighter.sub_check_button_jump().get_bool() {
+    if jump_cancel(fighter) {
         fighter.change_status(FIGHTER_WARIO_STATUS_KIND_ATTACK_DASH_JUMP_SQUAT.into(), false.into());
     }
     if situation_kind == *SITUATION_KIND_AIR {
@@ -333,7 +333,7 @@ unsafe extern "C" fn wario_attack_dash_end_end_status(fighter: &mut L2CFighterCo
 
 unsafe extern "C" fn wario_throw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH) {
-        StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_AIR_STOP, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLOAT, 0);
+        StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_AIR), *FIGHTER_KINETIC_TYPE_FALL, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLOAT, 0);
         FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, (*FIGHTER_LOG_MASK_FLAG_THROW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_KEEP) as u64, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, *FIGHTER_POWER_UP_ATTACK_BIT_THROW as u32, 0);
         0.into()
     }
@@ -349,9 +349,10 @@ unsafe extern "C" fn wario_throw_main_status(fighter: &mut L2CFighterCommon) -> 
         sv_kinetic_energy!(reset_energy, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FREE, 0.0, 0.0, 0.0, 0.0, 0.0);
         sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 3.5);
         sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.12);
-        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5, 0.0);
-        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 1.5, 0.0);
-        sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.14894);
+        sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0, 0.0);
+        sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.7, 0.0);
+        sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.7, 0.0);
+        sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.04);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         wario_throw_sub_status(fighter);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_catch"), 0.0, 1.0, false, 0.0, false, false);
@@ -375,12 +376,16 @@ unsafe extern "C" fn wario_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let up_special_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_UP_SPECIAL_TIMER);
     if motion_kind == hash40("special_hi_catch") {
+        if up_special_timer < 60 {
+            WorkModule::inc_int(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_UP_SPECIAL_TIMER);
+        }
         if frame > 23.0 {
             ADD_SPEED_NO_LIMIT(fighter, 0, -0.12);
             MotionModule::set_rate(fighter.module_accessor, 0.0);
         }
-        if situation_kind == *SITUATION_KIND_AIR && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+        if situation_kind == *SITUATION_KIND_AIR && (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || up_special_timer >= 60) {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_throw_air"), 0.0, 1.0, false, 0.0, false, false);
         }
         if situation_kind == *SITUATION_KIND_GROUND {
@@ -429,6 +434,7 @@ unsafe extern "C" fn wario_throw_exec_status(fighter: &mut L2CFighterCommon) -> 
 unsafe extern "C" fn wario_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_UP_SPECIAL_TIMER);
     fighter.status_end_Throw()
 }
 

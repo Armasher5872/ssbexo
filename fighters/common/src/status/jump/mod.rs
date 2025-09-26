@@ -21,15 +21,12 @@ use {
         phx::Hash40
     },
     smash_script::*,
-    std::arch::asm
 };
 
 mod jump;
 mod jumpsquat;
-mod treadjump;
 
 pub fn install() {
     jump::install();
     jumpsquat::install();
-    treadjump::install();
 }

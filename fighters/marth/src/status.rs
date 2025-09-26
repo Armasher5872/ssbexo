@@ -56,6 +56,7 @@ unsafe extern "C" fn marth_special_hi_main_status(fighter: &mut L2CFighterCommon
 
 unsafe extern "C" fn marth_special_hi_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -65,7 +66,9 @@ unsafe extern "C" fn marth_special_hi_main_loop(fighter: &mut L2CFighterCommon) 
         }
     }
     if stick_x > 0.7 {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        if prev_status_kind != *FIGHTER_STATUS_KIND_GUARD {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
+        }
     }
     else {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARTH_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DID_ANGLE);
@@ -133,12 +136,14 @@ unsafe extern "C" fn marth_special_hi_hi_exec_status(fighter: &mut L2CFighterCom
 
 unsafe extern "C" fn marth_special_hi_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let landing_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("landing_frame"));
-    let fall_x_mul_value = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("fall_x_mul_value"));
+    //let fall_x_mul_value = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_hi"), hash40("fall_x_mul_value"));
     WorkModule::set_float(fighter.module_accessor, landing_frame, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_LANDING_CANCEL);
+    /*
     if fighter.global_table[STATUS_KIND] == *FIGHTER_STATUS_KIND_FALL_SPECIAL {
         WorkModule::set_float(fighter.module_accessor, fall_x_mul_value, *FIGHTER_INSTANCE_WORK_ID_FLOAT_FALL_X_MAX_MUL);
     }
+    */
     0.into()
 }
 

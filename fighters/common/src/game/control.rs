@@ -5,10 +5,10 @@ const PRECEDE_EXTENSION: u8 = 15;
 
 #[skyline::hook(offset = 0x6bd5b4, inline)]
 unsafe fn set_hold_buffer_value(ctx: &mut skyline::hooks::InlineCtx) {
-    let current_buffer = *ctx.registers[8].w.as_ref();
+    let current_buffer = ctx.registers[8].w();
     let threshold = u8::MAX - PRECEDE_EXTENSION;
     let buffer = if current_buffer == 1 {u8::MAX as u32} else if current_buffer == threshold as u32 {1} else {current_buffer};
-    *ctx.registers[8].w.as_mut() = buffer;
+    ctx.registers[8].set_w(buffer);
 }
 
 #[skyline::hook(offset = 0x6bd51c, inline)]
@@ -23,9 +23,9 @@ unsafe fn set_release_value(ctx: &mut skyline::hooks::InlineCtx) {
 
 unsafe fn set_release_value_internal(ctx: &mut skyline::hooks::InlineCtx) {
     let threshold = u8::MAX - PRECEDE_EXTENSION;
-    let current_buffer = ctx.registers[9].w.as_ref();
-    let buffer = if *current_buffer < threshold as u32 {*current_buffer} else {1};
-    *ctx.registers[8].w.as_mut() = buffer as u32;
+    let current_buffer = ctx.registers[9].w();
+    let buffer = if current_buffer < threshold as u32 {current_buffer} else {1};
+    ctx.registers[8].set_w(buffer as u32);
 }
 
 pub fn install() {

@@ -2,7 +2,6 @@ use {
     exo_var::{
         captain::*,
         consts::*,
-        kirby::*,
     },
     smash::{
         app::{

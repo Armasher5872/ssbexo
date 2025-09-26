@@ -577,7 +577,7 @@ unsafe extern "C" fn ssbexo_armstrong_final_smash_throw_expression(agent: &mut L
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
     .effect_acmd("effect_entryr", ssbexo_armstrong_entry_effect, Low)
     .effect_acmd("effect_entryl", ssbexo_armstrong_entry_effect, Low)
     .sound_acmd("sound_entryr", ssbexo_armstrong_entry_sound, Low)

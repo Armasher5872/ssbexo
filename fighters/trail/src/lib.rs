@@ -13,7 +13,10 @@ use {
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon
     },
-    smash_script::*,
+    smash_script::{
+        macros::*,
+        *
+    },
     smashline::*,
 };
 

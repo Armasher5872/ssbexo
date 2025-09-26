@@ -9,18 +9,13 @@ unsafe extern "C" fn cloud_guard_on_pre_status(fighter: &mut L2CFighterCommon) -
 
 //Cloud Guard On Init Status
 unsafe extern "C" fn cloud_guard_on_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let guard_hit_stop_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), 0x20d241cd64);
     let guard_off_disable_shield_recovery = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("guard_off_disable_shield_recovery"));
-    ShieldModule::set_status(fighter.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_CLOUD_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
-    ShieldModule::set_hit_stop_mul(fighter.module_accessor, guard_hit_stop_frame);
     WorkModule::set_int(fighter.module_accessor, guard_off_disable_shield_recovery, *FIGHTER_INSTANCE_WORK_ID_INT_DISABLE_SHIELD_RECOVERY_FRAME);
     0.into()
 }
 
 //Cloud Guard On Main Status
 unsafe extern "C" fn cloud_guard_on_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let shield_min_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("shield_min_frame"));
-    WorkModule::set_int(fighter.module_accessor, shield_min_frame, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("punish_guard_on"), 0.0, 1.0, false, 0.0, false, false);
     cloud_sub_guard_cont_pre(fighter);
     if !StopModule::is_stop(fighter.module_accessor) {
@@ -36,7 +31,7 @@ unsafe extern "C" fn cloud_sub_guard_cont_pre(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS
     ];
     let catch_dash_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("catch_dash_frame"));
-    if fighter.global_table[STATUS_KIND_INTERRUPT].get_i32() == *FIGHTER_STATUS_KIND_GUARD_ON {
+    if fighter.global_table[STATUS_KIND_INTERRUPT].get_i32() == *FIGHTER_CLOUD_STATUS_KIND_GUARD_ON {
         if fighter.global_table[STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_RUN {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN);
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_DASH);
@@ -50,12 +45,8 @@ unsafe extern "C" fn cloud_sub_guard_cont_pre(fighter: &mut L2CFighterCommon) {
 }
 
 unsafe extern "C" fn cloud_sub_guard_on_uniq(fighter: &mut L2CFighterCommon, bool_check: L2CValue) -> L2CValue {
-    let guard_min_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME);
     let catch_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_CATCH_FRAME);
     if bool_check.get_bool() {
-        if 0 < guard_min_frame {
-            WorkModule::dec_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME);
-        }
         if 0 <= catch_frame {
             WorkModule::dec_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_CATCH_FRAME);
             if catch_frame < 0 {

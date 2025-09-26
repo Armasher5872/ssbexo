@@ -82,7 +82,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
     if defender_category != *BATTLE_OBJECT_CATEGORY_FIGHTER { 
         return;
     }
-    if ![*BATTLE_OBJECT_CATEGORY_FIGHTER, *BATTLE_OBJECT_CATEGORY_WEAPON, *BATTLE_OBJECT_CATEGORY_ITEM].contains(&attacker_category) { 
+    if ![*BATTLE_OBJECT_CATEGORY_FIGHTER, *BATTLE_OBJECT_CATEGORY_WEAPON].contains(&attacker_category) { 
         return;
     }
     for id in 0..8 {
@@ -156,7 +156,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
             CAM_ZOOM_IN_arg5(defender_agent, 2.0, 0.0, 1.8, 0.0, 0.0);
             QUAKE(attacker_agent, *CAMERA_QUAKE_KIND_XL);
             set_stage_visibility(attacker_boma, 0);
-            UiManager::set_ui_state(0, false);
+            set_vis_hud(false);
         }
         else {
             if ![*FIGHTER_KIND_EDGE, *WEAPON_KIND_EDGE_FIRE, *WEAPON_KIND_EDGE_FLARE2, *WEAPON_KIND_EDGE_FLASH].contains(&attacker_kind) {
@@ -267,11 +267,12 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
         SlowModule::set_whole(attacker_boma, 8, 25);
         SlowModule::set_whole(defender_boma, 8, 25);
         StopModule::set_hit_stop_frame(defender_boma, 20, true);
-        WorkModule::set_int(attacker_boma, attacker_battle_object.battle_object_id as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
-        WorkModule::set_int(attacker_boma, defender_battle_object.battle_object_id as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
-        WorkModule::set_int(defender_boma, attacker_battle_object.battle_object_id as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
-        WorkModule::set_int(defender_boma, defender_battle_object.battle_object_id as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
+        WorkModule::set_int(attacker_boma, attacker as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
+        WorkModule::set_int(attacker_boma, defender as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
+        WorkModule::set_int(defender_boma, attacker as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
+        WorkModule::set_int(defender_boma, defender as i32, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
         WorkModule::set_int(attacker_boma, 160, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+        WorkModule::set_int(defender_boma, 160, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
         effect_global_back_ground(attacker_agent.lua_state_agent);
         request_kill_sound(&mut *defender_boma, &mut *attacker_boma, defender_kind as i32, attacker_kind as i32, WorkModule::is_flag(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK));
     }

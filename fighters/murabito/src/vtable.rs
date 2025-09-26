@@ -3,7 +3,7 @@ use super::*;
 const MURABITO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xdba810; //Shared
 const MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
 const MURABITO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xdbad80; //Shared
-const MURABITO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xdbb940; //Shared
+const MURABITO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xdbb050; //Shared
 
 unsafe extern "C" fn murabito_var(boma: &mut BattleObjectModuleAccessor) {
     let team_no = TeamModule::team_no(boma) as i32;

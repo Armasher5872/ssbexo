@@ -5,9 +5,9 @@ unsafe extern "C" fn ssbexo_cloud_punisher_counter_attack_acmd(agent: &mut L2CAg
     if is_excute(agent) {
         ShieldModule::set_status(agent.module_accessor, 0, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_CLOUD_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     }
-    frame(agent.lua_state_agent, 21.0);
+    frame(agent.lua_state_agent, 23.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 80, 0, 50, 10.0, 0.0, 9.0, 16.5, Some(0.0), Some(9.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CLOUD_HIT, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 14.0, 361, 80, 0, 50, 9.5, 0.0, 9.0, 16.5, Some(0.0), Some(9.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CLOUD_HIT, *ATTACK_REGION_SWORD);
     }
     wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
@@ -21,19 +21,18 @@ unsafe extern "C" fn ssbexo_cloud_grounded_punisher_counter_attack_effect(agent:
         EFFECT(agent, Hash40::new("sys_counter_flash"), Hash40::new("top"), 0, 14.8, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         LANDING_EFFECT(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 21.0);
+    frame(agent.lua_state_agent, 23.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, 0.4);
-        EFFECT_FOLLOW(agent, Hash40::new("cloud_smash_slash"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
-        EffectModule::set_disable_render_offset_last(agent.module_accessor);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_cloud_sword1"), Hash40::new("tex_cloud_sword2"), 4, Hash40::new("haver"), 0, 1.5, -1.2, Hash40::new("haver"), 0, 20.5, -1.19, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
     }
-    frame(agent.lua_state_agent, 23.0);
+    frame(agent.lua_state_agent, 25.0);
     if is_excute(agent) {
         FLASH(agent, 1, 1, 1, 0);
         AFTER_IMAGE_OFF(agent, 4);
     }
-    frame(agent.lua_state_agent, 27.0);
+    frame(agent.lua_state_agent, 29.0);
     if is_excute(agent) {
         COL_NORMAL(agent);
         EFFECT_OFF_KIND_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, false, true);
@@ -49,19 +48,18 @@ unsafe extern "C" fn ssbexo_cloud_aerial_punisher_counter_attack_effect(agent: &
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_counter_flash"), Hash40::new("top"), 0, 14.8, -1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 21.0);
+    frame(agent.lua_state_agent, 23.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_OFFSET_TO_CAMERA_FLAT(agent, 0.4);
-        EFFECT_FOLLOW(agent, Hash40::new("cloud_smash_slash"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
-        EffectModule::set_disable_render_offset_last(agent.module_accessor);
+        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_cloud_sword1"), Hash40::new("tex_cloud_sword2"), 4, Hash40::new("haver"), 0, 1.5, -1.2, Hash40::new("haver"), 0, 20.5, -1.19, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
     }
-    frame(agent.lua_state_agent, 23.0);
+    frame(agent.lua_state_agent, 25.0);
     if is_excute(agent) {
         FLASH(agent, 1, 1, 1, 0);
         AFTER_IMAGE_OFF(agent, 4);
     }
-    frame(agent.lua_state_agent, 27.0);
+    frame(agent.lua_state_agent, 29.0);
     if is_excute(agent) {
         COL_NORMAL(agent);
         EFFECT_OFF_KIND_WORK(agent, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_EFFECT_KIND_SWORD_FLARE, false, true);
@@ -93,11 +91,11 @@ unsafe extern "C" fn ssbexo_cloud_punisher_counter_attack_expression(agent: &mut
         ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_counter"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 21.0);
+    frame(agent.lua_state_agent, 23.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_slashl"), 0);
     }

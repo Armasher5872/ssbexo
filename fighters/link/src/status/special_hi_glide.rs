@@ -1,3 +1,4 @@
+//Credit to AParticularUser for the Link Gliding Code
 use super::*;
 
 unsafe extern "C" fn link_special_hi_glide_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {    
@@ -7,12 +8,7 @@ unsafe extern "C" fn link_special_hi_glide_pre_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn link_special_hi_glide_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
-    let max_jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX);
     let lr = PostureModule::lr(fighter.module_accessor);
-    if jump_count < max_jump_count {
-        WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_JUMP_AERIAL);
-    }
     sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.3);
     sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.3);
     sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
@@ -33,28 +29,35 @@ unsafe extern "C" fn link_special_hi_glide_main_status(fighter: &mut L2CFighterC
 }
 
 unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
-    let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
+    let stick_x = fighter.global_table[STICK_X].get_f32();
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let get_stick_prev_y = ControlModule::get_stick_prev_y(fighter.module_accessor);
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let slow_rate = SlowModule::rate(fighter.module_accessor);
+    let special_hi_degree = WorkModule::get_float(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
     let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
-    let turn_run_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("turn_run_stick_x"));
+    let max_degree = 25.0;
+    let change_degree_per_frame = 1.5*slow_rate;
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
     if get_stick_prev_y < squat_stick_y {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP.into(), false.into());
     }
-    if stick_x < turn_run_stick_x {
-        fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_TURN.into(), false.into());
-    }
-    if WorkModule::is_enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_JUMP_AERIAL) {
-        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP != 0 || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON != 0 {
-            fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), false.into());
-        }
-    }
-    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+    if situation_kind == *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND.into(), false.into());
     }
+    if stick_x*lr > 0.25 {
+        if special_hi_degree < max_degree {
+            WorkModule::set_float(fighter.module_accessor, special_hi_degree+change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
+        }
+    }
+    if stick_x*lr < -0.25 {
+        if special_hi_degree > -max_degree {
+            WorkModule::set_float(fighter.module_accessor, special_hi_degree-change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
+        }
+    }
+    link_change_angle(fighter, special_hi_degree, max_degree, "special_hi_glide_f", "special_hi_glide_b");
     if MotionModule::is_end(fighter.module_accessor) {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_glide"), 0.0, 1.0, false, 0.0, false, false);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, Hash40::new("glide"), false, -1.0);
@@ -62,7 +65,11 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
     0.into()
 }
 
-unsafe extern "C" fn link_special_hi_glide_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_special_hi_glide_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if status_kind != *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE {
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
+    }
     0.into()
 }
 

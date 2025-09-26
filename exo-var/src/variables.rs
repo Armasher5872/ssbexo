@@ -15,6 +15,7 @@ pub static mut LAST_ATTACK_HITBOX_LOCATION_Z: f32 = 0.0;
 pub static mut LAST_DAMAGE: [f32; 8] = [0.0; 8];
 pub static mut LAST_TO_HIT_BALL: usize = 9; //The last player to have hit the ball
 //pub static mut LOW_SPAWN_POS: Vector3f = Vector3f{x: 0.0, y: 0.0, z: 1.0}; //Determines where to spawn the left net
+pub static mut MARKED_COLORS: [bool; 256] = [false; 256];
 pub static mut READY_GO_TIMER: i32 = 0; //Determines how many frames to suspend all players while respawning in Tennis and One-Hit modes
 pub static mut SIZE0: [f32; 9] = [0.0; 9];
 pub static mut SIZE1: [f32; 9] = [0.0; 9];

@@ -1,4 +1,5 @@
 use {
+    exo_utils::fighter_common::*,
     exo_var::{
         consts::*,
         wario::*,
@@ -28,6 +29,7 @@ use {
 
 mod aerials;
 mod grounded;
+mod other;
 mod smashes;
 mod specials;
 mod throws;
@@ -35,6 +37,7 @@ mod throws;
 pub fn install() {
     aerials::install();
     grounded::install();
+    other::install();
     smashes::install();
     specials::install();
     throws::install();

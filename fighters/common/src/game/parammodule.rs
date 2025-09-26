@@ -8,371 +8,6 @@ unsafe extern "C" fn get_param_float_impl_hook(module_accessor: u64, param_type:
     let fighter_kind = smash::app::utility::get_kind(boma_reference);
 	let sticky = ControlModule::get_stick_y(boma);
 	if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-		if fighter_kind == *FIGHTER_KIND_YOSHI
-		&& param_type == hash40("param_special_s")
-		&& param_hash == hash40("jump_angle") {
-			let max = 80.0;
-			let min = 10.0;
-			return (max*sticky).abs().clamp(min, max);
-		}
-		if fighter_kind == *FIGHTER_KIND_MIIFIGHTER
-		&& param_type == hash40("param_special_n")
-		&& param_hash == hash40("n1_throw_angle") {
-			let max = 90.0;
-			let min = 0.0;
-			return (max*sticky).abs().clamp(min, max);
-		}
-		if fighter_kind == *FIGHTER_KIND_PALUTENA {
-			if param_type == hash40("walk_accel_mul") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.4;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.11;
-				}
-				else {
-					return 0.21;
-				}
-			}
-			if param_type == hash40("walk_accel_add") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.2;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.05;
-				}
-				else {
-					return 0.105;
-				}
-			}
-			if param_type == hash40("walk_speed_max") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 1.6;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.77;
-				}
-				else {
-					return 1.271;
-				}
-			}
-			if param_type == hash40("dash_speed") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 2.2;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 1.22;
-				}
-				else {
-					return 1.768;
-				}
-			}
-			if param_type == hash40("run_accel_mul") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.3;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.03;
-				}
-				else {
-					return 0.12991;
-				}
-			}
-			if param_type == hash40("run_accel_add") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.2;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.0;
-				}
-				else {
-					return 0.044;
-				}
-			}
-			if param_type == hash40("run_speed_max") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 2.6;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 1.4;
-				}
-				else {
-					return 2.077;
-				}
-			}
-			if param_type == hash40("jump_initial_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 26.0;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 13.0;
-				}
-				else {
-					return 19.745;
-				}
-			}
-			if param_type == hash40("jump_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 50.0;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 22.0;
-				}
-				else {
-					return 35.9;
-				}
-			}
-			if param_type == hash40("mini_jump_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 13.0;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 21.0;
-				}
-				else {
-					return 17.3;
-				}
-			}
-			if param_type == hash40("jump_aerial_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 50.0;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 22.0;
-				}
-				else {
-					return 35.9;
-				}
-			}
-			if param_type == hash40("air_accel_x_mul") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.2;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.04;
-				}
-				else {
-					return 0.105;
-				}
-			}
-			if param_type == hash40("air_accel_x_add") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.06;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.0;
-				}
-				else {
-					return 0.01;
-				}
-			}
-			if param_type == hash40("air_speed_x_stable") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 1.4;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.75;
-				}
-				else {
-					return 1.0;
-				}
-			}
-			if param_type == hash40("air_brake_x") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.05;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.0;
-				}
-				else {
-					return 0.01;
-				}
-			}
-			if param_type == hash40("air_accel_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.2;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.09;
-				}
-				else {
-					return 0.12;
-				}
-			}
-			if param_type == hash40("air_speed_y_stable") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 1.9;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 1.2;
-				}
-				else {
-					return 1.55;
-				}
-			}
-			if param_type == hash40("damage_fly_top_air_accel_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 0.2;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 0.09;
-				}
-				else {
-					return 0.12;
-				}
-			}
-			if param_type == hash40("damage_fly_top_speed_y_stable") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 1.9;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 1.2;
-				}
-				else {
-					return 1.55;
-				}
-			}
-			if param_type == hash40("dive_speed_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 3.0;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 2.0;
-				}
-				else {
-					return 2.48;
-				}
-			}
-			if param_type == hash40("weight") {
-				if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT) {
-					return 50.0;
-				}
-				else if WorkModule::is_flag(boma, *FIGHTER_PALUTENA_INSTANCE_WORK_ID_FLAG_IS_LIGHTWEIGHT_BURNOUT) {
-					return 83.0;
-				}
-				else {
-					return 91.0;
-				}
-			}
-		}
-		if fighter_kind == *FIGHTER_KIND_CLOUD {
-			if param_type == hash40("walk_speed_max") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 0.4;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("dash_speed") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 0.8;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("run_speed_max") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 1.3;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("jump_speed_x") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 1.018;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("jump_speed_x_max") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 1.3;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("air_speed_x_stable") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 1.018;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("air_accel_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 0.12;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("air_speed_y_stable") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 1.88;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("dive_speed_y") {
-				if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-					return 2.9;
-				}
-				else {
-					return original!()(module_accessor, param_type, param_hash);
-				}
-			}
-			if param_type == hash40("param_private") {
-				let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
-				let gauge;
-				if param_hash == hash40("limit_gauge_damage_add") {
-					match limit_level {
-						0 => {
-							gauge = 5.0;
-						},
-						1 => {
-							gauge = 3.333;
-						},
-						2 => {
-							gauge = 2.222;
-						},
-						3 => {
-							gauge = 1.667;
-						},
-						_ => {
-							gauge = 1.0;
-						}
-					}
-					return gauge;
-				}
-				if param_hash == hash40("limit_gauge_attack_add") {
-					match limit_level {
-						0 => {
-							gauge = 3.333;
-						},
-						1 => {
-							gauge = 2.5;
-						},
-						2 => {
-							gauge = 1.667;
-						},
-						3 => {
-							gauge = 1.25;
-						},
-						_ => {
-							gauge = 1.0;
-						}
-					}	
-					return gauge;
-				}
-			}
-		}
 		if fighter_kind == *FIGHTER_KIND_INKLING {
 			if param_type == hash40("dash_speed") {
 				if WorkModule::is_flag(boma, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_ON_ROLLER_INK) {
@@ -398,3 +33,200 @@ unsafe extern "C" fn get_param_float_impl_hook(module_accessor: u64, param_type:
 pub fn install() {
 	skyline::install_hook!(get_param_float_impl_hook);
 }
+/*
+lua2cpp::L2CFighterCommon::calc_walk_speed(L2CFighterCommon *this,L2CValue param_1,L2CValue param_2,L2CValue param_3,L2CValue param_4,L2CValue param_5,L2CValue param_6,L2CValue param_7,L2CValue param_8,L2CValue param_9) {
+	pLVar8 = (L2CValue *)(ulong)param_2;
+	this_00 = (L2CAgent *)(ulong)param_1;
+	fVar9 = (float)app::lua_bind::ControlModule__get_stick_x_impl(this->moduleAccessor);
+	lib::L2CValue::L2CValue(&LStack_80,fVar9);
+	lib::L2CValue::operator/((L2CValue *)(ulong)param_3,pLVar8);
+	lib::L2CValue::operator/((L2CValue *)(ulong)param_4,pLVar8);
+	lib::L2CValue::operator*(&LStack_80,(L2CValue *)&LStack_90);
+	pLVar1 = (L2CValue *)CONCAT44(param_9,param_8);
+	lib::L2CValue::operator*(&LStack_70,pLVar1);
+	lib::L2CValue::~L2CValue(&LStack_70);
+	lib::L2CValue::L2CValue(&LStack_70,0.0);
+	uVar5 = lib::L2CValue::operator<(&LStack_70,(L2CValue *)&LStack_80);
+	lib::L2CValue::~L2CValue(&LStack_70);
+	if ((uVar5 & 1) == 0) {
+		lib::L2CValue::operator-(&LStack_a0);
+		lib::L2CValue::operator*((L2CValue *)(auStack_e0 + 0x10),pLVar1);
+		lib::L2CValue::operator+(&LStack_b0,(L2CValue *)(auStack_e0 + 0x20));
+		lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+		lib::L2CValue::~L2CValue(&LStack_70);
+		lib::L2CValue::~L2CValue((L2CValue *)(auStack_e0 + 0x20));
+		pLVar7 = (L2CValue *)(auStack_e0 + 0x10);
+	}
+	else {
+		lib::L2CValue::operator*(&LStack_a0,pLVar1);
+		lib::L2CValue::operator+(&LStack_b0,(L2CValue *)(auStack_e0 + 0x20));
+		lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+		lib::L2CValue::~L2CValue(&LStack_70);
+		pLVar7 = (L2CValue *)(auStack_e0 + 0x20);
+	}
+	lib::L2CValue::~L2CValue(pLVar7);
+	lib::L2CValue::operator*(&LStack_80,pLVar1);
+	lib::L2CValue::L2CValue(&LStack_70,0x6e5ec7051);
+	lib::L2CValue::L2CValue((L2CValue *)auStack_e0,0x14cf046ee5);
+	uVar5 = lib::L2CValue::as_integer(&LStack_70);
+	uVar6 = lib::L2CValue::as_integer((L2CValue *)auStack_e0);
+	fVar9 = (float)app::lua_bind::WorkModule__get_param_float_impl(this->moduleAccessor,uVar5,uVar6);
+	lib::L2CValue::L2CValue((L2CValue *)(auStack_e0 + 0x10),fVar9);
+	lib::L2CValue::~L2CValue((L2CValue *)auStack_e0);
+	lib::L2CValue::~L2CValue(&LStack_70);
+	uVar5 = lib::L2CValue::operator<((L2CValue *)(auStack_e0 + 0x10),(L2CValue *)(auStack_e0 + 0x20));
+	if ((uVar5 & 1) != 0) {
+		lib::L2CValue::operator=((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)(auStack_e0 + 0x10));
+	}
+	lib::L2CValue::L2CValue(&LStack_70,true);
+	uVar5 = lib::L2CValue::operator==(in_stack_00000008,(L2CValue *)&LStack_70);
+	lib::L2CValue::~L2CValue(&LStack_70);
+	if ((uVar5 & 1) != 0) {
+		if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_ABNORMAL_MINIJUMP_SLOWWALK) {
+			lib::L2CValue::L2CValue(&LStack_110,0x112d83771b);
+			lib::L2CValue::L2CValue(&LStack_120,0);
+			uVar5 = lib::L2CValue::as_integer(&LStack_110);
+			uVar6 = lib::L2CValue::as_integer(&LStack_120);
+			fVar9 = (float)app::lua_bind::WorkModule__get_param_float_impl(this->moduleAccessor,uVar5,uVar6);
+			lib::L2CValue::L2CValue(&LStack_100,fVar9);
+			lib::L2CValue::operator/(&LStack_100,pLVar1);
+			lib::L2CValue::L2CValue(&LStack_70,0.001);
+			lib::L2CValue::operator-(&LStack_f0,(L2CValue *)&LStack_70);
+			lib::L2CValue::~L2CValue(&LStack_70);
+			lib::L2CValue::~L2CValue(&LStack_f0);
+			lib::L2CValue::~L2CValue(&LStack_100);
+			lib::L2CValue::~L2CValue(&LStack_120);
+			lib::L2CValue::~L2CValue(&LStack_110);
+			uVar5 = lib::L2CValue::operator<((L2CValue *)auStack_e0,(L2CValue *)(auStack_e0 + 0x20));
+			if ((uVar5 & 1) == 0) {
+				lib::L2CValue::operator-((L2CValue *)auStack_e0);
+				uVar5 = lib::L2CValue::operator<((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)&LStack_70);
+				lib::L2CValue::~L2CValue(&LStack_70);
+				if ((uVar5 & 1) != 0) {
+					lib::L2CValue::operator-((L2CValue *)auStack_e0);
+					lib::L2CValue::operator=((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)&LStack_70);
+					lib::L2CValue::~L2CValue(&LStack_70);
+				}
+			}
+			else {
+				lib::L2CValue::operator=((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)auStack_e0);
+			}
+			lib::L2CValue::~L2CValue((L2CValue *)auStack_e0);
+		}
+	}
+	lib::L2CValue::L2CValue(&LStack_70,1e-05);
+	uVar5 = lib::L2CValue::operator<(&LStack_70,(L2CValue *)(auStack_e0 + 0x20));
+	lib::L2CValue::~L2CValue(&LStack_70);
+	if ((uVar5 & 1) == 0) {
+		lib::L2CValue::L2CValue(&LStack_70,-1e-05);
+		uVar5 = lib::L2CValue::operator<((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)&LStack_70);
+		lib::L2CValue::~L2CValue(&LStack_70);
+		if ((uVar5 & 1) == 0) {
+			lib::L2CValue::L2CValue(&LStack_70,0.0);
+			lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+			pLVar7 = &LStack_70;
+		}
+	}
+	else {
+		LAB_71001aa48c:
+		lib::L2CValue::operator/((L2CValue *)this_00,(L2CValue *)(auStack_e0 + 0x20));
+		lib::L2CValue::L2CValue(&LStack_70,0.0);
+		uVar5 = lib::L2CValue::operator<(&LStack_70,(L2CValue *)auStack_e0);
+		lib::L2CValue::~L2CValue(&LStack_70);
+		if ((uVar5 & 1) != 0) {
+			lib::L2CValue::L2CValue(&LStack_70,1.0);
+			uVar5 = lib::L2CValue::operator<((L2CValue *)auStack_e0,(L2CValue *)&LStack_70);
+			lib::L2CValue::~L2CValue(&LStack_70);
+			if ((uVar5 & 1) != 0) {
+				lib::L2CValue::L2CValue(&LStack_70,1.0);
+				lib::L2CValue::operator-(&LStack_70,(L2CValue *)auStack_e0);
+				lib::L2CValue::~L2CValue(&LStack_70);
+				lib::L2CValue::operator=((L2CValue *)auStack_e0,(L2CValue *)&LStack_f0);
+				lib::L2CValue::~L2CValue(&LStack_f0);
+				uVar5 = lib::L2CValue::operator<((L2CValue *)auStack_e0,(L2CValue *)(ulong)param_5);
+				if ((uVar5 & 1) != 0) {
+					lib::L2CValue::operator=((L2CValue *)auStack_e0,(L2CValue *)(ulong)param_5);
+				}
+				lib::L2CValue::operator*((L2CValue *)auStack_e0,(L2CValue *)(ulong)param_6);
+				lib::L2CValue::operator*(&LStack_b0,(L2CValue *)&LStack_f0);
+				lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+				lib::L2CValue::~L2CValue(&LStack_70);
+				lib::L2CValue::~L2CValue(&LStack_f0);
+			}
+		}
+		pLVar7 = (L2CValue *)auStack_e0;
+	}
+	lib::L2CValue::~L2CValue(pLVar7);
+	lib::L2CValue::L2CValue(&LStack_f0,0xc8cc9db76);
+	lib::L2CValue::L2CValue(&LStack_100,0);
+	uVar5 = lib::L2CValue::as_integer(&LStack_f0);
+	uVar6 = lib::L2CValue::as_integer(&LStack_100);
+	fVar9 = (float)app::lua_bind::WorkModule__get_param_float_impl(this->moduleAccessor,uVar5,uVar6);
+	lib::L2CValue::L2CValue(&LStack_70,fVar9);
+	lib::L2CValue::operator/(&LStack_70,pLVar8);
+	lib::L2CValue::~L2CValue(&LStack_70);
+	lib::L2CValue::~L2CValue(&LStack_100);
+	lib::L2CValue::~L2CValue(&LStack_f0);
+	lib::L2CValue::L2CValue(&LStack_70,0.0);
+	uVar5 = lib::L2CValue::operator==((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)&LStack_70);
+	lib::L2CValue::~L2CValue(&LStack_70);
+	if ((uVar5 & 1) == 0) {
+		lib::L2CValue::L2CValue(&LStack_70,0.0);
+		uVar5 = lib::L2CValue::operator<(&LStack_70,(L2CValue *)&LStack_b0);
+		lib::L2CValue::~L2CValue(&LStack_70);
+		if ((uVar5 & 1) == 0) {
+			lib::L2CValue::operator+((L2CValue *)this_00,(L2CValue *)&LStack_b0);
+			uVar5 = lib::L2CValue::operator<(&LStack_70,(L2CValue *)(auStack_e0 + 0x20));
+			lib::L2CValue::~L2CValue(&LStack_70);
+			if ((uVar5 & 1) != 0) {
+				lib::L2CValue::operator=(&LStack_b0,(L2CValue *)auStack_e0);
+				lib::L2CValue::operator+((L2CValue *)this_00,(L2CValue *)&LStack_b0);
+				uVar5 = lib::L2CValue::operator<((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)&LStack_70);
+				lib::L2CValue::~L2CValue(&LStack_70);
+				if ((uVar5 & 1) != 0) {
+					lib::L2CValue::operator-((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)this_00);
+					lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+				}
+			}
+		}
+		else {
+			lib::L2CValue::operator+((L2CValue *)this_00,(L2CValue *)&LStack_b0);
+			uVar5 = lib::L2CValue::operator<((L2CValue *)(auStack_e0 + 0x20),(L2CValue *)&LStack_70);
+			lib::L2CValue::~L2CValue(&LStack_70);
+			if ((uVar5 & 1) != 0) {
+				lib::L2CValue::operator-((L2CValue *)auStack_e0);
+				lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+				lib::L2CValue::~L2CValue(&LStack_70);
+				lib::L2CValue::operator+((L2CValue *)this_00,(L2CValue *)&LStack_b0);
+				uVar5 = lib::L2CValue::operator<(&LStack_70,(L2CValue *)(auStack_e0 + 0x20));
+				lib::L2CValue::~L2CValue(&LStack_70);
+				if ((uVar5 & 1) != 0) {
+					lstack_b0 = this_00 - (auStack_e0 + 0x20);
+				}
+			}
+		}
+	}
+	else {
+		lib::L2CAgent::math_abs((L2CAgent *)auStack_e0,extraout_x1);
+		lib::L2CAgent::math_abs(this_00,extraout_x1_00);
+		uVar5 = lib::L2CValue::operator<(&LStack_f0,(L2CValue *)&LStack_70);
+		lib::L2CValue::~L2CValue(&LStack_f0);
+		lib::L2CValue::~L2CValue(&LStack_70);
+		if ((uVar5 & 1) == 0) {
+			lib::L2CValue::L2CValue(&LStack_70,0.0);
+			uVar5 = lib::L2CValue::operator<(&LStack_70,(L2CValue *)this_00);
+			lib::L2CValue::~L2CValue(&LStack_70);
+			if ((uVar5 & 1) == 0) {
+				lib::L2CValue::operator=(&LStack_b0,(L2CValue *)auStack_e0);
+			}
+			lib::L2CValue::operator-((L2CValue *)auStack_e0);
+			lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+		}
+		else {
+			lib::L2CValue::operator-((L2CValue *)this_00);
+			lib::L2CValue::operator=(&LStack_b0,(L2CValue *)&LStack_70);
+		}
+	}
+	WorkModule::set_float(fighter.module_accessor, this_00+LStack_b0, param_7.get_i32());
+}
+*/

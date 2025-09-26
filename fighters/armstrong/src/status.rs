@@ -446,7 +446,7 @@ unsafe extern "C" fn armstrong_final_exec_status(_fighter: &mut L2CFighterCommon
 
 pub fn install() {
     Agent::new("ganon")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_AIR, armstrong_attack_air_end_status)
     .status(Pre, *FIGHTER_STATUS_KIND_THROW, armstrong_throw_pre_status)
     .status(Main, *FIGHTER_STATUS_KIND_THROW, armstrong_throw_main_status)

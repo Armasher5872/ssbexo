@@ -39,7 +39,6 @@ mod attack;
 pub mod attackair;
 mod attackdash;
 mod attackhi4;
-mod attacklw3;
 mod attacklw4;
 mod attacks4;
 mod attackxx4;
@@ -49,7 +48,6 @@ pub fn install() {
     attackair::install();
     attackdash::install();
     attackhi4::install();
-    attacklw3::install();
     attacklw4::install();
     attacks4::install();
     attackxx4::install();

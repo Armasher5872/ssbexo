@@ -181,10 +181,6 @@ unsafe extern "C" fn status_attackdash_main(fighter: &mut L2CFighterCommon) -> L
         fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4_START.into(), true.into());
         return 1.into();
     }
-    //Kirby Aerial Dash Attack
-    if fighter_kind == *FIGHTER_KIND_KIRBY && situation_kind == *SITUATION_KIND_AIR && fighter.sub_check_button_jump().get_bool() && frame > 25.0 {
-        fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
-    }
     //Snake Dash Attack Item Toss
     if fighter_kind == *FIGHTER_KIND_SNAKE && frame > 12.0 && ItemModule::is_have_item(boma, 0) && motion_kind != hash40("attack_dash_throw") {
         MotionModule::change_motion(boma, Hash40::new("attack_dash_throw"), 0.0, 1.0, false, 0.0, false, false);

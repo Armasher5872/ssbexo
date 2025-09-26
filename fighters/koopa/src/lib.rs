@@ -4,7 +4,11 @@ use {
         vector::*,
         status_end_control::*,
     },
-    exo_var::globals::*,
+    exo_var::{
+        consts::*,
+        globals::*,
+        koopa::*,
+    },
     smash::{
         app::{
             lua_bind::*,

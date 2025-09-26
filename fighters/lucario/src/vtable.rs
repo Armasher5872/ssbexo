@@ -118,42 +118,6 @@ unsafe extern "C" fn lucario_opff(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let aura_level = WorkModule::get_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    /*
-    let magic_series = fighter.battle_object.magic_series();
-    if [1, 93].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, false);
-    }
-    if [2, 94].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, false);
-    }
-    if [3, 95].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
-    }
-    if [5, 27, 49, 71, 96].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S4_START, false);
-    }
-    if [6, 28, 50, 72, 97].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, false);
-    }
-    if [7, 29, 51, 73, 98].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, false);
-    }
-    if [181, 204, 227, 250, 273].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_START, false);
-    }
-    if [23, 45, 67, 89, 114, 133, 152, 171, 194, 217, 240, 263, 286].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
-    }
-    if [24, 46, 68, 90, 115, 134, 153, 172, 195, 218, 241, 264, 287].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_S, false);
-    }
-    if [25, 47, 69, 91, 116, 135, 154, 173, 196, 219, 242, 265, 288].contains(&magic_series) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_HI, false);
-    }
-    if [26, 48, 70, 92, 117, 136, 155, 174, 197, 220, 243, 266, 289].contains(&magic_series) && !WorkModule::is_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
-        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-    }
-    */
     UiManager::set_lucario_meter_info(entry_id, aura_level);
     UiManager::set_lucario_meter_enable(entry_id, true);
     original!()(vtable, fighter)
@@ -175,11 +139,8 @@ pub unsafe extern "C" fn lucario_death_reset(_vtable: u64, fighter: &mut Fighter
 #[skyline::hook(offset = LUCARIO_VTABLE_ON_ATTACK_OFFSET)]
 unsafe extern "C" fn lucario_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    let situation_kind = agent.global_table[SITUATION_KIND].get_i32();
-    let cmd_cat1 = agent.global_table[CMD_CAT1].get_i32();
-    let aura_level = WorkModule::get_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     let status_kind = StatusModule::status_kind(boma);
+    let aura_level = WorkModule::get_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
     if status_kind == *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH {
         if aura_level < 9 {
             //fighter.battle_object.gimmick_flash();
@@ -189,116 +150,6 @@ unsafe extern "C" fn lucario_on_attack(vtable: u64, fighter: &mut Fighter, log: 
             //fighter.battle_object.gimmick_flash();
             WorkModule::inc_int(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_AURA_LEVEL);
             //FILL_SCREEN_MODEL_COLOR(agent, 0, 10, 0.3, 0.3, 0.3, 0, 0, 0, 1, 1, *smash::lib::lua_const::EffectScreenLayer::GROUND, *EFFECT_SCREEN_PRIO_FINAL);
-        }
-    }
-    if WorkModule::is_flag(boma, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLAG_MAX_AURA) {
-        if [
-            *FIGHTER_LUCARIO_STATUS_KIND_DASHING_FORCE_PALM, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_HI, *FIGHTER_LUCARIO_STATUS_KIND_SPECIAL_S_LW, *FIGHTER_STATUS_KIND_SPECIAL_HI, 
-            *FIGHTER_STATUS_KIND_SPECIAL_LW
-        ].contains(&status_kind) {
-            if situation_kind == *SITUATION_KIND_AIR {
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_N != 0
-                || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_F != 0
-                || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_B != 0
-                || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_HI != 0
-                || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_LW != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
-                }
-            }
-            else {
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S4_START, false);
-                }
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, false);
-                }
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, false);
-                }
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, false);
-                }
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, false);
-                }
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
-                }
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0 {
-                    if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_DASH != 0 {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_DASH, false);
-                    }
-                    else {
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK, false);
-                    }
-                }
-            }
-        }
-        if [*FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK_LANDING, *FIGHTER_LUCARIO_STATUS_KIND_POWER_UP_PUNCH].contains(&status_kind) {
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S4_START, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0 {
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_DASH != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_DASH, false);
-                }
-                else {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK, false);
-                }
-            }
-        }
-        if status_kind == *FIGHTER_LUCARIO_STATUS_KIND_HIGH_JUMP_KICK {
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_N != 0
-            || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_F != 0
-            || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_B != 0
-            || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_HI != 0
-            || cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_AIR_LW != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
-            }
-        }
-        if [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind) {
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_S3, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_HI3, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 != 0 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_LW3, false);
-            }
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0 {
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_DASH != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_DASH, false);
-                }
-                else {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK, false);
-                }
-            }
-        }
-        if [*FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3].contains(&status_kind) {
-            if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0 {
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_DASH != 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_DASH, false);
-                }
-                else {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK, false);
-                }
-            }
         }
     }
     call_original!(vtable, fighter, log)

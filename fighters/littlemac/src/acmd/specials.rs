@@ -7,7 +7,7 @@ unsafe extern "C" fn ssbexo_littlemac_grounded_star_punch_acmd(agent: &mut L2CAg
         let star_punch_strength = WorkModule::get_int(agent.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
         let damage = if star_punch_strength == 3 {35.0} else if star_punch_strength == 2 {29.0} else if star_punch_strength == 1 {22.0} else {15.0};
         let hitstop = if star_punch_strength == 3 {1.7} else if star_punch_strength == 2 {1.5} else if star_punch_strength == 1 {1.2} else {1.0};
-        let priority = if star_punch_strength == 3 {*ATTACK_SETOFF_KIND_OFF} else {*ATTACK_SETOFF_KIND_ON}; 
+        let priority = if star_punch_strength == 3 {*ATTACK_SETOFF_KIND_THRU} else {*ATTACK_SETOFF_KIND_ON}; 
         let hit_sound = if star_punch_strength == 3 {*COLLISION_SOUND_ATTR_HEAVY} else if star_punch_strength == 2 {*COLLISION_SOUND_ATTR_KICK} else {*COLLISION_SOUND_ATTR_PUNCH};
         ATTACK(agent, 0, 0, Hash40::new("armr"), damage, 80, 100, 0, 25, 4.5, 3.0, 0.0, 0.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("top"), damage, 80, 100, 0, 25, 4.5, 0.0, 9.0, 5.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
@@ -38,6 +38,104 @@ unsafe extern "C" fn ssbexo_littlemac_grounded_star_punch_acmd(agent: &mut L2CAg
     }
 }
 
+//Grounded Star Punch Effect
+unsafe extern "C" fn ssbexo_littlemac_grounded_star_punch_effect(agent: &mut L2CAgentBase) {
+    let color = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
+    if is_excute(agent) {
+        EFFECT_FLW_POS(agent, Hash40::new("littlemac_ko_uppercut_start"), Hash40::new("handr"), 0, 10, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut"), Hash40::new("handr"), 0.5, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(agent.lua_state_agent, 5.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+        if is_excute(agent) {
+            let star_punch_strength = WorkModule::get_int(agent.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+            if star_punch_strength == 3 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_ko_uppercut_arc"), Hash40::new("rot"), -4, 1, -3, -15, -60, 90, 1, true);
+                EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), -4, 1, -3, -15, -60, 90, 1, false);
+            }
+            else if star_punch_strength == 2 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), -4, 10, 0, 0, 0, 0, 1.8, false);
+                LAST_PARTICLE_SET_COLOR(agent, 1, 1, 0);
+                EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), -4, 1, -3, -15, -60, 90, 1, false);
+            }
+            else if star_punch_strength == 1 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), -4, 10, 0, 0, 0, 0, 2.0, false);
+            }
+            else {
+                EFFECT(agent, Hash40::new("littlemac_attack_arc_glove_b"), Hash40::new("top"), -1, 11, -6, -10, -45, 120, 2.0, 0, 0, 0, 0, 0, 0, true);
+                match color {
+                    _ if [0, 4, 5, 6].contains(&color) => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.43, 1, 0.3);
+                    }
+                    1 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.6, 0.3);
+                    }
+                    2 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.4, 0.4, 0.4);
+                    }
+                    3 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.3, 0.3);
+                    }
+                    7 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.4, 0.5);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    else {
+        if is_excute(agent) {
+            let star_punch_strength = WorkModule::get_int(agent.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+            if star_punch_strength == 3 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_ko_uppercut_arc"), Hash40::new("rot"), 0.5, 1, -3, 0, -60, 70, 1, true);
+                EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), 0.5, 1, -3, 0, -60, 70, 1, false);
+            }
+            else if star_punch_strength == 2 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), -4, 10, 0, 0, 0, 0, 1.8, false);
+                LAST_PARTICLE_SET_COLOR(agent, 1, 1, 0);
+                EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), -4, 1, -3, -15, -60, 90, 1, false);
+            }
+            else if star_punch_strength == 1 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), 0.5, 10, 0, 0, 0, 0, 2.0, false);
+            }
+            else {
+                EFFECT(agent, Hash40::new("littlemac_attack_arc_glove_b"), Hash40::new("top"), 3, 11, -6, -10, -45, 120, 2.0, 0, 0, 0, 0, 0, 0, true);
+                match color {
+                    _ if [0, 4, 5, 6].contains(&color) => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.43, 1, 0.3);
+                    }
+                    1 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.6, 0.3);
+                    }
+                    2 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.4, 0.4, 0.4);
+                    }
+                    3 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.3, 0.3);
+                    }
+                    7 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.4, 0.5);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    frame(agent.lua_state_agent, 12.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 6, 0, 0, 0, 180, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(agent.lua_state_agent, 19.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("littlemac_ko_uppercut"), false, false);
+    }
+}
+
 //Aerial Star Punch ACMD
 unsafe extern "C" fn ssbexo_littlemac_aerial_star_punch_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 9.0);
@@ -45,7 +143,7 @@ unsafe extern "C" fn ssbexo_littlemac_aerial_star_punch_acmd(agent: &mut L2CAgen
         let star_punch_strength = WorkModule::get_int(agent.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
         let damage = if star_punch_strength == 3 {25.0} else if star_punch_strength == 2 {21.0} else if star_punch_strength == 1 {18.0} else {15.0};
         let hitstop = if star_punch_strength == 3 {1.7} else if star_punch_strength == 2 {1.5} else if star_punch_strength == 1 {1.2} else {1.0};
-        let priority = if star_punch_strength == 3 {*ATTACK_SETOFF_KIND_OFF} else {*ATTACK_SETOFF_KIND_ON}; 
+        let priority = if star_punch_strength == 3 {*ATTACK_SETOFF_KIND_THRU} else {*ATTACK_SETOFF_KIND_ON}; 
         let hit_sound = if star_punch_strength == 3 {*COLLISION_SOUND_ATTR_HEAVY} else if star_punch_strength == 2 {*COLLISION_SOUND_ATTR_KICK} else {*COLLISION_SOUND_ATTR_PUNCH};
         ATTACK(agent, 0, 0, Hash40::new("armr"), damage, 80, 95, 0, 50, 5.0, 3.0, 0.0, 0.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("armr"), damage, 80, 95, 0, 50, 3.0, -1.0, 0.0, 0.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
@@ -72,6 +170,99 @@ unsafe extern "C" fn ssbexo_littlemac_aerial_star_punch_acmd(agent: &mut L2CAgen
     }
 }
 
+//Aerial Star Punch Effect
+unsafe extern "C" fn ssbexo_littlemac_aerial_star_punch_effect(agent: &mut L2CAgentBase) {
+    let color = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
+    if is_excute(agent) {
+        EFFECT_FLW_POS(agent, Hash40::new("littlemac_ko_uppercut_start"), Hash40::new("handr"), 0, 10, 0, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut"), Hash40::new("handr"), 0.5, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(agent.lua_state_agent, 4.0);
+    if is_excute(agent) {
+        EFFECT_DETACH_KIND(agent, Hash40::new("littlemac_ko_uppercut_start"), -1);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+        if is_excute(agent) {
+            let star_punch_strength = WorkModule::get_int(agent.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+            if star_punch_strength == 3 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_ko_uppercut_arc"), Hash40::new("rot"), -4, 1, -3, -15, -60, 90, 1, true);
+                EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), -4, 1, -3, -15, -60, 90, 1, false);
+            }
+            else if star_punch_strength == 2 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), -4, 10, 0, 0, 0, 0, 1.8, false);
+                LAST_PARTICLE_SET_COLOR(agent, 1, 1, 0);
+                EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), -4, 1, -3, -15, -60, 90, 1, false);
+            }
+            else if star_punch_strength == 1 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), -4, 10, 0, 0, 0, 0, 2.0, false);
+            }
+            else {
+                EFFECT(agent, Hash40::new("littlemac_attack_arc_glove_b"), Hash40::new("top"), -1, 11, -6, -10, -45, 120, 2.0, 0, 0, 0, 0, 0, 0, true);
+                match color {
+                    _ if [0, 4, 5, 6].contains(&color) => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.43, 1, 0.3);
+                    }
+                    1 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.6, 0.3);
+                    }
+                    2 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.4, 0.4, 0.4);
+                    }
+                    3 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.3, 0.3);
+                    }
+                    7 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.4, 0.5);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    else {
+        if is_excute(agent) {
+            let star_punch_strength = WorkModule::get_int(agent.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+            if star_punch_strength == 3 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_ko_uppercut_arc"), Hash40::new("rot"), 0.5, 1, -3, 0, -60, 70, 1, true);
+                EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), 0.5, 1, -3, 0, -60, 70, 1, false);
+            }
+            else if star_punch_strength == 2 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), -4, 10, 0, 0, 0, 0, 1.8, false);
+                LAST_PARTICLE_SET_COLOR(agent, 1, 1, 0);
+            }
+            else if star_punch_strength == 1 {
+                EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("top"), 0.5, 10, 0, 0, 0, 0, 2.0, false);
+            }
+            else {
+                EFFECT(agent, Hash40::new("littlemac_attack_arc_glove_b"), Hash40::new("top"), 3, 11, -6, -10, -45, 120, 2.0, 0, 0, 0, 0, 0, 0, true);
+                match color {
+                    _ if [0, 4, 5, 6].contains(&color) => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.43, 1, 0.3);
+                    }
+                    1 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.6, 0.3);
+                    }
+                    2 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 0.4, 0.4, 0.4);
+                    }
+                    3 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.3, 0.3);
+                    }
+                    7 => {
+                        LAST_PARTICLE_SET_COLOR(agent, 1, 0.4, 0.5);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    frame(agent.lua_state_agent, 19.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("littlemac_ko_uppercut"), false, false);
+    }
+}
+
 //Jolt Haymaker Attack ACMD
 unsafe extern "C" fn ssbexo_littlemac_jolt_haymaker_attack_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
@@ -95,6 +286,53 @@ unsafe extern "C" fn ssbexo_littlemac_jolt_haymaker_attack_acmd(agent: &mut L2CA
     wait(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+    }
+}
+
+//Jolt Haymaker Attack Effect
+unsafe extern "C" fn ssbexo_littlemac_jolt_haymaker_attack_effect(agent: &mut L2CAgentBase) {
+    let color = WorkModule::get_int(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
+    if is_excute(agent) {
+        let star_punch_strength = WorkModule::get_int(agent.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+        if star_punch_strength == 3 {
+            EFFECT_FOLLOW(agent, Hash40::new("littlemac_ko_uppercut_arc"), Hash40::new("rot"), 0.5, 1, -3, 0, 0, -80, 1, true);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_ko_uppercut_arc_splash"), Hash40::new("rot"), 0.5, 1, -3, 0, -80, 0, 1, false);
+        }
+        else if star_punch_strength == 2 {
+            EFFECT_FOLLOW_FLIP(agent, Hash40::new("littlemac_attack_ground"), Hash40::new("littlemac_attack_ground"), Hash40::new("top"), -4, 10, 0, -90, 0, 0, 1.8, false, *EF_FLIP_ZX);
+            LAST_PARTICLE_SET_COLOR(agent, 1, 1, 0);
+        }
+        else if star_punch_strength == 1 {
+            EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_arc2_aura"), Hash40::new("top"), 1, 10, -1.5, 0, -20, -110, 1, false);
+            EFFECT_FOLLOW(agent, Hash40::new("littlemac_attack_arc2"), Hash40::new("top"), 1, 10, -1.5, 0, -20, -110, 1, false);
+            EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("littlemac_attack_arc2_splash"), Hash40::new("top"), 1, 10, -1.5, 0, -20, -110, 1, false);
+        }
+        else {
+            EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), -1, 9.5, -3, -180, 160, 80, 0.9, false);
+            match color {
+                _ if [0, 4, 5, 6].contains(&color) => {
+                    LAST_PARTICLE_SET_COLOR(agent, 0.43, 1, 0.3);
+                }
+                1 => {
+                    LAST_PARTICLE_SET_COLOR(agent, 1, 0.6, 0.3);
+                }
+                2 => {
+                    LAST_PARTICLE_SET_COLOR(agent, 0.4, 0.4, 0.4);
+                }
+                3 => {
+                    LAST_PARTICLE_SET_COLOR(agent, 1, 0.3, 0.3);
+                }
+                7 => {
+                    LAST_PARTICLE_SET_COLOR(agent, 1, 0.4, 0.5);
+                }
+                _ => {}
+            }
+        }
+    }
+    frame(agent.lua_state_agent, 14.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("littlemac_joltblow"), false, false);
+        EffectModule::enable_sync_init_pos_last(agent.module_accessor);
     }
 }
 
@@ -222,8 +460,11 @@ pub fn install() {
     Agent::new("littlemac")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_specialn2", ssbexo_littlemac_grounded_star_punch_acmd, Low)
+    .effect_acmd("effect_specialn2", ssbexo_littlemac_grounded_star_punch_effect, Low)
     .game_acmd("game_specialairn2", ssbexo_littlemac_aerial_star_punch_acmd, Low)
+    .effect_acmd("effect_specialairn2", ssbexo_littlemac_aerial_star_punch_effect, Low)
     .game_acmd("game_specialairsblow", ssbexo_littlemac_jolt_haymaker_attack_acmd, Low)
+    .effect_acmd("effect_specialairsblow", ssbexo_littlemac_jolt_haymaker_attack_effect, Low)
     .game_acmd("game_specialhijump", ssbexo_littlemac_rising_uppercut_jump_acmd, Low)
     .game_acmd("game_speciallw", ssbexo_littlemac_slip_counter_acmd, Low)
     .game_acmd("game_specialairlw", ssbexo_littlemac_slip_counter_acmd, Low)

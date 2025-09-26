@@ -18,6 +18,7 @@ unsafe extern "C" fn wario_end_control(fighter: &mut L2CFighterCommon) -> L2CVal
 unsafe extern "C" fn wario_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_HIT);
     WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SWING_DING_MOVE);
+    WorkModule::set_int(boma, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_UP_SPECIAL_TIMER);
 }
 
 //Wario Startup Initialization

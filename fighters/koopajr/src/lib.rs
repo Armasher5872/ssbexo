@@ -2,19 +2,21 @@ use {
   exo_utils::{
     collision_struct::*,
     fighter_common::*,
+    ganon::*,
     hook::*,
     shielddata_struct::*,
     vector::*,
     vtable_funcs::*,
-    weapon::*,
   },
   exo_var::{
     consts::*,
     donkey::*,
+    ganon::*,
     gekkouga::*,
     globals::*,
     ike::*,
     koopajr::*,
+    variables::*,
   },
   smash::{
     app::{
