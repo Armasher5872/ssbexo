@@ -12,7 +12,6 @@ unsafe extern "C" fn ssbexo_littlemac_grounded_star_punch_acmd(agent: &mut L2CAg
         ATTACK(agent, 0, 0, Hash40::new("armr"), damage, 80, 100, 0, 25, 4.5, 3.0, 0.0, 0.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("top"), damage, 80, 100, 0, 25, 4.5, 0.0, 9.0, 5.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
         if star_punch_strength == 3 {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
             AttackModule::set_damage_shake_scale(agent.module_accessor, 0.67);
         }
     }
@@ -149,7 +148,6 @@ unsafe extern "C" fn ssbexo_littlemac_aerial_star_punch_acmd(agent: &mut L2CAgen
         ATTACK(agent, 1, 0, Hash40::new("armr"), damage, 80, 95, 0, 50, 3.0, -1.0, 0.0, 0.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("shoulderr"), damage, 80, 95, 0, 50, 3.0, 0.0, 0.0, 0.0, None, None, None, hitstop, 1.0, priority, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, hit_sound, *ATTACK_REGION_PUNCH);
         if star_punch_strength == 3  {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
             AttackModule::set_damage_shake_scale(agent.module_accessor, 0.67);
         }
     }

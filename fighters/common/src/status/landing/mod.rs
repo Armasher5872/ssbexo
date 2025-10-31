@@ -3,7 +3,6 @@ use {
     exo_var::{
         consts::*,
         globals::*,
-        palutena::*,
     },
     smash::{
         app::lua_bind::*,
@@ -16,12 +15,10 @@ use {
     }
 };
 
-mod attackairlanding;
 mod landing;
 mod landinglight;
 
 pub fn install() {
-    attackairlanding::install();
     landing::install();
     landinglight::install();
 }

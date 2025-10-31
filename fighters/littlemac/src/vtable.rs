@@ -133,19 +133,25 @@ unsafe extern "C" fn littlemac_on_attack(meter: f32, vtable: u64, battle_object:
 #[skyline::hook(offset = LITTLEMAC_VTABLE_ON_SEARCH_OFFSET)]
 unsafe extern "C" fn littlemac_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    let collision_log = *(log as *const u64).add(0x10 / 0x8);
-    let collision_log = collision_log as *const CollisionLog;
-    let opponent_boma = &mut *(sv_battle_object::module_accessor((*collision_log).opponent_battle_object_id));
-    let opponent_category = sv_battle_object::category((*collision_log).opponent_battle_object_id);
+    let collision_log = log as *mut CollisionLogScuffed;
+    let collision_kind = (*collision_log).collision_kind;
+    let opponent_boma = &mut *(sv_battle_object::module_accessor((*collision_log).opponent_object_id));
+    let opponent_category = sv_battle_object::category((*collision_log).opponent_object_id);
     let slow_frame = SlowModule::frame(opponent_boma, 0);
     let status_kind = StatusModule::status_kind(boma);
-    if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-        //Adds a third of the meter if Little Mac lands Down Special
-        WorkModule::add_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-        //Slows the opponent down
-        if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            if slow_frame < 20 {
-                SlowModule::set(opponent_boma, 0, 8, 20, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    if [1, 2].contains(&collision_kind) {
+        let attack_data = AttackModule::attack_data(opponent_boma, (*collision_log).collider_id as i32, (*collision_log).x35);
+        let power = (*attack_data).power;
+        if power > 0.0 {
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                //Adds a third of the meter if Little Mac lands Down Special
+                WorkModule::add_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+                //Slows the opponent down
+                if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+                    if slow_frame < 20 {
+                        SlowModule::set(opponent_boma, 0, 8, 20, false, *BATTLE_OBJECT_ID_INVALID as u32);
+                    }
+                }
             }
         }
     }

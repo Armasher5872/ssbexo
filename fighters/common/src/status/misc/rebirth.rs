@@ -346,6 +346,9 @@ unsafe extern "C" fn status_rebirth_main(fighter: &mut L2CFighterCommon) -> L2CV
         else {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_hi_l"), 0.0, 1.0, false, 0.0, false, false);
         }
+        if kind == 0x34 {
+            DamageModule::add_damage(fighter.module_accessor, 50.0, 0);
+        }
     }
     if (cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_L != 0 || cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_R != 0) && ![hash40("appeal_s_r"), hash40("appeal_s_l")].contains(&motion_kind) {
         if lr >= 0.0 {
@@ -364,6 +367,9 @@ unsafe extern "C" fn status_rebirth_main(fighter: &mut L2CFighterCommon) -> L2CV
         }
         else {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_lw_l"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        if kind == 0x34 {
+            DamageModule::add_damage(fighter.module_accessor, 50.0, 0);
         }
     }
     match kind {

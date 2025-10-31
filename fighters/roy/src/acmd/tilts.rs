@@ -2,6 +2,9 @@ use super::*;
 
 //Forward Tilt ACMD
 unsafe extern "C" fn ssbexo_roy_forward_tilt_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        JostleModule::set_team(agent.module_accessor, 1);
+    }
     MotionModule::set_rate(agent.module_accessor, 0.625);
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
@@ -13,6 +16,7 @@ unsafe extern "C" fn ssbexo_roy_forward_tilt_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+        JostleModule::set_team(agent.module_accessor, 0);
     }
 }
 
@@ -21,10 +25,6 @@ unsafe extern "C" fn ssbexo_roy_forward_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
         FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -8, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
     }
     frame(agent.lua_state_agent, 5.0);
@@ -37,7 +37,6 @@ unsafe extern "C" fn ssbexo_roy_forward_tilt_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 2);
         EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
     }
 }
 
@@ -99,82 +98,11 @@ unsafe extern "C" fn ssbexo_roy_up_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword3"), Hash40::new("tex_roy_sword4"), 7, Hash40::new("sword1"), 0, 0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
         FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 10);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
-    }
-}
-
-//Down Tilt ACMD
-unsafe extern "C" fn ssbexo_roy_down_tilt_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 6.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 70, 75, 0, 45, 3.5, 0.0, 5.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_LOW), false);
-    }
-    frame(agent.lua_state_agent, 7.0);
-    if is_excute(agent) {
-        ATTACK(agent, 1, 0, Hash40::new("top"), 6.0, 60, 75, 0, 45, 3.5, 0.0, 4.0, 7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-    }
-    frame(agent.lua_state_agent, 8.0);
-    if is_excute(agent) {
-        ATTACK(agent, 2, 0, Hash40::new("top"), 6.0, 50, 75, 0, 45, 3.5, 0.0, 3.0, 12.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-    }
-    frame(agent.lua_state_agent, 9.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-    }
-}
-
-//Down Tilt Effect
-unsafe extern "C" fn ssbexo_roy_down_tilt_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("sys_run_smoke"), Hash40::new("sys_run_smoke"), Hash40::new("top"), 12, 0, -1, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_YZ);
-        smash::app::sv_animcmd::FOOT_EFFECT_FLIP(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
-        LAST_EFFECT_SET_RATE(agent, 0.8);
-    }
-    frame(agent.lua_state_agent, 5.0);
-    if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 4, 2, 9, -5, 0, 0.45, true, *EF_FLIP_YZ, 0.6);
-    }
-}
-
-//Down Tilt Sound
-unsafe extern "C" fn ssbexo_roy_down_tilt_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_roy_attackl_l01"));
-    }
-}
-
-//Down Tilt Expression
-unsafe extern "C" fn ssbexo_roy_down_tilt_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 2);
-    }
-    frame(agent.lua_state_agent, 4.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 4, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 6.0);
-    if is_excute(agent) {
-        RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 5);
     }
 }
 
@@ -195,10 +123,6 @@ pub fn install() {
     .expression_acmd("expression_attacks3lw", ssbexo_roy_forward_tilt_expression, Low)
     .game_acmd("game_attackhi3", ssbexo_roy_up_tilt_acmd, Low)
     .effect_acmd("effect_attackhi3", ssbexo_roy_up_tilt_effect, Low)
-    .game_acmd("game_attacklw3", ssbexo_roy_down_tilt_acmd, Low)
-    .effect_acmd("effect_attacklw3", ssbexo_roy_down_tilt_effect, Low)
-    .sound_acmd("sound_attacklw3", ssbexo_roy_down_tilt_sound, Low)
-    .expression_acmd("expression_attacklw3", ssbexo_roy_down_tilt_expression, Low)
     .install()
     ;
 }

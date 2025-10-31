@@ -45,8 +45,7 @@ unsafe extern "C" fn donkey_throw_f_f_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 //Cargo Forward Throw End Status
-unsafe extern "C" fn donkey_throw_f_f_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED);
+unsafe extern "C" fn donkey_throw_f_f_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

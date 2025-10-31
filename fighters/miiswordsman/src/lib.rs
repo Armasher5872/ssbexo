@@ -2,29 +2,12 @@ use {
   exo_utils::{
     fighter_common::*,
     status_end_control::*,
-    waza_customize::*,
   },
-  exo_var::{
-    globals::*,
-    miiswordsman::*,
-  },
+  exo_var::globals::*,
   smash::{
-    app::{
-      lua_bind::*,
-      *
-    },
-    hash40,
-    lib::{
-      L2CValue,
-      lua_const::*,
-    },
-    lua2cpp::*,
-    phx::{
-      Hash40,
-      Vector3f
-    }
-  },
-  smash_script::*,
+    app::*,
+    lib::L2CValue,
+  }
 };
 
 mod acmd;

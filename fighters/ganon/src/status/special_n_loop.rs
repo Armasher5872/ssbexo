@@ -79,7 +79,7 @@ unsafe extern "C" fn ganon_special_n_loop_exec_status(fighter: &mut L2CFighterCo
     let effect = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
     if (160.0..=200.0).contains(&current_frame) {
         WorkModule::add_float(fighter.module_accessor, 0.1, *FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_VOLLEY_SCALE_CHARGE);
-        EffectModule::set_scale(fighter.module_accessor, effect as u32, &Vector3f{x: 3.0+(0.1*(current_frame-159.0)), y: 3.0+(0.1*(current_frame-159.0)), z: 3.0+(0.1*(current_frame-159.0))});
+        EffectModule::set_scale(fighter.module_accessor, effect as u32, &Vector3f{x: 3.8+(0.1*(current_frame-159.0)), y: 3.8+(0.1*(current_frame-159.0)), z: 3.8+(0.1*(current_frame-159.0))});
         EffectModule::set_pos(fighter.module_accessor, effect as u32, &Vector3f{x: 4.0+(0.1*(current_frame-159.0)), y: 0.0, z: 0.0});
     }
     WorkModule::add_float(fighter.module_accessor, 0.01667, *FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_VOLLEY_DAMAGE_CHARGE);

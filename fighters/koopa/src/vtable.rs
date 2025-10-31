@@ -7,9 +7,6 @@ const KOOPA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xbc1e00; //Bowser only
 const KOOPA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xbc2290; //Bowser only
 
 unsafe extern "C" fn koopa_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
-    }
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KOOPA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USE_COUNT);
@@ -78,7 +75,6 @@ unsafe extern "C" fn koopa_opff(_vtable: u64, fighter: &mut Fighter) {
         WorkModule::set_float(boma, speed_mul.clamp(fire_speed_mul_min, fire_speed_mul_max), *FIGHTER_KOOPA_INSTANCE_WORK_ID_FLOAT_BREATH_SPEED_MUL);
         WorkModule::set_float(boma, scale.clamp(fire_scale_min, fire_scale_max), *FIGHTER_KOOPA_INSTANCE_WORK_ID_FLOAT_BREATH_SCALE);
     }
-    println!("Does Breath Exist: {}", ArticleModule::is_exist(boma, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH));
 }
 
 pub fn install() {

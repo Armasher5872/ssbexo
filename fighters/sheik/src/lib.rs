@@ -3,7 +3,7 @@ use {
   exo_utils::{
     check_attack::*,
     fighter_common::*,
-    vector::*,
+    sheik::*,
   },
   exo_var::{
     consts::*,

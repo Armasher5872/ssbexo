@@ -13,7 +13,6 @@ use {
         lucario_meter::*,
         mariod_meter::*,
         robot_meter::*,
-        palutena_meter::*,
         ui_manager::*,
         ui_object::*,
         vector::*,
@@ -71,15 +70,12 @@ mod control;
 mod delay;
 mod effect;
 mod energy;
-//mod fighterutil;
 mod frame;
 mod menu;
 pub mod misc;
 mod music;
-//mod parammodule;
 mod status;
 mod ui;
-//mod workmodule;
 
 pub fn install() {
     article::install();
@@ -88,13 +84,10 @@ pub fn install() {
     delay::install();
     effect::install();
     energy::install();
-    //fighterutil::install();
     frame::install();
     menu::install();
     misc::install();
     music::install();
-    //parammodule::install();
     status::install();
     ui::install();
-    //workmodule::install();
 }

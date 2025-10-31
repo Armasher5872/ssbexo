@@ -252,76 +252,24 @@ unsafe extern "C" fn ssbexo_roy_aerial_up_special_acmd(agent: &mut L2CAgentBase)
     }
 }
 
-//Down Special ACMD
-unsafe extern "C" fn ssbexo_roy_down_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 9.0);
-    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SOL_ACTIVE) {
+//Down Special Attack ACMD
+unsafe extern "C" fn ssbexo_roy_down_special_attack_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 5.0);
+    if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("top"), 8.0, 300, 90, 0, 60, 7.7, 0.0, 8.0, 13.0, Some(0.0), Some(8.0), Some(3.0), 1.9, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 300, 80, 0, 50, 7.5, 0.0, 8.0, 18.0, Some(0.0), Some(8.0), Some(2.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
+        AttackModule::set_force_reaction(agent.module_accessor, 0, true, false);
+        AttackModule::set_force_reaction(agent.module_accessor, 1, true, false);
+    }
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_SPECIAL_EFFECT) {
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("armr"), 18.0, 80, 60, 0, 60, 5.6, 0.0, 0.0, -1.5, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
-            ATTACK(agent, 1, 0, Hash40::new("sword1"), 12.0, 80, 60, 0, 60, 4.2, 2.5, 0.0, 0.7, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
-            ATTACK(agent, 2, 0, Hash40::new("sword1"), 12.0, 80, 60, 0, 60, 4.2, 2.5, 0.0, 7.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_SWORD);
+            AttackModule::set_optional_hit_sound(agent.module_accessor, 0, Hash40::new("se_roy_criticalhit"));
+            AttackModule::set_optional_hit_sound(agent.module_accessor, 1, Hash40::new("se_roy_criticalhit"));
         }
     }
-    else {
-        if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("armr"), 4.0, 361, 60, 0, 70, 5.6, 0.0, 0.0, -1.5, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
-            ATTACK(agent, 1, 0, Hash40::new("sword1"), 2.0, 361, 60, 0, 70, 4.2, 2.5, 0.0, 0.7, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ROY_HIT, *ATTACK_REGION_SWORD);
-            ATTACK(agent, 2, 0, Hash40::new("sword1"), 2.0, 361, 60, 0, 70, 4.2, 2.5, 0.0, 7.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_SWORD);
-        }
-    }
-    frame(agent.lua_state_agent, 13.0);
+    frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-    }
-}
-
-//Down Special Effect
-unsafe extern "C" fn ssbexo_roy_down_special_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 8.0);
-    if is_excute(agent) {
-        AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword3"), Hash40::new("tex_roy_sword4"), 7, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
-        EFFECT_FOLLOW(agent, Hash40::new("roy_sword_light"), Hash40::new("sword1"), 0, 0, 10.5, 0, 0, 0, 1, true);
-        LAST_EFFECT_SET_ALPHA(agent, 0.6);
-    }
-    frame(agent.lua_state_agent, 9.0);
-    if is_excute(agent) {
-        LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(agent.lua_state_agent, 13.0);
-    if is_excute(agent) {
-        AFTER_IMAGE_OFF(agent, 4);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_light"), false, true);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
-    }
-}
-
-//Down Special Sound
-unsafe extern "C" fn ssbexo_roy_down_special_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_roy_attack10"));
-    }
-    frame(agent.lua_state_agent, 8.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_roy_special_s01"));
-    }
-}
-
-//Down Special Expression
-unsafe extern "C" fn ssbexo_roy_down_special_expression(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_roy_attack10"));
-    }
-    frame(agent.lua_state_agent, 8.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_roy_special_s01"));
     }
 }
 
@@ -342,14 +290,8 @@ pub fn install() {
     .expression_acmd("expression_specialairs", ssbexo_roy_side_special_expression, Low)
     .game_acmd("game_specialhi", ssbexo_roy_grounded_up_special_acmd, Low)
     .game_acmd("game_specialairhi", ssbexo_roy_aerial_up_special_acmd, Low)
-    .game_acmd("game_speciallw", ssbexo_roy_down_special_acmd, Low)
-    .game_acmd("game_specialairlw", ssbexo_roy_down_special_acmd, Low)
-    .effect_acmd("effect_speciallw", ssbexo_roy_down_special_effect, Low)
-    .effect_acmd("effect_specialairlw", ssbexo_roy_down_special_effect, Low)
-    .sound_acmd("sound_speciallw", ssbexo_roy_down_special_sound, Low)
-    .sound_acmd("sound_specialairlw", ssbexo_roy_down_special_sound, Low)
-    .expression_acmd("expression_speciallw", ssbexo_roy_down_special_expression, Low)
-    .expression_acmd("expression_specialairlw", ssbexo_roy_down_special_expression, Low)
+    .game_acmd("game_speciallwhit", ssbexo_roy_down_special_attack_acmd, Low)
+    .game_acmd("game_specialairlwhit", ssbexo_roy_down_special_attack_acmd, Low)
     .install()
     ;
 }

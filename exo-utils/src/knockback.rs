@@ -73,7 +73,6 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
     let defender_boma = defender_battle_object.module_accessor;
     let defender_category = smash::app::utility::get_category(&mut *defender_boma);
     let defender_agent = get_fighter_common_from_accessor(&mut *defender_boma);
-    let defender_kind = defender_battle_object.kind as i32;
     let attacker_battle_object = *get_battle_object_from_id(attacker);
     let attacker_boma = attacker_battle_object.module_accessor;
     let attacker_category = smash::app::utility::get_category(&mut *attacker_boma);
@@ -274,125 +273,27 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
         WorkModule::set_int(attacker_boma, 160, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
         WorkModule::set_int(defender_boma, 160, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
         effect_global_back_ground(attacker_agent.lua_state_agent);
-        request_kill_sound(&mut *defender_boma, &mut *attacker_boma, defender_kind as i32, attacker_kind as i32, WorkModule::is_flag(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK));
+        request_kill_sound(&mut *attacker_boma, attacker_kind as i32, WorkModule::is_flag(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK));
     }
 }
 
-unsafe extern "C" fn request_kill_sound(defender_boma: &mut BattleObjectModuleAccessor, attacker_boma: &mut BattleObjectModuleAccessor, defender_kind: i32, attacker_kind: i32, is_final_stock: bool) {
+unsafe extern "C" fn request_kill_sound(attacker_boma: &mut BattleObjectModuleAccessor, attacker_kind: i32, is_final_stock: bool) {
     let attacker_agent = get_fighter_common_from_accessor(&mut *attacker_boma);
-    let kill_sound;
+    match attacker_kind {
+        _ if attacker_kind == *FIGHTER_KIND_PZENIGAME => PLAY_SE(attacker_agent, Hash40::new("vc_ptrainer_win_pzenigame")),
+        _ if attacker_kind == *FIGHTER_KIND_PFUSHIGISOU => PLAY_SE(attacker_agent, Hash40::new("vc_ptrainer_win_pfushigisou")),
+        _ if attacker_kind == *FIGHTER_KIND_PLIZARDON => PLAY_SE(attacker_agent, Hash40::new("vc_ptrainer_win_plizardon")),
+        _ if attacker_kind == *FIGHTER_KIND_LITTLEMAC => PLAY_SE(attacker_agent, Hash40::new("vc_littlemac_win_dl06")),
+        _ if attacker_kind == *FIGHTER_KIND_REFLET => PLAY_SE(attacker_agent, Hash40::new("vc_reflet_final_chrom09")),
+        _ if attacker_kind == *FIGHTER_KIND_JACK => PLAY_SE(attacker_agent, Hash40::new("vc_jack_appeal01")),
+        _ if attacker_kind == *FIGHTER_KIND_EFLAME => PLAY_SE(attacker_agent, Hash40::new("vc_eflame_diver_apeal01")),
+        _ if attacker_kind == *FIGHTER_KIND_ELIGHT => PLAY_SE(attacker_agent, Hash40::new("vc_elight_diver_apeal01")),
+        _ => {}
+    };
     if is_final_stock {
-        kill_sound = match defender_kind {
-            _ if defender_kind == *FIGHTER_KIND_MARIO => "vc_mario_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_DONKEY => "vc_donkey_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_LINK => "vc_link_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SAMUS => "vc_samus_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SAMUSD => "vc_samusd_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_YOSHI => "vc_yoshi_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_KIRBY => "vc_kirby_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_FOX => "vc_fox_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PIKACHU => "vc_pikachu_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_LUIGI => "vc_luigi_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_NESS => "vc_ness_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_CAPTAIN => "vc_captain_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PURIN => "vc_purin_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PEACH => "vc_peach_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_DAISY => "vc_daisy_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_KOOPA => "vc_koopa_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SHEIK => "vc_sheik_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_ZELDA => "vc_zelda_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MARIOD => "vc_mariod_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PICHU => "vc_pichu_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_FALCO => "vc_falco_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MARTH => "vc_marth_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_LUCINA => "vc_lucina_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_YOUNGLINK => "vc_younglink_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_GANON => "vc_ganon_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MEWTWO => "vc_mewtwo_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_ROY => "vc_roy_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_CHROM => "vc_chrom_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_GAMEWATCH => "vc_gamewatch_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_METAKNIGHT => "vc_metaknight_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PIT => "vc_pit_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PITB => "vc_pitb_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SZEROSUIT => "vc_szerosuit_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_WARIO => "vc_wario_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SNAKE => "vc_snake_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_IKE => "vc_ike_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PZENIGAME => "vc_pzenigame_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PFUSHIGISOU => "vc_pfushigisou_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PLIZARDON => "vc_plizardon_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_DIDDY => "vc_diddy_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_LUCAS => "vc_lucas_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SONIC => "vc_sonic_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_DEDEDE => "vc_dedede_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PIKMIN => "vc_pikmin_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_LUCARIO => "vc_lucario_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_ROBOT => "vc_robot_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_TOONLINK => "vc_toonlink_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_WOLF => "vc_wolf_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MURABITO => "vc_murabito_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_ROCKMAN => "vc_rockman_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_WIIFIT => "vc_wiifit_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_ROSETTA => "vc_rosetta_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_LITTLEMAC => "vc_littlemac_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_GEKKOUGA => "vc_gekkouga_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PALUTENA => "vc_palutena_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PACMAN => "vc_pacman_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_REFLET => "vc_reflet_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SHULK => "vc_shulk_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_KOOPAJR => "vc_koopajr_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_DUCKHUNT => "vc_duckhunt_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_RYU => "vc_ryu_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_KEN => "vc_ken_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_CLOUD => "vc_cloud_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_KAMUI => "vc_kamui_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_BAYONETTA => "vc_bayonetta_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_INKLING => "vc_inkling_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_RIDLEY => "vc_ridley_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SIMON => "vc_simon_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_RICHTER => "vc_richter_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_KROOL => "vc_krool_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_SHIZUE => "vc_shizue_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_GAOGAEN => "vc_gaogaen_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MIIFIGHTER => "vc_miifighter_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MIISWORDSMAN => "vc_miiswordsman_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MIIGUNNER => "vc_miigunner_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_POPO => "vc_popo_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_NANA => "vc_nana_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PACKUN => "vc_packun_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_JACK => "vc_jack_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_BRAVE => "vc_brave_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_BUDDY => "vc_buddy_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_DOLLY => "vc_dolly_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_MASTER => "vc_master_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_TANTAN => "vc_tantan_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_PICKEL => "vc_pickel_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_EDGE => "vc_edge_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_EFLAME => "vc_eflame_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_ELIGHT => "vc_elight_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_DEMON => "vc_demon_damage_twinkle",
-            _ if defender_kind == *FIGHTER_KIND_TRAIL => "vc_trail_damage_twinkle",
-            _ => ""
-        };
-        SoundModule::set_remain_se(defender_boma, true);
-        let kill_se = SoundModule::play_se(defender_boma, Hash40::new(kill_sound), false, false, false, false, enSEType(0));
-        SoundModule::set_se_vol(defender_boma, kill_se as i32, 2.0, 0);
-        SoundModule::set_continue_se_at_game_finish(defender_boma, kill_se as i32, true);
         SoundModule::play_se(attacker_boma, Hash40::new("se_common_finishhit"), false, false, false, false, enSEType(0));
     }
     else {
-        match attacker_kind {
-            _ if attacker_kind == *FIGHTER_KIND_PZENIGAME => PLAY_SE(attacker_agent, Hash40::new("vc_ptrainer_win_pzenigame")),
-            _ if attacker_kind == *FIGHTER_KIND_PFUSHIGISOU => PLAY_SE(attacker_agent, Hash40::new("vc_ptrainer_win_pfushigisou")),
-            _ if attacker_kind == *FIGHTER_KIND_PLIZARDON => PLAY_SE(attacker_agent, Hash40::new("vc_ptrainer_win_plizardon")),
-            _ if attacker_kind == *FIGHTER_KIND_LITTLEMAC => PLAY_SE(attacker_agent, Hash40::new("vc_littlemac_win_dl06")),
-            _ if attacker_kind == *FIGHTER_KIND_REFLET => PLAY_SE(attacker_agent, Hash40::new("vc_reflet_final_chrom09")),
-            _ if attacker_kind == *FIGHTER_KIND_JACK => PLAY_SE(attacker_agent, Hash40::new("vc_jack_appeal01")),
-            _ if attacker_kind == *FIGHTER_KIND_EFLAME => PLAY_SE(attacker_agent, Hash40::new("vc_eflame_diver_apeal01")),
-            _ if attacker_kind == *FIGHTER_KIND_ELIGHT => PLAY_SE(attacker_agent, Hash40::new("vc_elight_diver_apeal01")),
-            _ => {}
-        };
         SoundModule::play_se(attacker_boma, Hash40::new("se_common_boss_down"), false, false, false, false, enSEType(0));
     }
 }

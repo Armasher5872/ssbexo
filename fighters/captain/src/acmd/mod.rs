@@ -1,12 +1,10 @@
 use {
-    exo_var::{
-        captain::*,
-        consts::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
             sv_animcmd::{
+                execute,
                 frame,
                 wait
             },
@@ -34,6 +32,7 @@ mod grounded;
 mod smashes;
 mod specials;
 mod throws;
+mod tilts;
 
 pub fn install() {
     aerials::install();
@@ -41,4 +40,5 @@ pub fn install() {
     smashes::install();
     specials::install();
     throws::install();
+    tilts::install();
 }

@@ -8,22 +8,11 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 	let agent = get_fighter_common_from_accessor(&mut *boma);
 	let status_kind = agent.global_table[STATUS_KIND].get_i32();
 	let prev_status_kind = agent.global_table[PREV_STATUS_KIND].get_i32();
-	let mashing = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
 	let final_zoom_attacker_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
 	let final_zoom_defender_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
 	//Zair Platform Falling
 	if status_kind == *FIGHTER_STATUS_KIND_AIR_LASSO && prev_status_kind == *FIGHTER_STATUS_KIND_PASS && !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
         GroundModule::set_passable_check(boma, true);
-    }
-	//Mashing
-    if [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT, *FIGHTER_STATUS_KIND_ICE].contains(&status_kind) {
-        WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
-        if mashing >= 5 {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                ControlModule::add_clatter_time(boma, -15.0, 0);
-            }
-            WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_MASHING);
-        }
     }
 	//Bury Knockback Resistance
     if [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&status_kind) {

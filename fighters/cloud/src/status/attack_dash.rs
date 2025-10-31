@@ -42,6 +42,7 @@ unsafe extern "C" fn cloud_attack_dash_main_loop(fighter: &mut L2CFighterCommon)
     let reserve_log = WorkModule::get_int64(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     let mini_jump_attack_frame = WorkModule::get_int(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
     let turn_run_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("turn_run_stick_x"));
+    let is_punisher = WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
     if CancelModule::is_enable_cancel(boma) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
         return 0.into();
     }
@@ -67,9 +68,11 @@ unsafe extern "C" fn cloud_attack_dash_main_loop(fighter: &mut L2CFighterCommon)
         fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW4_START.into(), true.into());
         return 1.into();
     }
-    if frame == 6.0 && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
-        MotionModule::set_rate(boma, 0.6111);
-        WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_CHARGED_ATTACK_DASH);
+    if is_punisher {
+        if frame == 6.0 && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
+            MotionModule::set_rate(boma, 0.6111);
+            WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_CHARGED_ATTACK_DASH);
+        }
     }
     if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN)
     && stick_x <= turn_run_stick_x

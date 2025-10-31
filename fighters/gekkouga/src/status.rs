@@ -2,6 +2,7 @@ use super::*;
 
 unsafe extern "C" fn gekkouga_landing_fall_special_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.026);
+    sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.026);
     fighter.sub_landing_fall_special_init(hash40("landing_fall_special").into());
     0.into()
 }
@@ -149,7 +150,6 @@ unsafe extern "C" fn gekkouga_special_s_attack_main_status(fighter: &mut L2CFigh
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24b1b29e66));
     PostureModule::update_rot_y_lr(fighter.module_accessor);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOLD_FRONT) || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_FIND_ENEMY) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_FRONT) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
@@ -267,10 +267,12 @@ unsafe extern "C" fn gekkouga_special_s_end_main_loop(fighter: &mut L2CFighterCo
     let mut air_motion_kind = "special_air_s_end_f";
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
             return 1.into();
         }
     }
     if fighter.sub_air_check_fall_common().get_bool() {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
         return 1.into();
     }
     if [hash40("special_s_end_b"), hash40("special_air_s_end_b")].contains(&motion_kind) {
@@ -299,6 +301,7 @@ unsafe extern "C" fn gekkouga_special_s_end_main_loop(fighter: &mut L2CFighterCo
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
         else {
@@ -391,7 +394,6 @@ unsafe extern "C" fn gekkouga_special_lw_end_status(fighter: &mut L2CFighterComm
             ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         }
     }
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
     0.into()
 }
 
@@ -403,7 +405,6 @@ unsafe extern "C" fn gekkouga_special_lw_exit_status(fighter: &mut L2CFighterCom
             ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         }
     }
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
     0.into()
 }
 
@@ -447,7 +448,6 @@ unsafe extern "C" fn gekkouga_mat_fall_main_loop(weapon: &mut L2CWeaponCommon) -
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
     let motion_kind = MotionModule::motion_kind(weapon.module_accessor);
     let owner_boma = get_owner_boma(weapon);
-    let owner_status_kind = StatusModule::status_kind(owner_boma);
     let owner_frame = MotionModule::frame(owner_boma);
     if should_remove_projectile(weapon) 
     || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR) {
@@ -460,13 +460,9 @@ unsafe extern "C" fn gekkouga_mat_fall_main_loop(weapon: &mut L2CWeaponCommon) -
         sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
         sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     }
-    if [hash40("special_lw"), hash40("special_air_lw")].contains(&motion_kind) {
-        if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
-            if owner_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-                if owner_frame >= 40.0 {
-                    CancelModule::enable_cancel(owner_boma);
-                }
-            }
+    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
+        if owner_frame >= 40.0 {
+            CancelModule::enable_cancel(owner_boma);
         }
     }
     0.into()

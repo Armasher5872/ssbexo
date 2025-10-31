@@ -11,11 +11,6 @@ pub unsafe extern "C" fn ac_common(boma: *mut BattleObjectModuleAccessor) {
             let weapon = get_weapon_common_from_accessor(&mut *obj_boma);
             let owner_boma = get_owner_boma(weapon);
             let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
-            if is_barrel(obj_boma) {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
-                WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);
-                barrel_removal(weapon);
-            }
             if is_disarming_voice(obj_boma) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_FAILURE, false);
                 WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID);

@@ -44,67 +44,10 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
 //Attack Module Set Attack, makes it so random tripping doesn't happen if the move doesn't have a 100% trip chance (Credit to HDR)
 #[skyline::hook(offset = 0x3dc180)]
 unsafe extern "C" fn attack_module_set_attack(module: u64, id: i32, group: i32, data: &mut smash2::app::AttackData) {
-    let boma = *(module as *mut *mut BattleObjectModuleAccessor).add(1);
     if data.slip < 1.0 {
         data.slip = -1.0;
     }
-    WorkModule::set_int(boma, data.vector, *FIGHTER_INSTANCE_WORK_ID_INT_ATTACK_ANGLE);
     call_original!(module, id, group, data);
-}
-
-//Used for reverse knockback
-#[skyline::hook(replace = sv_animcmd::ATTACK)]
-unsafe extern "C" fn attack_replace(lua_state: u64) {
-    let mut l2c_agent = L2CAgent::new(lua_state);
-    if SPECIAL_SMASH_STATUS == 1 {
-        let mut hitbox_params: Vec<L2CValue> = (0..36).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
-        l2c_agent.clear_lua_stack();
-        for (i, x) in hitbox_params.iter_mut().enumerate().take(36) {
-            if i == 4 {
-                if i < 362 {
-                    let positive_angle = (i+180) as f32;
-                    let negative_angle = (i-180) as f32;
-                    if i < 180 {
-                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(positive_angle));
-                    }
-                    else {
-                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(negative_angle));
-                    }
-                }
-            }
-            else {
-                l2c_agent.push_lua_stack(x);
-            }
-        }
-    }
-	original!()(lua_state);
-}
-
-#[skyline::hook(replace = sv_animcmd::ATTACK_ABS)]
-unsafe extern "C" fn attack_abs_replace(lua_state: u64) {
-    let mut l2c_agent = L2CAgent::new(lua_state);
-    if SPECIAL_SMASH_STATUS == 1 {
-        let mut hitbox_params: Vec<L2CValue> = (0..15).map(|i| l2c_agent.pop_lua_stack(i + 1)).collect();
-        l2c_agent.clear_lua_stack();
-        for (i, x) in hitbox_params.iter_mut().enumerate().take(15) {
-            if i == 3 {
-                if i < 362 {
-                    let positive_angle = (i+180) as f32;
-                    let negative_angle = (i-180) as f32;
-                    if i < 180 {
-                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(positive_angle));
-                    }
-                    else {
-                        l2c_agent.push_lua_stack(&mut L2CValue::new_num(negative_angle));
-                    }
-                }
-            }
-            else {
-                l2c_agent.push_lua_stack(x);
-            }
-        }
-    }
-    original!()(lua_state);
 }
 
 //Notify Log Event Collision Hit, dictates several things when you've hit the opponent
@@ -112,22 +55,7 @@ unsafe extern "C" fn attack_abs_replace(lua_state: u64) {
 unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
 	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
 	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
-	let attacker_kind = smash::app::utility::get_kind(attacker_boma);
-	let defender_kind = smash::app::utility::get_kind(defender_boma);
 	let attacker_status_kind = StatusModule::status_kind(attacker_boma);
-	//Turbo
-	if SPECIAL_SMASH_HEAD == 1 {
-		CancelModule::enable_cancel(attacker_boma);
-	}
-	//Ball
-	if attacker_kind == *ITEM_KIND_SOCCERBALL {
-		LAST_TO_HIT_BALL = get_player_number(defender_boma); //If the ball hits someone and then goes out of bounds, the team that got hit loses the stock
-	}
-	if defender_kind == *ITEM_KIND_SOCCERBALL {
-		LAST_TO_HIT_BALL = get_player_number(attacker_boma);
-        WorkModule::off_flag(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ALREADY_BOUNCED);
-	}
-	LAST_DAMAGE[get_player_number(defender_boma)] = DamageModule::damage(defender_boma, 0);
     if attacker_status_kind == WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT {
         ItemModule::drop_item(defender_boma, 0.0, 0.0, 0);
     }
@@ -136,15 +64,7 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
 
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32); //Removes phantoms
-    /*
-    //Nops functions related to final smash meter gain
-    let _ = skyline::patching::Patch::in_text(0x61552c).nop();
-    let _ = skyline::patching::Patch::in_text(0x6209a0).nop();
-    let _ = skyline::patching::Patch::in_text(0x633db8).nop();
-    */
 	skyline::install_hooks!(
-        //attack_replace,
-        //attack_abs_replace,
         notify_log_event_collision_hit,
         hit_module_handle_attack_event,
         shield_module_send_shield_attack_collision_event,

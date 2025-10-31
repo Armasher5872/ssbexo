@@ -1,6 +1,5 @@
 use {
     exo_var::{
-        bayonetta::*,
         consts::*,
         globals::*,
     },
@@ -34,9 +33,7 @@ use {
 };
 
 pub mod gliding;
-mod sub_transition_group_check_air_attack;
 
 pub fn install() {
     gliding::install();
-    sub_transition_group_check_air_attack::install();
 }

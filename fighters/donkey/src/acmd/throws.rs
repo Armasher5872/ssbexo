@@ -186,16 +186,9 @@ unsafe extern "C" fn ssbexo_donkey_forward_throw_expression(agent: &mut L2CAgent
 
 //Up Throw ACMD
 unsafe extern "C" fn ssbexo_donkey_up_throw_acmd(agent: &mut L2CAgentBase) {
-    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED) {
-        if is_excute(agent) {
-            MotionModule::set_rate(agent.module_accessor, 0.5);
-        }
-    }
-    else {
-        if is_excute(agent) {
-            WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
-            ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 361, 100, 30, 0, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-        }
+    if is_excute(agent) {
+        WHOLE_HIT(agent, *HIT_STATUS_INVINCIBLE);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 361, 100, 30, 0, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {
@@ -260,7 +253,6 @@ unsafe extern "C" fn ssbexo_donkey_cargo_forward_throw_acmd(agent: &mut L2CAgent
         let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED);
     }
 }
 
@@ -284,7 +276,6 @@ unsafe extern "C" fn ssbexo_donkey_cargo_back_throw_acmd(agent: &mut L2CAgentBas
         let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED);
     }
 }
 
@@ -305,7 +296,6 @@ unsafe extern "C" fn ssbexo_donkey_cargo_up_throw_acmd(agent: &mut L2CAgentBase)
         let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED);
     }
 }
 
@@ -327,7 +317,6 @@ unsafe extern "C" fn ssbexo_donkey_cargo_down_throw_acmd(agent: &mut L2CAgentBas
         let target_group = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
         let target_no = WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_LINKED);
     }
 }
 

@@ -36,11 +36,6 @@ unsafe extern "C" fn ssbexo_roy_nair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword3"), Hash40::new("tex_roy_sword4"), 10, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
         EFFECT_FOLLOW(agent, Hash40::new("roy_sword_light"), Hash40::new("sword1"), 0, 0, 10.5, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.6);
     }
@@ -48,8 +43,6 @@ unsafe extern "C" fn ssbexo_roy_nair_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 4);
         EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_light"), false, true);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
     }
 }
 
@@ -114,17 +107,10 @@ unsafe extern "C" fn ssbexo_roy_fair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword3"), Hash40::new("tex_roy_sword4"), 7, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
     }
     frame(agent.lua_state_agent, 18.0);
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 2);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
     }
 }
 
@@ -154,11 +140,6 @@ unsafe extern "C" fn ssbexo_roy_bair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword3"), Hash40::new("tex_roy_sword4"), 7, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
         EFFECT_FOLLOW(agent, Hash40::new("roy_sword_light"), Hash40::new("sword1"), 0, 0, 10.5, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.6);
     }
@@ -166,8 +147,6 @@ unsafe extern "C" fn ssbexo_roy_bair_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 4);
         EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_light"), false, true);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
     }
 }
 
@@ -204,17 +183,10 @@ unsafe extern "C" fn ssbexo_roy_uair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 3.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_roy_sword3"), Hash40::new("tex_roy_sword4"), 8, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
-        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
     }
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 2);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_attack_fire"), false, false);
     }
 }
 
@@ -252,18 +224,10 @@ unsafe extern "C" fn ssbexo_roy_dair_effect(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW(agent, Hash40::new("roy_sword_light"), Hash40::new("sword1"), 0, 0, 10.55, 0, 0, 0, 1.05, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.6);
         LAST_EFFECT_SET_RATE(agent, 1.1);
-        EFFECT_FOLLOW(agent, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 0.8, true);
-        LAST_EFFECT_SET_RATE(agent, 1.3);
     }
     frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("roy_sword_light"), false, true);
-        EFFECT_OFF_KIND(agent, Hash40::new("roy_fire"), false, false);
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("roy_attack_fire"), Hash40::new("sword1"), 0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.9, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, true);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_RND(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
-        LAST_EFFECT_SET_RATE(agent, 1.1);
     }
     frame(agent.lua_state_agent, 23.0);
     if is_excute(agent) {

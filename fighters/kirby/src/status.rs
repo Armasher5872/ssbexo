@@ -28,7 +28,6 @@ unsafe extern "C" fn kirby_special_s_main_status(fighter: &mut L2CFighterCommon)
 unsafe extern "C" fn kirby_special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {

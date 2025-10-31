@@ -4,11 +4,10 @@ use super::*;
 unsafe extern "C" fn ssbexo_palutena_dash_attack_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("shoulderr"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("shoulderl"), *HIT_STATUS_INVINCIBLE);
         HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_INVINCIBLE);
         HIT_NODE(agent, Hash40::new("virtualshield"), *HIT_STATUS_INVINCIBLE);
-    }
-    if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_INVINCIBLE);
         HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_INVINCIBLE);
     }
@@ -19,9 +18,9 @@ unsafe extern "C" fn ssbexo_palutena_dash_attack_acmd(agent: &mut L2CAgentBase) 
     }
     frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
         HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_NORMAL);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
@@ -30,9 +29,17 @@ unsafe extern "C" fn ssbexo_palutena_dash_attack_acmd(agent: &mut L2CAgentBase) 
     }
     frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("bust"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("hip"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("shoulderr"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("shoulderl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("legr"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("legl"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("kneer"), *HIT_STATUS_NORMAL);
+        HIT_NODE(agent, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("virtualshield"), *HIT_STATUS_OFF);
     }
     frame(agent.lua_state_agent, 18.0);

@@ -9,7 +9,7 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_start_acmd(agent: &mut L2CAgen
 unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_start_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
-        let effect = EffectModule::req_follow(agent.module_accessor, Hash40::new("ganon_volley"), Hash40::new("haver"), &Vector3f{x: 4.0, y: 0.0, z: 0.0}, &Vector3f::zero(), 3.0, true, 0, 0, 0, 0, 0, true, true);
+        let effect = EffectModule::req_follow(agent.module_accessor, Hash40::new("ganon_volley"), Hash40::new("haver"), &Vector3f{x: 4.0, y: 0.0, z: 0.0}, &Vector3f::zero(), 3.8, true, 0, 0, 0, 0, 0, true, true);
         WorkModule::set_int(agent.module_accessor, effect as i32, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
     }
 }
@@ -22,7 +22,7 @@ unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_start_effect(agent: &mu
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
-        let effect = EffectModule::req_follow(agent.module_accessor, Hash40::new("ganon_volley"), Hash40::new("haver"), &Vector3f{x: 4.0, y: 0.0, z: 0.0}, &Vector3f::zero(), 3.0, true, 0, 0, 0, 0, 0, true, true);
+        let effect = EffectModule::req_follow(agent.module_accessor, Hash40::new("ganon_volley"), Hash40::new("haver"), &Vector3f{x: 4.0, y: 0.0, z: 0.0}, &Vector3f::zero(), 3.8, true, 0, 0, 0, 0, 0, true, true);
         WorkModule::set_int(agent.module_accessor, effect as i32, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
     }
 }

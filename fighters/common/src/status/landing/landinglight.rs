@@ -7,7 +7,6 @@ use super::*;
 pub unsafe fn status_landinglight_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let mut ret: i32 = 0;
     let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-    let pass_stick_y = WorkModule::get_param_float(boma, hash40("common"), hash40("pass_stick_y"));
     let pass_flick_y = WorkModule::get_param_int(boma, hash40("common"), hash40("pass_flick_y"));
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
@@ -35,8 +34,7 @@ pub unsafe fn status_landinglight_main(fighter: &mut L2CFighterCommon) -> L2CVal
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
             ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
             ControlModule::reset_main_stick_x(boma);
-            if GroundModule::is_passable_ground(boma)
-            && (fighter.global_table[FLICK_Y].get_i32() < pass_flick_y || fighter.global_table[STICK_Y].get_f32() < pass_stick_y) {
+            if GroundModule::is_passable_ground(boma) && fighter.global_table[FLICK_Y].get_i32() < pass_flick_y {
                 fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
                 return 1.into();
             }

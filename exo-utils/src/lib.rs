@@ -6,7 +6,6 @@ use {
         battle_object::*,
         cloud_meter::*,
         create_item_param::*,
-        donkey::*,
         extern_func::*,
         fighter_common::*,
         ganon::*,
@@ -17,7 +16,6 @@ use {
         lucario_meter::*,
         mariod_meter::*,
         metaknight::*,
-        palutena_meter::*,
         pfushigisou::*,
         purin::*,
         rect::*,
@@ -31,22 +29,18 @@ use {
     exo_var::{
         cloud::*,
         consts::*,
-        donkey::*,
         ganon::*,
         globals::*,
         kirby::*,
         link::*,
         littlemac::*,
         murabito::*,
-        rockman::*,
-        variables::*,
     },
     once_cell::sync::Lazy,
     parking_lot::RwLock,
     smash::{
         app::{
             lua_bind::*,
-            utility::*,
             *
         },
         hash40,
@@ -96,7 +90,6 @@ pub mod command_input;
 pub mod create_item_param;
 pub mod daisy;
 pub mod damage;
-pub mod donkey;
 pub mod extern_func;
 pub mod fighter_common;
 pub mod flydata;
@@ -115,12 +108,11 @@ pub mod lucario_meter;
 pub mod mariod_meter;
 pub mod metaknight;
 pub mod murabito_shizue_common;
-pub mod palutena_meter;
 pub mod pfushigisou;
 pub mod purin;
 pub mod rect;
 pub mod robot_meter;
-pub mod rockman;
+pub mod sheik;
 pub mod shielddata_struct;
 pub mod status_end_control;
 pub mod ui_manager;

@@ -40,7 +40,6 @@ unsafe extern "C" fn cloud_special_hi_combo_1_main_loop(fighter: &mut L2CFighter
     let stick_degrees = stick_angle.to_degrees();
     let speed_x = ((stick_degrees+90.0).to_radians().sin()*2.0)*lr;
     let speed_y = (stick_degrees-90.0).to_radians().cos()*2.0;
-    let mut new_stick_degrees = stick_degrees;
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -62,30 +61,35 @@ unsafe extern "C" fn cloud_special_hi_combo_1_main_loop(fighter: &mut L2CFighter
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_DECIDE) {
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        if stick_x.abs()+stick_y.abs() >= 0.5 {
-            new_stick_degrees = 90.0;
-        }
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN) {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, speed_y);
         sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.04, 0.04);
         if stick_degrees < 0.0 {
-            WorkModule::set_int(fighter.module_accessor, (new_stick_degrees+180.0) as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
+            WorkModule::set_int(fighter.module_accessor, (stick_degrees+180.0) as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
         }
         else {
-            WorkModule::set_int(fighter.module_accessor, new_stick_degrees as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
+            WorkModule::set_int(fighter.module_accessor, stick_degrees as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
         }
-        if (stick_degrees*lr > 90.0 && stick_degrees*lr <= 180.0) || (stick_degrees*lr < -90.0 && stick_degrees*lr >= -180.0) {
+        if (stick_degrees >= 0.0 && stick_degrees <= 90.0) || (stick_degrees >= -90.0 && stick_degrees < 0.0) {
+            WorkModule::set_int(fighter.module_accessor, -stick_degrees as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
+        }
+        if stick_degrees > 90.0 && stick_degrees <= 180.0 {
+            WorkModule::set_int(fighter.module_accessor, -(stick_degrees-90.0) as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
+        }
+        if stick_degrees >= -180.0 && stick_degrees < -90.0 {
+            WorkModule::set_int(fighter.module_accessor, (stick_degrees+180.0) as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
+        }
+        if (stick_degrees > 90.0 && stick_degrees <= 180.0) || (stick_degrees >= -180.0 && stick_degrees < -90.0) {
             PostureModule::reverse_lr(fighter.module_accessor);
             PostureModule::update_rot_y_lr(fighter.module_accessor);
         }
-        WorkModule::set_int(fighter.module_accessor, new_stick_degrees as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN);
     }
     if current_frame > 10.0 && move_frame < 30 {
         WorkModule::inc_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
-         ModelModule::set_joint_rotate(fighter.module_accessor, Hash40::new("rot"), &Vector3f{x: -rot_angle as f32, y: 0.0, z: 0.0}, MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});
+        ModelModule::set_joint_rotate(fighter.module_accessor, Hash40::new("rot"), &Vector3f{x: rot_angle as f32, y: 0.0, z: 0.0}, MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});
     }
     if move_frame >= 30 {
         ModelModule::set_joint_rotate(fighter.module_accessor, Hash40::new("rot"), &Vector3f::zero(), MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});

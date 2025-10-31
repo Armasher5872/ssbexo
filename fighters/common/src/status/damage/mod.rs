@@ -20,10 +20,7 @@ use {
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        },
+        lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
             Vector3f
@@ -37,24 +34,14 @@ use {
 
 mod damage;
 mod damageair;
-mod damagefall;
 mod damagefly;
 mod damageflyroll;
-//mod damagesleep;
 mod damagesleepfall;
-//mod damagesong;
-mod furafura;
-mod saving;
 
 pub fn install() {
     damage::install();
     damageair::install();
-    damagefall::install();
     damagefly::install();
     damageflyroll::install();
-    //damagesleep::install();
     damagesleepfall::install();
-    //damagesong::install();
-    furafura::install();
-    saving::install();
 }

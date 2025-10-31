@@ -41,6 +41,9 @@ unsafe extern "C" fn ssbexo_cloud_punisher_forward_smash_charge_expression(agent
 
 //Punisher Forward Smash ACMD
 unsafe extern "C" fn ssbexo_cloud_punisher_forward_smash_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        JostleModule::set_team(agent.module_accessor, 1);
+    }
     frame(agent.lua_state_agent, 13.0);
     if is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
@@ -68,14 +71,6 @@ unsafe extern "C" fn ssbexo_cloud_punisher_forward_smash_acmd(agent: &mut L2CAge
         AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 2, 24.0, false);
     }
     frame(agent.lua_state_agent, 36.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-    }
-    frame(agent.lua_state_agent, 40.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 0.0, 361, 100, 20, 0, 3.0, 0.0, 6.0, 7.0, Some(0.0), Some(6.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, true, true, false, *COLLISION_SITUATION_MASK_G_d, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-    }
-    frame(agent.lua_state_agent, 46.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }
@@ -107,6 +102,7 @@ unsafe extern "C" fn ssbexo_cloud_punisher_forward_smash_acmd(agent: &mut L2CAge
     frame(agent.lua_state_agent, 59.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
+        JostleModule::set_team(agent.module_accessor, 0);
     }
 }
 
@@ -363,7 +359,6 @@ unsafe extern "C" fn ssbexo_cloud_punisher_down_smash_acmd(agent: &mut L2CAgentB
     }
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         ATTACK(agent, 0, 0, Hash40::new("haver"), 16.0, 280, 90, 0, 20, 6.0, 3.0, 13.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CLOUD_HIT, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("haver"), 16.0, 280, 90, 0, 20, 6.0, 3.0, 9.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CLOUD_HIT, *ATTACK_REGION_SWORD);
         ATTACK(agent, 2, 0, Hash40::new("haver"), 16.0, 280, 90, 0, 20, 6.0, 3.0, 4.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CLOUD_HIT, *ATTACK_REGION_SWORD);

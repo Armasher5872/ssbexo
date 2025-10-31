@@ -29,38 +29,12 @@ unsafe extern "C" fn ssbexo_tantan_grab_start_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn ssbexo_tantan_grab_end_acmd(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        FighterAreaModuleImpl::enable_fix_jostle_area(agent.module_accessor, 3.5, 3.5);
-    }
-    frame(agent.lua_state_agent, 1.0);
-    if is_excute(agent) {
-        HIT_NO(agent, 2, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 3, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 4, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 5, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 6, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 7, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 8, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 9, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 10, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 11, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 12, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 13, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 18, *HIT_STATUS_NORMAL);
-        HIT_NO(agent, 19, *HIT_STATUS_NORMAL);
-    }
-}
-
 pub fn install() {
     Agent::new("tantan")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_catchstart", ssbexo_tantan_grab_start_acmd, Low)
     .game_acmd("game_catchdashstart", ssbexo_tantan_grab_start_acmd, Low)
     .game_acmd("game_catchturnstart", ssbexo_tantan_grab_start_acmd, Low)
-    .game_acmd("game_catchend", ssbexo_tantan_grab_end_acmd, Low)
-    .game_acmd("game_catchdashend", ssbexo_tantan_grab_end_acmd, Low)
-    .game_acmd("game_catchturnend", ssbexo_tantan_grab_end_acmd, Low)
     .install()
     ;
 }

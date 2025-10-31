@@ -79,14 +79,14 @@ unsafe extern "C" fn cloud_reset_initialization(vtable: u64, fighter: &mut Fight
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
     cloud_var(&mut *boma);
-    ShieldModule::set_target_property(boma, *COLLISION_PROPERTY_MASK_NORMAL, *FIGHTER_CLOUD_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
+    ShieldModule::set_target_property(boma, *COLLISION_PROPERTY_NORMAL, *FIGHTER_CLOUD_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("walk_speed_max"), 0, 1.055));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dash_speed"), 0, 1.868));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 1.58));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.85));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 1.58));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.125));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_y"), 0, 0.098));
+    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_y"), 0, 0.101));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.77));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("param_private"), hash40("limit_gauge_damage_add"), 5.0));
     update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("param_private"), hash40("limit_gauge_attack_add"), 3.333));
@@ -145,7 +145,7 @@ unsafe extern "C" fn cloud_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 1.3));
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 1.018));
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 1.3));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.018));
+                update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.027));
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_y"), 0, 0.12));
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.88));
                 WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
@@ -159,7 +159,7 @@ unsafe extern "C" fn cloud_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.85));
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 1.58));
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.125));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_y"), 0, 0.098));
+                update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_y"), 0, 0.101));
                 update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.77));
                 WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
             }
@@ -217,9 +217,17 @@ unsafe extern "C" fn cloud_shield_attack_detection_event(vtable: u64, fighter: &
         let collision_log = collision_log as *const CollisionLog;
         let opponent_id = (*collision_log).opponent_battle_object_id;
         let status_kind = StatusModule::status_kind(boma);
+        let lr = PostureModule::lr(boma);
         if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 || opponent_id != 0 {
             if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
                 if [*FIGHTER_CLOUD_STATUS_KIND_GUARD_ON, *FIGHTER_CLOUD_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
+                    if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 || opponent_id != 0 {
+                        let opponent_boma = sv_battle_object::module_accessor(opponent_id as u32);
+                        let opponent_lr = PostureModule::lr(opponent_boma);
+                        println!("Lr: {}", lr);
+                        println!("Opponent Lr: {}", opponent_lr);
+                        let new_lr = if lr == opponent_lr {if lr == 1.0 {1.0} else {-1.0}} else {if lr == 1.0 {-1.0} else {1.0}};
+                    }
                     WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
                 }   
             }
@@ -233,25 +241,9 @@ unsafe extern "C" fn cloud_shield_attack_detection_event(vtable: u64, fighter: &
 unsafe extern "C" fn cloud_shield_attack_transition_event(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_CLOUD as u32 {
         let boma = fighter.battle_object.module_accessor;
-        let collision_log = *(log as *const u64).add(0x10/0x8);
-        let collision_log = collision_log as *const CollisionLog;
-        let opponent_id = (*collision_log).opponent_battle_object_id;
-        let lr = PostureModule::lr(boma);
-        let pos = *PostureModule::pos(boma);
-        let mut facing = 1.0;
         if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER) {
-            if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 || opponent_id != 0 {
-                let opponent_boma = sv_battle_object::module_accessor(opponent_id as u32);
-                let opponent_lr = PostureModule::lr(opponent_boma);
-                let opponent_pos = *PostureModule::pos(opponent_boma);
-                println!("Current LR: {}", lr);
-                println!("Opponent LR: {}", opponent_lr);
-                if opponent_pos.x.abs() < pos.x.abs() {
-                    facing = -1.0;
-                }
-            }
-            PostureModule::set_lr(boma, facing);
-            PostureModule::update_rot_y_lr(boma);
+            //PostureModule::set_lr(boma, new_lr);
+            //PostureModule::update_rot_y_lr(boma);
             StatusModule::change_status_request_from_script(boma, *FIGHTER_CLOUD_STATUS_KIND_COUNTER_ATTACK, false);
             WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
         }

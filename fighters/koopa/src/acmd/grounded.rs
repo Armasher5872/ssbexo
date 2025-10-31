@@ -129,7 +129,7 @@ unsafe extern "C" fn ssbexo_koopa_side_taunt_expression(agent: &mut L2CAgentBase
 
 //Dash Attack ACMD
 unsafe extern "C" fn ssbexo_koopa_dash_attack_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 361, 45, 0, 95, 7.0, 0.0, 8.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
     }
@@ -137,7 +137,7 @@ unsafe extern "C" fn ssbexo_koopa_dash_attack_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     }  
-    frame(agent.lua_state_agent, 26.0);
+    frame(agent.lua_state_agent, 27.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }
@@ -145,7 +145,7 @@ unsafe extern "C" fn ssbexo_koopa_dash_attack_acmd(agent: &mut L2CAgentBase) {
 
 //Dash Attack Effect
 unsafe extern "C" fn ssbexo_koopa_dash_attack_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
@@ -153,7 +153,7 @@ unsafe extern "C" fn ssbexo_koopa_dash_attack_effect(agent: &mut L2CAgentBase) {
 
 //Dash Attack Sound
 unsafe extern "C" fn ssbexo_koopa_dash_attack_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_koopa_attackdash"));
     }
@@ -164,16 +164,19 @@ unsafe extern "C" fn ssbexo_koopa_dash_attack_expression(agent: &mut L2CAgentBas
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 13.0);
+    if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 4);
     }
-    frame(agent.lua_state_agent, 26.0);
+    frame(agent.lua_state_agent, 44.0);
     if is_excute(agent) {
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_landl_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 8);

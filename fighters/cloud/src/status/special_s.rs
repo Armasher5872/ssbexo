@@ -45,9 +45,11 @@ unsafe extern "C" fn cloud_special_s_main_loop(fighter: &mut L2CFighterCommon) -
     if !StatusModule::is_changing(fighter.module_accessor) {
         if situation_kind == *SITUATION_KIND_GROUND 
         && prev_situation_kind == *SITUATION_KIND_AIR {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-            fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LANDING.into(), false.into());
+            if current_frame > 10.0 {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+                fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LANDING.into(), false.into());
+            }
         }
         if situation_kind == *SITUATION_KIND_AIR 
         && prev_situation_kind == *SITUATION_KIND_GROUND {
@@ -76,24 +78,11 @@ unsafe extern "C" fn cloud_special_s_main_loop(fighter: &mut L2CFighterCommon) -
                     sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.0, 0.0, 0.0, 0.0);
                     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, get_sum_speed_x*0.2);
                     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 3.0);
+                    sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
                     sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.01);
                     sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.03);
                     sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, air_speed_x_stable*0.5);
                 }
-            }
-        }
-    }
-    if current_frame == 32.0 {
-        if situation_kind != *SITUATION_KIND_GROUND {
-            if is_punisher {
-                KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            }
-        }
-    }
-    if current_frame == 62.0 {
-        if situation_kind != *SITUATION_KIND_GROUND {
-            if is_punisher {
-                KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
             }
         }
     }

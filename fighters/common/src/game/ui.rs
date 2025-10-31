@@ -21,7 +21,6 @@ unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
         _ => return,
     };
     let mut manager = UI_MANAGER.write();
-    manager.palutena_meter[index] = PalutenaMeter::new(layout_udata);
     manager.robot_meter[index] = RobotMeter::new(layout_udata);
     manager.ice_climber_meter[index] = IceClimberMeter::new(layout_udata);
     manager.mariod_meter[index] = MarioDMeter::new(layout_udata);
@@ -38,11 +37,6 @@ fn hud_update(_: &skyline::hooks::InlineCtx) {
         }
     }
     let mut mgr = UI_MANAGER.write();
-    for palutena_meter in mgr.palutena_meter.iter_mut() {
-        if palutena_meter.is_valid() && palutena_meter.is_enabled() {
-            palutena_meter.update();
-        }
-    }
     for robot_meter in mgr.robot_meter.iter_mut() {
         if robot_meter.is_valid() && robot_meter.is_enabled() {
             robot_meter.update();

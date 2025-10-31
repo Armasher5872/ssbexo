@@ -14,6 +14,7 @@ use {
     smashline::*,
 };
 
+/*
 mod cliff_attack;
 mod cliff_catch_move;
 mod cliff_catch;
@@ -24,9 +25,11 @@ mod cliff_jump2;
 mod cliff_jump3;
 mod cliff_robbed;
 mod cliff_wait;
+*/
 mod cliff;
 
 pub fn install() {
+    /*
     cliff_attack::install();
     cliff_catch_move::install();
     cliff_catch::install();
@@ -37,5 +40,6 @@ pub fn install() {
     cliff_jump3::install();
     cliff_robbed::install();
     cliff_wait::install();
+    */
     cliff::install();
 }

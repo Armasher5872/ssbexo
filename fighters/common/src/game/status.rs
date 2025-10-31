@@ -1,35 +1,13 @@
 #![allow(unused_parens)]
 use super::*;
 
-#[skyline::hook(replace = smash::app::lua_bind::WorkModule::is_enable_transition_term)]
-unsafe extern "C" fn is_enable_transition_term_replace(module_accessor: &mut smash::app::BattleObjectModuleAccessor, term: i32) -> bool {
-	let situation_kind = StatusModule::situation_kind(module_accessor);
-	let ret = original!()(module_accessor, term);
-	if smash::app::utility::get_category(module_accessor) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-		if READY_GO_TIMER != 0 {
-			return false;
-		}
-		if SPECIAL_SMASH_BODY == 3 {
-			if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW 
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_DASH
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_GUARD
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE
-			|| term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE_DASH {
-				return ret && situation_kind == *SITUATION_KIND_AIR;
-			}
-		}
-		return ret;
-	}
-	return ret;
-}
-
 //Deals with Gordo
 #[skyline::hook(replace = smash::app::lua_bind::StatusModule::change_status_request)]
 unsafe extern "C" fn change_status_request_hook(boma: &mut smash::app::BattleObjectModuleAccessor, status_kind: i32, arg3: bool) -> u64 {
-	let mut next_status = status_kind;
+	let next_status = status_kind;
 	let category = smash::app::utility::get_category(boma);
 	let kind = smash::app::utility::get_kind(boma);
-	if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+	/*if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
 		if next_status == *FIGHTER_STATUS_KIND_CLIFF_WAIT {
             let cliff_id = GroundModule::get_cliff_id_uint32(boma);
             for object_id in get_all_active_battle_object_ids() {
@@ -45,7 +23,7 @@ unsafe extern "C" fn change_status_request_hook(boma: &mut smash::app::BattleObj
             }
 		}
 	}
-	else if (category == *BATTLE_OBJECT_CATEGORY_WEAPON && kind == *WEAPON_KIND_DEDEDE_GORDO) {
+	else */if (category == *BATTLE_OBJECT_CATEGORY_WEAPON && kind == *WEAPON_KIND_DEDEDE_GORDO) {
         if next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_ATTACK || next_status == *WEAPON_DEDEDE_GORDO_STATUS_KIND_HOP {
             HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
             HitModule::set_no_team(boma, true);
@@ -227,9 +205,8 @@ unsafe extern "C" fn set_fighter_status_data_hook(boma: &mut BattleObjectModuleA
 
 pub fn install() {
 	skyline::install_hooks!(
-		is_enable_transition_term_replace,
 		change_status_request_hook,
-		change_status_request_from_script_hook,
+		//change_status_request_from_script_hook,
 		init_settings_hook,
         correct_hook,
         get_ground_correct_kind_air_trans_hook,

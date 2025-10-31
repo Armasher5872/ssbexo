@@ -17,9 +17,7 @@ use {
 };
 
 mod grounded;
-mod smashes;
 
 pub fn install() {
     grounded::install();
-    smashes::install();
 }

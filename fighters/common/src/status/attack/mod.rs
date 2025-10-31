@@ -31,8 +31,7 @@ use {
     smash_script::{
         macros::*,
         *
-    },
-    smashline::*,
+    }
 };
 
 mod attack;

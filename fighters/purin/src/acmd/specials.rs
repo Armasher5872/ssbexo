@@ -70,12 +70,10 @@ unsafe extern "C" fn ssbexo_purin_grounded_side_special_acmd(agent: &mut L2CAgen
         AttackModule::set_add_reaction_frame(agent.module_accessor, 0, 2.0, false);
         AttackModule::set_add_reaction_frame(agent.module_accessor, 1, 2.0, false);
         ATK_SET_SHIELD_SETOFF_MUL_arg3(agent, 0, 1, 1.5);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
     }
     frame(agent.lua_state_agent, 29.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
     }
 }
 
@@ -91,13 +89,11 @@ unsafe extern "C" fn ssbexo_purin_aerial_side_special_acmd(agent: &mut L2CAgentB
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_PURIN_STATUS_SPECIAL_S_FLAG_INPUT);
         WorkModule::set_int(agent.module_accessor, *FIGHTER_PURIN_SPECIAL_S_ENERGY_MODE_BRAKE, *FIGHTER_PURIN_STATUS_SPECIAL_S_WORK_INT_ENERGY_MODE);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_PURIN_STATUS_SPECIAL_S_FLAG_CHANGE_ENERGY);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
     }
     frame(agent.lua_state_agent, 29.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
     }
     frame(agent.lua_state_agent, 31.0);
     if is_excute(agent) {

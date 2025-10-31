@@ -1,9 +1,5 @@
 use super::*;
 
-pub unsafe extern "C" fn empty_waza_customize() -> L2CValue {
-    0.into()
-}
-
 //Gets the original Waza Customize
 pub unsafe fn get_original_customizer(fighter: &mut L2CFighterCommon) -> Option<unsafe extern "C" fn(&mut L2CFighterCommon) -> L2CValue> {
     let ptr = fighter.global_table["move_customizer_original"].get_ptr();

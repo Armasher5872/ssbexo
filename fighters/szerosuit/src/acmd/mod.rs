@@ -24,11 +24,9 @@ use {
 };
 
 mod grounded;
-mod smashes;
 mod throws;
 
 pub fn install() {
     grounded::install();
-    smashes::install();
     throws::install();
 }

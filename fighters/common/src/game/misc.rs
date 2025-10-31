@@ -42,28 +42,11 @@ unsafe extern "C" fn const_allot_hook(unk: *const u8, constant: *const c_char, m
     original!()(unk,constant,value)
 }
 
-//Gravity, used in Custom Gamemodes
-#[skyline::hook(replace = smash::app::lua_bind::FighterInformation::gravity)]
-unsafe fn gravity_replace(fighter_information: &mut smash::app::FighterInformation) -> f32 {
-	let ret = original!()(fighter_information);
-	if ret == 1.33 {
-		SPECIAL_SMASH_GRAVITY = 1;
-	}
-	else if ret == 0.66 {
-		SPECIAL_SMASH_GRAVITY = 2;
-	}
-	else {
-		SPECIAL_SMASH_GRAVITY = 0;
-	}
-	return 1.0;
-}
-
 //Installation
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x60eb08).data(0x52800001u32); //Removes Jostle
 	skyline::install_hooks!(
         change_version_string_hook,
-        const_allot_hook//,
-        //gravity_replace
+        const_allot_hook
     );
 }

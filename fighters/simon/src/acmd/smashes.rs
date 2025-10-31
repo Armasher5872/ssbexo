@@ -8,7 +8,6 @@ unsafe extern "C" fn ssbexo_simon_forward_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         SEARCH(agent, 0, 0, Hash40::new("top"), 3.0, 0.0, 7.0, 17.0, Some(0.0), Some(7.0), Some(45.5), *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_IG, *COLLISION_PART_MASK_ALL, false);
     }
     frame(agent.lua_state_agent, 24.0);
@@ -39,7 +38,6 @@ unsafe extern "C" fn ssbexo_simon_forward_smash_hi_acmd(agent: &mut L2CAgentBase
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         SEARCH(agent, 0, 0, Hash40::new("top"), 3.0, 0.0, 7.0, 17.0, Some(0.0), Some(7.0), Some(45.5), *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_IG, *COLLISION_PART_MASK_ALL, false);
     }
     frame(agent.lua_state_agent, 24.0);
@@ -70,7 +68,6 @@ unsafe extern "C" fn ssbexo_simon_forward_smash_lw_acmd(agent: &mut L2CAgentBase
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         SEARCH(agent, 0, 0, Hash40::new("top"), 3.0, 0.0, 7.0, 17.0, Some(0.0), Some(7.0), Some(45.5), *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_IG, *COLLISION_PART_MASK_ALL, false);
     }
     frame(agent.lua_state_agent, 24.0);

@@ -10,11 +10,9 @@ use {
   },
   exo_var::{
     consts::*,
-    donkey::*,
     ganon::*,
     gekkouga::*,
     globals::*,
-    ike::*,
     koopajr::*,
     variables::*,
   },

@@ -1,18 +1,13 @@
 use {
-    exo_var::{
-        consts::*,
-        rockman::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
             sv_animcmd::{
                 frame,
                 wait
-            },
-            *
+            }
         },
-        hash40,
         lib::lua_const::*,
         lua2cpp::*,
         phx::Hash40
@@ -27,18 +22,10 @@ use {
     },
 };
 
-mod aerials;
 mod grounded;
-mod smashes;
-mod specials;
 mod throws;
-mod tilts;
 
 pub fn install() {
-    aerials::install();
     grounded::install();
-    smashes::install();
-    specials::install();
     throws::install();
-    tilts::install();
 }

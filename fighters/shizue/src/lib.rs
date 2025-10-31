@@ -14,17 +14,14 @@ use {
             *
         },
         lib::lua_const::*,
-        lua2cpp::*,
     },
     smashline::*,
 };
 
 mod acmd;
-mod status;
 mod vtable;
   
 pub fn install() {
     acmd::install();
-    status::install();
     vtable::install();
 }

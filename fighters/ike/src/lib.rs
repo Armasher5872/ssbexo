@@ -4,7 +4,6 @@ use {
     fighter_common::*,
     ike::*,
     status_end_control::*,
-    vector::*,
     weapon::*,
   },
   exo_var::{
@@ -19,10 +18,7 @@ use {
     hash40,
     lib::lua_const::*,
     lua2cpp::L2CFighterCommon,
-    phx::{
-      Hash40,
-      Vector3f
-    }
+    phx::Hash40
   },
   smash_script::*,
   smashline::*,

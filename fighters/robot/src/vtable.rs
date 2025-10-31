@@ -7,11 +7,6 @@ const ROBOT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x105c7f0; //R.O.B onl
 
 unsafe extern "C" fn robot_var(boma: &mut BattleObjectModuleAccessor) {
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    WorkModule::set_float(boma, 0.0, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_SNAKE_SPEED_VALUE);
-    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_POWER_BOOST);
-    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_CAN_SNAKE);
-    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_DID_POWER_BOOST);
-    WorkModule::off_flag(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLAG_EARLY_CANCEL);
     UiManager::set_robot_meter_info(entry_id, 160.0, 160.0, 80.0);
 }
 

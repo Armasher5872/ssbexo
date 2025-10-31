@@ -3,7 +3,6 @@ use super::*;
 pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
     RwLock::new(
         UiManager {
-            palutena_meter: [PalutenaMeter::default(); 8],
             robot_meter: [RobotMeter::default(); 8],
             ice_climber_meter: [IceClimberMeter::default(); 8],
             mariod_meter: [MarioDMeter::default(); 8],
@@ -15,7 +14,6 @@ pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
 
 #[repr(C)]
 pub struct UiManager {
-    pub palutena_meter: [PalutenaMeter; 8],
     pub robot_meter: [RobotMeter; 8],
     pub ice_climber_meter: [IceClimberMeter; 8],
     pub mariod_meter: [MarioDMeter; 8],
@@ -32,32 +30,6 @@ impl UiManager {
             }
         }
         return index;
-    }
-    //Palutena
-    #[export_name = "UiManager__set_palutena_meter_enable"]
-    pub extern "C" fn set_palutena_meter_enable(entry_id: u32, enable: bool) {
-        let mut manager = UI_MANAGER.write();
-        manager.palutena_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_enable(enable);
-    }
-    #[export_name = "UiManager__set_palutena_meter_info"]
-    pub extern "C" fn set_palutena_meter_info(entry_id: u32, current: f32, max: f32, per_level: f32) {
-        let mut manager = UI_MANAGER.write();
-        manager.palutena_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_meter_info(current, max, per_level);
-    }
-    #[export_name = "UiManager__reset_palutena_meter"]
-    pub extern "C" fn reset_palutena_meter(entry_id: u32) {
-        let mut manager = UI_MANAGER.write();
-        manager.palutena_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].reset();
-    }
-    #[export_name = "UiManager__change_palutena_meter_color_green"]
-    pub extern "C" fn change_palutena_meter_color_green(entry_id: u32) {
-        let mut manager = UI_MANAGER.write();
-        manager.palutena_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].change_color_green();
-    }
-    #[export_name = "UiManager__change_palutena_meter_color_purple"]
-    pub extern "C" fn change_palutena_meter_color_purple(entry_id: u32) {
-        let mut manager = UI_MANAGER.write();
-        manager.palutena_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].change_color_purple();
     }
     //R.O.B.
     #[export_name = "UiManager__set_robot_meter_enable"]

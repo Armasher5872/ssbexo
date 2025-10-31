@@ -1,15 +1,8 @@
 use {
-    exo_utils::{
-        attackinfo_struct::*,
-        hook::*,
-        vector::*,
-        vtable_funcs::*,
-    },
+    exo_utils::vector::*,
     exo_var::{
         consts::*,
         globals::*,
-        ness::*,
-        lucas::*,
         sonic::*,
     },
     smash::{

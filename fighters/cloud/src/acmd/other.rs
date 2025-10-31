@@ -240,6 +240,21 @@ unsafe extern "C" fn ssbexo_cloud_punisher_forward_fullhop_sound(agent: &mut L2C
     }
 }
 
+//Punisher Forward Aerial Jump Effect
+unsafe extern "C" fn ssbexo_cloud_punisher_forward_aerial_jump_effect(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_jump_aerial"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+//Punisher Forward Aerial Jump Sound
+unsafe extern "C" fn ssbexo_cloud_punisher_forward_aerial_jump_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 3.0);
+    if is_excute(agent) {
+        PLAY_STATUS(agent, Hash40::new("se_cloud_jump02"));
+    }
+}
+
 //Punisher Backward Shorthop Effect
 unsafe extern "C" fn ssbexo_cloud_punisher_backward_shorthop_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
@@ -270,6 +285,21 @@ unsafe extern "C" fn ssbexo_cloud_punisher_backward_fullhop_sound(agent: &mut L2
             PLAY_SEQUENCE(agent, Hash40::new("seq_cloud_rnd_jump"));
             PLAY_STATUS(agent, Hash40::new("se_cloud_jump01"));
         }
+    }
+}
+
+//Punisher Backward Aerial Jump Effect
+unsafe extern "C" fn ssbexo_cloud_punisher_backward_aerial_jump_effect(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_jump_aerial"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+//Punisher Backward Aerial Jump Sound
+unsafe extern "C" fn ssbexo_cloud_punisher_backward_aerial_jump_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 3.0);
+    if is_excute(agent) {
+        PLAY_STATUS(agent, Hash40::new("se_cloud_jump02"));
     }
 }
 
@@ -416,10 +446,14 @@ pub fn install() {
     .sound_acmd("sound_punishjumpfrontmini", ssbexo_cloud_punisher_forward_shorthop_sound, Low)
     .effect_acmd("effect_punishjumpfront", ssbexo_cloud_punisher_forward_fullhop_effect, Low)
     .sound_acmd("sound_punishjumpfront", ssbexo_cloud_punisher_forward_fullhop_sound, Low)
+    .effect_acmd("effect_punishjumpaerialfront", ssbexo_cloud_punisher_forward_aerial_jump_effect, Low)
+    .sound_acmd("sound_punishjumpaerialfront", ssbexo_cloud_punisher_forward_aerial_jump_sound, Low)
     .effect_acmd("effect_punishjumpbackmini", ssbexo_cloud_punisher_backward_shorthop_effect, Low)
     .sound_acmd("sound_punishjumpbackmini", ssbexo_cloud_punisher_backward_shorthop_sound, Low)
     .effect_acmd("effect_punishjumpback", ssbexo_cloud_punisher_backward_fullhop_effect, Low)
     .sound_acmd("sound_punishjumpback", ssbexo_cloud_punisher_backward_fullhop_sound, Low)
+    .effect_acmd("effect_punishjumpaerialback", ssbexo_cloud_punisher_backward_aerial_jump_effect, Low)
+    .sound_acmd("sound_punishjumpaerialback", ssbexo_cloud_punisher_backward_aerial_jump_sound, Low)
     .effect_acmd("effect_punishsquat", ssbexo_cloud_punisher_squat_effect, Low)
     .sound_acmd("sound_punishsquat", ssbexo_cloud_punisher_squat_sound, Low)
     .expression_acmd("expression_punishsquat", ssbexo_cloud_punisher_squat_expression, Low)

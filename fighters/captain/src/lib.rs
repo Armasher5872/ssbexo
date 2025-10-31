@@ -5,21 +5,16 @@ use {
     },
     exo_var::{
         captain::*,
-        consts::*,
         globals::*,
-        variables::*,
     },
     smash::{
         app::{
-            BattleObjectModuleAccessor,
             lua_bind::*,
             *
         },
         hash40,
         lib::lua_const::*,
-        lua2cpp::L2CFighterCommon
     },
-    smash_script::macros::*,
     smashline::*,
 };
 

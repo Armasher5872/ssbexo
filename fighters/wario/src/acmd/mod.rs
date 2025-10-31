@@ -1,9 +1,6 @@
 use {
     exo_utils::fighter_common::*,
-    exo_var::{
-        consts::*,
-        wario::*,
-    },
+    exo_var::wario::*,
     smash::{
         app::{
             lua_bind::*,

@@ -12,10 +12,7 @@ use {
         lua2cpp::*,
         phx::Hash40
     },
-    smash_script::{
-        *,
-        macros::*
-    },
+    smash_script::macros::*,
     smashline::{
         *,
         Priority::Low
@@ -23,9 +20,7 @@ use {
 };
 
 mod grounded;
-mod specials;
 
 pub fn install() {
     grounded::install();
-    specials::install();
 }
