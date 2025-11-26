@@ -94,19 +94,26 @@ unsafe extern "C" fn koopajr_cannonball_initialization_event(vtable: u64, weapon
     let ptr = get_module_vtable_func(boma, 0x108, 0x60);
     let set_shield_group2: extern "C" fn(*mut u64, *mut ShieldGroupResource2, i32) = std::mem::transmute(ptr);
     let reflector_module = *(boma as *mut *mut u64).add(0x108/8);
+    if owner_kind == *FIGHTER_KIND_DONKEY {
+        let shield_data = ShieldData::new(0.0, 4.0, 0.0, 0.0, 4.0, 0.0, 8.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
+        let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
+        let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
+        set_shield_group2(reflector_module, resource, *WEAPON_DONKEY_BARREL_SHIELD_KIND_BODY);
+        ReflectorModule::set_status(boma, *WEAPON_DONKEY_BARREL_SHIELD_KIND_BODY, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+    }
     if owner_kind == *FIGHTER_KIND_GANON {
-        let shield_data = ShieldData::new(15.0, 0.0, 0.0, 15.0, 0.0, 0.0, 15.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
+        let shield_data = ShieldData::new(6.0, 0.0, 0.0, 6.0, 0.0, 0.0, 8.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
         let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
         let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
         set_shield_group2(reflector_module, resource, *WEAPON_GANON_VOLLEY_SHIELD_KIND_BODY);
-        ReflectorModule::set_status_all(boma, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+        ReflectorModule::set_status(boma, *WEAPON_GANON_VOLLEY_SHIELD_KIND_BODY, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
     }
     if owner_kind == *FIGHTER_KIND_GEKKOUGA {
         let shield_data = ShieldData::new(0.0, 0.0, 0.0, 30.0, 0.0, 0.0, 3.0, Hash40::new("tatami1"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
         let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
         let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
         set_shield_group2(reflector_module, resource, *WEAPON_GEKKOUGA_MAT_SHIELD_KIND_BODY);
-        ReflectorModule::set_status_all(boma, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+        ReflectorModule::set_status(boma, *WEAPON_GEKKOUGA_MAT_SHIELD_KIND_BODY, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
     }
     call_original!(vtable, weapon, param_3)
 }
@@ -117,7 +124,7 @@ unsafe extern "C" fn koopajr_cannonball_reflector_clean_event(_vtable: u64, weap
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
-    if [*FIGHTER_KIND_GANON, *FIGHTER_KIND_GEKKOUGA].contains(&owner_kind) {
+    if [*FIGHTER_KIND_DONKEY, *FIGHTER_KIND_GANON, *FIGHTER_KIND_GEKKOUGA].contains(&owner_kind) {
         ReflectorModule::clean(boma);
     }
 }
@@ -130,11 +137,8 @@ unsafe extern "C" fn koopajr_cannonball_on_attack(vtable: u64, weapon: *mut smas
     let owner_kind = utility::get_kind(&mut *owner_boma);
     let agent = get_fighter_common_from_accessor(&mut *boma);
     let pos = *PostureModule::pos(boma);
-    if owner_kind == *FIGHTER_KIND_PURIN {
-        EffectModule::req(boma, Hash40::new("sys_flash"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
-        EffectModule::kill_kind(boma, Hash40::new("poke_meloetta_bullet"), false, false);
-        EffectModule::kill_kind(boma, Hash40::new("rosetta_ring_erase"), false, false);
-        *(weapon as *mut bool).add(0x90) = false;
+    if owner_kind == *FIGHTER_KIND_DONKEY {
+        *(weapon as *mut bool).add(0x90) = true;
     }
     if owner_kind == *FIGHTER_KIND_GANON {
         if !WorkModule::is_flag(boma, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLAG_CHARGED) {
@@ -170,9 +174,8 @@ unsafe extern "C" fn koopajr_cannonball_on_attack(vtable: u64, weapon: *mut smas
             );
         }
     }
-    if [*FIGHTER_KIND_METAKNIGHT, *FIGHTER_KIND_IKE].contains(&owner_kind) {
-        EffectModule::req(boma, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
-        EffectModule::kill_kind(boma, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
+    if owner_kind == *FIGHTER_KIND_IKE {
+        EffectModule::req(boma, Hash40::new("ike_counter_attack"), &Vector3f{x: pos.x, y: pos.y, z: pos.z}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
         *(weapon as *mut bool).add(0x90) = false;
     }
     if owner_kind == *FIGHTER_KIND_PFUSHIGISOU {
@@ -192,10 +195,37 @@ unsafe extern "C" fn koopajr_cannonball_on_attack(vtable: u64, weapon: *mut smas
     normal_weapon_hit_handler(vtable, weapon, log)
 }
 
+//Bowser Jr Cannonball On Reflect Event Offset
+unsafe extern "C" fn koopajr_cannonball_on_reflect_event(_vtable: u64, battle_object: *mut BattleObject) {
+    let boma = (*battle_object).module_accessor;
+    let agent = get_weapon_common_from_accessor(&mut *boma);
+    let reflect_team_no = ReflectModule::team_no(boma);
+    let reflect_object_id = ReflectModule::object_id(boma);
+    let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let owner_boma = sv_battle_object::module_accessor(owner_id);
+    let owner_kind = utility::get_kind(&mut *owner_boma);
+    PostureModule::reverse_lr(boma);
+    PostureModule::update_rot_y_lr(boma);
+    TeamModule::set_team(boma, reflect_team_no as i32, true);
+    TeamModule::set_hit_team(boma, reflect_team_no as i32);
+    TeamModule::set_team_owner_id(boma, reflect_object_id as u32);
+    if owner_kind == *FIGHTER_KIND_GANON {
+        EffectModule::kill_kind(boma, Hash40::new("ganon_volley"), true, true);
+        let scale = WorkModule::get_float(boma, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLOAT_SCALE);
+        if scale > 1.0 {
+            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3.8+scale, true);
+        }
+        else {
+            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3.8, true);
+        }
+    }
+}
+
 //Bowser Jr Cannonball On Reflection Event Offset
 unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon: *mut smash::app::Weapon, log: *mut ShieldAttackCollisionEvent) {
     let boma = (*weapon).battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
+    let status_kind = StatusModule::status_kind(boma);
+    let agent = get_weapon_common_from_accessor(&mut *boma);
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
@@ -203,12 +233,23 @@ unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon
     let opponent_battle_object = get_battle_object_from_id(opponent_id);
     let opponent_boma = (*opponent_battle_object).module_accessor;
     let opponent_agent = get_fighter_common_from_accessor(&mut *opponent_boma);
-    let opponent_category = (*(*log).collision_log).opponent_object_category as i32;
-    let get_sum_speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let get_sum_speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let opponent_status_kind = opponent_agent.global_table[STATUS_KIND].get_i32();
+    let opponent_category = utility::get_category(&mut *opponent_boma);
+    let attack_data = *AttackModule::attack_data(owner_boma, (*(*log).collision_log).collider_id as i32, (*(*log).collision_log).x35);
+    let power = attack_data.power;
+    let attr = attack_data.attr;
+    EffectModule::kill_kind(boma, Hash40::new("sys_reflection"), true, true);
+    spawn_hit_effects(agent, attr);
+    if owner_kind == *FIGHTER_KIND_DONKEY {
+        WorkModule::sub_float(boma, power, *WEAPON_DONKEY_BARREL_INSTANCE_WORK_ID_FLOAT_HP);
+        if WorkModule::get_float(boma, *WEAPON_DONKEY_BARREL_INSTANCE_WORK_ID_FLOAT_HP) <= 0.0 && status_kind != *WEAPON_DONKEY_BARREL_STATUS_KIND_BREAK {
+            StatusModule::change_status_request_from_script(boma, *WEAPON_DONKEY_BARREL_STATUS_KIND_BREAK, false);
+        }
+    }
     if owner_kind == *FIGHTER_KIND_GANON {
-        let life = WorkModule::get_param_int(owner_boma, hash40("param_volley"), hash40("life"));
-        let opponent_status_kind = opponent_agent.global_table[STATUS_KIND].get_i32();
+        let life = WorkModule::get_param_int(boma, hash40("param_volley"), hash40("life"));
+        let get_sum_speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        let get_sum_speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         let normals_status = [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&opponent_status_kind);
         let smashes_status = [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&opponent_status_kind);
         let specials_status = [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_FINAL].contains(&opponent_status_kind);
@@ -229,15 +270,17 @@ unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon
         else {
             -1.0
         };
-        if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            ReflectorModule::set_no_team(boma, true);
-            TeamModule::set_team(boma, *TEAM_NONE, false);
-            WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-            let reflect = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_special_n06"), true, false, false, false, smash::app::enSEType(0));
-            SoundModule::set_se_vol(agent.module_accessor, reflect as i32, 6.0, 0);
-            sv_kinetic_energy!(set_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, -get_sum_speed_y*speed_multiplier);
-            sv_kinetic_energy!(set_stable_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, -get_sum_speed_y*speed_multiplier);
-        }
+        PostureModule::reverse_lr(boma);
+        PostureModule::update_rot_y_lr(boma);
+        ReflectorModule::set_no_team(boma, true);
+        TeamModule::set_team(boma, *TEAM_NONE, false);
+        TeamModule::set_hit_team(boma, *TEAM_NONE);
+        TeamModule::set_team_owner_id(boma, owner_id);
+        WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+        let reflect = SoundModule::play_se(boma, Hash40::new("se_ganon_special_n06"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, reflect as i32, 6.0, 0);
+        sv_kinetic_energy!(set_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, -get_sum_speed_y*speed_multiplier);
+        sv_kinetic_energy!(set_stable_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, -get_sum_speed_y*speed_multiplier);
     }
 }
 
@@ -254,6 +297,7 @@ pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x519ab68).data(initialize_reflectormodule);
     let _ = skyline::patching::Patch::in_text(0x51d8348).data(koopajr_cannonball_reflector_clean_event as u64);
     let _ = skyline::patching::Patch::in_text(0x51d83e8).data(koopajr_cannonball_on_attack as u64);
+    let _ = skyline::patching::Patch::in_text(0x51d8400).data(koopajr_cannonball_on_reflect_event as u64);
     let _ = skyline::patching::Patch::in_text(0x51d8468).data(koopajr_cannonball_on_reflection_event as u64);
 	skyline::install_hooks!(
         koopajr_start_initialization,

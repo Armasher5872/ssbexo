@@ -96,36 +96,10 @@ unsafe extern "C" fn link_attack_dash_main_loop(fighter: &mut L2CFighterCommon) 
     0.into()
 }
 
-unsafe extern "C" fn link_attack_dash_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-    if 0 < attack_kind {
-        FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, attack_kind);
-        WorkModule::set_int64(fighter.module_accessor, 0i64, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-    }
-    if status_kind != *FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND {
-        VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
-        VisibilityModule::set_int64(fighter.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
-    0.into()
-}
-
-unsafe extern "C" fn link_attack_dash_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if status_kind != *FIGHTER_LINK_STATUS_KIND_ATTACK_DASH_BOUND {
-        VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
-        VisibilityModule::set_int64(fighter.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-    0.into()
-}
-
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_DASH, link_attack_dash_main_status)
-    .status(End, *FIGHTER_STATUS_KIND_ATTACK_DASH, link_attack_dash_end_status)
-    .status(Exit, *FIGHTER_STATUS_KIND_ATTACK_DASH, link_attack_dash_exit_status)
     .install()
     ;
 }

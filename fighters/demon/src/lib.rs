@@ -1,7 +1,6 @@
 use {
     common::status::grounded::dash::fgc_dashback_main,
     exo_utils::{
-        attack::*,
         fighter_common::*,
         status_end_control::*,
     },

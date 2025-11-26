@@ -644,6 +644,9 @@ unsafe extern "C" fn sub_rebirth_uniq_process_exit(fighter: &mut L2CFighterCommo
     if fighter_kind == *FIGHTER_KIND_CAPTAIN {
         ShadowModule::set_draw_status(fighter.module_accessor, true);
     }
+    if fighter_kind == *FIGHTER_KIND_KOOPA {
+        STOP_SE(fighter, Hash40::new("se_koopa_appear01"));
+    }
     if fighter_kind == *FIGHTER_KIND_FALCO {
         ShadowModule::set_draw_status(fighter.module_accessor, true);
     }

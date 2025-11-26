@@ -59,4 +59,3 @@ Joby1Kenobi for the English Cloud and Sephiroth Voices
 ## Legal Disclaimer
 Super Smash Bros: EXO and its creators do not condone any forms of piracy or other illegal actions that may damage Nintendo or other relevant copyright holders.
 Super Smash Bros: EXO is not endorsed by Nintendo or other copyright holders involved in Smash Ultimate. This repository does not contain copyrighted code." Super-Smash-Bros-EXO" 
-# ssbuexo

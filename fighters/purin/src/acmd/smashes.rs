@@ -36,21 +36,21 @@ unsafe extern "C" fn ssbexo_purin_forward_smash_effect(agent: &mut L2CAgentBase)
     }
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 6, 7, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_song"), Hash40::new("top"), 0, 6, 7, 0, 0, 0, 1, true);
     }
     frame(agent.lua_state_agent, 19.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("poke_meloetta_bullet"), false, false);
-        EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 6, 12, 0, 0, 0, 1.3, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("purin_song"), false, false);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_song"), Hash40::new("top"), 0, 6, 12, 0, 0, 0, 1.3, true);
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("poke_meloetta_bullet"), false, false);
-        EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 6, 18, 0, 0, 0, 1.6, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("purin_song"), false, false);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_song"), Hash40::new("top"), 0, 6, 18, 0, 0, 0, 1.6, true);
     }
     frame(agent.lua_state_agent, 25.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("poke_meloetta_bullet"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("purin_song"), false, false);
     }
 }
 
@@ -62,7 +62,7 @@ unsafe extern "C" fn ssbexo_purin_forward_smash_sound(agent: &mut L2CAgentBase) 
     }
     frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_purin_rnd_attack_smash_s"));
+        PLAY_STATUS(agent, Hash40::new("vc_purin_003"));
     }
     frame(agent.lua_state_agent, 47.0);
     if is_excute(agent) {
@@ -128,21 +128,21 @@ unsafe extern "C" fn ssbexo_purin_up_smash_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 7, 1, 0, 0, 0, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_song"), Hash40::new("top"), 0, 7, 1, 0, 0, 0, 1, true);
     }
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("poke_meloetta_bullet"), false, false);
-        EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 13, 1, 0, 0, 0, 1.3, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("purin_song"), false, false);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_song"), Hash40::new("top"), 0, 13, 1, 0, 0, 0, 1.3, true);
     }
     frame(agent.lua_state_agent, 18.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("poke_meloetta_bullet"), false, false);
-        EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0, 19, 1, 0, 0, 0, 1.6, true);
+        EFFECT_OFF_KIND(agent, Hash40::new("purin_song"), false, false);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_song"), Hash40::new("top"), 0, 19, 1, 0, 0, 0, 1.6, true);
     }
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("poke_meloetta_bullet"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("purin_song"), false, false);
     }
 }
 
@@ -151,7 +151,7 @@ unsafe extern "C" fn ssbexo_purin_up_smash_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_smash_start_04"));
-        PLAY_SEQUENCE(agent, Hash40::new("seq_purin_rnd_attack_smash_h"));
+        PLAY_STATUS(agent, Hash40::new("vc_purin_003"));
     }
 }
 
@@ -210,7 +210,7 @@ unsafe extern "C" fn ssbexo_purin_down_smash_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 19.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("poke_meloetta_bullet"), Hash40::new("top"), 0.0, 5.0, -2.0, 0, 0, 0, 2.0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_song"), Hash40::new("top"), 0.0, 5.0, -2.0, 0, 0, 0, 2.0, true);
     }
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
@@ -218,7 +218,7 @@ unsafe extern "C" fn ssbexo_purin_down_smash_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("poke_meloetta_bullet"), false, false);
+        EFFECT_OFF_KIND(agent, Hash40::new("purin_song"), false, false);
     }
 }
 
@@ -230,7 +230,7 @@ unsafe extern "C" fn ssbexo_purin_down_smash_sound(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 18.0);
     if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_purin_rnd_attack_smash_l"));
+        PLAY_STATUS(agent, Hash40::new("vc_purin_003"));
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {

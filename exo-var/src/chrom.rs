@@ -1,8 +1,0 @@
-use super::*;
-
-pub const FIGHTER_CHROM_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK: LuaConst = LuaConst::new(0x200000E2);
-pub const FIGHTER_CHROM_INSTANCE_WORK_ID_INT_SPECIAL_LW_HIT_COUNT: LuaConst = LuaConst::new(0x100000CC);
-pub const FIGHTER_CHROM_STATUS_KIND_SPECIAL_S_ATTACK: LuaConst = LuaConst::new(0x1F3);
-pub const FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_HOLD: LuaConst = LuaConst::new(0x1F4);
-pub const FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_DROP: LuaConst = LuaConst::new(0x1F5);
-pub const FIGHTER_CHROM_STATUS_KIND_SPECIAL_HI_LAND: LuaConst = LuaConst::new(0x1F6);

@@ -36,13 +36,6 @@ pub trait MarioDUiObject {
     fn pill_id(&self) -> i32;
 }
 
-pub trait LucarioUiObject {
-    fn update(&mut self);
-    fn is_valid(&self) -> bool;
-    fn set_enable(&mut self, enable: bool);
-    fn is_enabled(&self) -> bool;
-}
-
 pub trait CloudUiObject {
     fn update(&mut self);
     fn is_valid(&self) -> bool;
@@ -174,28 +167,6 @@ impl MarioDUiObject for MarioDMeter {
     }
     fn pill_id(&self) -> i32 {
         return self.element;
-    }
-}
-
-impl LucarioUiObject for LucarioMeter {
-    fn update(&mut self) {
-        self.update_icon();
-    }
-    fn is_valid(&self) -> bool {
-        is_pane_valid(self.number) && is_pane_valid(self.icon)
-    }
-    fn set_enable(&mut self, enable: bool) {
-        if !enable {
-            set_pane_visible(self.number, false);
-            set_pane_visible(self.icon, false);
-        }
-        else if !self.enabled {
-            self.reset();
-        }
-        self.enabled = enable;
-    }
-    fn is_enabled(&self) -> bool {
-        self.enabled
     }
 }
 

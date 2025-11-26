@@ -2,6 +2,7 @@ use {
     exo_utils::{
         check_attack::*,
         fighter_common::*,
+        mario::*,
         status_end_control::*,
     },
     exo_var::{

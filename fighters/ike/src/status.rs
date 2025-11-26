@@ -81,41 +81,37 @@ unsafe extern "C" fn ike_slash_shoot_pre_status(weapon: &mut L2CWeaponCommon) ->
 }
 
 unsafe extern "C" fn ike_slash_shoot_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let owner_boma = get_owner_boma(weapon);
+    let owner_lr = PostureModule::lr(owner_boma);
+    let owner_pos_x = PostureModule::pos_x(owner_boma);
+    let owner_pos_y = PostureModule::pos_y(owner_boma);
+    let owner_pos_z = PostureModule::pos_z(owner_boma);
     let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_slash"), hash40("life"));
     let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_slash"), hash40("speed_max"));
     let lr = PostureModule::lr(weapon.module_accessor);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    ModelModule::set_scale(weapon.module_accessor, 0.001);
-    weapon.clear_lua_stack();
     sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, 0.0);
     sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, 0.0);
     sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
+    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(16.0*owner_lr), y: owner_pos_y, z: owner_pos_z});
     0.into()
 }
 
 unsafe extern "C" fn ike_slash_shoot_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let speed_max = WorkModule::get_param_float(weapon.module_accessor, hash40("param_slash"), hash40("speed_max"));
-    let lr = PostureModule::lr(weapon.module_accessor);
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("shoot"), 0.0, 1.0, false, 0.0, false, false);
-    if GroundModule::is_floor_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
-        weapon.set_situation(SITUATION_KIND_GROUND.into());
-        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, 0.0);
-        sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_max*lr, 0.0);
-        sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
-    }
-    if should_remove_projectile(weapon) {
-        slash_removal(weapon);
-    }
     weapon.fastshift(L2CValue::Ptr(ike_slash_shoot_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn ike_slash_shoot_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_boma = get_owner_boma(weapon);
-    let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
-    let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
-    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR && WorkModule::is_flag(owner_boma, *FIGHTER_IKE_INSTANCE_WORK_ID_FLAG_AIR_SPECIAL_N)) {
+    let frame = weapon.global_table[CURRENT_FRAME].get_f32();
+    if GroundModule::is_floor_touch_line(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) && frame > 1.0 {
+        weapon.set_situation(SITUATION_KIND_GROUND.into());
+        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x2f89bbb63a));
+        WorkModule::on_flag(weapon.module_accessor, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLAG_HOP);
+    }
+    if should_remove_projectile(weapon) {
         slash_removal(weapon);
     }
     0.into()
@@ -127,7 +123,7 @@ unsafe extern "C" fn ike_slash_shoot_exec_status(weapon: &mut L2CWeaponCommon) -
 }
 
 unsafe extern "C" fn ike_slash_shoot_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("ike_slash"), false, false);
     0.into()
 }
 

@@ -25,6 +25,55 @@ unsafe extern "C" fn ssbexo_donkey_turn_dash_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
+//Item Heavy Forward Throw ACMD
+unsafe extern "C" fn ssbexo_donkey_item_heavy_forward_throw_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 18.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
+        agent.clear_lua_stack();
+        lua_args!(agent, 21, 10, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
+        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Item Heavy Back Throw ACMD
+unsafe extern "C" fn ssbexo_donkey_item_heavy_back_throw_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 20.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
+        agent.clear_lua_stack();
+        lua_args!(agent, -23, 10, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
+        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+        REVERSE_LR(agent);
+    }
+}
+
+//Item Heavy Up Throw ACMD
+unsafe extern "C" fn ssbexo_donkey_item_heavy_up_throw_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 15.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
+        agent.clear_lua_stack();
+        lua_args!(agent, 0, 42, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
+        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Item Heavy Down Throw ACMD
+unsafe extern "C" fn ssbexo_donkey_item_heavy_down_throw_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 14.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
+        agent.clear_lua_stack();
+        lua_args!(agent, 0, 1, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
+        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
 //Final Smash Start ACMD
 unsafe extern "C" fn ssbexo_donkey_final_smash_start_acmd(agent: &mut L2CAgentBase) {
     let scale = PostureModule::scale(agent.module_accessor);
@@ -132,6 +181,14 @@ pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_turndash", ssbexo_donkey_turn_dash_acmd, Low)
+    .game_acmd("game_itemheavythrowf", ssbexo_donkey_item_heavy_forward_throw_acmd, Low)
+    .game_acmd("game_itemheavythrowf4", ssbexo_donkey_item_heavy_forward_throw_acmd, Low)
+    .game_acmd("game_itemheavythrowb", ssbexo_donkey_item_heavy_back_throw_acmd, Low)
+    .game_acmd("game_itemheavythrowb4", ssbexo_donkey_item_heavy_back_throw_acmd, Low)
+    .game_acmd("game_itemheavythrowhi", ssbexo_donkey_item_heavy_up_throw_acmd, Low)
+    .game_acmd("game_itemheavythrowhi4", ssbexo_donkey_item_heavy_up_throw_acmd, Low)
+    .game_acmd("game_itemheavythrowlw", ssbexo_donkey_item_heavy_down_throw_acmd, Low)
+    .game_acmd("game_itemheavythrowlw4", ssbexo_donkey_item_heavy_down_throw_acmd, Low)
     .game_acmd("game_finalstart", ssbexo_donkey_final_smash_start_acmd, Low)
     .game_acmd("game_finalairstart", ssbexo_donkey_final_smash_start_acmd, Low)
     .install()

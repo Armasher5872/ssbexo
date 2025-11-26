@@ -1,12 +1,14 @@
 #![allow(dead_code, unexpected_cfgs)]
 use super::*;
 
+const CONSTANT_OFFSET: usize = 0x3728410;
+
 //Changes the title screen version
 #[skyline::hook(replace = change_version_string)]
 fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 	let original_string = unsafe { from_c_str(string) };
 	if original_string.contains("Ver.") {
-        let version = match std::fs::read_to_string("sd:/ultimate/mods/Super Smash Bros EXO (Code Edits Only)/ui/exo_version.txt") {
+        let version = match std::fs::read_to_string("sd:/ultimate/mods/Super Smash Bros EXO/ui/exo_version.txt") {
             Ok(version_value) => version_value.trim().to_string(),
             Err(_) => {
                 #[cfg(feature = "main_nro")]
@@ -27,17 +29,11 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 //Credit to Claude
 #[skyline::hook(offset = CONSTANT_OFFSET)]
 unsafe extern "C" fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u32) {
-    if CStr::from_ptr(constant as _).to_str().unwrap().contains("WEAPON_KOOPAJR_CANNONBALL_STATUS_KIND_NUM") {
-        value = 0x7;
-    }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("WEAPON_LINK_NAVY_STATUS_KIND_NUM") {
         value = 0x9;
     }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIIFIGHTER_STATUS_KIND_NUM") {
         value = 0x20D;
-    }
-    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIISWORDSMAN_STATUS_KIND_NUM") {
-        value = 0x203;
     }
     original!()(unk,constant,value)
 }

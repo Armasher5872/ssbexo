@@ -3,10 +3,7 @@ use {
         fighter_common::*,
         status_end_control::*,
     },
-    exo_var::{
-        globals::*,
-        variables::*,
-    },
+    exo_var::globals::*,
     smash::{
         app::{
             lua_bind::*,
@@ -18,11 +15,7 @@ use {
             lua_const::*,
         },
         lua2cpp::L2CFighterCommon,
-        phx::{
-            Hash40,
-            Vector2f,
-            Vector3f
-        }
+        phx::Hash40
     },
     smash_script::{
         macros::*,

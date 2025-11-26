@@ -218,6 +218,8 @@ unsafe extern "C" fn mario_special_n_attack_exec_status(_fighter: &mut L2CFighte
 
 //Neutral Special Attack End Status
 unsafe extern "C" fn mario_special_n_attack_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    EFFECT_OFF_KIND(fighter, Hash40::new("mario_fb_shoot"), true, true);
+    EFFECT_OFF_KIND(fighter, Hash40::new("mario_fb_bullet_r"), true, true);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_ATTACK_ACTIVE);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MARIO_INSTANCE_WORK_ID_INT_SPECIAL_N_HELD_FRAME);
     0.into()
@@ -225,6 +227,8 @@ unsafe extern "C" fn mario_special_n_attack_end_status(fighter: &mut L2CFighterC
 
 //Neutral Special Attack Exit Status
 unsafe extern "C" fn mario_special_n_attack_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    EFFECT_OFF_KIND(fighter, Hash40::new("mario_fb_shoot"), true, true);
+    EFFECT_OFF_KIND(fighter, Hash40::new("mario_fb_bullet_r"), true, true);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_ATTACK_ACTIVE);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_MARIO_INSTANCE_WORK_ID_INT_SPECIAL_N_HELD_FRAME);
     0.into()
@@ -349,7 +353,7 @@ unsafe extern "C" fn mario_special_s_loop_init_status(fighter: &mut L2CFighterCo
     let lr = PostureModule::lr(fighter.module_accessor);
     let jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
     let max_jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX);
-    let gravity = if get_sum_speed_y > -1.5 {0.18} else {0.0484};
+    let gravity = if get_sum_speed_y > -1.5 {0.18} else {0.0242};
     if jump_count < max_jump_count {
         WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_JUMP_AERIAL);
     }
@@ -364,8 +368,9 @@ unsafe extern "C" fn mario_special_s_loop_init_status(fighter: &mut L2CFighterCo
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
     sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.07, 0.0);
-    sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -gravity);
-    sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 3.9);
+    sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -gravity);
+    sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -3.9);
+    sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 3.9);
     0.into()
 }
 
@@ -382,8 +387,12 @@ unsafe extern "C" fn mario_special_s_loop_main_loop(fighter: &mut L2CFighterComm
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let lr = PostureModule::lr(fighter.module_accessor);
+    let slow_rate = SlowModule::rate(fighter.module_accessor);
     let pass_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_stick_y"));
     let pass_flick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_flick_y")) as i32;
+    let special_s_degree = WorkModule::get_float(fighter.module_accessor, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_DEGREE);
+    let max_degree = 90.0;
+    let change_degree_per_frame = 0.7*slow_rate;
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
@@ -419,6 +428,10 @@ unsafe extern "C" fn mario_special_s_loop_main_loop(fighter: &mut L2CFighterComm
             fighter.change_status(FIGHTER_MARIO_STATUS_KIND_SPECIAL_S_BONK.into(), false.into());
         }
     } 
+    if special_s_degree > -max_degree {
+        WorkModule::set_float(fighter.module_accessor, special_s_degree-change_degree_per_frame, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_DEGREE);
+    }
+    mario_change_angle(fighter, special_s_degree, max_degree, "special_s_loop_down", "special_s_loop_down");
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_MARIO_STATUS_KIND_SPECIAL_S_LOOP.into(), false.into());
         return 1.into();
@@ -442,9 +455,11 @@ unsafe extern "C" fn mario_special_s_loop_exec_status(fighter: &mut L2CFighterCo
         sv_kinetic_energy!(controller_set_accel_x_add, fighter, 0.01/*Additional Horizontal Air Acceleration*/);
     }
     sv_kinetic_energy!(set_accel, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -gravity);
-    WorkModule::add_float(fighter.module_accessor, 1.0, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_ATTACK_FRAME);
     if attack_frame > 32.0 {
         AttackModule::clear_all(fighter.module_accessor);
+    }
+    else {
+        WorkModule::add_float(fighter.module_accessor, 1.0, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_ATTACK_FRAME);
     }
     0.into()
 }
@@ -455,6 +470,7 @@ unsafe extern "C" fn mario_special_s_loop_end_status(fighter: &mut L2CFighterCom
     if status_kind != *FIGHTER_MARIO_STATUS_KIND_SPECIAL_S_LOOP {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_ATTACK_FRAME);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_DEGREE);
     }
     0.into()
 }
@@ -465,6 +481,7 @@ unsafe extern "C" fn mario_special_s_loop_exit_status(fighter: &mut L2CFighterCo
     if status_kind != *FIGHTER_MARIO_STATUS_KIND_SPECIAL_S_LOOP {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_ATTACK_FRAME);
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_DEGREE);
     }
     0.into()
 }

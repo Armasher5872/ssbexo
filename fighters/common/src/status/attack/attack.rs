@@ -1,229 +1,104 @@
-/* The hooks and status_kind edits are credited to the HDR Code Repository and WuBoyTH's source code from the WuBor Patch */
 use super::*;
 
-/*   GROUNDED ATTACK STATUSES   */
-//Sub Status Attack Common, removes the combo check
-#[skyline::hook(replace = L2CFighterCommon_sub_status_AttackCommon)]
-unsafe extern "C" fn sub_status_attackcommon(fighter: &mut L2CFighterCommon) {
+#[skyline::hook(replace = L2CFighterCommon_attack_mtrans_post_process)]
+unsafe extern "C" fn attack_mtrans_post_process(fighter: &mut L2CFighterCommon) {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    if fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_ATTACK {
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ATTACK_WORK_INT_100_HIT_NEAR_COUNT);
-    }
-    ComboModule::reset(fighter.module_accessor);
-    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_100);
-    if fighter_kind == *FIGHTER_KIND_SAMUS {
-        WorkModule::set_int64(fighter.module_accessor, hash40("attack_12") as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_ATTACK11_MOTION);
-    }
-    else {
-        WorkModule::set_int64(fighter.module_accessor, hash40("attack_11") as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_ATTACK11_MOTION);
-    }
-}
-
-//Attack Combo None Uniq Chk Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
-#[skyline::hook(replace = L2CFighterCommon_attack_combo_none_uniq_chk_button)]
-unsafe extern "C" fn attack_combo_none_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue, param_3: L2CValue) {
-    if !param_1.get_bool() {
-        if ControlModule::check_button_on(fighter.module_accessor, param_2.get_i32()) && only_jabs(fighter) {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_RESTART) {
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART);
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART_ATTACK);
+    let status_kind_interrupt = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    //let stick_x = fighter.global_table[STICK_X].get_f32();
+    //let stick_y = fighter.global_table[STICK_Y].get_f32();
+    //let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
+    let count = ComboModule::count(fighter.module_accessor);
+    //let lr = PostureModule::lr(fighter.module_accessor);
+    let mini_jump_attack_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
+    let attack_11_motion = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_WORK_INT_ATTACK11_MOTION);
+    let reserve_log_attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    let attack_jump_mini_attack_enable_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("attack_jump_mini_attack_enable_frame"));
+    let status_attack = fighter.status_attack();
+    let log_infos = status_attack["log_infos"].clone();
+    let attack_11 = log_infos["attack_11"].get_i64();
+    let attack_12 = log_infos["attack_12"].get_i64();
+    let attack_13 = log_infos["attack_13"].get_i64();
+    let mut cont = false;
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if prev_status_kind != status_kind_interrupt {
+            if prev_status_kind != *FIGHTER_STATUS_KIND_ESCAPE {
+                cont = true;
             }
-        }
-        fighter.attack_uniq_chk_command(param_3);
-    }
-    else {
-        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
-            if !WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0) {
-                return;
-            }
-        }
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
-    }
-}
-
-//Attack Combo Uniq Chk Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
-#[skyline::hook(replace = L2CFighterCommon_attack_combo_uniq_chk_button)]
-unsafe extern "C" fn attack_combo_uniq_chk_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue, param_3: L2CValue) {
-    if !param_1.get_bool() {
-        fighter.attack_uniq_chk_command(param_3.clone());
-        if fighter.global_table[CMD_CAT1].get_i32() & param_3.get_i32() != 0 && only_jabs(fighter) {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_CONNECT_COMBO);
-            }
-        }
-        let button = param_2.get_i32();
-        if !ControlModule::check_button_on(fighter.module_accessor, button) {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RELEASE_BUTTON);
         }
         else {
-            if !AttackModule::is_infliction_status(fighter.module_accessor, 0x7f) {
-                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_RESTART) {
-                    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RELEASE_BUTTON) {
-                        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART);
-                        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART_ATTACK);
-                        ComboModule::reset(fighter.module_accessor);
+            if FighterMotionModuleImpl::is_valid_cancel_frame(fighter.module_accessor, -1, true) {
+                cont = true;
+            }
+        }
+    }
+    if count != 1 {
+        if count != 2 {
+            if count != 3 {
+                if StatusModule::is_changing(fighter.module_accessor) {
+                    if cont {
+                        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
+                            WorkModule::set_int(fighter.module_accessor, attack_jump_mini_attack_enable_frame+1, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
+                            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+                        }
                     }
                 }
-                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_NO_HIT_COMBO) && only_jabs(fighter) {
-                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_CONNECT_COMBO);
-                    if ControlModule::check_button_on_trriger(fighter.module_accessor, button) {
-                        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_NO_HIT_COMBO_TRIGGER);
+                else {
+                    if 0 < mini_jump_attack_frame {
+                        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
+                        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK);
+                        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
                     }
                 }
-            }
-            else if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) && only_jabs(fighter) {
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_CONNECT_COMBO);
-            }
-        }
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART_COMBO) && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_CONNECT_COMBO) {
-            let combo_count = ComboModule::count(fighter.module_accessor) as i32;
-            let attack_combo_max = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_combo_max"), 0);
-            if combo_count != attack_combo_max {
-                return;
-            }
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART);
-            ComboModule::reset(fighter.module_accessor);
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_NO_HIT_COMBO) {
-                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_NO_HIT_COMBO_TRIGGER) {
-                    return;
+                if mini_jump_attack_frame != 0 {
+                    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
+                        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART_ATTACK);
+                        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_NO_HIT_COMBO_TRIGGER);
+                    }
                 }
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART_ATTACK);
+                if 0 < reserve_log_attack_kind {
+                    FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, reserve_log_attack_kind);
+                    WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+                }
             }
-        }
-    }
-    else {
-        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
-            if !WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0) {
-                return;
+            /*if stick_x*lr > 0.7 || (cmd_cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4) != 0) {
+                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_S3.into(), true.into());
             }
-        }
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
-    }
-}
-
-//Attack Uniq Chk Command, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
-#[skyline::hook(replace = L2CFighterCommon_attack_uniq_chk_command)]
-unsafe extern "C" fn attack_uniq_chk_command(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
-    let cat1 = fighter.global_table[CMD_CAT1].get_i32();
-    if cat1 & param_1.get_i32() != 0 && only_jabs(fighter) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO_PRECEDE);
-    }
-}
-
-//Check 100 Count Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
-#[skyline::hook(replace = L2CFighterCommon_check_100_count_button)]
-unsafe extern "C" fn check_100_count_button(fighter: &mut L2CFighterCommon, param_1: L2CValue) {
-    let button = param_1.get_i32();
-    if only_jabs(fighter) {
-        if fighter.global_table[IS_STOP].get_bool() {
-            if !ControlModule::check_button_on_trriger(fighter.module_accessor, button) && !ControlModule::check_button_on_release(fighter.module_accessor, button) {
-                return;
+            else if stick_y > 0.7 || (cmd_cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 0) {
+                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI3.into(), true.into());
             }
-            WorkModule::inc_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_WORK_INT_100_COUNT);
+            else if stick_y < -0.7 || (cmd_cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) != 0) {
+                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW3.into(), true.into());
+            }
+            else {*/
+                MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_13"), 0.0, 1.0, false, 0.0, false, false);
+                fighter.clear_lua_stack();
+                sv_kinetic_energy::set_motion_energy_update_flag(fighter.lua_state_agent);
+                WorkModule::set_int64(fighter.module_accessor, attack_13, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+            /*}*/
         }
         else {
-            if !ControlModule::check_button_trigger(fighter.module_accessor, button) && !ControlModule::check_button_release(fighter.module_accessor, button) {
-                return;
-            }
-            WorkModule::inc_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_WORK_INT_100_COUNT);
-        }
-    }
-}
-
-//Status Attack Main Button, meant to make it so that only neutral attack inputs (without any stick inputs) enable Jabs
-#[skyline::hook(replace = L2CFighterCommon_status_Attack_Main_button)]
-unsafe extern "C" fn status_attack_main_button(fighter: &mut L2CFighterCommon, param_1: L2CValue, param_2: L2CValue) -> L2CValue {
-    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    fighter.check_100_count_button(param_1.clone());
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            return 1.into();
-        }
-    }
-    let attack100_type = WorkModule::get_param_int(fighter.module_accessor, hash40("attack100_type"), 0);
-    if attack100_type != *FIGHTER_ATTACK100_TYPE_NONE {
-        if AttackModule::is_infliction_status(fighter.module_accessor, 0x7f)
-        && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100)
-        && ControlModule::check_button_on(fighter.module_accessor, param_1.get_i32())
-        && only_jabs(fighter) {
-            let combo = ComboModule::count(fighter.module_accessor) as i32;
-            let attack_combo_max = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_combo_max"), 0);
-            if attack_combo_max <= combo && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_100.into(), true.into());
-                return 1.into();
-            }
-        }
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_100)
-        && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100) {
-            let attack_100_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_WORK_INT_100_COUNT);
-            let attack_100_enable_cnt = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_100_enable_cnt"), 0);
-            if attack_100_enable_cnt <= attack_100_count && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_100.into(), true.into());
-                return 1.into();
-            }
-        }
-    }
-    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-        return 1.into();
-    }
-    if 0 < WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME) && !StopModule::is_stop(fighter.module_accessor) && fighter.sub_check_button_jump().get_bool() {
-        let mot = MotionModule::motion_kind(fighter.module_accessor);
-        MotionAnimcmdModule::call_script_single(fighter.module_accessor, *FIGHTER_ANIMCMD_EXPRESSION, Hash40::new_raw(mot), -1);
-        WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-        let callable: extern "C" fn(&mut L2CFighterCommon, L2CValue) -> L2CValue = std::mem::transmute(param_2.get_ptr());
-        callable(fighter, true.into());
-        return 1.into();
-    }
-    if 1 == WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME) && !fighter.global_table[IS_STOP].get_bool() {
-        let kind =  WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-        if 0 < kind {
-            FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, kind);
-            WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-        }
-    }
-    let attack_combo_type = WorkModule::get_param_int(fighter.module_accessor, hash40("attack_combo_type"), 0);
-    if attack_combo_type != *FIGHTER_COMBO_TYPE_NONE {
-        if attack_combo_type == *FIGHTER_COMBO_TYPE_HIT && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART) {
-            /*   START OF NEW ADDITIONS   */
-            //Forces Samus to only have 1 Jab
-            if fighter_kind == *FIGHTER_KIND_SAMUS {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK.into(), false.into());
-                MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_12"), 0.0, 1.0, false, 0.0, false, false);
-            }
-            /*   END OF NEW ADDITIONS   */
-            else {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK.into(), false.into());
-            }
-            return 1.into();
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_12"), 0.0, 1.0, false, 0.0, false, false);
+            fighter.clear_lua_stack();
+            lua_args!(fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION);
+            sv_kinetic_energy::clear_speed_ex(fighter.lua_state_agent);
+            fighter.clear_lua_stack();
+            sv_kinetic_energy::set_motion_energy_update_flag(fighter.lua_state_agent);
+            WorkModule::set_int64(fighter.module_accessor, attack_12, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
         }
     }
     else {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_RESTART) {
-            fighter.change_status(FIGHTER_STATUS_KIND_ATTACK.into(), false.into());
-            return 1.into();
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(attack_11_motion as u64), 0.0, 1.0, false, 0.0, false, false);
+        if ![*FIGHTER_KIND_RYU, *FIGHTER_KIND_KEN].contains(&fighter_kind) {
+            WorkModule::set_int64(fighter.module_accessor, attack_11, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
         }
     }
-    if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
-        return 1.into();
-    }
-    0.into()
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(
-            sub_status_attackcommon,
-            attack_combo_none_uniq_chk_button,
-            attack_combo_uniq_chk_button,
-            attack_uniq_chk_command,
-            check_100_count_button,
-            status_attack_main_button
+        skyline::install_hook!(
+            attack_mtrans_post_process
         );
     }
 }

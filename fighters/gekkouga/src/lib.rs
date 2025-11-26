@@ -1,9 +1,9 @@
 use {
   exo_utils::{
     check_attack::*,
-    extern_func::*,
     fighter_common::*,
     gekkouga::*,
+    status_end_control::*,
     weapon::*,
   },
   exo_var::{
@@ -24,10 +24,7 @@ use {
       Vector3f
     }
   },
-  smash_script::{
-    *,
-    macros::*
-  },
+  smash_script::*,
   smashline::*,
 };
 
@@ -37,7 +34,7 @@ mod vtable;
 
 pub fn install() {
   acmd::install();
-  clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "gekkouga", "mat", false);
   status::install();
   vtable::install();
+  clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "gekkouga", "mat", false);
 }

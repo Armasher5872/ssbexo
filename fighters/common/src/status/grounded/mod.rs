@@ -23,14 +23,11 @@ mod appeal;
 pub mod dash;
 mod run;
 mod turndash;
-//mod turnrun;
 mod wait;
 
 pub fn install() {
     appeal::install();
-    //dash::install();
     run::install();
     turndash::install();
-    //turnrun::install();
     wait::install();
 }

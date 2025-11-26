@@ -1,12 +1,5 @@
 use super::*;
 
-unsafe extern "C" fn gekkouga_landing_fall_special_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION, 0.026);
-    sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.026);
-    fighter.sub_landing_fall_special_init(hash40("landing_fall_special").into());
-    0.into()
-}
-
 unsafe extern "C" fn gekkouga_attack_air_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
     let table = param_3.get_table() as *mut smash2::lib::L2CTable;
     let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
@@ -27,8 +20,9 @@ unsafe extern "C" fn gekkouga_attack_air_check_attack_status(fighter: &mut L2CFi
 
 unsafe extern "C" fn gekkouga_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let chance = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("chance"));
-    let rate = MotionModule::end_frame_from_hash(fighter.module_accessor, Hash40::new("special_s"))/(chance as f32);
+    let end_frame_from_hash = MotionModule::end_frame_from_hash(fighter.module_accessor, Hash40::new("special_s"));
+    let chance = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("chance")) as f32;
+    let rate = end_frame_from_hash/chance;
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_INT_WARP_FRAME);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_BACK);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s"), 0.0, rate, false, 0.0, false, false);
@@ -47,13 +41,12 @@ unsafe extern "C" fn gekkouga_special_s_main_loop(fighter: &mut L2CFighterCommon
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let stick_x = fighter.global_table[STICK_X].get_f32();
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let lr = PostureModule::lr(fighter.module_accessor);
-    let warp_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_INT_SPECIAL_S_WARP_COUNT);
-    let chance = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("chance"));
+    let special_s_warp_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_INT_SPECIAL_S_WARP_COUNT);
     let stick_play = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_s"), hash40("stick_play"));
+    let chance = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("chance"));
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_START_WARP) {
-        if chance-1 <= warp_count {
+        if chance-1 <= special_s_warp_count {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_START_WARP);
         }
     }
@@ -71,9 +64,8 @@ unsafe extern "C" fn gekkouga_special_s_main_loop(fighter: &mut L2CFighterCommon
             }
         }
     }
-    if stick_y < 0.7 && stick_y > -0.7 {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
-        if stick_play >= stick_x*lr {
+    if stick_play >= stick_x*lr {
+        if stick_play >= stick_x*-lr {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_FRONT);
         }
         else {
@@ -81,13 +73,7 @@ unsafe extern "C" fn gekkouga_special_s_main_loop(fighter: &mut L2CFighterCommon
         }
     }
     else {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL);
-        if stick_y > 0.7 {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
-        }
-        else {
-            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI);
-        }
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_FRONT);
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_FLAG_RESET_GRAVITY) {
         if situation_kind == *SITUATION_KIND_AIR {
@@ -101,17 +87,16 @@ unsafe extern "C" fn gekkouga_special_s_main_loop(fighter: &mut L2CFighterCommon
 
 unsafe extern "C" fn gekkouga_special_s_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let warp_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_INT_SPECIAL_S_WARP_COUNT);
-    let work_warp_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_INT_WARP_FRAME);
-    let shadow_x_pos = WorkModule::get_float(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_SHADOW_X_POS);
-    let shadow_y_pos = WorkModule::get_float(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_SHADOW_Y_POS);
-    let warp_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("warp_frame"));
-    let chance = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("chance"));
-    let pos_x = PostureModule::pos_y(fighter.module_accessor);
+    let pos_x = PostureModule::pos_x(fighter.module_accessor);
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let pos_z = PostureModule::pos_z(fighter.module_accessor);
+    let shadow_x_pos = WorkModule::get_float(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_SHADOW_X_POS);
+    let shadow_y_pos = WorkModule::get_float(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_SHADOW_Y_POS);
+    let warp_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_INT_SPECIAL_S_WARP_COUNT);
+    let work_warp_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_INT_WARP_FRAME);
+    let chance = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("chance"));
+    let warp_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_s"), hash40("warp_frame"));
     WorkModule::inc_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_INT_SPECIAL_S_WARP_COUNT);
-    WorkModule::inc_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_INT_WARP_FRAME);
     if chance > warp_count {
         return 0.into();
     }
@@ -120,6 +105,7 @@ unsafe extern "C" fn gekkouga_special_s_exec_status(fighter: &mut L2CFighterComm
         HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_XLU), 0);
         AreaModule::set_whole(fighter.module_accessor, false);
     }
+    WorkModule::inc_int(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_INT_WARP_FRAME);
     if warp_frame <= work_warp_frame {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_WARP_GIMMICK) {
             GroundModule::set_shape_safe_pos(fighter.module_accessor, &Vector2f{x: shadow_x_pos, y: shadow_y_pos});
@@ -147,58 +133,42 @@ unsafe extern "C" fn gekkouga_special_s_exec_status(fighter: &mut L2CFighterComm
 
 unsafe extern "C" fn gekkouga_special_s_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24b1b29e66));
-    PostureModule::update_rot_y_lr(fighter.module_accessor);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
-    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOLD_FRONT) || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_FIND_ENEMY) {
+    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOLD_FRONT) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_FRONT) {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
         }
-        else {
+    }
+    notify_event_msc_cmd!(fighter, Hash40::new_raw(0x24b1b29e66));
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_FIND_ENEMY) {
+        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_FRONT) {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
         }
+        else {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT);
+        }
     }
-    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_VERTICAL) {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT) {
-            fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s_attack_f"), L2CValue::Hash40s("special_air_s_attack_f"), false.into());
-            if situation_kind != *SITUATION_KIND_GROUND {
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-            }
-            else {
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-                sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-            }
+    PostureModule::update_rot_y_lr(fighter.module_accessor);
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_WORK_FLAG_ATTACK_FRONT) {
+        if situation_kind != *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_attack_f"), 0.0, 1.0, false, 0.0, false, false);
         }
         else {
-            fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s_attack_b"), L2CValue::Hash40s("special_air_s_attack_b"), false.into());
-            if situation_kind != *SITUATION_KIND_GROUND {
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-            }
-            else {
-                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-                sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-            }
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_attack_f"), 0.0, 1.0, false, 0.0, false, false);
         }
+    }
+    else if situation_kind != *SITUATION_KIND_GROUND {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_attack_b"), 0.0, 1.0, false, 0.0, false, false);
     }
     else {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ATTACK_HI) {
-            fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s_attack_hi"), L2CValue::Hash40s("special_air_s_attack_hi"), false.into());
-            fighter.set_situation(SITUATION_KIND_AIR.into());
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            SET_SPEED_EX(fighter, 0.0, 1.3, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        }
-        else {
-            fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_s_attack_lw"), L2CValue::Hash40s("special_air_s_attack_lw"), false.into());
-            fighter.set_situation(SITUATION_KIND_AIR.into());
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            SET_SPEED_EX(fighter, 0.0, -5.0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        }
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_attack_b"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    if situation_kind == *SITUATION_KIND_GROUND {
+        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
     }
     fighter.sub_shift_status_main(L2CValue::Ptr(gekkouga_special_s_attack_main_loop as *const () as _))
 }
@@ -206,15 +176,11 @@ unsafe extern "C" fn gekkouga_special_s_attack_main_status(fighter: &mut L2CFigh
 unsafe extern "C" fn gekkouga_special_s_attack_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     if !StatusModule::is_changing(fighter.module_accessor) {
         if prev_situation_kind != *SITUATION_KIND_GROUND {
             if situation_kind == *SITUATION_KIND_GROUND {
                 GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-                if [hash40("special_s_attack_hi"), hash40("special_air_s_attack_hi"), hash40("special_s_attack_lw"), hash40("special_air_s_attack_lw")].contains(&motion_kind) {
-                    fighter.change_status(FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_S_END.into(), false.into());
-                }
             }
         }
         else {
@@ -233,29 +199,34 @@ unsafe extern "C" fn gekkouga_special_s_attack_main_loop(fighter: &mut L2CFighte
 unsafe extern "C" fn gekkouga_special_s_end_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let mut ground_motion_kind = "special_s_end_f";
-    let mut air_motion_kind = "special_air_s_end_f";
-    if [hash40("special_s_attack_b"), hash40("special_air_s_attack_b")].contains(&motion_kind) {
-        ground_motion_kind = "special_s_end_b";
-        air_motion_kind = "special_air_s_end_b";
+    let mut front = true;
+    if ![hash40("special_s_attack_f"), hash40("special_air_s_attack_f")].contains(&motion_kind) {
+        front = false;
+    }
+    if !front {
+        if situation_kind != *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_end_b"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_end_b"), 0.0, 1.0, false, 0.0, false, false);
+        }
         PostureModule::reverse_lr(fighter.module_accessor);
     }
-    if [hash40("special_s_attack_hi"), hash40("special_air_s_attack_hi")].contains(&motion_kind) {
-        ground_motion_kind = "special_s_end_hi";
-        air_motion_kind = "special_air_s_end_hi";
-    }
-    if [hash40("special_s_attack_lw"), hash40("special_air_s_attack_lw")].contains(&motion_kind) {
-        ground_motion_kind = "special_s_end_lw";
-        air_motion_kind = "special_air_s_end_lw";
-    }
-    if situation_kind != *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-    }
     else {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+        if situation_kind != *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_end_f"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s_end_f"), 0.0, 1.0, false, 0.0, false, false);
+        }
+    }
+    if situation_kind == *SITUATION_KIND_GROUND {
         sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
     }
-    fighter.sub_change_motion_by_situation(L2CValue::Hash40s(ground_motion_kind), L2CValue::Hash40s(air_motion_kind), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(gekkouga_special_s_end_main_loop as *const () as _))
 }
 
@@ -263,45 +234,41 @@ unsafe extern "C" fn gekkouga_special_s_end_main_loop(fighter: &mut L2CFighterCo
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let mut ground_motion_kind = "special_s_end_f";
-    let mut air_motion_kind = "special_air_s_end_f";
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
-            return 1.into();
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 0.into();
+            }
         }
     }
-    if fighter.sub_air_check_fall_common().get_bool() {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
-        return 1.into();
-    }
-    if [hash40("special_s_end_b"), hash40("special_air_s_end_b")].contains(&motion_kind) {
-        ground_motion_kind = "special_s_end_b";
-        air_motion_kind = "special_air_s_end_b";
-    }
-    if [hash40("special_s_end_hi"), hash40("special_air_s_end_hi")].contains(&motion_kind) {
-        ground_motion_kind = "special_s_end_hi";
-        air_motion_kind = "special_air_s_end_hi";
-    }
-    if [hash40("special_s_end_lw"), hash40("special_air_s_end_lw")].contains(&motion_kind) {
-        ground_motion_kind = "special_s_end_lw";
-        air_motion_kind = "special_air_s_end_lw";
-    }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new(ground_motion_kind), -1.0, 1.0, 0.0, false, false);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new(air_motion_kind), -1.0, 1.0, 0.0, false, false);
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if prev_situation_kind != *SITUATION_KIND_GROUND {
+            if situation_kind == *SITUATION_KIND_GROUND {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+                if motion_kind != hash40("special_air_s_end_f") {
+                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s_end_b"), -1.0, 1.0, 0.0, false, false);
+                }
+                else {
+                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s_end_f"), -1.0, 1.0, 0.0, false, false);
+                }
+            }
+        }
+        else {
+            if situation_kind == *SITUATION_KIND_AIR {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+                if motion_kind != hash40("special_s_end_f") {
+                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_end_b"), -1.0, 1.0, 0.0, false, false);
+                }
+                else {
+                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_end_f"), -1.0, 1.0, 0.0, false, false);
+                }
+            }
+        }
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
         else {
@@ -340,7 +307,6 @@ unsafe extern "C" fn gekkouga_special_lw_main_status(fighter: &mut L2CFighterCom
 }
 
 unsafe extern "C" fn gekkouga_special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
@@ -363,11 +329,6 @@ unsafe extern "C" fn gekkouga_special_lw_main_loop(fighter: &mut L2CFighterCommo
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-        }
-    }
-    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-        if frame >= 40.0 {
-            CancelModule::enable_cancel(fighter.module_accessor);
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -447,10 +408,7 @@ unsafe extern "C" fn gekkouga_mat_fall_main_loop(weapon: &mut L2CWeaponCommon) -
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
     let motion_kind = MotionModule::motion_kind(weapon.module_accessor);
-    let owner_boma = get_owner_boma(weapon);
-    let owner_frame = MotionModule::frame(owner_boma);
-    if should_remove_projectile(weapon) 
-    || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR) {
+    if should_remove_projectile(weapon) || (situation_kind == *SITUATION_KIND_GROUND && prev_situation_kind == *SITUATION_KIND_AIR) {
         mat_removal(weapon);
     }
     if motion_kind == hash40("special_air_lw_start") && frame == 28.0 {
@@ -459,11 +417,6 @@ unsafe extern "C" fn gekkouga_mat_fall_main_loop(weapon: &mut L2CWeaponCommon) -
         sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
         sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
         sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
-    }
-    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_HIT) {
-        if owner_frame >= 40.0 {
-            CancelModule::enable_cancel(owner_boma);
-        }
     }
     0.into()
 }
@@ -482,7 +435,6 @@ unsafe extern "C" fn gekkouga_mat_fall_end_status(_weapon: &mut L2CWeaponCommon)
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .status(Init, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, gekkouga_landing_fall_special_init_status)
     .status(CheckAttack, *FIGHTER_STATUS_KIND_ATTACK_AIR, gekkouga_attack_air_check_attack_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, gekkouga_special_s_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_S, gekkouga_special_s_exec_status)

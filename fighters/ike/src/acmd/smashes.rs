@@ -53,7 +53,7 @@ unsafe extern "C" fn ssbexo_ike_forward_smash_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         let pull = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_pullout"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 2.3, 0);
+        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 1.8, 0);
     }
     frame(agent.lua_state_agent, 26.0);
     if is_excute(agent) {
@@ -63,8 +63,8 @@ unsafe extern "C" fn ssbexo_ike_forward_smash_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let swing = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_stab"), true, false, false, false, smash::app::enSEType(0));
         let flame = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_special_n07"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 4.0, 0);
-        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 4.0, 0);
+        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 3.0, 0);
+        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 3.0, 0);
     }
     wait(agent.lua_state_agent, 1.0);
     if is_excute(agent) {
@@ -143,7 +143,7 @@ unsafe extern "C" fn ssbexo_ike_up_smash_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         let pull = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_pullout"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 2.0, 0);
+        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 1.5, 0);
     }
     frame(agent.lua_state_agent, 13.0);
     if is_excute(agent) {
@@ -153,8 +153,8 @@ unsafe extern "C" fn ssbexo_ike_up_smash_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let swing = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_stab"), true, false, false, false, smash::app::enSEType(0));
         let flame = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_special_n07"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 3.5, 0);
-        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 3.5, 0);
+        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 2.8, 0);
+        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 2.8, 0);
     }
     wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
@@ -251,7 +251,7 @@ unsafe extern "C" fn ssbexo_ike_down_smash_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
         let pull = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_pullout"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 2.3, 0);
+        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 1.6, 0);
     }
     frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
@@ -261,8 +261,8 @@ unsafe extern "C" fn ssbexo_ike_down_smash_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let swing = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_stab"), true, false, false, false, smash::app::enSEType(0));
         let flame = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_special_n07"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 3.3, 0);
-        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 3.3, 0);
+        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 2.4, 0);
+        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 2.4, 0);
     }
     wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {
@@ -273,14 +273,14 @@ unsafe extern "C" fn ssbexo_ike_down_smash_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
         let pull = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_pullout"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 2.3, 0);
+        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 1.6, 0);
     }
     frame(agent.lua_state_agent, 30.0);
     if is_excute(agent) {
         let swing = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_stab"), true, false, false, false, smash::app::enSEType(0));
         let flame = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_special_n07"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 3.3, 0);
-        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 3.3, 0);
+        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 2.4, 0);
+        SoundModule::set_se_vol(agent.module_accessor, flame as i32, 2.4, 0);
     }
     wait(agent.lua_state_agent, 2.0);
     if is_excute(agent) {

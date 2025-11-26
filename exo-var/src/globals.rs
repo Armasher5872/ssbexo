@@ -1,5 +1,4 @@
 #![allow(dead_code)]
-//Vanilla Consts
 pub const UNK1: i32 = 0x0; //void value
 pub const UNK2: i32 = 0x1; //void value
 pub const FIGHTER_KIND: i32 = 0x2; //fighter kind, i32
@@ -91,7 +90,3 @@ pub const CHECK_ATTACK_S4_UNIQ: i32 = 0x57;
 pub const CHECK_ATTACK_HI4_UNIQ: i32 = 0x58;
 pub const CHECK_ATTACK_LW4_UNIQ: i32 = 0x59;
 pub const SQUAT_COMMON_UNIQ: i32 = 0x5A;
-
-//Offsets
-pub const CONSTANT_OFFSET : usize = 0x3728410;
-pub const FLOAT_OFFSET: usize = 0x4E53E0;

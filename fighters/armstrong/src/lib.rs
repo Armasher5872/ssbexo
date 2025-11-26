@@ -54,9 +54,9 @@ pub fn install() {
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("dash_speed"), 0, 1.443));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("run_accel_mul"), 0, 0.015));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("run_accel_add"), 0, 0.15));
-    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("run_speed_max"), 0, 1.53));
-    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_speed_x"), 0, 0.74));
-    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_speed_x_max"), 0, 1.53));
+    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("run_speed_max"), 0, 1.36));
+    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_speed_x"), 0, 0.788));
+    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_speed_x_max"), 0, 1.443));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_initial_y"), 0, 21.0));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_y"), 0, 32.0));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("mini_jump_y"), 0, 15.0));

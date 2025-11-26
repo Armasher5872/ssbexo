@@ -4,9 +4,9 @@ use super::*;
 unsafe extern "C" fn ssbexo_purin_forward_tilt_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 361, 70, 0, 60, 7.0, 0.0, 3.0, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 7.0, 361, 70, 0, 60, 7.0, 0.0, 6.0, 8.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 7.0, 361, 70, 0, 60, 7.0, 0.0, 8.0, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 7.0, 361, 50, 0, 74, 7.0, 0.0, 3.0, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 7.0, 361, 50, 0, 74, 7.0, 0.0, 6.0, 8.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 7.0, 361, 50, 0, 74, 7.0, 0.0, 8.0, 4.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_NONE);
     }
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
@@ -22,8 +22,8 @@ unsafe extern "C" fn ssbexo_purin_forward_tilt_effect(agent: &mut L2CAgentBase) 
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 8, -2, 0, 0, 90, 0.7, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 4, 6, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 4, 6, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
@@ -34,8 +34,8 @@ unsafe extern "C" fn ssbexo_purin_forward_tilt_effect(agent: &mut L2CAgentBase) 
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 6.5, 11, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 7, 8, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 7, 8, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
@@ -46,8 +46,8 @@ unsafe extern "C" fn ssbexo_purin_forward_tilt_effect(agent: &mut L2CAgentBase) 
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 9.5, 7, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 10, 6, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 10, 6, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
 }
 
@@ -93,74 +93,74 @@ unsafe extern "C" fn ssbexo_purin_up_tilt_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 12.0, 0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 10, 0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 10, 0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 11.0, 1.5, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 9, 1.5, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 9, 1.5, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 11.0, -1.5, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 9, -1.5, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 9, -1.5, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 10.0, 3.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 8, 3.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 8, 3.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 10.0, -3.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 8, -3.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 8, -3.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 8.0, 4.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 6, 4.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 6, 4.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 8.0, -4.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 6, -4.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 6, -4.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 7.0, 4.5, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 5, 4.5, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 5, 4.5, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 7.0, -4.5, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 5, -4.5, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 5, -4.5, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 13.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 6.0, 4.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 4, 4.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 4, 4.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 6.0, -4.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 4, -4.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 4, -4.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 4.0, 4.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 2, 4.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 2, 4.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 4.0, -4.0, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 2, -4.0, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 2, -4.0, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
 }
 
@@ -220,8 +220,8 @@ unsafe extern "C" fn ssbexo_purin_down_tilt_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_flash"), Hash40::new("top"), 0, 2.0, 12, 0, 0, 0, 0.6, true);
         LAST_EFFECT_SET_COLOR(agent, 1.0, 0.75, 0.8);
-        EFFECT_FOLLOW(agent, Hash40::new("rosetta_ring_erase"), Hash40::new("top"), 0, 2, 12, 0, 0, 25, 1, false);
-        EFFECT_DETACH_KIND(agent, Hash40::new("rosetta_ring_erase"), -1);
+        EFFECT_FOLLOW(agent, Hash40::new("purin_sparkle"), Hash40::new("top"), 0, 2, 12, 0, 0, 25, 1, false);
+        EFFECT_DETACH_KIND(agent, Hash40::new("purin_sparkle"), -1);
     }
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {

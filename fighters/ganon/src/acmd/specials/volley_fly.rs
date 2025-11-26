@@ -13,10 +13,10 @@ unsafe extern "C" fn ssbexo_ganon_volley_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let scale = WorkModule::get_float(agent.module_accessor, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLOAT_SCALE);
         if scale > 1.0 {
-            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3800.0+(scale*1000.0), true);
+            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3.8+scale, true);
         }
         else {
-            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3800.0, true);
+            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3.8, true);
         }
     }
 }

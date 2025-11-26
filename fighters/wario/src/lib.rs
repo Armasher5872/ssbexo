@@ -1,7 +1,8 @@
 use {
   exo_utils::{
-    cancel::*,
+    collision_struct::*,
     fighter_common::*,
+    hook::*,
     status_end_control::*,
   },
   exo_var::{
@@ -19,20 +20,12 @@ use {
       L2CValue,
       lua_const::*,
     },
-    lua2cpp::{
-      L2CFighterCommon,
-      *
-    },
+    lua2cpp::*,
     phx::{
       Hash40,
       Vector3f
     }
-  },
-  smash_script::{
-    *,
-    macros::*
-  },
-  smashline::*,
+  }
 };
 
 mod acmd;

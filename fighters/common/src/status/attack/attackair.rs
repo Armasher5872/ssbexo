@@ -48,7 +48,7 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
 #[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_init)]
 unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    if ![*FIGHTER_KIND_YOSHI, *FIGHTER_KIND_NESS, *FIGHTER_KIND_LUCAS].contains(&fighter_kind) {
+    if ![*FIGHTER_KIND_YOSHI, *FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&fighter_kind) {
         call_original!(fighter)
     }
     else {

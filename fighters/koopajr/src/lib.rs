@@ -1,5 +1,6 @@
 use {
   exo_utils::{
+    attack::*,
     collision_struct::*,
     fighter_common::*,
     ganon::*,
@@ -7,9 +8,11 @@ use {
     shielddata_struct::*,
     vector::*,
     vtable_funcs::*,
+    weapon::*,
   },
   exo_var::{
     consts::*,
+    donkey::*,
     ganon::*,
     gekkouga::*,
     globals::*,

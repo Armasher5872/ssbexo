@@ -131,7 +131,7 @@ unsafe extern "C" fn ssbexo_koopa_side_taunt_expression(agent: &mut L2CAgentBase
 unsafe extern "C" fn ssbexo_koopa_dash_attack_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 361, 45, 0, 95, 7.0, 0.0, 8.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 361, 45, 0, 95, 7.0, 0.0, 8.0, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
     }
     wait(agent.lua_state_agent, 1.0);
     if is_excute(agent) {
@@ -156,6 +156,18 @@ unsafe extern "C" fn ssbexo_koopa_dash_attack_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_koopa_attackdash"));
+    }
+    frame(agent.lua_state_agent, 27.0);
+    if is_excute(agent) {
+        PLAY_LANDING_SE(agent, Hash40::new("se_koopa_landing02"));
+    }
+    frame(agent.lua_state_agent, 45.0);
+    if is_excute(agent) {
+        PLAY_LANDING_SE(agent, Hash40::new("se_koopa_landing02"));
+    }
+    frame(agent.lua_state_agent, 72.0);
+    if is_excute(agent) {
+        PLAY_STEP_FLIPPABLE(agent, Hash40::new("se_koopa_step_right_m"), Hash40::new("se_koopa_step_left_m"));
     }
 }
 

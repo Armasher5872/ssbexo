@@ -17,10 +17,8 @@ use {
         lua2cpp::{
             L2CFighterCommon,
             *
-        },
-        phx::Hash40
-    },
-    smash_script::*,
+        }
+    }
 };
 
 mod jump;

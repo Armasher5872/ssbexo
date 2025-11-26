@@ -9,7 +9,7 @@ unsafe extern "C" fn ganon_special_hi_move_pre_status(fighter: &mut L2CFighterCo
 unsafe extern "C" fn ganon_special_hi_move_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let is_charged = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED);
     let rot_angle = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE) as f32;
-    let speed: f32 = if is_charged {1.0} else {3.0};
+    let speed: f32 = if is_charged {4.0} else {3.0};
     let speed_x = (rot_angle+90.0).to_radians().sin()*speed;
     let speed_y = (rot_angle-90.0).to_radians().cos()*speed;
     let brake = if is_charged {0.0} else {0.04};
@@ -31,7 +31,7 @@ unsafe extern "C" fn ganon_special_hi_move_main_status(fighter: &mut L2CFighterC
         EffectModule::set_rate(fighter.module_accessor, effect as u32, 0.6);
         EffectModule::set_rgb(fighter.module_accessor, effect as u32, 1.0, 0.0, 0.325);
         WorkModule::set_int(fighter.module_accessor, effect as i32, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
-        WorkModule::set_int(fighter.module_accessor, 110, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
+        WorkModule::set_int(fighter.module_accessor, 7, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
     }
     HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_XLU), 0);
     GroundModule::set_ignore_boss(fighter.module_accessor, true);
@@ -50,6 +50,8 @@ unsafe extern "C" fn ganon_special_hi_move_main_loop(fighter: &mut L2CFighterCom
         return 1.into();
     }
     if situation_kind == *SITUATION_KIND_GROUND && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
+        GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         WorkModule::set_float(fighter.module_accessor, 30.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_LANDING_FRAME);
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         return 1.into();

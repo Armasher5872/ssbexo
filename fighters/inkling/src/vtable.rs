@@ -37,7 +37,7 @@ unsafe extern "C" fn inkling_spawn_stage_ink(fighter: &mut Fighter) {
     if 0.0 < ink && situation_kind == *SITUATION_KIND_GROUND {
         if [*FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_WALK, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_RUN].contains(&status_kind) {
             if roller_line {
-                for x in 0..999 {
+                for x in 0..9 {
                     let ink_param = &mut fighterinkling.ink_params[x];
                     let first = x == 0 && !WorkModule::is_flag(boma, 0x21000012);
                     if !ink_param.enabled || first {

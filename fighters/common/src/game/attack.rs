@@ -55,9 +55,53 @@ unsafe extern "C" fn attack_module_set_attack(module: u64, id: i32, group: i32, 
 unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attacker_object_id: u32, defender_object_id: u32, move_type: u64, arg5: u64, move_type_again: u64) -> u64 {
 	let attacker_boma = &mut *smash::app::sv_battle_object::module_accessor(attacker_object_id);
 	let defender_boma = &mut *smash::app::sv_battle_object::module_accessor(defender_object_id);
-	let attacker_status_kind = StatusModule::status_kind(attacker_boma);
-    if attacker_status_kind == WEAPON_PURIN_DISARMING_VOICE_STATUS_KIND_SHOOT {
-        ItemModule::drop_item(defender_boma, 0.0, 0.0, 0);
+    let attacker_category = utility::get_category(&mut *attacker_boma);
+    let defender_category = utility::get_category(&mut *defender_boma);
+    let attacker_kind = sv_battle_object::kind(attacker_object_id);
+    let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let owner_boma = sv_battle_object::module_accessor(owner_id);
+    let owner_kind = utility::get_kind(&mut *owner_boma);
+    if attacker_category == *BATTLE_OBJECT_CATEGORY_WEAPON {
+        if defender_category == *BATTLE_OBJECT_CATEGORY_ITEM {
+            if attacker_kind == *WEAPON_KIND_LINK_BOOMERANG {
+                WorkModule::set_int(attacker_boma, defender_object_id as i32, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+                LinkModule::remove_model_constraint(defender_boma, true);
+                if LinkModule::is_link(defender_boma, *ITEM_LINK_NO_HAVE) {
+                    LinkModule::unlink(defender_boma, *ITEM_LINK_NO_HAVE);
+                }
+                if !LinkModule::is_link(defender_boma, *ITEM_LINK_NO_HAVE) {
+                    VisibilityModule::set_whole(defender_boma, true);
+                    LinkModule::link(defender_boma, *ITEM_LINK_NO_HAVE, (*(attacker_boma)).battle_object_id);
+                    LinkModule::set_model_constraint_pos_ort(defender_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("top"), *CONSTRAINT_FLAG_ORIENTATION as u32 | *CONSTRAINT_FLAG_POSITION as u32, true);
+                }
+            }
+        }
+        if defender_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+            if defender_object_id == owner_id {
+                if owner_kind == *FIGHTER_KIND_LINK {
+                    let fuse_item_id = WorkModule::get_int(attacker_boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+                    if fuse_item_id != *BATTLE_OBJECT_ID_INVALID as u32 && fuse_item_id != 0 && sv_battle_object::is_active(fuse_item_id) {
+                        let item_boma = smash::app::sv_battle_object::module_accessor(fuse_item_id);
+                        LinkModule::remove_model_constraint(item_boma, true);
+                        if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
+                            LinkModule::unlink_all(item_boma);
+                            StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
+                        }
+                    }
+                }
+            }
+            if attacker_kind == *WEAPON_KIND_KOOPAJR_CANNONBALL {
+                if owner_kind == *FIGHTER_KIND_GEKKOUGA {
+                    let owner_frame = MotionModule::frame(owner_boma);
+                    let owner_status_kind = StatusModule::status_kind(owner_boma);
+                    if owner_frame >= 40.0 {
+                        if owner_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                            CancelModule::enable_cancel(owner_boma);
+                        }
+                    }
+                }
+            }
+        }
     }
 	original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
 }
@@ -65,9 +109,9 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x3e6d08).data(0x14000012u32); //Removes phantoms
 	skyline::install_hooks!(
-        notify_log_event_collision_hit,
         hit_module_handle_attack_event,
         shield_module_send_shield_attack_collision_event,
-        attack_module_set_attack
+        attack_module_set_attack,
+        notify_log_event_collision_hit
     );
 }

@@ -163,9 +163,17 @@ unsafe extern "C" fn ssbexo_ike_slash_acmd(agent: &mut L2CAgentBase) {
 
 //Slash Effect
 unsafe extern "C" fn ssbexo_ike_slash_effect(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("miiswordsman_final_edge_yellow"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 500, true);
-        LAST_EFFECT_SET_COLOR(agent, 0.0, 0.2, 1.0);
+    let owner_boma = get_owner_boma(agent);
+    let owner_situation_kind = StatusModule::situation_kind(owner_boma);
+    if owner_situation_kind == *SITUATION_KIND_AIR {
+        if is_excute(agent) {
+            EFFECT_FOLLOW(agent, Hash40::new("ike_slash2"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, true);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            EFFECT_FOLLOW(agent, Hash40::new("ike_slash"), Hash40::new("top"), 0, -2, 0, 0, 0, 0, 1, true);
+        }
     }
 }
 

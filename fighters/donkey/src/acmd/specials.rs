@@ -287,9 +287,6 @@ unsafe extern "C" fn ssbexo_donkey_aerial_side_special_expression(agent: &mut L2
 unsafe extern "C" fn ssbexo_donkey_up_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
-        KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        sv_kinetic_energy!(set_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 3.5);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 270, 100, 0, 30, 8.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_bomb"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_NONE);
         ATTACK(agent, 1, 0, Hash40::new("top"), 8.0, 80, 50, 0, 50, 10.0, 0.0, 8.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
@@ -349,6 +346,63 @@ unsafe extern "C" fn ssbexo_donkey_up_special_sound(agent: &mut L2CAgentBase) {
     }
 }
 
+//Down Special ACMD
+unsafe extern "C" fn ssbexo_donkey_down_special_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 25.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
+    }
+}
+
+//Down Special Effect
+unsafe extern "C" fn ssbexo_donkey_down_special_effect(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_item_get"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 0.8, true);
+    }
+}
+
+//Down Special Sound
+unsafe extern "C" fn ssbexo_donkey_down_special_sound(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_item_item_get"));
+    }
+    frame(agent.lua_state_agent, 20.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_item_item_throw"));
+        PLAY_SEQUENCE(agent, Hash40::new("seq_donkey_rnd_attack"));
+    }
+}
+
+//Down Special Expression
+unsafe extern "C" fn ssbexo_donkey_down_special_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(agent.lua_state_agent, 2.0);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 2);
+    }
+    frame(agent.lua_state_agent, 8.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_grapple"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
+//Barrel Roll ACMD
+unsafe extern "C" fn ssbexo_donkey_barrel_roll_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("rotx"), 10.0, 361, 25, 0, 50, 8.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+    }
+}
+
+//Barrel Break Sound
+unsafe extern "C" fn ssbexo_donkey_barrel_break_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 15.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_item_barrel_break"));
+    }
+}
+
 pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
@@ -368,6 +422,20 @@ pub fn install() {
     .effect_acmd("effect_specialairhi", ssbexo_donkey_up_special_effect, Low)
     .sound_acmd("sound_specialhi", ssbexo_donkey_up_special_sound, Low)
     .sound_acmd("sound_specialairhi", ssbexo_donkey_up_special_sound, Low)
+    .game_acmd("game_speciallwstart", ssbexo_donkey_down_special_acmd, Low)
+    .game_acmd("game_specialairlw", ssbexo_donkey_down_special_acmd, Low)
+    .effect_acmd("effect_speciallwstart", ssbexo_donkey_down_special_effect, Low)
+    .effect_acmd("effect_specialairlw", ssbexo_donkey_down_special_effect, Low)
+    .sound_acmd("sound_speciallwstart", ssbexo_donkey_down_special_sound, Low)
+    .sound_acmd("sound_specialairlw", ssbexo_donkey_down_special_sound, Low)
+    .expression_acmd("expression_speciallwstart", ssbexo_donkey_down_special_expression, Low)
+    .expression_acmd("expression_specialairlw", ssbexo_donkey_down_special_expression, Low)
+    .install()
+    ;
+    Agent::new("donkey_barrel")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .game_acmd("game_roll", ssbexo_donkey_barrel_roll_acmd, Low)
+    .sound_acmd("sound_break", ssbexo_donkey_barrel_break_sound, Low)
     .install()
     ;
 }

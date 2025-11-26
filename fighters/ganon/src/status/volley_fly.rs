@@ -40,7 +40,7 @@ unsafe extern "C" fn ganon_volley_fly_init_status(weapon: &mut L2CWeaponCommon) 
         WorkModule::set_float(weapon.module_accessor, volley_damage_charge, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLOAT_DAMAGE_SCALE);
         WorkModule::set_float(weapon.module_accessor, volley_scale, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLOAT_SCALE);
         if !is_charged {
-            ModelModule::set_scale(weapon.module_accessor, 0.001);
+            ReflectorModule::set_status(weapon.module_accessor, *WEAPON_GANON_VOLLEY_SHIELD_KIND_BODY, ShieldStatus(*SHIELD_STATUS_NORMAL), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
         }
         else {
             let effect_id_1 = EffectModule::req_follow(weapon.module_accessor, Hash40::new("ganon_volley"), Hash40::new_raw(0x0c12cb676b), &Vector3f::zero(), &Vector3f::zero(), 4.0, true, 0, 0, 0, 0, 0, true, true);
@@ -53,8 +53,8 @@ unsafe extern "C" fn ganon_volley_fly_init_status(weapon: &mut L2CWeaponCommon) 
             WorkModule::set_int(weapon.module_accessor, effect_id_3 as i32, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_EFFECT_ID_TWO);
             WorkModule::set_int(weapon.module_accessor, effect_id_4 as i32, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_EFFECT_ID_THREE);
             WorkModule::set_int(weapon.module_accessor, effect_id_5 as i32, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_EFFECT_ID_FOUR);
-            ModelModule::set_scale(weapon.module_accessor, 1.0);
         }
+        ModelModule::set_scale(weapon.module_accessor, 1.0);
         PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(10.0*owner_lr), y: owner_pos_y+14.0, z: owner_pos_z});
         WorkModule::on_flag(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_HAS_ACTIVE_VOLLEY);
     }
@@ -70,7 +70,6 @@ unsafe extern "C" fn ganon_volley_fly_main_status(weapon: &mut L2CWeaponCommon) 
         MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly_charge"), 0.0, 1.0, false, 0.0, false, false);
     }
     else {
-        ReflectorModule::set_status_all(weapon.module_accessor, ShieldStatus(*SHIELD_STATUS_NORMAL_GLOBAL), 0);
         MotionModule::change_motion(weapon.module_accessor, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);   
     }
     weapon.fastshift(L2CValue::Ptr(ganon_volley_fly_main_loop as *const () as _))

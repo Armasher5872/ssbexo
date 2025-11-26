@@ -657,6 +657,7 @@ unsafe extern "C" fn ssbexo_miifighter_counter_throw_throw_toss_acmd(agent: &mut
     frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {
         shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, hash40("haver"), 11.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.5, 1.5, 50, false, 1.5, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
+        EffectModule::kill_kind(agent.module_accessor, Hash40::new("sys_reflection"), true, true);
     }
     frame(agent.lua_state_agent, 18.0);
     if counter_throw_object_id != *BATTLE_OBJECT_ID_INVALID {
@@ -682,7 +683,7 @@ unsafe extern "C" fn ssbexo_miifighter_counter_throw_throw_toss_acmd(agent: &mut
                 GroundModule::set_collidable(counter_throw_boma, true);
                 JostleModule::set_status(counter_throw_boma, true);
                 shield!(agent, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, 0, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
-            }   
+            } 
         }
     }
     else {
@@ -733,14 +734,6 @@ unsafe extern "C" fn ssbexo_miifighter_grounded_counter_throw_throw_toss_effect(
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 8, 0, 0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, false);
         EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
-    }
-    frame(agent.lua_state_agent, 17.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_reflection"), true, true);
-    }
-    frame(agent.lua_state_agent, 18.0);
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_reflection"), true, true);
     }
 }
 

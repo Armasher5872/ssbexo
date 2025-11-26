@@ -144,8 +144,6 @@ unsafe extern "C" fn littlemac_on_search(vtable: u64, fighter: &mut Fighter, log
         let power = (*attack_data).power;
         if power > 0.0 {
             if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-                //Adds a third of the meter if Little Mac lands Down Special
-                WorkModule::add_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
                 //Slows the opponent down
                 if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
                     if slow_frame < 20 {

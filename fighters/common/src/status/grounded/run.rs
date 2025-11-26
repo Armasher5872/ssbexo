@@ -335,79 +335,12 @@ unsafe fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-//Turn Run Brake
-#[skyline::hook(replace = L2CFighterCommon_status_TurnRunBrake_Main)]
-unsafe fn status_turnrunbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32(); //New
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
-    let flick_y = fighter.global_table[FLICK_Y].get_i32(); //New
-    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32(); //New
-    let cmd_cat2 = fighter.global_table[CMD_CAT2].get_i32(); //New
-    let jump_run_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("jump_run_stick_y"));
-    let pass_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_stick_y")); //New
-    let pass_flick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("pass_flick_y")) as i32; //New
-    let notify_taunt_hash = {fighter.clear_lua_stack(); fighter.push_lua_stack(&mut L2CValue::new_int(0x1daca540be)); smash::app::sv_battle_object::notify_event_msc_cmd(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_bool()}; //New
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            return 1.into();
-        }
-    }
-    if situation_kind == *SITUATION_KIND_AIR {
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-    }
-    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON) {
-        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-            fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), true.into());
-        }
-    }
-    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT) {
-        if jump_run_stick_y <= stick_y {
-            if ControlModule::is_enable_flick_jump(fighter.module_accessor) {
-                fighter.change_status(FIGHTER_STATUS_KIND_JUMP_SQUAT.into(), true.into());
-            }
-        }
-    }
-    if !fighter.sub_ground_check_ottotto().get_bool() {
-        if situation_kind == *SITUATION_KIND_GROUND {
-            if MotionModule::is_end(fighter.module_accessor) {
-                fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
-            }
-        }
-        return 0.into();
-    }
-    /* START OF NEW ADDITION */
-    //Allows platform drops out of turn run brake
-    if GroundModule::is_passable_ground(fighter.module_accessor) && stick_y < pass_stick_y && flick_y < pass_flick_y {
-        fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
-        return 0.into();
-    }
-    //Allows taunts out of turn run brake
-    if (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U) && cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0) 
-    || (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW) && cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0) 
-    || (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S) && (cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_L != 0 || cmd_cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_R != 0))
-    && notify_taunt_hash {
-        fighter.change_status(FIGHTER_STATUS_KIND_APPEAL.into(), false.into());
-        return 0.into();
-    }
-    //R.O.B. Snaking
-    if fighter_kind == *FIGHTER_KIND_ROBOT {
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH) && cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH != 0 {
-            fighter.change_status(FIGHTER_STATUS_KIND_DASH.into(), true.into());
-            return 0.into();
-        }
-    }
-    /* END OF NEW ADDITION */
-    0.into()
-}
-
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
             status_run_sub,
             status_run_main,
-            status_runbrake_main//,
-            //status_turnrunbrake_main
+            status_runbrake_main
         );
     }
 }

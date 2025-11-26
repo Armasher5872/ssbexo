@@ -1,5 +1,25 @@
 use super::*;
 
+//Neutral Special Start Expression
+unsafe extern "C" fn ssbexo_link_neutral_special_start_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+        ArticleModule::change_status_exist(agent.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, *WN_LINK_BOW_STATUS_KIND_HAVE);
+    }
+    frame(agent.lua_state_agent, 1.0);
+    if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+    }
+    frame(agent.lua_state_agent, 20.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_drawhold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 //Arrow Fly ACMD
 unsafe extern "C" fn ssbexo_link_bowarrow_fly_acmd(agent: &mut L2CAgentBase) {
     let weapon = get_weapon_common_from_accessor(&mut *(agent.module_accessor));
@@ -230,6 +250,10 @@ unsafe extern "C" fn ssbexo_link_special_hi_sound(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_link_special_hi_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+    }
+    frame(agent.lua_state_agent, 1.0);
+    if is_excute(agent) {
         VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
     }
     frame(agent.lua_state_agent, 8.0);
@@ -699,9 +723,35 @@ unsafe extern "C" fn ssbexo_link_glider_glide_land_effect(agent: &mut L2CAgentBa
     }
 }
 
+//Down Special Expression
+unsafe extern "C" fn ssbexo_link_down_special_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
+    }
+    frame(agent.lua_state_agent, 4.0);
+    if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+    }
+    frame(agent.lua_state_agent, 7.0);
+    if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
+    }
+    frame(agent.lua_state_agent, 22.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 34.0);
+    if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
+    }
+}
+
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .expression_acmd("expression_specialnstart", ssbexo_link_neutral_special_start_expression, Low)
+    .expression_acmd("expression_specialairnstart", ssbexo_link_neutral_special_start_expression, Low)
     .game_acmd("game_specialhi", ssbexo_link_special_hi_acmd, Low)
     .game_acmd("game_specialairhi", ssbexo_link_special_hi_acmd, Low)
     .effect_acmd("effect_specialhi", ssbexo_link_special_hi_effect, Low)
@@ -735,6 +785,8 @@ pub fn install() {
     .expression_acmd("expression_specialhiglidedrop", ssbexo_link_special_hi_glide_drop_expression, Low)
     .game_acmd("game_specialhiglideland", ssbexo_link_special_hi_glide_land_acmd, Low)
     .expression_acmd("expression_specialhiglideland", ssbexo_link_special_hi_glide_land_expression, Low)
+    .expression_acmd("expression_speciallw", ssbexo_link_down_special_expression, Low)
+    .expression_acmd("expression_specialairlw", ssbexo_link_down_special_expression, Low)
     .install()
     ;
     Agent::new("link_bowarrow")

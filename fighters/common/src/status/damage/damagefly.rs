@@ -2,7 +2,6 @@ use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageFly_Main)]
 unsafe fn status_damagefly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let get_sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
@@ -10,13 +9,6 @@ unsafe fn status_damagefly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     asdi_function(fighter);
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT) {
         WorkModule::set_flag(fighter.module_accessor, true, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
-    }
-    //Fighter Specific
-    if fighter_kind == *FIGHTER_KIND_PICKEL {
-        if fighter.global_table[IS_STOP].get_bool() {
-            COL_NORMAL(fighter);
-            FLASH(fighter, 2.55, 0.0, 0.0, 0.25);
-        }
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINISH_CAMERA_TARGET) {
         if !fighter.status_DamageFinishCamera_exec().get_bool() {

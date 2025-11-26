@@ -1,13 +1,5 @@
 use super::*;
 
-//Side Special ACMD
-unsafe extern "C" fn ssbexo_gekkouga_side_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_S_FLAG_RESET_GRAVITY);
-    }
-}
-
 //Side Special Attack Hi ACMD
 unsafe extern "C" fn ssbexo_gekkouga_side_special_attack_hi_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
@@ -240,7 +232,6 @@ unsafe extern "C" fn ssbexo_gekkouga_down_special_expression(agent: &mut L2CAgen
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specials", ssbexo_gekkouga_side_special_acmd, Low)
     .game_acmd("game_specialsattackhi", ssbexo_gekkouga_side_special_attack_hi_acmd, Low)
     .game_acmd("game_specialairsattackhi", ssbexo_gekkouga_side_special_attack_hi_acmd, Low)
     .effect_acmd("effect_specialsattackhi", ssbexo_gekkouga_side_special_attack_hi_effect, Low)

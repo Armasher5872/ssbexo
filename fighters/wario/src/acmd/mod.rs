@@ -1,18 +1,28 @@
 use {
-    exo_utils::fighter_common::*,
-    exo_var::wario::*,
+    exo_utils::{
+        fighter_common::*,
+        vector::*,
+    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
             sv_animcmd::{
+                execute,
                 frame,
+                get_value_float,
+                wait_loop_sync_mot,
                 wait
             },
             *
         },
+        hash40,
         lib::lua_const::*,
         lua2cpp::*,
-        phx::Hash40
+        phx::{
+            Hash40,
+            Vector3f
+        }
     },
     smash_script::{
         *,
@@ -30,6 +40,7 @@ mod other;
 mod smashes;
 mod specials;
 mod throws;
+mod tilts;
 
 pub fn install() {
     aerials::install();
@@ -38,4 +49,5 @@ pub fn install() {
     smashes::install();
     specials::install();
     throws::install();
+    tilts::install();
 }

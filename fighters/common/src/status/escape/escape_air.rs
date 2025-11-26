@@ -13,9 +13,7 @@ unsafe extern "C" fn status_pre_escapeair(fighter: &mut L2CFighterCommon) -> L2C
     let is_touch_any = GroundModule::line_segment_check(fighter.module_accessor, &Vector2f::new(pos.x, pos.y+3.0), &lower_bound, &Vector2f::zero(), ground_pos_any, true);
     let is_touch_stage = GroundModule::line_segment_check(fighter.module_accessor, &Vector2f::new(pos.x, pos.y+3.0), &lower_bound, &Vector2f::zero(), ground_pos_stage, false);
     let can_snap = !(is_touch_any == 0 as *const *const u64 || (is_touch_stage != 0 as *const *const u64 && dir_y > 0.0));
-    if prev_status_kind != *FIGHTER_STATUS_KIND_DAMAGE_FALL
-    && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH)
-    && can_snap {
+    if prev_status_kind != *FIGHTER_STATUS_KIND_DAMAGE_FALL && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH) && can_snap {
         GroundModule::attach_ground(fighter.module_accessor, true);
         GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         PostureModule::set_pos(fighter.module_accessor, &Vector3f::new(pos.x, ground_pos_any.y+0.1, pos.z));
@@ -34,10 +32,19 @@ unsafe extern "C" fn status_pre_escapeair(fighter: &mut L2CFighterCommon) -> L2C
 unsafe extern "C" fn status_escapeair(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_escape_air_common();
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("escape_air_slide"), 0.0, 1.0, false, 0.0, false, false);
+        let stick_x = fighter.global_table[STICK_X].get_f32();
+        let stick_y = fighter.global_table[STICK_Y].get_f32();
+        let stick_vec = sv_math::vec2_normalize(stick_x, stick_y);
+        let escape_air_angle = (stick_vec.y/stick_vec.x.abs()).atan().to_degrees();
+        if escape_air_angle > 60.0 {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("escape_air_slide"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("escape_air_slide"), 0.0, 7.0/6.0, false, 0.0, false, false);
+        }
     } 
     else {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("escape_air"), 0.0, 1.0, false, 0.0, false, false);
+        MotionModule::change_motion(fighter.module_accessor, Hash40::new("escape_air"), 0.0, 7.0/5.0, false, 0.0, false, false);
     }
     fighter.sub_shift_status_main(L2CValue::Ptr(status_escapeair_main as *const () as _))
 }
@@ -49,9 +56,6 @@ unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2
         fighter.sub_escape_check_rumble();
     }
     if WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
-        if frame <= 46.0 {
-            sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.11);
-        }
         if (25.0..=46.0).contains(&frame) {
             KineticModule::unable_energy_all(boma);
             KineticModule::clear_speed_all(boma);
@@ -61,6 +65,53 @@ unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2
             fighter.sub_transition_group_check_air_cliff();
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
+    }
+    0.into()
+}
+
+//Sub Escape Air Common Main
+#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_escape_air_common_main)]
+unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let motion_frame = MotionModule::frame(fighter.module_accessor);
+    let prev_frame = MotionModule::prev_frame(fighter.module_accessor);
+    let end_frame = MotionModule::end_frame(fighter.module_accessor);
+    let cancel_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_motion"), hash40("escape_air_cancel_frame"))-1.0;
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 1.into();
+            }
+        }
+    }
+    if fighter.sub_escape_air_common_strans_main().get_bool() {
+        return 1.into();
+    }
+    if situation_kind == *SITUATION_KIND_GROUND {
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING) {
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+        }
+    }
+    /*Start of New Additions*/
+    //Halts the current animation on the second to last frame of the animation if the animation of the airdodge is shorter than the cancel frame
+    if end_frame < cancel_frame {
+        if frame < cancel_frame {
+            if prev_frame < end_frame-1.0 && motion_frame >= end_frame-1.0 {
+                MotionModule::set_rate(fighter.module_accessor, 0.0);
+            }
+            return 0.into();
+        }
+        else {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+        }
+    }
+    /*End of New Additions*/
+    if MotionModule::is_end(fighter.module_accessor) {
+        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     0.into()
 }
@@ -78,10 +129,10 @@ unsafe extern "C" fn setup_escape_air_slide_common(fighter: &mut L2CFighterCommo
     let stick_vec = sv_math::vec2_normalize(stick_x.get_f32(), stick_y.get_f32());
     let escape_air_angle = (stick_vec.y/stick_vec.x.abs()).atan().to_degrees();
     if escape_air_angle > 80.0 {
-        escape_air_slide_speed = 2.1;
+        escape_air_slide_speed = 2.5;
     }
     if escape_air_angle > 45.0 && escape_air_angle <= 80.0 {
-        escape_air_slide_speed = 2.8;
+        escape_air_slide_speed = 3.0;
     }
     let escape_air_slide_speed_vec = Vector2f{x: escape_air_slide_speed*stick_vec.x, y: escape_air_slide_speed*stick_vec.y};
     let lerp;
@@ -94,6 +145,7 @@ unsafe extern "C" fn setup_escape_air_slide_common(fighter: &mut L2CFighterCommo
         sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, -1.0, -1.0);
         KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_GRAVITY, fighter.module_accessor);
         KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_CONTROL, fighter.module_accessor);
+        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.11);
         if escape_air_angle < 0.0 {
             lerp = (escape_air_angle*-1.0)/90.0;
             escape_air_slide_stiff_frame = Lerp::lerp(&lerp, &escape_air_slide_d_stiff_frame, &escape_air_slide_stiff_frame);
@@ -114,6 +166,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
         skyline::install_hooks!(
             status_pre_escapeair,
             status_escapeair,
+            sub_escape_air_common_main,
             setup_escape_air_slide_common
         );
     }

@@ -160,7 +160,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
         else {
             if ![*FIGHTER_KIND_EDGE, *WEAPON_KIND_EDGE_FIRE, *WEAPON_KIND_EDGE_FLARE2, *WEAPON_KIND_EDGE_FLASH].contains(&attacker_kind) {
                 handle = match attacker_kind {
-                    _ if [*FIGHTER_KIND_MARIO, *WEAPON_KIND_MARIO_FIREBALL, *WEAPON_KIND_MARIO_HUGE_FLAME, *WEAPON_KIND_MARIO_PUMP_WATER].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_mario_final"), false, true, true),
+                    _ if [*FIGHTER_KIND_MARIO, *WEAPON_KIND_MARIO_FIREBALL, *WEAPON_KIND_MARIO_HUGE_FLAME].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_mario_final"), false, true, true),
                     _ if attacker_kind == *FIGHTER_KIND_DONKEY => EffectModule::req_screen(attacker_boma, Hash40::new("bg_donkey_final"), false, true, true),
                     _ if [*FIGHTER_KIND_LINK, *WEAPON_KIND_LINK_SWORD_BEAM, *WEAPON_KIND_LINK_BOWARROW, *WEAPON_KIND_LINK_BOOMERANG].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_link_final"), false, true, true),
                     _ if [*FIGHTER_KIND_SAMUS, *WEAPON_KIND_SAMUS_CSHOT, *WEAPON_KIND_SAMUS_MISSILE, *WEAPON_KIND_SAMUS_SUPERMISSILE, *WEAPON_KIND_SAMUS_BOMB].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_samus_final"), false, true, true),
@@ -192,7 +192,7 @@ pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, k
                     _ if [*FIGHTER_KIND_PIT, *WEAPON_KIND_PIT_BOWARROW].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pit_final"), false, true, true),
                     _ if [*FIGHTER_KIND_PITB, *WEAPON_KIND_PITB_BOWARROW].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_pitb_final"), false, true, true),
                     _ if [*FIGHTER_KIND_SZEROSUIT, *WEAPON_KIND_SZEROSUIT_PARALYZER_BULLET, *WEAPON_KIND_SZEROSUIT_WHIP, *WEAPON_KIND_SZEROSUIT_WHIP2].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_szerosuit_final"), false, true, true),
-                    _ if [*FIGHTER_KIND_WARIO, *WEAPON_KIND_WARIO_WARIOBIKE].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_wario_final"), false, true, true),
+                    _ if attacker_kind == *FIGHTER_KIND_WARIO => EffectModule::req_screen(attacker_boma, Hash40::new("bg_wario_final"), false, true, true),
                     _ if [*FIGHTER_KIND_SNAKE, *WEAPON_KIND_SNAKE_C4, *WEAPON_KIND_SNAKE_NIKITA_MISSILE, *WEAPON_KIND_SNAKE_TRENCHMORTAR_BULLET].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_snake_final"), false, true, true),
                     _ if attacker_kind == *FIGHTER_KIND_IKE => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ike_final"), false, true, true),
                     _ if [*FIGHTER_KIND_PZENIGAME, *WEAPON_KIND_PZENIGAME_WATER].contains(&attacker_kind) => EffectModule::req_screen(attacker_boma, Hash40::new("bg_ptrainer_final"), false, true, true),

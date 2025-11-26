@@ -39,7 +39,6 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 					}
 				}
 				if counter <= 40 {
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_black"), 0);
 					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_finishhit"), 0);
 					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_mario_final"), 0);
 					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_donkey_final"), 0);
@@ -143,6 +142,7 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 			WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
 		}
 	}
+	//set_vis_hud(false);
 }
 
 /*

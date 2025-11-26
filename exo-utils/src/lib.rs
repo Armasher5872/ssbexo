@@ -1,4 +1,5 @@
-#![feature(concat_idents, proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
+#![feature(proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
+#![allow(improper_ctypes_definitions)]
 use {
     bitflags::bitflags,
     crate::{
@@ -8,16 +9,9 @@ use {
         create_item_param::*,
         extern_func::*,
         fighter_common::*,
-        ganon::*,
-        gekkouga::*,
         hook::*,
         ice_climber_meter::*,
-        ike::*,
-        lucario_meter::*,
         mariod_meter::*,
-        metaknight::*,
-        pfushigisou::*,
-        purin::*,
         rect::*,
         robot_meter::*,
         shielddata_struct::*,
@@ -80,7 +74,6 @@ pub mod attack;
 pub mod attackinfo_struct;
 pub mod battle_object;
 pub mod buttons;
-pub mod cancel;
 pub mod catch;
 pub mod check_attack;
 pub mod cloud_meter;
@@ -90,6 +83,7 @@ pub mod command_input;
 pub mod create_item_param;
 pub mod daisy;
 pub mod damage;
+pub mod donkey;
 pub mod extern_func;
 pub mod fighter_common;
 pub mod flydata;
@@ -104,12 +98,10 @@ pub mod kirby;
 pub mod knockback;
 pub mod link;
 pub mod littlemac;
-pub mod lucario_meter;
+pub mod mario;
 pub mod mariod_meter;
-pub mod metaknight;
 pub mod murabito_shizue_common;
 pub mod pfushigisou;
-pub mod purin;
 pub mod rect;
 pub mod robot_meter;
 pub mod sheik;

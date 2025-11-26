@@ -6,7 +6,6 @@ pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
             robot_meter: [RobotMeter::default(); 8],
             ice_climber_meter: [IceClimberMeter::default(); 8],
             mariod_meter: [MarioDMeter::default(); 8],
-            lucario_meter: [LucarioMeter::default(); 8],
             cloud_meter: [CloudMeter::default(); 8]
         }
     )}
@@ -17,7 +16,6 @@ pub struct UiManager {
     pub robot_meter: [RobotMeter; 8],
     pub ice_climber_meter: [IceClimberMeter; 8],
     pub mariod_meter: [MarioDMeter; 8],
-    pub lucario_meter: [LucarioMeter; 8],
     pub cloud_meter: [CloudMeter; 8]
 }
 
@@ -103,17 +101,6 @@ impl UiManager {
     pub extern "C" fn get_mariod_pill_id(entry_id: u32) -> i32 {
         let manager = UI_MANAGER.write();
         return manager.mariod_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].pill_id();
-    }
-    //Lucario
-    #[export_name = "UiManager__set_lucario_meter_enable"]
-    pub extern "C" fn set_lucario_meter_enable(entry_id: u32, enable: bool) {
-        let mut manager = UI_MANAGER.write();
-        manager.lucario_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_enable(enable);
-    }
-    #[export_name = "UiManager__set_lucario_meter_info"]
-    pub extern "C" fn set_lucario_meter_info(entry_id: u32, value: i32) {
-        let mut manager = UI_MANAGER.write();
-        manager.lucario_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_meter_info(value);
     }
     //Cloud
     #[export_name = "UiManager__set_cloud_meter_enable"]

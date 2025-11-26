@@ -24,7 +24,6 @@ unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
     manager.robot_meter[index] = RobotMeter::new(layout_udata);
     manager.ice_climber_meter[index] = IceClimberMeter::new(layout_udata);
     manager.mariod_meter[index] = MarioDMeter::new(layout_udata);
-    manager.lucario_meter[index] = LucarioMeter::new(layout_udata);
     manager.cloud_meter[index] = CloudMeter::new(layout_udata);
 }
 
@@ -58,11 +57,6 @@ fn hud_update(_: &skyline::hooks::InlineCtx) {
     for mariod_meter in mgr.mariod_meter.iter_mut() {
         if mariod_meter.is_valid() && mariod_meter.is_enabled() {
             mariod_meter.update();
-        }
-    }
-    for lucario_meter in mgr.lucario_meter.iter_mut() {
-        if lucario_meter.is_valid() && lucario_meter.is_enabled() {
-            lucario_meter.update();
         }
     }
     for cloud_meter in mgr.cloud_meter.iter_mut() {

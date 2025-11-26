@@ -1,14 +1,7 @@
 use {
   exo_utils::{
     fighter_common::*,
-    ganon::*,
-    gekkouga::*,
-    ike::*,
-    metaknight::*,
-    pfushigisou::*,
-    purin::*,
     status_end_control::*,
-    weapon::*,
   },
   exo_var::{
     globals::*,

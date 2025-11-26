@@ -1,9 +1,6 @@
 use {
     exo_utils::fighter_common::*,
-    exo_var::{
-        consts::*,
-        globals::*,
-    },
+    exo_var::globals::*,
     smash::{
         app::{
             lua_bind::*,
@@ -29,10 +26,8 @@ use {
     },
 };
 
-mod dead;
 mod rebirth;
 
 pub fn install() {
-    dead::install();
     rebirth::install();
 }

@@ -1,4 +1,13 @@
 use super::*;
 
+pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL: LuaConst = LuaConst::new(0x1);
 pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON: LuaConst = LuaConst::new(0x2);
+pub const FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK: LuaConst = LuaConst::new(0x200000E3);
 pub const FIGHTER_DONKEY_STATUS_KIND_AIR_LASSO_LANDING: LuaConst = LuaConst::new(0x203);
+pub const WEAPON_DONKEY_BARREL_STATUS_KIND_PULL: LuaConst = LuaConst::new(0x0);
+pub const WEAPON_DONKEY_BARREL_STATUS_KIND_ROLL: LuaConst = LuaConst::new(0x1);
+pub const WEAPON_DONKEY_BARREL_STATUS_KIND_IDLE: LuaConst = LuaConst::new(0x2);
+pub const WEAPON_DONKEY_BARREL_STATUS_KIND_BREAK: LuaConst = LuaConst::new(0x3);
+pub const WEAPON_DONKEY_BARREL_INSTANCE_WORK_ID_FLAG_TOUCHED_GROUND: LuaConst = LuaConst::new(0x2000000A);
+pub const WEAPON_DONKEY_BARREL_INSTANCE_WORK_ID_FLOAT_HP: LuaConst = LuaConst::new(0x5);
+pub const WEAPON_DONKEY_BARREL_SHIELD_KIND_BODY: LuaConst = LuaConst::new(0x0);

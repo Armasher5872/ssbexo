@@ -10,7 +10,7 @@ unsafe extern "C" fn donkey_special_hi_pre_status(fighter: &mut L2CFighterCommon
 //Special Hi Init Status
 unsafe extern "C" fn donkey_special_hi_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if situation_kind == *SITUATION_KIND_AIR {
+    if situation_kind != *SITUATION_KIND_AIR {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
     }
     else {
@@ -40,8 +40,7 @@ unsafe extern "C" fn donkey_special_hi_main_status(fighter: &mut L2CFighterCommo
 }
 
 unsafe extern "C" fn donkey_special_hi_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
@@ -51,11 +50,11 @@ unsafe extern "C" fn donkey_special_hi_loop(fighter: &mut L2CFighterCommon) -> L
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+    if frame == 22.0 {
+        SA_SET(fighter, *SITUATION_KIND_AIR);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 3.5);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());

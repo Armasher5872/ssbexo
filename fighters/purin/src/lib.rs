@@ -2,14 +2,9 @@
 use {
   exo_utils::{
     fighter_common::*,
-    purin::*,
     status_end_control::*,
-    weapon::*,
   },
-  exo_var::{
-    globals::*,
-    purin::*,
-  },
+  exo_var::globals::*,
   smash::{
     app::{
       lua_bind::*,
@@ -17,10 +12,8 @@ use {
     },
     hash40,
     lib::lua_const::*,
-    lua2cpp::L2CFighterCommon,
-    phx::Vector3f
+    lua2cpp::L2CFighterCommon
   },
-  smash_script::*,
   smashline::*,
 };
 
@@ -32,5 +25,4 @@ pub fn install() {
   acmd::install();
   status::install();
   vtable::install();
-  clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "purin", "disarmingvoice", false);
 }

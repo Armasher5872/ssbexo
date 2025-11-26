@@ -13,10 +13,7 @@ pub unsafe extern "C" fn is_slash(object_boma: *mut BattleObjectModuleAccessor) 
 }
 
 pub unsafe extern "C" fn slash_removal(weapon: &mut L2CWeaponCommon) {
-    let pos = *PostureModule::pos(weapon.module_accessor);
-    EffectModule::req(weapon.module_accessor, Hash40::new("miiswordsman_hensoku_hit"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
-    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("miiswordsman_final_edge_yellow"), false, false);
+    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("ike_slash"), false, false);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-    weapon.pop_lua_stack(1);
 }

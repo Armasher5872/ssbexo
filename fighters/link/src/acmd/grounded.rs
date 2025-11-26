@@ -281,10 +281,10 @@ unsafe extern "C" fn ssbexo_link_dash_attack_sound(agent: &mut L2CAgentBase) {
 //Dash Attack Expression
 unsafe extern "C" fn ssbexo_link_dash_attack_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
         ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
     }
     frame(agent.lua_state_agent, 3.0);
     if is_excute(agent) {
@@ -309,12 +309,9 @@ unsafe extern "C" fn ssbexo_link_dash_attack_expression(agent: &mut L2CAgentBase
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
     }
-    frame(agent.lua_state_agent, 58.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
-    }
     frame(agent.lua_state_agent, 60.0);
     if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
         VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
     }
 }

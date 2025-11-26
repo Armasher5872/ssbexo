@@ -6,15 +6,11 @@ use {
             sv_animcmd::{
                 frame,
                 wait
-            },
-            *
+            }
         },
         lib::lua_const::*,
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        phx::Hash40
     },
     smash_script::{
         *,
@@ -27,17 +23,13 @@ use {
 };
 
 mod grounded;
-mod tilts;
 mod smashes;
-mod aerials;
 mod throws;
-mod specials;
+mod tilts;
 
 pub fn install() {
-  grounded::install();
-  tilts::install();
-  smashes::install();
-  aerials::install();
-  throws::install();
-  specials::install();
+    grounded::install();
+    smashes::install();
+    tilts::install();
+    throws::install();
 }

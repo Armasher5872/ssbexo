@@ -1,11 +1,7 @@
-use smash::{
-    lib::LuaConst,
-    phx::Vector2f
-};
+use smash::lib::LuaConst;
 
 pub mod armstrong;
 pub mod captain;
-pub mod chrom;
 pub mod cloud;
 pub mod consts;
 pub mod dedede;
@@ -32,20 +28,14 @@ pub mod lucario;
 pub mod luigi;
 pub mod mario;
 pub mod mariod;
-pub mod marth;
-pub mod metaknight;
 pub mod miifighter;
 pub mod murabito;
 pub mod pfushigisou;
 pub mod pikachu;
-pub mod purin;
-pub mod reflet;
 pub mod ryu;
 pub mod samusd;
 pub mod sheik;
 pub mod snake;
-pub mod sonic;
-pub mod toonlink;
 pub mod variables;
 pub mod wario;
 pub mod wolf;

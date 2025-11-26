@@ -8,15 +8,7 @@ extern "C" {
 
     #[link_name = "_ZN3app6camera13get_dead_areaEv"]
     pub fn get_dead_area() -> Rect;
-
-    /*
-    #[link_name = "\u{1}_ZN3app8lua_bind28PostureModule__rot_y_lr_implEPNS_26BattleObjectModuleAccessorE"]
-	pub fn imported_rot_y_lr(boma: &mut BattleObjectModuleAccessor) -> f32;
-
-    #[link_name = "\u{1}_ZN3app9curryshot15is_preview_modeEv"]
-	pub fn is_preview_mode() -> bool;
-    */
-
+    
     #[link_name = "\u{1}_ZN3app8lua_bind38FighterManager__get_fighter_entry_implEPNS_14FighterManagerENS_14FighterEntryIDE"]
     pub fn get_fighter_entry(manager: *mut smash::app::FighterManager, entry_id: u32) -> *mut u8;
 

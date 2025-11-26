@@ -43,7 +43,7 @@ unsafe extern "C" fn effect_follow_replace(lua_state: u64) {
             hash40("shulk_monad_sword3_end"), hash40("shulk_monad_sword3_pink_end"), hash40("shulk_monad_sword3_pink"), hash40("shulk_monad_sword3_red_end"), hash40("shulk_monad_sword3_red"), hash40("shulk_monad_sword3"), hash40("shulk_vision_attack")
         ].contains(&hitbox_params[0].get_int()) {
 			let monado_type = WorkModule::get_int(boma, *FIGHTER_SHULK_INSTANCE_WORK_ID_INT_SPECIAL_N_TYPE);
-			let (mut r, mut g, mut b) = (1.0, 1.0, 1.0);
+			let (mut r, mut g, mut b) = (0.0, 0.0, 1.0);
             match monado_type {
                 0 => {
                     r = 0.1; g = 1.0; b = 0.1; // Jump

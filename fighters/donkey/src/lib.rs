@@ -1,10 +1,13 @@
 use {
     exo_utils::{
+        collision_struct::*,
+        donkey::*,
         fighter_common::*,
         status_end_control::*,
     },
     exo_var::{
         consts::*,
+        donkey::*,
         globals::*,
     },
     smash::{

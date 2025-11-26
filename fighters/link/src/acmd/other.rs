@@ -184,6 +184,55 @@ unsafe extern "C" fn ssbexo_link_mortal_draw_attack_expression(agent: &mut L2CAg
     }
 }
 
+//wall Cling Sound
+unsafe extern "C" fn ssbexo_link_wall_cling_sound(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        STOP_SE(agent, Hash40::new("se_link_step_left_s_ft"));
+        STOP_SE(agent, Hash40::new("se_link_step_right_s_ft"));
+    }
+}
+
+//Wall Cling Expression
+unsafe extern "C" fn ssbexo_link_wall_cling_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
+    }
+}
+
+//Wall Climb Sound
+unsafe extern "C" fn ssbexo_link_wall_climb_sound(agent: &mut L2CAgentBase) {
+    for _ in 0..i32::MAX {
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_link_step_right_s_ft"));
+        }
+        wait(agent.lua_state_agent, 5.0);
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_link_step_left_s_ft"));
+        }
+        wait(agent.lua_state_agent, 5.0);
+    }
+}
+
+//Wall Climb Expression
+unsafe extern "C" fn ssbexo_link_wall_climb_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
+    }
+    frame(agent.lua_state_agent, 1.0);
+    for _ in 0..i32::MAX {
+        if is_excute(agent) {
+            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_run"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        }
+        wait(agent.lua_state_agent, 6.0);
+        if is_excute(agent) {
+            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_run"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        }
+        wait(agent.lua_state_agent, 1.0);
+    }
+}
+
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
@@ -203,6 +252,10 @@ pub fn install() {
     .effect_acmd("effect_mortaldrawattack", ssbexo_link_mortal_draw_attack_effect, Low)
     .sound_acmd("sound_mortaldrawattack", ssbexo_link_mortal_draw_attack_sound, Low)
     .expression_acmd("expression_mortaldrawattack", ssbexo_link_mortal_draw_attack_expression, Low)
+    .sound_acmd("sound_attachwall", ssbexo_link_wall_cling_sound, Priority::Low)
+    .expression_acmd("expression_attachwall", ssbexo_link_wall_cling_expression, Priority::Low)
+    .sound_acmd("sound_attachwallclimb", ssbexo_link_wall_climb_sound, Priority::Low)
+    .expression_acmd("expression_attachwallclimb", ssbexo_link_wall_climb_expression, Priority::Low)
     .install()
     ;
 }

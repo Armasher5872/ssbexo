@@ -136,7 +136,9 @@ unsafe extern "C" fn koopa_firebreath_move_main_loop(weapon: &mut L2CWeaponCommo
     let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let pos = PostureModule::pos(weapon.module_accessor);
     let owner_boma = get_owner_boma(weapon);
-    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_ALL) || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32) {
+    if AttackModule::is_infliction_status(weapon.module_accessor, *COLLISION_KIND_MASK_ALL) 
+    || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) 
+    || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_UP as u32) || GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
         EffectModule::req(weapon.module_accessor, Hash40::new("sys_bomb_b"), pos, &Vector3f::zero(), 1.0, 0, -1, false, 0);
         SoundModule::play_se(weapon.module_accessor, Hash40::new("se_common_bomb_m"), true, false, false, false, enSEType(0));
         WorkModule::off_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);

@@ -1,7 +1,5 @@
 use {
     exo_utils::{
-        armstrong::*,
-        battle_object::*,
         buttons::*,
         cloud_meter::*,
         extern_func::*,
@@ -10,7 +8,6 @@ use {
         hook::*,
         ice_climber_meter::*,
         kinetic_energy::*,
-        lucario_meter::*,
         mariod_meter::*,
         robot_meter::*,
         ui_manager::*,
@@ -19,8 +16,13 @@ use {
     },
     exo_var::{
         consts::*,
+        donkey::*,
+        ganon::*,
+        gekkouga::*,
         globals::*,
-        purin::*,
+        ike::*,
+        link::*,
+        pfushigisou::*,
         variables::*,
     },
     param_config::*,
@@ -32,8 +34,6 @@ use {
     smash::{
         app::{
             BattleObjectModuleAccessor,
-            GroundCorrectKind,
-            HitStatus,
             lua_bind::{
                 PostureModule,
                 *
@@ -74,7 +74,6 @@ mod frame;
 mod menu;
 pub mod misc;
 mod music;
-mod status;
 mod ui;
 
 pub fn install() {
@@ -88,6 +87,5 @@ pub fn install() {
     menu::install();
     misc::install();
     music::install();
-    status::install();
     ui::install();
 }

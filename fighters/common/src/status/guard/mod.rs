@@ -3,7 +3,6 @@ use {
     exo_var::{
         consts::*,
         globals::*,
-        sonic::*,
     },
     smash::{
         app::{

@@ -72,33 +72,6 @@ unsafe extern "C" fn ssbexo_ike_dash_attack_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
-//Dash Attack Sound
-unsafe extern "C" fn ssbexo_ike_dash_attack_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
-    if is_excute(agent) {
-        let pull = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_pullout"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, pull as i32, 0.8, 0);
-    }
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        let swing = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ike_appeal_stab"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, swing as i32, 1.6, 0);
-    }
-    frame(agent.lua_state_agent, 18.0);
-    if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_ike_rnd_attack"));
-        PLAY_SE(agent, Hash40::new("se_ike_swing_ll"));
-    }
-    wait(agent.lua_state_agent, 6.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ike_step_right_m"));
-    }
-    wait(agent.lua_state_agent, 28.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ike_step_left_m"));
-    }
-}
-
 pub fn install() {
     Agent::new("ike")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
@@ -106,7 +79,6 @@ pub fn install() {
     .game_acmd("game_appeallwl", ssbexo_ike_down_taunt_acmd, Low)
     .sound_acmd("sound_attack13", ssbexo_ike_jab_3_sound, Low)
     .game_acmd("game_attackdash", ssbexo_ike_dash_attack_acmd, Low)
-    .sound_acmd("sound_attackdash", ssbexo_ike_dash_attack_sound, Low)
     .install()
     ;
 }

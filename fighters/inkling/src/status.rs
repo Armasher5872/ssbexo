@@ -17,7 +17,7 @@ unsafe extern "C" fn inkling_inkbullet_hit_main_status(weapon: &mut L2CWeaponCom
     let paint_life = WorkModule::get_param_float(owner_boma, hash40("param_private"), hash40("paint_life"));
     if GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
         if 0.0 < ink {
-            for x in 0..999 {
+            for x in 0..9 {
                 let ink_param = &mut fighterinkling.ink_params[x];
                 let first = x == 0 && !WorkModule::is_flag(owner_boma, 0x21000012);
                 if !ink_param.enabled || first {
@@ -196,7 +196,7 @@ unsafe extern "C" fn inkling_splashbomb_explode_main_status(weapon: &mut L2CWeap
         EffectModule::set_rgb_partial_last(weapon.module_accessor, r, g, b);
         if 0.0 < ink {
             for y in 0..=2 {
-                for x in 0..999 {
+                for x in 0..9 {
                     let ink_param = &mut fighterinkling.ink_params[x];
                     let first = x == 0 && !WorkModule::is_flag(owner_boma, 0x21000012);
                     if !ink_param.enabled || first {

@@ -56,10 +56,6 @@ unsafe fn status_guarddamage_common(fighter: &mut L2CFighterCommon, param_1: L2C
             SoundModule::play_se(fighter.module_accessor, Hash40::new("vc_captain_appeal03"), true, false, false, false, enSEType(0));
             SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
         }
-        else if fighter_kind == *FIGHTER_KIND_SONIC {
-            SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
-            WorkModule::add_int(fighter.module_accessor, 5, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_BOOST_GAUGE);
-        }
         /*   END OF NEW ADDITIONS  */
         else {
             SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));

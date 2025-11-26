@@ -26,10 +26,7 @@ use {
             Vector3f
         }
     },
-    smash_script::{
-        *,
-        macros::*
-    },
+    smash_script::*,
 };
 
 mod damage;

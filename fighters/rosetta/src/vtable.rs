@@ -41,36 +41,8 @@ unsafe extern "C" fn rosetta_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let obj_id = WorkModule::get_int(boma, 0x11000006) as u32;
         let obj_boma = smash::app::sv_battle_object::module_accessor(obj_id);
         let obj_kind = smash::app::utility::get_kind(&mut *obj_boma);
-        let weapon = get_weapon_common_from_accessor(&mut *obj_boma);
-        if is_disarming_voice(obj_boma) {
-            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            disarming_voice_removal(weapon);
-        }
-        if is_volley(obj_boma) {
-            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            volley_removal(weapon);
-        }
-        if is_galaxia(obj_boma) {
-            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            galaxia_beam_removal(weapon);
-        }
-        if is_slash(obj_boma) {
-            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            slash_removal(weapon);
-        }
-        if is_sludge(obj_boma) {
-            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            sludge_removal(weapon);
-        }
-        if is_mat(obj_boma) {
-            WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x11000006);
-            mat_removal(weapon);
-        }
         let item_id = if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
             WorkModule::get_int64(obj_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
-        }
-        else if obj_kind == *WEAPON_KIND_LINK_BOOMERANG {
-            WorkModule::get_int64(obj_boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32
         }
         else {
             *BATTLE_OBJECT_ID_INVALID as u32

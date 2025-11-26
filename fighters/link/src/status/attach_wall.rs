@@ -9,6 +9,8 @@ unsafe extern "C" fn link_attach_wall_main_status(fighter: &mut L2CFighterCommon
     if !StopModule::is_stop(fighter.module_accessor) {
         link_attach_wall_sub_status(fighter);
     }
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(link_attach_wall_sub_status as *const () as _));
     fighter.sub_shift_status_main(L2CValue::Ptr(link_attach_wall_main_loop as *const () as _))
 }
@@ -55,6 +57,7 @@ unsafe extern "C" fn link_attach_wall_main_loop(fighter: &mut L2CFighterCommon) 
     let lr = PostureModule::lr(fighter.module_accessor);
     let attach_side = if 0.0 <= lr {*GROUND_TOUCH_FLAG_LEFT} else {*GROUND_TOUCH_FLAG_RIGHT};
     let remove_attach = !GroundModule::is_attachable(fighter.module_accessor, GroundTouchFlag(attach_side));
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     let cliff_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_COUNT);
     let no_attach_wall_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_NO_ATTACH_WALL_FRAME)-1;
     let cliff_max_count = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("cliff_max_count"));
@@ -71,7 +74,12 @@ unsafe extern "C" fn link_attach_wall_main_loop(fighter: &mut L2CFighterCommon) 
             WorkModule::set_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_NO_ATTACH_WALL_FRAME,0);
         }
     }
-    WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_STATUS_ATTACH_WALL_WORK_INT_FRAME);
+    if motion_kind == hash40("attach_wall_climb") {
+        WorkModule::sub_int(fighter.module_accessor, 2, *FIGHTER_STATUS_ATTACH_WALL_WORK_INT_FRAME);
+    }
+    else {
+        WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_STATUS_ATTACH_WALL_WORK_INT_FRAME);
+    }
     if no_attach_wall_frame <= 0 {
         PostureModule::reverse_lr(fighter.module_accessor);
         PostureModule::update_rot_y_lr(fighter.module_accessor);

@@ -1,7 +1,6 @@
 use {
   crate::status::common_func::*,
   exo_utils::{
-    attack::*,
     attack_xx4::*,
     littlemac::*,
   },
