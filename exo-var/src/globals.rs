@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 pub const UNK1: i32 = 0x0; //void value
 pub const UNK2: i32 = 0x1; //void value
 pub const FIGHTER_KIND: i32 = 0x2; //fighter kind, i32

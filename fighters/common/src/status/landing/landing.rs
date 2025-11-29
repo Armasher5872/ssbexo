@@ -1,4 +1,5 @@
 /* The hooks and status_kind edits are credited to the HDR Code Repository and WuBoyTH's source code from the WuBor Patch */
+#![allow(unused_assignments)] //Addresses warning: value assigned to `ret` is never read
 use super::*;
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_pre_Landing_param)]
@@ -18,20 +19,20 @@ unsafe extern "C" fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> 
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
         if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GENESISSET)
         || WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAMMER) {
-            ret = 0.into();
+            ret = 0;
         }
         let get_have_item_kind = ItemModule::get_have_item_kind(boma, 0);
         if get_have_item_kind == *ITEM_KIND_ASSIST {
             if !MotionModule::is_end(boma) {
-                ret = 0.into();
+                ret = 0;
             }
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
         if !fighter.sub_landing_uniq_check_strans().get_bool() {
             if fighter.sub_landing_ground_check_common().get_bool() {
-                ret = 1.into();
+                ret = 1;
             }
-            ret = 0.into();
+            ret = 0;
         }
         if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);

@@ -38,4 +38,3 @@ pub mod sheik;
 pub mod snake;
 pub mod variables;
 pub mod wario;
-pub mod wolf;

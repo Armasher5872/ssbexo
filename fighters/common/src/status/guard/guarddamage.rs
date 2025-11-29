@@ -51,15 +51,7 @@ unsafe fn status_guarddamage_common(fighter: &mut L2CFighterCommon, param_1: L2C
         if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_GUARD_OFF {
             EffectModule::req_screen(fighter.module_accessor, Hash40::new("just_shield_screen"), false, false, false);
         }
-        /*   NEW ADDITIONS   */
-        if fighter_kind == *FIGHTER_KIND_CAPTAIN {
-            SoundModule::play_se(fighter.module_accessor, Hash40::new("vc_captain_appeal03"), true, false, false, false, enSEType(0));
-            SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
-        }
-        /*   END OF NEW ADDITIONS  */
-        else {
-            SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
-        }
+        SoundModule::play_se(fighter.module_accessor, just_shield_se, true, false, false, false, enSEType(0));
     }
     else {
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD);

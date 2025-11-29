@@ -1,3 +1,0 @@
-#![allow(dead_code)]
-pub const FIGHTER_WOLF_STATUS_KIND_SPECIAL_S_RUSH: i32 = 0x1EB;
-pub const FIGHTER_WOLF_STATUS_KIND_SPECIAL_S_END: i32 = 0x1EC;

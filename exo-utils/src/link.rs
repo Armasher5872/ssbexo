@@ -1,3 +1,4 @@
+#![allow(improper_ctypes_definitions)] //Addresses warning: `extern` fn uses type `Vector2`, which is not FFI-safe
 use super::*;
 
 pub struct FuseKind();

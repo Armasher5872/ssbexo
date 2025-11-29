@@ -1,4 +1,3 @@
-#![allow(dead_code, unconditional_recursion)]
 use super::*;
 
 pub trait ROBUiObject {

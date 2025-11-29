@@ -15,3 +15,7 @@ smash_script = { git = "https://github.com/blu-dev/smash-script.git", branch = "
 smashline = { git = "https://github.com/HDR-Development/smashline" }
 smash_singletons = { git = "https://github.com/WuBoytH/smash_singletons.git" }
 smash2 = { package = "smash", git = "https://github.com/blu-dev/smash-rs" }
+
+[features]
+default = ["skyline-web"]
+main_nro = ["skyline-web"]

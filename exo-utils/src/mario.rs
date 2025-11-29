@@ -1,4 +1,4 @@
-
+#![allow(improper_ctypes_definitions)] //Addresses warning: `extern` fn uses type `str`, which is not FFI-safe
 use super::*;
 
 pub unsafe extern "C" fn mario_change_angle(fighter: &mut L2CFighterCommon, current_degree: f32, max_degree: f32, motion_kind_max: &str, motion_kind_min: &str) {

@@ -1,5 +1,5 @@
 //The following code is credited to HDR
-#![allow(dead_code)]
+#![allow(dead_code)] //Addresses multiple variants are never constructed
 use super::*;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -499,7 +499,6 @@ unsafe extern "C" fn control_setup(energy: &mut FighterKineticEnergyControl, res
     }
     energy.initialize(boma);
 }
-
 
 pub fn install() {
     skyline::install_hooks!(

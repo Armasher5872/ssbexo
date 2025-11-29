@@ -1,5 +1,5 @@
 //Credit to HDR
-#![allow(static_mut_refs)]
+#![allow(static_mut_refs)] //Addresses warning: creating a shared reference to mutable static is discouraged
 use super::*;
 
 unsafe fn calc_nnsdk_offset() -> u64 {

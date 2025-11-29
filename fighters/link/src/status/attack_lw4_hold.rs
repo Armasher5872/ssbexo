@@ -1,4 +1,4 @@
-#![allow(unused_assignments)]
+#![allow(unused_assignments)] //Addresses value assigned to `ret` is never read
 use super::*;
 
 unsafe extern "C" fn link_attack_lw_4_hold_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {

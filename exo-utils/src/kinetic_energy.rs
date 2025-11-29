@@ -1,4 +1,4 @@
-#![allow(dead_code, improper_ctypes_definitions)]
+#![allow(improper_ctypes_definitions)] //Addresses Building warning: `extern` fn uses type `Vector2`, which is not FFI-safe
 use super::*;
 
 //Credited to WuBoyTH and BluJay, the following functions handle kinetics, ultimately related to Momentum Transfer

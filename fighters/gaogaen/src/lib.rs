@@ -1,4 +1,3 @@
-#![allow(unused_parens)]
 use {
   exo_utils::{
     fighter_common::*,

@@ -1,4 +1,3 @@
-#![allow(unused_must_use)]
 use {
     exo_var::globals::*,
     smash::{

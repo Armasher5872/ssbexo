@@ -1,4 +1,3 @@
-#![allow(improper_ctypes_definitions)]
 use super::*;
 
 const LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET: usize = 0x68cda0; //Little Mac only

@@ -1,4 +1,3 @@
-#![allow(unused_comparisons, unused_macros, unused_parens)]
 use {
     exo_utils::{
         attack_dash::*,

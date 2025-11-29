@@ -118,7 +118,6 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pickel_final_l"), 0);
 					EFFECT_OFF_KIND(attacker_agent, Hash40::new("edge_win_fire"), false, false);
 					EFFECT_OFF_KIND(attacker_agent, Hash40::new("edge_win_sprks_b"), false, false);
-					EFFECT_OFF_KIND(attacker_agent, Hash40::new("sys_bg_black"), false, false);
 					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_eflame_final"), 0);
 					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_eelight_final"), 0);
 					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_demon_final"), 0);

@@ -1,4 +1,4 @@
-#![allow(unused_assignments)]
+#![allow(unused_assignments)] //Addresses warning: value assigned to `event` is never read
 use super::*;
 
 //Ink Bullet Hit Main Status

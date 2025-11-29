@@ -1,5 +1,4 @@
 #![feature(proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
-#![allow(improper_ctypes_definitions)]
 use {
     bitflags::bitflags,
     crate::{

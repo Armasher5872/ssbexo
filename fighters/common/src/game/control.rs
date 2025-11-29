@@ -1,4 +1,3 @@
-#![allow(unused_variables)]
 //The following section is credited to WuBoyTH, and is utilized to handle held buffer
 
 const PRECEDE_EXTENSION: u8 = 15;

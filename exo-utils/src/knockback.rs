@@ -1,4 +1,4 @@
-#![allow(dead_code)]
+#![allow(dead_code)] //Addresses warning: fields `knockback` and `tumble` are never read
 use super::*;
 
 #[derive(Debug, Copy, Clone)]

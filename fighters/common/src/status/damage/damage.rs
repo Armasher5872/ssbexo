@@ -1,3 +1,4 @@
+#![allow(unused_assignments)] //Addresses warning: value assigned to `fall_check` is never read
 use super::*;
 
 static mut IS_CALCULATING: Option<(u32, u32)> = None;

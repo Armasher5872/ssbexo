@@ -1,4 +1,3 @@
-#![allow(dead_code)]
 use super::*;
 
 //Credited to HDR, used for adding 0 values of Vector2f and Vector3f

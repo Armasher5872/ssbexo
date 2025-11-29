@@ -1,4 +1,3 @@
-#![allow(dead_code, unexpected_cfgs)]
 use super::*;
 
 const CONSTANT_OFFSET: usize = 0x3728410;

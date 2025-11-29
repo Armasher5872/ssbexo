@@ -22,7 +22,7 @@ unsafe fn sub_attack_xx4_common_uniq_process_exit(fighter: &mut L2CFighterCommon
             fighter.sub_end_attack_s4_turn_rev();
         }
     }
-    if log_attack_kind < 0 {
+    if 0 < log_attack_kind {
         FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, log_attack_kind);
         WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     }
