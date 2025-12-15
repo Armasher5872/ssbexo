@@ -12,7 +12,6 @@ unsafe extern "C" fn link_special_hi_main_status(fighter: &mut L2CFighterCommon)
         0.into()
     }
     else {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         fighter.sub_change_motion_by_situation(Hash40::new("special_hi").into(), Hash40::new("special_air_hi").into(), false.into());
         fighter.sub_shift_status_main(L2CValue::Ptr(link_special_hi_main_loop as *const () as _))
     }

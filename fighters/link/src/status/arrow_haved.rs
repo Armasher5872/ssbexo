@@ -16,12 +16,12 @@ unsafe extern "C" fn link_bowarrow_haved_main_loop(weapon: &mut L2CWeaponCommon)
         if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_HOLD {
             if !WorkModule::is_flag(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_INIT_FUSE) {
                 if ItemModule::is_have_item(owner_boma, 0) {
-                    set_arrow_fuse_params(weapon.module_accessor, ItemModule::get_have_item_kind(owner_boma, 0), FuseKind::FUSE, ItemModule::get_have_item_trait(owner_boma, 0) as i32);
+                    set_arrow_fuse_params(weapon.module_accessor, ItemModule::get_have_item_kind(owner_boma, 0), FuseKind::FUSE);
                 }
                 else if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
                     let kind = WorkModule::get_int(owner_boma, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
                     if kind != *ITEM_KIND_NONE {
-                        set_arrow_fuse_params(weapon.module_accessor, kind, FuseKind::REFUSE, i32::MAX);
+                        set_arrow_fuse_params(weapon.module_accessor, kind, FuseKind::REFUSE);
                     }
                 }
                 else {

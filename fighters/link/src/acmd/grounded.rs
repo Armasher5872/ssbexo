@@ -355,8 +355,6 @@ unsafe extern "C" fn ssbexo_link_dash_attack_bound_sound(agent: &mut L2CAgentBas
 //Dash Attack Bound Expression
 unsafe extern "C" fn ssbexo_link_dash_attack_bound_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
         ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         RUMBLE_HIT(agent, Hash40::new("rbkind_attacks"), 0);

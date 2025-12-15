@@ -5,7 +5,6 @@ use {
         hook::*,
         inkling::*,
         status_end_control::*,
-        vector::*,
     },
     exo_var::{
         globals::*,
@@ -18,17 +17,11 @@ use {
         },
         hash40,
         lib::lua_const::*,
-        lua2cpp::{
-            L2CFighterCommon,
-            L2CWeaponCommon
-        },
         phx::{
             Hash40,
-            Vector2f,
-            Vector3f
+            Vector2f
         }
     },
-    smash_script::*,
     smashline::*,
 };
 

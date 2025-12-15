@@ -4,23 +4,12 @@ use {
     status_end_control::*,
   },
   exo_var::{
-    consts::*,
     gaogaen::*,
     globals::*,
   },
-  smash::{
-    app::{
-      lua_bind::*,
-      *
-    },
-    hash40,
-    lib::lua_const::*,
-    lua2cpp::L2CFighterCommon,
-    phx::Vector3f
-  },
-  smash_script::{
-    *,
-    macros::*
+  smash::app::{
+    lua_bind::*,
+    *
   },
   smashline::*,
 };

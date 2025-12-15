@@ -1,9 +1,7 @@
 use super::*;
 
 //Neutral Special Start ACMD
-unsafe extern "C" fn ssbexo_ganon_neutral_special_start_acmd(agent: &mut L2CAgentBase) {
-    FT_MOTION_RATE(agent, 1.5);
-}
+unsafe extern "C" fn ssbexo_ganon_neutral_special_start_acmd(_agent: &mut L2CAgentBase) {}
 
 //Grounded Neutral Special Start Effect
 unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_start_effect(agent: &mut L2CAgentBase) {

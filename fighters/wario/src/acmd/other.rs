@@ -3,11 +3,11 @@ use super::*;
 //Slow Walk Effect
 unsafe extern "C" fn ssbexo_wario_slow_walk_effect(agent: &mut L2CAgentBase) {
     loop {
-        frame(agent.lua_state_agent, 40.0);
+        frame(agent.lua_state_agent, 6.0);
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
         }
-        frame(agent.lua_state_agent, 70.0);
+        frame(agent.lua_state_agent, 40.0);
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
         agent.clear_lua_stack();
         wait_loop_sync_mot(agent.lua_state_agent);
@@ -18,11 +18,11 @@ unsafe extern "C" fn ssbexo_wario_slow_walk_effect(agent: &mut L2CAgentBase) {
 //Slow Walk Sound
 unsafe extern "C" fn ssbexo_wario_slow_walk_sound(agent: &mut L2CAgentBase) {
     loop {
-        frame(agent.lua_state_agent, 40.0);
+        frame(agent.lua_state_agent, 6.0);
         if is_excute(agent) {
             PLAY_STEP(agent, Hash40::new("se_wario_step_right_s"));
         }
-        frame(agent.lua_state_agent, 70.0);
+        frame(agent.lua_state_agent, 40.0);
         PLAY_STEP(agent, Hash40::new("se_wario_step_left_s"));
         agent.clear_lua_stack();
         wait_loop_sync_mot(agent.lua_state_agent);
@@ -36,11 +36,59 @@ unsafe extern "C" fn ssbexo_wario_slow_walk_expression(agent: &mut L2CAgentBase)
         if is_excute(agent) {
             slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 6);
         }
-        frame(agent.lua_state_agent, 40.0);
+        frame(agent.lua_state_agent, 6.0);
         if is_excute(agent) {
             ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         }
-        frame(agent.lua_state_agent, 70.0);
+        frame(agent.lua_state_agent, 40.0);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Middle Walk Effect
+unsafe extern "C" fn ssbexo_wario_middle_walk_effect(agent: &mut L2CAgentBase) {
+    loop {
+        frame(agent.lua_state_agent, 6.0);
+        if is_excute(agent) {
+            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+        }
+        frame(agent.lua_state_agent, 40.0);
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Middle Walk Sound
+unsafe extern "C" fn ssbexo_wario_middle_walk_sound(agent: &mut L2CAgentBase) {
+    loop {
+        frame(agent.lua_state_agent, 6.0);
+        if is_excute(agent) {
+            PLAY_STEP(agent, Hash40::new("se_wario_step_right_s"));
+        }
+        frame(agent.lua_state_agent, 40.0);
+        PLAY_STEP(agent, Hash40::new("se_wario_step_left_s"));
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Middle Walk Expression
+unsafe extern "C" fn ssbexo_wario_middle_walk_expression(agent: &mut L2CAgentBase) {
+    loop {
+        if is_excute(agent) {
+            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 6);
+        }
+        frame(agent.lua_state_agent, 6.0);
+        if is_excute(agent) {
+            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        }
+        frame(agent.lua_state_agent, 40.0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         agent.clear_lua_stack();
         wait_loop_sync_mot(agent.lua_state_agent);
@@ -90,6 +138,100 @@ unsafe extern "C" fn ssbexo_wario_fast_walk_expression(agent: &mut L2CAgentBase)
         }
         frame(agent.lua_state_agent, 24.0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Dash ACMD
+unsafe extern "C" fn ssbexo_wario_dash_acmd(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 5.0);
+    if is_excute(agent) {
+        WorkModule::enable_transition_term(agent.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+    }
+}
+
+//Dash Effect
+unsafe extern "C" fn ssbexo_wario_dash_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 4.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(agent.lua_state_agent, 21.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+//Dash Sound
+unsafe extern "C" fn ssbexo_wario_dash_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 5.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_wario_dash_start"));
+        SET_PLAY_INHIVIT(agent, Hash40::new("se_wario_dash_start"), 23);
+    }
+    frame(agent.lua_state_agent, 21.0);
+    if is_excute(agent) {
+        PLAY_STEP(agent, Hash40::new("se_wario_step_right_l"));
+    }
+}
+
+//Dash Expression
+unsafe extern "C" fn ssbexo_wario_dash_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 6);
+    }
+    frame(agent.lua_state_agent, 5.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_dash"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
+//Run Effect
+unsafe extern "C" fn ssbexo_wario_run_effect(agent: &mut L2CAgentBase) {
+    loop {
+        frame(agent.lua_state_agent, 5.0);
+        if is_excute(agent) {
+            FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+        frame(agent.lua_state_agent, 17.0);
+        if is_excute(agent) {
+            FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Run Sound
+unsafe extern "C" fn ssbexo_wario_run_sound(agent: &mut L2CAgentBase) {
+    loop {
+        frame(agent.lua_state_agent, 5.0);
+        if is_excute(agent) {
+            PLAY_STEP(agent, Hash40::new("se_wario_step_left_m"));
+        }
+        frame(agent.lua_state_agent, 17.0);
+        PLAY_STEP(agent, Hash40::new("se_wario_step_right_m"));
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
+    }
+}
+
+//Run Expression
+unsafe extern "C" fn ssbexo_wario_run_expression(agent: &mut L2CAgentBase) {
+    loop {
+        if is_excute(agent) {
+            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 6);
+        }
+        frame(agent.lua_state_agent, 5.0);
+        if is_excute(agent) {
+            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_run"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        }
+        frame(agent.lua_state_agent, 17.0);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_run"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         agent.clear_lua_stack();
         wait_loop_sync_mot(agent.lua_state_agent);
         agent.pop_lua_stack(1);
@@ -239,9 +381,19 @@ pub fn install() {
     .effect_acmd("effect_walkslow", ssbexo_wario_slow_walk_effect, Low)
     .sound_acmd("sound_walkslow", ssbexo_wario_slow_walk_sound, Low)
     .expression_acmd("expression_walkslow", ssbexo_wario_slow_walk_expression, Low)
+    .effect_acmd("effect_walkmiddle", ssbexo_wario_middle_walk_effect, Low)
+    .sound_acmd("sound_walkmiddle", ssbexo_wario_middle_walk_sound, Low)
+    .expression_acmd("expression_walkmiddle", ssbexo_wario_middle_walk_expression, Low)
     .effect_acmd("effect_walkfast", ssbexo_wario_fast_walk_effect, Low)
     .sound_acmd("sound_walkfast", ssbexo_wario_fast_walk_sound, Low)
     .expression_acmd("expression_walkfast", ssbexo_wario_fast_walk_expression, Low)
+    .game_acmd("game_dash", ssbexo_wario_dash_acmd, Low)
+    .effect_acmd("effect_dash", ssbexo_wario_dash_effect, Low)
+    .sound_acmd("sound_dash", ssbexo_wario_dash_sound, Low)
+    .expression_acmd("expression_dash", ssbexo_wario_dash_expression, Low)
+    .effect_acmd("effect_run", ssbexo_wario_run_effect, Low)
+    .sound_acmd("sound_run", ssbexo_wario_run_sound, Low)
+    .expression_acmd("expression_run", ssbexo_wario_run_expression, Low)
     .effect_acmd("effect_appealhil", ssbexo_wario_up_taunt_effect, Low)
     .sound_acmd("sound_appealhil", ssbexo_wario_up_taunt_sound, Low)
     .effect_acmd("effect_appealhir", ssbexo_wario_up_taunt_effect, Low)

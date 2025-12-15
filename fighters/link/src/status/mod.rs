@@ -50,6 +50,8 @@ mod attack_lw4_hold;
 mod attack_lw4;
 mod attack_s4_hold;
 mod attack_s4;
+mod boomerang_fly;
+mod boomerang_turn;
 mod mortal_draw_attack;
 mod mortal_draw_loop;
 mod special_hi_ascend_end;
@@ -62,6 +64,7 @@ mod special_hi_land;
 mod special_hi;
 mod special_lw_blast;
 mod special_n;
+mod special_s;
 mod swordbeam_fly;
 
 pub fn install() {
@@ -78,6 +81,8 @@ pub fn install() {
     attack_lw4::install();
     attack_s4_hold::install();
     attack_s4::install();
+    boomerang_fly::install();
+    boomerang_turn::install();
     mortal_draw_attack::install();
     mortal_draw_loop::install();
     special_hi_ascend_end::install();
@@ -90,5 +95,6 @@ pub fn install() {
     special_hi::install();
     special_lw_blast::install();
     special_n::install();
+    special_s::install();
     swordbeam_fly::install();
 }

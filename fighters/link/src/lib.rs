@@ -2,6 +2,7 @@ use {
   exo_utils::{
     fighter_common::*,
     status_end_control::*,
+    ui_manager::*,
   },
   exo_var::{
     consts::*,
@@ -19,7 +20,6 @@ use {
       lua_const::*,
     },
     lua2cpp::*,
-    phx::Hash40
   }
 };
 

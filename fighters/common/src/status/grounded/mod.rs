@@ -20,7 +20,6 @@ use {
 };
 
 mod appeal;
-pub mod dash;
 mod run;
 mod turndash;
 mod wait;

@@ -26,10 +26,7 @@ use {
     },
     hash40,
     lib::lua_const::*,
-    lua2cpp::{
-      L2CFighterCommon,
-      L2CWeaponCommon
-    },
+    lua2cpp::L2CFighterCommon,
     phx::{
       Hash40,
       Vector3f

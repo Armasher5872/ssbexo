@@ -35,13 +35,14 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
     let lr = PostureModule::lr(fighter.module_accessor);
     let slow_rate = SlowModule::rate(fighter.module_accessor);
     let special_hi_degree = WorkModule::get_float(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
+    let stamina = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
     let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
     let max_degree = 25.0;
     let change_degree_per_frame = 1.5*slow_rate;
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if get_stick_prev_y < squat_stick_y {
+    if get_stick_prev_y < squat_stick_y || stamina <= 0 {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP.into(), false.into());
     }
     if situation_kind == *SITUATION_KIND_GROUND {
@@ -51,13 +52,20 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
         if special_hi_degree < max_degree {
             WorkModule::set_float(fighter.module_accessor, special_hi_degree+change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
         }
+        if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) || GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
+            fighter.change_status(FIGHTER_STATUS_KIND_ATTACH_WALL.into(), false.into());
+        }
     }
     if stick_x*lr < -0.25 {
         if special_hi_degree > -max_degree {
             WorkModule::set_float(fighter.module_accessor, special_hi_degree-change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
         }
+        if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) || GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
+            fighter.change_status(FIGHTER_STATUS_KIND_ATTACH_WALL.into(), false.into());
+        }
     }
-    link_change_angle(fighter, special_hi_degree, max_degree, "special_hi_glide_f", "special_hi_glide_b");
+    change_angle(fighter, special_hi_degree, max_degree, "special_hi_glide_f", "special_hi_glide_b");
+    WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
     if MotionModule::is_end(fighter.module_accessor) {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_glide"), 0.0, 1.0, false, 0.0, false, false);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, Hash40::new("glide"), false, -1.0);
@@ -67,8 +75,13 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
 
 unsafe extern "C" fn link_special_hi_glide_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    let stamina = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
     if status_kind != *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE {
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN);
+    }
+    if stamina <= 0 {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
     }
     0.into()
 }

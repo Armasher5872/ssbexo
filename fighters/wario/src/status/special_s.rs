@@ -70,7 +70,7 @@ unsafe extern "C" fn wario_special_s_exec_status(_fighter: &mut L2CFighterCommon
 //Grounded Side Special End Status
 unsafe extern "C" fn wario_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_AIR_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_JUMPSQUAT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LANDING, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_END].contains(&status_kind) {
+    if ![*FIGHTER_WARIO_STATUS_KIND_SPECIAL_AIR_S, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_AIR_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_JUMPSQUAT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LANDING, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_END].contains(&status_kind) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
     }
@@ -80,7 +80,7 @@ unsafe extern "C" fn wario_special_s_end_status(fighter: &mut L2CFighterCommon) 
 //Grounded Side Special Exit Status
 unsafe extern "C" fn wario_special_s_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_AIR_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_JUMPSQUAT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LANDING, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_END].contains(&status_kind) {
+    if ![*FIGHTER_WARIO_STATUS_KIND_SPECIAL_AIR_S, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_AIR_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_JUMPSQUAT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LANDING, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_END].contains(&status_kind) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
     }

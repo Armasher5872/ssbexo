@@ -118,7 +118,7 @@ unsafe extern "C" fn ssbexo_ganon_fair_acmd(agent: &mut L2CAgentBase) {
 
 //Fair Effect
 unsafe extern "C" fn ssbexo_ganon_fair_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
+    frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("arml"), 7, 0, 0, 0, 0, 0, 1.6, true);
     }

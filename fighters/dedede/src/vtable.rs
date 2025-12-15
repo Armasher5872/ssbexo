@@ -69,7 +69,7 @@ unsafe extern "C" fn dedede_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         }
         if WorkModule::is_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK) && frame >= 7.0 {
             if obj_kind == *WEAPON_KIND_LINK_BOWARROW {
-                set_arrow_fuse_params(obj_boma, item, FuseKind::REFUSE, i32::MAX);
+                set_arrow_fuse_params(obj_boma, item, FuseKind::REFUSE);
             }
             let item_id = WorkModule::get_int(obj_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
             let item_boma = smash::app::sv_battle_object::module_accessor(item_id);

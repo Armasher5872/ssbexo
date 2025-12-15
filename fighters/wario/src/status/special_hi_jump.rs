@@ -11,7 +11,7 @@ unsafe extern "C" fn wario_special_hi_jump_check_attack_status(fighter: &mut L2C
             if current_frame >= 24.0 {
                 if LAST_ATTACK_HITBOX_ID != 0 {
                     let coin_sfx = SoundModule::play_se(fighter.module_accessor, Hash40::new("se_common_coin"), true, false, false, false, smash::app::enSEType(0));
-                    SoundModule::set_se_vol(fighter.module_accessor, coin_sfx as i32, 2.0, 0);
+                    SoundModule::set_se_vol(fighter.module_accessor, coin_sfx as i32, 4.0, 0);
                 }
             }
         }

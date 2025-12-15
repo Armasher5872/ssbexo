@@ -5,17 +5,12 @@ use {
   },
   exo_var::globals::*,
   smash::{
-    app::{
-      lua_bind::*,
-      *
-    },
+    app::*,
     lib::{
       L2CValue,
       lua_const::*,
-    },
-    lua2cpp::L2CFighterCommon
-  },
-  smashline::*,
+    }
+  }
 };
 
 mod acmd;

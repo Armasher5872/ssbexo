@@ -206,12 +206,17 @@ unsafe extern "C" fn koopajr_cannonball_on_reflect_event(_vtable: u64, battle_ob
     let owner_kind = utility::get_kind(&mut *owner_boma);
     PostureModule::reverse_lr(boma);
     PostureModule::update_rot_y_lr(boma);
-    TeamModule::set_team(boma, reflect_team_no as i32, true);
-    TeamModule::set_hit_team(boma, reflect_team_no as i32);
-    TeamModule::set_team_owner_id(boma, reflect_object_id as u32);
-    if owner_kind == *FIGHTER_KIND_GANON {
-        EffectModule::kill_kind(boma, Hash40::new("ganon_volley"), true, true);
+    if owner_kind != *FIGHTER_KIND_GANON {
+        TeamModule::set_team(boma, reflect_team_no as i32, true);
+        TeamModule::set_hit_team(boma, reflect_team_no as i32);
+        TeamModule::set_team_owner_id(boma, reflect_object_id as u32);
+    }
+    else {
         let scale = WorkModule::get_float(boma, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLOAT_SCALE);
+        TeamModule::set_team(boma, *TEAM_NONE, false);
+        TeamModule::set_hit_team(boma, *TEAM_NONE);
+        TeamModule::set_team_owner_id(boma, *BATTLE_OBJECT_ID_INVALID as u32);
+        EffectModule::kill_kind(boma, Hash40::new("ganon_volley"), true, true);
         if scale > 1.0 {
             EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3.8+scale, true);
         }
@@ -249,7 +254,6 @@ unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon
     if owner_kind == *FIGHTER_KIND_GANON {
         let life = WorkModule::get_param_int(boma, hash40("param_volley"), hash40("life"));
         let get_sum_speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-        let get_sum_speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         let normals_status = [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&opponent_status_kind);
         let smashes_status = [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&opponent_status_kind);
         let specials_status = [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_FINAL].contains(&opponent_status_kind);
@@ -275,12 +279,12 @@ unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon
         ReflectorModule::set_no_team(boma, true);
         TeamModule::set_team(boma, *TEAM_NONE, false);
         TeamModule::set_hit_team(boma, *TEAM_NONE);
-        TeamModule::set_team_owner_id(boma, owner_id);
+        TeamModule::set_team_owner_id(boma, *BATTLE_OBJECT_ID_INVALID as u32);
         WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
         let reflect = SoundModule::play_se(boma, Hash40::new("se_ganon_special_n06"), true, false, false, false, smash::app::enSEType(0));
         SoundModule::set_se_vol(boma, reflect as i32, 6.0, 0);
-        sv_kinetic_energy!(set_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, -get_sum_speed_y*speed_multiplier);
-        sv_kinetic_energy!(set_stable_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, -get_sum_speed_y*speed_multiplier);
+        sv_kinetic_energy!(set_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, 0.0);
+        sv_kinetic_energy!(set_stable_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, 0.0);
     }
 }
 

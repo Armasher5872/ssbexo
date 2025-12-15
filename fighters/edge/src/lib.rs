@@ -15,9 +15,7 @@ use {
     hash40,
     lib::lua_const::*,
     lua2cpp::*,
-    phx::Vector3f
   },
-  smash_script::*,
   smashline::*,
 };
 

@@ -6,11 +6,13 @@ unsafe extern "C" fn ssbexo_wario_forward_tilt_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         FT_MOTION_RATE(agent, 1.0);
+        HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_XLU);
         ATTACK(agent, 0, 0, Hash40::new("handl"), 13.0, 44, 86, 0, 20, 5.7, 2.3, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("arml"), 11.0, 44, 86, 0, 20, 3.0, -0.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     wait(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(agent.module_accessor);
     }
 }
@@ -19,12 +21,14 @@ unsafe extern "C" fn ssbexo_wario_forward_tilt_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_wario_up_tilt_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_XLU);
         ATTACK(agent, 0, 0, Hash40::new("handl"), 7.1, 74, 64, 0, 46, 5.7, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("arml"), 7.1, 74, 64, 0, 46, 4.3, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("shoulderl"), 7.1, 74, 64, 0, 46, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(agent.module_accessor);
     }
 }
@@ -88,12 +92,14 @@ unsafe extern "C" fn ssbexo_wario_up_tilt_expression(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_wario_down_tilt_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_XLU);
         ATTACK(agent, 0, 0, Hash40::new("handl"), 8.6, 44, 56, 0, 22, 5.7, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("arml"), 8.6, 44, 56, 0, 22, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("shoulderl"), 8.6, 44, 56, 0, 22, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
     }
     frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(agent.module_accessor);
     }
 }

@@ -3,7 +3,6 @@ use super::*;
 const CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8b7ce0; //Captain Falcon only
 const CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8b7610; //Captain Falcon only
 const CAPTAIN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x8b7cf0; //Captain Falcon only
-const CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x8b7d20; //Captain Falcon only
 const CAPTAIN_VTABLE_ON_ATTACK_OFFSET: usize = 0x8b8b90; //Captain Falcon only
 
 unsafe extern "C" fn captain_var(boma: &mut BattleObjectModuleAccessor) {
@@ -38,20 +37,6 @@ unsafe extern "C" fn captain_death_initialization(vtable: u64, fighter: &mut Fig
     original!()(vtable, fighter)
 }
 
-//Captain Falcon Once Per Fighter Frame
-#[skyline::hook(offset = CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME)]
-unsafe extern "C" fn captain_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    let status_kind = agent.global_table[STATUS_KIND].get_i32();
-    if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) && ![*FIGHTER_STATUS_KIND_CATCH_ATTACK, *FIGHTER_STATUS_KIND_THROW].contains(&status_kind) {
-        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-            StatusModule::change_status_request(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
-        }
-    }
-    original!()(vtable, fighter)
-}
-
 //Captain Falcon On Attack
 #[skyline::hook(offset = CAPTAIN_VTABLE_ON_ATTACK_OFFSET)]
 unsafe extern "C" fn captain_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
@@ -71,7 +56,6 @@ pub fn install() {
         captain_start_initialization,
         captain_reset_initialization,
         captain_death_initialization,
-        captain_opff,
         captain_on_attack
     );
 }

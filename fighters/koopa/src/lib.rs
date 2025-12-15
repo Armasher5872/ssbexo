@@ -1,7 +1,6 @@
 use {
     exo_utils::{
         fighter_common::*,
-        vector::*,
         status_end_control::*,
     },
     exo_var::{
@@ -16,13 +15,8 @@ use {
         },
         hash40,
         lib::lua_const::*,
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        },
-        phx::Vector3f
+        lua2cpp::L2CFighterCommon,
     },
-    smash_script::*,
     smashline::*,
 };
 

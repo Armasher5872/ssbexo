@@ -126,7 +126,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                 let bow_arrow_boma = get_article_boma(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
                 let bow_arrow_agent = get_weapon_common_from_accessor(&mut *bow_arrow_boma);
                 let arrow_type = WorkModule::get_int(bow_arrow_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
-                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
                     if arrow_type != *WN_LINK_BOWARROW_ICE_ARROW {
                         EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_ice_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
                         EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_final_arrow_hold"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 1.0, true);
@@ -134,10 +134,10 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                         WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_ICE_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
                     }
                 }
-                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
                     if arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
                         EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_light_arrow_charge"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
-                        WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_LIGHT_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);   
+                        WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_LIGHT_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE); 
                     }
                 }
                 if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L) {
@@ -145,7 +145,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                         EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_fire_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.6, true);
                         EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_final_arrow_hold"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 1.0, true);
                         LAST_EFFECT_SET_COLOR(bow_arrow_agent, 1.0, 0.0, 0.0);
-                        WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_FIRE_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);   
+                        WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_FIRE_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
                     }
                 }
                 if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
@@ -153,7 +153,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                         EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_shock_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
                         EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_final_arrow_hold"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 1.0, true);
                         LAST_EFFECT_SET_COLOR(bow_arrow_agent, 1.0, 0.0, 1.0);
-                        WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_SHOCK_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);   
+                        WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_SHOCK_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
                     }
                 }
             }
@@ -171,7 +171,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                     WorkModule::set_float(fighter.module_accessor, special_n_degree-change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_DEGREE);
                 }
             }
-            link_change_angle(fighter, special_n_degree, max_degree, "special_n_hi", "special_n_lw");
+            change_angle(fighter, special_n_degree, max_degree, "special_n_hi", "special_n_lw");
         }
     }
     if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_HOLD {
@@ -191,20 +191,8 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
             }
         }
     }
-    if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE);
-        WorkModule::set_int(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_STEP_END, *FIGHTER_LINK_STATUS_BOW_WORK_INT_STEP);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LINK_STATUS_BOW_WORK_INT_MAX_HOLD_COUNT);
-        if situation_kind == *SITUATION_KIND_GROUND {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-            ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_end"), true, -1.0);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_end"), 0.0, 1.0, false, 0.0, false, false);
-        }
-        else {
-            ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_air_end"), true, -1.0);
-            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_end"), 0.0, 1.0, false, 0.0, false, false);
-        }
-        link_shoot_arrow(fighter);
+    if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_END {
+        change_angle(fighter, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw");
     }
     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
         let bow_arrow_boma = get_article_boma(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
@@ -212,6 +200,21 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
         let hold_frame = if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {300} else {max_hold_frame};
         if max_hold_count >= hold_frame {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE);
+            WorkModule::set_int(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_STEP_END, *FIGHTER_LINK_STATUS_BOW_WORK_INT_STEP);
+            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LINK_STATUS_BOW_WORK_INT_MAX_HOLD_COUNT);
+            if situation_kind == *SITUATION_KIND_GROUND {
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+                ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_end"), true, -1.0);
+                MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_end"), 0.0, 1.0, false, 0.0, false, false);
+            }
+            else {
+                ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_air_end"), true, -1.0);
+                MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_end"), 0.0, 1.0, false, 0.0, false, false);
+            }
+            link_shoot_arrow(fighter);
+        }
+        if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE) && arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE);
             WorkModule::set_int(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_STEP_END, *FIGHTER_LINK_STATUS_BOW_WORK_INT_STEP);
             WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LINK_STATUS_BOW_WORK_INT_MAX_HOLD_COUNT);
@@ -252,6 +255,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                 ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_air"), true, -1.0);
                 MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n"), 0.0, 1.0, false, 0.0, false, false);
             }
+            change_angle(fighter, special_n_degree, max_degree, "special_n_hi", "special_n_lw");
         }
         if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_HOLD {
             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE) && max_hold_count < max_hold_frame {
@@ -276,10 +280,13 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                     ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_air_end"), true, -1.0);
                     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_end"), 0.0, 1.0, false, 0.0, false, false);
                 }
+                change_angle(fighter, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw");
                 link_shoot_arrow(fighter);
             }
         }
         if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_END {
+            MotionModule::set_weight(fighter.module_accessor, 1.0, true);
+            MotionModule::enable_remove_2nd_change_motion(fighter.module_accessor, true);
             if situation_kind == *SITUATION_KIND_AIR {
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
             }

@@ -12,7 +12,6 @@ use {
             lua_bind::*,
             *
         },
-        hash40,
         lib::lua_const::*,
     },
     smashline::*,

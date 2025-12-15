@@ -22,6 +22,8 @@ unsafe extern "C" fn ganon_special_hi_end_init_status(fighter: &mut L2CFighterCo
     HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
     GroundModule::set_ignore_boss(fighter.module_accessor, false);
     JostleModule::set_status(fighter.module_accessor, true);
+    PostureModule::set_lr(fighter.module_accessor, 1.0);
+    PostureModule::update_rot_y_lr(fighter.module_accessor);
     0.into()
 }
 

@@ -7,6 +7,8 @@ unsafe extern "C" fn ssbexo_wario_grounded_side_special_acmd(agent: &mut L2CAgen
         SEARCH(agent, 0, 0, Hash40::new("top"), 10.0, 0.0, 7.0, 0.0, Some(0.0), Some(7.0), Some(10.0), *COLLISION_KIND_MASK_ALL, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 35, 95, 0, 42, 4.0, 0.0, 5.0, 5.8, Some(0.0), Some(9.7), Some(5.8), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 11.0, 35, 95, 0, 42, 4.0, 0.0, 6.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
+        ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 0.0);
+        ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 0.0);
     }
 }
 
@@ -17,6 +19,8 @@ unsafe extern "C" fn ssbexo_wario_aerial_side_special_acmd(agent: &mut L2CAgentB
         SEARCH(agent, 0, 0, Hash40::new("top"), 10.0, 0.0, 7.0, 0.0, Some(0.0), Some(7.0), Some(10.0), *COLLISION_KIND_MASK_ALL, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, true);
         ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 45, 82, 0, 42, 4.0, 0.0, 5.0, 5.8, Some(0.0), Some(9.7), Some(5.8), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 11.0, 45, 82, 0, 42, 4.0, 0.0, 6.0, 2.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
+        ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 0.0);
+        ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 0.0);
     }
     frame(agent.lua_state_agent, 32.0);
     if is_excute(agent) {
