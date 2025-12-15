@@ -1,9 +1,5 @@
 use super::*;
 
-unsafe extern "C" fn ryu_dash_back_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    fgc_dashback_main(fighter)
-}
-
 unsafe extern "C" fn ryu_special_n_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     if !StopModule::is_stop(fighter.module_accessor) {
         ryu_special_n_substatus(fighter, false.into());
@@ -114,7 +110,6 @@ unsafe extern "C" fn ryu_hadoken_move_exec_status(weapon: &mut L2CWeaponCommon) 
 pub fn install() {
     Agent::new("ryu")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .status(Main, *FIGHTER_RYU_STATUS_KIND_DASH_BACK, ryu_dash_back_main_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, ryu_special_n_main_status)
     .install()
     ;

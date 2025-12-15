@@ -1,5 +1,4 @@
 use {
-    common::status::grounded::dash::fgc_dashback_main,
     exo_utils::{
         command_input::*,
         fighter_common::*,
@@ -14,14 +13,12 @@ use {
             lua_bind::*,
             *
         },
-        hash40,
         lib::{
             L2CValue,
             lua_const::*,
         },
         lua2cpp::L2CFighterCommon
     },
-    smash_script::*,
     smashline::*,
 };
 

@@ -42,6 +42,13 @@ pub trait CloudUiObject {
     fn is_enabled(&self) -> bool;
 }
 
+pub trait LinkUiObject {
+    fn update(&mut self);
+    fn is_valid(&self) -> bool;
+    fn set_enable(&mut self, enable: bool);
+    fn is_enabled(&self) -> bool;
+}
+
 impl ROBUiObject for RobotMeter {
     fn update(&mut self) {
         self.set_tex_coords();
@@ -170,6 +177,27 @@ impl MarioDUiObject for MarioDMeter {
 }
 
 impl CloudUiObject for CloudMeter {
+    fn update(&mut self) {
+        self.update_icon();
+    }
+    fn is_valid(&self) -> bool {
+        is_pane_valid(self.number)
+    }
+    fn set_enable(&mut self, enable: bool) {
+        if !enable {
+            set_pane_visible(self.number, false);
+        }
+        else if !self.enabled {
+            self.reset();
+        }
+        self.enabled = enable;
+    }
+    fn is_enabled(&self) -> bool {
+        self.enabled
+    }
+}
+
+impl LinkUiObject for LinkStamina {
     fn update(&mut self) {
         self.update_icon();
     }

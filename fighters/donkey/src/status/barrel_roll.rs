@@ -22,14 +22,14 @@ unsafe extern "C" fn donkey_barrel_roll_init_status(weapon: &mut L2CWeaponCommon
     KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     if owner_situation_kind == *SITUATION_KIND_GROUND {
         sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x*2.5, 0.0);
-        sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (-(brake_x*0.5))*owner_lr, -gravity);
+        sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (-brake_x)*owner_lr, -gravity);
         sv_kinetic_energy!(set_stable_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
         sv_kinetic_energy!(set_limit_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 4.0, 4.0);
         PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(20.0*owner_lr), y: owner_pos_y, z: owner_pos_z});
     }
     else {
         sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x*2.5, speed_y*0.5);
-        sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (-(brake_x*0.5))*owner_lr, -gravity);
+        sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (-brake_x)*owner_lr, -gravity);
         sv_kinetic_energy!(set_stable_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
         sv_kinetic_energy!(set_limit_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 4.0, 4.0);
         PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(12.0*owner_lr), y: owner_pos_y+6.0, z: owner_pos_z});

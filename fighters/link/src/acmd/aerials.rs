@@ -45,7 +45,6 @@ unsafe extern "C" fn ssbexo_link_nair_sound(agent: &mut L2CAgentBase) {
 //Nair Expression
 unsafe extern "C" fn ssbexo_link_nair_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
         ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE);
     }
@@ -159,59 +158,6 @@ unsafe extern "C" fn ssbexo_link_bair_expression(agent: &mut L2CAgentBase) {
     }
 }
 
-//Uair Expression
-unsafe extern "C" fn ssbexo_link_uair_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        AttackModule::set_attack_reference_joint_id(agent.module_accessor, Hash40::new("sword1"), AttackDirectionAxis(*ATTACK_DIRECTION_X), AttackDirectionAxis(*ATTACK_DIRECTION_Y), AttackDirectionAxis(*ATTACK_DIRECTION_Z));
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-    frame(agent.lua_state_agent, 2.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 9.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 11.0);
-    if is_excute(agent) {
-        RUMBLE_HIT(agent, Hash40::new("rbkind_pierces"), 0);
-    }
-    frame(agent.lua_state_agent, 48.0);
-    if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, true, 0);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-}
-
-//Dair Expression
-unsafe extern "C" fn ssbexo_link_dair_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-    frame(agent.lua_state_agent, 3.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 14.0);
-    if is_excute(agent) {
-        RUMBLE_HIT(agent, Hash40::new("rbkind_pierces"), 0);
-    }
-    frame(agent.lua_state_agent, 78.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-        ItemModule::set_have_item_visibility(agent.module_accessor, true, 0);
-    }
-}
-
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
@@ -224,8 +170,6 @@ pub fn install() {
     .effect_acmd("effect_attackairb", ssbexo_link_bair_effect, Low)
     .sound_acmd("sound_attackairb", ssbexo_link_bair_sound, Low)
     .expression_acmd("expression_attackairb", ssbexo_link_bair_expression, Low)
-    .expression_acmd("expression_attackairhi", ssbexo_link_uair_expression, Low)
-    .expression_acmd("expression_attackairlw", ssbexo_link_dair_expression, Low)
     .install()
     ;
 }

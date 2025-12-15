@@ -14,7 +14,6 @@ use {
     },
     lib::lua_const::*,
     lua2cpp::*,
-    phx::Hash40
   },
   smashline::*,
 };

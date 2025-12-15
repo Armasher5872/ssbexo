@@ -1,56 +1,5 @@
 use super::*;
 
-//Forward Smash ACMD
-unsafe extern "C" fn ssbexo_donkey_forward_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
-    }
-    frame(agent.lua_state_agent, 20.0);
-    if is_excute(agent) {
-        HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
-    }
-    frame(agent.lua_state_agent, 22.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 22.0, 46, 88, 0, 21, 5.7, 0.0, 6.4, 24.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 21.0, 361, 86, 0, 18, 3.7, 0.0, 6.4, 18.0, Some(0.0), Some(6.4), Some(10.0), 1.4, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-    }
-    wait(agent.lua_state_agent, 2.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-    }
-    frame(agent.lua_state_agent, 27.0);
-    if is_excute(agent) {
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
-    }
-}
-
-//Up Smash ACMD
-unsafe extern "C" fn ssbexo_donkey_up_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 6.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
-    }
-    frame(agent.lua_state_agent, 8.0);
-    if is_excute(agent) {
-        HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
-        HIT_NODE(agent, Hash40::new("arml"), *HIT_STATUS_XLU);
-    }
-    frame(agent.lua_state_agent, 14.0);
-    if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 19.0, 90, 84, 0, 40, 8.8, 0.0, 28.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 19.0, 90, 84, 0, 40, 7.0, 0.0, 18.0, 5.0, Some(0.0), Some(18.0), Some(-5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-    }
-    wait(agent.lua_state_agent, 2.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
-    }
-}
-
 //Up Smash Effect
 unsafe extern "C" fn ssbexo_donkey_up_smash_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
@@ -182,8 +131,6 @@ unsafe extern "C" fn ssbexo_donkey_down_smash_expression(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_donkey_forward_smash_acmd, Low)
-    .game_acmd("game_attackhi4", ssbexo_donkey_up_smash_acmd, Low)
     .effect_acmd("effect_attackhi4", ssbexo_donkey_up_smash_effect, Low)
     .game_acmd("game_attacklw4", ssbexo_donkey_down_smash_acmd, Low)
     .effect_acmd("effect_attacklw4", ssbexo_donkey_down_smash_effect, Low)

@@ -18,9 +18,7 @@ use {
       lua_const::*,
     },
     lua2cpp::L2CFighterCommon,
-    phx::Hash40
-  },
-  smashline::*,
+  }
 };
 
 mod acmd;

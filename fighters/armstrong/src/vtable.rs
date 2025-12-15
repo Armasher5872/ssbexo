@@ -180,8 +180,10 @@ unsafe extern "C" fn armstrong_opff(vtable: u64, fighter: &mut Fighter) {
                                 }
                                 _ => {}
                             }
-                            DamageModule::set_reaction_mul(boma, 0.85/armor_multiplier);
-                            DamageModule::set_no_reaction_mode_status(boma, DamageNoReactionMode{_address: *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER as u8}, armor*armor_multiplier, -1.0, -1);
+                            if charge_frames > 2 {
+                                DamageModule::set_reaction_mul(boma, 0.85/armor_multiplier);
+                                DamageModule::set_no_reaction_mode_status(boma, DamageNoReactionMode{_address: *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER as u8}, armor*armor_multiplier, -1.0, -1);
+                            }
                         }
                         WorkModule::inc_int(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
                     }
@@ -202,8 +204,10 @@ unsafe extern "C" fn armstrong_opff(vtable: u64, fighter: &mut Fighter) {
                         WorkModule::set_float(boma, 1.0+((1.0/14.0)*(charge_frames as f32)), *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);
                         WorkModule::set_float(boma, 1.0+(0.02*(charge_frames as f32)), *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
                         if [hash40("special_s_start"), hash40("special_lw")].contains(&motion_kind) {
-                            DamageModule::set_reaction_mul(boma, 0.85/armor_multiplier);
-                            DamageModule::set_no_reaction_mode_status(boma, DamageNoReactionMode{_address: *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER as u8}, 9.0*armor_multiplier, -1.0, -1);
+                            if charge_frames > 2 {
+                                DamageModule::set_reaction_mul(boma, 0.85/armor_multiplier);
+                                DamageModule::set_no_reaction_mode_status(boma, DamageNoReactionMode{_address: *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER as u8}, 9.0*armor_multiplier, -1.0, -1);
+                            }
                         }
                         WorkModule::inc_int(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
                     }

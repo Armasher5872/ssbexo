@@ -109,7 +109,7 @@ unsafe extern "C" fn wario_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
     let collision_log = log as *mut CollisionLogScuffed;
     let collision_kind = (*collision_log).collision_kind;
     let opponent_object_id = (*collision_log).opponent_object_id;
-    if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 && opponent_object_id != 0 {
+    if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
         let opponent_object = get_battle_object_from_id(opponent_object_id);
         let opponent_battle_object_id = (*opponent_object).battle_object_id;
         if [

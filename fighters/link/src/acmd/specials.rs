@@ -1,25 +1,5 @@
 use super::*;
 
-//Neutral Special Start Expression
-unsafe extern "C" fn ssbexo_link_neutral_special_start_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-        ArticleModule::change_status_exist(agent.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, *WN_LINK_BOW_STATUS_KIND_HAVE);
-    }
-    frame(agent.lua_state_agent, 1.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 20.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_drawhold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-}
-
 //Arrow Fly ACMD
 unsafe extern "C" fn ssbexo_link_bowarrow_fly_acmd(agent: &mut L2CAgentBase) {
     let weapon = get_weapon_common_from_accessor(&mut *(agent.module_accessor));
@@ -53,7 +33,7 @@ unsafe extern "C" fn ssbexo_link_bowarrow_fly_acmd(agent: &mut L2CAgentBase) {
     else {
         if arrow_type == *WN_LINK_BOWARROW_NORMAL_ARROW {
             if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 60, 0, 10, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 30, 0, 10, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_OBJECT);
                 AttackModule::enable_safe_pos(agent.module_accessor);
             }
         }
@@ -169,15 +149,25 @@ unsafe extern "C" fn ssbexo_link_special_hi_acmd(agent: &mut L2CAgentBase) {
         SA_SET(agent, *SITUATION_KIND_AIR);
         KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         GroundModule::correct(agent.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        sv_kinetic_energy!(set_limit_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 2.2);
-        sv_kinetic_energy!(set_stable_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 2.2);
-        sv_kinetic_energy!(set_accel, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.36);
-        sv_kinetic_energy!(set_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
-        sv_kinetic_energy!(set_brake, agent, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.05, 0.0);
+        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN) {
+            sv_kinetic_energy!(set_limit_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 2.2);
+            sv_kinetic_energy!(set_stable_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 2.2);
+            sv_kinetic_energy!(set_accel, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.36);
+            sv_kinetic_energy!(set_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+            sv_kinetic_energy!(set_brake, agent, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.05, 0.0);
+        }
+        else {
+            sv_kinetic_energy!(reset_energy, agent, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, *ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, 0.0, 0.0, 0.0, 0.0, 0.0);
+            sv_kinetic_energy!(reset_energy, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 0.9, 0.0, 0.0, 0.0);
+            sv_kinetic_energy!(set_accel, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.03);
+            WorkModule::sub_int(agent.module_accessor, 30, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
+        }
     }
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
+        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN) {
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
+        }
         ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, true, ArticleOperationTarget(0));
         ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 60, 145, 0, 50, 6.0, 0.0, 4.0, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
@@ -188,10 +178,12 @@ unsafe extern "C" fn ssbexo_link_special_hi_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
-        sv_kinetic_energy!(set_limit_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.3);
-        sv_kinetic_energy!(set_stable_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.3);
-        sv_kinetic_energy!(set_accel, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
-        sv_kinetic_energy!(set_brake, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.0);
+        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN) {
+            sv_kinetic_energy!(set_limit_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.3);
+            sv_kinetic_energy!(set_stable_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.3);
+            sv_kinetic_energy!(set_accel, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
+            sv_kinetic_energy!(set_brake, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.0);
+        }
     }
     frame(agent.lua_state_agent, 25.0);
     if is_excute(agent) {
@@ -750,8 +742,6 @@ unsafe extern "C" fn ssbexo_link_down_special_expression(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .expression_acmd("expression_specialnstart", ssbexo_link_neutral_special_start_expression, Low)
-    .expression_acmd("expression_specialairnstart", ssbexo_link_neutral_special_start_expression, Low)
     .game_acmd("game_specialhi", ssbexo_link_special_hi_acmd, Low)
     .game_acmd("game_specialairhi", ssbexo_link_special_hi_acmd, Low)
     .effect_acmd("effect_specialhi", ssbexo_link_special_hi_effect, Low)

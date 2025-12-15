@@ -117,6 +117,13 @@ unsafe extern "C" fn ssbexo_link_forward_smash_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_link_landing02"));
     }
+    frame(agent.lua_state_agent, 32.0);
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if is_excute(agent) {
+            let thunder_sfx = SoundModule::play_se(agent.module_accessor, Hash40::new("se_common_elec_m_damage"), true, false, false, false, smash::app::enSEType(0));
+            SoundModule::set_se_vol(agent.module_accessor, thunder_sfx as i32, 4.0, 0);
+        }
+    }
 }
 
 //Forward Smash Expression
@@ -302,6 +309,37 @@ unsafe extern "C" fn ssbexo_link_up_smash_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.2);
+    }
+}
+
+//Up Smash Sound
+unsafe extern "C" fn ssbexo_link_up_smash_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 7.0);
+    if is_excute(agent) {
+        STOP_SE(agent, Hash40::new("se_common_smash_start_02"));
+    }
+    wait(agent.lua_state_agent, 3.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_link_rnd_smash_h"));
+        PLAY_SE(agent, Hash40::new("se_common_smashswing_03"));
+        PLAY_SE(agent, Hash40::new("se_link_swing_m"));
+    }
+    wait(agent.lua_state_agent, 14.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_smashswing_03"));
+        PLAY_SE(agent, Hash40::new("se_link_swing_l"));
+    }
+    wait(agent.lua_state_agent, 16.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_smashswing_03"));
+        PLAY_SE(agent, Hash40::new("se_link_swing_ll"));
+    }
+    frame(agent.lua_state_agent, 48.0);
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if is_excute(agent) {
+            let thunder_sfx = SoundModule::play_se(agent.module_accessor, Hash40::new("se_common_elec_m_damage"), true, false, false, false, smash::app::enSEType(0));
+            SoundModule::set_se_vol(agent.module_accessor, thunder_sfx as i32, 4.0, 0);
+        }
     }
 }
 
@@ -581,6 +619,13 @@ unsafe extern "C" fn ssbexo_link_down_smash_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_special_h11"));
     }
+    frame(agent.lua_state_agent, 27.0);
+    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY) {
+        if is_excute(agent) {
+            let thunder_sfx = SoundModule::play_se(agent.module_accessor, Hash40::new("se_common_elec_m_damage"), true, false, false, false, smash::app::enSEType(0));
+            SoundModule::set_se_vol(agent.module_accessor, thunder_sfx as i32, 4.0, 0);
+        }
+    }
 }
 
 //Down Smash Expression
@@ -620,6 +665,7 @@ pub fn install() {
     .expression_acmd("expression_attacks4", ssbexo_link_forward_smash_expression, Low)
     .game_acmd("game_attackhi4", ssbexo_link_up_smash_acmd, Low)
     .effect_acmd("effect_attackhi4", ssbexo_link_up_smash_effect, Low)
+    .sound_acmd("sound_attackhi4", ssbexo_link_up_smash_sound, Low)
     .game_acmd("game_attacklw4charge", ssbexo_link_down_smash_charge_acmd, Low)
     .effect_acmd("effect_attacklw4charge", ssbexo_link_down_smash_charge_effect, Low)
     .sound_acmd("sound_attacklw4charge", ssbexo_link_down_smash_charge_sound, Low)

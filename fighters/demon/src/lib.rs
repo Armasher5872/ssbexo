@@ -1,5 +1,4 @@
 use {
-    common::status::grounded::dash::fgc_dashback_main,
     exo_utils::{
         fighter_common::*,
         status_end_control::*,
@@ -17,10 +16,8 @@ use {
         lib::{
             L2CValue,
             lua_const::*,
-        },
-        lua2cpp::L2CFighterCommon
-    },
-    smashline::*,
+        }
+    }
 };
 
 mod acmd;

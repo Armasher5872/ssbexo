@@ -190,7 +190,7 @@ unsafe extern "C" fn ssbexo_wario_dash_attack_acmd(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("head"), 9.0, 75, 140, 0, 23, 4.8, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("bust"), 9.0, 75, 140, 0, 23, 6.8, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
     }
-    frame(agent.lua_state_agent, 22.0);
+    frame(agent.lua_state_agent, 24.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
     }

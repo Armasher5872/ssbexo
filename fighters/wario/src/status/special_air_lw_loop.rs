@@ -18,7 +18,6 @@ unsafe extern "C" fn wario_special_air_lw_loop_init_status(fighter: &mut L2CFigh
 
 //Aerial Down Special Loop Main Status
 unsafe extern "C" fn wario_special_air_lw_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    GroundModule::set_passable_check(fighter.module_accessor, true);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(wario_special_air_lw_loop_main_loop as *const () as _))
 }
@@ -45,10 +44,7 @@ unsafe extern "C" fn wario_special_air_lw_loop_main_loop(fighter: &mut L2CFighte
         }
     }
     if situation_kind == *SITUATION_KIND_GROUND {
-        println!("Is Grounded");
-        println!("Is Passable Check: {}", GroundModule::is_passable_check(fighter.module_accessor));
-        println!("Is Passable Ground: {}", GroundModule::is_passable_ground(fighter.module_accessor));
-        if GroundModule::is_passable_check(fighter.module_accessor) && GroundModule::is_passable_ground(fighter.module_accessor) {
+        if GroundModule::is_passable_ground(fighter.module_accessor) {
             if stick_y <= pass_stick_y {
                 GroundModule::pass_floor(fighter.module_accessor);
                 SA_SET(fighter, *SITUATION_KIND_AIR);
@@ -67,6 +63,11 @@ unsafe extern "C" fn wario_special_air_lw_loop_main_loop(fighter: &mut L2CFighte
                     sv_kinetic_energy!(controller_set_accel_x_add, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.015);
                     sv_kinetic_energy!(controller_set_accel_x_mul, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.0);
                 }
+            }
+            else {
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+                fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_AIR_LW_LAND.into(), false.into());
             }
         }
         else {

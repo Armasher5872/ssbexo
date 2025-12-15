@@ -1,3 +1,4 @@
+#![allow(improper_ctypes_definitions)] //Addresses warning: `extern` fn uses type `str`, which is not FFI-safe
 use super::*;
 
 pub fn get_fighter_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAccessor) -> &'a mut L2CFighterCommon {
@@ -109,4 +110,33 @@ pub unsafe fn get_article_boma(boma: *mut BattleObjectModuleAccessor, article_ty
 //Gets the article owner boma
 pub unsafe fn get_owner_boma(weapon: &mut L2CAgentBase) -> *mut BattleObjectModuleAccessor {
     return &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
+}
+
+//Handles angling of moves
+pub unsafe extern "C" fn change_angle(fighter: &mut L2CFighterCommon, current_degree: f32, max_degree: f32, motion_kind_max: &str, motion_kind_min: &str) {
+    let frame = MotionModule::frame(fighter.module_accessor);
+    let motion_kind_2nd = MotionModule::motion_kind_2nd(fighter.module_accessor);
+    let rate = MotionModule::rate(fighter.module_accessor);
+    let motion = if current_degree <= 0.0 {hash40(motion_kind_min)} else {hash40(motion_kind_max)};
+    if motion_kind_2nd != motion {
+        if current_degree <= 0.0 {
+            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_min), frame, rate, true, -(current_degree/max_degree));
+            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
+        }
+        else {
+            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_max), frame, rate, true, current_degree/max_degree);
+            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
+        }
+    }
+    else {
+        if current_degree < 0.0 {
+            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
+        }
+        else if current_degree > 0.0 {
+            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
+        }
+        else {
+            MotionModule::set_weight(fighter.module_accessor, 1.0, true);
+        }
+    }
 }

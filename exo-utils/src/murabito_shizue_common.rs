@@ -5,7 +5,7 @@ pub unsafe extern "C" fn ac_common(boma: *mut BattleObjectModuleAccessor) {
     let status_kind = StatusModule::status_kind(boma);
     if status_kind == *FIGHTER_MURABITO_STATUS_KIND_SPECIAL_N_SEARCH {
         let obj_id = WorkModule::get_int(boma, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_TARGET_OBJECT_ID) as u32;
-        if obj_id != *BATTLE_OBJECT_ID_INVALID as u32 || obj_id != 0 {
+        if obj_id != *BATTLE_OBJECT_ID_INVALID as u32 {
             let obj_boma = sv_battle_object::module_accessor(obj_id);
             let obj_kind = smash::app::utility::get_kind(&mut *obj_boma);
             let weapon = get_weapon_common_from_accessor(&mut *obj_boma);

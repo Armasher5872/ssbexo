@@ -283,7 +283,6 @@ unsafe extern "C" fn inkling_opff(_vtable: u64, fighter: &mut Fighter) {
             let rollerink_x_pos_min = rollerink_x_pos-8.0;
             let is_standing_on_roller_ink = current_pos < rollerink_x_pos_max && current_pos > rollerink_x_pos_min;
             if is_standing_on_roller_ink && StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND {
-                println!("Is On Roller Ink");
                 WorkModule::on_flag(boma, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_ON_ROLLER_INK);
                 break;
             }

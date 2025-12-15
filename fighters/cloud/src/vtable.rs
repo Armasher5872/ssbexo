@@ -218,16 +218,12 @@ unsafe extern "C" fn cloud_shield_attack_detection_event(vtable: u64, fighter: &
         let opponent_id = (*collision_log).opponent_battle_object_id;
         let status_kind = StatusModule::status_kind(boma);
         let lr = PostureModule::lr(boma);
-        if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 || opponent_id != 0 {
+        if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 {
             if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
                 if [*FIGHTER_CLOUD_STATUS_KIND_GUARD_ON, *FIGHTER_CLOUD_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
-                    if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 || opponent_id != 0 {
-                        let opponent_boma = sv_battle_object::module_accessor(opponent_id as u32);
-                        let opponent_lr = PostureModule::lr(opponent_boma);
-                        println!("Lr: {}", lr);
-                        println!("Opponent Lr: {}", opponent_lr);
-                        let new_lr = if lr == opponent_lr {if lr == 1.0 {1.0} else {-1.0}} else {if lr == 1.0 {-1.0} else {1.0}};
-                    }
+                    let opponent_boma = sv_battle_object::module_accessor(opponent_id as u32);
+                    let opponent_lr = PostureModule::lr(opponent_boma);
+                    //let new_lr = if lr == opponent_lr {if lr == 1.0 {1.0} else {-1.0}} else {if lr == 1.0 {-1.0} else {1.0}};
                     WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
                 }   
             }

@@ -1,7 +1,6 @@
 use {
     exo_utils::{
         armstrong::*,
-        catch::*,
         fighter_common::*,
         hook::*,
         status_end_control::*,
@@ -24,10 +23,7 @@ use {
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        },
+        lua2cpp::L2CFighterCommon,
         phx::{
             Hash40,
             Vector3f
@@ -36,9 +32,7 @@ use {
     smash2::app::{
         LinkEvent,
         LinkEventCapture
-    },
-    smash_script::*,
-    smashline::*,
+    }
 };
 
 mod acmd;

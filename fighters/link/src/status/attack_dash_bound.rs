@@ -41,11 +41,15 @@ unsafe extern "C" fn link_attack_dash_bound_main_loop(fighter: &mut L2CFighterCo
     0.into()
 }
 
-unsafe extern "C" fn link_attack_dash_bound_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_attack_dash_bound_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
     0.into()
 }
 
-unsafe extern "C" fn link_attack_dash_bound_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_attack_dash_bound_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
+    VisibilityModule::set_int64(fighter.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
     0.into()
 }
 

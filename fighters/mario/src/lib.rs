@@ -1,8 +1,6 @@
 use {
     exo_utils::{
-        check_attack::*,
         fighter_common::*,
-        mario::*,
         status_end_control::*,
     },
     exo_var::{
@@ -15,16 +13,11 @@ use {
             lua_bind::*,
             *
         },
-        hash40,
         lib::{
             L2CValue,
             lua_const::*,
         },
         lua2cpp::L2CFighterCommon
-    },
-    smash_script::{
-        *,
-        macros::*
     },
     smashline::*,
 };

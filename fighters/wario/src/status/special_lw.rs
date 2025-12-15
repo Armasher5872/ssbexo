@@ -45,13 +45,18 @@ unsafe extern "C" fn wario_special_lw_main_loop(fighter: &mut L2CFighterCommon) 
     if !StatusModule::is_changing(fighter.module_accessor) {
         if situation_kind == *SITUATION_KIND_GROUND
         && prev_situation_kind == *SITUATION_KIND_AIR {
-            if GroundModule::is_passable_check(fighter.module_accessor) && GroundModule::is_passable_ground(fighter.module_accessor) {
+            if GroundModule::is_passable_ground(fighter.module_accessor) {
                 if stick_y <= pass_stick_y {
                     GroundModule::pass_floor(fighter.module_accessor);
                     SA_SET(fighter, *SITUATION_KIND_AIR);
                     KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
                     GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
                     fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_AIR_LW_LOOP.into(), false.into());
+                }
+                else {
+                    GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+                    fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_AIR_LW_LAND.into(), false.into());
                 }
             }
             else {

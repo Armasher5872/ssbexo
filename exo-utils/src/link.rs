@@ -15,9 +15,8 @@ impl FuseType {
     pub const ELEMENTAL: i32 = 2;
 }
 
-pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAccessor, item_kind: i32, fuse_kind: i32, trait_type: i32) {
-    if (![*ITEM_KIND_NONE, *ITEM_KIND_ASSIST, *ITEM_KIND_LINKARROW].contains(&item_kind) && ![*ITEM_TRAIT_FLAG_NONE, *ITEM_TRAIT_FLAG_SHOOT, *ITEM_TRAIT_FLAG_SWING].contains(&trait_type)) 
-    || [*ITEM_KIND_BANANAGUN, *ITEM_KIND_FIREFLOWER].contains(&item_kind) {
+pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAccessor, item_kind: i32, fuse_kind: i32) {
+    if ![*ITEM_KIND_NONE, *ITEM_KIND_ASSIST, *ITEM_KIND_LINKARROW].contains(&item_kind) || [*ITEM_KIND_BANANAGUN, *ITEM_KIND_FIREFLOWER].contains(&item_kind) {
         WorkModule::on_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
     }
     else {
@@ -95,34 +94,6 @@ pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAcce
     }
 }
 
-pub unsafe extern "C" fn link_change_angle(fighter: &mut L2CFighterCommon, current_degree: f32, max_degree: f32, motion_kind_max: &str, motion_kind_min: &str) {
-    let frame = MotionModule::frame(fighter.module_accessor);
-    let motion_kind_2nd = MotionModule::motion_kind_2nd(fighter.module_accessor);
-    let rate = MotionModule::rate(fighter.module_accessor);
-    let motion = if current_degree <= 0.0 {hash40(motion_kind_min)} else {hash40(motion_kind_max)};
-    if motion_kind_2nd != motion {
-        if current_degree <= 0.0 {
-            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_min), frame, rate, true, -(current_degree/max_degree));
-            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
-        }
-        else {
-            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_max), frame, rate, true, current_degree/max_degree);
-            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
-        }
-    }
-    else {
-        if current_degree < 0.0 {
-            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
-        }
-        else if current_degree > 0.0 {
-            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
-        }
-        else {
-            MotionModule::set_weight(fighter.module_accessor, 1.0, true);
-        }
-    }
-}
-
 pub unsafe extern "C" fn find_ascendable_ground(boma: *mut BattleObjectModuleAccessor, pos_x: f32, min_pos_y: f32, pos_y: f32, height: f32) -> f32 {
     let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
     if GroundModule::ray_check_hit_pos(boma, &Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: -100.0}, ground_hit_pos, true) {
@@ -133,5 +104,60 @@ pub unsafe extern "C" fn find_ascendable_ground(boma: *mut BattleObjectModuleAcc
     }
     else {
         return pos_y;
+    }
+}
+
+#[derive(Default, Copy, Clone)]
+pub struct LinkStamina {
+    pub number: u64,
+    pub value: i32,
+    pub enabled: bool,
+}
+
+impl LinkStamina {
+    pub fn new(layout_data: u64) -> Self {
+        let number = get_pane_from_layout(layout_data, "link_wheel\0").expect("Couldn't find link_wheel");
+        return Self {
+            number: number,
+            value: 0,
+            enabled: false
+        };
+    }
+    pub fn reset(&mut self) {
+        set_pane_visible(self.number, true);
+        self.value = 0;
+    }
+    pub fn set_meter_info(&mut self, value: i32) {
+        self.value = value;
+    }
+    pub fn update_icon(&mut self) {
+        let offset = match self.value {
+            0 => 0.0,
+            1 => 1.0,
+            2 => 2.0,
+            3 => 3.0,
+            4 => 4.0,
+            5 => 5.0,
+            6 => 6.0,
+            7 => 7.0,
+            8 => 8.0,
+            9 => 9.0,
+            10 => 10.0,
+            11 => 11.0,
+            12 => 12.0,
+            13 => 13.0,
+            14 => 14.0,
+            15 => 15.0,
+            16 => 16.0,
+            _ => -1.0
+        };
+        if offset < 0.0 {
+            set_pane_visible(self.number, false);
+            return;
+        }
+        let offset = offset/17.0;
+        let len = 1.0/17.0;
+        set_pane_visible(self.number, true);
+        set_tex_coords(self.number, [offset, 0.0, offset+len, 0.0, offset, 1.0, offset+len, 1.0]);
     }
 }

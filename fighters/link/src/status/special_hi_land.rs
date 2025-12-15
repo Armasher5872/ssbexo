@@ -33,7 +33,8 @@ unsafe extern "C" fn link_special_hi_glide_land_main_loop(fighter: &mut L2CFight
     0.into()
 }
 
-unsafe extern "C" fn link_special_hi_glide_land_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_special_hi_glide_land_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_int(fighter.module_accessor, 300, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
     0.into()
 }
 

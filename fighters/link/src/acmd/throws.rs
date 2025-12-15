@@ -20,27 +20,6 @@ unsafe extern "C" fn ssbexo_link_grab_acmd(agent: &mut L2CAgentBase) {
 }
 
 
-//Standing Grab Expression
-unsafe extern "C" fn ssbexo_link_grab_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 1.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 5.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 40.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-}
-
 //Dash Grab ACMD
 unsafe extern "C" fn ssbexo_link_dash_grab_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
@@ -59,30 +38,6 @@ unsafe extern "C" fn ssbexo_link_dash_grab_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
-//Dash Grab Expression
-unsafe extern "C" fn ssbexo_link_dash_grab_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-    frame(agent.lua_state_agent, 2.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 8.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 14.0);
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
-    }
-    frame(agent.lua_state_agent, 42.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-}
-
 //Pivot Grab ACMD
 unsafe extern "C" fn ssbexo_link_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
@@ -98,42 +53,6 @@ unsafe extern "C" fn ssbexo_link_pivot_grab_acmd(agent: &mut L2CAgentBase) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
         GrabModule::set_rebound(agent.module_accessor, false);
-    }
-}
-
-//Pivot Grab Expression
-unsafe extern "C" fn ssbexo_link_pivot_grab_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-    frame(agent.lua_state_agent, 3.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 9.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 14.0);
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
-    }
-    frame(agent.lua_state_agent, 40.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_normal") as i64);
-    }
-}
-
-//Grab Pull Expression
-unsafe extern "C" fn ssbexo_link_grab_pull_expression(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 1.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
     }
 }
 
@@ -357,12 +276,8 @@ pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_catch", ssbexo_link_grab_acmd, Low)
-    .expression_acmd("expression_catch", ssbexo_link_grab_expression, Low)
     .game_acmd("game_catchdash", ssbexo_link_dash_grab_acmd, Low)
-    .expression_acmd("expression_catchdash", ssbexo_link_dash_grab_expression, Low)
     .game_acmd("game_catchturn", ssbexo_link_pivot_grab_acmd, Low)
-    .expression_acmd("expression_catchturn", ssbexo_link_pivot_grab_expression, Low)
-    .expression_acmd("expression_catchpull", ssbexo_link_grab_pull_expression, Low)
     .game_acmd("game_throwb", ssbexo_link_back_throw_acmd, Low)
     .effect_acmd("effect_throwb", ssbexo_link_back_throw_effect, Low)
     .sound_acmd("sound_throwb", ssbexo_link_back_throw_sound, Low)
