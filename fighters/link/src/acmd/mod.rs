@@ -1,8 +1,4 @@
 use {
-    exo_utils::{
-        fighter_common::*,
-        weapon::*,
-    },
     exo_var::{
         consts::*,
         link::*,
@@ -21,7 +17,6 @@ use {
         lua2cpp::*,
         phx::{
             Hash40,
-            Vector2f,
             Vector3f
         }
     },

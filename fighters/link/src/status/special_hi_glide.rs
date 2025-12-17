@@ -53,7 +53,9 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
             WorkModule::set_float(fighter.module_accessor, special_hi_degree+change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
         }
         if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) || GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
-            fighter.change_status(FIGHTER_STATUS_KIND_ATTACH_WALL.into(), false.into());
+            if GroundModule::is_attachable(fighter.module_accessor, GroundTouchFlag(*GROUND_TOUCH_FLAG_LEFT)) || GroundModule::is_attachable(fighter.module_accessor, GroundTouchFlag(*GROUND_TOUCH_FLAG_RIGHT)) {
+                fighter.change_status(FIGHTER_STATUS_KIND_ATTACH_WALL.into(), false.into());
+            }
         }
     }
     if stick_x*lr < -0.25 {
@@ -61,7 +63,9 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
             WorkModule::set_float(fighter.module_accessor, special_hi_degree-change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
         }
         if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) || GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
-            fighter.change_status(FIGHTER_STATUS_KIND_ATTACH_WALL.into(), false.into());
+            if GroundModule::is_attachable(fighter.module_accessor, GroundTouchFlag(*GROUND_TOUCH_FLAG_LEFT)) || GroundModule::is_attachable(fighter.module_accessor, GroundTouchFlag(*GROUND_TOUCH_FLAG_RIGHT)) {
+                fighter.change_status(FIGHTER_STATUS_KIND_ATTACH_WALL.into(), false.into());
+            }
         }
     }
     change_angle(fighter, special_hi_degree, max_degree, "special_hi_glide_f", "special_hi_glide_b");

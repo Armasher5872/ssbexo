@@ -112,10 +112,9 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
     }
     else {
         if [hash40("attack_lw4_hold_walk_f"), hash40("attack_lw4_hold_walk_b")].contains(&motion_kind) {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
-            fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_HI.into(), false.into());
+            fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_END.into(), false.into());
         }
         else {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);

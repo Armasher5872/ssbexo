@@ -80,13 +80,10 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
             if defender_object_id == owner_id {
                 if owner_kind == *FIGHTER_KIND_LINK {
                     let fuse_item_id = WorkModule::get_int(attacker_boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-                    if fuse_item_id != *BATTLE_OBJECT_ID_INVALID as u32 && fuse_item_id != 0 && sv_battle_object::is_active(fuse_item_id) {
-                        let item_boma = smash::app::sv_battle_object::module_accessor(fuse_item_id);
+                    let item_boma = smash::app::sv_battle_object::module_accessor(fuse_item_id);
+                    if fuse_item_id != *BATTLE_OBJECT_ID_INVALID as u32 && sv_battle_object::is_active(fuse_item_id) {
                         LinkModule::remove_model_constraint(item_boma, true);
-                        if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
-                            LinkModule::unlink_all(item_boma);
-                            StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
-                        }
+                        StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
                     }
                 }
             }

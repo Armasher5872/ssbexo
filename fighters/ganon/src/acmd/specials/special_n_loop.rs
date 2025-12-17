@@ -1,16 +1,7 @@
 use super::*;
 
-//Grounded Neutral Special Loop ACMD
-unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_loop_acmd(_agent: &mut L2CAgentBase) {}
-
-//Aerial Neutral Special Loop ACMD
-unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_loop_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 31.0);
-    if is_excute(agent) {
-        sv_kinetic_energy!(set_accel, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.03833);
-        sv_kinetic_energy!(set_limit_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.65);
-    }
-}
+//Neutral Special Loop ACMD
+unsafe extern "C" fn ssbexo_ganon_neutral_special_loop_acmd(_agent: &mut L2CAgentBase) {}
 
 //Grounded Neutral Special Loop Effect
 unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_loop_effect(_agent: &mut L2CAgentBase) {}
@@ -24,11 +15,7 @@ unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_loop_effect(agent: &mut
 }
 
 //Neutral Special Loop Sound
-unsafe extern "C" fn ssbexo_ganon_neutral_special_loop_sound(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_special_n04"));
-    }
-}
+unsafe extern "C" fn ssbexo_ganon_neutral_special_loop_sound(_agent: &mut L2CAgentBase) {}
 
 //Neutral Special Loop Expression
 unsafe extern "C" fn ssbexo_ganon_neutral_special_loop_expression(agent: &mut L2CAgentBase) {
@@ -42,14 +29,30 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_loop_expression(agent: &mut L2
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn", ssbexo_ganon_grounded_neutral_special_loop_acmd, Low)
+    .game_acmd("game_specialn", ssbexo_ganon_neutral_special_loop_acmd, Low)
     .effect_acmd("effect_specialn", ssbexo_ganon_grounded_neutral_special_loop_effect, Low)
     .sound_acmd("sound_specialn", ssbexo_ganon_neutral_special_loop_sound, Low)
     .expression_acmd("expression_specialn", ssbexo_ganon_neutral_special_loop_expression, Low)
-    .game_acmd("game_specialairn", ssbexo_ganon_aerial_neutral_special_loop_acmd, Low)
+    .game_acmd("game_specialairn", ssbexo_ganon_neutral_special_loop_acmd, Low)
     .effect_acmd("effect_specialairn", ssbexo_ganon_aerial_neutral_special_loop_effect, Low)
     .sound_acmd("sound_specialairn", ssbexo_ganon_neutral_special_loop_sound, Low)
     .expression_acmd("expression_specialairn", ssbexo_ganon_neutral_special_loop_expression, Low)
+    .game_acmd("game_specialnmaxstart", ssbexo_ganon_neutral_special_loop_acmd, Low)
+    .effect_acmd("effect_specialnmaxstart", ssbexo_ganon_grounded_neutral_special_loop_effect, Low)
+    .sound_acmd("sound_specialnmaxstart", ssbexo_ganon_neutral_special_loop_sound, Low)
+    .expression_acmd("expression_specialnmaxstart", ssbexo_ganon_neutral_special_loop_expression, Low)
+    .game_acmd("game_specialairnmaxstart", ssbexo_ganon_neutral_special_loop_acmd, Low)
+    .effect_acmd("effect_specialairnmaxstart", ssbexo_ganon_aerial_neutral_special_loop_effect, Low)
+    .sound_acmd("sound_specialairnmaxstart", ssbexo_ganon_neutral_special_loop_sound, Low)
+    .expression_acmd("expression_specialairnmaxstart", ssbexo_ganon_neutral_special_loop_expression, Low)
+    .game_acmd("game_specialnmax", ssbexo_ganon_neutral_special_loop_acmd, Low)
+    .effect_acmd("effect_specialnmax", ssbexo_ganon_grounded_neutral_special_loop_effect, Low)
+    .sound_acmd("sound_specialnmax", ssbexo_ganon_neutral_special_loop_sound, Low)
+    .expression_acmd("expression_specialnmax", ssbexo_ganon_neutral_special_loop_expression, Low)
+    .game_acmd("game_specialairnmax", ssbexo_ganon_neutral_special_loop_acmd, Low)
+    .effect_acmd("effect_specialairnmax", ssbexo_ganon_aerial_neutral_special_loop_effect, Low)
+    .sound_acmd("sound_specialairnmax", ssbexo_ganon_neutral_special_loop_sound, Low)
+    .expression_acmd("expression_specialairnmax", ssbexo_ganon_neutral_special_loop_expression, Low)
     .install()
     ;
 }

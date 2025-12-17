@@ -35,8 +35,7 @@ unsafe extern "C" fn link_special_hi_end_main_loop(fighter: &mut L2CFighterCommo
     0.into()
 }
 
-unsafe extern "C" fn link_special_hi_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPIN_ATTACK_CAN_FALL);
+unsafe extern "C" fn link_special_hi_end_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
