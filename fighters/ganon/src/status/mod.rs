@@ -34,6 +34,7 @@ use {
 };
 
 mod appeal_attack;
+mod appeal;
 mod catch_pull;
 mod catch_wait;
 mod special_hi_cling;
@@ -50,6 +51,7 @@ mod volley_summon;
 
 pub fn install() {
     appeal_attack::install();
+    appeal::install();
     catch_pull::install();
     catch_wait::install();
     special_hi_cling::install();

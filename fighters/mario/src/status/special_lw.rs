@@ -30,8 +30,6 @@ unsafe extern "C" fn mario_special_lw_init_status(fighter: &mut L2CFighterCommon
 //Down Special Main Status
 unsafe extern "C" fn mario_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
-    PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
-    PostureModule::update_rot_y_lr(fighter.module_accessor);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw"), L2CValue::Hash40s("special_air_lw"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(mario_special_lw_main_loop as *const () as _))
 }

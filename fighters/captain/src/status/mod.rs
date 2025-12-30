@@ -26,6 +26,7 @@ mod catch_pull;
 mod catch;
 mod special_lw_wall_end;
 mod special_lw;
+mod special_n;
 
 pub fn install() {
     attack_hi3::install();
@@ -40,4 +41,5 @@ pub fn install() {
     catch::install();
     special_lw_wall_end::install();
     special_lw::install();
+    special_n::install();
 }

@@ -128,7 +128,7 @@ unsafe extern "C" fn ssbexo_link_jab_2_expression(agent: &mut L2CAgentBase) {
 
 //Jab 3 ACMD
 unsafe extern "C" fn ssbexo_link_jab_3_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("sword2"), 5.0, 42, 65, 0, 70, 3.5, 7.8, 0.0, -2.5, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("sword2"), 5.0, 42, 65, 0, 70, 4.0, 1.8, 0.0, -2.5, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);

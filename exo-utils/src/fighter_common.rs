@@ -23,18 +23,21 @@ pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleO
         *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, 
         *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE
     ];
+    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_X, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_Y, *FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL];
     let ints = [
         *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
     };
+    for y in 0..floats.len() {
+        WorkModule::set_float(boma, 0.0, floats[y]);
+    }
     for z in 0..ints.len() {
         WorkModule::set_int(boma, 0, ints[z]);
     }
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     WorkModule::set_float(boma, ratio, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
 }
@@ -57,15 +60,18 @@ pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModu
     let ints = [
         *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
+    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_X, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_Y, *FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
     };
+    for y in 0..floats.len() {
+        WorkModule::set_float(boma, 0.0, floats[y]);
+    }
     for z in 0..ints.len() {
         WorkModule::set_int(boma, 0, ints[z]);
     }
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     WorkModule::set_float(boma, ratio, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
 }
@@ -87,15 +93,18 @@ pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModu
     let ints = [
         *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER, *FIGHTER_INSTANCE_WORK_ID_INT_SHIELD_EFFECT_ID, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX
     ];
+    let floats = [*FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_X, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_Y, *FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL];
     for x in 0..flags.len() {
         WorkModule::off_flag(boma, flags[x]);
     };
+    for y in 0..floats.len() {
+        WorkModule::set_float(boma, 0.0, floats[y]);
+    }
     for z in 0..ints.len() {
         WorkModule::set_int(boma, 0, ints[z]);
     }
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     WorkModule::set_float(boma, ratio, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_INSTANCE_WORK_ID_FLOAT_ATTACK_DASH_FALL_SPEED_Y_MUL);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
 }
@@ -113,30 +122,30 @@ pub unsafe fn get_owner_boma(weapon: &mut L2CAgentBase) -> *mut BattleObjectModu
 }
 
 //Handles angling of moves
-pub unsafe extern "C" fn change_angle(fighter: &mut L2CFighterCommon, current_degree: f32, max_degree: f32, motion_kind_max: &str, motion_kind_min: &str) {
-    let frame = MotionModule::frame(fighter.module_accessor);
-    let motion_kind_2nd = MotionModule::motion_kind_2nd(fighter.module_accessor);
-    let rate = MotionModule::rate(fighter.module_accessor);
+pub unsafe extern "C" fn change_angle(boma: *mut BattleObjectModuleAccessor, current_degree: f32, max_degree: f32, motion_kind_max: &str, motion_kind_min: &str) {
+    let frame = MotionModule::frame(boma);
+    let motion_kind_2nd = MotionModule::motion_kind_2nd(boma);
+    let rate = MotionModule::rate(boma);
     let motion = if current_degree <= 0.0 {hash40(motion_kind_min)} else {hash40(motion_kind_max)};
     if motion_kind_2nd != motion {
         if current_degree <= 0.0 {
-            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_min), frame, rate, true, -(current_degree/max_degree));
-            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
+            MotionModule::add_motion_2nd(boma, Hash40::new(motion_kind_min), frame, rate, true, -(current_degree/max_degree));
+            MotionModule::set_weight(boma, 1.0+(current_degree/max_degree), true);
         }
         else {
-            MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new(motion_kind_max), frame, rate, true, current_degree/max_degree);
-            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
+            MotionModule::add_motion_2nd(boma, Hash40::new(motion_kind_max), frame, rate, true, current_degree/max_degree);
+            MotionModule::set_weight(boma, 1.0-(current_degree/max_degree), true);
         }
     }
     else {
         if current_degree < 0.0 {
-            MotionModule::set_weight(fighter.module_accessor, 1.0+(current_degree/max_degree), true);
+            MotionModule::set_weight(boma, 1.0+(current_degree/max_degree), true);
         }
         else if current_degree > 0.0 {
-            MotionModule::set_weight(fighter.module_accessor, 1.0-(current_degree/max_degree), true);
+            MotionModule::set_weight(boma, 1.0-(current_degree/max_degree), true);
         }
         else {
-            MotionModule::set_weight(fighter.module_accessor, 1.0, true);
+            MotionModule::set_weight(boma, 1.0, true);
         }
     }
 }

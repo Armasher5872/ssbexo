@@ -59,6 +59,7 @@ mod special_hi_ascend_start;
 mod special_hi_ascend;
 mod special_hi_drop;
 mod special_hi_end;
+mod special_hi_glide_start;
 mod special_hi_glide;
 mod special_hi_land;
 mod special_hi_launch;
@@ -93,6 +94,7 @@ pub fn install() {
     special_hi_ascend::install();
     special_hi_drop::install();
     special_hi_end::install();
+    special_hi_glide_start::install();
     special_hi_glide::install();
     special_hi_land::install();
     special_hi_launch::install();

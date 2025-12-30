@@ -20,8 +20,6 @@ unsafe extern "C" fn ganon_special_hi_init_status(fighter: &mut L2CFighterCommon
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_STARTED_GROUNDED);
     }
-    PostureModule::set_lr(fighter.module_accessor, 1.0);
-    PostureModule::update_rot_y_lr(fighter.module_accessor);
     0.into()
 }
 

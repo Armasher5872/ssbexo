@@ -5,28 +5,20 @@ unsafe extern "C" fn ssbexo_link_special_hi_hold_acmd(_agent: &mut L2CAgentBase)
 
 //Up Special Hold Effect
 unsafe extern "C" fn ssbexo_link_special_hi_hold_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), 0, 0.0, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, false);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 1.0);
-        LAST_EFFECT_SET_RATE(agent, 0.5);
-    }
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), 0, 0.0, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, false);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 1.0);
-        LAST_EFFECT_SET_RATE(agent, 0.5);
-    }
     frame(agent.lua_state_agent, 28.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_ground_shockwave"), Hash40::new("top"), 0, 0.0, 0, 0, 0, 0, 1.25, 0, 0, 0, 0, 0, 0, false);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 1.0);
-        LAST_EFFECT_SET_RATE(agent, 0.5);
+        EFFECT_OFF_KIND(agent, Hash40::new("link_revali_gale_wind"), true, true);
+        EFFECT(agent, Hash40::new("link_revali_gale_wind"), Hash40::new("top"), 0, 0, 0, 0, 90, 270, 1.0, 0, 0, 0, 0, 0, 0, false);
     }
 }
 
 //Up Special Hold Sound
-unsafe extern "C" fn ssbexo_link_special_hi_hold_sound(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_link_special_hi_hold_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 28.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_link_special_h01"));
+    }
+}
 
 //Up Special Hold Expression
 unsafe extern "C" fn ssbexo_link_special_hi_hold_expression(agent: &mut L2CAgentBase) {

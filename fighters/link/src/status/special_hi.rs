@@ -10,10 +10,8 @@ unsafe extern "C" fn link_special_hi_init_status(fighter: &mut L2CFighterCommon)
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if situation_kind == *SITUATION_KIND_AIR {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0);
-        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.5);
-        sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.005);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.15);
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -49,7 +47,12 @@ unsafe extern "C" fn link_special_hi_main_loop(fighter: &mut L2CFighterCommon) -
             fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD.into(), false.into());
         }
         else {
-            fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH.into(), false.into());
+            if situation_kind == *SITUATION_KIND_GROUND {
+                fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH.into(), false.into());
+            }
+            else {
+                fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START.into(), false.into());
+            }
         }
         return 1.into();
     }
@@ -62,7 +65,7 @@ unsafe extern "C" fn link_special_hi_exec_status(_fighter: &mut L2CFighterCommon
 
 unsafe extern "C" fn link_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH].contains(&status_kind) {
+    if ![*FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH].contains(&status_kind) {
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
     }
     0.into()
@@ -70,7 +73,7 @@ unsafe extern "C" fn link_special_hi_end_status(fighter: &mut L2CFighterCommon) 
 
 unsafe extern "C" fn link_special_hi_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH].contains(&status_kind) {
+    if ![*FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH].contains(&status_kind) {
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
     }
     0.into()

@@ -11,6 +11,7 @@ pub mod dolly;
 pub mod donkey;
 pub mod edge;
 pub mod element;
+pub mod fox;
 pub mod ganon;
 pub mod gaogaen;
 pub mod gekkouga;

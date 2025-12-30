@@ -27,11 +27,14 @@ unsafe extern "C" fn link_var(boma: &mut BattleObjectModuleAccessor) {
 }
 
 unsafe extern "C" fn link_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
-        WorkModule::set_int(fighter.module_accessor, 300, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    if situation_kind != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    }
+    if situation_kind == *SITUATION_KIND_GROUND {
+        WorkModule::set_int(fighter.module_accessor, 300, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
     }
     0.into()
 }
@@ -94,7 +97,9 @@ unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                 }
             }
         }
-        if [*FIGHTER_STATUS_KIND_ATTACH_WALL, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE].contains(&status_kind) {
+        if [
+            *FIGHTER_STATUS_KIND_ATTACH_WALL, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE
+        ].contains(&status_kind) {
             UiManager::set_link_wheel_enable(entry_id, true);
             UiManager::set_link_wheel_info(entry_id, wheel_value);
         }

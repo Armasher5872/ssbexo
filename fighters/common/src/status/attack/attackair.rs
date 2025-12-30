@@ -44,65 +44,11 @@ unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon
     true.into()
 }
 
-//Sub Attack Air Inherit Jump Aerial Motion Uniq Process Init, inherits the initial motion of double jump
-#[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_init)]
-unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    if ![*FIGHTER_KIND_YOSHI, *FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&fighter_kind) {
-        call_original!(fighter)
-    }
-    else {
-        let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-        let frame = MotionModule::frame(fighter.module_accessor);
-        fighter.sub_attack_air_kind();
-        if [hash40("jump_aerial_f"), hash40("jump_aerial_b")].contains(&motion_kind) {
-            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_IGNORE_2ND_MOTION) {
-                MotionModule::add_motion_2nd(fighter.module_accessor, Hash40::new_raw(motion_kind), frame, 1.0, false, 1.0);
-                MotionModule::set_weight(fighter.module_accessor, 1.0, true);
-                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) || frame < 2.0 {
-                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND);
-                } 
-                else {
-                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-                }
-            }
-            else {
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-                KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-            }
-        } 
-        else {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-        }
-        let _ = fighter.sub_attack_air_uniq_process_init();
-        0.into()
-    }
-}
-
-//Sub Attack Air Inherit Jump Aerial Motion Uniq Process Exec, inherits the momentum of double jump
-#[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec)]
-unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let fighter_kind = fighter.global_table[FIGHTER_KIND].get_i32();
-    if KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND 
-    && [*FIGHTER_KIND_YOSHI, *FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&fighter_kind)
-    && MotionModule::frame_2nd(fighter.module_accessor) >= 2.0
-    && fighter.global_table[CURRENT_FRAME].get_f32() <= 5.0
-    && ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
-    }
-    call_original!(fighter)
-}
-
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
             status_pre_attackair,
-            status_attackair_main_common,
-            sub_attack_air_inherit_jump_aerial_motion_uniq_process_init,
-            sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec
+            status_attackair_main_common
         );
     }
 }

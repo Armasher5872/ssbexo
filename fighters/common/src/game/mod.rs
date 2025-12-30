@@ -73,7 +73,7 @@ mod effect;
 mod energy;
 mod frame;
 mod menu;
-pub mod misc;
+mod misc;
 mod music;
 mod ui;
 

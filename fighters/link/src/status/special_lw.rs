@@ -20,6 +20,14 @@ unsafe extern "C" fn link_special_lw_pre_status(fighter: &mut L2CFighterCommon) 
                         return 1.into();
                     }
                 }
+                else {
+                    if !smash::app::lua_bind::Item::is_had(lua_bind_item, false) {
+                        if item_status_kind != *ITEM_STATUS_KIND_STANDBY {
+                            StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_LINK_STATUS_KIND_SPECIAL_LW_BLAST);
+                            return 1.into();
+                        }
+                    }
+                }
             }
             else {
                 if !smash::app::lua_bind::Item::is_had(lua_bind_item, false) {

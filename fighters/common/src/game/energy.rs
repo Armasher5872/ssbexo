@@ -68,9 +68,7 @@ unsafe extern "C" fn control_update(energy: &mut FighterKineticEnergyControl, bo
     let backup_max = energy.speed_max;
     let backup_brake = energy.speed_brake;
     let jump_speed_x_max = run_speed_max*ratio;
-    let accel_add_x = if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR 
-    && WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) 
-    && !WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL) {
+    let accel_add_x = if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR && WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) && !WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL) {
         stick.x = 0.0;
         0.0
     } 
@@ -399,9 +397,6 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
 
 #[skyline::hook(offset = 0x6d4bc0)]
 unsafe extern "C" fn control_setup(energy: &mut FighterKineticEnergyControl, reset_type: EnergyControllerResetType, initial_speed: &Vector3f, _unk: u64, boma: &mut BattleObjectModuleAccessor) {
-    let fighter = get_fighter_common_from_accessor(&mut *boma);
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let kind = smash::app::utility::get_kind(boma);
     let dash_speed = WorkModule::get_param_float(boma, hash40("dash_speed"), 0);
     let air_speed_x_stable = WorkModule::get_param_float(boma, hash40("air_speed_x_stable"), 0);
@@ -422,12 +417,6 @@ unsafe extern "C" fn control_setup(energy: &mut FighterKineticEnergyControl, res
     energy.accel_add_y = 0.0;
     energy.lr = PostureModule::lr(boma);
     energy.unk[3] = 1;
-    //The following permits characters to retain momentum during specials
-    if situation_kind == *SITUATION_KIND_AIR {
-        if kind == *FIGHTER_KIND_CAPTAIN && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
-            WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-        }
-    }
     use EnergyControllerResetType::*;
     match reset_type {
         FallAdjust | FallAdjustNoCap | StopCeil | WallJump => {

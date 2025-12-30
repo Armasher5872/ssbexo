@@ -46,7 +46,10 @@ unsafe extern "C" fn link_mortal_draw_attack_check_attack_status(fighter: &mut L
     let opponent_boma = sv_battle_object::module_accessor(opponent_id);
     if category == *BATTLE_OBJECT_CATEGORY_FIGHTER && collision_kind == *COLLISION_KIND_HIT {
         let opponent_pos = PostureModule::pos_2d(opponent_boma);
-        FighterUtil::request_critical_hit_cut_in_force(fighter.module_accessor, opponent_id, &Vector2f{x: opponent_pos.x, y: opponent_pos.y}, -1, Hash40::new("param_critical"), 0, true, 0, true);
+        if DamageModule::damage(opponent_boma, 0) >= 100.0 {
+            FighterUtil::request_critical_hit_cut_in_force(fighter.module_accessor, opponent_id, &Vector2f{x: opponent_pos.x, y: opponent_pos.y}, -1, Hash40::new("param_critical"), 0, true, 0, true);
+            StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_DEAD, false);
+        }
     }
     0.into()
 }

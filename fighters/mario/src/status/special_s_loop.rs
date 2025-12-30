@@ -92,7 +92,7 @@ unsafe extern "C" fn mario_special_s_loop_main_loop(fighter: &mut L2CFighterComm
     if special_s_degree > -max_degree {
         WorkModule::set_float(fighter.module_accessor, special_s_degree-change_degree_per_frame, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_DEGREE);
     }
-    change_angle(fighter, special_s_degree, max_degree, "special_s_loop_down", "special_s_loop_down");
+    change_angle(fighter.module_accessor, special_s_degree, max_degree, "special_s_loop_down", "special_s_loop_down");
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_MARIO_STATUS_KIND_SPECIAL_S_LOOP.into(), false.into());
         return 1.into();

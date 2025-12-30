@@ -68,12 +68,12 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
             }
         }
     }
-    change_angle(fighter, special_hi_degree, max_degree, "special_hi_glide_f", "special_hi_glide_b");
-    WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
-    if MotionModule::is_end(fighter.module_accessor) {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_glide"), 0.0, 1.0, false, 0.0, false, false);
-        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, Hash40::new("glide"), false, -1.0);
+    change_angle(fighter.module_accessor, special_hi_degree, max_degree, "special_hi_glide_f", "special_hi_glide_b");
+    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL) {
+        let parasail_boma = get_article_boma(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL);
+        change_angle(parasail_boma, special_hi_degree, max_degree, "glide_f", "glide_b");
     }
+    WorkModule::sub_int(fighter.module_accessor, 1, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
     0.into()
 }
 
