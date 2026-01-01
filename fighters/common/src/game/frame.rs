@@ -18,7 +18,7 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
     if [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&status_kind) {
         DamageModule::set_reaction_mul(boma, 0.77);
     }
-    if status_kind == *FIGHTER_STATUS_KIND_BURY_JUMP || (WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) && [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&prev_status_kind)) {
+    if status_kind == *FIGHTER_STATUS_KIND_BURY_JUMP || (is_damaged(boma) && [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&prev_status_kind)) {
         DamageModule::set_reaction_mul(boma, 1.0);
     }
 	//Final Zoom Effect Clearing

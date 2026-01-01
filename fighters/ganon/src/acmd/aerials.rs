@@ -126,9 +126,6 @@ unsafe extern "C" fn ssbexo_ganon_fair_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), 0, 12, 6, 180, -180, 100, 1.1, false);
         LAST_EFFECT_SET_RATE(agent, 1.5);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 20.0);
     if is_excute(agent) {
@@ -364,16 +361,10 @@ unsafe extern "C" fn ssbexo_ganon_uair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 16, 2.0, 0, 30, 90, 1.1, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 16, 2.0, 0, 110, 90, 1.1, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 22.0);
     if is_excute(agent) {
@@ -412,12 +403,7 @@ unsafe extern "C" fn ssbexo_ganon_dair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 2, 0, -90, 0, 0, 1.8, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_PARTICLE_SET_COLOR(agent, 1, 0, 0);
-        }
-        else {
-            LAST_PARTICLE_SET_COLOR(agent, 0.8, 0.6, 3);
-        }
+        LAST_PARTICLE_SET_COLOR(agent, 0.8, 0.6, 3);
     }
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {

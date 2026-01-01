@@ -6,6 +6,7 @@ use {
         battle_object::*,
         cloud_meter::*,
         create_item_param::*,
+        damage::*,
         extern_func::*,
         fighter_common::*,
         hook::*,
@@ -61,8 +62,7 @@ use {
         ops::{
             Deref,
             DerefMut
-        },
-        path::Path
+        }
     }
 };
 

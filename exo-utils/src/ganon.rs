@@ -23,19 +23,6 @@ pub unsafe extern "C" fn volley_removal(weapon: &mut L2CWeaponCommon) {
     weapon.pop_lua_stack(1);
 }
 
-pub unsafe extern "C" fn has_totk_skin(boma: *mut BattleObjectModuleAccessor) -> bool {
-    let color_slots = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
-    let file_check = Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c00/def_ganon_tear_col.nutexb").is_file()
-    || Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c01/def_ganon_tear_col.nutexb").is_file()
-    || Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c02/def_ganon_tear_col.nutexb").is_file()
-    || Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c03/def_ganon_tear_col.nutexb").is_file()
-    || Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c04/def_ganon_tear_col.nutexb").is_file()
-    || Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c05/def_ganon_tear_col.nutexb").is_file()
-    || Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c06/def_ganon_tear_col.nutexb").is_file()
-    || Path::new("sd:/ultimate/mods/Super Smash Bros EXO (Cosmetics Only)/fighter/ganon/model/body/c07/def_ganon_tear_col.nutexb").is_file();
-    return file_check && (5..=7).contains(&color_slots);
-}
-
 //Don't do this
 pub unsafe extern "C" fn volley_hitbox_check(weapon: *mut smash::app::Weapon, agent: &mut L2CFighterCommon, total_hit_count: i32, first_hit_id: i32, second_hit_id: i32, third_hit_id: i32, fourth_hit_id: i32) {
     let boma = (*weapon).battle_object.module_accessor;

@@ -2,6 +2,7 @@ use {
     exo_utils::{
         buttons::*,
         cloud_meter::*,
+        damage::*,
         extern_func::*,
         fighter_common::*,
         flydata::*,

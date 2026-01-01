@@ -1,5 +1,11 @@
 use super::*;
 
+/*
+First Instance Flag: 0x200000E1
+First Instance Float: 0x4D
+First Instance Int: 0x100000C0
+*/
+
 pub const FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER: LuaConst = LuaConst::new(0x4D);
 pub const FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER: LuaConst = LuaConst::new(0x4E);
 pub const FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_CHARGE_START: LuaConst = LuaConst::new(0x4F);

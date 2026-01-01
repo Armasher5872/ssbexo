@@ -6,13 +6,7 @@ unsafe extern "C" fn ganon_volley_summon_pre_status(weapon: &mut L2CWeaponCommon
 }
 
 unsafe extern "C" fn ganon_volley_summon_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_boma = get_owner_boma(weapon);
-    if has_totk_skin(owner_boma) {
-        ModelModule::set_scale(weapon.module_accessor, 0.8);
-    }
-    else {
-        ModelModule::set_scale(weapon.module_accessor, 1.0);
-    }
+    ModelModule::set_scale(weapon.module_accessor, 1.0);
     KineticModule::unable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     WorkModule::set_int(weapon.module_accessor, 20, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(weapon.module_accessor, 20, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
@@ -20,13 +14,7 @@ unsafe extern "C" fn ganon_volley_summon_init_status(weapon: &mut L2CWeaponCommo
 }
 
 unsafe extern "C" fn ganon_volley_summon_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let owner_boma = get_owner_boma(weapon);
-    if has_totk_skin(owner_boma) {
-        MotionModule::change_motion(weapon.module_accessor, Hash40::new("summon_dragon"), 0.0, 1.0, false, 0.0, false, false);
-    }
-    else {
-        MotionModule::change_motion(weapon.module_accessor, Hash40::new("summon_boar"), 0.0, 1.0, false, 0.0, false, false);
-    }
+    MotionModule::change_motion(weapon.module_accessor, Hash40::new("summon_boar"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(ganon_volley_summon_main_loop as *const () as _))
 }
 

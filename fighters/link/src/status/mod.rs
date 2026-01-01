@@ -26,8 +26,7 @@ use {
         phx::{
             Hash40,
             Vector2f,
-            Vector3f,
-            Vector4f
+            Vector3f
         }
     },
     smash_script::{
@@ -54,9 +53,6 @@ mod boomerang_fly;
 mod boomerang_turn;
 mod mortal_draw_attack;
 mod mortal_draw_loop;
-mod special_hi_ascend_end;
-mod special_hi_ascend_start;
-mod special_hi_ascend;
 mod special_hi_drop;
 mod special_hi_end;
 mod special_hi_glide_start;
@@ -89,9 +85,6 @@ pub fn install() {
     boomerang_turn::install();
     mortal_draw_attack::install();
     mortal_draw_loop::install();
-    special_hi_ascend_end::install();
-    special_hi_ascend_start::install();
-    special_hi_ascend::install();
     special_hi_drop::install();
     special_hi_end::install();
     special_hi_glide_start::install();

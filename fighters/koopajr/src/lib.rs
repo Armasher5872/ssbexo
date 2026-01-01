@@ -2,6 +2,7 @@ use {
   exo_utils::{
     attack::*,
     collision_struct::*,
+    damage::*,
     fighter_common::*,
     ganon::*,
     hook::*,

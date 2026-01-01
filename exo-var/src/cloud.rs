@@ -1,5 +1,11 @@
 use super::*;
 
+/*
+First Instance Flag: 0x200000ED
+First Instance Float: 0x50
+First Instance Int: 0x100000C7
+*/
+
 pub const FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE: LuaConst = LuaConst::new(0x200000ED);
 pub const FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER: LuaConst = LuaConst::new(0x200000EE);
 pub const FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_DECIDE: LuaConst = LuaConst::new(0x200000EF);

@@ -1,5 +1,11 @@
 use super::*;
 
+/*
+First Instance Flag: 0x200000E1
+First Instance Float: 0x4D
+First Instance Int: 0x100000C0
+*/
+
 pub const FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY: LuaConst = LuaConst::new(0x2);
 pub const FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_HAS_ACTIVE_VOLLEY: LuaConst = LuaConst::new(0x200000E2);
 pub const FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED: LuaConst = LuaConst::new(0x200000E3);

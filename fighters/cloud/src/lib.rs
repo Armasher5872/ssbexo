@@ -2,6 +2,7 @@ use {
   exo_utils::{
     cloud::*,
     collision_struct::*,
+    damage::*,
     fighter_common::*,
     hook::*,
     shielddata_struct::*,

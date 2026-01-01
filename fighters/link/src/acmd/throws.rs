@@ -72,8 +72,8 @@ unsafe extern "C" fn ssbexo_link_back_throw_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         MotionModule::set_weight(capture_boma, 1.0, false);
         LinkModule::set_model_constraint_pos_ort(capture_boma, *LINK_NO_CAPTURE, Hash40::new_raw(node), Hash40::new("throw"), (*CONSTRAINT_FLAG_ORIENTATION | *CONSTRAINT_FLAG_POSITION | *CONSTRAINT_FLAG_OFFSET_ROT | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32, true);
-        ATTACK(agent, 0, 0, Hash40::new("sword2"), 7.0, 20, 100, 0, 55, 4.8, 7.8, 0.0, 0.0, None, None, None, 0.8, 1.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("sword2"), 7.0, 20, 100, 0, 55, 4.8, 2.0, 0.0, 0.0, None, None, None, 0.8, 1.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("sword2"), 7.0, 20, 100, 0, 55, 4.8, 7.8, 0.0, 0.0, None, None, None, 0.8, 1.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("sword2"), 7.0, 20, 100, 0, 55, 4.8, 2.0, 0.0, 0.0, None, None, None, 0.8, 1.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         AttackModule::set_catch_only_all(agent.module_accessor, true, false);
         CHECK_FINISH_CAMERA(agent, -18, 12);
     }
@@ -226,7 +226,7 @@ unsafe extern "C" fn ssbexo_link_up_throw_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_throw_01"));
     }
-    wait(agent.lua_state_agent, 13.0);
+    frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_swing_l"));
         PLAY_SEQUENCE(agent, Hash40::new("seq_link_rnd_attack"));

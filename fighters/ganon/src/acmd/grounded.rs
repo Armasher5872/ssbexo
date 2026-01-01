@@ -20,9 +20,6 @@ unsafe extern "C" fn ssbexo_ganon_jab_1_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 8.0, 8.0, 0, 0, 0, 0.6, 0, 0, 0, 0, 0, 0, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
@@ -203,22 +200,12 @@ unsafe extern "C" fn ssbexo_ganon_dash_attack_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 13.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 9, 2, 0, 180, 0, 1.5, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_PARTICLE_SET_COLOR(agent, 1, 0, 0);
-        }
-        else {
-            LAST_PARTICLE_SET_COLOR(agent, 0.8, 0.6, 3);
-        }
+        LAST_PARTICLE_SET_COLOR(agent, 0.8, 0.6, 3);
     }
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 9, 2, 0, 180, 0, 1.5, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_PARTICLE_SET_COLOR(agent, 1, 0, 0);
-        }
-        else {
-            LAST_PARTICLE_SET_COLOR(agent, 0.8, 0.6, 3);
-        }
+        LAST_PARTICLE_SET_COLOR(agent, 0.8, 0.6, 3);
     }
     frame(agent.lua_state_agent, 25.0);
     if is_excute(agent) {

@@ -28,12 +28,7 @@ unsafe extern "C" fn link_special_hi_launch_main_status(fighter: &mut L2CFighter
 unsafe extern "C" fn link_special_hi_launch_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let pos_x = PostureModule::pos_x(fighter.module_accessor);
-    let pos_y = PostureModule::pos_y(fighter.module_accessor);
     let special_hi_charge_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
-    let height = WorkModule::get_param_float(fighter.module_accessor, hash40("height"), 0);
-    let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
-    let mut min_pos_y = pos_y;
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -62,18 +57,6 @@ unsafe extern "C" fn link_special_hi_launch_main_loop(fighter: &mut L2CFighterCo
         sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.03);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_JUMP);
     }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND) && special_hi_charge_frame < 10 {
-        if GroundModule::ray_check_hit_pos(fighter.module_accessor, &Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: 100.0}, ground_hit_pos, true) {
-            min_pos_y = ground_hit_pos.y;
-        }
-        let ground = find_ascendable_ground(fighter.module_accessor, pos_x, min_pos_y+height, pos_y+100.0, height);
-        if pos_y < ground && ground < pos_y+100.0 {
-            WorkModule::set_float(fighter.module_accessor, pos_y, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_START_Y);
-            WorkModule::set_float(fighter.module_accessor, ground+5.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_ASCEND_TARGET_Y);
-            fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_ASCEND_START.into(), false.into());
-            return 0.into();
-        }
-    }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE.into(), false.into());
     }
@@ -85,14 +68,14 @@ unsafe extern "C" fn link_special_hi_launch_exec_status(_fighter: &mut L2CFighte
 }
 
 unsafe extern "C" fn link_special_hi_launch_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
+    EFFECT_OFF_KIND(fighter, Hash40::new("link_revali_gale_wind"), true, true);
     0.into()
 }
 
 unsafe extern "C" fn link_special_hi_launch_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
+    EFFECT_OFF_KIND(fighter, Hash40::new("link_revali_gale_wind"), true, true);
     0.into()
 }
 

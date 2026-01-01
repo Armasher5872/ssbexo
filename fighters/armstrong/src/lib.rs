@@ -1,6 +1,7 @@
 use {
     exo_utils::{
         armstrong::*,
+        damage::*,
         fighter_common::*,
         hook::*,
         status_end_control::*,

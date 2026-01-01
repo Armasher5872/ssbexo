@@ -56,23 +56,30 @@ unsafe extern "C" fn link_special_hi_loop_main_loop(fighter: &mut L2CFighterComm
         }
         else {
             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN) {
-                fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START.into(), false.into());
+                if situation_kind == *SITUATION_KIND_GROUND {
+                    fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH.into(), false.into());
+                }
+                else {
+                    fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START.into(), false.into());
+                }
             }
             else {
                 fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH.into(), false.into());
             }
         }
     }
-    if hi_charge_frame >= 80 {
+    if MotionModule::is_end(fighter.module_accessor) {
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN) {
-            fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START.into(), false.into());
+            if situation_kind == *SITUATION_KIND_GROUND {
+                fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH.into(), false.into());
+            }
+            else {
+                fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START.into(), false.into());
+            }
         }
         else {
             fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH.into(), false.into());
         }
-    }
-    if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD.into(), false.into());
         return 1.into();
     }
     0.into()  

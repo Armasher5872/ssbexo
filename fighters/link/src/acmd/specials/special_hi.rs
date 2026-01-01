@@ -12,17 +12,12 @@ unsafe extern "C" fn ssbexo_link_special_hi_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
         ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 60, 145, 0, 50, 6.0, 0.0, 4.0, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 1.0, 60, 145, 0, 50, 6.0, 0.0, 4.0, 5.0, None, None, None, 1.0, 0.6, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
-    frame(agent.lua_state_agent, 25.0);
-    if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_CAN_ASCEND);
     }
     frame(agent.lua_state_agent, 28.0);
     if is_excute(agent) {
@@ -34,19 +29,14 @@ unsafe extern "C" fn ssbexo_link_special_hi_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_link_special_hi_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("link_revali_gale_wind"), true, true);
-        EFFECT(agent, Hash40::new("link_revali_gale_wind"), Hash40::new("top"), 0, 0, 0, 0, 90, 270, 1.0, 0, 0, 0, 0, 0, 0, false);
+        EFFECT_FLIP(agent, Hash40::new("linl_revali_gale_wind"), Hash40::new("link_revali_gale_wind"), Hash40::new("top"), 0, 8, 0, 0, 90, 270, 2.0, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 13, 0, -90, 0, 0, 0.625, true, *EF_FLIP_YZ);
         LAST_PARTICLE_SET_COLOR(agent, 0.25, 1.00, 0.5);
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_vector"), Hash40::new("sys_vector"), Hash40::new("top"), 0, 25, 0, -90, 0, 0, 2.0, true, *EF_FLIP_YZ);
-        LAST_EFFECT_SET_COLOR(agent, 0, 2, 0.5);
-        LAST_EFFECT_SET_SCALE_W(agent, 1.0, 3.25, 1);
-    }
-    frame(agent.lua_state_agent, 25.0); 
-    if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("sys_vector"), false, false);
+        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
 }
 

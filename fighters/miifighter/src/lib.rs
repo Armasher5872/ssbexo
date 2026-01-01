@@ -12,6 +12,7 @@ use {
   },
   exo_utils::{
     collision_struct::*,
+    damage::*,
     fighter_common::*,
     status_end_control::*,
     vector::*,

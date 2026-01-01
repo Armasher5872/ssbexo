@@ -1,6 +1,7 @@
 use {
   exo_utils::{
     check_attack::*,
+    damage::*,
     fighter_common::*,
     sheik::*,
   },

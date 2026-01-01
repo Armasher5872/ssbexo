@@ -3,10 +3,10 @@ use super::*;
 const PIKACHU_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xf2a520; //Shared
 const PIKACHU_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const PIKACHU_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xf2a530; //Shared
-const PIKACHU_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xf2a630; //Shared
+const PIKACHU_VTABLE_ON_ATTACK_OFFSET: usize = 0xf2ae00; //Shared
 
 unsafe extern "C" fn pikachu_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED) {
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
     }
@@ -54,32 +54,24 @@ unsafe extern "C" fn pikachu_death_initialization(vtable: u64, fighter: &mut Fig
     original!()(vtable, fighter)
 }
 
-//Pikachu Once Per Fighter Frame
-#[skyline::hook(offset = PIKACHU_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn pikachu_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_PIKACHU as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let status_kind = StatusModule::status_kind(boma);
-        let frame = MotionModule::frame(boma);
-        if status_kind == *FIGHTER_STATUS_KIND_ATTACK {
-            if frame < 1.0 {
-                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
-            }
-            if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD) && AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-                WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_ADD);
+//Pikachu On Attack
+#[skyline::hook(offset = PIKACHU_VTABLE_ON_ATTACK_OFFSET)]
+unsafe extern "C" fn pikachu_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    let status_kind = StatusModule::status_kind(boma);
+    let collision_log = log as *mut CollisionLogScuffed;
+    let collision_kind = (*collision_log).collision_kind;
+    let opponent_object_id = (*collision_log).opponent_object_id;
+    let opponent_object = get_battle_object_from_id(opponent_object_id);
+    let opponent_battle_object_id = (*opponent_object).battle_object_id;
+    if [1, 2].contains(&collision_kind) {
+        if opponent_battle_object_id >> 0x1C == 0 {
+            if status_kind == *FIGHTER_STATUS_KIND_ATTACK {
                 WorkModule::inc_int(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
             }
-            if WorkModule::get_int(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT) > 1 {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_ATTACK_DASH, true);
-                WorkModule::on_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
-            }
-        };
-        if status_kind != *FIGHTER_STATUS_KIND_ATTACK {
-            WorkModule::set_int(boma, 0, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
-            WorkModule::off_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_ATTACK_11_DASH);
         }
     }
-    original!()(vtable, fighter)
+    call_original!(vtable, fighter, log)
 }
 
 pub fn install() {
@@ -87,6 +79,6 @@ pub fn install() {
         pikachu_start_initialization,
         pikachu_reset_initialization,
         pikachu_death_initialization,
-        pikachu_opff
+        pikachu_on_attack
     );
 }

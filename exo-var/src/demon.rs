@@ -1,5 +1,11 @@
 use super::*;
 
+/*
+First Instance Flag: 0x200000F7
+First Instance Float: 0x4F
+First Instance Int: 0x100000CF
+*/
+
 pub const FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_IS_VALID_RAGE_DRIVE: LuaConst = LuaConst::new(0x200000F7);
 pub const FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ONE_TWO_PUNCH: LuaConst = LuaConst::new(0x200000F8);
 pub const FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEMON_SLAYER: LuaConst = LuaConst::new(0x200000F9);

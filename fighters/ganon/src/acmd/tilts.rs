@@ -19,9 +19,6 @@ unsafe extern "C" fn ssbexo_ganon_forward_tilt_effect(agent: &mut L2CAgentBase) 
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, -10, 0, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
@@ -53,9 +50,6 @@ unsafe extern "C" fn ssbexo_ganon_forward_tilt_hi_effect(agent: &mut L2CAgentBas
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 7.8, -10, -32, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
@@ -69,9 +63,6 @@ unsafe extern "C" fn ssbexo_ganon_forward_tilt_lw_effect(agent: &mut L2CAgentBas
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 15.8, -10, 28, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
@@ -303,9 +294,6 @@ unsafe extern "C" fn ssbexo_ganon_down_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), -1, 11.5, 0, 45, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, true);
-        if has_totk_skin(agent.module_accessor) {
-            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.0, 0.0);
-        }
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {

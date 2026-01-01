@@ -1,5 +1,6 @@
 use {
   exo_utils::{
+    damage::*,
     fighter_common::*,
     status_end_control::*,
     ui_manager::*,

@@ -1,5 +1,11 @@
 use super::*;
 
+/*
+First Instance Flag: 0x200000E3
+First Instance Float: 0x53
+First Instance Int: 0x100000C2
+*/
+
 pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL: LuaConst = LuaConst::new(0x1);
 pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON: LuaConst = LuaConst::new(0x2);
 pub const FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK: LuaConst = LuaConst::new(0x200000E3);

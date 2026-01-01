@@ -46,9 +46,6 @@ unsafe fn status_damageair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     }
     asdi_check(fighter);
     asdi_function(fighter);
-    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT) {
-        WorkModule::set_flag(fighter.module_accessor, true, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED);
-    }
     if situation_kind == *SITUATION_KIND_GROUND {
         if !StopModule::is_damage(fighter.module_accessor) {
             if 0 >= hit_stop_frame {
@@ -82,10 +79,7 @@ unsafe fn status_damageair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_DamageAir)]
 unsafe fn status_end_damageair(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let flags = [
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGED_PREVENT, *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, 
-        *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE
-    ];
+    let flags = [ *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE];
     for x in 0..flags.len() {
         WorkModule::off_flag(fighter.module_accessor, flags[x]);
     }
