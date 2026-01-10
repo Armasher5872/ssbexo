@@ -44,7 +44,7 @@ unsafe extern "C" fn daisy_kassar_vtable_on_despawn_event_offset(_vtable: u64, w
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x51face0).data(daisy_kassar_vtable_on_despawn_event_offset as u64);
+    let _ = skyline::patching::Patch::in_text(0x51face0).data(daisy_kassar_vtable_on_despawn_event_offset as *const () as u64);
     skyline::install_hooks!(
         daisy_start_initialization,
         daisy_reset_initialization,

@@ -1,5 +1,6 @@
 use {
     exo_utils::{
+        collision_struct::*,
         fighter_common::*,
         status_end_control::*,
     },

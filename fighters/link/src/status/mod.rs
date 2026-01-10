@@ -6,6 +6,7 @@ use {
         extern_func::*,
         fighter_common::*,
         link::*,
+        vector::*,
         weapon::*,
     },
     exo_var::{

@@ -25,6 +25,7 @@ unsafe extern "C" fn wario_special_s_loop_main_status(fighter: &mut L2CFighterCo
 
 unsafe extern "C" fn wario_special_s_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
     let lr = PostureModule::lr(fighter.module_accessor);
     WorkModule::inc_int(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
@@ -51,7 +52,13 @@ unsafe extern "C" fn wario_special_s_loop_main_loop(fighter: &mut L2CFighterComm
             fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_WALL_END.into(), false.into());
             return 0.into();
         }
-    } 
+    }
+    if timer < 15 {
+        if stick_y < -0.66 {
+            fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_SLIDE.into(), false.into());
+            return 0.into();
+        }
+    }
     if MotionModule::is_end(fighter.module_accessor) {
         if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_END.into(), false.into());

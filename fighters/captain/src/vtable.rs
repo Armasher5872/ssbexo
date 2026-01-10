@@ -42,11 +42,15 @@ unsafe extern "C" fn captain_death_initialization(vtable: u64, fighter: &mut Fig
 unsafe extern "C" fn captain_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
+    let collision_log = log as *mut CollisionLogScuffed;
+    let collision_kind = (*collision_log).collision_kind;
     let status_kind = agent.global_table[STATUS_KIND].get_i32();
     let situation_kind = agent.global_table[SITUATION_KIND].get_i32();
     if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW && situation_kind == *SITUATION_KIND_AIR {
-        WorkModule::on_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HIT_JUMP);
-        StatusModule::change_status_request(boma, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_WALL_END, false);
+        if collision_kind == 1 {
+            WorkModule::on_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HIT_JUMP);
+            StatusModule::change_status_request(boma, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_WALL_END, false);
+        }
     }
     call_original!(vtable, fighter, log)
 }

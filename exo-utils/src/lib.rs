@@ -2,7 +2,6 @@
 use {
     bitflags::bitflags,
     crate::{
-        armstrong::*,
         battle_object::*,
         cloud_meter::*,
         create_item_param::*,
@@ -90,6 +89,7 @@ pub mod fighter_common;
 pub mod flydata;
 pub mod ganon;
 pub mod gekkouga;
+pub mod glide;
 pub mod hook;
 pub mod ice_climber_meter;
 pub mod ike;
@@ -100,6 +100,7 @@ pub mod knockback;
 pub mod link;
 pub mod littlemac;
 pub mod mariod_meter;
+pub mod metaknight;
 pub mod miifighter;
 pub mod murabito_shizue_common;
 pub mod pfushigisou;

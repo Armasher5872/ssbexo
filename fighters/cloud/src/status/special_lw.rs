@@ -83,6 +83,11 @@ unsafe extern "C" fn cloud_special_lw_main_loop(fighter: &mut L2CFighterCommon) 
 }
 
 unsafe extern "C" fn cloud_special_lw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
+    0.into()
+}
+
+unsafe extern "C" fn cloud_special_lw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if status_kind != *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_LW_LIMIT_BREAK {
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
@@ -92,11 +97,6 @@ unsafe extern "C" fn cloud_special_lw_end_status(fighter: &mut L2CFighterCommon)
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
         }
     }
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
-    0.into()
-}
-
-unsafe extern "C" fn cloud_special_lw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
     0.into()
 }

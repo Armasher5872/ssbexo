@@ -28,8 +28,6 @@ unsafe extern "C" fn ssbexo_link_special_hi_acmd(agent: &mut L2CAgentBase) {
 //Up Special Launch Effect
 unsafe extern "C" fn ssbexo_link_special_hi_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        EFFECT_OFF_KIND(agent, Hash40::new("link_revali_gale_wind"), true, true);
-        EFFECT_FLIP(agent, Hash40::new("linl_revali_gale_wind"), Hash40::new("link_revali_gale_wind"), Hash40::new("top"), 0, 8, 0, 0, 90, 270, 2.0, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
     frame(agent.lua_state_agent, 8.0);
@@ -37,6 +35,22 @@ unsafe extern "C" fn ssbexo_link_special_hi_effect(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 13, 0, -90, 0, 0, 0.625, true, *EF_FLIP_YZ);
         LAST_PARTICLE_SET_COLOR(agent, 0.25, 1.00, 0.5);
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+    }
+    frame(agent.lua_state_agent, 16.0);
+    if is_excute(agent) {
+        EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+    }
+    frame(agent.lua_state_agent, 24.0);
+    if is_excute(agent) {
+        EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+    }
+    frame(agent.lua_state_agent, 32.0);
+    if is_excute(agent) {
+        EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+    }
+    frame(agent.lua_state_agent, 40.0);
+    if is_excute(agent) {
+        EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
 }
 

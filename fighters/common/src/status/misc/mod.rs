@@ -1,6 +1,13 @@
 use {
-    exo_utils::fighter_common::*,
-    exo_var::globals::*,
+    exo_utils::{
+        fighter_common::*,
+        glide::*,
+        vector::*,
+    },
+    exo_var::{
+        consts::*,
+        globals::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -8,6 +15,7 @@ use {
         },
         hash40,
         lib::{
+            L2CAgent,
             L2CValue,
             lua_const::*,
         },
@@ -17,6 +25,7 @@ use {
         },
         phx::{
             Hash40,
+            Vector2f,
             Vector3f
         }
     },
@@ -24,10 +33,17 @@ use {
         macros::*,
         *
     },
+    smashline::*,
 };
 
+mod glide_end;
+mod glide_start;
+mod glide;
 mod rebirth;
 
 pub fn install() {
+    glide_end::install();
+    glide_start::install();
+    glide::install();
     rebirth::install();
 }

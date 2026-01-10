@@ -24,6 +24,7 @@ use {
         globals::*,
         ike::*,
         link::*,
+        metaknight::*,
         pfushigisou::*,
         variables::*,
     },

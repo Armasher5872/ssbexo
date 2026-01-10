@@ -61,6 +61,7 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
     let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
+    let owner_agent = get_fighter_common_from_accessor(&mut *owner_boma);
     if attacker_category == *BATTLE_OBJECT_CATEGORY_WEAPON {
         if defender_category == *BATTLE_OBJECT_CATEGORY_ITEM {
             if attacker_kind == *WEAPON_KIND_LINK_BOOMERANG {
@@ -94,6 +95,13 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
                     if owner_frame >= 40.0 {
                         if owner_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
                             CancelModule::enable_cancel(owner_boma);
+                            let owner_situation_kind = StatusModule::situation_kind(owner_boma);
+                            if owner_situation_kind == *SITUATION_KIND_GROUND {
+                                owner_agent.sub_wait_ground_check_common(false.into());
+                            }
+                            else {
+                                owner_agent.sub_air_check_fall_common();
+                            }
                         }
                     }
                 }

@@ -174,6 +174,11 @@ unsafe extern "C" fn koopajr_cannonball_on_attack(vtable: u64, weapon: *mut smas
             );
         }
     }
+    if owner_kind == *FIGHTER_KIND_METAKNIGHT {
+        EffectModule::req(boma, Hash40::new("sys_erace_smoke"), &Vector3f{x: pos.x, y: pos.y, z: pos.z}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
+        EffectModule::kill_kind(boma, Hash40::new("metaknight_beam"), false, false);
+        *(weapon as *mut bool).add(0x90) = false;
+    }
     if owner_kind == *FIGHTER_KIND_IKE {
         EffectModule::req(boma, Hash40::new("ike_counter_attack"), &Vector3f{x: pos.x, y: pos.y, z: pos.z}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
         *(weapon as *mut bool).add(0x90) = false;
@@ -299,10 +304,10 @@ pub fn install() {
     //Fuck it we ball type code (Patches the initialization of Bowser Jr's Cannonball modules to instead use Palutena's Reflection Board Module Initialization so that the former can call to ReflectorModule functions correctly)
     let initialize_reflectormodule = unsafe {skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64+0x33b9830};
     let _ = skyline::patching::Patch::in_text(0x519ab68).data(initialize_reflectormodule);
-    let _ = skyline::patching::Patch::in_text(0x51d8348).data(koopajr_cannonball_reflector_clean_event as u64);
-    let _ = skyline::patching::Patch::in_text(0x51d83e8).data(koopajr_cannonball_on_attack as u64);
-    let _ = skyline::patching::Patch::in_text(0x51d8400).data(koopajr_cannonball_on_reflect_event as u64);
-    let _ = skyline::patching::Patch::in_text(0x51d8468).data(koopajr_cannonball_on_reflection_event as u64);
+    let _ = skyline::patching::Patch::in_text(0x51d8348).data(koopajr_cannonball_reflector_clean_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x51d83e8).data(koopajr_cannonball_on_attack as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x51d8400).data(koopajr_cannonball_on_reflect_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x51d8468).data(koopajr_cannonball_on_reflection_event as *const () as u64);
 	skyline::install_hooks!(
         koopajr_start_initialization,
         koopajr_reset_initialization,

@@ -159,8 +159,7 @@ unsafe extern "C" fn littlemac_on_search(vtable: u64, fighter: &mut Fighter, log
 #[skyline::hook(offset = LITTLEMAC_VTABLE_ON_DAMAGE_OFFSET)]
 unsafe extern "C" fn littlemac_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    let log = *(on_damage as *const u64).add(0x10/0x8);
-    let damage = *((log as *const u64).add(0x4) as *const f32);
+    let damage = *((*(on_damage as *const u64).add(0x10/0x8)) as *const f32).add(0x4/0x4);
     if WorkModule::is_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_HAS_STAR) {
         WorkModule::add_float(boma, damage, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_STAR_DAMAGE);
     }

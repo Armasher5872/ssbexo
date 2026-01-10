@@ -20,6 +20,10 @@ unsafe extern "C" fn link_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE_ID);
     WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
     WorkModule::set_int(boma, 300, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
+    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_1);
+    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_2);
+    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_3);
+    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_4);
 }
 
 unsafe extern "C" fn link_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {

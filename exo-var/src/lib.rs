@@ -29,6 +29,7 @@ pub mod lucario;
 pub mod luigi;
 pub mod mario;
 pub mod mariod;
+pub mod metaknight;
 pub mod miifighter;
 pub mod murabito;
 pub mod pfushigisou;

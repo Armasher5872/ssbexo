@@ -4,6 +4,10 @@ use super::*;
 First Instance Flag: 0x200000E3
 First Instance Float: 0x53
 First Instance Int: 0x100000C2
+
+First Cannonball Instance Flag: 0x2000000A
+First Cannonball Instance Float: 0x5
+First Cannonball Instance Int: 0x1000000D
 */
 
 pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL: LuaConst = LuaConst::new(0x1);

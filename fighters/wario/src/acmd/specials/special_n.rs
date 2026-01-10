@@ -2,8 +2,8 @@ use super::*;
 
 //Neutral Special ACMD
 unsafe extern "C" fn ssbexo_wario_neutral_special_acmd(agent: &mut L2CAgentBase) {
-    FT_MOTION_RATE(agent, 13.0/14.0);
-    frame(agent.lua_state_agent, 14.0);
+    FT_MOTION_RATE(agent, 11.0/12.0);
+    frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         FT_MOTION_RATE(agent, 1.0);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 4.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
@@ -12,7 +12,7 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_acmd(agent: &mut L2CAgentBase)
         search!(agent, *MA_MSC_CMD_SEARCH_SET_OPPONENT, 0, 0, *COLLISION_TARGET_PROPERTY, *COLLISION_PROPERTY_MASK_REFLECT);
         CATCH(agent, 0, Hash40::new("top"), 8.0, 0.0, 8.0, 10.0, None, None, None, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_START, *COLLISION_SITUATION_MASK_GA);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
         search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
