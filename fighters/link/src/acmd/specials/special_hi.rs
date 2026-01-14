@@ -71,10 +71,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_expression(agent: &mut L2CAgentBase)
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
         VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-    }
-    frame(agent.lua_state_agent, 1.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
@@ -83,10 +80,6 @@ unsafe extern "C" fn ssbexo_link_special_hi_expression(agent: &mut L2CAgentBase)
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
-    }
-    frame(agent.lua_state_agent, 18.0);
-    if is_excute(agent) {
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
     }
 }
 
