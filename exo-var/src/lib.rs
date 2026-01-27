@@ -38,5 +38,6 @@ pub mod ryu;
 pub mod samusd;
 pub mod sheik;
 pub mod snake;
+pub mod sonic;
 pub mod variables;
 pub mod wario;

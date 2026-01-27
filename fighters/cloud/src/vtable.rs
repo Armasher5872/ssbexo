@@ -9,8 +9,6 @@ const CLOUD_VTABLE_SHIELD_ATTACK_TRANSITION_EVENT_OFFSET: usize = 0x68d8d0; //Sh
 const CLOUD_VTABLE_ON_DAMAGE_OFFSET: usize = 0x8dd510; //Cloud only
 const CLOUD_LIMIT_MANAGER_OFFSET: usize = 0x8dc160; //Cloud only
 
-static mut BOMA_PTR: u64 = 0;
-
 #[skyline::from_offset(CLOUD_LIMIT_MANAGER_OFFSET)]
 extern "C" fn cloud_limit_manager_call(limit: f32, boma: *mut BattleObjectModuleAccessor, param_3: u64);
 
@@ -51,6 +49,7 @@ unsafe extern "C" fn cloud_end_control(fighter: &mut L2CFighterCommon) -> L2CVal
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
     }
     0.into()
 }
@@ -69,7 +68,6 @@ unsafe extern "C" fn cloud_start_initialization(vtable: u64, fighter: &mut Fight
     agent.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
     agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(cloud_end_control as *const () as _));
     agent.global_table[CHECK_GROUND_GUARD_UNIQ].assign(&L2CValue::Ptr(cloud_check_ground_guard_uniq as *const () as _));
-    BOMA_PTR = boma as u64;
     original!()(vtable, fighter)
 }
 
@@ -318,34 +316,6 @@ unsafe extern "C" fn cloud_limit_manager(limit: f32, boma: *mut BattleObjectModu
     }
 }
 
-//Cloud Display Final Window
-#[skyline::hook(offset = 0x8df300)]
-unsafe extern "C" fn display_final_window(is_visible: bool) {
-    let boma = BOMA_PTR as *mut BattleObjectModuleAccessor;
-    let status_kind = StatusModule::status_kind(boma);
-    let msbt_reader_instance = *((0x52C2420 + skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64) as *const u64);
-    if msbt_reader_instance != 0 {
-        let local_20 = *((msbt_reader_instance.add(1) as *const u64).add(0xbe0/0x8) as *const u64);
-        let vtable_instance = (0x5062AD0+skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64) as *const u64;
-        let other_entry = *((0x532E8B0 + skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as u64)  as *const u64);
-        let compare_1 = if other_entry != 0 {*((other_entry.add(1) as *const u64).add(0x138/0x4) as *const u64)} else {0};
-        let compare_2 = if other_entry != 0 {*((other_entry.add(1) as *const u64).add(0x2B8/0x4) as *const u8)} else {b'\x0b'};
-        if !is_visible {
-            if (local_20 != 0u64 && msbt_vtable_validator(vtable_instance) && other_entry != 0) || (compare_1 == 0 || compare_2 != b'\x0b') {
-                *(((msbt_reader_instance.add(1) as *const u64).add(0xBE0/0x8) as *const u64).add(0x6E0/0x8) as *mut u64).add(0xE0/0x4) = 2;
-                *(((msbt_reader_instance.add(1) as *const u64).add(0xBE0/0x8) as *const u64).add(0x6E0/0x8) as *mut u64).add(0xEC/0x2) = 1;
-            }
-        }
-        else {
-            if (local_20 != 0u64 && msbt_vtable_validator(vtable_instance) && other_entry != 0) || (compare_1 == 0 || compare_2 != b'\x0b') {
-                *(((msbt_reader_instance.add(1) as *const u64).add(0xBE0/0x8) as *const u64).add(0x6E0/0x8) as *mut u64).add(0xE0/0x4) = 2;
-                
-                *(((msbt_reader_instance.add(1) as *const u64).add(0xBE0/0x8) as *const u64).add(0x6E0/0x8) as *mut u64).add(0xEC/0x2) = 0;
-            }
-        }
-    }
-}
-
 pub fn install() {
     //The following nop disables Cloud's Waza Customize being enabled for Neutral Special, thusly preventing Limit Break Neutral Special from being used
     let _ = skyline::patching::Patch::in_text(0x8dd868).nop();
@@ -359,8 +329,7 @@ pub fn install() {
         cloud_on_attack,
         cloud_shield_attack_transition_event,
         cloud_on_damage,
-        cloud_limit_manager,
-        display_final_window
+        cloud_limit_manager
     );
     let _ = skyline::patching::Patch::in_text(0x4F9BA78).data(cloud_shield_attack_detection_event as *const () as u64);
 }

@@ -7,7 +7,8 @@ pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
             ice_climber_meter: [IceClimberMeter::default(); 8],
             mariod_meter: [MarioDMeter::default(); 8],
             cloud_meter: [CloudMeter::default(); 8],
-            link_stamina: [LinkStamina::default(); 8]
+            link_stamina: [LinkStamina::default(); 8],
+            sonic_meter: [SonicMeter::default(); 8]
         }
     )}
 );
@@ -18,7 +19,8 @@ pub struct UiManager {
     pub ice_climber_meter: [IceClimberMeter; 8],
     pub mariod_meter: [MarioDMeter; 8],
     pub cloud_meter: [CloudMeter; 8],
-    pub link_stamina: [LinkStamina; 8]
+    pub link_stamina: [LinkStamina; 8],
+    pub sonic_meter: [SonicMeter; 8]
 }
 
 impl UiManager {
@@ -125,5 +127,21 @@ impl UiManager {
     pub extern "C" fn set_link_wheel_info(entry_id: u32, value: i32) {
         let mut manager = UI_MANAGER.write();
         manager.link_stamina[Self::get_ui_index_from_entry_id(entry_id) as usize].set_meter_info(value);
+    }
+    //Sonic
+    #[export_name = "UiManager__set_sonic_meter_enable"]
+    pub extern "C" fn set_sonic_meter_enable(entry_id: u32, enable: bool) {
+        let mut manager = UI_MANAGER.write();
+        manager.sonic_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_enable(enable);
+    }
+    #[export_name = "UiManager__set_sonic_meter_info"]
+    pub extern "C" fn set_sonic_meter_info(entry_id: u32, percent: f32) {
+        let mut manager = UI_MANAGER.write();
+        manager.sonic_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_percent(percent);
+    }
+    #[export_name = "UiManager__reset_sonic_meter"]
+    pub extern "C" fn reset_sonic_meter(entry_id: u32) {
+        let mut manager = UI_MANAGER.write();
+        manager.sonic_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].reset();
     }
 }

@@ -4,7 +4,7 @@ use super::*;
 unsafe extern "C" fn ssbexo_ganon_volley_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let scale = WorkModule::get_float(agent.module_accessor, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLOAT_DAMAGE_SCALE);
-        ATTACK(agent, 0, 0, Hash40::new("rot"), 3.0+(scale*3.0), 80, 40, 0, 20, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
+        ATTACK(agent, 0, 0, Hash40::new("rot"), 3.0+(scale*3.0), 51, 60, 0, 36, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_NONE);
     }
 }
 

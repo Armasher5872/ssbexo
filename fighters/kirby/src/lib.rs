@@ -2,12 +2,12 @@ use {
   exo_utils::{
     damage::*,
     fighter_common::*,
+    kirby::*,
     status_end_control::*,
   },
   exo_var::{
     consts::*,
     globals::*,
-    kirby::*,
   },
   smash::{
     app::{

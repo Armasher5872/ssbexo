@@ -49,6 +49,13 @@ pub trait LinkUiObject {
     fn is_enabled(&self) -> bool;
 }
 
+pub trait SonicUiObject {
+    fn update(&mut self);
+    fn is_valid(&self) -> bool;
+    fn set_enable(&mut self, enable: bool);
+    fn is_enabled(&self) -> bool;
+}
+
 impl ROBUiObject for RobotMeter {
     fn update(&mut self) {
         self.set_tex_coords();
@@ -210,6 +217,29 @@ impl LinkUiObject for LinkStamina {
         }
         else if !self.enabled {
             self.reset();
+        }
+        self.enabled = enable;
+    }
+    fn is_enabled(&self) -> bool {
+        self.enabled
+    }
+}
+
+impl SonicUiObject for SonicMeter {
+    fn update(&mut self) {
+        self.update_number();
+    }
+    fn is_valid(&self) -> bool {
+        is_pane_valid(self.base_bar) && is_pane_valid(self.bar1) && is_pane_valid(self.bar2)
+    }
+    fn set_enable(&mut self, enable: bool) {
+        if enable && !self.enabled {
+            self.reset();
+        } 
+        else if !enable {
+            set_pane_visible(self.base_bar, false);
+            set_pane_visible(self.bar1, false);
+            set_pane_visible(self.bar2, false);
         }
         self.enabled = enable;
     }

@@ -8,8 +8,8 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 	let agent = get_fighter_common_from_accessor(&mut *boma);
 	let status_kind = agent.global_table[STATUS_KIND].get_i32();
 	let prev_status_kind = agent.global_table[PREV_STATUS_KIND].get_i32();
-	let final_zoom_attacker_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
-	let final_zoom_defender_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
+	let final_zoom_counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
+	let effect_handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
 	//Zair Platform Falling
 	if status_kind == *FIGHTER_STATUS_KIND_AIR_LASSO && prev_status_kind == *FIGHTER_STATUS_KIND_PASS && !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
         GroundModule::set_passable_check(boma, true);
@@ -21,127 +21,117 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
     if status_kind == *FIGHTER_STATUS_KIND_BURY_JUMP || (is_damaged(boma) && [*FIGHTER_STATUS_KIND_BURY, *FIGHTER_STATUS_KIND_BURY_WAIT].contains(&prev_status_kind)) {
         DamageModule::set_reaction_mul(boma, 1.0);
     }
-	//Final Zoom Effect Clearing
-	if final_zoom_attacker_id != *BATTLE_OBJECT_ID_INVALID {
-		let attacker_battle_object = *get_battle_object_from_id(final_zoom_attacker_id as u32);
-		let attacker_boma = attacker_battle_object.module_accessor;
-		let attacker_agent = get_fighter_common_from_accessor(&mut *attacker_boma);
-		let counter = WorkModule::get_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
-		if final_zoom_defender_id != *BATTLE_OBJECT_ID_INVALID {
-			let defender_battle_object = *get_battle_object_from_id(final_zoom_defender_id as u32);
-			let defender_boma = defender_battle_object.module_accessor;
-			let defender_agent = get_fighter_common_from_accessor(&mut *defender_boma);
-			if counter > 0 {
-				if counter == 80 {
-					if WorkModule::is_flag(defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_ZOOM_LAST_STOCK) {
-						set_stage_visibility(attacker_boma, 1);
-						set_vis_hud(true);
-					}
-				}
-				if counter <= 40 {
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_finishhit"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_mario_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_donkey_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_link_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_samus_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_samusd_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_yoshi_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_kirby_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pikachu_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_luigi_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_ness_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_captain_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_purin_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_peach_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_daisy_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_koopa_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_popo_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_sheik_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_zelda_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_mariod_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pichu_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_marth_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_lucina_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_younglink_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_ganon_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_mewtwo_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_roy_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_chrom_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_gamewatch_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_metaknight_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pit_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pitb_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_szerosuit_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_wario_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_snake_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_ike_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_ptrainer_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_diddy_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_lucas_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_sonic_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_dedede_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pikmin_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_lucario_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_robot_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_toonlink_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_murabito_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_rockman_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_wiifit_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_rosetta_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_littlemac_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_gekkouga_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_palutena_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pacman_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_reflet_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_shulk_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_koopajr_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_duckhunt_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_ryu_final_shinsyoryu"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_ken_final_shinryuken"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_cloud_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_kamui_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_bayonetta_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_inkling_final_l"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_ridley_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_simon_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_richter_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_krool_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_shizue_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_gaogaen_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_packun_final1"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_jack_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_brave_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_buddy_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_dolly_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_master_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_tantan_final_l"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_pickel_final_l"), 0);
-					EFFECT_OFF_KIND(attacker_agent, Hash40::new("edge_win_fire"), false, false);
-					EFFECT_OFF_KIND(attacker_agent, Hash40::new("edge_win_sprks_b"), false, false);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_eflame_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_eelight_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_demon_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_trail_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_miifighter_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_miiswordsman_final"), 0);
-					EffectModule::remove_screen(attacker_boma, Hash40::new("bg_miigunner_final"), 0);
-					CAM_ZOOM_OUT(defender_agent);
-				}
-				if counter == 20 {
-					SlowModule::clear_whole(attacker_boma);
-					SlowModule::clear_whole(defender_boma);
-				}
-				WorkModule::dec_int(attacker_boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
-			}
-			else {
-				WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_DEFENDER_ID);
+	//Final Zoom Clearing
+	if final_zoom_counter > 0 {
+		println!("Final Zoom Handle: {}", effect_handle);
+		println!("Final Zoom Counter: {}", final_zoom_counter);
+		if final_zoom_counter == 40 {
+			WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STOCK);
+			if is_final_killing_hit(&mut *boma) {
+				set_stage_visibility(boma, 1);
+				set_vis_hud(true);
 			}
 		}
-		if counter == 0 {
-			WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_ATTACKER_ID);
+		if final_zoom_counter <= 40 {
+			EffectModule::set_alpha(boma, effect_handle as u32, 0.0+((final_zoom_counter-20) as f32/20.0));
 		}
+		if final_zoom_counter == 25 {
+			SlowModule::clear_whole(boma);
+		}
+		if final_zoom_counter <= 20 {
+			EffectModule::kill(boma, effect_handle as u32, true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_criticalhit"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_finishhit"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("sys_bg_black"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("mario_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("donkey_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("link_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("samus_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("samusd_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("yoshi_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("kirby_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("pikachu_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("luigi_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("ness_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("captain_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("purin_final_bg_vortex"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("peach_final_gb"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("daisy_final_gb"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("koopa_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("popo_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("nana_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("sheik_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("zelda_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("mariod_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("pichu_final_bg_flash"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("marth_final_line_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("lucina_final_line_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("younglink_final_line_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("ganon_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("mewtwo_final_mega_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("roy_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("chrom_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("gamewatch_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("metaknight_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("pit_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("pitb_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("szero_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("wario_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("snake_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("ike_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("ptrainer_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("diddy_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("lucas_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("sonic_final_bg_vortex"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("dedede_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("pikmin_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("lucario_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("robot_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("toonlink_final_line_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("murabito_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("rockman_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("wiifit_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("rosetta_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("littlemac_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("gekkouga_final_bg_vortex"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("palutena_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("pacman_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("reflet_final_line_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("shulk_final_world_effect"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("koopajr_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("ryu_final_line_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("ken_final_line_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("cloud_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("kamui_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("bayonetta_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("inkling_final_bg_l"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("ridley_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("simon_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("richter_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("krool_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("shizue_final_bg2"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("gaogaen_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("packun_final_bg_1"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("jack_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("buddy_final_flow_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("dolly_fainal_bg1"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("master_final_bg_vortex"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("tantan_final_bg_l"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("pickel_final_bg_l"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("edge_win_fire"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("eflame_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("demon_final_bg_after_l"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("trail_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("miifighter_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("miiswordsman_final_bg"), true, true);
+			EFFECT_OFF_KIND(agent, Hash40::new("miigunner_final_bg"), true, true);
+			WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+		}
+		WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
 	}
-	//set_vis_hud(false);
+	else {
+		WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
+	}
 }
 
 /*

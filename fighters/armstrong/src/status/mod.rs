@@ -28,6 +28,7 @@ use {
 mod attack_air;
 mod final_smash;
 mod special_air_s_catch;
+mod special_lw;
 mod special_n;
 mod special_s;
 mod throw;
@@ -36,6 +37,7 @@ pub fn install() {
     attack_air::install();
     final_smash::install();
     special_air_s_catch::install();
+    special_lw::install();
     special_n::install();
     special_s::install();
     throw::install();

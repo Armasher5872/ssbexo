@@ -1,22 +1,42 @@
 use {
     exo_utils::{
+        collision_struct::*,
+        damage::*,
         fighter_common::*,
+        hook::*,
         status_end_control::*,
+        ui_manager::*,
     },
-    exo_var::globals::*,
+    exo_var::{
+        consts::*,
+        globals::*,
+        sonic::*,
+    },
     smash::{
-        app::*,
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
         lib::{
             L2CValue,
             lua_const::*,
-        }
+        },
+        lua2cpp::*,
+        phx::Hash40
+    },
+    smash_script::{
+        macros::*,
+        *
     }
 };
 
 mod acmd;
+mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
+    status::install();
     vtable::install();
 }

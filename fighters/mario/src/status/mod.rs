@@ -36,7 +36,6 @@ mod special_s_jump;
 mod special_s_landing;
 mod special_s_loop;
 mod special_s;
-mod throw;
 
 pub fn install() {
     attack_air::install();
@@ -48,5 +47,4 @@ pub fn install() {
     special_s_landing::install();
     special_s_loop::install();
     special_s::install();
-    throw::install();
 }

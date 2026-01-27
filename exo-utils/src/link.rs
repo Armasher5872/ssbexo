@@ -94,6 +94,130 @@ pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAcce
     }
 }
 
+pub unsafe extern "C" fn link_decide_arrow(fighter: &mut L2CFighterCommon) {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
+        let bow_arrow_boma = get_article_boma(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
+        let bow_arrow_agent = get_weapon_common_from_accessor(&mut *bow_arrow_boma);
+        let arrow_type = WorkModule::get_int(bow_arrow_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
+        if arrow_type == *WN_LINK_BOWARROW_NORMAL_ARROW {
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
+                if arrow_type != *WN_LINK_BOWARROW_ICE_ARROW {
+                    EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_ice_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
+                    EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_final_arrow_hold"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 1.0, true);
+                    LAST_EFFECT_SET_COLOR(bow_arrow_agent, 0.0, 0.0, 1.0);
+                    WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_ICE_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
+                }
+            }
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                if arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
+                    EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_light_arrow_charge"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
+                    WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_LIGHT_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
+                    if situation_kind != *SITUATION_KIND_GROUND {
+                        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_start"), 0.0, 0.19, false, 0.0, false, false);
+                        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_air_start"), true, -1.0);
+                        ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, 0.19);
+                    }
+                    else {
+                        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_start"), 0.0, 0.19, false, 0.0, false, false);
+                        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new("n_start"), true, -1.0);
+                        ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, 0.19);
+                    }
+                }
+            }
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_L) {
+                if arrow_type != *WN_LINK_BOWARROW_FIRE_ARROW {
+                    EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_fire_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.6, true);
+                    EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_final_arrow_hold"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 1.0, true);
+                    LAST_EFFECT_SET_COLOR(bow_arrow_agent, 1.0, 0.0, 0.0);
+                    WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_FIRE_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
+                }
+            }
+            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
+                if arrow_type != *WN_LINK_BOWARROW_SHOCK_ARROW {
+                    EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_shock_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 0.3, true);
+                    EFFECT_FOLLOW(bow_arrow_agent, Hash40::new("link_final_arrow_hold"), Hash40::new("arrow"), 0, 0, 13, 0, 0, 0, 1.0, true);
+                    LAST_EFFECT_SET_COLOR(bow_arrow_agent, 1.0, 0.0, 1.0);
+                    WorkModule::set_int(bow_arrow_boma, *WN_LINK_BOWARROW_SHOCK_ARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
+                }
+            }
+        }
+    }
+}
+
+pub unsafe extern "C" fn link_guard_cancel(fighter: &mut L2CFighterCommon) {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+        if situation_kind == *SITUATION_KIND_AIR {
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+        }
+        else {
+            StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_GUARD_ON, false);
+        }
+    }
+}
+
+pub unsafe extern "C" fn link_change_motion(fighter: &mut L2CFighterCommon, situation_kind: i32, ground_motion_kind: &str, ground_bow_motion_kind: &str, air_motion_kind: &str, air_bow_motion_kind: &str, keep: bool) {
+    if situation_kind == *SITUATION_KIND_GROUND {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new(ground_bow_motion_kind), true, -1.0);
+        if keep {
+            if hash40(ground_motion_kind) == hash40("special_n_start") {
+                if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
+                    let bow_arrow_boma = get_article_boma(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
+                    let arrow_type = WorkModule::get_int(bow_arrow_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
+                    if arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
+                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new(ground_motion_kind), -1.0, 1.0, 0.0, false, false);
+                    }
+                    else {
+                        MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new(ground_motion_kind), -1.0, 1.0, 0.0);
+                        ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, 0.19);
+                    }
+                }
+            }
+            else {
+                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new(ground_motion_kind), -1.0, 1.0, 0.0, false, false);
+            }
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new(ground_motion_kind), 0.0, 1.0, false, 0.0, false, false);
+        }
+    }
+    else {
+        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+        ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new(air_bow_motion_kind), true, -1.0);
+        if keep {
+            if hash40(air_motion_kind) == hash40("special_air_n_start") {
+                if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
+                    let bow_arrow_boma = get_article_boma(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
+                    let arrow_type = WorkModule::get_int(bow_arrow_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
+                    if arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
+                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new(air_motion_kind), -1.0, 1.0, 0.0, false, false);
+                    }
+                    else {
+                        MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new(air_motion_kind), -1.0, 1.0, 0.0);
+                        ArticleModule::set_rate(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, 0.19);
+                    }
+                }
+            }
+            else {
+                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new(air_motion_kind), -1.0, 1.0, 0.0, false, false);
+            }
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new(air_motion_kind), 0.0, 1.0, false, 0.0, false, false);
+        }
+    }
+}
+
+pub unsafe extern "C" fn link_shoot_arrow(fighter: &mut L2CFighterCommon) {
+    ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    ArticleModule::shoot(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, ArticleOperationTarget(*ARTICLE_OPE_TARGET_FIRST), true);
+}
+
 pub unsafe extern "C" fn find_ascendable_ground(boma: *mut BattleObjectModuleAccessor, pos_x: f32, min_pos_y: f32, pos_y: f32, height: f32) -> f32 {
     let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
     if GroundModule::ray_check_hit_pos(boma, &Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: -100.0}, ground_hit_pos, true) {

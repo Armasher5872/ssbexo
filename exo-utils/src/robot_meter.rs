@@ -32,11 +32,11 @@ pub struct RobotMeter {
 
 impl RobotMeter {
     pub fn new(layout_data: u64) -> Self {
-        let base_bar = get_pane_from_layout(layout_data, "ff_meter_base\0").expect("Could not find base meter!");
-        let bar1 = get_pane_from_layout(layout_data, "ff_meter_bar1\0").expect("Could not find first bar!");
-        let bar2 = get_pane_from_layout(layout_data, "ff_meter_bar2\0").expect("Could not find second bar!");
-        let bar1_bg = get_pane_from_layout(layout_data, "ff_meter_bar1_bg\0").expect("Could not find first bg bar!");
-        let bar2_bg = get_pane_from_layout(layout_data, "ff_meter_bar2_bg\0").expect("Could not find second bg bar!");
+        let base_bar = get_pane_from_layout(layout_data, "robot_meter_base\0").expect("Could not find base meter!");
+        let bar1 = get_pane_from_layout(layout_data, "robot_meter_bar1\0").expect("Could not find first bar!");
+        let bar2 = get_pane_from_layout(layout_data, "robot_meter_bar2\0").expect("Could not find second bar!");
+        let bar1_bg = get_pane_from_layout(layout_data, "robot_meter_bar1_bg\0").expect("Could not find first bg bar!");
+        let bar2_bg = get_pane_from_layout(layout_data, "robot_meter_bar2_bg\0").expect("Could not find second bg bar!");
         let number = get_pane_from_layout(layout_data, "robot_meter_num\0").expect("Could not find number!");
         Self {
             base_bar,

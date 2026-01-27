@@ -19,8 +19,7 @@ use {
             lua_const::*,
         },
         lua2cpp::L2CFighterCommon
-    },
-    smashline::*,
+    }
 };
 
 mod acmd;
@@ -31,5 +30,4 @@ pub fn install() {
     acmd::install();
     status::install();
     vtable::install();
-    clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "mario", "hammer", false);
 }

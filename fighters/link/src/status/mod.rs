@@ -7,7 +7,6 @@ use {
         fighter_common::*,
         link::*,
         vector::*,
-        weapon::*,
     },
     exo_var::{
         consts::*,

@@ -34,7 +34,6 @@ use {
     }
   },
   smash_script::macros::*,
-  std::ops::Add
 };
 
 mod acmd;

@@ -1,7 +1,7 @@
 use {
     exo_utils::{
         buttons::*,
-        cloud_meter::*,
+        cloud::*,
         damage::*,
         extern_func::*,
         fighter_common::*,
@@ -9,9 +9,11 @@ use {
         hook::*,
         ice_climber_meter::*,
         kinetic_energy::*,
+        knockback_func::*,
         link::*,
         mariod_meter::*,
         robot_meter::*,
+        sonic::*,
         ui_manager::*,
         ui_object::*,
         vector::*,

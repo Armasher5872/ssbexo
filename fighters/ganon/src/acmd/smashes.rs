@@ -187,7 +187,7 @@ unsafe extern "C" fn ssbexo_ganon_down_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 19.0);
     if is_excute(agent) {
-        ATTACK(agent, 2, 0, Hash40::new("top"), 8.5, 77, 40, 0, 80, 5.0, 0.0, 5.0, -5.0, Some(0.0), Some(5.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 8.5, 79, 105, 0, 34, 5.5, 0.0, 5.0, -7.0, Some(0.0), Some(5.0), Some(7.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_SWORD);
     }
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {

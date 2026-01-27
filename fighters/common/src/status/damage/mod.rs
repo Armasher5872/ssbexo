@@ -1,7 +1,7 @@
 use {
     exo_utils::{
         damage::*,
-        knockback::*,
+        knockback_func::*,
         vector::*,
     },
     exo_var::{

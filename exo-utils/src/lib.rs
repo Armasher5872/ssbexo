@@ -3,18 +3,20 @@ use {
     bitflags::bitflags,
     crate::{
         battle_object::*,
-        cloud_meter::*,
+        cloud::*,
         create_item_param::*,
         damage::*,
         extern_func::*,
         fighter_common::*,
         hook::*,
         ice_climber_meter::*,
+        knockback_calc_context::*,
         link::*,
         mariod_meter::*,
         rect::*,
         robot_meter::*,
         shielddata_struct::*,
+        sonic::*,
         ui_object::*,
         ui_utility::*,
         vector::*,
@@ -75,7 +77,6 @@ pub mod battle_object;
 pub mod buttons;
 pub mod catch;
 pub mod check_attack;
-pub mod cloud_meter;
 pub mod cloud;
 pub mod collision_struct;
 pub mod command_input;
@@ -96,7 +97,8 @@ pub mod ike;
 pub mod inkling;
 pub mod kinetic_energy;
 pub mod kirby;
-pub mod knockback;
+pub mod knockback_calc_context;
+pub mod knockback_func;
 pub mod link;
 pub mod littlemac;
 pub mod mariod_meter;
@@ -108,6 +110,7 @@ pub mod rect;
 pub mod robot_meter;
 pub mod sheik;
 pub mod shielddata_struct;
+pub mod sonic;
 pub mod status_end_control;
 pub mod ui_manager;
 pub mod ui_object;

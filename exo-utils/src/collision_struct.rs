@@ -27,19 +27,19 @@ pub struct CollisionLogScuffed {
     pub x21: u8,
     pub x22: u8,
     pub x23: u8,
-    pub opponent_object_id: u32,
-    pub opponent_object_category: u8,
+    pub opponent_object_id: u32, //x24 - x27
+    pub opponent_object_category: u8, //x28
     pub x29: u8,
     pub x2a: u8,
     pub x2b: u8,
     pub x2c: u8,
     pub x2d: u8,
     pub x2e: u8,
-    pub collision_kind: u8,
-    pub receiver_part_id: u8,
-    pub collider_part_id: u8,
-    pub receiver_id: u8,
-    pub collider_id: u8,
+    pub collision_kind: u8, //x2f
+    pub receiver_part_id: u8, //x30
+    pub collider_part_id: u8, //x31
+    pub receiver_id: u8, //x32
+    pub collider_id: u8, //x33
     pub x35: bool
 }
 

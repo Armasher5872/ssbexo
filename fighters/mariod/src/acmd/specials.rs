@@ -188,36 +188,6 @@ unsafe extern "C" fn ssbexo_mariod_side_special_sound(agent: &mut L2CAgentBase) 
     }
 }
 
-//Grounded Up Special ACMD
-unsafe extern "C" fn ssbexo_mariod_grounded_up_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
-    if is_excute(agent) {
-        SA_SET(agent, *SITUATION_KIND_AIR);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 50, 105, 0, 30, 6.0, 0.0, 6.0, 9.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
-    }
-    wait(agent.lua_state_agent, 2.0);
-    if ControlModule::get_stick_y(agent.module_accessor) < -0.7 {
-        if is_excute(agent) {
-            StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_FALL_SPECIAL, true);
-        }
-    }
-    wait(agent.lua_state_agent, 1.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_MOVE_TRANS);
-        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 74, 66, 0, 64, 6.0, 0.0, 9.5, 4.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-    }
-    frame(agent.lua_state_agent, 10.0);
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
-    }
-    frame(agent.lua_state_agent, 20.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-    }
-}
-
 //Grounded Down Special ACMD
 unsafe extern "C" fn ssbexo_mariod_grounded_down_special_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 2.0);
@@ -309,7 +279,6 @@ pub fn install() {
     .effect_acmd("effect_specialairs", ssbexo_mariod_aerial_side_special_effect, Low)
     .sound_acmd("sound_specials", ssbexo_mariod_side_special_sound, Low)
     .sound_acmd("sound_specialairs", ssbexo_mariod_side_special_sound, Low)
-    .game_acmd("game_specialhi", ssbexo_mariod_grounded_up_special_acmd, Low)
     .game_acmd("game_speciallw", ssbexo_mariod_grounded_down_special_acmd, Low)
     .game_acmd("game_specialairlw", ssbexo_mariod_aerial_down_special_acmd, Low)
     .install()
