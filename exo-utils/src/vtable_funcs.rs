@@ -1,3 +1,4 @@
+//Credited to WuBoyTH
 use super::*;
 
 //Adds a new shield type, used for making new counters
@@ -33,4 +34,37 @@ pub unsafe fn get_module_vtable_func(boma: *mut BattleObjectModuleAccessor, modu
     let module = (boma as *mut u64).add(module_offset/0x8);
     let vtable = *module as *const u64;
     *((*vtable + func_offset) as *const u64)
+}
+
+//Sets and enables lightweight
+pub unsafe fn set_lightweight(boma: *mut BattleObjectModuleAccessor, mut changes: Vec<StatChange>) {
+    let ptr = changes.as_mut_ptr();
+    let len = changes.len();
+    let end_ptr = ptr.add(len);
+    let memory = allocator(0x10, 0x60);
+    for i in 0..12 {
+        *memory.add(i) = 0;
+    }
+    let memory = memory as *mut StatChangeGroup;
+    set_lightweight_data(memory, ptr, end_ptr);
+    let work_module = (boma as *mut u64).add(0xf1c0/0x8);
+    //Fix this later
+    *((*work_module as *mut *mut StatChangeGroup).add(0x58/0x8)) = memory;
+    *((*work_module as *mut u64).add(0x88/0x8)) = 0;
+    WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHT_WEIGHT);
+    let ptr = get_module_vtable_func(boma, 0xf1c0, 0x280);
+    let handle_attach_item: extern "C" fn(work_module: *mut u64, param_1: u64, param_2: u8) = std::mem::transmute(ptr);
+    handle_attach_item(*work_module as *mut u64, 0, 1);
+}
+
+//Removes and disables lightweight
+pub unsafe fn disable_lightweight(boma: *mut BattleObjectModuleAccessor) {
+    let work_module = (boma as *mut u64).add(0xf1c0/0x8);
+    //Fix this later
+    *((*work_module as *mut u64).add(0x58/0x8)) = 0;
+    *((*work_module as *mut u64).add(0x88/0x8)) = 0;
+    WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_LIGHT_WEIGHT);
+    let ptr = get_module_vtable_func(boma, 0xf1c0, 0x280);
+    let handle_attach_item: extern "C" fn(work_module: *mut u64, param_1: u64, param_2: u8) = std::mem::transmute(ptr);
+    handle_attach_item(*work_module as *mut u64, 0, 1);
 }

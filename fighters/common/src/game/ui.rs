@@ -78,9 +78,46 @@ fn hud_update(_: &skyline::hooks::InlineCtx) {
     }
 }
 
+#[skyline::hook(offset = 0x4b638, inline)]
+pub unsafe fn handle_draw_ui(ctx: &mut skyline::hooks::InlineCtx) {
+    let layout = ctx.registers[0].x() as *mut Layout;
+    ctx.registers[0].set_x(handle_layout_ui(layout) as u64);    
+}
+
+unsafe fn handle_layout_ui(layout: *mut Layout) -> *mut Layout {
+    let layout_name = skyline::from_c_str((*layout).layout_name);
+    let root_pane = &mut *(*layout).root_pane;
+    if layout_name == "info_final" {
+        if let Some(parent) = root_pane.find_pane_by_name_recursive("cloud_window") {
+            if let Some(child) = parent.find_pane_by_name_recursive("txt_cloud") {
+                let pane_text = match UiManager::get_limit_type() {
+                    1 => "Cross-Slash",
+                    2 => "Finishing Touch",
+                    3 => "Climhazzard",
+                    _ => "Omnislash"
+                };
+                child.as_textbox().set_text_string(&pane_text);
+            }
+        }
+        if let Some(parent) = root_pane.find_pane_by_name_recursive("cloud_window_01") {
+            if let Some(child) = parent.find_pane_by_name_recursive("txt_cloud_00") {
+                let pane_text = match UiManager::get_limit_type() {
+                    1 => "Cross-Slash",
+                    2 => "Finishing Touch",
+                    3 => "Climhazzard",
+                    _ => "Omnislash Ver. 5"
+                };
+                child.as_textbox().set_text_string(&pane_text);
+            }
+        }
+    }
+    return layout;
+}
+
 pub fn install() {
     skyline::install_hooks!(
         get_set_info_alpha, 
-        hud_update
+        hud_update,
+        handle_draw_ui
     );
 }

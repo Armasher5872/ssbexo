@@ -16,7 +16,6 @@ use {
     consts::*,
     globals::*,
   },
-  param_config::*,
   smash::{
     app::{
       lua_bind::*,

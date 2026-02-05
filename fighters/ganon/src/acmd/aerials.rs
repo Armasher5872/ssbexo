@@ -8,7 +8,8 @@ unsafe extern "C" fn ssbexo_ganon_nair_acmd(agent: &mut L2CAgentBase) {
     }  
     frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 60, 80, 0, 50, 11.0, 0.0, 12.0, 2.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_BODY);
+        ATTACK (agent, 0, 0, Hash40::new("top"), 10.0, 64, 68, 0, 45, 11.0, 0.0, 12.0, 2.0, None, None, None, 1.1, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_BODY);
+        AttackModule::set_add_reaction_frame_revised(agent.module_accessor, 0, 2.0, false);
     }
     frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {

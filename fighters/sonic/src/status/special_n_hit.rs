@@ -26,8 +26,8 @@ unsafe extern "C" fn sonic_special_n_hit_main_status(fighter: &mut L2CFighterCom
 
 unsafe extern "C" fn sonic_special_n_hit_substatus(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::dec_int(fighter.module_accessor, *FIGHTER_SONIC_STATUS_SPECIAL_N_HIT_WORK_INT_ADVANCE_COUNTER);
-    let advance_counter = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SONIC_STATUS_SPECIAL_N_WORK_FLOAT_ADVANCE_COUNTER);
-    if advance_counter < 0.0 {
+    let advance_counter = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SONIC_STATUS_SPECIAL_N_HIT_WORK_INT_ADVANCE_COUNTER);
+    if advance_counter < 0 {
         fighter.global_table[PREV_SUB_STATUS].assign(&L2CValue::I32(0));
         fighter.global_table[SUB_STATUS].assign(&L2CValue::I32(0));
     }

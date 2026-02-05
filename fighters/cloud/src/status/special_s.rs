@@ -35,6 +35,7 @@ unsafe extern "C" fn cloud_special_s_main_loop(fighter: &mut L2CFighterCommon) -
     let is_punisher = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
     let air_speed_x_stable = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("air_speed_x_stable"));
     let get_sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -91,6 +92,7 @@ unsafe extern "C" fn cloud_special_s_main_loop(fighter: &mut L2CFighterCommon) -
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+            UiManager::set_limit_type(entry_id, 1);
             fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LIMIT_BREAK.into(), false.into());
         }
     }
@@ -100,6 +102,7 @@ unsafe extern "C" fn cloud_special_s_main_loop(fighter: &mut L2CFighterCommon) -
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+                UiManager::set_limit_type(entry_id, 1);
                 fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LIMIT_BREAK.into(), false.into());
             }
         }
@@ -108,6 +111,7 @@ unsafe extern "C" fn cloud_special_s_main_loop(fighter: &mut L2CFighterCommon) -
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+                UiManager::set_limit_type(entry_id, 1);
                 fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LIMIT_BREAK.into(), false.into());
             }
         }
@@ -136,13 +140,14 @@ unsafe extern "C" fn cloud_special_s_exit_status(fighter: &mut L2CFighterCommon)
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if status_kind != *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LIMIT_BREAK {
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+            cloud_set_lightweight(fighter.module_accessor, true);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
         }
         else {
+            cloud_set_lightweight(fighter.module_accessor, false);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
         }
     }
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
     0.into()
 }
 

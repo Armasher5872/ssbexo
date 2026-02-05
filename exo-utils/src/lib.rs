@@ -17,9 +17,11 @@ use {
         robot_meter::*,
         shielddata_struct::*,
         sonic::*,
+        stat_change::*,
         ui_object::*,
         ui_utility::*,
         vector::*,
+        vtable_funcs::*,
         weapon::*,
     },
     exo_var::{
@@ -32,8 +34,13 @@ use {
         littlemac::*,
         murabito::*,
     },
+    nnsdk::ui2d::{
+        Pane,
+        TextBox
+    },
     once_cell::sync::Lazy,
     parking_lot::RwLock,
+    skyline::libc::c_char,
     smash::{
         app::{
             lua_bind::*,
@@ -59,7 +66,6 @@ use {
     },
     std::{
         ffi::c_uint,
-        os::raw::c_char,
         ops::{
             Deref,
             DerefMut
@@ -111,10 +117,12 @@ pub mod robot_meter;
 pub mod sheik;
 pub mod shielddata_struct;
 pub mod sonic;
+pub mod stat_change;
 pub mod status_end_control;
 pub mod ui_manager;
 pub mod ui_object;
 pub mod ui_utility;
+pub mod ui2d;
 pub mod vector;
 pub mod vtable_funcs;
 pub mod waza_customize;

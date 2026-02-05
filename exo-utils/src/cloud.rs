@@ -65,10 +65,31 @@ pub unsafe extern "C" fn cloud_set_vec_target_pos(boma: *mut BattleObjectModuleA
     AttackModule::set_vec_target_pos(boma, hit_id, bone, &Vector2f{x: vec_x, y: vec_y}, time_to_position, false);
 }
 
+//Credited to WuBoyTH
+#[no_mangle]
+pub unsafe extern "C" fn cloud_set_lightweight(boma: *mut BattleObjectModuleAccessor, new_stats: bool) {
+    if new_stats {
+        let mut changes = Vec::new();
+        changes.push(StatChange::new(hash40("walk_speed_max"), 0.379147)); //1.055 -> 0.4
+        changes.push(StatChange::new(hash40("dash_speed"), 0.428266)); //1.868 -> 0.8
+        changes.push(StatChange::new(hash40("run_speed_max"), 0.822785)); //1.58 -> 1.3
+        changes.push(StatChange::new(hash40("jump_speed_x"), 1.19765)); //0.85 -> 1.018
+        changes.push(StatChange::new(hash40("jump_speed_x_max"), 0.822785)); //1.58 -> 1.3
+        changes.push(StatChange::new(hash40("air_speed_x_stable"), 0.912889)); //1.125 -> 1.027
+        changes.push(StatChange::new(hash40("air_accel_y"), 1.18812)); //0.101 -> 0.12 
+        changes.push(StatChange::new(hash40("air_speed_y_stable"), 1.06215)); //1.77 -> 1.88
+        set_lightweight(boma, changes);
+    }
+    else {
+        disable_lightweight(boma);
+    }
+}
+
 #[derive(Default, Copy, Clone)]
 pub struct CloudMeter {
     pub number: u64,
     pub value: i32,
+    pub limit_type: i32,
     pub enabled: bool
 }
 
@@ -78,6 +99,7 @@ impl CloudMeter {
         return Self {
             number: number,
             value: 0,
+            limit_type: 0,
             enabled: false
         };
     }

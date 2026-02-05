@@ -38,7 +38,7 @@ extern "C" {
     #[link_name = "\u{1}_ZN3app30WeaponSpecializer_LinkBowarrow7to_itemERNS_26BattleObjectModuleAccessorE"]
     pub fn to_item(boma: *mut smash::app::BattleObjectModuleAccessor);
 
-    pub fn change_version_string(arg: u64, string: *const c_char);
+    pub fn change_version_string(arg: u64, string: *const std::os::raw::c_char);
 }
 
 pub fn is_on_ryujinx() -> bool {

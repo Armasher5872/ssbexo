@@ -117,6 +117,16 @@ impl UiManager {
         let mut manager = UI_MANAGER.write();
         manager.cloud_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_meter_info(value);
     }
+    #[export_name = "UiManager__get_limit_type"]
+    pub extern "C" fn get_limit_type() -> i32 {
+        let manager = UI_MANAGER.write();
+        return manager.cloud_meter[0].limit_type;
+    }
+    #[export_name = "UiManager__set_limit_type"]
+    pub extern "C" fn set_limit_type(entry_id: u32, limit_type: i32) {
+        let mut manager = UI_MANAGER.write();
+        manager.cloud_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].set_limit_type(limit_type);
+    }
     //Link
     #[export_name = "UiManager__set_link_wheel_enable"]
     pub extern "C" fn set_link_wheel_enable(entry_id: u32, enable: bool) {

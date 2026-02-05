@@ -33,6 +33,7 @@ unsafe extern "C" fn cloud_special_lw_main_status(fighter: &mut L2CFighterCommon
 unsafe extern "C" fn cloud_special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -69,6 +70,7 @@ unsafe extern "C" fn cloud_special_lw_main_loop(fighter: &mut L2CFighterCommon) 
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+        UiManager::set_limit_type(entry_id, 2);
         fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_LW_LIMIT_BREAK.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -91,13 +93,14 @@ unsafe extern "C" fn cloud_special_lw_exit_status(fighter: &mut L2CFighterCommon
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if status_kind != *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_LW_LIMIT_BREAK {
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
+            cloud_set_lightweight(fighter.module_accessor, true);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
         }
         else {
+            cloud_set_lightweight(fighter.module_accessor, false);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
         }
     }
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
     0.into()
 }
 

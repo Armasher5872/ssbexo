@@ -34,6 +34,15 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
         _ if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW => {
             300.0
         },
+        _ if arrow_type == *WN_LINK_BOWARROW_ICE_ARROW => {
+            0.8
+        },
+        _ if arrow_type == *WN_LINK_BOWARROW_FIRE_ARROW => {
+            1.0
+        },
+        _ if arrow_type == *WN_LINK_BOWARROW_SHOCK_ARROW => {
+            3.0
+        },
         _ => {
             WorkModule::get_param_float(weapon.module_accessor, hash40("param_bowarrow"), hash40("speed_min"))
         }
@@ -42,6 +51,15 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
         _ if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW => {
             300.0
         },
+        _ if arrow_type == *WN_LINK_BOWARROW_ICE_ARROW => {
+            2.4
+        }
+        _ if arrow_type == *WN_LINK_BOWARROW_FIRE_ARROW => {
+            4.0
+        }
+        _ if arrow_type == *WN_LINK_BOWARROW_SHOCK_ARROW => {
+            4.0
+        }
         _ => {
             WorkModule::get_param_float(weapon.module_accessor, hash40("param_bowarrow"), hash40("speed_max"))
         }
@@ -49,6 +67,15 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
     let accel_y = match arrow_type {
         _ if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW => {
             0.0
+        },
+        _ if arrow_type == *WN_LINK_BOWARROW_ICE_ARROW => {
+            0.04
+        },
+        _ if arrow_type == *WN_LINK_BOWARROW_FIRE_ARROW => {
+            0.075
+        },
+        _ if arrow_type == *WN_LINK_BOWARROW_SHOCK_ARROW => {
+            0.072
         },
         _ => {
             WorkModule::get_param_float(weapon.module_accessor, hash40("param_bowarrow"), hash40("accel_y"))
@@ -58,13 +85,10 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
     let shot_angle = WorkModule::get_float(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLOAT_SHOT_ANGLE);
     let power = power_max-power_min;
     let power_charge = power*charge;
-    let clamp_angle = shot_angle.abs().clamp(2.5, 80.0);
-    let accel = 3.5*(clamp_angle.powf(-0.3));
-    let new_speed_min = speed_min+accel;
-    let new_speed_max = speed_max+accel;
-    let lerp_speed = weapon.lerp(new_speed_min.into(), new_speed_max.into(), charge.into());
+    let lerp_speed = weapon.lerp(speed_min.into(), speed_max.into(), charge.into());
     let speed_x = (shot_angle+90.0).to_radians().sin()*lerp_speed.get_f32()*lr;
     let speed_y = (shot_angle-90.0).to_radians().cos()*lerp_speed.get_f32();
+    let x_speed_mod = ((80.0-shot_angle.abs())/60.0)*lr;
     let x_pos = (10.0-(0.105*shot_angle.abs()))*lr;
     let y_pos = 13.0+(0.09*shot_angle);
     if WorkModule::is_flag(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_DOUBLE) {
@@ -81,10 +105,9 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
         }
     }
     PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+x_pos, y: owner_pos_y+y_pos, z: owner_pos_z});
-    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
+    sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x+x_speed_mod, speed_y);
     sv_kinetic_energy!(set_stable_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -speed_max);
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -accel_y);
-    sv_kinetic_energy!(set_brake, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.034-(shot_angle.abs()/2400.0));
     0.into()
 }
 
@@ -120,17 +143,8 @@ unsafe extern "C" fn link_bowarrow_fly_sub_status(weapon: &mut L2CWeaponCommon, 
 }
 
 unsafe extern "C" fn link_bowarrow_fly_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let y_speed = KineticModule::get_sum_speed_y(weapon.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let accel_y = WorkModule::get_param_float(weapon.module_accessor, hash40("param_bowarrow"), hash40("accel_y"));
-    let shot_angle = WorkModule::get_float(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLOAT_SHOT_ANGLE).abs();
     let arrow_type = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
     let ret = GroundModule::is_touch(weapon.module_accessor, *GROUND_TOUCH_FLAG_ALL as u32);
-    let clamp_angle = shot_angle.clamp(2.5, 80.0);
-    let m_accel = 0.1*(clamp_angle.powf(-0.66));
-    let n_accel = 0.1*(clamp_angle.powf(-0.3));
-    let positive_accel = 0.1;
-    let mid_accel = accel_y-m_accel;
-    let negative_accel = 0.1-n_accel;
     if ret {
         if arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
             weapon.change_status(WN_LINK_BOWARROW_STATUS_KIND_STICK.into(), false.into());
@@ -148,17 +162,6 @@ unsafe extern "C" fn link_bowarrow_fly_main_loop(weapon: &mut L2CWeaponCommon) -
         let team_owner_id = TeamModule::team_owner_id(weapon.module_accessor) as u32;
         TeamModule::set_team(item_boma, team_no, true);
         TeamModule::set_team_owner_id(item_boma, team_owner_id);
-    }
-    if arrow_type != *WN_LINK_BOWARROW_LIGHT_ARROW {
-        if y_speed > 0.5 {
-            sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -positive_accel);
-        }
-        else if y_speed > 0.0 {
-            sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -mid_accel);
-        }
-        else {
-            sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -negative_accel);
-        }
     }
     ret.into()
 }

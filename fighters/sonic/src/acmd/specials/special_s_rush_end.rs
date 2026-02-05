@@ -1,11 +1,7 @@
 use super::*;
 
 //Side Special Rush End ACMD
-unsafe extern "C" fn ssbexo_sonic_side_special_rush_end_acmd(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES);
-    }
-}
+unsafe extern "C" fn ssbexo_sonic_side_special_rush_end_acmd(_agent: &mut L2CAgentBase) {}
 
 //Side Special Rush End Effect
 unsafe extern "C" fn ssbexo_sonic_side_special_rush_end_effect(agent: &mut L2CAgentBase) {

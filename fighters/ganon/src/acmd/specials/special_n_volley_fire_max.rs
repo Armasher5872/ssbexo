@@ -1,15 +1,15 @@
 use super::*;
 
-//Neutral Special Max Fire ACMD
-unsafe extern "C" fn ssbexo_ganon_neutral_special_max_fire_acmd(agent: &mut L2CAgentBase) {
+//Neutral Special Volley Max Fire ACMD
+unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_max_fire_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 50.0);
     if is_excute(agent) {
         ArticleModule::generate_article(agent.module_accessor, *FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
     }
 }
 
-//Grounded Neutral Special Max Fire Effect
-unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_max_fire_effect(agent: &mut L2CAgentBase) {
+//Grounded Neutral Special Volley Max Fire Effect
+unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_volley_max_fire_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_jump_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, false);
@@ -26,8 +26,8 @@ unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_max_fire_effect(agent
     }
 }
 
-//Aerial Neutral Special Max Fire Effect
-unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_max_fire_effect(agent: &mut L2CAgentBase) {
+//Aerial Neutral Special Volley Max Fire Effect
+unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_volley_max_fire_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("footr"), 0, 0, 0, -0.286, -45, 25, 1, true);
         EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("footl"), 0, 0, 0, -0.286, -45, 25, 1, true);
@@ -39,15 +39,15 @@ unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_max_fire_effect(agent: 
     }
 }
 
-//Neutral Special Max Fire Sound
-unsafe extern "C" fn ssbexo_ganon_neutral_special_max_fire_sound(agent: &mut L2CAgentBase) {
+//Neutral Special Volley Max Fire Sound
+unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_max_fire_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("vc_ganon_attackhard_h01"));
     }
 }
 
-//Neutral Special Max Fire Expression
-unsafe extern "C" fn ssbexo_ganon_neutral_special_max_fire_expression(agent: &mut L2CAgentBase) {
+//Neutral Special Volley Max Fire Expression
+unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_max_fire_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
         AREA_WIND_2ND_arg10(agent, 0, 2, 75, 2, 1, 0, 12, 50, 30, 50);
@@ -66,14 +66,14 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_max_fire_expression(agent: &mu
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnfiremax", ssbexo_ganon_neutral_special_max_fire_acmd, Low)
-    .effect_acmd("effect_specialnfiremax", ssbexo_ganon_grounded_neutral_special_max_fire_effect, Low)
-    .sound_acmd("sound_specialnfiremax", ssbexo_ganon_neutral_special_max_fire_sound, Low)
-    .expression_acmd("expression_specialnfiremax", ssbexo_ganon_neutral_special_max_fire_expression, Low)
-    .game_acmd("game_specialairnfiremax", ssbexo_ganon_neutral_special_max_fire_acmd, Low)
-    .effect_acmd("effect_specialairnfiremax", ssbexo_ganon_aerial_neutral_special_max_fire_effect, Low)
-    .sound_acmd("sound_specialairnfiremax", ssbexo_ganon_neutral_special_max_fire_sound, Low)
-    .expression_acmd("expression_specialairnfiremax", ssbexo_ganon_neutral_special_max_fire_expression, Low)
+    .game_acmd("game_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_acmd, Low)
+    .effect_acmd("effect_specialnvolleyfiremax", ssbexo_ganon_grounded_neutral_special_volley_max_fire_effect, Low)
+    .sound_acmd("sound_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_sound, Low)
+    .expression_acmd("expression_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_expression, Low)
+    .game_acmd("game_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_acmd, Low)
+    .effect_acmd("effect_specialairnvolleyfiremax", ssbexo_ganon_aerial_neutral_special_volley_max_fire_effect, Low)
+    .sound_acmd("sound_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_sound, Low)
+    .expression_acmd("expression_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_expression, Low)
     .install()
     ;
 }

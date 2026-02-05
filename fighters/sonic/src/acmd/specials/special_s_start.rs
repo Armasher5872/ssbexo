@@ -1,11 +1,7 @@
 use super::*;
 
 //Side Special Start ACMD
-unsafe extern "C" fn ssbexo_sonic_side_special_start_acmd(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        FT_MOTION_RATE(agent, 19.0/15.0);
-    }
-}
+unsafe extern "C" fn ssbexo_sonic_side_special_start_acmd(_agent: &mut L2CAgentBase) {}
 
 //Side Special Start Effect
 unsafe extern "C" fn ssbexo_sonic_side_special_start_effect(agent: &mut L2CAgentBase) {

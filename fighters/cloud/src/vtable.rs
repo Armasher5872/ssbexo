@@ -18,7 +18,6 @@ unsafe extern "C" fn cloud_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
     WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_DECIDE);
     WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN);
-    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
     WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_CHARGED_ATTACK_DASH);
     WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
     WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
@@ -28,6 +27,7 @@ unsafe extern "C" fn cloud_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_ATTACK_COUNT);
     WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_GUARD_COOLDOWN);
     UiManager::set_cloud_meter_info(entry_id, 0);
+    UiManager::set_limit_type(entry_id, 0);
 }
 
 unsafe extern "C" fn cloud_check_ground_guard_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -78,16 +78,6 @@ unsafe extern "C" fn cloud_reset_initialization(vtable: u64, fighter: &mut Fight
     common_reset_variable_reset(&mut *boma);
     cloud_var(&mut *boma);
     ShieldModule::set_target_property(boma, *COLLISION_PROPERTY_NORMAL, *FIGHTER_CLOUD_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("walk_speed_max"), 0, 1.055));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("dash_speed"), 0, 1.868));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 1.58));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.85));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x_max"), 0, 1.58));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_x_stable"), 0, 1.125));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_accel_y"), 0, 0.101));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("air_speed_y_stable"), 0, 1.77));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("param_private"), hash40("limit_gauge_damage_add"), 5.0));
-    update_float_2(*FIGHTER_KIND_CLOUD, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("param_private"), hash40("limit_gauge_attack_add"), 3.333));
     original!()(vtable, fighter)
 }
 
@@ -118,6 +108,7 @@ unsafe extern "C" fn cloud_death_initialization(vtable: u64, fighter: &mut Fight
     WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
     WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_ATTACK_COUNT);
     UiManager::set_cloud_meter_info(entry_id, 0);
+    UiManager::set_limit_type(entry_id, 0);
     original!()(vtable, fighter)
 }
 
@@ -128,7 +119,6 @@ unsafe extern "C" fn cloud_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let boma = fighter.battle_object.module_accessor;
         let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
         let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
-        let color = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR);
         if limit_level > 0 {
             UiManager::set_cloud_meter_enable(entry_id, true);
             UiManager::set_cloud_meter_info(entry_id, limit_level-1);
@@ -136,32 +126,6 @@ unsafe extern "C" fn cloud_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         else {
             UiManager::set_cloud_meter_enable(entry_id, false);
             UiManager::set_cloud_meter_info(entry_id, 0);
-        }
-        if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-            if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE) {
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("walk_speed_max"), 0, 0.4));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("dash_speed"), 0, 0.8));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("run_speed_max"), 0, 1.3));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("jump_speed_x"), 0, 1.018));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("jump_speed_x_max"), 0, 1.3));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("air_speed_x_stable"), 0, 1.027));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("air_accel_y"), 0, 0.12));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("air_speed_y_stable"), 0, 1.88));
-                WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
-            }
-        }
-        else {
-            if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE) {
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("walk_speed_max"), 0, 1.055));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("dash_speed"), 0, 1.868));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("run_speed_max"), 0, 1.58));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("jump_speed_x"), 0, 0.85));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("jump_speed_x_max"), 0, 1.58));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("air_speed_x_stable"), 0, 1.125));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("air_accel_y"), 0, 0.101));
-                update_float_2(*FIGHTER_KIND_CLOUD, vec![color].clone(), (hash40("air_speed_y_stable"), 0, 1.77));
-                WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PARAM_CHANGE);
-            }
         }
         cloud_training_mode_features(boma);
     }
@@ -183,7 +147,7 @@ unsafe extern "C" fn cloud_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
     let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
     let attack_data = AttackModule::attack_data(boma, (*collision_log).collider_id as i32, (*collision_log).x35);
     let power = (*attack_data).power;
-    if status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LIMIT_BREAK && current_frame > 40.0 {
+    if status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_S_LIMIT_BREAK {
         call_special_zoom(boma, log, *FIGHTER_KIND_CLOUD, hash40("param_special_lw"), 1, 0, 0, 0, 0);
     }
     if status_kind == *FIGHTER_CLOUD_STATUS_KIND_SPECIAL_HI_LIMIT_BREAK && current_frame < 8.0 {

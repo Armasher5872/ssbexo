@@ -9,6 +9,7 @@ colorgrad = "0.6.2"
 exo_var = { path = "../exo-var" }
 lazy_static = "1.4.0"
 modular-bitfield = "0.11.2"
+nnsdk = { git = "https://github.com/ultimate-research/nnsdk-rs" }
 once_cell = "1.15.0"
 parking_lot = "0.11.2"
 skyline = { git = "https://github.com/ultimate-research/skyline-rs" }

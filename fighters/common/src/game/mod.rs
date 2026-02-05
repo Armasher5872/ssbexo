@@ -16,6 +16,7 @@ use {
         sonic::*,
         ui_manager::*,
         ui_object::*,
+        ui2d::*,
         vector::*,
     },
     exo_var::{
@@ -34,7 +35,8 @@ use {
     skyline::{
         c_str,
         from_c_str,
-        hooks::InlineCtx
+        hooks::InlineCtx,
+        nn::ui2d::*,
     },
     smash::{
         app::{

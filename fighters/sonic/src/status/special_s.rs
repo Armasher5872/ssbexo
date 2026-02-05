@@ -50,26 +50,14 @@ unsafe extern "C" fn sonic_special_s_main_loop(fighter: &mut L2CFighterCommon) -
     0.into()
 }
 
-unsafe extern "C" fn sonic_special_s_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
-    if stick_y > 0.7 {
-        WorkModule::set_int(fighter.module_accessor, 20, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_S_ANGLE);
-    }
-    else if stick_y < -0.7 {
-        WorkModule::set_int(fighter.module_accessor, -20, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_S_ANGLE);
-    }
-    else {
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_S_ANGLE);
-    }
+unsafe extern "C" fn sonic_special_s_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
 unsafe extern "C" fn sonic_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if status_kind != *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_RUSH);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_S_ANGLE);
         EFFECT_OFF_KIND(fighter, Hash40::new("sonic_spintrace"), true, true);
         EFFECT_OFF_KIND(fighter, Hash40::new("sonic_rush_shock"), true, true);
     }
@@ -79,9 +67,7 @@ unsafe extern "C" fn sonic_special_s_end_status(fighter: &mut L2CFighterCommon) 
 unsafe extern "C" fn sonic_special_s_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if status_kind != *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_RUSH);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_S_ANGLE);
         EFFECT_OFF_KIND(fighter, Hash40::new("sonic_spintrace"), true, true);
         EFFECT_OFF_KIND(fighter, Hash40::new("sonic_rush_shock"), true, true);
     }

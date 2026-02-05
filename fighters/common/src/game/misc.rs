@@ -6,7 +6,7 @@ const CONSTANT_OFFSET: usize = 0x3728410;
 #[skyline::hook(replace = change_version_string)]
 fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 	let original_string = unsafe { from_c_str(string) };
-	if original_string.contains("Ver.") {
+	if original_string.contains("13.0.4") {
         let version = match std::fs::read_to_string("sd:/ultimate/mods/Super Smash Bros EXO/ui/exo_version.txt") {
             Ok(version_value) => version_value.trim().to_string(),
             Err(_) => {
@@ -18,8 +18,8 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
             }
         };
 		let version_str = format!("{} / SSB:EXO (Beta) | Ver. {}\0", original_string, version);
-		call_original!(arg, c_str(&version_str))
-	} 
+        call_original!(arg, c_str(&version_str))
+	}
     else {
 		call_original!(arg, string)
 	}

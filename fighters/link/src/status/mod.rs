@@ -1,6 +1,5 @@
 use {
     exo_utils::{
-        attack_dash::*,
         attack_xx4::*,
         check_attack::*,
         extern_func::*,
@@ -41,8 +40,6 @@ mod arrow_haved;
 mod arrow_hit_stick;
 mod arrow_stick;
 mod attach_wall;
-mod attack_dash_bound;
-mod attack_dash;
 mod attack_hi4_hold;
 mod attack_hi4;
 mod attack_lw4_hold;
@@ -73,8 +70,6 @@ pub fn install() {
     arrow_hit_stick::install();
     arrow_stick::install();
     attach_wall::install();
-    attack_dash_bound::install();
-    attack_dash::install();
     attack_hi4_hold::install();
     attack_hi4::install();
     attack_lw4_hold::install();

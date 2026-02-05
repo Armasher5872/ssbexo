@@ -2,7 +2,7 @@ use super::*;
 
 //Neutral Special Cape ACMD
 unsafe extern "C" fn ssbexo_ganon_neutral_special_cape_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 12.0);
+    frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
         shield!(agent, *MA_MSC_CMD_REFLECTOR, *COLLISION_KIND_REFLECTOR, 0, Hash40::new("top"), 8.0, 0.0, 4.0, 10.0, 0.0, 10.0, 10.0, 1.3, 1.3, 50, false, 1.3, *FIGHTER_REFLECTOR_GROUP_HOMERUNBAT);
     }

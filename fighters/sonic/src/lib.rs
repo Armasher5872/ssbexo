@@ -4,13 +4,15 @@ use {
         damage::*,
         fighter_common::*,
         hook::*,
-        status_end_control::*,
+        sonic::*,
         ui_manager::*,
+        vector::*,
     },
     exo_var::{
         consts::*,
         globals::*,
         sonic::*,
+        variables::*,
     },
     smash::{
         app::{
@@ -23,7 +25,7 @@ use {
             lua_const::*,
         },
         lua2cpp::*,
-        phx::Hash40
+        phx::*
     },
     smash_script::{
         macros::*,

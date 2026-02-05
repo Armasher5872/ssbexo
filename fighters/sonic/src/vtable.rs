@@ -11,13 +11,13 @@ const SONIC_VTABLE_ON_DAMAGE_OFFSET: usize = 0x11d7910; //Sonic only
 unsafe extern "C" fn sonic_var(boma: &mut BattleObjectModuleAccessor) {
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED);
-    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_RUSH);
-    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_BOOSTED);
+    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_RUSH_ACTIVE);
+    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     WorkModule::set_float(boma, 0.0, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
     WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_TIMER);
     WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
     WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_SEARCH_MISS_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_S_ANGLE);
+    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_PHANTOM_RUSH_EFFECT_HANDLE);
     UiManager::set_sonic_meter_info(entry_id, 0.0);
 }
 
@@ -68,7 +68,6 @@ unsafe extern "C" fn sonic_start_initialization(vtable: u64, fighter: &mut Fight
     common_initialization_variable_reset(&mut *boma);
     sonic_var(&mut *boma);
     agent.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(sonic_check_special_n_uniq as *const () as _));
-    agent.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
     agent.global_table[CHECK_GROUND_SPECIAL_UNIQ].assign(&L2CValue::Ptr(sonic_check_ground_special_uniq as *const () as _));
     agent.global_table[CHECK_AIR_SPECIAL_UNIQ].assign(&L2CValue::Ptr(sonic_check_air_special_uniq as *const () as _));
     agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(sonic_end_control as *const () as _));
@@ -106,7 +105,9 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let timer = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_TIMER);
     let cooldown = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
     let miss_timer = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_SEARCH_MISS_TIMER);
+    let phantom_rush_effect_handle = WorkModule::get_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_PHANTOM_RUSH_EFFECT_HANDLE);
     let boost_value = WorkModule::get_float(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+    let phantom_rush_active = WorkModule::is_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_RUSH_ACTIVE);
     let special_n_start_auto_attack_frame = WorkModule::get_param_int(boma, hash40("param_special_n"), hash40("special_n_start_auto_attack_frame"));
     let neutral_special_check = cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_N != 0;
     let neutral_special_statuses = [
@@ -115,7 +116,7 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     ].contains(&status_kind);
     if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N) && !WorkModule::is_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED) && neutral_special_check {
         if cooldown <= 0 {
-            SEARCH(agent, 0, 0, Hash40::new("top"), 35.0, 0.0, 10.0, 0.0, None, None, None, *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIEB, *COLLISION_PART_MASK_BODY_HEAD, false);
+            SEARCH(agent, 0, 0, Hash40::new("top"), 35.0, 0.0, 10.0, 35.0, None, None, None, *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIEB, *COLLISION_PART_MASK_BODY_HEAD, false);
             WorkModule::inc_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_SEARCH_MISS_TIMER);
             if miss_timer >= 1 {
                 StatusModule::change_status_force(boma, *FIGHTER_STATUS_KIND_SPECIAL_N, false);
@@ -131,14 +132,12 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             ArticleModule::remove_exist(boma, *FIGHTER_SONIC_GENERATE_ARTICLE_HOMINGTARGET, ArticleOperationTarget(0));
             SoundModule::stop_se(boma, Hash40::new("se_sonic_tracking"), 0);
             search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
-            DamageModule::set_damage_mul(boma, 1.0);
-            DamageModule::set_reaction_mul(boma, 1.0);
             WorkModule::set_int(boma, 120, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
             WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_TIMER);
             WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED);
         }
         else {
-            if timer >= 120 && neutral_special_check {
+            if timer >= 120 && neutral_special_check && WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N) {
                 ArticleModule::remove_exist(boma, *FIGHTER_SONIC_GENERATE_ARTICLE_HOMINGTARGET, ArticleOperationTarget(0));
                 SoundModule::stop_se(boma, Hash40::new("se_sonic_tracking"), 0);
                 search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
@@ -146,8 +145,6 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
                 WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED);
                 WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_TIMER);
             }
-            DamageModule::set_damage_mul(boma, 1.1);
-            DamageModule::set_reaction_mul(boma, 1.1);
             WorkModule::inc_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_TIMER);
         }
     }
@@ -156,14 +153,37 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         SoundModule::stop_se(boma, Hash40::new("se_sonic_tracking"), 0);
         WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED);
     }
-    if boost_value > 0.0 {
-        WorkModule::sub_float(boma, 0.03, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
-    }
     if cooldown > 0 {
         WorkModule::dec_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
     }
     if cooldown == 1 {
         gimmick_flash(agent);
+    }
+    if boost_value > 0.0 {
+        if phantom_rush_active {
+            WorkModule::sub_float(boma, 0.12, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+        }
+        else {
+            WorkModule::sub_float(boma, 0.03, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+        }
+    }
+    if boost_value > 100.0 {
+        WorkModule::set_float(boma, 100.0, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+    }
+    if boost_value == 100.0 && !phantom_rush_active {
+        sonic_set_lightweight(boma, true);
+        let phantom_rush_effect = EffectModule::req_follow(boma, Hash40::new("sys_status_speed_up"), Hash40::new("hip"), &Vector3f{x: 0.7, y: 0.0, z: 0.0}, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true);
+        EffectModule::set_rgb(boma, phantom_rush_effect as u32, 0.0, 0.5, 1.0);
+        WorkModule::set_int(boma, phantom_rush_effect as i32, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_PHANTOM_RUSH_EFFECT_HANDLE);
+        SoundModule::play_se(boma, Hash40::new("se_sonic_final01"), true, false, false, false, smash::app::enSEType(0));
+        WorkModule::on_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_RUSH_ACTIVE);
+    }
+    if boost_value <= 0.0 && phantom_rush_active {
+        sonic_set_lightweight(boma, false);
+        EffectModule::kill(boma, phantom_rush_effect_handle as u32, true, true);
+        WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_PHANTOM_RUSH_EFFECT_HANDLE);
+        SoundModule::play_se(boma, Hash40::new("se_sonic_final04"), true, false, false, false, smash::app::enSEType(0));
+        WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_RUSH_ACTIVE);
     }
     UiManager::set_sonic_meter_info(entry_id, boost_value);
     UiManager::set_sonic_meter_enable(entry_id, true);
@@ -174,32 +194,30 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 #[skyline::hook(offset = SONIC_VTABLE_ON_ATTACK_OFFSET)]
 unsafe extern "C" fn sonic_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let current_frame = MotionModule::frame(boma);
     let status_kind = StatusModule::status_kind(boma);
-    let get_attack_air_kind = ControlModule::get_attack_air_kind(boma);
-    let motion_kind = MotionModule::motion_kind(boma);
-    let boost_value = WorkModule::get_float(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
     let collision_log = log as *mut CollisionLogScuffed;
     let collision_kind = (*collision_log).collision_kind;
     let opponent_object_id = (*collision_log).opponent_object_id;
     let opponent_object = get_battle_object_from_id(opponent_object_id);
     let opponent_battle_object_id = (*opponent_object).battle_object_id;
-    if status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR {
-        if [1, 2].contains(&collision_kind) {
-            if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F || motion_kind == hash40("attack_air_f") {
-                MotionModule::change_motion(boma, Hash40::new("attack_air_f_hit"), 0.0, 1.0, false, 0.0, false, false);
-            }
-        }
-    }
     if [1, 2].contains(&collision_kind) {
         let attack_data = AttackModule::attack_data(boma, (*collision_log).collider_id as i32, (*collision_log).x35);
         let power = (*attack_data).power;
         if opponent_battle_object_id >> 0x1C == 0 && HitModule::get_status((*opponent_object).module_accessor, (*collision_log).receiver_id as i32, 0) == 0 {
-            if boost_value+power < 100.0 {
-                if collision_kind == 1 {
-                    WorkModule::add_float(boma, power, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
-                }
-                else {
-                    WorkModule::add_float(boma, power/2.0, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+            if collision_kind == 1 {
+                WorkModule::add_float(boma, power*1.5, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+            }
+            else {
+                WorkModule::add_float(boma, power*0.75, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+            }
+        }
+        if status_kind == *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH {
+            if LAST_ATTACK_HITBOX_ID == 0 || LAST_ATTACK_HITBOX_ID == 1 {
+                if current_frame >= 25.0 {
+                    if !WorkModule::is_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT) {
+                        WorkModule::on_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
+                    }
                 }
             }
         }

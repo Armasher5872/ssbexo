@@ -186,7 +186,7 @@ pub unsafe extern "C" fn link_change_motion(fighter: &mut L2CFighterCommon, situ
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, Hash40::new(air_bow_motion_kind), true, -1.0);
         if keep {
             if hash40(air_motion_kind) == hash40("special_air_n_start") {

@@ -8,20 +8,14 @@ unsafe extern "C" fn sonic_special_s_rush_end_pre_status(fighter: &mut L2CFighte
 
 unsafe extern "C" fn sonic_special_s_rush_end_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let get_sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if situation_kind == *SITUATION_KIND_AIR {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
-        sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.09);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-        sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.13);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
     }
-    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, get_sum_speed_x, 0.0);
     0.into()
 }
 
@@ -31,28 +25,36 @@ unsafe extern "C" fn sonic_special_s_rush_end_main_status(fighter: &mut L2CFight
 }
 
 unsafe extern "C" fn sonic_special_s_rush_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let boost_value = WorkModule::get_float(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 1.into();
+            }
+        }
+    }
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if !StatusModule::is_changing(fighter.module_accessor) {
         if prev_situation_kind == *SITUATION_KIND_GROUND
         && situation_kind == *SITUATION_KIND_AIR {
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_rush_end"), -1.0, 1.0, 0.0, false, false);
         }
         if prev_situation_kind == *SITUATION_KIND_AIR
         && situation_kind == *SITUATION_KIND_GROUND {
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s_rush_end"), -1.0, 1.0, 0.0, false, false);
         }
     }
-    if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-        if boost_value > 33.0 {
-            WorkModule::sub_float(fighter.module_accessor, 33.0, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_BOOSTED);
-            fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_S.into(), false.into());
+    if current_frame >= 15.0 {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT) {
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -60,12 +62,7 @@ unsafe extern "C" fn sonic_special_s_rush_end_main_loop(fighter: &mut L2CFighter
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
         }
         else {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_BOOSTED) {
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-            }
-            else {
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
-            }
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
         }
         return 1.into();
     }
@@ -77,22 +74,12 @@ unsafe extern "C" fn sonic_special_s_rush_end_exec_status(_fighter: &mut L2CFigh
 }
 
 unsafe extern "C" fn sonic_special_s_rush_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH_END].contains(&status_kind) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_BOOSTED);
-    }
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_RUSH);
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     0.into()
 }
 
 unsafe extern "C" fn sonic_special_s_rush_end_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH_END].contains(&status_kind) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_BOOSTED);
-    }
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_RUSH);
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     0.into()
 }
 

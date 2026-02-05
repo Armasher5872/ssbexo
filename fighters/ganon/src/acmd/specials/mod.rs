@@ -35,10 +35,11 @@ mod special_hi_start;
 mod special_hi_throw;
 mod special_lw;
 mod special_n_cape;
-mod special_n_fire_max;
-mod special_n_fire;
-mod special_n_loop;
-mod special_n_start;
+mod special_n_volley_fire_max;
+mod special_n_volley_fire;
+mod special_n_volley_loop;
+mod special_n_volley_start;
+mod special_n;
 mod volley_fly_charge;
 mod volley_fly;
 
@@ -51,10 +52,11 @@ pub fn install() {
     special_hi_throw::install();
     special_lw::install();
     special_n_cape::install();
-    special_n_fire_max::install();
-    special_n_fire::install();
-    special_n_loop::install();
-    special_n_start::install();
+    special_n_volley_fire_max::install();
+    special_n_volley_fire::install();
+    special_n_volley_loop::install();
+    special_n_volley_start::install();
+    special_n::install();
     volley_fly_charge::install();
     volley_fly::install();
 }

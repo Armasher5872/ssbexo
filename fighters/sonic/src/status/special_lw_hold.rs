@@ -90,9 +90,7 @@ unsafe extern "C" fn sonic_special_lw_hold_main_loop(fighter: &mut L2CFighterCom
         }
         if prev_situation_kind == *SITUATION_KIND_AIR
         && situation_kind == *SITUATION_KIND_GROUND {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_hold"), -1.0, 1.0, 0.0, false, false);
+            fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH.into(), true.into());
         }
     }
     if can_go_into_dash {
@@ -130,53 +128,6 @@ unsafe extern "C" fn fun_71000156a0(fighter: &mut L2CFighterCommon) {
     lua_args!(fighter, *MA_MSC_CMD_EFFECT_EFFECT_OFF_KIND, Hash40::new("sonic_spinblur_max"), true, true);
     sv_module_access::effect(fighter.lua_state_agent);
     fighter.pop_lua_stack(1);
-}
-
-unsafe extern "C" fn fun_7100015020(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind_interrupt = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
-    let jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
-    let max_jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX);
-    let mut ret = 0;
-    if situation_kind == *SITUATION_KIND_GROUND {
-        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON != 0 {
-            fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPIN_JUMP.into(), true.into());
-        }
-        else {
-            if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPIN_JUMP.into(), true.into());
-            }
-            else {
-                if status_kind_interrupt == *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_DASH {
-                    if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                        fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPIN_JUMP.into(), true.into());
-                        ret = 1;
-                    }
-                }
-                if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP != 0 {
-                    if ControlModule::is_enable_flick_jump(fighter.module_accessor) {
-                        fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPIN_JUMP.into(), true.into());
-                        ret = 1;
-                    }
-                }
-            }
-        }
-    }
-    else {
-        if !fighter.sub_transition_group_check_air_jump_aerial().get_bool() {
-            if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                if jump_count < max_jump_count {
-                    fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
-                    ret = 1;
-                }
-            }
-            else {
-                ret = 0;
-            }
-        }
-    }
-    ret.into()
 }
 
 unsafe extern "C" fn sonic_special_lw_hold_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {

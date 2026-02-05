@@ -37,6 +37,7 @@ unsafe extern "C" fn cloud_special_hi_main_loop(fighter: &mut L2CFighterCommon) 
     let lr = PostureModule::lr(fighter.module_accessor);
     let rot_angle = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
     let move_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
+    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     let stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
     let vec_stick_x = stick["x"].get_f32();
     let vec_stick_y = stick["y"].get_f32();
@@ -66,6 +67,7 @@ unsafe extern "C" fn cloud_special_hi_main_loop(fighter: &mut L2CFighterCommon) 
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+        UiManager::set_limit_type(entry_id, 3);
         fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_HI_LIMIT_BREAK.into(), false.into());
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_DECIDE) {

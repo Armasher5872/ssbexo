@@ -1,7 +1,9 @@
 use super::*;
 
 //Neutral Special Catch Turn ACMD
-unsafe extern "C" fn ssbexo_wario_neutral_special_catch_turn_acmd(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_wario_neutral_special_catch_turn_acmd(agent: &mut L2CAgentBase) {
+    FT_MOTION_RATE(agent, 0.5);
+}
 
 //Neutral Special Catch Turn Effect
 unsafe extern "C" fn ssbexo_wario_neutral_special_catch_turn_effect(_agent: &mut L2CAgentBase) {}

@@ -26,3 +26,12 @@ pub unsafe extern "C" fn call_special_zoom(boma: *mut BattleObjectModuleAccessor
 
 #[skyline::from_offset(0x33bd9c0)]
 pub unsafe extern "C" fn normal_weapon_hit_handler(vtable: u64, weapon: *mut smash::app::Weapon, log: u32) -> u64;
+
+#[skyline::from_offset(0x392dce0)]
+pub unsafe extern "C" fn allocator(align: i32, size: i32) -> *mut u64;
+
+#[skyline::from_offset(0x75d8f0)]
+pub unsafe extern "C" fn set_lightweight_data(group_ptr: *mut StatChangeGroup, stat_change_vec: *mut StatChange, end_ptr: *mut StatChange);
+
+#[skyline::from_offset(0x392e590)]
+pub unsafe extern "C" fn set_lightweight_data_post(stat_change_vec: *mut StatChange);

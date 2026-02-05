@@ -21,6 +21,7 @@ use {
 };
 
 mod homingtarget_homing;
+mod special_lw_hold;
 mod special_n_hit;
 mod special_n_homing_start;
 mod special_n_homing;
@@ -31,6 +32,7 @@ mod special_s_start;
 
 pub fn install() {
     homingtarget_homing::install();
+    special_lw_hold::install();
     special_n_hit::install();
     special_n_homing_start::install();
     special_n_homing::install();

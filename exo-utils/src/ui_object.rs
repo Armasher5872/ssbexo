@@ -40,6 +40,8 @@ pub trait CloudUiObject {
     fn is_valid(&self) -> bool;
     fn set_enable(&mut self, enable: bool);
     fn is_enabled(&self) -> bool;
+    fn get_limit_type(&self) -> i32;
+    fn set_limit_type(&mut self, limit_type: i32);
 }
 
 pub trait LinkUiObject {
@@ -201,6 +203,12 @@ impl CloudUiObject for CloudMeter {
     }
     fn is_enabled(&self) -> bool {
         self.enabled
+    }
+    fn get_limit_type(&self) -> i32 {
+        return self.limit_type;
+    }
+    fn set_limit_type(&mut self, limit_type: i32) {
+        self.limit_type = limit_type;
     }
 }
 
