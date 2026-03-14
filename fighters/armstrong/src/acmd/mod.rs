@@ -1,13 +1,15 @@
 use {
-    exo_utils::catch::*,
-    exo_var::{
+    exo_utils::{
         armstrong::*,
-        consts::*,
+        catch::*,
+        fighter_common::*,
     },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
             sv_animcmd::{
+                execute,
                 frame,
                 wait
             },
@@ -15,7 +17,7 @@ use {
         },
         lib::lua_const::*,
         lua2cpp::*,
-        phx::Hash40
+        phx::*
     },
     smash_script::{
         *,

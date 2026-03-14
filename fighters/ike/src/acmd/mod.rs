@@ -1,9 +1,5 @@
 use {
-    exo_utils::fighter_common::*,
-    exo_var::{
-        consts::*,
-        ike::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,

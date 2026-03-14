@@ -412,6 +412,22 @@ unsafe extern "C" fn ssbexo_cloud_punisher_guard_off_expression(agent: &mut L2CA
     }
 }
 
+//Down Taunt Sound
+unsafe extern "C" fn ssbexo_cloud_down_taunt_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 1.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_cloud_appeal_l01"));
+    }
+    frame(agent.lua_state_agent, 25.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("vc_cloud_appeal03"));
+    }
+    frame(agent.lua_state_agent, 115.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_cloud_appeal_l02"));
+    }
+}
+
 //Omnislash Dash ACMD
 unsafe extern "C" fn ssbexo_cloud_omnislash_dash_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
@@ -466,6 +482,8 @@ pub fn install() {
     .expression_acmd("expression_punishguard", ssbexo_cloud_punisher_guard_expression, Low)
     .sound_acmd("sound_punishguardoff", ssbexo_cloud_punisher_guard_off_sound, Low)
     .expression_acmd("expression_punishguardoff", ssbexo_cloud_punisher_guard_off_expression, Low)
+    .sound_acmd("sound_appeallwl", ssbexo_cloud_down_taunt_sound, Low)
+    .sound_acmd("sound_appeallwr", ssbexo_cloud_down_taunt_sound, Low)
     .game_acmd("game_finaldash", ssbexo_cloud_omnislash_dash_acmd, Low)
     .game_acmd("game_final2dash", ssbexo_cloud_omnislash_dash_acmd, Low)
     .install()

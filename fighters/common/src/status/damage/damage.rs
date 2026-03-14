@@ -3,96 +3,75 @@ use super::*;
 
 static mut IS_CALCULATING: Option<(u32, u32)> = None;
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_Damage_Main)]
-unsafe fn status_damage_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let is_end = MotionModule::is_end(fighter.module_accessor);
-    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+#[skyline::hook(replace = L2CFighterCommon_status_Damage_Main)]
+unsafe extern "C" fn status_damage_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+   let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let break_to_death = fighter.FighterStatusDamage__check_dolly_stadium_wall_break_to_death();
+    let is_damage_stop = FighterStopModuleImpl::is_damage_stop(fighter.module_accessor);
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     let damage_fly_reflect_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("damage_fly_reflect_speed"));
-    let get_speed_x = {
+    let damage_end_reaction = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION);
+    let get_damage_speed_x = {
         fighter.clear_lua_stack();
         lua_args!(fighter, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
         smash::app::sv_kinetic_energy::get_speed_x(fighter.lua_state_agent)
     };
-    let mut fall_check;
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 0.into();
         }
     }
-    asdi_check(fighter);
-    asdi_function(fighter);
-    if situation_kind != *SITUATION_KIND_AIR {
-        if !WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) {
-            fall_check = false;
+    if situation_kind == *SITUATION_KIND_AIR {
+        if GroundModule::is_miss_foot(fighter.module_accessor) {
+            fighter.change_status(FIGHTER_STATUS_KIND_MISS_FOOT.into(), false.into());   
         }
-        else {
-            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION) {
-                fall_check = false;
-            }
-            if !is_end {
-                fall_check = false;
-            }
-            else {
-                fall_check = situation_kind == *SITUATION_KIND_AIR;
-            }
-            if fall_check {
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-            }
+    }
+    if MotionModule::is_end(fighter.module_accessor) && damage_end_reaction {
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) && situation_kind == *SITUATION_KIND_GROUND {
+            fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());  
         }
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION) {
-                if is_end {
-                    if situation_kind == *SITUATION_KIND_GROUND {
-                        fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
-                    }
-                }
-            }
+        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) && situation_kind == *SITUATION_KIND_AIR {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());  
         }
-        if !FighterStopModuleImpl::is_damage_stop(fighter.module_accessor) {
-            if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32)
-            || GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) {
-                if damage_fly_reflect_speed < get_speed_x {
-                    if break_to_death.get_bool() {
-                        fighter.change_status(FIGHTER_STATUS_KIND_DOLLY_STAGE_DEAD.into(), false.into());
-                    }
-                    else {
-                        fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR.into(), false.into());
-                    }
-                }
-            }
-        }
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DAMAGE_FALL) {
-            if situation_kind == *SITUATION_KIND_AIR {
-                if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION) {
-                    fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FALL.into(), false.into());   
+    }
+    if !is_damage_stop {
+        if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32)
+        || GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) {
+            if damage_fly_reflect_speed < get_damage_speed_x {
+                if break_to_death.get_bool() {
+                    fighter.change_status(FIGHTER_STATUS_KIND_DOLLY_STAGE_DEAD.into(), false.into());
                 }
                 else {
-                    fighter.change_status(FIGHTER_STATUS_KIND_MISS_FOOT.into(), false.into());   
+                    fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR.into(), false.into());
                 }
             }
         }
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_KNOCKOUT) {
-            if FighterStopModuleImpl::is_damage_stop(fighter.module_accessor) {
-                return 0.into();
+    }
+    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DAMAGE_FALL) {
+        if situation_kind == *SITUATION_KIND_AIR {
+            if damage_end_reaction {
+                fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FALL.into(), false.into());   
             }
+            else {
+                fighter.change_status(FIGHTER_STATUS_KIND_MISS_FOOT.into(), false.into());   
+            }
+        }
+    }
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_KNOCKOUT) {
+        if !is_damage_stop {
             if [hash40("damage_n_1"), hash40("damage_n_2"), hash40("damage_n_3"), hash40("damage_hi_1"), hash40("damage_hi_2"), hash40("damage_hi_3"), hash40("damage_lw_1"), hash40("damage_lw_2"), hash40("damage_lw_3")].contains(&motion_kind) {
                 fighter.change_status(FIGHTER_STATUS_KIND_DOWN_SPOT.into(), false.into());   
                 return 0.into();
             }
         }
     }
-    else {
-        if GroundModule::is_miss_foot(fighter.module_accessor) {
-            fighter.change_status(FIGHTER_STATUS_KIND_MISS_FOOT.into(), false.into());   
-        }
-    }
+    asdi_check(fighter);
+    asdi_function(fighter);
     0.into()
 }
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_Damage)]
-unsafe fn status_end_damage(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_end_Damage)]
+unsafe extern "C" fn status_end_damage(fighter: &mut L2CFighterCommon) -> L2CValue {
     let flags = [*FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE];
     for x in 0..flags.len() {
         WorkModule::off_flag(fighter.module_accessor, flags[x]);

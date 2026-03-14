@@ -16,22 +16,17 @@ unsafe extern "C" fn ganon_volley_fly_init_status(weapon: &mut L2CWeaponCommon) 
     let owner_pos_x = PostureModule::pos_x(owner_boma);
     let owner_pos_y = PostureModule::pos_y(owner_boma);
     let owner_pos_z = PostureModule::pos_z(owner_boma);
-    let owner_situation_kind = StatusModule::situation_kind(owner_boma);
     let volley_damage_charge = WorkModule::get_float(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_VOLLEY_DAMAGE_CHARGE);
     let volley_scale = WorkModule::get_float(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_VOLLEY_SCALE_CHARGE);
     let is_charged = WorkModule::is_flag(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    let direction = WorkModule::get_int(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_N_DIRECTION);
     let angle: f32 = 10.0;
     let speed = if is_charged {speed_max} else {speed_min};
     let speed_y = angle.to_radians().cos()*speed;
+    let y_speed = if direction == 2 {-speed_y/4.5} else if direction == 1 {speed_y/4.5} else {0.0};
     if owner_status_kind != *FIGHTER_STATUS_KIND_SPECIAL_LW {
-        if owner_situation_kind == *SITUATION_KIND_GROUND {
-            sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed*lr, 0.0);
-            sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed*lr, 0.0);
-        }
-        else {
-            sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed*lr, -speed_y/4.5);
-            sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed*lr, -speed_y/4.5);
-        }
+        sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed*lr, y_speed);
+        sv_kinetic_energy!(set_stable_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed*lr, y_speed);
         sv_kinetic_energy!(set_accel, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
         KineticModule::enable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
         WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);

@@ -25,7 +25,6 @@ unsafe extern "C" fn armstrong_final_init_status(fighter: &mut L2CFighterCommon)
 
 unsafe extern "C" fn armstrong_final_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x201bc9217c));
-    fighter.pop_lua_stack(1);
     AreaModule::set_whole(fighter.module_accessor, false);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("final_start"), L2CValue::Hash40s("final_air_start"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(armstrong_final_main_loop as *const () as _))
@@ -34,25 +33,29 @@ unsafe extern "C" fn armstrong_final_main_status(fighter: &mut L2CFighterCommon)
 unsafe extern "C" fn armstrong_final_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    if fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
-        return 1.into();
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
+            return 1.into();
+        }
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        fighter.set_situation(SITUATION_KIND_GROUND.into());
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("final_start"), -1.0, 1.0, 0.0, false, false);
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-        fighter.set_situation(SITUATION_KIND_AIR.into());
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("final_air_start"), -1.0, 1.0, 0.0, false, false);
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+            fighter.set_situation(SITUATION_KIND_GROUND.into());
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("final_start"), -1.0, 1.0, 0.0, false, false);
+        }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+            fighter.set_situation(SITUATION_KIND_AIR.into());
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("final_air_start"), -1.0, 1.0, 0.0, false, false);
+        }
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+        if situation_kind == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), true.into());
         }
         else {
@@ -67,6 +70,22 @@ unsafe extern "C" fn armstrong_final_exec_status(_fighter: &mut L2CFighterCommon
     0.into()
 }
 
+unsafe extern "C" fn armstrong_final_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if status_kind != *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW {
+        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1e0aba2d68));
+    }
+    0.into()
+}
+
+unsafe extern "C" fn armstrong_final_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if status_kind != *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW {
+        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1e0aba2d68));
+    }
+    0.into()
+}
+
 pub fn install() {
     Agent::new("ganon")
     .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
@@ -74,6 +93,8 @@ pub fn install() {
     .status(Init, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_main_status)
     .status(Exec, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_exec_status)
+    .status(End, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_end_status)
+    .status(Exit, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_exit_status)
     .install()
     ;
 }

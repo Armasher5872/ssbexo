@@ -13,35 +13,24 @@ unsafe extern "C" fn status_pre_attackair(fighter: &mut L2CFighterCommon) -> L2C
 //Status Attack Air Main Common, used for continual platform drops and ECB Shifts
 #[skyline::hook(replace = L2CFighterCommon_status_AttackAir_Main_common)]
 unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !fighter.attack_air_common_strans().get_bool() {
-        /* START OF NEW ADDITIONS */
-        let boma = smash::app::sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
-        if prev_status_kind == *FIGHTER_STATUS_KIND_PASS {
-            if !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
-                GroundModule::set_passable_check(boma, true);
-            }
-        }
-        /* END OF NEW ADDITIONS */
-        if !CancelModule::is_enable_cancel(boma) {
-            if MotionModule::is_end(boma) {
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-            }
-            return false.into();
-        }
-        else {
-            if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-                if fighter.sub_air_check_fall_common().get_bool() {
-                    return true.into();
-                }
-                if !MotionModule::is_end(boma) {
-                    return false.into();
-                }
-                fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    if fighter.attack_air_common_strans().get_bool() {
+        return true.into();
+    }
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return true.into();
             }
         }
     }
-    true.into()
+    if prev_status_kind == *FIGHTER_STATUS_KIND_PASS && !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+        GroundModule::set_passable_check(fighter.module_accessor, true);
+    }
+    if MotionModule::is_end(fighter.module_accessor) {
+        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+    }
+    false.into()
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {

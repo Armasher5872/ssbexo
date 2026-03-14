@@ -10,15 +10,18 @@ unsafe extern "C" fn status_pre_jump_sub(fighter: &mut L2CFighterCommon) {
 
 //The following set of hooks handles adjusting fullhop height speed, making jumping account for the C Stick, and properly applying Momentum Transfer.
 
-//The jump_y*gravity*2.0 formula controls your characters total jump height, with lower values decreasing your total height
-//The 0.5*gravity formula controls how quickly you accelerate to the top of your jump, with higher values increasing how quickly you ascend
+//The jump_y*air_accel_y*2.0 formula controls your characters total jump height, with lower values decreasing your total height
+//The (0.5*jump_initial_y)*air_accel_y formula controls how quickly you accelerate to the top of your jump, with higher values increasing how quickly you ascend. Most characters have jump_initial_y changed to 1.0, making jump_initial_y now work as a velocity multiplier
 #[skyline::hook(offset = 0x6d2194, inline)]
 unsafe extern "C" fn fullhop_initial_y_speed_hook(ctx: &mut skyline::hooks::InlineCtx) {
     let callable: extern "C" fn(u64, u64, u64) -> f32 = std::mem::transmute(ctx.registers[8].x());
     let work_module = ctx.registers[0].x();
     let jump_y = callable(work_module, hash40("jump_y"), 0);
-    let gravity = callable(work_module, hash40("air_accel_y"), 0);
-    let initital_jump_vel = (jump_y*gravity*2.0).sqrt()+(0.5*gravity);
+    let jump_initial_y = callable(work_module, hash40("jump_initial_y"), 0);
+    let air_accel_y = callable(work_module, hash40("air_accel_y"), 0);
+    let total_jump_height = (jump_y*air_accel_y*2.0).sqrt();
+    let init_jump_vel_mul = (0.5*jump_initial_y)*air_accel_y;
+    let initital_jump_vel = total_jump_height+init_jump_vel_mul;
     ctx.registers_f[0].set_s(initital_jump_vel)
 }
 
@@ -92,8 +95,10 @@ unsafe extern "C" fn jump1_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
+    let dash_speed = callable(work_module, hash40("dash_speed"), 0);
+    let speed_max = if dash_speed > run_speed_max {dash_speed} else {run_speed_max};
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    let jump_speed_x_max = run_speed_max*ratio;
+    let jump_speed_x_max = speed_max*ratio;
     ctx.registers_f[0].set_s(jump_speed_x_max)
 }
 
@@ -103,8 +108,10 @@ unsafe extern "C" fn jump2_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
+    let dash_speed = callable(work_module, hash40("dash_speed"), 0);
+    let speed_max = if dash_speed > run_speed_max {dash_speed} else {run_speed_max};
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    let jump_speed_x_max = run_speed_max*ratio;
+    let jump_speed_x_max = speed_max*ratio;
     ctx.registers_f[0].set_s(jump_speed_x_max)
 }
 
@@ -114,8 +121,10 @@ unsafe extern "C" fn jump3_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
+    let dash_speed = callable(work_module, hash40("dash_speed"), 0);
+    let speed_max = if dash_speed > run_speed_max {dash_speed} else {run_speed_max};
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    let jump_speed_x_max = run_speed_max*ratio;
+    let jump_speed_x_max = speed_max*ratio;
     ctx.registers_f[0].set_s(jump_speed_x_max)
 }
 
@@ -125,8 +134,10 @@ unsafe extern "C" fn jump4_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
     let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
+    let dash_speed = callable(work_module, hash40("dash_speed"), 0);
+    let speed_max = if dash_speed > run_speed_max {dash_speed} else {run_speed_max};
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    let jump_speed_x_max = run_speed_max*ratio;
+    let jump_speed_x_max = speed_max*ratio;
     ctx.registers_f[0].set_s(jump_speed_x_max)
 }
 

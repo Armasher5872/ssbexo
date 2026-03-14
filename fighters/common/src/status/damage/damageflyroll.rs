@@ -1,7 +1,7 @@
 use super::*;
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageFlyRoll_Main)]
-unsafe fn status_damageflyroll_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_DamageFlyRoll_Main)]
+unsafe extern "C" fn status_damageflyroll_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     asdi_check(fighter);
     asdi_function(fighter);
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR) {
@@ -39,8 +39,8 @@ unsafe fn status_damageflyroll_main(fighter: &mut L2CFighterCommon) -> L2CValue 
     0.into()
 }
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_DamageFlyRoll)]
-unsafe fn status_end_damageflyroll(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_end_DamageFlyRoll)]
+unsafe extern "C" fn status_end_damageflyroll(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let flags = [*FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE];
     for x in 0..flags.len() {

@@ -65,7 +65,7 @@ unsafe extern "C" fn cloud_special_hi_combo_2_main_loop(fighter: &mut L2CFighter
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN) {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
-        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, ((new_stick_degrees+90.0).to_radians().sin()*2.0)*lr, (new_stick_degrees-90.0).to_radians().cos()*2.0);
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, ((new_stick_degrees+90.0).to_radians().sin())*lr, (new_stick_degrees-90.0).to_radians().cos());
         sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.04, 0.04);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN);
     }

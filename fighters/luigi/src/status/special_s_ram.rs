@@ -6,19 +6,10 @@ unsafe extern "C" fn luigi_special_s_ram_pre_status(fighter: &mut L2CFighterComm
     0.into()
 }
 
-unsafe extern "C" fn luigi_special_s_ram_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_LAST_STRANS) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_RAM_FLAG_HIT);
-    }
-    WorkModule::set_int(fighter.module_accessor, 9, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_S_DISCHARGE_CHANCE);
-    0.into()
-}
-
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, luigi_special_s_ram_pre_status)
-    .status(End, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, luigi_special_s_ram_end_status)
     .install()
     ;
 }

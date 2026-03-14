@@ -20,6 +20,7 @@ use {
         vector::*,
     },
     exo_var::{
+        armstrong::*,
         consts::*,
         donkey::*,
         ganon::*,

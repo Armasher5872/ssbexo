@@ -75,11 +75,13 @@ unsafe extern "C" fn sonic_special_s_rush_end_exec_status(_fighter: &mut L2CFigh
 
 unsafe extern "C" fn sonic_special_s_rush_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_BOOSTED_MOTION_RATE);
     0.into()
 }
 
 unsafe extern "C" fn sonic_special_s_rush_end_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_BOOSTED_MOTION_RATE);
     0.into()
 }
 

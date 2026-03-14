@@ -25,6 +25,7 @@ use {
         weapon::*,
     },
     exo_var::{
+        armstrong::*,
         cloud::*,
         consts::*,
         ganon::*,

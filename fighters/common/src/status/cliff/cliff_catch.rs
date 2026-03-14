@@ -55,10 +55,7 @@ unsafe extern "C" fn sub_status_cliffcatch_maincommon(fighter: &mut L2CFighterCo
     if situation_kind == *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
     }
-    if situation_kind == *SITUATION_KIND_AIR {
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-    }
-    if !GroundModule::is_status_cliff(fighter.module_accessor) {
+    if situation_kind == *SITUATION_KIND_AIR || !GroundModule::is_status_cliff(fighter.module_accessor) {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     if sv_information::stage_id() == 0x145 && 10.0 <= current_frame && FighterUtil::check_cliff_separated(fighter.module_accessor) {

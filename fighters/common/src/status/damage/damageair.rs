@@ -1,7 +1,7 @@
 use super::*;
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageAir_Main)]
-unsafe fn status_damageair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_DamageAir_Main)]
+unsafe extern "C" fn status_damageair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let fall_check;
     let pos_y = PostureModule::pos_y(fighter.module_accessor);
@@ -77,8 +77,8 @@ unsafe fn status_damageair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_DamageAir)]
-unsafe fn status_end_damageair(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_end_DamageAir)]
+unsafe extern "C" fn status_end_damageair(fighter: &mut L2CFighterCommon) -> L2CValue {
     let flags = [ *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE];
     for x in 0..flags.len() {
         WorkModule::off_flag(fighter.module_accessor, flags[x]);

@@ -14,7 +14,7 @@ unsafe extern "C" fn ssbexo_ganon_grounded_down_special_acmd(agent: &mut L2CAgen
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("armr"), 16.0, 45, 65, 0, 65, 5.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         JostleModule::set_status(agent.module_accessor, false);
-        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
+        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
     }
     wait(agent.lua_state_agent, 1.0);
     if is_excute(agent) {

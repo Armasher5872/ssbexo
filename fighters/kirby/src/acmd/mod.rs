@@ -1,8 +1,5 @@
 use {
-    exo_var::{
-        consts::*,
-        kirby::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,

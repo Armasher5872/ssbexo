@@ -7,7 +7,7 @@ unsafe extern "C" fn ssbexo_luigi_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(9.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(agent.lua_state_agent, 2.0);
@@ -133,9 +133,9 @@ unsafe extern "C" fn ssbexo_luigi_pivot_grab_expression(agent: &mut L2CAgentBase
 
 //Pummel ACMD
 unsafe extern "C" fn ssbexo_luigi_pummel_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 16.0);
+    frame(agent.lua_state_agent, 1.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 3.2, 361, 100, 40, 0, 5.0, 0.0, 10.0, 10.0, None, None, None, 2.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 1.2, 361, 100, 40, 0, 5.0, 0.0, 10.0, 10.0, None, None, None, 2.1, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
         AttackModule::set_catch_only_all(agent.module_accessor, true, false);
     }
     wait(agent.lua_state_agent, 1.0);
@@ -228,25 +228,16 @@ unsafe extern "C" fn ssbexo_luigi_forward_throw_expression(agent: &mut L2CAgentB
 //Back Throw ACMD
 unsafe extern "C" fn ssbexo_luigi_back_throw_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 10.0, 45, 65, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 10.0, 135, 65, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
-    frame(agent.lua_state_agent, 13.0);
-    if is_excute(agent) {
-        ATTACK_IGNORE_THROW(agent, 0, 0, Hash40::new("hip"), 6.0, 361, 100, 30, 0, 4.0, -1.0, 6.0, 0.0, Some(-3.2), Some(13.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_THROW);
-    }
-    frame(agent.lua_state_agent, 40.0);
-    if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        REVERSE_LR(agent);
-    }
-    frame(agent.lua_state_agent, 43.0);
+    frame(agent.lua_state_agent, 31.0);
     if is_excute(agent) {
         CHECK_FINISH_CAMERA(agent, 14, 7);
         smash::app::lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
         smash::app::lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 7.0, y: 0.0, z: 0.0});
     }
-    frame(agent.lua_state_agent, 44.0);
+    frame(agent.lua_state_agent, 32.0);
     if is_excute(agent) {
         ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(agent.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
     }
@@ -254,45 +245,14 @@ unsafe extern "C" fn ssbexo_luigi_back_throw_acmd(agent: &mut L2CAgentBase) {
 
 //Back Throw Effect
 unsafe extern "C" fn ssbexo_luigi_back_throw_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 8, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(agent.lua_state_agent, 16.0);
-    if is_excute(agent) {
-        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-        LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-    }
-    frame(agent.lua_state_agent, 22.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, -2, 0, 0, -90, 0, 1.5, true, *EF_FLIP_YZ, 0, 1, 0);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_FLIP_COLOR(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 26.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, 1.5, 0, 0, -90, 0, 1.5, true, *EF_FLIP_YZ, 0, 1, 0);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_FLIP_COLOR(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 29.0);
-    if is_excute(agent) {
-        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
-        LAST_EFFECT_SET_COLOR(agent, 0.0, 1.0, 0.0);
-    }
-    frame(agent.lua_state_agent, 34.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 1.5, true, *EF_FLIP_YZ, 0, 1, 0);
-        smash::app::sv_animcmd::EFFECT_FOLLOW_FLIP_COLOR(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 44.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
-    }
-    frame(agent.lua_state_agent, 45.0);
+    frame(agent.lua_state_agent, 31.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, 10, -165, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(agent.lua_state_agent, 32.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
 }
 
@@ -302,45 +262,43 @@ unsafe extern "C" fn ssbexo_luigi_back_throw_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_throw_01"));
     }
-    wait(agent.lua_state_agent, 5.0);
+    frame(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
-        PLAY_DOWN_SE(agent, Hash40::new("se_common_down_m_01"));
-    }
-    wait(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_luigi_special_l01"));
-    }
-    wait(agent.lua_state_agent, 25.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_luigi_special_l02"));
         PLAY_SE(agent, Hash40::new("vc_luigi_006"));
+    }
+    frame(agent.lua_state_agent, 32.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+    }
+    frame(agent.lua_state_agent, 52.0);
+    if is_excute(agent) {
+        PLAY_LANDING_SE(agent, Hash40::new("se_luigi_landing02"));
+        PLAY_SE(agent, Hash40::new("vc_luigi_damage01"));
     }
 }
 
 //Back Throw Expression
 unsafe extern "C" fn ssbexo_luigi_back_throw_expression(agent: &mut L2CAgentBase) {
+    let expression_common : &mut smash::lua2cpp::L2CFighterAnimcmdExpressionCommon = std::mem::transmute(&mut *agent);
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 4);
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(agent.lua_state_agent, 28.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 11, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_R, 4);
     }
-    frame(agent.lua_state_agent, 24.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 9, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 34.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 45.0);
+    frame(agent.lua_state_agent, 32.0);
     if is_excute(agent) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_M);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
+    frame(agent.lua_state_agent, 38.0);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE, 3);
+    }
     frame(agent.lua_state_agent, 52.0);
     if is_excute(agent) {
+        expression_common.expression_LandingHeavyRumble();
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 4);
     }
 }

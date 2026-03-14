@@ -102,7 +102,22 @@ unsafe extern "C" fn ganon_special_n_volley_fire_main_loop(fighter: &mut L2CFigh
     0.into()
 }
 
-unsafe extern "C" fn ganon_special_n_volley_fire_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn ganon_special_n_volley_fire_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+    if current_frame < 11.0 {
+        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED) {
+            if stick_y >= 0.7 {
+                WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_N_DIRECTION);
+            }
+            else if stick_y <= -0.7 {
+                WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_N_DIRECTION);
+            }
+            else {
+                WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_N_DIRECTION);
+            }
+        }
+    }
     0.into()
 }
 
@@ -111,6 +126,7 @@ unsafe extern "C" fn ganon_special_n_volley_fire_end_status(fighter: &mut L2CFig
     WorkModule::set_float(fighter.module_accessor, 1.0, *FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_VOLLEY_SCALE_CHARGE);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("ganon_volley"), true, true);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_N_DIRECTION);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_USED_SPECIAL_N_AIR);
     0.into()
@@ -121,6 +137,7 @@ unsafe extern "C" fn ganon_special_n_volley_fire_exit_status(fighter: &mut L2CFi
     WorkModule::set_float(fighter.module_accessor, 1.0, *FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_VOLLEY_SCALE_CHARGE);
     EffectModule::kill_kind(fighter.module_accessor, Hash40::new("ganon_volley"), true, true);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
+    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_N_DIRECTION);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_USED_SPECIAL_N_AIR);
     0.into()

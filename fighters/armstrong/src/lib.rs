@@ -1,8 +1,10 @@
 use {
     exo_utils::{
         armstrong::*,
+        collision_struct::*,
         damage::*,
         fighter_common::*,
+        ganon::*,
         hook::*,
         status_end_control::*,
         vtable_funcs::*,
@@ -12,6 +14,7 @@ use {
         consts::*,
         ganon::*,
         globals::*,
+        variables::*,
     },
     param_config::*,
     smash::{
@@ -33,10 +36,12 @@ use {
     smash2::app::{
         LinkEvent,
         LinkEventCapture
-    }
+    },
+    smashline::*,
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
@@ -51,7 +56,6 @@ pub fn install() {
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("run_speed_max"), 0, 1.36));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_speed_x"), 0, 0.788));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_speed_x_max"), 0, 1.443));
-    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_initial_y"), 0, 21.0));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_y"), 0, 32.0));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("mini_jump_y"), 0, 15.0));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("jump_aerial_y"), 0, 30.35));
@@ -70,7 +74,14 @@ pub fn install() {
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("landing_attack_air_frame_b"), 0, 11.0));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("landing_attack_air_frame_hi"), 0, 12.0));
     update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("landing_attack_air_frame_lw"), 0, 16.0));
+    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("fighter"), hash40("common_effect_0_r"), 0.88));
+    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("fighter"), hash40("common_effect_0_r"), 0.35));
+    update_float_2(*FIGHTER_KIND_GANON, vec![8, 9, 10, 11, 12, 13, 14, 15].clone(), (hash40("fighter"), hash40("common_effect_0_r"), 0.13));
     acmd::install();
+    opff::install();
     status::install();
     vtable::install();
+    unsafe {
+        FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR += clone_weapon("luigi", *WEAPON_KIND_LUIGI_FIREBALL, "ganon", "firepillar", false);
+    }
 }

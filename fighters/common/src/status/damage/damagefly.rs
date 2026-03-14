@@ -1,7 +1,7 @@
 use super::*;
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageFly_Main)]
-unsafe fn status_damagefly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_DamageFly_Main)]
+unsafe extern "C" fn status_damagefly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let get_sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
@@ -45,8 +45,8 @@ unsafe fn status_damagefly_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_DamageFly)]
-unsafe fn status_end_damagefly(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_end_DamageFly)]
+unsafe extern "C" fn status_end_damagefly(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let flags = [*FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE];
     for x in 0..flags.len() {

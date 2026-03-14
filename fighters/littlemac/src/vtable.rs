@@ -120,7 +120,7 @@ unsafe extern "C" fn littlemac_on_attack(meter: f32, vtable: u64, battle_object:
     let ko_gauge = WorkModule::get_float(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
     let star_punch_strength = WorkModule::get_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
     if status_kind == *FIGHTER_STATUS_KIND_THROW && motion_kind == hash40("throw_lw") && frame >= 16.0 {
-        StatusModule::change_status_request(opponent_boma, *FIGHTER_STATUS_KIND_DOWN, false);
+        StatusModule::change_status_request(opponent_boma, *FIGHTER_STATUS_KIND_DOWN_SPOT, false);
     }
     if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N && ko_gauge == 100.0 && star_punch_strength == 3 && collision_kind == *COLLISION_KIND_HIT {
         call_special_zoom(boma, log, *FIGHTER_KIND_LITTLEMAC, hash40("param_special_n"), 1, 0, 0, 0, 0);

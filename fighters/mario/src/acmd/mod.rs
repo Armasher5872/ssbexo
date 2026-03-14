@@ -1,18 +1,12 @@
 use {
-    exo_utils::{
-        fighter_common::*,
-        vector::*,
-    },
-    exo_var::{
-        consts::*,
-        mario::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
             sv_animcmd::{
                 frame,
-                wait
+                wait,
+                wait_loop_sync_mot
             },
             *
         },

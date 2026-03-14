@@ -4,7 +4,7 @@ use super::*;
 unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_fire_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 11.0);
     if is_excute(agent) {
-        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
+        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
     }
 }
 

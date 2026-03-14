@@ -2,22 +2,44 @@ use super::*;
 
 //Neutral Special ACMD
 unsafe extern "C" fn ssbexo_ganon_neutral_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 14.0);
+    frame(agent.lua_state_agent, 3.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
+    }
+    frame(agent.lua_state_agent, 19.0);
     if is_excute(agent) {
         WorkModule::off_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
     }
 }
 
-//Neutral Special Effect
-unsafe extern "C" fn ssbexo_ganon_neutral_special_effect(agent: &mut L2CAgentBase) {
+//Grounded Neutral Special Effect
+unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_effect(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("armr"), 7, 0, 0, 0, 0, 0, 1.6, true);
+    }
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_NONE);
     }
 }
 
-//Neutral Special Sound
-unsafe extern "C" fn ssbexo_ganon_neutral_special_sound(agent: &mut L2CAgentBase) {
+//Aerial Neutral Special Effect
+unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 5.0);
+    if is_excute(agent) {
+        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_NONE);
+    }
+}
+
+//Grounded Neutral Special Sound
+unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_sound(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_appear01"));
+    }
+}
+
+//Aerial Neutral Special Sound
+unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         let swipe = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_special_n07"), true, false, false, false, smash::app::enSEType(0));
@@ -49,12 +71,12 @@ pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_specialn", ssbexo_ganon_neutral_special_acmd, Low)
-    .effect_acmd("effect_specialn", ssbexo_ganon_neutral_special_effect, Low)
-    .sound_acmd("sound_specialn", ssbexo_ganon_neutral_special_sound, Low)
+    .effect_acmd("effect_specialn", ssbexo_ganon_grounded_neutral_special_effect, Low)
+    .sound_acmd("sound_specialn", ssbexo_ganon_grounded_neutral_special_sound, Low)
     .expression_acmd("expression_specialn", ssbexo_ganon_neutral_special_expression, Low)
     .game_acmd("game_specialairn", ssbexo_ganon_neutral_special_acmd, Low)
-    .effect_acmd("effect_specialairn", ssbexo_ganon_neutral_special_effect, Low)
-    .sound_acmd("sound_specialairn", ssbexo_ganon_neutral_special_sound, Low)
+    .effect_acmd("effect_specialairn", ssbexo_ganon_aerial_neutral_special_effect, Low)
+    .sound_acmd("sound_specialairn", ssbexo_ganon_aerial_neutral_special_sound, Low)
     .expression_acmd("expression_specialairn", ssbexo_ganon_neutral_special_expression, Low)
     .install()
     ;

@@ -7,7 +7,6 @@ use {
         app::{
             lua_bind::*,
             sv_animcmd::{
-                get_value_float,
                 frame,
                 wait
             },

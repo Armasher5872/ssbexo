@@ -19,7 +19,6 @@ unsafe extern "C" fn ssbexo_link_grab_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
-
 //Dash Grab ACMD
 unsafe extern "C" fn ssbexo_link_dash_grab_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {

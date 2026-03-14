@@ -42,6 +42,10 @@ unsafe extern "C" fn ssbexo_cloud_up_special_combo_1_acmd(agent: &mut L2CAgentBa
     if is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_CLOUD_STATUS_SPECIAL_HI_FLAG_SHIFT);
     }
+    frame(agent.lua_state_agent, 71.0);
+    if is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_CLOUD_STATUS_SPECIAL_HI_FLAG_SHIFT);
+    }
 }
 
 //Up Special Combo 1 Effect

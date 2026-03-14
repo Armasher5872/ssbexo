@@ -19,7 +19,7 @@ unsafe extern "C" fn status_cliffrobbed(fighter: &mut L2CFighterCommon) -> L2CVa
     if fighter_kind == *FIGHTER_KIND_KOOPAG {
         motion_kind = Hash40::new("fall");
     }
-    MotionModule::change_motion(fighter.module_accessor, motion_kind, 0.0, 1.0, false, 0.0, false, false);
+    MotionModule::change_motion(fighter.module_accessor, motion_kind, 0.0, 0.5, false, 0.0, false, false);
     KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x*-lr);
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, speed_y);

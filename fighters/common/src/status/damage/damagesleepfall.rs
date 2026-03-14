@@ -1,7 +1,7 @@
 use super::*;
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_DamageSleepFall_Main)]
-unsafe fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_DamageSleepFall_Main)]
+unsafe extern "C" fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let damage_song_fall_effect_interval = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("damage_song_fall_effect_interval"));
@@ -36,8 +36,8 @@ unsafe fn status_damagesleepfall_main(fighter: &mut L2CFighterCommon) -> L2CValu
     0.into()
 }
 
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_end_DamageSleepFall)]
-unsafe fn status_end_damagesleepfall(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_end_DamageSleepFall)]
+unsafe extern "C" fn status_end_damagesleepfall(fighter: &mut L2CFighterCommon) -> L2CValue {
     let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let flags = [*FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE];

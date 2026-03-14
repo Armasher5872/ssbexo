@@ -56,6 +56,7 @@ unsafe extern "C" fn sonic_special_s_exec_status(_fighter: &mut L2CFighterCommon
 
 unsafe extern "C" fn sonic_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_BOOSTED_MOTION_RATE);
     if status_kind != *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
         EFFECT_OFF_KIND(fighter, Hash40::new("sonic_spintrace"), true, true);
@@ -66,6 +67,7 @@ unsafe extern "C" fn sonic_special_s_end_status(fighter: &mut L2CFighterCommon) 
 
 unsafe extern "C" fn sonic_special_s_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_BOOSTED_MOTION_RATE);
     if status_kind != *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
         EFFECT_OFF_KIND(fighter, Hash40::new("sonic_spintrace"), true, true);

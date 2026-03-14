@@ -1,7 +1,9 @@
 use {
   exo_utils::{
+    collision_struct::*,
+    damage::*,
     fighter_common::*,
-    status_end_control::*,
+    hook::*,
   },
   exo_var::{
     consts::*,
@@ -18,7 +20,7 @@ use {
       L2CValue,
       lua_const::*,
     },
-    phx::Hash40
+    lua2cpp::*,
   }
 };
 

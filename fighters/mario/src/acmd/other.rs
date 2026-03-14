@@ -1,151 +1,79 @@
 use super::*;
 
-//Final Smash ACMD
-unsafe extern "C" fn ssbexo_mario_final_smash_acmd(agent: &mut L2CAgentBase) {
-    let scale = PostureModule::scale(agent.module_accessor);
-    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_CHARGE) {
-        if is_excute(agent) {
-            CHECK_VALID_FINAL_START_CAMERA(agent, 0, 1, 20, 0, 0, 0);
-        }
-        frame(agent.lua_state_agent, 5.0);
-        if is_excute(agent) {
-            ArticleModule::generate_article(agent.module_accessor, *FIGHTER_MARIO_GENERATE_ARTICLE_HUGE_FLAME, false, -1);
-        }
-        frame(agent.lua_state_agent, 10.0);
-        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {      
-            if is_excute(agent) {
-                FT_SET_FINAL_FEAR_FACE(agent, 60);
-                REQ_FINAL_START_CAMERA_arg3(agent, Hash40::new("d04final.nuanmb"), false, false);
-                FT_START_CUTIN(agent);
-            }  
-        }
-        else {
-            if is_excute(agent) {
-                CAM_ZOOM_IN_arg5(agent, 2.05, 0.0, 3.0*scale, 0.0, 0.0);
-                FT_START_CUTIN(agent);
-            }
-        }
-        if sv_animcmd::get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-            if is_excute(agent) {
-                camera!(agent, *MA_MSC_CMD_CAMERA_CAM_OFFSET, 0, 0);
-            }
-        }
-        else {
-            if is_excute(agent) {
-                camera!(agent, *MA_MSC_CMD_CAMERA_CAM_OFFSET, 0, 0);
-            }
-        }
+//Crawl ACMD
+unsafe extern "C" fn ssbexo_mario_crawl_acmd(_agent: &mut L2CAgentBase) {}
+
+//Crawl Effect
+unsafe extern "C" fn ssbexo_mario_crawl_effect(agent: &mut L2CAgentBase) {
+    loop {
         frame(agent.lua_state_agent, 25.0);
-        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
-            CAM_ZOOM_OUT(agent);
-        }
-    }
-    else {
         if is_excute(agent) {
-            WHOLE_HIT(agent, *HIT_STATUS_XLU);
-            CHECK_VALID_FINAL_START_CAMERA(agent, 0, 1, 20, 0, 0, 0);
-            SLOW_OPPONENT(agent, 20.0, 75.0);
+            FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 3, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
         }
-        frame(agent.lua_state_agent, 5.0);
-        if is_excute(agent) {
-            ArticleModule::generate_article(agent.module_accessor, *FIGHTER_MARIO_GENERATE_ARTICLE_HUGE_FLAME, false, -1);
-        }
-        frame(agent.lua_state_agent, 10.0);
-        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {      
-            if is_excute(agent) {
-                FT_SET_FINAL_FEAR_FACE(agent, 60);
-                REQ_FINAL_START_CAMERA_arg3(agent, Hash40::new("d04final.nuanmb"), false, false);
-                FT_START_CUTIN(agent);
-            }  
-        }
-        else {
-            if is_excute(agent) {
-                CAM_ZOOM_IN_arg5(agent, 2.05, 0.0, 3.0*scale, 0.0, 0.0);
-                FT_START_CUTIN(agent);
-            }
-        }
-        if sv_animcmd::get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
-            if is_excute(agent) {
-                camera!(agent, *MA_MSC_CMD_CAMERA_CAM_OFFSET, 0, 0);
-            }
-        }
-        else {
-            if is_excute(agent) {
-                camera!(agent, *MA_MSC_CMD_CAMERA_CAM_OFFSET, 0, 0);
-            }
-        }
-        frame(agent.lua_state_agent, 25.0);
-        if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
-            CAM_ZOOM_OUT(agent);
-        }
+        frame(agent.lua_state_agent, 41.0);
+        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 3, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
     }
 }
 
-//Finale Fireball Regular ACMD
-unsafe extern "C" fn ssbexo_mario_finale_fireball_regular_acmd(agent: &mut L2CAgentBase) {
-    let owner_boma = get_owner_boma(agent);
-    if WorkModule::is_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_CHARGE) {
-        frame(agent.lua_state_agent, 60.0);
+//Crawl Sound
+unsafe extern "C" fn ssbexo_mario_crawl_sound(agent: &mut L2CAgentBase) {
+    loop {
+        frame(agent.lua_state_agent, 24.0);
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("fire1"), 2.5, 50, 40, 0, 25, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 1, 0, Hash40::new("fire2"), 2.5, 48, 40, 0, 25, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+            PLAY_STEP_FLIPPABLE(agent, Hash40::new("se_mario_step_right_s"), Hash40::new("se_mario_step_left_s"));
         }
-        frame(agent.lua_state_agent, 100.0);
-        if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("fire1"), 3.0, 23, 90, 0, 20, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 1, 0, Hash40::new("fire2"), 3.0, 20, 90, 0, 20, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 2, 0, Hash40::new("fire1"), 3.0, 50, 100, 0, 15, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 3, 0, Hash40::new("fire2"), 3.0, 48, 100, 0, 15, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        }
-        frame(agent.lua_state_agent, 150.0);
-        if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("fire1"), 3.5, 23, 120, 0, 10, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 1, 0, Hash40::new("fire2"), 3.5, 20, 120, 0, 10, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 2, 0, Hash40::new("fire1"), 3.5, 50, 130, 0, 5, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 3, 0, Hash40::new("fire2"), 3.5, 48, 130, 0, 5, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-        }
-        frame(agent.lua_state_agent, 220.0);
-        if is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
-        }
+        frame(agent.lua_state_agent, 40.0);
+        PLAY_STEP_FLIPPABLE(agent, Hash40::new("se_mario_step_left_s"), Hash40::new("se_mario_step_right_s"));
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
     }
-    else {
-        frame(agent.lua_state_agent, 60.0);
+}
+
+//Crawl Expression
+unsafe extern "C" fn ssbexo_mario_crawl_expression(agent: &mut L2CAgentBase) {
+    loop {
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("fire1"), 2.5, 50, 40, 0, 25, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 1, 0, Hash40::new("fire2"), 2.5, 48, 40, 0, 25, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 6);
         }
-        frame(agent.lua_state_agent, 100.0);
+        frame(agent.lua_state_agent, 6.0);
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("fire1"), 3.0, 23, 90, 0, 20, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 1, 0, Hash40::new("fire2"), 3.0, 20, 90, 0, 20, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 2, 0, Hash40::new("fire1"), 3.0, 50, 100, 0, 15, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 3, 0, Hash40::new("fire2"), 3.0, 48, 100, 0, 15, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 14, true);
         }
-        frame(agent.lua_state_agent, 150.0);
+        frame(agent.lua_state_agent, 20.0);
         if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("fire1"), 3.5, 23, 120, 0, 10, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 1, 0, Hash40::new("fire2"), 3.5, 20, 120, 0, 10, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 2, 0, Hash40::new("fire1"), 3.5, 50, 130, 0, 5, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            ATTACK(agent, 3, 0, Hash40::new("fire2"), 3.5, 48, 130, 0, 5, 16.0, 0.0, -3.0, 0.0, Some(0.0), Some(3.0), Some(0.0), 0.0, 0.8, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, f32::NAN, 0.0, 7, false, false, false, false, false, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 13, true);
         }
-        frame(agent.lua_state_agent, 220.0);
+        frame(agent.lua_state_agent, 24.0);
         if is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
+            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         }
+        frame(agent.lua_state_agent, 33.0);
+        if is_excute(agent) {
+            slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 12, true);
+        }
+        frame(agent.lua_state_agent, 40.0);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        agent.clear_lua_stack();
+        wait_loop_sync_mot(agent.lua_state_agent);
+        agent.pop_lua_stack(1);
     }
 }
 
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_final", ssbexo_mario_final_smash_acmd, Low)
-    .game_acmd("game_finalair", ssbexo_mario_final_smash_acmd, Low)
-    .install()
-    ;
-    Agent::new("mario_hugeflame")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_regular", ssbexo_mario_finale_fireball_regular_acmd, Low)
+    .game_acmd("game_squatf", ssbexo_mario_crawl_acmd, Low)
+    .effect_acmd("effect_squatf", ssbexo_mario_crawl_effect, Low)
+    .sound_acmd("sound_squatf", ssbexo_mario_crawl_sound, Low)
+    .expression_acmd("expression_squatf", ssbexo_mario_crawl_expression, Low)
+    .game_acmd("game_squatb", ssbexo_mario_crawl_acmd, Low)
+    .effect_acmd("effect_squatb", ssbexo_mario_crawl_effect, Low)
+    .sound_acmd("sound_squatb", ssbexo_mario_crawl_sound, Low)
+    .expression_acmd("expression_squatb", ssbexo_mario_crawl_expression, Low)
     .install()
     ;
 }

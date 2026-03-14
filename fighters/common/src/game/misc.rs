@@ -28,9 +28,6 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 //Credit to Claude
 #[skyline::hook(offset = CONSTANT_OFFSET)]
 unsafe extern "C" fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u32) {
-    if CStr::from_ptr(constant as _).to_str().unwrap().contains("WEAPON_LINK_NAVY_STATUS_KIND_NUM") {
-        value = 0x9;
-    }
     if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIIFIGHTER_STATUS_KIND_NUM") {
         value = 0x20D;
     }

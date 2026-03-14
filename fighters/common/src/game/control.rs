@@ -1,7 +1,7 @@
 //The following section is credited to WuBoyTH, and is utilized to handle held buffer
 use super::*;
 
-const PRECEDE_EXTENSION: u8 = 15;
+const PRECEDE_EXTENSION: u8 = 6;
 
 #[skyline::hook(offset = 0x6bd5b4, inline)]
 unsafe fn set_hold_buffer_value(ctx: &mut skyline::hooks::InlineCtx) {

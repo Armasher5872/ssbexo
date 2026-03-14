@@ -25,7 +25,6 @@ unsafe extern "C" fn ganon_special_n_init_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn ganon_special_n_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n"), L2CValue::Hash40s("special_air_n"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(ganon_special_n_main_loop as *const () as _))
 }
@@ -41,13 +40,13 @@ unsafe extern "C" fn ganon_special_n_main_loop(fighter: &mut L2CFighterCommon) -
         }
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE) {
-        if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        if ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_HAS_ACTIVE_VOLLEY) {
                 fighter.change_status(FIGHTER_GANON_STATUS_KIND_SPECIAL_N_VOLLEY_START.into(), false.into());
                 return 1.into();
             }
         }
-        if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+        if ControlModule::check_button_on_trriger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
             fighter.change_status(FIGHTER_GANON_STATUS_KIND_SPECIAL_N_CAPE.into(), false.into());
             return 1.into();
         }
@@ -88,7 +87,8 @@ unsafe extern "C" fn ganon_special_n_exec_status(_fighter: &mut L2CFighterCommon
 
 unsafe extern "C" fn ganon_special_n_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
+    STOP_SE(fighter, Hash40::new("se_ganon_appear01"));
     if ![*FIGHTER_GANON_STATUS_KIND_SPECIAL_N_VOLLEY_START, *FIGHTER_GANON_STATUS_KIND_SPECIAL_N_CAPE].contains(&status_kind) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_USED_SPECIAL_N_AIR);
     }
@@ -97,7 +97,8 @@ unsafe extern "C" fn ganon_special_n_end_status(fighter: &mut L2CFighterCommon) 
 
 unsafe extern "C" fn ganon_special_n_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
+    STOP_SE(fighter, Hash40::new("se_ganon_appear01"));
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
     if ![*FIGHTER_GANON_STATUS_KIND_SPECIAL_N_VOLLEY_START, *FIGHTER_GANON_STATUS_KIND_SPECIAL_N_CAPE].contains(&status_kind) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_USED_SPECIAL_N_AIR);
     }
