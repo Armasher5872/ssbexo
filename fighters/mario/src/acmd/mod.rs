@@ -19,8 +19,11 @@ use {
         }
     },
     smash_script::{
-        *,
-        macros::*
+        macros::{
+            ATTACK_ABS,
+            *
+        },
+        *
     },
     smashline::{
         *,

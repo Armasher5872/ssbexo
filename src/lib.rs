@@ -1,4 +1,4 @@
-#![feature(concat_idents, proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
+#![feature(proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
 
 use skyline_web::dialog_ok::DialogOk;
 use exo_utils::extern_func::is_on_ryujinx;

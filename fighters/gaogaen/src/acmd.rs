@@ -18,8 +18,11 @@ use {
         phx::Hash40
     },
     smash_script::{
-        *,
-        macros::*
+        macros::{
+            ATTACK_ABS,
+            *
+        },
+        *
     },
     smashline::{
         *,

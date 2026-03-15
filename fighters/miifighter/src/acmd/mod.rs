@@ -1,8 +1,5 @@
 use {
-    exo_var::{
-        consts::*,
-        miifighter::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
@@ -12,7 +9,6 @@ use {
             },
             *
         },
-        hash40,
         lib::lua_const::*,
         lua2cpp::*,
         phx::{
@@ -21,8 +17,11 @@ use {
         }
     },
     smash_script::{
-        *,
-        macros::*
+        macros::{
+            ATTACK_ABS,
+            *
+        },
+        *
     },
     smashline::{
         *,

@@ -16,8 +16,11 @@ use {
         phx::Vector3f,
     },
     smash_script::{
-        *,
-        macros::*
+        macros::{
+            ATTACK_ABS,
+            *
+        },
+        *
     },
     smashline::{
         *,

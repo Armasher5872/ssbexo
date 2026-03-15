@@ -1,8 +1,5 @@
 use {
-    exo_var::{
-        consts::*,
-        miifighter::*,
-    },
+    exo_var::miifighter::*,
     smash::{
         app::{
             lua_bind::*,
@@ -21,8 +18,11 @@ use {
         }
     },
     smash_script::{
-        *,
-        macros::*
+        macros::{
+            ATTACK_ABS,
+            *
+        },
+        *
     },
     smashline::{
         *,
