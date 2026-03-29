@@ -119,7 +119,7 @@ crate-type = ["cdylib"]
 [dependencies]
 arcropolis-api = { git = "https://github.com/Raytwo/arcropolis_api" }
 hash40 = "1.3"
-param_config = { git = "https://github.com/csharpm7/lib_paramconfig.git"}
+param_config = { git = "https://github.com/csharpm7/lib_paramconfig"}
 skyline-web = { git = "https://github.com/skyline-rs/skyline-web", optional = true }
 skyline = { git = "https://github.com/ultimate-research/skyline-rs" }
 skyline_smash = { git = "https://github.com/ultimate-research/skyline-smash.git", features = ["weak_l2cvalue"] }
