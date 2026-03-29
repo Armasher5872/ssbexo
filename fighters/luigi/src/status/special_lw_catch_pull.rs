@@ -8,7 +8,9 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_pre_status(fighter: &mut L2CFig
 
 unsafe extern "C" fn luigi_special_lw_catch_pull_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
-    if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+    if situation_kind == *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
     }
@@ -19,10 +21,26 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_init_status(fighter: &mut L2CFi
     if prev_status_kind == *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
     }
+    else {
+        HitModule::set_invincible_frame_global(fighter.module_accessor, 12, false, 0);
+        fighter.clear_lua_stack();
+        lua_args!(fighter, *MA_MSC_SET_IGNORE_CATCHING, true);
+        sv_module_access::capture(fighter.lua_state_agent);
+        fighter.pop_lua_stack(1);
+        if capture_id != 0x50000000 {
+            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+            let shouldered_frame_add= WorkModule::get_param_float(capture_boma, hash40("common"), hash40("shouldered_frame_add"));
+            let damage = DamageModule::damage(capture_boma, 0);
+            let get_clatter_time = ControlModule::get_clatter_time(capture_boma, 0);
+            let total_time = damage+shouldered_frame_add+get_clatter_time;
+            ControlModule::start_clatter(capture_boma, total_time, 0.0, 10.0, 127, 0, false, false);
+        }
+    }
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_catch_pull_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    grabbed_anim_selector(fighter, "barrel_screw", 0.0, 0.0);
     ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW_CATCH_PULL, ArticleOperationTarget(0));
     ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_catch"), 0.0, 1.0, false, 0.0, false, false);
@@ -32,23 +50,10 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_main_status(fighter: &mut L2CFi
 
 unsafe extern "C" fn luigi_special_lw_catch_pull_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(fighter.module_accessor);
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
     let plunger_throw = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW) {
-        if stick_y > 0.6 {
-            WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-        }
-        else if stick_x < -0.6 {
-            WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-        }
-        else {
-            WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-        }
-    }
     if !StatusModule::is_changing(fighter.module_accessor) {
         if situation_kind == *SITUATION_KIND_GROUND
         && prev_situation_kind == *SITUATION_KIND_AIR {
@@ -79,7 +84,12 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_main_loop(fighter: &mut L2CFigh
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW.into(), false.into());
+        if !plunger_throw {
+            fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WAIT.into(), false.into());
+        }
+        else {
+            fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW.into(), false.into());
+        }
     }
     0.into()
 }
@@ -91,7 +101,9 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_exec_status(_fighter: &mut L2CF
 unsafe extern "C" fn luigi_special_lw_catch_pull_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-    if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW {
+    if ![
+        *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WAIT, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_TURN, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WALK, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_JUMP, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW
+    ].contains(&status_kind) {
         if CatchModule::is_catch(fighter.module_accessor) {
             let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
             if capture_id != 0x50000000 {
@@ -105,7 +117,9 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_end_status(fighter: &mut L2CFig
         }
         ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+        if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+        }
     }
     0.into()
 }
@@ -113,7 +127,9 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_end_status(fighter: &mut L2CFig
 unsafe extern "C" fn luigi_special_lw_catch_pull_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-    if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW {
+    if ![
+        *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WAIT, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_TURN, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WALK, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_JUMP, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW
+    ].contains(&status_kind) {
         if CatchModule::is_catch(fighter.module_accessor) {
             let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
             if capture_id != 0x50000000 {
@@ -127,7 +143,9 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_exit_status(fighter: &mut L2CFi
         }
         ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
         ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+        if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+        }
     }
     0.into()
 }

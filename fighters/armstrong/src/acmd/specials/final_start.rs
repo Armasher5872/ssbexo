@@ -146,8 +146,16 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_final_smash_start_expression(agent:
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_finalstart", ssbexo_armstrong_final_smash_start_acmd, Low)
     .game_acmd("game_finalairstart", ssbexo_armstrong_final_smash_start_acmd, Low)
     .effect_acmd("effect_finalstart", ssbexo_armstrong_grounded_final_smash_start_effect, Low)

@@ -1,5 +1,6 @@
 use {
     exo_utils::{
+        buttons::cat4::*,
         command_input::*,
         fighter_common::*,
         status_end_control::*,

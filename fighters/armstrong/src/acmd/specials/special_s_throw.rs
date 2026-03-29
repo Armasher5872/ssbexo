@@ -27,11 +27,7 @@ unsafe extern "C" fn ssbexo_armstrong_side_special_throw_effect(agent: &mut L2CA
 
 //Side Special Throw Sound
 unsafe extern "C" fn ssbexo_armstrong_side_special_throw_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_ganon_special_s01"));
-    }
-    wait(agent.lua_state_agent, 3.0);
+    frame(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_special_s03"));
         PLAY_SE(agent, Hash40::new("se_common_heavy_hit_l"));
@@ -49,8 +45,16 @@ unsafe extern "C" fn ssbexo_armstrong_side_special_throw_expression(agent: &mut 
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_specialairs", ssbexo_armstrong_side_special_throw_acmd, Low)
     .effect_acmd("effect_specialairs", ssbexo_armstrong_side_special_throw_effect, Low)
     .sound_acmd("sound_specialairs", ssbexo_armstrong_side_special_throw_sound, Low)

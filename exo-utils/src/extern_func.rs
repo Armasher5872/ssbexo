@@ -14,6 +14,9 @@ extern "C" {
     #[link_name = "_ZN3app10sv_animcmd25EFFECT_GLOBAL_BACK_GROUNDEP9lua_State"]
     pub fn effect_global_back_ground(lua_state: u64);
 
+    #[link_name = "\u{1}_ZN3app11FighterUtil33get_ground_correct_kind_air_transERNS_26BattleObjectModuleAccessorEi"]
+    pub fn get_ground_correct_kind_air_trans(boma: &mut BattleObjectModuleAccessor, something: i32) -> i32;
+    
     #[link_name = "_ZN3app16kiiladarzmanager15set_visible_hudEb"]
     pub fn set_vis_hud(param_1: bool);
 

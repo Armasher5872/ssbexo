@@ -132,7 +132,7 @@ unsafe extern "C" fn ssbexo_armstrong_final_smash_throw_acmd(agent: &mut L2CAgen
     }
     frame(agent.lua_state_agent, 201.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_FINAL_THROW);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_THROW);
         ATTACK(agent, 0, 0, Hash40::new("top"), 30.0, 361, 40, 0, 70, 25.0, 0.0, 13.0, 0.0, None, None, None, 3.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_OBJECT);
         CAM_ZOOM_OUT(agent);
     }
@@ -204,8 +204,16 @@ unsafe extern "C" fn ssbexo_armstrong_final_smash_throw_expression(agent: &mut L
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_finalthrow", ssbexo_armstrong_final_smash_throw_acmd, Low)
     .game_acmd("game_finalairthrow", ssbexo_armstrong_final_smash_throw_acmd, Low)
     .effect_acmd("effect_finalthrow", ssbexo_armstrong_final_smash_throw_effect, Low)

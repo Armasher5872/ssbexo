@@ -12,8 +12,8 @@ unsafe extern "C" fn armstrong_special_s_fall_init_status(fighter: &mut L2CFight
     sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.14);
     sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -6.0);
     sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 6.0);
-    sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 1.2);
-    sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 1.2);
+    sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.7);
+    sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.7);
     sv_kinetic_energy!(set_accel_x_mul, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.03);
     sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.02);
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x31697c2b98), hash40("catched_ganon"), hash40("catched_air_fall_ganon"));
@@ -59,8 +59,16 @@ unsafe extern "C" fn armstrong_special_s_fall_exit_status(fighter: &mut L2CFight
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .status(Pre, *FIGHTER_GANON_STATUS_KIND_SPECIAL_AIR_S_FALL, armstrong_special_s_fall_pre_status)
     .status(Init, *FIGHTER_GANON_STATUS_KIND_SPECIAL_AIR_S_FALL, armstrong_special_s_fall_init_status)
     .status(Main, *FIGHTER_GANON_STATUS_KIND_SPECIAL_AIR_S_FALL, armstrong_special_s_fall_main_status)

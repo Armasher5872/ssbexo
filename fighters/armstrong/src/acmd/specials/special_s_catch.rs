@@ -31,7 +31,7 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_catch_sound(agent: &
     }
     frame(agent.lua_state_agent, 28.0);
     if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_ganon_rnd_jump"));
+        PLAY_SE(agent, Hash40::new("vc_ganon_special_s01"));
         PLAY_SE(agent, Hash40::new("se_ganon_jump01"));
     }
 }
@@ -74,7 +74,7 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_catch_sound(agent: &mu
     }
     frame(agent.lua_state_agent, 28.0);
     if is_excute(agent) {
-        PLAY_SEQUENCE(agent, Hash40::new("seq_ganon_rnd_jump"));
+        PLAY_SE(agent, Hash40::new("vc_ganon_special_s01"));
         PLAY_SE(agent, Hash40::new("se_ganon_jump01"));
     }
 }
@@ -88,8 +88,16 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_catch_expression(agent
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_specials", ssbexo_armstrong_grounded_side_special_catch_acmd, Low)
     .effect_acmd("effect_specials", ssbexo_armstrong_grounded_side_special_catch_effect, Low)
     .sound_acmd("sound_specials", ssbexo_armstrong_grounded_side_special_catch_sound, Low)

@@ -50,13 +50,13 @@ unsafe extern "C" fn armstrong_final_throw_main_loop(fighter: &mut L2CFighterCom
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("final_air_throw"), -1.0, 1.0, 0.0, false, false);
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_FINAL_THROW) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_THROW) {
         if capture_id != 0x50000000 {
             let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
             VisibilityModule::set_whole(capture_boma, true);
             AttackModule::hit_absolute_joint(fighter.module_accessor, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, capture_id as u32, Hash40::new("throw"), 0, 0);
         }
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_FINAL_THROW);
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_THROW);
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
@@ -86,7 +86,7 @@ unsafe extern "C" fn armstrong_final_throw_end_status(fighter: &mut L2CFighterCo
         CatchModule::catch_cut(fighter.module_accessor, false, false);
     }
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1e0aba2d68));
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_FINAL_THROW);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_THROW);
     0.into()
 }
 
@@ -104,13 +104,21 @@ unsafe extern "C" fn armstrong_final_throw_exit_status(fighter: &mut L2CFighterC
         fighter.pop_lua_stack(1);
     }
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x1e0aba2d68));
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_FINAL_THROW);
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_THROW);
     0.into()
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .status(Pre, *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW, armstrong_final_throw_pre_status)
     .status(Init, *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW, armstrong_final_throw_init_status)
     .status(Main, *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW, armstrong_final_throw_main_status)

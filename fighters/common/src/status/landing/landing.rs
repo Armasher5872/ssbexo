@@ -3,6 +3,10 @@ use super::*;
 
 #[skyline::hook(replace = L2CFighterCommon_status_pre_Landing_param)]
 unsafe extern "C" fn status_pre_landing_param(fighter: &mut L2CFighterCommon, param_2: L2CValue, param_3: L2CValue, param_4: L2CValue, param_5: L2CValue, param_6: L2CValue) -> L2CValue {
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_ENABLE_LANDING_CLIFF_STOP); //Makes wavedashes edge cancelable
+    }
     StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_GROUND), param_5.get_i32(), *GROUND_CORRECT_KIND_GROUND as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, param_2.get_i32(), param_3.get_i32(), param_4.get_i32(), param_6.get_i32());
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, true, *FIGHTER_TREADED_KIND_ENABLE, false, false, false, 0, *FIGHTER_STATUS_ATTR_INTO_DOOR as u32, 0, 0);
     0.into()
@@ -21,6 +25,7 @@ unsafe extern "C" fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> 
         return 1.into();
     }
     if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
+        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);
         ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE);
         ControlModule::clear_command_one(fighter.module_accessor, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
@@ -54,6 +59,11 @@ unsafe extern "C" fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> 
     fighter.sub_landing_cancel_check_damage_face()
 }
 
+#[skyline::hook(replace=get_ground_correct_kind_air_trans)]
+unsafe extern "C" fn get_ground_correct_kind_air_trans_hook(_boma: &mut BattleObjectModuleAccessor, _something: i32) -> i32 {
+    return *GROUND_CORRECT_KIND_AIR;
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
@@ -65,4 +75,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 
 pub fn install() {
     let _ = skyline::nro::add_hook(nro_hook);
+    skyline::install_hook!(get_ground_correct_kind_air_trans_hook);
 }

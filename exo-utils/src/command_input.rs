@@ -1,13 +1,15 @@
+//The functions here are credited to WuBoytH
 use super::*;
 
-//Credited to WuBoyTH, enables characters having command inputs buttons to work properly, and assigns them to a single button type
+//Enables characters having command inputs buttons to work properly, and assigns them to a single button type. 0 = Both, 1 = Attack, 2 = Special
 pub unsafe extern "C" fn set_command_input_button(boma: *mut BattleObjectModuleAccessor, command: usize, buttons: u8) {
+    let buttons = InputAllow::from_bits(buttons).unwrap();
     let control_module = *(boma as *const *const u64).add(0x48/8);
-    let command_input = *control_module.add((0x7f0+(command*8))/8) as *mut u8;
-    *command_input.add(0xb) = buttons;
+    let command_input = *control_module.add((0x7f0+(command*8))/8) as *mut CommandInputState;
+    (*command_input).input_allow = buttons;
 }
 
-//Credited to WuBoyTH, clones a command input to another cat4 flag
+//Clones a command input to another cat4 flag
 pub unsafe extern "C" fn clone_command_input(boma: *mut BattleObjectModuleAccessor, command: usize, replace_command: usize) {
     let control_module = *(boma as *const *const u64).add(0x48/8);
     let original = *control_module.add((0x7f0+(command*8))/8) as *mut CommandInputState;
@@ -57,18 +59,4 @@ pub unsafe extern "C" fn get_command_stick_direction(boma: &mut BattleObjectModu
             return 5;
         }
     }
-}
-
-//Command Input State, used for command input handling
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct CommandInputState {
-    pub vtable: u64,
-    pub command_timer: u8,
-    pub state: u8,
-    pub unk2: u8,
-    pub input_allow: u8,
-    pub max_timer: u8,
-    pub enable_timer: u8,
-    pub lr: i8,
 }

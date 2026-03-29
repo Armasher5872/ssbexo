@@ -19,13 +19,13 @@ use {
     smash_script::*,
 };
 
-mod appeal;
+mod dash;
 mod run;
 mod turndash;
 mod wait;
 
 pub fn install() {
-    appeal::install();
+    dash::install();
     run::install();
     turndash::install();
     wait::install();

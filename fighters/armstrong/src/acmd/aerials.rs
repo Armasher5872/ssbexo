@@ -31,6 +31,7 @@ unsafe extern "C" fn ssbexo_armstrong_nair_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_armstrong_nair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 7.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 7, 0, 0, 0, 0, 1.5, true, 0.8);
         LAST_EFFECT_SET_RATE(agent, 1.2);
     }
@@ -83,6 +84,7 @@ unsafe extern "C" fn ssbexo_armstrong_fair_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_armstrong_fair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 14.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc"), Hash40::new("top"), 0, 12, 6, 180, -180, 100, 1.1, false);
         LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         LAST_EFFECT_SET_RATE(agent, 1.5);
@@ -121,6 +123,7 @@ unsafe extern "C" fn ssbexo_armstrong_bair_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 10, -17, 0, 0, 0, 2, true, 0.9);
     }
 }
@@ -187,6 +190,7 @@ unsafe extern "C" fn ssbexo_armstrong_uair_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_armstrong_uair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 16, -0.5, 0, 30, 90, 1.3, true);
         LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
     }
@@ -254,6 +258,7 @@ unsafe extern "C" fn ssbexo_armstrong_dair_effect(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 2, 0, -90, 0, 0, 1.8, true);
         LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
     }
@@ -267,8 +272,16 @@ unsafe extern "C" fn ssbexo_armstrong_dair_effect(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_attackairn", ssbexo_armstrong_nair_acmd, Low)
     .effect_acmd("effect_attackairn", ssbexo_armstrong_nair_effect, Low)
     .sound_acmd("sound_attackairn", ssbexo_armstrong_nair_sound, Low)

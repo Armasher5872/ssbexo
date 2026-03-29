@@ -6,7 +6,7 @@ unsafe extern "C" fn armstrong_attack_lw3_main_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn armstrong_attack_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    armstrong_charge_move(fighter, 3.0, 9.0, 0.03, 4.5, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), true);
+    armstrong_charge_move(fighter, 3.0, 9.0, 0.03, 4.5, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), true, "footr");
     fighter.status_AttackLw3_Main()
 }
 
@@ -28,8 +28,16 @@ unsafe extern "C" fn armstrong_attack_lw3_exit_status(fighter: &mut L2CFighterCo
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW3, armstrong_attack_lw3_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_LW3, armstrong_attack_lw3_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_ATTACK_LW3, armstrong_attack_lw3_exit_status)

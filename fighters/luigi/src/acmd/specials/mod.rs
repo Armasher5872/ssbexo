@@ -8,7 +8,8 @@ use {
             sv_animcmd::{
                 frame,
                 wait
-            }
+            },
+            *
         },
         hash40,
         lib::lua_const::*,
@@ -30,10 +31,15 @@ use {
 
 mod fireball_regular;
 mod special_hi;
+mod special_lw_catch_jump;
+mod special_lw_catch_turn;
+mod special_lw_catch_wait;
+mod special_lw_catch_walk;
 mod special_lw_catch;
 mod special_lw_end;
 mod special_lw_loop;
 mod special_lw_plunger;
+mod special_lw_start;
 mod special_lw_throw_b;
 mod special_lw_throw_f;
 mod special_lw_throw_hi;
@@ -44,10 +50,15 @@ mod special_n_attack;
 pub fn install() {
     fireball_regular::install();
     special_hi::install();
+    special_lw_catch_jump::install();
+    special_lw_catch_turn::install();
+    special_lw_catch_wait::install();
+    special_lw_catch_walk::install();
     special_lw_catch::install();
     special_lw_end::install();
     special_lw_loop::install();
     special_lw_plunger::install();
+    special_lw_start::install();
     special_lw_throw_b::install();
     special_lw_throw_f::install();
     special_lw_throw_hi::install();

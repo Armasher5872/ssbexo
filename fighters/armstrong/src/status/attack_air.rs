@@ -9,19 +9,19 @@ unsafe extern "C" fn armstrong_attack_air_main_loop(fighter: &mut L2CFighterComm
     let get_attack_air_kind = ControlModule::get_attack_air_kind(fighter.module_accessor);
     let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_N || motion_kind == hash40("attack_air_n") {
-        armstrong_charge_move(fighter, 2.0, 7.0, 0.025, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false);
+        armstrong_charge_move(fighter, 2.0, 7.0, 0.025, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "waist");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F || motion_kind == hash40("attack_air_f") {
-        armstrong_charge_move(fighter, 4.0, 12.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false);
+        armstrong_charge_move(fighter, 4.0, 12.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "handr");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_B || motion_kind == hash40("attack_air_b") {
-        armstrong_charge_move(fighter, 1.0, 5.0, 0.025, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false);
+        armstrong_charge_move(fighter, 1.0, 5.0, 0.015, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "footr");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_HI || motion_kind == hash40("attack_air_hi") {
-        armstrong_charge_move(fighter, 1.0, 5.0, 0.025, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false);
+        armstrong_charge_move(fighter, 1.0, 5.0, 0.015, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "handr");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_LW || motion_kind == hash40("attack_air_lw") {
-        armstrong_charge_move(fighter, 3.0, 11.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false);
+        armstrong_charge_move(fighter, 3.0, 11.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "footr");
     }
     if !fighter.status_AttackAir_Main().get_bool() {
         fighter.sub_air_check_superleaf_fall_slowly();
@@ -45,8 +45,16 @@ unsafe extern "C" fn armstrong_attack_air_exit_status(fighter: &mut L2CFighterCo
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, armstrong_attack_air_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_AIR, armstrong_attack_air_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_ATTACK_AIR, armstrong_attack_air_exit_status)

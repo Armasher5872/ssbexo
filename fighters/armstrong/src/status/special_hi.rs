@@ -1,7 +1,7 @@
 use super::*;
 
 unsafe extern "C" fn armstrong_special_hi_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ON_DROP_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_HI | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_HI as u32, 0);
     0.into()
 }
@@ -73,10 +73,10 @@ unsafe extern "C" fn armstrong_special_hi_loop(fighter: &mut L2CFighterCommon) -
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     if !fighter.sub_transition_group_check_air_cliff().get_bool() {
         if situation_kind == *SITUATION_KIND_GROUND {
-            armstrong_charge_move(fighter, 4.0, 8.0, 0.01, 7.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), true);
+            armstrong_charge_move(fighter, 4.0, 8.0, 0.01, 7.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), true, "handl");
         }
         else {
-            armstrong_charge_move(fighter, 4.0, 8.0, 0.01, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), false);
+            armstrong_charge_move(fighter, 4.0, 8.0, 0.01, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), false, "handl");
         }
         fighter.super_jump_punch_main();
     }
@@ -92,7 +92,7 @@ unsafe extern "C" fn armstrong_special_hi_end_status(fighter: &mut L2CFighterCom
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_NANOMACHINES);
     effect!(fighter, *MA_MSC_CMD_EFFECT_EFFECT_OFF_KIND, Hash40::new("armstrong_flame_grab_hold"), false, true);
     fighter.super_jump_punch_reset_common_condition();
-    if ![*FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING, *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW].contains(&status_kind) {
+    if status_kind != *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW {
         armstrong_clear_charge(fighter.module_accessor);
     }
     0.into()
@@ -101,15 +101,23 @@ unsafe extern "C" fn armstrong_special_hi_end_status(fighter: &mut L2CFighterCom
 unsafe extern "C" fn armstrong_special_hi_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_NANOMACHINES);
-    if ![*FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING, *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW].contains(&status_kind) {
+    if status_kind != *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW {
         armstrong_clear_charge(fighter.module_accessor);
     }
     0.into()
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_HI, armstrong_special_hi_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_HI, armstrong_special_hi_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_HI, armstrong_special_hi_main_status)

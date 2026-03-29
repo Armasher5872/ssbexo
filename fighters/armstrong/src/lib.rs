@@ -1,3 +1,4 @@
+#![allow(static_mut_refs, unused_mut)] //Addresses variable does not need to be mutable and creating a shared reference to mutable static
 use {
     exo_utils::{
         armstrong::*,
@@ -37,6 +38,7 @@ use {
         LinkEvent,
         LinkEventCapture
     },
+    smash_script::macros::*,
     smashline::*,
 };
 

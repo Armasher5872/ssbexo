@@ -4,24 +4,20 @@ use super::*;
 unsafe extern "C" fn ssbexo_luigi_down_special_acmd(_agent: &mut L2CAgentBase) {}
 
 //Down Special Effect
-unsafe extern "C" fn ssbexo_luigi_down_special_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 10.0);
-    if is_excute(agent) {
-        FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-    }
-}
+unsafe extern "C" fn ssbexo_luigi_down_special_effect(_agent: &mut L2CAgentBase) {}
 
 //Down Special Sound
-unsafe extern "C" fn ssbexo_luigi_down_special_sound(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_luigi_down_special_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 8.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_luigi_final01"));
+    }   
+}
 
 //Down Special Expression
 unsafe extern "C" fn ssbexo_luigi_down_special_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 

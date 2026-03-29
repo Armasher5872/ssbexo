@@ -198,8 +198,7 @@ unsafe extern "C" fn ssbexo_armstrong_down_smash_acmd(agent: &mut L2CAgentBase) 
     }
     frame(agent.lua_state_agent, 20.0);
     if is_excute(agent) {
-        ATTACK(agent, 2, 0, Hash40::new("handr"), 20.0, 300, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("handr"), 20.0, 300, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("handr"), 20.0, 300, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 0, 0, Hash40::new("shoulderr"), 18.0, 361, 50, 0, 50, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
     }
     frame(agent.lua_state_agent, 25.0);
@@ -226,6 +225,10 @@ unsafe extern "C" fn ssbexo_armstrong_down_smash_sound(agent: &mut L2CAgentBase)
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_smash_start"));
         PLAY_SE(agent, Hash40::new("vc_ganon_attack07"));
+    }
+    frame(agent.lua_state_agent, 18.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_ganon_smash_h01"));
     }
 }
 
@@ -264,8 +267,16 @@ unsafe extern "C" fn ssbexo_armstrong_down_smash_expression(agent: &mut L2CAgent
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .effect_acmd("effect_attacks4charge", ssbexo_armstrong_forward_smash_charge_effect, Low)
     .game_acmd("game_attacks4", ssbexo_armstrong_forward_smash_acmd, Low)
     .effect_acmd("effect_attacks4", ssbexo_armstrong_forward_smash_effect, Low)

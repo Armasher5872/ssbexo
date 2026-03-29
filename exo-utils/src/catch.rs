@@ -1,4 +1,4 @@
-#![allow(improper_ctypes_definitions)]
+#![allow(improper_ctypes_definitions)] //Addresses `extern` fn uses type `str`, which is not FFI-safe
 use super::*;
 
 //Gets the boma of the grabbed opponent
@@ -14,19 +14,15 @@ pub unsafe extern "C" fn grabbed_anim_selector(fighter: &mut L2CFighterCommon, a
     if capture_id as i32 != *BATTLE_OBJECT_ID_INVALID {
         let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
         let motion_share = WorkModule::get_param_int(capture_boma, hash40("param_motion"), hash40("motion_share"));
-        let motion = hash40(anim_name);
-        let mut share_type = 0;
+        let mut motion = hash40(anim_name);
         if motion_share == *FIGHTER_MOTION_SHARE_TYPE_TARO {
-            share_type = *BODY_TYPE_MOTION_DX;
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_DX);
         }
         if motion_share == *FIGHTER_MOTION_SHARE_TYPE_GIRL {
-            share_type = *BODY_TYPE_MOTION_GIRL;
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_GIRL);
         }
         if motion_share == *FIGHTER_MOTION_SHARE_TYPE_BIG {
-            share_type = *BODY_TYPE_MOTION_BIG;
-        }
-        if share_type > 0 {
-            FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_DX);
+            motion = FighterMotionModuleImpl::add_body_type_hash(capture_boma, Hash40::new_raw(motion), *BODY_TYPE_MOTION_BIG);
         }
         MotionModule::change_motion(capture_boma, Hash40::new_raw(motion), set_frame, mot_rate, false, 0.0, false, false);
     }

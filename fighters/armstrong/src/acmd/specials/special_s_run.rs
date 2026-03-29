@@ -75,8 +75,16 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_run_expression(agent: 
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_specialsrun", ssbexo_armstrong_grounded_side_special_run_acmd, Low)
     .effect_acmd("effect_specialsrun", ssbexo_armstrong_grounded_side_special_run_effect, Low)
     .sound_acmd("sound_specialsrun", ssbexo_armstrong_grounded_side_special_run_sound, Low)

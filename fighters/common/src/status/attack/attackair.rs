@@ -10,35 +10,9 @@ unsafe extern "C" fn status_pre_attackair(fighter: &mut L2CFighterCommon) -> L2C
     0.into()
 }
 
-//Status Attack Air Main Common, used for continual platform drops and ECB Shifts
-#[skyline::hook(replace = L2CFighterCommon_status_AttackAir_Main_common)]
-unsafe extern "C" fn status_attackair_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
-    if fighter.attack_air_common_strans().get_bool() {
-        return true.into();
-    }
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            if fighter.sub_air_check_fall_common().get_bool() {
-                return true.into();
-            }
-        }
-    }
-    if prev_status_kind == *FIGHTER_STATUS_KIND_PASS && !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-        GroundModule::set_passable_check(fighter.module_accessor, true);
-    }
-    if MotionModule::is_end(fighter.module_accessor) {
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
-    }
-    false.into()
-}
-
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(
-            status_pre_attackair,
-            status_attackair_main_common
-        );
+        skyline::install_hook!(status_pre_attackair);
     }
 }
 

@@ -201,8 +201,16 @@ unsafe extern "C" fn ssbexo_armstrong_passive_wall_sound(agent: &mut L2CAgentBas
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .effect_acmd("effect_entryr", ssbexo_armstrong_entry_effect, Low)
     .effect_acmd("effect_entryl", ssbexo_armstrong_entry_effect, Low)
     .sound_acmd("sound_entryr", ssbexo_armstrong_entry_sound, Low)

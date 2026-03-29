@@ -87,8 +87,16 @@ unsafe extern "C" fn armstrong_final_exit_status(fighter: &mut L2CFighterCommon)
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .status(Pre, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_FINAL, armstrong_final_main_status)

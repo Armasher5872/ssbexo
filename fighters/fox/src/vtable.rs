@@ -45,7 +45,10 @@ unsafe extern "C" fn fox_death_initialization(vtable: u64, fighter: &mut Fighter
 unsafe extern "C" fn fox_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_FOX as u32 {
         let boma = fighter.battle_object.module_accessor;
-        WorkModule::on_flag(boma, *FIGHTER_FOX_INSTANCE_WORK_ID_FLAG_REFLECTOR_HIT);
+        let status_kind = StatusModule::status_kind(boma);
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+            WorkModule::on_flag(boma, *FIGHTER_FOX_INSTANCE_WORK_ID_FLAG_REFLECTOR_HIT);
+        }
     }
     original!()(vtable, fighter, log)
 }

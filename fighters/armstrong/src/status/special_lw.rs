@@ -47,10 +47,10 @@ unsafe extern "C" fn armstrong_special_lw_loop(fighter: &mut L2CFighterCommon) -
         }
     }
     if situation_kind == *SITUATION_KIND_GROUND {
-        armstrong_charge_move(fighter, 5.0, 14.0, 0.045, 9.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), true);
+        armstrong_charge_move(fighter, 5.0, 14.0, 0.045, 9.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), true, "bust");
     }
     else {
-        armstrong_charge_move(fighter, 5.0, 14.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), false);
+        armstrong_charge_move(fighter, 5.0, 14.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), false, "bust");
     }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind == *SITUATION_KIND_GROUND {
@@ -99,8 +99,16 @@ unsafe extern "C" fn armstrong_special_lw_exit_status(fighter: &mut L2CFighterCo
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_LW, armstrong_special_lw_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_LW, armstrong_special_lw_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_LW, armstrong_special_lw_main_status)

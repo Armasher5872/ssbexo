@@ -96,14 +96,18 @@ unsafe extern "C" fn luigi_link_event(vtable: u64, fighter: &mut Fighter, event:
     let offset_lw = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CATCH_MOTION_OFFSET_LW);
     if event.link_event_kind.0 == hash40("capture") {
         let capture_event : &mut smash2::app::LinkEventCapture = std::mem::transmute(event);
-        if capture_event.status == *FIGHTER_STATUS_KIND_CAPTURE_PULLED {
-            if [*FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER].contains(&status_kind) {
-                capture_event.node = smash2::phx::Hash40::new("throw");
-                capture_event.result = true;
-                capture_event.motion_offset = offset;
-                capture_event.motion_offset_lw = offset_lw;
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, false);
-            }
+        if capture_event.status == *FIGHTER_STATUS_KIND_CAPTURE_PULLED && status_kind == *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER {
+            capture_event.node = smash2::phx::Hash40::new("throw");
+            capture_event.result = true;
+            capture_event.motion_offset = offset;
+            capture_event.motion_offset_lw = offset_lw;
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, false);
+        }
+        if capture_event.status == *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_START && status_kind == *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP {
+            capture_event.node = smash2::phx::Hash40::new("throw");
+            capture_event.result = true;
+            capture_event.constraint = true;
+            StatusModule::change_status_request_from_script(boma, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, false);
         }
         return 1;
     }

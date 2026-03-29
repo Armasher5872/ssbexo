@@ -33,58 +33,9 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_acmd(agent: &mut L2C
 
 //Grounded Down Special Effect
 unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_effect(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("head"), 0.0, 0.0, 0.0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
-        LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
-    }
-    frame(agent.lua_state_agent, 4.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 6.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 7.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 9.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 10.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 13.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 16.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
     frame(agent.lua_state_agent, 20.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT(agent, Hash40::new("armstrong_ground_flame_crack"), Hash40::new("top"), -2.3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_blast_wave"), Hash40::new("top"), 0, 11, 0, 0, 0, 0, 0.3, true);
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_blast_shock"), Hash40::new("top"), 0, 11, -3, 0, 0, 0, 1.0, true);
@@ -92,10 +43,6 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_down_special_effect(agent: &mut L
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_blast_fire"), Hash40::new("top"), 0, 11, 0, 0, 0, 0, 2.0, true);
         LANDING_EFFECT(agent, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 1.2);
-    }
-    frame(agent.lua_state_agent, 30.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
     }
 }
 
@@ -170,66 +117,12 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_acmd(agent: &mut L2CAg
 
 //Aerial Down Special Effect
 unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_effect(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_flash"), Hash40::new("head"), 0.0, 0.0, 0.0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
-        LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
-    }
-    frame(agent.lua_state_agent, 4.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 6.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 7.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 9.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 10.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 12.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 13.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
-    }
-    frame(agent.lua_state_agent, 16.0);
-    if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, 0.88, 0.35, 0.13, 0.5);
-        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
-    }
     frame(agent.lua_state_agent, 20.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_blast_wave"), Hash40::new("top"), 0, 11, 0, 0, 0, 0, 0.3, true);
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_blast_shock"), Hash40::new("top"), 0, 11, -3, 0, 0, 0, 1.0, true);
         LAST_EFFECT_SET_ALPHA(agent, 0.25);
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_blast_fire"), Hash40::new("top"), 0, 11, 0, 0, 0, 0, 2.0, true);
-    }
-    frame(agent.lua_state_agent, 30.0);
-    if is_excute(agent) {
-        COL_NORMAL(agent);
     }
 }
 
@@ -275,8 +168,16 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_expression(agent: &mut
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_speciallw", ssbexo_armstrong_grounded_down_special_acmd, Low)
     .effect_acmd("effect_speciallw", ssbexo_armstrong_grounded_down_special_effect, Low)
     .sound_acmd("sound_speciallw", ssbexo_armstrong_grounded_down_special_sound, Low)

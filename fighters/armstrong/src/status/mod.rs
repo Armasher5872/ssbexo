@@ -9,6 +9,7 @@ use {
         armstrong::*,
         consts::*,
         globals::*,
+        variables::*,
     },
     smash::{
         app::{
@@ -38,7 +39,6 @@ mod final_smash;
 mod final_throw;
 mod firepillar_burst;
 mod special_air_s_end;
-mod special_hi_cling;
 mod special_hi_throw;
 mod special_hi;
 mod special_lw;
@@ -58,7 +58,6 @@ pub fn install() {
     final_throw::install();
     firepillar_burst::install();
     special_air_s_end::install();
-    special_hi_cling::install();
     special_hi_throw::install();
     special_hi::install();
     special_lw::install();

@@ -73,8 +73,16 @@ unsafe extern "C" fn ssbexo_armstrong_dash_attack_effect(agent: &mut L2CAgentBas
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_attack11", ssbexo_armstrong_jab_acmd, Low)
     .effect_acmd("effect_attack11", ssbexo_armstrong_jab_effect, Low)
     .game_acmd("game_attackdash", ssbexo_armstrong_dash_attack_acmd, Low)

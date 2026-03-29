@@ -26,7 +26,7 @@ unsafe extern "C" fn status_damage_main(fighter: &mut L2CFighterCommon) -> L2CVa
             fighter.change_status(FIGHTER_STATUS_KIND_MISS_FOOT.into(), false.into());   
         }
     }
-    if MotionModule::is_end(fighter.module_accessor) && damage_end_reaction {
+    if MotionModule::is_end(fighter.module_accessor) || damage_end_reaction {
         if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) && situation_kind == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());  
         }

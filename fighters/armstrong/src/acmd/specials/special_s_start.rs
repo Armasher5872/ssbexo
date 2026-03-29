@@ -12,6 +12,7 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_start_acmd(agent: &m
 unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_start_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
 }
@@ -56,6 +57,7 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_start_acmd(agent: &mut
 unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_start_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
 }
@@ -86,8 +88,16 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_start_expression(agent
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_specialsstart", ssbexo_armstrong_grounded_side_special_start_acmd, Low)
     .effect_acmd("effect_specialsstart", ssbexo_armstrong_grounded_side_special_start_effect, Low)
     .sound_acmd("sound_specialsstart", ssbexo_armstrong_grounded_side_special_start_sound, Low)

@@ -6,8 +6,8 @@ const PRECEDE_EXTENSION: u8 = 6;
 #[skyline::hook(offset = 0x6bd5b4, inline)]
 unsafe fn set_hold_buffer_value(ctx: &mut skyline::hooks::InlineCtx) {
     let current_buffer = ctx.registers[8].w();
-    let threshold = u8::MAX - PRECEDE_EXTENSION;
-    let buffer = if current_buffer == 1 {u8::MAX as u32} else if current_buffer == threshold as u32 {1} else {current_buffer};
+    let threshold = u8::MAX-PRECEDE_EXTENSION;
+    let buffer = if current_buffer < threshold as u32 {current_buffer} else {1};
     ctx.registers[8].set_w(buffer);
 }
 

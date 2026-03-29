@@ -7,6 +7,7 @@ unsafe extern "C" fn luigi_special_lw_throw_pre_status(fighter: &mut L2CFighterC
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let plunger_throw = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
     let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
@@ -18,7 +19,13 @@ unsafe extern "C" fn luigi_special_lw_throw_init_status(fighter: &mut L2CFighter
     }
     if capture_id != 0x50000000 {
         let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-        StatusModule::change_status_force(capture_boma, *FIGHTER_STATUS_KIND_THROWN, false);
+        if plunger_throw {
+            StatusModule::change_status_force(capture_boma, *FIGHTER_STATUS_KIND_THROWN, false);
+        }
+        else {
+            StatusModule::change_status_force(capture_boma, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN, false);
+            grabbed_anim_selector(fighter, "barrel_screw", 0.0, 0.0);
+        }
     }
     HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_INVINCIBLE), 0);
     0.into()
@@ -139,17 +146,41 @@ unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
 
 unsafe extern "C" fn luigi_special_lw_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
+    if CatchModule::is_catch(fighter.module_accessor) {
+        let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+        if capture_id != 0x50000000 {
+            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+            let pos = *PostureModule::pos(fighter.module_accessor);
+            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
+        }
+        CatchModule::set_send_cut_event(fighter.module_accessor, true);
+        CatchModule::catch_cut(fighter.module_accessor, false, false);
+        HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+    }
     ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    fighter.status_end_Throw()
+    0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    fighter.sub_throw_uniq_process_exit()
+    if LinkModule::is_link(fighter.module_accessor, *LINK_NO_CAPTURE) {
+        let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+        if capture_id != 0x50000000 {
+            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+            let pos = *PostureModule::pos(fighter.module_accessor);
+            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
+        }
+        fighter.clear_lua_stack();
+        lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
+        sv_module_access::_catch(fighter.lua_state_agent);
+        fighter.pop_lua_stack(1);
+    }
+    HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+    0.into()
 }
 
 pub fn install() {

@@ -350,8 +350,16 @@ unsafe extern "C" fn ssbexo_armstrong_down_throw_expression(agent: &mut L2CAgent
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_catch", ssbexo_armstrong_grab_acmd, Low)
     .game_acmd("game_catchdash", ssbexo_armstrong_dash_grab_acmd, Low)
     .game_acmd("game_catchturn", ssbexo_armstrong_pivot_grab_acmd, Low)

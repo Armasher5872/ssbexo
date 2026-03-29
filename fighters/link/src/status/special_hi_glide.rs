@@ -82,7 +82,6 @@ unsafe extern "C" fn link_special_hi_glide_end_status(fighter: &mut L2CFighterCo
     let stamina = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
     if status_kind != *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE {
         WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN);
     }
     if stamina <= 0 {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);

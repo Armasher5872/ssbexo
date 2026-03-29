@@ -2,21 +2,22 @@
 use super::*;
 
 //Status Pre EscapeAir, used for instant wavedashes
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_pre_EscapeAir)]
+#[skyline::hook(replace = L2CFighterCommon_status_pre_EscapeAir)]
 unsafe extern "C" fn status_pre_escapeair(fighter: &mut L2CFighterCommon) -> L2CValue {
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let pos = *PostureModule::pos(fighter.module_accessor);
+    let scale = PostureModule::scale(fighter.module_accessor);
     let dir_y = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y);
-    let lower_bound = Vector2f::new(pos.x, pos.y-3.0);
+    let lower_bound = Vector2f::new(pos.x, pos.y-(3.0*scale));
     let ground_pos_any = &mut Vector2f::zero();
     let ground_pos_stage = &mut Vector2f::zero();
-    let is_touch_any = GroundModule::line_segment_check(fighter.module_accessor, &Vector2f::new(pos.x, pos.y+3.0), &lower_bound, &Vector2f::zero(), ground_pos_any, true);
-    let is_touch_stage = GroundModule::line_segment_check(fighter.module_accessor, &Vector2f::new(pos.x, pos.y+3.0), &lower_bound, &Vector2f::zero(), ground_pos_stage, false);
+    let is_touch_any = GroundModule::line_segment_check(fighter.module_accessor, &Vector2f::new(pos.x, pos.y+(3.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_any, true);
+    let is_touch_stage = GroundModule::line_segment_check(fighter.module_accessor, &Vector2f::new(pos.x, pos.y+(3.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_stage, false);
     let can_snap = !(is_touch_any == 0 as *const *const u64 || (is_touch_stage != 0 as *const *const u64 && dir_y > 0.0));
     if prev_status_kind != *FIGHTER_STATUS_KIND_DAMAGE_FALL && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH) && can_snap {
         GroundModule::attach_ground(fighter.module_accessor, true);
         GroundModule::set_correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        PostureModule::set_pos(fighter.module_accessor, &Vector3f::new(pos.x, ground_pos_any.y+0.1, pos.z));
+        PostureModule::set_pos(fighter.module_accessor, &Vector3f::new(pos.x, ground_pos_any.y+(0.1*scale), pos.z));
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
         fighter.set_situation(SITUATION_KIND_GROUND.into());
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
@@ -28,7 +29,7 @@ unsafe extern "C" fn status_pre_escapeair(fighter: &mut L2CFighterCommon) -> L2C
 }
 
 //Escape Air
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_status_EscapeAir)]
+#[skyline::hook(replace = L2CFighterCommon_status_EscapeAir)]
 unsafe extern "C" fn status_escapeair(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_escape_air_common();
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
@@ -70,7 +71,7 @@ unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2
 }
 
 //Sub Escape Air Common Main
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sub_escape_air_common_main)]
+#[skyline::hook(replace = L2CFighterCommon_sub_escape_air_common_main)]
 unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
@@ -117,7 +118,7 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
 }
 
 //Setup Escape Air Slide Common
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_setup_escape_air_slide_common)]
+#[skyline::hook(replace = L2CFighterCommon_setup_escape_air_slide_common)]
 unsafe extern "C" fn setup_escape_air_slide_common(fighter: &mut L2CFighterCommon, stick_x: L2CValue, stick_y: L2CValue) {
     let mut escape_air_slide_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("param_motion"), hash40("escape_air_slide_speed"));
     let mut escape_air_slide_stiff_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("param_motion"), hash40("escape_air_slide_stiff_frame"));

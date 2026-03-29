@@ -4,7 +4,10 @@ use {
         catch::*,
         fighter_common::*,
     },
-    exo_var::consts::*,
+    exo_var::{
+        consts::*,
+        variables::*,
+    },
     smash::{
         app::{
             lua_bind::*,

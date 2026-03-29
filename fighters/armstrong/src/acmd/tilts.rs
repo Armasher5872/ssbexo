@@ -24,6 +24,7 @@ unsafe extern "C" fn ssbexo_armstrong_forward_tilt_effect(agent: &mut L2CAgentBa
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
         EFFECT_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 12, 18.5, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
     }
@@ -38,6 +39,7 @@ unsafe extern "C" fn ssbexo_armstrong_forward_tilt_hi_effect(agent: &mut L2CAgen
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
         EFFECT_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("footl"), 0, 0, 0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
     }
@@ -52,6 +54,7 @@ unsafe extern "C" fn ssbexo_armstrong_forward_tilt_lw_effect(agent: &mut L2CAgen
     }
     frame(agent.lua_state_agent, 10.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
         EFFECT_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("footl"), 0, 0, 10, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
     }
@@ -104,6 +107,7 @@ unsafe extern "C" fn ssbexo_armstrong_up_tilt_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_armstrong_up_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 12.0);
 	if is_excute(agent) {
+        COL_NORMAL(agent);
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
 	    LAST_EFFECT_SET_RATE(agent, 0.4);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 15, -3, 180, 190, -90, 1.15, true);
@@ -167,6 +171,7 @@ unsafe extern "C" fn ssbexo_armstrong_down_tilt_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_armstrong_down_tilt_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), -1, 9.5, 0, 10, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
     }
@@ -178,8 +183,16 @@ unsafe extern "C" fn ssbexo_armstrong_down_tilt_effect(agent: &mut L2CAgentBase)
 }
 
 pub fn install() {
+    let mut costume = &mut Vec::new();
+    unsafe {
+        for i in 0..MARKED_COLORS.len() {
+            if MARKED_COLORS[i] {
+                costume.push(i);
+            }
+        }
+    }
     Agent::new("ganon")
-    .set_costume([8, 9, 10, 11, 12, 13, 14, 15].to_vec())
+    .set_costume(costume.to_vec())
     .game_acmd("game_attacks3", ssbexo_armstrong_forward_tilt_acmd, Low)
     .game_acmd("game_attacks3hi", ssbexo_armstrong_forward_tilt_acmd, Low)
     .game_acmd("game_attacks3lw", ssbexo_armstrong_forward_tilt_acmd, Low)

@@ -1,9 +1,11 @@
-#![feature(proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
+#![allow(internal_features)]
+#![feature(core_intrinsics, proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
 use {
     bitflags::bitflags,
     crate::{
         battle_object::*,
         cloud::*,
+        command_input_struct::*,
         create_item_param::*,
         damage::*,
         extern_func::*,
@@ -34,6 +36,7 @@ use {
         link::*,
         littlemac::*,
         murabito::*,
+        variables::*,
     },
     nnsdk::ui2d::{
         Pane,
@@ -86,6 +89,7 @@ pub mod catch;
 pub mod check_attack;
 pub mod cloud;
 pub mod collision_struct;
+pub mod command_input_struct;
 pub mod command_input;
 pub mod create_item_param;
 pub mod daisy;

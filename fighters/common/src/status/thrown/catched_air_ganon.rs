@@ -8,8 +8,8 @@ unsafe extern "C" fn status_catched_air_ganon(fighter: &mut L2CFighterCommon) ->
     let motion_share = WorkModule::get_param_int(fighter.module_accessor, hash40("param_motion"), hash40("motion_share"));
     let ganon_special_s_fall_clatter_add_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("ganon_special_s_fall_clatter_add_frame"));
     let ganon_special_s_fall_clatter_add_frame_up_limit = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("ganon_special_s_fall_clatter_add_frame_up_limit"));
-    let ganon_special_s_fall_clatter_add_frame_down_limit /*LStack_e0*/ = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("ganon_special_s_fall_clatter_add_frame_down_limit"));
-    let ganon_special_s_fall_hold_frame /*LStack_100*/ = if !is_armstrong_slots(parent_boma) {WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("ganon_special_s_fall_hold_frame"))} else {300.0};
+    let ganon_special_s_fall_clatter_add_frame_down_limit = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("ganon_special_s_fall_clatter_add_frame_down_limit"));
+    let ganon_special_s_fall_hold_frame = if !is_armstrong_slots(parent_boma) {WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("ganon_special_s_fall_hold_frame"))} else {300.0};
     let ganon_special_s_fall_clatter_frame = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("ganon_special_s_fall_clatter_frame"));
     let damage = DamageModule::damage(fighter.module_accessor, 0);
     let parent_damage = DamageModule::damage(parent_boma, 0);
@@ -27,16 +27,6 @@ unsafe extern "C" fn status_catched_air_ganon(fighter: &mut L2CFighterCommon) ->
     }
     MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(motion_kind), 0.0, 1.0, false, 0.0, false, false);
     if ganon_special_s_fall_clatter_add_frame_up_limit >= damage_clatter_add {
-        //lstack_100 = -ganon_special_s_fall_clatter_add_frame_down_limit
-        /*
-        if damage_clatter_add < -ganon_special_s_fall_clatter_add_frame_down_limit {
-            base_clatter = ganon_special_s_fall_clatter_add_frame_down_limit;
-            /*
-            lib::L2CValue::operator-(&LStack_e0,(L2CValue *)&LStack_100);
-            lib::L2CValue::operator=(&LStack_f0,(L2CValue *)&LStack_100);
-            */
-        }
-        */
         base_clatter = ganon_special_s_fall_clatter_add_frame_down_limit;
     }
     else {
@@ -48,9 +38,7 @@ unsafe extern "C" fn status_catched_air_ganon(fighter: &mut L2CFighterCommon) ->
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(
-            status_catched_air_ganon
-        );
+        skyline::install_hook!(status_catched_air_ganon);
     }
 }
 

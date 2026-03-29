@@ -34,11 +34,25 @@ unsafe extern "C" fn const_allot_hook(unk: *const u8, constant: *const c_char, m
     original!()(unk,constant,value)
 }
 
+//Credit to HewDraw Remix. Fixes common statuses being weird with edge cancels
+#[skyline::hook(replace=GroundModule::correct)]
+unsafe extern "C" fn groundmodule_correct(boma: &mut BattleObjectModuleAccessor, kind: GroundCorrectKind) -> u64 {
+    let status_kind = StatusModule::status_kind(boma);
+    let situation_kind = StatusModule::situation_kind(boma);
+    if situation_kind == *SITUATION_KIND_GROUND {
+        if [*FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_STATUS_KIND_DASH].contains(&status_kind) {
+            return original!()(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        }
+    }
+    original!()(boma, kind)
+}
+
 //Installation
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x60eb08).data(0x52800001u32); //Removes Jostle
 	skyline::install_hooks!(
         change_version_string_hook,
-        const_allot_hook
+        const_allot_hook//,
+        //groundmodule_correct
     );
 }
