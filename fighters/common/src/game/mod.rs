@@ -74,6 +74,7 @@ use {
 
 mod article;
 mod attack;
+mod command_user;
 mod control;
 mod delay;
 mod effect;
@@ -87,6 +88,7 @@ mod ui;
 pub fn install() {
     article::install();
     attack::install();
+    command_user::install();
     control::install();
     delay::install();
     effect::install();
