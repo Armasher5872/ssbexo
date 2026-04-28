@@ -41,7 +41,7 @@ unsafe extern "C" fn ssbexo_mario_nair_acmd(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_mario_nair_effect(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), -1, 8.5, 4.5, 0, -25, 80, 0.85, true, *EF_FLIP_YZ);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_b"), Hash40::new("sys_attack_arc_b"), Hash40::new("top"), -1, 8.5, 2.5, 0, -75, 80, 0.85, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 0.5);
     }
 }
@@ -159,7 +159,53 @@ unsafe extern "C" fn ssbexo_mario_dair_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
+    frame(agent.lua_state_agent, 15.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, -5, 0, 0, 0, 0, 1.35, false);
+    }
+}
+
+//Dair Sound
+unsafe extern "C" fn ssbexo_mario_dair_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 10.0);
+    if is_excute(agent) {
+        let rand = sv_math::randf(hash40("fighter"), 1.0);
+        if rand > 0.5 {
+            PLAY_SE(agent, Hash40::new("vc_mario_002"));
+        }
+    }
     frame(agent.lua_state_agent, 13.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_punch_kick_swing_l"));
+    }
+}
+
+//Dair Expression
+unsafe extern "C" fn ssbexo_mario_dair_expression(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 13.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 15.0);
+    if is_excute(agent) {
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
+    }
+}
+
+//Dair Bounce ACMD
+unsafe extern "C" fn ssbexo_mario_dair_bounce_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        AttackModule::clear_all(agent.module_accessor);
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+    }
+    frame(agent.lua_state_agent, 23.0);
+    if is_excute(agent) {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+    }
+}
+
+//Dair Bounce Effect
+unsafe extern "C" fn ssbexo_mario_dair_bounce_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, 1, 0, 0, 0, 0, 0.7, 1, 1, 1, 0, 90, 0, true, *EF_FLIP_YZ);
@@ -170,14 +216,14 @@ unsafe extern "C" fn ssbexo_mario_dair_effect(agent: &mut L2CAgentBase) {
         sv_animcmd::EFFECT_FOLLOW_FLIP_RND(agent.lua_state_agent);
         agent.pop_lua_stack(1);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(agent.lua_state_agent, 6.0);
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, -6, -1.5, 0, 110, 0, 0.5, 1, 1, 1, 0, 90, 0, true, *EF_FLIP_YZ);
         sv_animcmd::EFFECT_FOLLOW_FLIP_RND(agent.lua_state_agent);
         agent.pop_lua_stack(1);
     }
-    frame(agent.lua_state_agent, 27.0);
+    frame(agent.lua_state_agent, 12.0);
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("rot"), 0, -1, 0, 0, 40, 0, 0.6, 1, 1, 1, 0, 90, 0, true, *EF_FLIP_YZ);
@@ -190,25 +236,15 @@ unsafe extern "C" fn ssbexo_mario_dair_effect(agent: &mut L2CAgentBase) {
     }
 }
 
-//Dair Sound
-unsafe extern "C" fn ssbexo_mario_dair_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 10.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("vc_mario_002"));
-    }
-    frame(agent.lua_state_agent, 13.0);
+//Dair Bounce Sound
+unsafe extern "C" fn ssbexo_mario_dair_bounce_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_mario_attackair_l01"));
     }
 }
 
-//Dair Expression
-unsafe extern "C" fn ssbexo_mario_dair_expression(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 13.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(agent.lua_state_agent, 15.0);
+//Dair Bounce Expression
+unsafe extern "C" fn ssbexo_mario_dair_bounce_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
     }
@@ -235,6 +271,10 @@ pub fn install() {
     .effect_acmd("effect_attackairlw", ssbexo_mario_dair_effect, Low)
     .sound_acmd("sound_attackairlw", ssbexo_mario_dair_sound, Low)
     .expression_acmd("expression_attackairlw", ssbexo_mario_dair_expression, Low)
+    .game_acmd("game_attackairlwbounce", ssbexo_mario_dair_bounce_acmd, Low)
+    .effect_acmd("effect_attackairlwbounce", ssbexo_mario_dair_bounce_effect, Low)
+    .sound_acmd("sound_attackairlwbounce", ssbexo_mario_dair_bounce_sound, Low)
+    .expression_acmd("expression_attackairlwbounce", ssbexo_mario_dair_bounce_expression, Low)
     .game_acmd("game_landingairlw", ssbexo_mario_dair_landing_acmd, Low)
     .install()
     ;

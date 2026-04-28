@@ -3,10 +3,13 @@ use super::*;
 const CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8b7ce0; //Captain Falcon only
 const CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8b7610; //Captain Falcon only
 const CAPTAIN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x8b7cf0; //Captain Falcon only
+const CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x8b7d20; //Captain Falcon only
 const CAPTAIN_VTABLE_ON_ATTACK_OFFSET: usize = 0x8b8b90; //Captain Falcon only
 
 unsafe extern "C" fn captain_var(boma: &mut BattleObjectModuleAccessor) {
+    WorkModule::off_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED);
     WorkModule::off_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HIT_JUMP);
+    WorkModule::set_int(boma, 0, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
 }
 
 //Captain Falcon Startup Initialization
@@ -37,6 +40,20 @@ unsafe extern "C" fn captain_death_initialization(vtable: u64, fighter: &mut Fig
     original!()(vtable, fighter)
 }
 
+//Captain Falcon Once Per Fighter Frame
+#[skyline::hook(offset = CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn captain_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let boma = fighter.battle_object.module_accessor;
+    if WorkModule::is_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED) {
+        let special_n_effect_handle = WorkModule::get_int(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
+        if !EffectModule::is_exist_effect(boma, special_n_effect_handle as u32) {
+            let fist = EffectModule::req_follow(boma, Hash40::new("sys_damage_fire"), Hash40::new("haver"), &Vector3f::zero(), &Vector3f::zero(), 0.5, true, 0, 0, 0, 0, 0, true, true) as u32;
+            WorkModule::set_int(boma, fist as i32, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
+        }
+    }
+    original!()(vtable, fighter)
+}
+
 //Captain Falcon On Attack
 #[skyline::hook(offset = CAPTAIN_VTABLE_ON_ATTACK_OFFSET)]
 unsafe extern "C" fn captain_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
@@ -60,6 +77,7 @@ pub fn install() {
         captain_start_initialization,
         captain_reset_initialization,
         captain_death_initialization,
+        captain_opff,
         captain_on_attack
     );
 }

@@ -27,12 +27,6 @@ unsafe extern "C" fn armstrong_special_n_main_status(fighter: &mut L2CFighterCom
 
 unsafe extern "C" fn armstrong_special_n_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
-        || fighter.sub_air_check_fall_common().get_bool() {
-            return 1.into();
-        }
-    }
     if !StatusModule::is_changing(fighter.module_accessor) {
         if StatusModule::is_situation_changed(fighter.module_accessor) {
             if situation_kind == *SITUATION_KIND_GROUND {
@@ -48,11 +42,11 @@ unsafe extern "C" fn armstrong_special_n_loop(fighter: &mut L2CFighterCommon) ->
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if situation_kind != *SITUATION_KIND_AIR {
-            fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+        if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+            fighter.change_status(FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_CHARGE.into(), true.into());
         }
         else {
-            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
+            fighter.change_status(FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_ATTACK.into(), false.into());
         }
         return 1.into();
     }
@@ -63,11 +57,19 @@ unsafe extern "C" fn armstrong_special_n_exec_status(_fighter: &mut L2CFighterCo
     0.into()
 }
 
-unsafe extern "C" fn armstrong_special_n_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn armstrong_special_n_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if [*FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_CHARGE, *FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_ATTACK].contains(&status_kind) {
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_NEUTRAL_SPECIAL_CHARGE);
+    }
     0.into()
 }
 
-unsafe extern "C" fn armstrong_special_n_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn armstrong_special_n_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if [*FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_CHARGE, *FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_ATTACK].contains(&status_kind) {
+        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_NEUTRAL_SPECIAL_CHARGE);
+    }
     0.into()
 }
 

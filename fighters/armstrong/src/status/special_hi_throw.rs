@@ -33,7 +33,7 @@ unsafe extern "C" fn armstrong_special_hi_throw_main_status(fighter: &mut L2CFig
     if !StopModule::is_stop(fighter.module_accessor) {
         armstrong_special_hi_throw_sub_status(fighter, false.into());
     }
-    grabbed_anim_selector(fighter, "clung_ganon", 0.0, 1.0);
+    grabbed_anim_selector(fighter, "barrel_screw", 0.0, 0.0);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_throw"), 0.0, 1.0, false, 0.0, false, false);
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(armstrong_special_hi_throw_sub_status as *const () as _));
     fighter.sub_shift_status_main(L2CValue::Ptr(armstrong_special_hi_throw_main_loop as *const () as _))

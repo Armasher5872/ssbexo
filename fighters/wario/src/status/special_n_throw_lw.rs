@@ -26,7 +26,7 @@ unsafe extern "C" fn wario_special_n_throw_lw_init_status(fighter: &mut L2CFight
 
 //Neutral Special Down Throw Main Status
 unsafe extern "C" fn wario_special_n_throw_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    grabbed_anim_selector(fighter, "bitten_wario_start", 50.0, 0.0);
+    grabbed_anim_selector(fighter, "bitten_wario_start", 0.0, 1.0);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_n_throw_lw"), 0.0, 1.0, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(wario_special_n_throw_lw_main_loop as *const () as _))
 }

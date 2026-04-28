@@ -58,7 +58,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_effect(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn ssbexo_link_special_hi_sound(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 9.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_link_jump02"));
+        PLAY_SE(agent, Hash40::new("se_link_special_h02"));
     }
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {

@@ -42,6 +42,8 @@ mod special_air_s_end;
 mod special_hi_throw;
 mod special_hi;
 mod special_lw;
+mod special_n_attack;
+mod special_n_charge;
 mod special_n;
 mod special_s_catch;
 mod special_s_end;
@@ -61,6 +63,8 @@ pub fn install() {
     special_hi_throw::install();
     special_hi::install();
     special_lw::install();
+    special_n_attack::install();
+    special_n_charge::install();
     special_n::install();
     special_s_catch::install();
     special_s_end::install();

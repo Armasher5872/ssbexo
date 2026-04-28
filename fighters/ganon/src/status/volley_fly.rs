@@ -20,9 +20,8 @@ unsafe extern "C" fn ganon_volley_fly_init_status(weapon: &mut L2CWeaponCommon) 
     let volley_scale = WorkModule::get_float(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLOAT_VOLLEY_SCALE_CHARGE);
     let is_charged = WorkModule::is_flag(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     let direction = WorkModule::get_int(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_N_DIRECTION);
-    let angle: f32 = 10.0;
     let speed = if is_charged {speed_max} else {speed_min};
-    let speed_y = angle.to_radians().cos()*speed;
+    let speed_y = 0.0f32.to_radians().cos()*speed;
     let y_speed = if direction == 2 {-speed_y/4.5} else if direction == 1 {speed_y/4.5} else {0.0};
     if owner_status_kind != *FIGHTER_STATUS_KIND_SPECIAL_LW {
         sv_kinetic_energy!(set_speed, weapon, WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed*lr, y_speed);

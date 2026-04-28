@@ -42,6 +42,8 @@ mod firepillar_burst;
 mod special_hi_throw;
 mod special_hi;
 mod special_lw;
+mod special_n_attack;
+mod special_n_charge;
 mod special_n;
 mod special_s_catch;
 mod special_s_end;
@@ -56,6 +58,8 @@ pub fn install() {
     firepillar_burst::install();
     special_hi_throw::install();
     special_hi::install();
+    special_n_attack::install();
+    special_n_charge::install();
     special_n::install();
     special_lw::install();
     special_s_catch::install();

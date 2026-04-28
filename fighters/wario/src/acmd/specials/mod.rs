@@ -51,6 +51,7 @@ mod special_s_end;
 mod special_s_jumpsquat;
 mod special_s_landing;
 mod special_s_loop;
+mod special_s_slide;
 mod special_s;
 
 pub fn install() {
@@ -78,5 +79,6 @@ pub fn install() {
     special_s_jumpsquat::install();
     special_s_landing::install();
     special_s_loop::install();
+    special_s_slide::install();
     special_s::install();
 }

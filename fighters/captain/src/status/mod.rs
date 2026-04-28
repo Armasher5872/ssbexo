@@ -10,8 +10,10 @@ use {
         },
         hash40,
         lib::lua_const::*,
+        phx::*,
     },
     smashline::*,
+    smash_script::*,
 };
 
 mod attack_hi3;
@@ -26,6 +28,7 @@ mod catch_pull;
 mod catch;
 mod special_lw_wall_end;
 mod special_lw;
+mod special_n_charged;
 mod special_n;
 
 pub fn install() {
@@ -41,5 +44,6 @@ pub fn install() {
     catch::install();
     special_lw_wall_end::install();
     special_lw::install();
+    special_n_charged::install();
     special_n::install();
 }

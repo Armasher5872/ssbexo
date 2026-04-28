@@ -60,10 +60,7 @@ unsafe extern "C" fn luigi_special_lw_end_loop(fighter: &mut L2CFighterCommon) -
     0.into()
 }
 
-unsafe extern "C" fn luigi_special_lw_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-    ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
-    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+unsafe extern "C" fn luigi_special_lw_end_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 

@@ -12,6 +12,9 @@ unsafe extern "C" fn mario_attack_air_check_attack_status(fighter: &mut L2CFight
             if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_LW
             || motion_kind == hash40("attack_air_lw") {
                 if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE) {
+                    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE) {
+                        MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_air_lw_bounce"), 0.0, 1.0, false, 0.0, false, false);
+                    }
                     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.6);
                     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
                 }

@@ -5,9 +5,11 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_throw_acmd(agent: &mut L2CAgent
     if is_excute(agent) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 9.0, 361, 108, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 8.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        FT_MOTION_RATE(agent, 30.0/24.0);
     }
     frame(agent.lua_state_agent, 24.0);
     if is_excute(agent) {
+        FT_MOTION_RATE(agent, 1.0);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_THROW);
         armstrong_clear_charge(agent.module_accessor);
     }
@@ -36,7 +38,7 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_throw_sound(agent: &mut L2CAgen
     }
     frame(agent.lua_state_agent, 24.0);
     if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_ganon_special_h04"));
+        PLAY_SE(agent, Hash40::new("se_common_throw_02"));
     }
 }
 

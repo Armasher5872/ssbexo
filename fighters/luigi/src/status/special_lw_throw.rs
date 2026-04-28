@@ -66,11 +66,15 @@ unsafe extern "C" fn luigi_special_lw_throw_sub_status(fighter: &mut L2CFighterC
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+    let sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
     let plunger_throw = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+    let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
@@ -84,7 +88,12 @@ unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             if !plunger_throw {
                 if direction == 2 {
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_throw_hi"), -1.0, 1.0, 0.0, false, false);
+                    if current_frame <= 17.0 {
+                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_throw_hi"), -1.0, 1.0, 0.0, false, false);
+                    }
+                    else {
+                        fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+                    }
                 }
                 else if direction == 1 {
                     MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_throw_b"), -1.0, 1.0, 0.0, false, false);
@@ -100,21 +109,47 @@ unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
         if situation_kind == *SITUATION_KIND_AIR
         && prev_situation_kind == *SITUATION_KIND_GROUND {
             GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
             if !plunger_throw {
                 if direction == 2 {
+                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
                     MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_hi"), -1.0, 1.0, 0.0, false, false);
                 }
                 else if direction == 1 {
+                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
                     MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_b"), -1.0, 1.0, 0.0, false, false);
                 }
                 else {
+                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
                     MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_f"), -1.0, 1.0, 0.0, false, false);
                 }
             }
             else {
                 MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_plunger"), -1.0, 1.0, 0.0, false, false);
             }
+        }
+    }
+    if situation_kind == *SITUATION_KIND_AIR {
+        if motion_kind == hash40("special_air_lw_throw_b") {
+            if current_frame < 28.0 {
+                if sum_speed_y != 0.0 {
+                    if sum_speed_y > 0.0 {
+                        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.05);
+                    }
+                    else {
+                        sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.05);
+                    }
+                }
+                else {
+                    sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+                    sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
+                }
+            }
+            else if current_frame == 28.0 {
+                sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_accel_y);
+            }
+        }
+        if motion_kind == hash40("special_air_lw_throw_f") {
+            sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.05);
         }
     }
     if capture_id != 0x50000000 {

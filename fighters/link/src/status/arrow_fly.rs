@@ -97,10 +97,23 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
     else {
         WorkModule::set_int(weapon.module_accessor, (power_min+power_charge) as i32, *WN_LINK_BOWARROW_STATUS_FLY_WORK_INT_ATTACK_POWER);
     }
+    if arrow_type == *WN_LINK_BOWARROW_NORMAL_ARROW {
+        PLAY_SE(weapon, Hash40::new("se_link_special_n03"));
+    }
+    if arrow_type == *WN_LINK_BOWARROW_FIRE_ARROW {
+        PLAY_SE(weapon, Hash40::new("se_link_special_n06"));
+    }
+    if arrow_type == *WN_LINK_BOWARROW_SHOCK_ARROW {
+        PLAY_SE(weapon, Hash40::new("se_link_special_n07"));
+    }
+    if arrow_type == *WN_LINK_BOWARROW_ICE_ARROW {
+        PLAY_SE(weapon, Hash40::new("se_link_special_n08"));
+    }
     if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {
         if WorkModule::is_flag(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE) {
+            PLAY_SE(weapon, Hash40::new("se_link_special_n10"));
             EFFECT_FOLLOW(weapon, Hash40::new("link_light_arrow_aura"), Hash40::new("arrow"), 0, 0, 13, -shot_angle, 0, 0, 1.0, true);
-            EFFECT(weapon, Hash40::new("link_light_arrow"), Hash40::new("top"), (0.0-(0.105*shot_angle.abs()))*lr, 0.0+(0.09*shot_angle), 0, -shot_angle, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+            EFFECT(weapon, Hash40::new("link_light_arrow"), Hash40::new("top"), (0.0-(0.105*shot_angle.abs()))*lr, -0.5+(0.09*shot_angle), 0, -shot_angle, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
             ModelModule::set_scale(weapon.module_accessor, 0.001);
         }
     }

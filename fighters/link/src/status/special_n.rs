@@ -146,7 +146,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
         let arrow_type = WorkModule::get_int(bow_arrow_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
         let hold_frame = if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {300} else {max_hold_frame};
         if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_START {
-            if arrow_type == WN_LINK_BOWARROW_LIGHT_ARROW {
+            if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {
                 link_guard_cancel(fighter);
             }
         }

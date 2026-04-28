@@ -8,9 +8,15 @@ unsafe extern "C" fn luigi_obakyumu_special_lw_pre_status(weapon: &mut L2CWeapon
 unsafe extern "C" fn luigi_obakyumu_special_lw_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let owner_boma = get_owner_boma(weapon);
     let owner_lr = PostureModule::lr(owner_boma);
-    WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
-    WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw"), 0.0, 1.0, false, 0.0, false, false);
+    let prev_status_kind = weapon.global_table[PREV_STATUS_KIND].get_i32();
+    if prev_status_kind == *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW_END {
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw"), 59.0, 1.0, false, 0.0, false, false);
+    }
+    else {
+        WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+        WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+        MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw"), 0.0, 1.0, false, 0.0, false, false);
+    }
     if owner_lr == -1.0 {
         MotionModule::set_flip(weapon.module_accessor, false, true, true);
     }

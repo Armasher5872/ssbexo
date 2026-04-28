@@ -45,6 +45,7 @@ unsafe extern "C" fn armstrong_firepillar_burst_end_status(weapon: &mut L2CWeapo
     WorkModule::set_int(weapon.module_accessor, 0, *WEAPON_ARMSTRONG_FIREPILLAR_INSTANCE_WORK_ID_INT_EFFECT_ID);
     WorkModule::set_float(weapon.module_accessor, 0.0, *WEAPON_ARMSTRONG_FIREPILLAR_INSTANCE_WORK_ID_FLOAT_POS_X);
     WorkModule::set_float(weapon.module_accessor, 0.0, *WEAPON_ARMSTRONG_FIREPILLAR_INSTANCE_WORK_ID_FLOAT_POS_Y);
+    WorkModule::set_float(weapon.module_accessor, 0.0, *WEAPON_ARMSTRONG_FIREPILLAR_INSTANCE_WORK_ID_FLOAT_CHARGE);
     0.into()
 }
 

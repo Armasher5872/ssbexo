@@ -4,6 +4,7 @@ unsafe extern "C" fn link_bowarrow_hit_stick_main_status(weapon: &mut L2CWeaponC
     let owner_boma = get_owner_boma(weapon);
     let item_id = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
     let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
+    let arrow_type = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x220cea5125));
     MotionModule::change_motion(weapon.module_accessor, Hash40::new("hit_stick"), 0.0, 1.0, false, 0.0, false, false);
     if !StopModule::is_stop(weapon.module_accessor) {
@@ -19,6 +20,9 @@ unsafe extern "C" fn link_bowarrow_hit_stick_main_status(weapon: &mut L2CWeaponC
             let status = WorkModule::get_int(weapon.module_accessor, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
             StatusModule::change_status_request(item_boma, status, false);
         }
+    }
+    if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {
+        PLAY_SE(weapon, Hash40::new("se_link_special_n11"));
     }
     weapon.fastshift(L2CValue::Ptr(link_bowarrow_hit_stick_main_loop as *const () as _))
 }

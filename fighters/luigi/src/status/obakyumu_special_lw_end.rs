@@ -15,7 +15,10 @@ unsafe extern "C" fn luigi_obakyumu_special_lw_end_main_status(weapon: &mut L2CW
     weapon.fastshift(L2CValue::Ptr(luigi_obakyumu_special_lw_end_main_loop as *const () as _))
 }
 
-unsafe extern "C" fn luigi_obakyumu_special_lw_end_main_loop(_weapon: &mut L2CWeaponCommon) -> L2CValue {
+unsafe extern "C" fn luigi_obakyumu_special_lw_end_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    if MotionModule::is_end(weapon.module_accessor) {
+        weapon.change_status(WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW.into(), false.into());
+    }
     0.into()
 }
 

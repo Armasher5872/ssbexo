@@ -16,17 +16,17 @@ unsafe extern "C" fn ssbexo_link_bowarrow_fly_acmd(agent: &mut L2CAgentBase) {
         }
         if arrow_type == *WN_LINK_BOWARROW_FIRE_ARROW {
             if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 50, 0, 35, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 60, 92, 0, 43, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
             }
         }
         if arrow_type == *WN_LINK_BOWARROW_SHOCK_ARROW {
             if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 70, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 37, 40, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_OBJECT);
             }
         }
         if arrow_type == *WN_LINK_BOWARROW_ICE_ARROW {
             if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 110, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ice"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 48, 110, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ice"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
             }
         }
     }
@@ -39,26 +39,27 @@ unsafe extern "C" fn ssbexo_link_bowarrow_fly_acmd(agent: &mut L2CAgentBase) {
         }
         if arrow_type == *WN_LINK_BOWARROW_FIRE_ARROW {
             if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 50, 0, 35, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 60, 92, 0, 43, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
                 AttackModule::enable_safe_pos(agent.module_accessor);
             }
         }
         if arrow_type == *WN_LINK_BOWARROW_SHOCK_ARROW {
             if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 70, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 37, 40, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_paralyze"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_OBJECT);
                 AttackModule::enable_safe_pos(agent.module_accessor);
             }
         }
         if arrow_type == *WN_LINK_BOWARROW_ICE_ARROW {
             if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 30, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ice"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
+                ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, 48, 30, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_ice"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_OBJECT);
                 AttackModule::enable_safe_pos(agent.module_accessor);
             }
         }
         if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {
             if WorkModule::is_flag(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE) {
                 if is_excute(agent) {
-                    ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 110, 0, 25, 1.35, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_OBJECT);
+                    ATTACK(agent, 0, 0, Hash40::new("top"), 5.0, angle, 110, 0, 25, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_OBJECT);
+                    AttackModule::set_optional_hit_sound(agent.module_accessor, 0, Hash40::new("se_link_special_n11"));
                     AttackModule::enable_safe_pos(agent.module_accessor);
                 }
             }
@@ -102,11 +103,15 @@ unsafe extern "C" fn ssbexo_link_bowarrow_fly_effect(agent: &mut L2CAgentBase) {
     }
 }
 
+//Arrow Fly Sound
+unsafe extern "C" fn ssbexo_link_bowarrow_fly_sound(_agent: &mut L2CAgentBase) {}
+
 pub fn install() {
     Agent::new("link_bowarrow")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_fly", ssbexo_link_bowarrow_fly_acmd, Low)
     .effect_acmd("effect_fly", ssbexo_link_bowarrow_fly_effect, Low)
+    .sound_acmd("sound_fly", ssbexo_link_bowarrow_fly_sound, Low)
     .install()
     ;
 }

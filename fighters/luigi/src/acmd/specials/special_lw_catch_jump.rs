@@ -4,12 +4,15 @@ use super::*;
 unsafe extern "C" fn ssbexo_luigi_down_special_catch_jump_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
+        let air_speed_x_stable = WorkModule::get_param_float(agent.module_accessor, hash40("air_speed_x_stable"), 0);
         let air_accel_y = WorkModule::get_param_float(agent.module_accessor, hash40("common"), hash40("air_accel_y"));
         ADD_SPEED_NO_LIMIT(agent, 0, 2.0);
         sv_kinetic_energy!(set_accel, agent, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_accel_y);
         SA_SET(agent, *SITUATION_KIND_AIR);
-        KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         GroundModule::correct(agent.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        sv_kinetic_energy!(set_stable_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_STOP, air_speed_x_stable*0.5);
+        sv_kinetic_energy!(set_limit_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_STOP, air_speed_x_stable*0.5);
     }
 }
 

@@ -59,8 +59,9 @@ unsafe extern "C" fn koopa_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let battle_object_slow = singletons::BattleObjectSlow() as *mut u8;
     let status_kind = StatusModule::status_kind(boma);
+    let kind = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_KIND);
     if (*battle_object_slow.add(0x8) == 0 || *(battle_object_slow as *const u32) == 0) && !StopModule::is_stop(boma) {
-        if (fighter.battle_object.kind == *FIGHTER_KIND_KIRBY as u32 && status_kind == *FIGHTER_KIRBY_STATUS_KIND_KOOPA_SPECIAL_N) || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
+        if (kind == *FIGHTER_KIND_KIRBY && status_kind == *FIGHTER_KIRBY_STATUS_KIND_KOOPA_SPECIAL_N) || status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N {
             return;
         }
         let fire_speed_mul_max = WorkModule::get_param_float(boma, hash40("param_special_n"), hash40("fire_speed_mul_max"));

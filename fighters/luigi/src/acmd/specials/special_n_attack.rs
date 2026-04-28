@@ -22,17 +22,17 @@ unsafe extern "C" fn ssbexo_luigi_grounded_neutral_special_attack_effect(agent: 
     }
     frame(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
-        let rand = &Vector3f{x: smash::app::sv_math::randf(hash40("fighter"), 50.0), y: smash::app::sv_math::randf(hash40("stage"), 50.0), z: smash::app::sv_math::randf(hash40("luigi"), 50.0)};
-        let flip = &Vector3f{x: if smash::app::sv_math::randf(hash40("fighter"), 1.0) == 0.0 {-1.0} else {1.0}, y: if smash::app::sv_math::randf(hash40("stage"), 1.0) == 0.0 {-1.0} else {1.0}, z: if smash::app::sv_math::randf(hash40("luigi"), 1.0) == 0.0 {-1.0} else {1.0}};
-        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 8.0, 0.0 + (rand.x*flip.x), 0, 0, 0.5, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 8.0, 120.0 + (rand.y*flip.y), 0, 0, 0.5, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 8.0, 240.0 + (rand.z*flip.z), 0, 0, 0.5, true);
+        let rand = &Vector3f{x: sv_math::randf(hash40("fighter"), 50.0), y: sv_math::randf(hash40("stage"), 50.0), z: sv_math::randf(hash40("luigi"), 50.0)};
+        let flip = &Vector3f{x: if sv_math::randf(hash40("fighter"), 1.0) == 0.0 {-1.0} else {1.0}, y: if sv_math::randf(hash40("stage"), 1.0) == 0.0 {-1.0} else {1.0}, z: if sv_math::randf(hash40("luigi"), 1.0) == 0.0 {-1.0} else {1.0}};
+        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 12.0, 0.0 + (rand.x*flip.x), 0, 0, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 12.0, 120.0 + (rand.y*flip.y), 0, 0, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 12.0, 240.0 + (rand.z*flip.z), 0, 0, 0.5, true);
     }
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         FLASH(agent, 0, 0.25, 1.0, 0.7);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_hit_elec_s"), Hash40::new("top"), 0.0, 9.0, 8.0, 0, 90, 90, 0.4, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 0.0, 9.0, 8.0, 0, 90, 90, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_hit_elec_s"), Hash40::new("top"), 0.0, 9.0, 12.0, 0, 90, 90, 0.4, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 0.0, 9.0, 12.0, 0, 90, 90, 0.5, true);
         EFFECT_FOLLOW(agent, Hash40::new("sys_h_smoke_b"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.5, true);
         LAST_EFFECT_SET_COLOR(agent, 0.2, 0.2, 0.2);
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -50,17 +50,17 @@ unsafe extern "C" fn ssbexo_luigi_aerial_neutral_special_attack_effect(agent: &m
     }
     frame(agent.lua_state_agent, 4.0);
     if is_excute(agent) {
-        let rand = &Vector3f{x: smash::app::sv_math::randf(hash40("fighter"), 50.0), y: smash::app::sv_math::randf(hash40("stage"), 50.0), z: smash::app::sv_math::randf(hash40("luigi"), 50.0)};
-        let flip = &Vector3f{x: if smash::app::sv_math::randf(hash40("fighter"), 1.0) == 0.0 {-1.0} else {1.0}, y: if smash::app::sv_math::randf(hash40("stage"), 1.0) == 0.0 {-1.0} else {1.0}, z: if smash::app::sv_math::randf(hash40("luigi"), 1.0) == 0.0 {-1.0} else {1.0}};
-        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 8.0, 0.0 + (rand.x*flip.x), 0, 0, 0.5, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 8.0, 120.0 + (rand.y*flip.y), 0, 0, 0.5, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 8.0, 240.0 + (rand.z*flip.z), 0, 0, 0.5, true);
+        let rand = &Vector3f{x: sv_math::randf(hash40("fighter"), 50.0), y: sv_math::randf(hash40("stage"), 50.0), z: sv_math::randf(hash40("luigi"), 50.0)};
+        let flip = &Vector3f{x: if sv_math::randf(hash40("fighter"), 1.0) == 0.0 {-1.0} else {1.0}, y: if sv_math::randf(hash40("stage"), 1.0) == 0.0 {-1.0} else {1.0}, z: if sv_math::randf(hash40("luigi"), 1.0) == 0.0 {-1.0} else {1.0}};
+        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 12.0, 0.0 + (rand.x*flip.x), 0, 0, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 12.0, 120.0 + (rand.y*flip.y), 0, 0, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_mball_beam"), Hash40::new("top"), 0.0, 9.0, 12.0, 240.0 + (rand.z*flip.z), 0, 0, 0.5, true);
     }
     frame(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         FLASH(agent, 0, 0.25, 1.0, 0.7);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_hit_elec_s"), Hash40::new("top"), 0.0, 9.0, 8.0, 0, 90, 90, 0.4, true);
-        EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 0.0, 9.0, 8.0, 0, 90, 90, 0.5, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_hit_elec_s"), Hash40::new("top"), 0.0, 9.0, 12.0, 0, 90, 90, 0.4, true);
+        EFFECT_FOLLOW(agent, Hash40::new("sys_sp_flash"), Hash40::new("top"), 0.0, 9.0, 12.0, 0, 90, 90, 0.5, true);
     }
     frame(agent.lua_state_agent, 8.0);
     if is_excute(agent) {

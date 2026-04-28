@@ -7,7 +7,11 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_start_acmd(_agent: &mut L2CAge
 unsafe extern "C" fn ssbexo_link_special_hi_glide_start_effect(_agent: &mut L2CAgentBase) {}
 
 //Up Special Glide Start Sound
-unsafe extern "C" fn ssbexo_link_special_hi_glide_start_sound(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_link_special_hi_glide_start_sound(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_link_special_h04"));
+    }
+}
 
 //Up Special Glide Start Expression
 unsafe extern "C" fn ssbexo_link_special_hi_glide_start_expression(agent: &mut L2CAgentBase) {

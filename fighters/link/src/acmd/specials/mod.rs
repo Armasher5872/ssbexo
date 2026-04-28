@@ -48,6 +48,8 @@ mod special_hi_hold;
 mod special_hi_spin_attack;
 mod special_hi_start;
 mod special_hi;
+mod special_n_end;
+mod special_n_start;
 
 pub fn install() {
     arrow_fly::install();
@@ -67,4 +69,6 @@ pub fn install() {
     special_hi_spin_attack::install();
     special_hi_start::install();
     special_hi::install();
+    special_n_end::install();
+    special_n_start::install();
 }

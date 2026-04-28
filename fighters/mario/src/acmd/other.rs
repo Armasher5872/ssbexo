@@ -1,5 +1,37 @@
 use super::*;
 
+//Down Taunt Effect
+unsafe extern "C" fn ssbexo_mario_down_taunt_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 29.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+//Down Taunt Sound
+unsafe extern "C" fn ssbexo_mario_down_taunt_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 29.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_mario_landing03"));
+    }
+}
+
+//Down Taunt Expression
+unsafe extern "C" fn ssbexo_mario_down_taunt_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE);
+    }
+    frame(agent.lua_state_agent, 29.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_landl_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_TOP, 3);
+    }
+    frame(agent.lua_state_agent, 60.0);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 10);
+    }
+}
+
 //Crawl ACMD
 unsafe extern "C" fn ssbexo_mario_crawl_acmd(_agent: &mut L2CAgentBase) {}
 
@@ -66,6 +98,12 @@ unsafe extern "C" fn ssbexo_mario_crawl_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .effect_acmd("effect_appeallwr", ssbexo_mario_down_taunt_effect, Low)
+    .sound_acmd("sound_appeallwr", ssbexo_mario_down_taunt_sound, Low)
+    .expression_acmd("expression_appeallwr", ssbexo_mario_down_taunt_expression, Low)
+    .effect_acmd("effect_appeallwl", ssbexo_mario_down_taunt_effect, Low)
+    .sound_acmd("sound_appeallwl", ssbexo_mario_down_taunt_sound, Low)
+    .expression_acmd("expression_appeallwl", ssbexo_mario_down_taunt_expression, Low)
     .game_acmd("game_squatf", ssbexo_mario_crawl_acmd, Low)
     .effect_acmd("effect_squatf", ssbexo_mario_crawl_effect, Low)
     .sound_acmd("sound_squatf", ssbexo_mario_crawl_sound, Low)

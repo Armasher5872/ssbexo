@@ -48,9 +48,9 @@ unsafe extern "C" fn armstrong_on_attack(vtable: u64, fighter: &mut Fighter, log
     let opponent_object = get_battle_object_from_id(opponent_object_id);
     let opponent_battle_object_id = (*opponent_object).battle_object_id;
     let status_kind = StatusModule::status_kind(boma);
-    let frame = MotionModule::frame(boma);
     if is_armstrong_slots(boma) {
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N && frame < 94.0 {
+        let charge = WorkModule::get_float(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_NEUTRAL_SPECIAL_CHARGE);
+        if status_kind == *FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_ATTACK && charge > 0.75 {
             call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
         }
         if [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind) && WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {

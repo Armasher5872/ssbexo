@@ -3,6 +3,7 @@ use {
         collision_struct::*,
         fighter_common::*,
         status_end_control::*,
+        vector::*,
     },
     exo_var::{
         captain::*,
@@ -14,6 +15,7 @@ use {
             *
         },
         lib::lua_const::*,
+        phx::*,
     },
     smashline::*,
 };

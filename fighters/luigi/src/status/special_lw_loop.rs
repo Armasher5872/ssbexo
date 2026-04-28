@@ -43,9 +43,11 @@ unsafe extern "C" fn luigi_special_lw_loop_main_loop(fighter: &mut L2CFighterCom
         }
     }
     WorkModule::inc_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
+    /*
     if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
         fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER.into(), false.into());
     }
+    */
     if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) || special_lw_timer > 180 {
         fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
     }
@@ -60,10 +62,19 @@ unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCo
     if [*FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind) {
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
     }
-    else {
-        let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-        ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
-        ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL {
+        if LinkModule::is_link(fighter.module_accessor, *LINK_NO_CAPTURE) {
+            let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+            if capture_id != 0x50000000 {
+                let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+                let pos = *PostureModule::pos(fighter.module_accessor);
+                PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
+            }
+            fighter.clear_lua_stack();
+            lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
+            sv_module_access::_catch(fighter.lua_state_agent);
+            fighter.pop_lua_stack(1);
+        }
     }
     0.into()
 }

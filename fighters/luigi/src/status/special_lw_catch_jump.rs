@@ -28,6 +28,13 @@ unsafe extern "C" fn luigi_special_lw_catch_jump_main_status(fighter: &mut L2CFi
 }
 
 unsafe extern "C" fn luigi_special_lw_catch_jump_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let stick_x = fighter.global_table[STICK_X].get_f32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+    let is_attack = ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
+    let lr = PostureModule::lr(fighter.module_accessor);
+    let x_stick = stick_x*lr;
+    let run_stick_x = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("run_stick_x"));
+    let jump_neutral_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("jump_neutral_y"));
     let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
     if capture_id != 0x50000000 {
         let pos = *PostureModule::pos(fighter.module_accessor);
@@ -38,6 +45,18 @@ unsafe extern "C" fn luigi_special_lw_catch_jump_main_loop(fighter: &mut L2CFigh
             PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
             fighter.change_status(FIGHTER_STATUS_KIND_CATCH_CUT.into(), false.into());
         }
+    }
+    if x_stick < -run_stick_x && is_attack {
+        WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW.into(), false.into());
+    }
+    if x_stick > run_stick_x && is_attack {
+        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW.into(), false.into());
+    }
+    if stick_y > jump_neutral_y && is_attack {
+        WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+        fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW.into(), false.into());
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WAIT.into(), false.into());

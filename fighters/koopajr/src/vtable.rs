@@ -288,7 +288,7 @@ unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon
         TeamModule::set_team_owner_id(boma, *BATTLE_OBJECT_ID_INVALID as u32);
         WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
         let reflect = SoundModule::play_se(boma, Hash40::new("se_ganon_special_n06"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(boma, reflect as i32, 6.0, 0);
+        SoundModule::set_se_vol(boma, reflect as i32, 3.0, 0);
         sv_kinetic_energy!(set_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, 0.0);
         sv_kinetic_energy!(set_stable_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, 0.0);
     }

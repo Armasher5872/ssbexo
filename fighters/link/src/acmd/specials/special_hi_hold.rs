@@ -37,9 +37,12 @@ unsafe extern "C" fn ssbexo_link_special_hi_hold_effect(agent: &mut L2CAgentBase
 
 //Up Special Hold Sound
 unsafe extern "C" fn ssbexo_link_special_hi_hold_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 28.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_special_h01"));
+    }
+    frame(agent.lua_state_agent, 24.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_link_special_h03"));
     }
 }
 
