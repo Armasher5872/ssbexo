@@ -32,12 +32,16 @@ unsafe extern "C" fn cloud_special_hi_combo_2_main_loop(fighter: &mut L2CFighter
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let lr = PostureModule::lr(fighter.module_accessor);
     let move_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
-    let stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
-    let vec_stick_x = stick["x"].get_f32();
-    let vec_stick_y = stick["y"].get_f32();
-    let stick_angle = vec_stick_y.atan2(vec_stick_x*lr);
+    let mut stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
+    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
+        stick["x"].assign(&L2CValue::F32(0.0));
+        stick["y"].assign(&L2CValue::F32(1.0));
+    }
+    let normalize = fighter.Vector2__normalize(stick);
+    let vec_stick_x = normalize["x"].get_f32();
+    let vec_stick_y = normalize["y"].get_f32();
+    let stick_angle = vec_stick_y.atan2(vec_stick_x);
     let stick_degrees = stick_angle.to_degrees();
-    let mut new_stick_degrees = stick_degrees;
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -45,27 +49,26 @@ unsafe extern "C" fn cloud_special_hi_combo_2_main_loop(fighter: &mut L2CFighter
             }
         }
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
-        return 0.into();
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
-        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_hi_combo_2"), -1.0, 1.0, 0.0, false, false);
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
+            return 0.into();
+        }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
+            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_hi_combo_2"), -1.0, 1.0, 0.0, false, false);
+        }
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_DECIDE) {
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-        if stick_x.abs()+stick_y.abs() >= 0.5 {
-            new_stick_degrees = 90.0;
-        }
     }
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN) {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
-        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, ((new_stick_degrees+90.0).to_radians().sin())*lr, (new_stick_degrees-90.0).to_radians().cos());
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, ((stick_degrees+90.0).to_radians().sin())*lr, (stick_degrees-90.0).to_radians().cos());
         sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.04, 0.04);
         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN);
     }

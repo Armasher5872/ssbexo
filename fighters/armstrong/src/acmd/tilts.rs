@@ -114,6 +114,10 @@ unsafe extern "C" fn ssbexo_armstrong_up_tilt_effect(agent: &mut L2CAgentBase) {
         LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
+    frame(agent.lua_state_agent, 43.0);
+	if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
+    }
 }
 
 //Up Tilt Sound

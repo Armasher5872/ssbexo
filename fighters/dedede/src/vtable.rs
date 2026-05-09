@@ -1,25 +1,8 @@
 use super::*;
 
-const DEDEDE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x903c80; //Dedede only
 const DEDEDE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x904520; //Dedede only
 const DEDEDE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x904cf0; //Dedede only
 const DEDEDE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x904e70; //Dedede only
-
-unsafe extern "C" fn dedede_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_FLAG_LINK_ITEM_FUSE_BACK);
-    WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_DEDEDE_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
-}
-
-//Dedede Startup Initialization
-#[skyline::hook(offset = DEDEDE_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn dedede_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    dedede_var(&mut *boma);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Dedede Reset Initialization
 #[skyline::hook(offset = DEDEDE_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -96,7 +79,6 @@ unsafe extern "C" fn dedede_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 
 pub fn install() {
     skyline::install_hooks!(
-        dedede_start_initialization,
         dedede_reset_initialization,
         dedede_death_initialization,
         dedede_opff

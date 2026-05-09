@@ -403,7 +403,7 @@ unsafe extern "C" fn control_setup(energy: &mut FighterKineticEnergyControl, res
     let shoot_dash_speed_f = WorkModule::get_param_float(boma, hash40("shoot_dash_speed_f"), 0);
     let shoot_dash_speed_b = WorkModule::get_param_float(boma, hash40("shoot_dash_speed_b"), 0);
     let rslash_air_spd_x_mul = WorkModule::get_param_float(boma, hash40("rslash_air_spd_x_mul"), 0);
-    let new_speed = exo_utils::kinetic_energy::KineticEnergy::adjust_speed_for_ground_normal(&energy.speed, boma);
+    let new_speed = exo_utils::structs::kinetic_energy::KineticEnergy::adjust_speed_for_ground_normal(&energy.speed, boma);
     energy.clear_energy();
     energy.accel = PaddedVec2::zeros();
     energy.speed_max = PaddedVec2::zeros();

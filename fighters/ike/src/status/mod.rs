@@ -1,9 +1,11 @@
 use {
     exo_utils::{
-        check_attack::*,
-        fighter_common::*,
-        ike::*,
-        weapon::*,
+        common::{
+            check_attack::*,
+            weapon::*,
+        },
+        fighter::ike::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         globals::*,

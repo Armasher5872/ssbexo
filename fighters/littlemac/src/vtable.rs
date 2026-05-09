@@ -1,7 +1,6 @@
 use super::*;
 
 const LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET: usize = 0x68cda0; //Little Mac only
-const LITTLEMAC_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xc44790; //Little Mac only
 const LITTLEMAC_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc44830; //Little Mac only
 const LITTLEMAC_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc448c0; //Little Mac only
 const LITTLEMAC_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0xc44b80; //Little Mac only
@@ -17,39 +16,6 @@ unsafe extern "C" fn update_littlemac_ui(entry_id: i32, total_gauge: f32) {
     let manager = singletons::FighterManager() as *mut u64;
     let fighter_entry = (*manager + (entry_id as u64 * 8) + 0x20) as *mut u64;
     update_littlemac_ui_internal((*fighter_entry + 0x41e4) as *mut u32, total_gauge as i32);
-}
-
-unsafe extern "C" fn littlemac_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_USED_AIR_SPECIAL_N);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-    }
-    0.into()
-}
-
-unsafe extern "C" fn littlemac_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_HAS_STAR);
-    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_USED_AIR_SPECIAL_N);
-    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_FLAG_IS_START_AIR);
-    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_CAN_INPUT_DREAMLAND_EXPRESS);
-    WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_DREAMLAND_EXPRESS);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_STAR_DAMAGE);
-    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_HELD_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SUCCESSFUL_DREAMLAND_EXPRESS_INPUTS);
-}
-
-//Little Mac Startup Initialization
-#[skyline::hook(offset = LITTLEMAC_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn littlemac_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    littlemac_var(&mut *boma);
-    agent.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(littlemac_end_control as *const () as _));
-    original!()(vtable, fighter)
 }
 
 //Little Mac Reset Initialization
@@ -178,7 +144,6 @@ unsafe extern "C" fn littlemac_on_damage(vtable: u64, fighter: &mut Fighter, on_
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0xc45938).nop(); //Removes the vanilla special zoom call on Neutral Special
 	skyline::install_hooks!(
-        littlemac_start_initialization,
         littlemac_reset_initialization,
         littlemac_death_initialization,
         littlemac_opff,

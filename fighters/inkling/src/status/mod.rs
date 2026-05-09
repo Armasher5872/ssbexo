@@ -1,9 +1,11 @@
 use {
     exo_utils::{
-        extern_func::*,
-        fighter_common::*,
-        inkling::*,
-        vector::*,
+        common::extern_func::*,
+        fighter::inkling::*,
+        structs::{
+            getter_funcs::*,
+            vector::*,
+        }
     },
     exo_var::globals::*,
     smash::{

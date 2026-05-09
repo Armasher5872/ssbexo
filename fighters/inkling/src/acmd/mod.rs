@@ -1,5 +1,5 @@
 use {
-    exo_utils::inkling::*,
+    exo_utils::fighter::inkling::*,
     exo_var::consts::*,
     smash::{
         app::{

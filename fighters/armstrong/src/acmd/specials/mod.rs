@@ -1,8 +1,10 @@
 use {
     exo_utils::{
-        armstrong::*,
-        fighter_common::*,
-        vector::*,
+        fighter::armstrong::*,
+        structs::{
+            getter_funcs::*,
+            vector::*,
+        }
     },
     exo_var::{
         armstrong::*,

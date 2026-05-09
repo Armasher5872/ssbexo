@@ -1,5 +1,5 @@
 use {
-    exo_utils::armstrong::*,
+    exo_utils::fighter::armstrong::*,
     smash::{
         app::{
             lua_bind::*,

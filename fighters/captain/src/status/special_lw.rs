@@ -10,6 +10,7 @@ unsafe extern "C" fn captain_special_lw_pre_status(fighter: &mut L2CFighterCommo
 unsafe extern "C" fn captain_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let hit_reduct_count = WorkModule::get_param_int(fighter.module_accessor, hash40("param_special_lw"), hash40("hit_reduct_count"));
+    let get_sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_KICK_SP_BRAKE);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_KICK_CLIFF_CHECK);
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_KICK_WALL_CHECK);
@@ -19,6 +20,8 @@ unsafe extern "C" fn captain_special_lw_main_status(fighter: &mut L2CFighterComm
     if situation_kind != *SITUATION_KIND_GROUND {
         WorkModule::set_int(fighter.module_accessor, *SITUATION_KIND_AIR, *FIGHTER_CAPTAIN_STATUS_WORK_ID_INT_FALCON_KICK_START_SITUATION);
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_lw"), 0.0, 1.0, false, 0.0, false, false);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_AIR, get_sum_speed_x*0.5, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, *ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, get_sum_speed_x*0.5, 0.0, 0.0, 0.0, 0.0);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));

@@ -1,5 +1,5 @@
 use {
-    exo_utils::daisy::*,
+    exo_utils::fighter::daisy::*,
     exo_var::consts::*,
     smash::{
         app::{

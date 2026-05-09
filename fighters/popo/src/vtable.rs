@@ -1,23 +1,8 @@
 use super::*;
 
-const POPO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xfb6750; //Shared
 const POPO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xfb6a50; //Shared
 const POPO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xfb6c40; //Shared
 const POPO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xfb5a10; //Shared
-
-//Popo Startup Initialization
-#[skyline::hook(offset = POPO_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn popo_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_POPO as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let agent = get_fighter_common_from_accessor(&mut *boma);
-        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-        common_initialization_variable_reset(&mut *boma);
-        UiManager::set_iceclimber_meter_info(entry_id, 0, 0, 0);
-        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    }
-    original!()(vtable, fighter)
-}
 
 //Popo Reset Initialization
 #[skyline::hook(offset = POPO_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -91,7 +76,6 @@ unsafe extern "C" fn popo_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 
 pub fn install() {
     skyline::install_hooks!(
-        popo_start_initialization,
         popo_reset_initialization,
         popo_death_initialization,
         popo_opff

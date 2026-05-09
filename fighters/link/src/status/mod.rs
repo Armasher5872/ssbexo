@@ -1,11 +1,16 @@
 use {
     exo_utils::{
-        attack_xx4::*,
-        check_attack::*,
-        extern_func::*,
-        fighter_common::*,
-        link::*,
-        vector::*,
+        common::{
+            check_attack::*,
+            extern_func::*,
+            fighter_common::*,
+        },
+        fighter::link::*,
+        status::attack_xx4::*,
+        structs::{
+            getter_funcs::*,
+            vector::*,
+        }
     },
     exo_var::{
         consts::*,

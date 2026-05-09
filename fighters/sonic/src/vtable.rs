@@ -1,79 +1,11 @@
 use super::*;
 
-const SONIC_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x11d56f0; //Sonic only
 const SONIC_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const SONIC_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11d5820; //Sonic only
 const SONIC_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11d7b20; //Sonic only
 const SONIC_VTABLE_ON_ATTACK_OFFSET: usize = 0x11d5a00; //Sonic only
 const SONIC_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x11d63d0; //Sonic only
 const SONIC_VTABLE_ON_DAMAGE_OFFSET: usize = 0x11d7910; //Sonic only
-
-unsafe extern "C" fn sonic_var(boma: &mut BattleObjectModuleAccessor) {
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED);
-    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_RUSH_ACTIVE);
-    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_BOOSTED_MOTION_RATE);
-    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
-    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_SEARCH_MISS_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_PHANTOM_RUSH_EFFECT_HANDLE);
-    UiManager::set_sonic_meter_info(entry_id, 0.0);
-}
-
-unsafe extern "C" fn sonic_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-    }
-    0.into()
-}
-
-unsafe extern "C" fn sonic_check_special_n_uniq(_fighter: &mut L2CFighterCommon) -> L2CValue {
-    false.into()
-}
-
-unsafe extern "C" fn sonic_check_ground_special_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_FLAG_SPECIAL_HI_FALL) {
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
-    }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_FLAG_SPECIAL_N_FALL) {
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N);
-    }
-    0.into()
-}
-
-unsafe extern "C" fn sonic_check_air_special_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_FLAG_SPECIAL_HI_FALL) {
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
-    }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_FLAG_SPECIAL_N_FALL) {
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N);
-    }
-    0.into()
-}
-
-//Sonic Startup Initialization
-#[skyline::hook(offset = SONIC_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn sonic_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    sonic_var(&mut *boma);
-    agent.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(sonic_check_special_n_uniq as *const () as _));
-    agent.global_table[CHECK_GROUND_SPECIAL_UNIQ].assign(&L2CValue::Ptr(sonic_check_ground_special_uniq as *const () as _));
-    agent.global_table[CHECK_AIR_SPECIAL_UNIQ].assign(&L2CValue::Ptr(sonic_check_air_special_uniq as *const () as _));
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(sonic_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Sonic Reset Initialization
 #[skyline::hook(offset = SONIC_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -301,7 +233,6 @@ unsafe extern "C" fn sonic_on_damage(_vtable: u64, fighter: &mut Fighter, on_dam
 
 pub fn install() {
     skyline::install_hooks!(
-        sonic_start_initialization,
         sonic_reset_initialization,
         sonic_death_initialization,
         sonic_opff,

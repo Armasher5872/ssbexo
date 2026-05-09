@@ -185,6 +185,18 @@ unsafe extern "C" fn ssbexo_armstrong_up_smash_expression(agent: &mut L2CAgentBa
     }
 }
 
+//Down Smash Charge Effect
+unsafe extern "C" fn ssbexo_armstrong_down_smash_charge_effect(agent: &mut L2CAgentBase) {
+    loop {
+        frame(agent.lua_state_agent, 5.0);
+        if is_excute(agent) {
+            FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 1, 15, 0, 10, 0, 0, 0, false);
+        }
+        wait(agent.lua_state_agent, 5.0);
+        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 0, 0, 0, true);
+    }
+}
+
 //Down Smash ACMD
 unsafe extern "C" fn ssbexo_armstrong_down_smash_acmd(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
@@ -211,6 +223,15 @@ unsafe extern "C" fn ssbexo_armstrong_down_smash_acmd(agent: &mut L2CAgentBase) 
 
 //Down Smash Effect
 unsafe extern "C" fn ssbexo_armstrong_down_smash_effect(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 2.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+    frame(agent.lua_state_agent, 16.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 0.7);
+    }
     frame(agent.lua_state_agent, 18.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 10, 0, 0, -40, -90, 1.2, true);
@@ -286,6 +307,7 @@ pub fn install() {
     .effect_acmd("effect_attackhi4", ssbexo_armstrong_up_smash_effect, Low)
     .sound_acmd("sound_attackhi4", ssbexo_armstrong_up_smash_sound, Low)
     .expression_acmd("expression_attackhi4", ssbexo_armstrong_up_smash_expression, Low)
+    .effect_acmd("effect_attacklw4charge", ssbexo_armstrong_down_smash_charge_effect, Low)
     .game_acmd("game_attacklw4", ssbexo_armstrong_down_smash_acmd, Low)
     .effect_acmd("effect_attacklw4", ssbexo_armstrong_down_smash_effect, Low)
     .sound_acmd("sound_attacklw4", ssbexo_armstrong_down_smash_sound, Low)

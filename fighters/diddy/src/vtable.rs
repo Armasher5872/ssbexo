@@ -1,23 +1,8 @@
 use super::*;
 
-const DIDDY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0; //Shared
 const DIDDY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const DIDDY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x956360; //Diddy only
 const DIDDY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x956600; //Diddy only
-
-//Diddy Kong Startup Initialization
-#[skyline::hook(offset = DIDDY_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn diddy_start_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_DIDDY as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let agent = get_fighter_common_from_accessor(&mut *boma);
-        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-        common_initialization_variable_reset(&mut *boma);
-        BANANA_EXIST[entry_id] = false;
-        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    }
-    original!()(vtable, fighter)
-}
 
 //Diddy Kong Reset Initialization
 #[skyline::hook(offset = DIDDY_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -77,7 +62,6 @@ unsafe extern "C" fn diddy_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 
 pub fn install() {
     skyline::install_hooks!(
-        diddy_start_initialization,
         diddy_reset_initialization,
         diddy_death_initialization,
         diddy_opff

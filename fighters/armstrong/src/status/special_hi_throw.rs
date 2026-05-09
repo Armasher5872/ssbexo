@@ -27,13 +27,18 @@ unsafe extern "C" fn armstrong_special_hi_throw_init_status(fighter: &mut L2CFig
 unsafe extern "C" fn armstrong_special_hi_throw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let charge_frames = WorkModule::get_int(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
     let damage_multiplier = WorkModule::get_float(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
+    let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
     if charge_frames > 0 {
         AttackModule::set_power_up(fighter.module_accessor, damage_multiplier);
     }
     if !StopModule::is_stop(fighter.module_accessor) {
         armstrong_special_hi_throw_sub_status(fighter, false.into());
     }
-    grabbed_anim_selector(fighter, "barrel_screw", 0.0, 0.0);
+    if capture_id != 0x50000000 {
+        let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+        StatusModule::change_status_force(capture_boma, *FIGHTER_STATUS_KIND_THROWN, false);
+    }
+    grabbed_anim_selector(fighter, "thrown_f", 0.0, 1.0);
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_throw"), 0.0, 1.0, false, 0.0, false, false);
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(armstrong_special_hi_throw_sub_status as *const () as _));
     fighter.sub_shift_status_main(L2CValue::Ptr(armstrong_special_hi_throw_main_loop as *const () as _))

@@ -1,10 +1,12 @@
 use {
     exo_utils::{
-        attack_dash::*,
-        cloud::*,
-        extern_func::*,
-        ui_manager::*,
-        vector::*,
+        common::extern_func::*,
+        fighter::cloud::*,
+        status::attack_dash::*,
+        structs::{
+            ui_manager::*,
+            vector::*,
+        }
     },
     exo_var::{
         cloud::*,

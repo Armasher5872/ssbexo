@@ -10,12 +10,13 @@ unsafe extern "C" fn mario_special_s_pre_status(fighter: &mut L2CFighterCommon) 
 //Side Special Init Status
 unsafe extern "C" fn mario_special_s_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let get_sum_speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if situation_kind != *SITUATION_KIND_GROUND {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, *ENERGY_STOP_RESET_TYPE_AIR, get_sum_speed_x*0.15, 0.0, 0.0, 0.0, 0.0);
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, *ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, get_sum_speed_x*0.15, 0.0, 0.0, 0.0, 0.0);
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.2, 0.0);
-        sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.03, 0.0);
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));

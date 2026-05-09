@@ -1,58 +1,8 @@
 use super::*;
 
-const LINK_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xc280f0; //Shared
 const LINK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc28280; //Shared
 const LINK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc28860; //Shared
 const LINK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xc289e0; //Shared
-
-unsafe extern "C" fn link_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
-    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE);
-    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_INIT_FUSE);
-    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_JUMP);
-    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_DEGREE);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
-    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-    WorkModule::set_int(boma, TeamModule::team_no(boma) as i32, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_TEAM_NO);
-    WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
-    WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
-    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE_ID);
-    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
-    WorkModule::set_int(boma, 300, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
-    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_1);
-    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_2);
-    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_3);
-    WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_4);
-}
-
-unsafe extern "C" fn link_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if situation_kind != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
-    }
-    if situation_kind == *SITUATION_KIND_GROUND {
-        WorkModule::set_int(fighter.module_accessor, 300, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
-    }
-    0.into()
-}
-
-//Link Startup Initialization
-#[skyline::hook(offset = LINK_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn link_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_LINK as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let agent = get_fighter_common_from_accessor(&mut *boma);
-        common_initialization_variable_reset(&mut *boma);
-        link_var(&mut *boma);
-        agent.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
-        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(link_end_control as *const () as _));
-    }
-    original!()(vtable, fighter)
-}
 
 //Link Reset Initialization
 #[skyline::hook(offset = LINK_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -112,9 +62,51 @@ unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     original!()(vtable, fighter)
 }
 
+unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut smash::app::Weapon, log: *mut CollisionLogScuffed) {
+    let boma = (*weapon).battle_object.module_accessor;
+    let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let owner_boma = sv_battle_object::module_accessor(owner_id);
+    let owner_kind = utility::get_kind(&mut *owner_boma);
+    let opponent_object_id = (*log).opponent_object_id;
+    println!("Opponent Object ID: {}", opponent_object_id);
+    if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+        let opponent_category = sv_battle_object::category(opponent_object_id);
+        let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+        let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+        let opponent_boma = (*opponent_battle_object).module_accessor;
+        println!("Opponent Category: {}", opponent_category);
+        if opponent_category == *BATTLE_OBJECT_CATEGORY_ITEM {
+            WorkModule::set_int(boma, opponent_battle_object_id as i32, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+            println!("Fuse ID: {}", WorkModule::get_int(boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID));
+            LinkModule::remove_model_constraint(opponent_boma, true);
+            if LinkModule::is_link(opponent_boma, *ITEM_LINK_NO_HAVE) {
+                LinkModule::unlink(opponent_boma, *ITEM_LINK_NO_HAVE);
+            }
+            if !LinkModule::is_link(opponent_boma, *ITEM_LINK_NO_HAVE) {
+                VisibilityModule::set_whole(opponent_boma, true);
+                LinkModule::link(opponent_boma, *ITEM_LINK_NO_HAVE, (*weapon).battle_object.battle_object_id);
+                LinkModule::set_model_constraint_pos_ort(opponent_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("top"), *CONSTRAINT_FLAG_ORIENTATION as u32 | *CONSTRAINT_FLAG_POSITION as u32, true);
+            }
+        }
+        if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+            if opponent_object_id == owner_id || opponent_battle_object_id == owner_id {
+                if owner_kind == *FIGHTER_KIND_LINK {
+                    let fuse_item_id = WorkModule::get_int(boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
+                    let item_boma = smash::app::sv_battle_object::module_accessor(fuse_item_id);
+                    if fuse_item_id != *BATTLE_OBJECT_ID_INVALID as u32 && sv_battle_object::is_active(fuse_item_id) {
+                        LinkModule::remove_model_constraint(item_boma, true);
+                        StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
+                    }
+                }
+            }
+        }
+    }
+}
+
 pub fn install() {
+    weapon_initialise_module(*WEAPON_KIND_LINK_BOOMERANG, ModuleInitModules::SearchModule);
+    let _ = skyline::patching::Patch::in_text(0x51dbb08).data(link_boomerang_on_search_event as *const () as u64);
 	skyline::install_hooks!(
-        link_start_initialization,
         link_reset_initialization,
         link_death_initialization,
         link_opff

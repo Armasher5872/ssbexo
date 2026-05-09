@@ -1,15 +1,15 @@
 use {
-    exo_utils::fighter_common::*,
+    exo_utils::structs::getter_funcs::*,
     exo_var::globals::*,
     smash::{
         app::{
-        lua_bind::*,
-        *
+            lua_bind::*,
+            *
         },
         hash40,
         lib::{
-        L2CValue,
-        lua_const::*,
+            L2CValue,
+            lua_const::*,
         },
         lua2cpp::L2CFighterCommon
     },

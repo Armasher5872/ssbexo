@@ -7,9 +7,11 @@ unsafe extern "C" fn armstrong_special_s_pre_status(fighter: &mut L2CFighterComm
 }
 
 unsafe extern "C" fn armstrong_special_s_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let get_sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        WorkModule::set_float(fighter.module_accessor, get_sum_speed_y, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_START_INIT_Y_VEL);
         sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.3);
     }
     else {
@@ -29,6 +31,7 @@ unsafe extern "C" fn armstrong_special_s_loop(fighter: &mut L2CFighterCommon) ->
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let lr = PostureModule::lr(fighter.module_accessor);
+    let init_y_vel = WorkModule::get_float(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_START_INIT_Y_VEL);
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -46,17 +49,13 @@ unsafe extern "C" fn armstrong_special_s_loop(fighter: &mut L2CFighterCommon) ->
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_start"), -1.0, 1.0, 0.0, false, false);
         }
     }
-    if situation_kind == *SITUATION_KIND_GROUND {
-        armstrong_charge_move(fighter, 6.0, 14.0, 0.03, 9.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), true, "bust");
-    }
-    else {
-        armstrong_charge_move(fighter, 6.0, 14.0, 0.03, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), false, "bust");
-    }
+    armstrong_charge_move(fighter, 6.0, 14.0, 0.03, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL), false, "bust");
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_SPECIAL_S_RUN) {
         if situation_kind != *SITUATION_KIND_GROUND {
             KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.6);
+            sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, init_y_vel.clamp(-0.2, 0.6));
             sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
+            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.65);
         }
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 2.0*lr, 0.0);
         sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 2.0*lr, 0.0);

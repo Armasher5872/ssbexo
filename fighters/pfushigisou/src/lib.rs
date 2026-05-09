@@ -1,9 +1,11 @@
 use {
     exo_utils::{
-        fighter_common::*,
-        pfushigisou::*,
-        status_end_control::*,
-        weapon::*,
+        common::{
+            status_end_control::*,
+            var_reset::*,
+            weapon::*,
+        },
+        fighter::pfushigisou::*,
     },
     exo_var::{
         globals::*,
@@ -30,11 +32,13 @@ use {
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
+    opff::install();
     status::install();
     vtable::install();
     clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "pfushigisou", "sludge", false);

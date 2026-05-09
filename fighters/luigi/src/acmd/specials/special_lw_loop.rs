@@ -5,6 +5,7 @@ unsafe extern "C" fn ssbexo_luigi_down_special_loop_acmd(agent: &mut L2CAgentBas
     if is_excute(agent) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 0.0, 361, 100, 0, 0, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK(agent, 0, 0, Hash40::new("top"), 0.2, 180, 100, 30, 0, 6.0, 0.0, 6.0, 8.0, Some(0.0), Some(6.0), Some(16.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 6, false, false, true, true, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_STAGE_GIMMICK, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+        ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 0.0);
         CATCH(agent, 0, Hash40::new("top"), 3.0, 0.0, 6.0, 5.0, None, None, None, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_START, *COLLISION_SITUATION_MASK_GA);
     }
 }

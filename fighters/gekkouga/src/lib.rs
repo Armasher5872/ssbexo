@@ -1,29 +1,28 @@
 use {
-  exo_utils::{
-    fighter_common::*,
-    status_end_control::*,
-  },
-  exo_var::{
-    gekkouga::*,
-    globals::*,
-  },
-  smash::{
-    app::{
-      lua_bind::*,
-      *
+    exo_utils::{
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::gekkouga::*,
     },
-    lib::lua_const::*,
-  },
-  smashline::*,
+    exo_var::globals::*,
+    smash::{
+        app::*,
+        lib::lua_const::*,
+    },
+    smashline::*,
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
-  acmd::install();
-  status::install();
-  vtable::install();
-  clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "gekkouga", "mat", false);
+    acmd::install();
+    opff::install();
+    status::install();
+    vtable::install();
+    clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "gekkouga", "mat", false);
 }

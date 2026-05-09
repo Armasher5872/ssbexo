@@ -1,6 +1,6 @@
 use {
-    exo_utils::{
-        fighter_common::*,
+    exo_utils::structs::{
+        getter_funcs::*,
         vector::*,
     },
     exo_var::mario::*,

@@ -1,21 +1,8 @@
 use super::*;
 
-const SAMUS_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0; //Shared
 const SAMUS_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10f3630; //Shared
 const SAMUS_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10f3650; //Shared
 const SAMUS_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x10f37a0; //Shared
-
-//Samus Startup Initialization
-#[skyline::hook(offset = SAMUS_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn samus_start_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_SAMUS as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let agent = get_fighter_common_from_accessor(&mut *boma);
-        common_initialization_variable_reset(&mut *boma);
-        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    }
-    original!()(vtable, fighter)
-}
 
 //Samus Reset Initialization
 #[skyline::hook(offset = SAMUS_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -54,7 +41,6 @@ unsafe extern "C" fn samus_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 
 pub fn install() {
 	skyline::install_hooks!(
-        samus_start_initialization,
         samus_reset_initialization,
         samus_death_initialization,
         samus_opff

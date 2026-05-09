@@ -9,6 +9,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_start_effect(_agent: &mut L2CA
 //Up Special Glide Start Sound
 unsafe extern "C" fn ssbexo_link_special_hi_glide_start_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
+        STOP_SE(agent, Hash40::new("se_link_special_h01"));
         PLAY_SE(agent, Hash40::new("se_link_special_h04"));
     }
 }

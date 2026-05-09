@@ -1,16 +1,9 @@
 //Credit to WuBoyTH for translating the OPFF Vtable for Inkling
 use super::*;
 
-const INKLING_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xb0ac70; //Inkling only
 const INKLING_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb0ac80; //Inkling only
 const INKLING_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xb0ad10; //Inkling only
 const INKLING_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xb0b770; //Inkling only
-
-unsafe extern "C" fn inkling_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_SPAWN_INK);
-    WorkModule::off_flag(boma, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_ON_ROLLER_INK);
-    WorkModule::set_int(boma, 0, *FIGHTER_INKLING_INSTANCE_WORK_ID_INT_SPAWNED_INK_COUNT);
-}
 
 unsafe extern "C" fn inkling_spawn_stage_ink(fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -223,16 +216,6 @@ unsafe extern "C" fn inkling_spawn_stage_ink(fighter: &mut Fighter) {
     }
 }
 
-//Inkling Startup Initialization
-#[skyline::hook(offset = INKLING_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn inkling_start_initialization(_vtable: u64, fighter: &mut Fighter) {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    inkling_var(&mut *boma);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-}
-
 //Inkling Reset Initialization
 #[skyline::hook(offset = INKLING_VTABLE_RESET_INITIALIZATION_OFFSET)]
 unsafe extern "C" fn inkling_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
@@ -296,7 +279,6 @@ unsafe extern "C" fn inkling_opff(_vtable: u64, fighter: &mut Fighter) {
 
 pub fn install() {
     skyline::install_hooks!(
-        inkling_start_initialization,
         inkling_reset_initialization,
         inkling_death_initialization,
         inkling_opff

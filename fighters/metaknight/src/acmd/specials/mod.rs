@@ -1,5 +1,5 @@
 use {
-    exo_utils::fighter_common::*,
+    exo_utils::structs::getter_funcs::*,
     exo_var::metaknight::*,
     smash::{
         app::{

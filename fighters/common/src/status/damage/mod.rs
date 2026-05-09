@@ -1,8 +1,10 @@
 use {
     exo_utils::{
-        damage::*,
-        knockback_func::*,
-        vector::*,
+        status::{
+            damage::*,
+            knockback_func::*,
+        },
+        structs::vector::*,
     },
     exo_var::{
         consts::*,

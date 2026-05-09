@@ -114,6 +114,7 @@ unsafe extern "C" fn ssbexo_armstrong_ledge_attack_effect(agent: &mut L2CAgentBa
     frame(agent.lua_state_agent, 24.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 1, 10, 4, 0, 25, 25, 1.25, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         LAST_EFFECT_SET_RATE(agent, 2.0);
     }
 }
@@ -133,6 +134,7 @@ unsafe extern "C" fn ssbexo_armstrong_face_down_getup_attack_effect(agent: &mut 
     frame(agent.lua_state_agent, 23.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -0.5, 10, 0.8, 180, -230, 90, 1.4, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
     frame(agent.lua_state_agent, 25.0);
@@ -154,6 +156,7 @@ unsafe extern "C" fn ssbexo_armstrong_face_up_getup_attack_effect(agent: &mut L2
     frame(agent.lua_state_agent, 16.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -3, 6, -1, 0, 180, 15, 1.6, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         LAST_EFFECT_SET_RATE(agent, 1.7);
     }
     frame(agent.lua_state_agent, 20.0);
@@ -163,6 +166,7 @@ unsafe extern "C" fn ssbexo_armstrong_face_up_getup_attack_effect(agent: &mut L2
     frame(agent.lua_state_agent, 21.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 5.5, 0, 0, 40, 13, 1.5, true);
+        LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         LAST_EFFECT_SET_RATE(agent, 1.2);
     }
 }

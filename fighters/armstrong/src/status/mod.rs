@@ -1,9 +1,11 @@
 use {
     exo_utils::{
-        armstrong::*,
-        catch::*,
-        damage::*,
-        fighter_common::*,
+        fighter::armstrong::*,
+        status::{
+            catch::*,
+            damage::*,
+        },
+        structs::getter_funcs::*,
     },
     exo_var::{
         armstrong::*,

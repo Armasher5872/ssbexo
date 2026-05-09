@@ -1,8 +1,5 @@
 use {
-    exo_utils::{
-        fighter_common::*,
-        weapon::*,
-    },
+    exo_utils::structs::getter_funcs::*,
     exo_var::link::*,
     smash::{
         app::{

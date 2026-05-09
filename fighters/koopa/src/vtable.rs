@@ -1,37 +1,9 @@
 //Credited to WuBoyTH for the opff
 use super::*;
 
-const KOOPA_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0; //Shared
 const KOOPA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xbc1dd0; //Bowser only
 const KOOPA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xbc1e00; //Bowser only
 const KOOPA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xbc2290; //Bowser only
-
-unsafe extern "C" fn koopa_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KOOPA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USE_COUNT);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
-    }
-    0.into()
-}
-
-unsafe extern "C" fn koopa_var(fighter: &mut L2CFighterCommon) {
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_KOOPA_INSTANCE_WORK_ID_INT_SPECIAL_HI_USE_COUNT);
-}
-
-//Bowser Startup Initialization
-#[skyline::hook(offset = KOOPA_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn koopa_start_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_KOOPA as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let agent = get_fighter_common_from_accessor(&mut *boma);
-        common_initialization_variable_reset(&mut *boma);
-        koopa_var(agent);
-        agent.global_table[CHECK_SPECIAL_N_UNIQ].assign(&L2CValue::Ptr(should_use_special_n_callback as *const () as _));
-        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(koopa_end_control as *const () as _));
-    }
-    original!()(vtable, fighter)
-}
 
 //Bowser Reset Initialization
 #[skyline::hook(offset = KOOPA_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -81,7 +53,6 @@ unsafe extern "C" fn koopa_opff(_vtable: u64, fighter: &mut Fighter) {
 
 pub fn install() {
     skyline::install_hooks!(
-        koopa_start_initialization,
         koopa_reset_initialization,
         koopa_death_initialization,
         koopa_opff

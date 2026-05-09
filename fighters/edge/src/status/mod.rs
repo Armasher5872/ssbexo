@@ -1,7 +1,7 @@
 use {
     exo_utils::{
-        edge::*,
-        fighter_common::*,
+        fighter::edge::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         edge::*,

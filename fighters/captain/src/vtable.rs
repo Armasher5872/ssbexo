@@ -1,26 +1,9 @@
 use super::*;
 
-const CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8b7ce0; //Captain Falcon only
 const CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8b7610; //Captain Falcon only
 const CAPTAIN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x8b7cf0; //Captain Falcon only
 const CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x8b7d20; //Captain Falcon only
 const CAPTAIN_VTABLE_ON_ATTACK_OFFSET: usize = 0x8b8b90; //Captain Falcon only
-
-unsafe extern "C" fn captain_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED);
-    WorkModule::off_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HIT_JUMP);
-    WorkModule::set_int(boma, 0, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
-}
-
-//Captain Falcon Startup Initialization
-#[skyline::hook(offset = CAPTAIN_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn captain_start_initialization(_vtable: u64, fighter: &mut Fighter) {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    captain_var(&mut *boma);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-}
 
 //Captain Falcon Reset Initialization
 #[skyline::hook(offset = CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -48,6 +31,7 @@ unsafe extern "C" fn captain_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let special_n_effect_handle = WorkModule::get_int(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
         if !EffectModule::is_exist_effect(boma, special_n_effect_handle as u32) {
             let fist = EffectModule::req_follow(boma, Hash40::new("sys_damage_fire"), Hash40::new("haver"), &Vector3f::zero(), &Vector3f::zero(), 0.5, true, 0, 0, 0, 0, 0, true, true) as u32;
+            EffectModule::set_rgb(boma, fist as u32, 1.0, 0.4, 0.0);
             WorkModule::set_int(boma, fist as i32, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
         }
     }
@@ -74,7 +58,6 @@ unsafe extern "C" fn captain_on_attack(vtable: u64, fighter: &mut Fighter, log: 
 
 pub fn install() {
 	skyline::install_hooks!(
-        captain_start_initialization,
         captain_reset_initialization,
         captain_death_initialization,
         captain_opff,

@@ -1,7 +1,7 @@
 use {
     exo_utils::{
-        catch::*,
-        check_attack::*,
+        common::check_attack::*,
+        status::catch::*,
     },
     exo_var::{
         consts::*,

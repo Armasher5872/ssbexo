@@ -1,6 +1,5 @@
 use super::*;
 
-const CLOUD_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8dacd0; //Cloud only
 const CLOUD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8db3b0; //Cloud only
 const CLOUD_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x8db780; //Cloud only
 const CLOUD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x68d670; //Shared
@@ -11,65 +10,6 @@ const CLOUD_LIMIT_MANAGER_OFFSET: usize = 0x8dc160; //Cloud only
 
 #[skyline::from_offset(CLOUD_LIMIT_MANAGER_OFFSET)]
 extern "C" fn cloud_limit_manager_call(limit: f32, boma: *mut BattleObjectModuleAccessor, param_3: u64);
-
-unsafe extern "C" fn cloud_var(boma: &mut BattleObjectModuleAccessor) {
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
-    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
-    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_DECIDE);
-    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN);
-    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_CHARGED_ATTACK_DASH);
-    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
-    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
-    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
-    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
-    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_ATTACK_COUNT);
-    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_GUARD_COOLDOWN);
-    UiManager::set_cloud_meter_info(entry_id, 0);
-    UiManager::set_limit_type(entry_id, 0);
-}
-
-unsafe extern "C" fn cloud_check_ground_guard_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON) && fighter.sub_check_command_guard().get_bool() {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {
-            fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_GUARD_ON.into(), true.into());
-            return 1.into();
-        }
-        else {
-            fighter.change_status(FIGHTER_STATUS_KIND_GUARD_ON.into(), true.into());
-            return 1.into();
-        }
-    }
-    0.into()
-}
-
-unsafe extern "C" fn cloud_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
-    }
-    0.into()
-}
-
-//Cloud Startup Initialization
-#[skyline::hook(offset = CLOUD_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn cloud_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    let shield_data = ShieldDataResource::new(0.0, 9.5, 3.0, 0.0, 9.5, 3.0, 13.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_UNDEFINED as u8);
-    let shield_datas = &mut (ShieldDatas::new().add(shield_data, 0));
-    let resource = &mut ShieldGroupResource::new(shield_datas, 1, 0, false, false, false);
-    common_initialization_variable_reset(&mut *boma);
-    cloud_var(&mut *boma);
-    add_shield_group(boma, resource, *FIGHTER_CLOUD_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
-    agent.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(cloud_end_control as *const () as _));
-    agent.global_table[CHECK_GROUND_GUARD_UNIQ].assign(&L2CValue::Ptr(cloud_check_ground_guard_uniq as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Cloud Reset Initialization
 #[skyline::hook(offset = CLOUD_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -286,7 +226,6 @@ pub fn install() {
     //Disables on attack limit manager
     let _ = skyline::patching::Patch::in_text(0x8dc8a0).nop();
 	skyline::install_hooks!(
-        cloud_start_initialization,
         cloud_reset_initialization,
         cloud_death_initialization,
         cloud_opff,

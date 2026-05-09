@@ -1,14 +1,27 @@
 use super::*;
 
-unsafe extern "C" fn ssbexo_captain_neutral_special_hold_acmd(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_captain_neutral_special_hold_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        FT_MOTION_RATE(agent, 195.0/180.0);
+    }  
+}
 
 unsafe extern "C" fn ssbexo_captain_neutral_special_hold_effect(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("captain_fp_hold"), Hash40::new("haver"), 0, 0, 0, 3.119, -0.79, -0.543, 1, true);
-        FLASH(agent, 1, 1, 0.392, 0.392);
-    }
-    frame(agent.lua_state_agent, 1.0);
-    for _ in 0..60 {
+    for _ in 0..10 {
+        if is_excute(agent) {
+            FLASH(agent, 1, 1, 0.392, 0.392);
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 0, 0, 0, true);
+            EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("haver"), 0, 0, 0, 3.119, -0.79, -0.543, 1, true);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 0.392, 0, 0.353);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            COL_NORMAL(agent);
+        }
+        wait(agent.lua_state_agent, 1.0);
         if is_excute(agent) {
             FLASH(agent, 1, 1, 0.392, 0.392);
         }
@@ -21,28 +34,85 @@ unsafe extern "C" fn ssbexo_captain_neutral_special_hold_effect(agent: &mut L2CA
             COL_NORMAL(agent);
         }
         wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 1, 0.392, 0.392);
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 0, 0, 0, true);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 0.392, 0, 0.353);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            COL_NORMAL(agent);
+        }
+        wait(agent.lua_state_agent, 1.0);
+    }
+    frame(agent.lua_state_agent, 89.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("captain_fp_hold"), Hash40::new("haver"), 0, 0, 0, 3.119, -0.79, -0.543, 1, true);
+        FLASH(agent, 1, 1, 0.392, 0.392);
+    }
+    frame(agent.lua_state_agent, 90.0);
+    for _ in 0..10 {
+        if is_excute(agent) {
+            FLASH(agent, 1, 0.392, 0, 0.392);
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 0, 0, 0, true);
+            EFFECT_FOLLOW(agent, Hash40::new("sys_damage_fire"), Hash40::new("haver"), 0, 0, 0, 3.119, -0.79, -0.543, 1, true);
+            LAST_EFFECT_SET_COLOR(agent, 1.0, 0.4, 0.0);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 0, 0, 0.353);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            COL_NORMAL(agent);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 0.392, 0, 0.392);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 0, 0, 0.353);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            COL_NORMAL(agent);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 0.392, 0, 0.392);
+            EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 0, 0, 0, true);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            FLASH(agent, 1, 0, 0, 0.353);
+        }
+        wait(agent.lua_state_agent, 1.0);
+        if is_excute(agent) {
+            COL_NORMAL(agent);
+        }
+        wait(agent.lua_state_agent, 1.0);
     }
 }
 
 unsafe extern "C" fn ssbexo_captain_neutral_special_hold_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
-    for _ in 0..3 {
-        if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("se_captain_special_n04"));
-        }
-        wait(agent.lua_state_agent, 30.0);
-    }
-    frame(agent.lua_state_agent, 95.0);
-    for _ in 0..6 {
-        if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("se_captain_special_n04"));
-        }
-        wait(agent.lua_state_agent, 15.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_captain_boost_charge"));
     }
 }
 
 unsafe extern "C" fn ssbexo_captain_neutral_special_hold_expression(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
+        physics!(agent, *MA_MSC_CMD_PHYSICS_START_CHARGE, 0.9, 0.9, -1, 0.6, 0.5, -1, Hash40::new("invalid"));
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_smashhold1"), 180, true, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(agent.lua_state_agent, 175.0);
+    if is_excute(agent) {
+        physics!(agent, *MA_MSC_CMD_PHYSICS_STOP_CHARGE);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_smashhold1"), 180, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }

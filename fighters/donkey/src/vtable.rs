@@ -1,42 +1,10 @@
 use super::*;
 
-const DONKEY_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x993750; //Donkey Kong only
 const DONKEY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x993ae0; //Donkey Kong only
 const DONKEY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x993b40; //Donkey Kong only
 const DONKEY_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x68d670; //Shared
 const DONKEY_VTABLE_LINK_EVENT_OFFSET: usize = 0x993ee0; //Donkey Kong only
 const DONKEY_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x68d8a0; //Shared
-
-unsafe extern "C" fn donkey_var(boma: *mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
-}
-
-unsafe extern "C" fn donkey_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
-    }
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
-    }
-    0.into()
-}
-
-//Donkey Kong Startup Initialization
-#[skyline::hook(offset = DONKEY_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn donkey_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    donkey_var(boma);
-    agent.global_table[THROW_F_STATUS_KIND].assign(&FIGHTER_STATUS_KIND_THROW.into());
-	agent.global_table[THROW_HI_STATUS_KIND].assign(&FIGHTER_DONKEY_STATUS_KIND_SHOULDER_START.into());
-    agent.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
-    agent.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(should_use_special_lw_callback as *const () as _));
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(donkey_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Donkey Kong Reset Initialization
 #[skyline::hook(offset = DONKEY_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -142,7 +110,6 @@ unsafe extern "C" fn donkey_on_search(vtable: u64, fighter: &mut Fighter, log: u
 
 pub fn install() {
 	skyline::install_hooks!(
-        donkey_start_initialization,
         donkey_reset_initialization,
         donkey_death_initialization,
         donkey_opff,

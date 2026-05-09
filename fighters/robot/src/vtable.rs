@@ -1,25 +1,8 @@
 use super::*;
 
-const ROBOT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x105bce0; //R.O.B only
 const ROBOT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x105bf20; //R.O.B only
 const ROBOT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x105bfa0; //R.O.B only
 const ROBOT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x105c7f0; //R.O.B only
-
-unsafe extern "C" fn robot_var(boma: &mut BattleObjectModuleAccessor) {
-    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    UiManager::set_robot_meter_info(entry_id, 160.0, 160.0, 80.0);
-}
-
-//R.O.B Startup Initialization
-#[skyline::hook(offset = ROBOT_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn robot_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    robot_var(&mut *boma);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //R.O.B Reset Initialization
 #[skyline::hook(offset = ROBOT_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -61,7 +44,6 @@ unsafe extern "C" fn robot_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 
 pub fn install() {
 	skyline::install_hooks!(
-        robot_start_initialization,
         robot_reset_initialization,
         robot_death_initialization,
         robot_opff

@@ -8,7 +8,6 @@ mod guard;
 mod jump;
 mod landing;
 mod misc;
-mod special;
 mod thrown;
 
 pub fn install() {
@@ -22,6 +21,5 @@ pub fn install() {
     jump::install();
     landing::install();
     misc::install();
-    special::install();
     thrown::install();
 }

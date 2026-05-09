@@ -1,31 +1,35 @@
 use {
-  exo_utils::{
-    fighter_common::*,
-    status_end_control::*,
-    ui_manager::*,
-  },
-  exo_var::globals::*,
-  smash::{
-    app::{
-      BattleObjectModuleAccessor,
-      lua_bind::*,
-      *
+    exo_utils::{
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::robot::*,
+        structs::ui_manager::*,
     },
-    lib::{
-      L2CValue,
-      lua_const::*,
+    exo_var::globals::*,
+    smash::{
+        app::{
+            lua_bind::*,
+            *
+        },
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
+        lua2cpp::L2CFighterCommon
     },
-    lua2cpp::L2CFighterCommon
-  },
-  smashline::*,
+    smashline::*,
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
-  acmd::install();
-  status::install();
-  vtable::install();
+    acmd::install();
+    opff::install();
+    status::install();
+    vtable::install();
 }

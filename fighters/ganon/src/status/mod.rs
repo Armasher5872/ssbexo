@@ -1,14 +1,16 @@
 use {
+    exo_utils::{
+        common::weapon::*,
+        fighter::ganon::*,
+        structs::{
+            getter_funcs::*,
+            vector::*,
+        }
+    },
     exo_var::{
         consts::*,
         ganon::*,
         globals::*,
-    },
-    exo_utils::{
-        fighter_common::*,
-        ganon::*,
-        vector::*,
-        weapon::*,
     },
     smash::{
         app::{

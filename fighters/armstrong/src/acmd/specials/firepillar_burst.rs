@@ -44,6 +44,13 @@ unsafe extern "C" fn ssbexo_armstrong_firepillar_burst_effect(agent: &mut L2CAge
     }
 }
 
+unsafe extern "C" fn ssbexo_armstrong_firepillar_burst_sound(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 180.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_bomb_l"));
+    }
+}
+
 pub fn install() {
     let mut costume = &mut Vec::new();
     unsafe {
@@ -57,6 +64,7 @@ pub fn install() {
     .set_costume(costume.to_vec())
     .game_acmd("game_burst", ssbexo_armstrong_firepillar_burst_acmd, Low)
     .effect_acmd("effect_burst", ssbexo_armstrong_firepillar_burst_effect, Low)
+    .sound_acmd("sound_burst", ssbexo_armstrong_firepillar_burst_sound, Low)
     .install()
     ;
 }

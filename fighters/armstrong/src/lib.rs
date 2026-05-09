@@ -1,14 +1,21 @@
 #![allow(static_mut_refs, unused_mut)] //Addresses variable does not need to be mutable and creating a shared reference to mutable static
 use {
     exo_utils::{
-        armstrong::*,
-        collision_struct::*,
-        damage::*,
-        fighter_common::*,
-        ganon::*,
-        hook::*,
-        status_end_control::*,
-        vtable_funcs::*,
+        common::{
+            hook::*,
+            status_end_control::*,
+            var_reset::*,
+            vtable_funcs::*,
+        },
+        fighter::{
+            armstrong::*,
+            ganon::*,
+        },
+        status::damage::*,
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+        }
     },
     exo_var::{
         armstrong::*,

@@ -1,13 +1,15 @@
 use {
     exo_utils::{
-        damage::*,
-        fighter_common::*,
-        status_end_control::*,
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::krool::*,
+        status::damage::*,
     },
     exo_var::{
         consts::*,
         globals::*,
-        krool::*,
     },
     smash::{
         app::{
@@ -21,11 +23,13 @@ use {
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
+    opff::install();
     status::install();
     vtable::install();
 }

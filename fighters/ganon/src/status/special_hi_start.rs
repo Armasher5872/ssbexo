@@ -64,9 +64,14 @@ unsafe extern "C" fn ganon_special_hi_exec_status(fighter: &mut L2CFighterCommon
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let special_hi_hold_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_HI_HOLD_FRAME);
     let effect_handle = WorkModule::get_int(fighter.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
-    let stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
-    let vec_stick_x = stick["x"].get_f32();
-    let vec_stick_y = stick["y"].get_f32();
+    let mut stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
+    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
+        stick["x"].assign(&L2CValue::F32(0.0));
+        stick["y"].assign(&L2CValue::F32(1.0));
+    }
+    let normalize = fighter.Vector2__normalize(stick);
+    let vec_stick_x = normalize["x"].get_f32();
+    let vec_stick_y = normalize["y"].get_f32();
     let stick_angle = vec_stick_y.atan2(vec_stick_x);
     let stick_degrees = stick_angle.to_degrees();
     if current_frame >= 30.0 {

@@ -1,5 +1,5 @@
 use {
-    exo_utils::kirby::*,
+    exo_utils::fighter::kirby::*,
     exo_var::{
         consts::*,
         globals::*,

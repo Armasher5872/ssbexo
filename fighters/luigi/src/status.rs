@@ -1,9 +1,11 @@
 use {
     exo_utils::{
-        catch::*,
-        extern_func::*,
-        fighter_common::*,
-        vector::*,
+        common::extern_func::*,
+        status::catch::*,
+        structs::{
+            getter_funcs::*,
+            vector::*,
+        }
     },
     exo_var::{
         globals::*,

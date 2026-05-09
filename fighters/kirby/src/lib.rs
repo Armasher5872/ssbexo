@@ -1,33 +1,38 @@
 use {
-  exo_utils::{
-    damage::*,
-    fighter_common::*,
-    kirby::*,
-    status_end_control::*,
-  },
-  exo_var::{
-    consts::*,
-    globals::*,
-  },
-  smash::{
-    app::{
-      lua_bind::*,
-      *
+    exo_utils::{
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::kirby::*,
+        status::damage::*,
     },
-    lib::{
-      L2CValue,
-      lua_const::*,
+    exo_var::{
+        consts::*,
+        globals::*,
     },
-    lua2cpp::*,
-  }
+    smash::{
+        app::{
+            lua_bind::*,
+            *
+        },
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
+        lua2cpp::*,
+    },
+    smashline::*,
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
-  acmd::install();
-  status::install();
-  vtable::install();
+    acmd::install();
+    opff::install();
+    status::install();
+    vtable::install();
 }

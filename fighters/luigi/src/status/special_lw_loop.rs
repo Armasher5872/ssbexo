@@ -14,7 +14,8 @@ unsafe extern "C" fn luigi_special_lw_loop_init_status(fighter: &mut L2CFighterC
     }
     else {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
     0.into()
 }
@@ -61,6 +62,9 @@ unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCo
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
     if [*FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind) {
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
+    }
+    else {
+        ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW, ArticleOperationTarget(0));
     }
     if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL {
         if LinkModule::is_link(fighter.module_accessor, *LINK_NO_CAPTURE) {

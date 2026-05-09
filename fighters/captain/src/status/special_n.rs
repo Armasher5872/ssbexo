@@ -3,7 +3,7 @@ use super::*;
 //Neutral Special Pre Status
 unsafe extern "C" fn captain_special_n_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_FALL, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_N | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_N as u32, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_N | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON | *FIGHTER_LOG_MASK_FLAG_HAJIKI) as u64, *FIGHTER_STATUS_ATTR_START_TURN as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_N as u32, 0);
     0.into()
 }
 
@@ -78,11 +78,11 @@ unsafe extern "C" fn captain_special_n_main_loop(fighter: &mut L2CFighterCommon)
     if (30.0..=40.0).contains(&frame) {
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) 
         && !is_stored
-        && [hash40("special_n"), hash40("special_air_n")].contains(&motion_kind) {
-            fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n_hold"), L2CValue::Hash40s("special_air_n_hold"), false.into());
+        && motion_kind == hash40("special_n") {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_n_hold"), 0.0, 1.0, false, 0.0, false, false);
         }
     }
-    if [hash40("special_n_hold"), hash40("special_air_n_hold")].contains(&motion_kind) {
+    if motion_kind == hash40("special_n_hold") {
         if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_MOT_FRAME_INHERIT);
             fun_7100015170(fighter, true.into());
@@ -94,7 +94,7 @@ unsafe extern "C" fn captain_special_n_main_loop(fighter: &mut L2CFighterCommon)
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
-        if [hash40("special_n_hold"), hash40("special_air_n_hold")].contains(&motion_kind) {
+        if motion_kind == hash40("special_n_hold") {
             fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_N_CHARGED.into(), false.into());
         }
         else {
@@ -118,17 +118,11 @@ unsafe extern "C" fn fun_7100015170(fighter: &mut L2CFighterCommon, was_holding:
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_MOT_FRAME_INHERIT) {
-            if was_holding.get_bool() {
-                MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new_raw(air_mot), 40.0, 1.0, 0.0);
-                MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 40.0, true, true, false);
+            if is_stored {
+                MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(air_mot), 0.0, 4.0, false, 0.0, false, false);
             }
             else {
-                if is_stored {
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(air_mot), 0.0, 4.0, false, 0.0, false, false);
-                }
-                else {
-                    MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(air_mot), 0.0, 1.0, false, 0.0, false, false);
-                }
+                MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(air_mot), 0.0, 1.0, false, 0.0, false, false);
             }
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_MOT_FRAME_INHERIT);
         }
@@ -142,8 +136,8 @@ unsafe extern "C" fn fun_7100015170(fighter: &mut L2CFighterCommon, was_holding:
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_MOT_FRAME_INHERIT) {
             if was_holding.get_bool() {
-                MotionModule::change_motion_inherit_frame_keep_rate(fighter.module_accessor, Hash40::new_raw(ground_mot), 40.0, 1.0, 0.0);
-                MotionModule::set_frame_sync_anim_cmd(fighter.module_accessor, 40.0, true, true, false);
+                STOP_SE(fighter, Hash40::new("se_captain_boost_charge"));
+                fighter.change_status(FIGHTER_STATUS_KIND_FURAFURA_END.into(), false.into());
             }
             else {
                 if is_stored {
@@ -256,6 +250,7 @@ unsafe extern "C" fn captain_special_n_end_status(fighter: &mut L2CFighterCommon
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED);
     }
     else {
+        STOP_SE(fighter, Hash40::new("se_captain_boost_charge"));
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED) {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED);
@@ -271,6 +266,7 @@ unsafe extern "C" fn captain_special_n_exit_status(fighter: &mut L2CFighterCommo
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED);
     }
     else {
+        STOP_SE(fighter, Hash40::new("se_captain_boost_charge"));
         WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED) {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED);

@@ -1,6 +1,5 @@
 use super::*;
 
-const WARIO_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x1285a70; //Wario only
 const WARIO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12864e0; //Wario only
 const WARIO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x12868c0; //Wario only
 const WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x1286ae0; //Wario only
@@ -8,37 +7,6 @@ const WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_2_OFFSET: usize = 0x128b0b0; //Wario o
 const WARIO_VTABLE_ON_ATTACK_OFFSET: usize = 0x1287320; //Wario only
 const WARIO_VTABLE_LINK_EVENT_OFFSET: usize = 0x12876c0; //Wario only
 const WARIO_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x12881c0; //Wario only
-
-unsafe extern "C" fn wario_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-    }
-    0.into()
-}
-
-unsafe extern "C" fn wario_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW);
-    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
-    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_STRONG);
-    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_JUMP);
-    WorkModule::set_float(boma, 1.0, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_PILEDRIVER_MULTIPLIER);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_CHARGE);
-    WorkModule::set_int(boma, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
-}
-
-//Wario Startup Initialization
-#[skyline::hook(offset = WARIO_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn wario_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    wario_var(&mut *boma);
-    agent.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(wario_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Wario Reset Initialization
 #[skyline::hook(offset = WARIO_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -195,7 +163,6 @@ unsafe extern "C" fn wario_on_search(vtable: u64, fighter: &mut Fighter, log: u6
 
 pub fn install() {
 	skyline::install_hooks!(
-        wario_start_initialization,
         wario_reset_initialization,
         wario_death_initialization,
         wario_opff,

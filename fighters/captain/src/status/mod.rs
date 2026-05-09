@@ -13,7 +13,10 @@ use {
         phx::*,
     },
     smashline::*,
-    smash_script::*,
+    smash_script::{
+        macros::*,
+        *
+    },
 };
 
 mod attack_hi3;

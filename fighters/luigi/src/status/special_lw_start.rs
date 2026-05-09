@@ -51,11 +51,19 @@ unsafe extern "C" fn luigi_special_lw_start_exec_status(_fighter: &mut L2CFighte
     0.into()
 }
 
-unsafe extern "C" fn luigi_special_lw_start_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn luigi_special_lw_start_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP {
+        ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW, ArticleOperationTarget(0));
+    }
     0.into()
 }
 
-unsafe extern "C" fn luigi_special_lw_start_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn luigi_special_lw_start_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP {
+        ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW, ArticleOperationTarget(0));
+    }
     0.into()
 }
 

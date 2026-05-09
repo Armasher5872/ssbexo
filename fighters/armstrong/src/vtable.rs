@@ -89,12 +89,6 @@ unsafe extern "C" fn armstrong_link_event(_vtable: u64, fighter: &mut Fighter, l
         if event_kind == hash40("capture") {
             let capture_event: &mut LinkEventCapture = std::mem::transmute(event);
             let captured_status = capture_event.status;
-            if status == *FIGHTER_STATUS_KIND_SPECIAL_HI && captured_status == *FIGHTER_STATUS_KIND_CLUNG_GANON {
-                StatusModule::change_status_request(boma, *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW, false);
-                capture_event.result = true;
-                capture_event.node = smash2::phx::Hash40::new("throw");
-                return 0;
-            }
             if status == *FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_S_RUN {
                 if captured_status == *FIGHTER_STATUS_KIND_CATCHED_GANON {
                     StatusModule::change_status_request(boma, *FIGHTER_GANON_STATUS_KIND_SPECIAL_S_CATCH, false);
@@ -118,9 +112,9 @@ unsafe extern "C" fn armstrong_link_event(_vtable: u64, fighter: &mut Fighter, l
                     StatusModule::change_status_request(boma, *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW, false);
                 }
                 if status == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+                    capture_event.motion_offset = offset;
+                    capture_event.motion_offset_lw = offset_lw;
                     StatusModule::change_status_request(boma, *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW, false);
-                    capture_event.result = true;
-                    capture_event.node = smash2::phx::Hash40::new("throw");
                     return 0;
                 }
                 return 0;

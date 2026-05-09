@@ -2,7 +2,7 @@
 use {
     arcropolis_api::*,
     crate::fighters::mods_mounted,
-    exo_utils::extern_func::is_on_ryujinx,
+    exo_utils::common::extern_func::is_on_ryujinx,
     skyline_web::dialog_ok::DialogOk,
     smash::hash40,
     std::{

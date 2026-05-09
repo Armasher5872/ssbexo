@@ -1,5 +1,5 @@
 use {
-    exo_utils::buttons::*,
+    exo_utils::structs::buttons::*,
     exo_var::{
         consts::*,
         globals::*,

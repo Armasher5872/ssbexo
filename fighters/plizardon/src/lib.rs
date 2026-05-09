@@ -1,7 +1,7 @@
 use {
-    exo_utils::{
-        fighter_common::*,
+    exo_utils::common::{
         status_end_control::*,
+        var_reset::*,
     },
     exo_var::globals::*,
     smash::{
@@ -9,14 +9,18 @@ use {
         lib::{
             L2CValue,
             lua_const::*,
-        }
-    }
+        },
+        lua2cpp::*,
+    },
+    smashline::*,
 };
 
 mod acmd;
+mod opff;
 mod vtable;
 
 pub fn install() {
     acmd::install();
+    opff::install();
     vtable::install();
 }

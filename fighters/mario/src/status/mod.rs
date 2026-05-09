@@ -1,5 +1,5 @@
 use {
-    exo_utils::{
+    exo_utils::common::{
         check_attack::*,
         fighter_common::*,
     },

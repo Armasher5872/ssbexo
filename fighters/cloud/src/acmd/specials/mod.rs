@@ -1,7 +1,7 @@
 use {
     exo_utils::{
-        cloud::*,
-        extern_func::*,
+        common::extern_func::*,
+        fighter::cloud::*,
     },
     exo_var::cloud::*,
     smash::{

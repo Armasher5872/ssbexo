@@ -1,5 +1,5 @@
 use {
-    exo_utils::sonic::*,
+    exo_utils::fighter::sonic::*,
     exo_var::{
         consts::*,
         globals::*,

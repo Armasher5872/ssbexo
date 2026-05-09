@@ -1,26 +1,28 @@
 use {
-  exo_utils::{
-    fighter_common::*,
-    status_end_control::*,
-  },
-  exo_var::{
-    globals::*,
-    link::*,
-  },
-  smash::{
-    app::{
-      lua_bind::*,
-      *
+    exo_utils::common::{
+        status_end_control::*,
+        var_reset::*,
     },
-    lib::lua_const::*,
-  },
-  smashline::*,
+    exo_var::{
+        globals::*,
+        link::*,
+    },
+    smash::{
+        app::{
+            lua_bind::*,
+            *
+        },
+        lib::lua_const::*,
+    },
+    smashline::*,
 };
 
 mod acmd;
+mod opff;
 mod vtable;
 
 pub fn install() {
-  acmd::install();
-  vtable::install();
+    acmd::install();
+    opff::install();
+    vtable::install();
 }

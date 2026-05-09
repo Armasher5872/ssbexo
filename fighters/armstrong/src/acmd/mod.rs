@@ -1,8 +1,8 @@
 use {
     exo_utils::{
-        armstrong::*,
-        catch::*,
-        fighter_common::*,
+        fighter::armstrong::*,
+        status::catch::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         consts::*,

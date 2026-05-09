@@ -1,22 +1,10 @@
 use super::*;
 
-const SNAKE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x11b5710; //Snake only
 const SNAKE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x11b5720; //Snake only
 const SNAKE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11b5890; //Snake only
 pub static mut SNAKE_GRENADE_STATUS_FALL_STATUS: usize = 0x7c9ae0;
 pub static mut SNAKE_GRENADE_STATUS_LANDING_STATUS: usize = 0x7c9d10;
 pub static mut SNAKE_GRENADE_STATUS_THROWN_STATUS: usize = 0x7c9fc0;
-
-//Snake Startup Initialization
-#[skyline::hook(offset = SNAKE_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn snake_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Snake Reset Initialization
 #[skyline::hook(offset = SNAKE_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -78,7 +66,6 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 pub fn install() {
     let _ = skyline::nro::add_hook(nro_hook);
     skyline::install_hooks!(
-        snake_start_initialization,
         snake_reset_initialization,
         snake_death_initialization
     );

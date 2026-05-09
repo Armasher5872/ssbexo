@@ -1,20 +1,9 @@
 use super::*;
 
-const SHULK_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x11623f0; //Shulk Only
 const SHULK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x1162490; //Shulk Only
 const SHULK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x1163580; //Shulk Only
 const SHULK_CHECK_VALID_ART_STATUSES_OFFSET: usize = 0x116a3d0; //Shulk Only
 const SHULK_CHECK_CAN_ACTIVATE_ART_WHEEL: usize = 0x116d8a0; //Shulk Only
-
-//Shulk Startup Initialization
-#[skyline::hook(offset = SHULK_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn shulk_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Shulk Reset Initialization
 #[skyline::hook(offset = SHULK_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -60,7 +49,6 @@ unsafe extern "C" fn shulk_check_can_activate_art_wheel(fighter: *mut Fighter) -
 
 pub fn install() {
     skyline::install_hooks!(
-        shulk_start_initialization,
         shulk_reset_initialization,
         shulk_death_initialization,
         shulk_check_valid_arts_statuses,

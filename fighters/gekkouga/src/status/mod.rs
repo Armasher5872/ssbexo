@@ -1,9 +1,11 @@
 use {
     exo_utils::{
-        check_attack::*,
-        fighter_common::*,
-        gekkouga::*,
-        weapon::*,
+        common::{
+            check_attack::*,
+            weapon::*,
+        },
+        fighter::gekkouga::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         gekkouga::*,

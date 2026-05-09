@@ -1,7 +1,7 @@
 use {
     exo_utils::{
-        miifighter::*,
-        vector::*,
+        fighter::miifighter::*,
+        structs::vector::*,
     },
     exo_var::{
         consts::*,

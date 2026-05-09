@@ -1,9 +1,15 @@
 use {
     exo_utils::{
-        collision_struct::*,
-        fighter_common::*,
-        status_end_control::*,
-        vector::*,
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::captain::*,
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+            vector::*,
+        }
     },
     exo_var::{
         captain::*,
@@ -16,16 +22,19 @@ use {
         },
         lib::lua_const::*,
         phx::*,
+        lua2cpp::*,
     },
     smashline::*,
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
+    opff::install();
     status::install();
     vtable::install();
 }

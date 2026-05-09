@@ -1,9 +1,11 @@
 use {
     exo_utils::{
-        fighter_common::*,
-        metaknight::*,
-        vector::*,
-        weapon::*,
+        common::weapon::*,
+        fighter::metaknight::*,
+        structs::{
+            getter_funcs::*,
+            vector::*,
+        }
     },
     exo_var::{
         globals::*,

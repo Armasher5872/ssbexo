@@ -1,8 +1,10 @@
 use {
     exo_utils::{
-        fighter_common::*,
-        glide::*,
-        vector::*,
+        status::glide::*,
+        structs::{
+            getter_funcs::*,
+            vector::*,
+        }
     },
     exo_var::{
         consts::*,

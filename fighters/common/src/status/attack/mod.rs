@@ -1,5 +1,5 @@
 use {
-    exo_utils::{
+    exo_utils::status::{
         attack_dash::*,
         attack_xx4::*,
     },

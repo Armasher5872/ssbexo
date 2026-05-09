@@ -8,11 +8,12 @@ unsafe extern "C" fn armstrong_special_s_run_pre_status(fighter: &mut L2CFighter
 
 unsafe extern "C" fn armstrong_special_s_run_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let lr = PostureModule::lr(fighter.module_accessor);
+    let init_y_vel = WorkModule::get_float(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_START_INIT_Y_VEL);
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
         GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.2);
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, init_y_vel.clamp(-1.2, 1.2));
         sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
     }
     else {
@@ -52,6 +53,7 @@ unsafe extern "C" fn armstrong_special_s_run_loop(fighter: &mut L2CFighterCommon
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
             KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
             sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.07);
+            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.65);
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_run"), -1.0, 1.0, 0.0, false, false);
         }
     }
@@ -76,6 +78,7 @@ unsafe extern "C" fn armstrong_special_s_run_end_status(fighter: &mut L2CFighter
     if ![*FIGHTER_GANON_STATUS_KIND_SPECIAL_S_CATCH, *FIGHTER_GANON_STATUS_KIND_SPECIAL_AIR_S_CATCH].contains(&status_kind) {
         armstrong_clear_charge(fighter.module_accessor);
     }
+    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_START_INIT_Y_VEL);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_SPECIAL_S_RUN_TIME);
     0.into()
 }
@@ -85,6 +88,7 @@ unsafe extern "C" fn armstrong_special_s_run_exit_status(fighter: &mut L2CFighte
     if ![*FIGHTER_GANON_STATUS_KIND_SPECIAL_S_CATCH, *FIGHTER_GANON_STATUS_KIND_SPECIAL_AIR_S_CATCH].contains(&status_kind) {
         armstrong_clear_charge(fighter.module_accessor);
     }
+    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_START_INIT_Y_VEL);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_SPECIAL_S_RUN_TIME);
     0.into()
 }

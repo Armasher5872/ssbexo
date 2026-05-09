@@ -1,5 +1,5 @@
 use {
-    exo_utils::fighter_common::*,
+    exo_utils::common::var_reset::*,
     smash::app::Fighter
 };
 

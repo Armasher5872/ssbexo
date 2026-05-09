@@ -129,12 +129,23 @@ unsafe extern "C" fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommo
     }
 }
 
+//Status End Jumpsquat, more momentum transfer stuff
+#[skyline::hook(replace = L2CFighterCommon_status_end_JumpSquat)]
+unsafe extern "C" fn status_end_jumpsquat(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    if ![*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT].contains(&status_kind) {
+        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
+    }
+    0.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
             status_jumpsquat_main,
             sub_jump_squat_uniq_check_sub,
-            sub_jump_squat_uniq_check_sub_mini_attack
+            sub_jump_squat_uniq_check_sub_mini_attack,
+            status_end_jumpsquat
         );
     }
 }

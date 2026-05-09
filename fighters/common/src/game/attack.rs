@@ -63,31 +63,7 @@ unsafe extern "C" fn notify_log_event_collision_hit(fighter_manager: u64, attack
     let owner_kind = utility::get_kind(&mut *owner_boma);
     let owner_agent = get_fighter_common_from_accessor(&mut *owner_boma);
     if attacker_category == *BATTLE_OBJECT_CATEGORY_WEAPON {
-        if defender_category == *BATTLE_OBJECT_CATEGORY_ITEM {
-            if attacker_kind == *WEAPON_KIND_LINK_BOOMERANG {
-                WorkModule::set_int(attacker_boma, defender_object_id as i32, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-                LinkModule::remove_model_constraint(defender_boma, true);
-                if LinkModule::is_link(defender_boma, *ITEM_LINK_NO_HAVE) {
-                    LinkModule::unlink(defender_boma, *ITEM_LINK_NO_HAVE);
-                }
-                if !LinkModule::is_link(defender_boma, *ITEM_LINK_NO_HAVE) {
-                    VisibilityModule::set_whole(defender_boma, true);
-                    LinkModule::link(defender_boma, *ITEM_LINK_NO_HAVE, (*(attacker_boma)).battle_object_id);
-                    LinkModule::set_model_constraint_pos_ort(defender_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("top"), *CONSTRAINT_FLAG_ORIENTATION as u32 | *CONSTRAINT_FLAG_POSITION as u32, true);
-                }
-            }
-        }
         if defender_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            if defender_object_id == owner_id {
-                if owner_kind == *FIGHTER_KIND_LINK {
-                    let fuse_item_id = WorkModule::get_int(attacker_boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-                    let item_boma = smash::app::sv_battle_object::module_accessor(fuse_item_id);
-                    if fuse_item_id != *BATTLE_OBJECT_ID_INVALID as u32 && sv_battle_object::is_active(fuse_item_id) {
-                        LinkModule::remove_model_constraint(item_boma, true);
-                        StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
-                    }
-                }
-            }
             if attacker_kind == *WEAPON_KIND_KOOPAJR_CANNONBALL {
                 if owner_kind == *FIGHTER_KIND_GEKKOUGA {
                     let owner_frame = MotionModule::frame(owner_boma);

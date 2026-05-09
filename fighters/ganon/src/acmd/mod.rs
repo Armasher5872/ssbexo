@@ -1,5 +1,5 @@
 use {
-    exo_utils::vector::*,
+    exo_utils::structs::vector::*,
     exo_var::{
         consts::*,
         ganon::*,

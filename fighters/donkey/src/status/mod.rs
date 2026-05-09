@@ -1,7 +1,7 @@
 use {
     exo_utils::{
-        donkey::*,
-        fighter_common::*,
+        fighter::donkey::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         consts::*,

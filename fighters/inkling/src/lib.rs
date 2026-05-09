@@ -1,10 +1,12 @@
 use {
     exo_utils::{
-        extern_func::*,
-        fighter_common::*,
-        hook::*,
-        inkling::*,
-        status_end_control::*,
+        common::{
+            extern_func::*,
+            hook::*,
+            var_reset::*,
+        },
+        fighter::inkling::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         globals::*,

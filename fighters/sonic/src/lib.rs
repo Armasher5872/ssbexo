@@ -1,12 +1,18 @@
 use {
     exo_utils::{
-        collision_struct::*,
-        damage::*,
-        fighter_common::*,
-        hook::*,
-        sonic::*,
-        ui_manager::*,
-        vector::*,
+        common::{
+            fighter_common::*,
+            hook::*,
+            var_reset::*,
+        },
+        fighter::sonic::*,
+        status::damage::*,
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+            ui_manager::*,
+            vector::*,
+        }
     },
     exo_var::{
         consts::*,
@@ -27,6 +33,7 @@ use {
         lua2cpp::*,
         phx::*
     },
+    smashline::*,
     smash_script::{
         macros::*,
         *
@@ -34,11 +41,13 @@ use {
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
+    opff::install();
     status::install();
     vtable::install();
 }

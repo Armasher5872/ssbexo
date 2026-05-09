@@ -1,7 +1,6 @@
 //Certain hooks are accredited to HDR and WuBor Patch
 use super::*;
 
-const JACK_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xb2f960; //Joker only
 const JACK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb2fd70; //Joker only
 const JACK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xb303a0; //Joker only
 const JACK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xb31350; //Joker only
@@ -11,47 +10,6 @@ const JACK_FIGHTERSPECIALIZER_CHECK_DOYLE_SUMMON_DISPATCH_OFFSET: usize = 0xb309
 
 #[skyline::from_offset(JACK_CUSTOMIZER_OFFSET)]
 extern "C" fn jack_customizer(boma: *mut BattleObjectModuleAccessor, customize_to: u32);
-
-unsafe extern "C" fn jack_special_lw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_JACK_INSTANCE_WORK_ID_FLAG_DOYLE_EXIST) {
-        WorkModule::on_flag(fighter.module_accessor, 0x200000E4);
-        FighterSpecializer_Jack::check_doyle_summon_dispatch(fighter.module_accessor, true, false);
-        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_JACK_STATUS_KIND_DISPATCH);
-    }
-    else {
-        WorkModule::on_flag(fighter.module_accessor, 0x200000E3);
-        FighterSpecializer_Jack::check_doyle_summon_dispatch(fighter.module_accessor, true, false);
-        StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_JACK_STATUS_KIND_SUMMON);
-    }
-    1.into()
-}
-
-//Set Move Customizer is accredited to WuBor Patch
-unsafe extern "C" fn jack_waza_customize(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let waza_customize_to = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO);
-    if [*FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1, *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_2].contains(&waza_customize_to) {
-        fighter.sv_set_status_func(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(), std::mem::transmute(jack_special_lw_pre_status as *const ()));
-        0.into()
-    }
-    else if let Some(original) = get_original_customizer(fighter) {
-        original(fighter)
-    } 
-    else {
-        0.into()
-    }
-}
-
-//Joker Startup Initialization
-#[skyline::hook(offset = JACK_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn jack_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    set_move_customizer(agent, jack_waza_customize);
-    jack_waza_customize(agent);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Joker Reset Initialization
 #[skyline::hook(offset = JACK_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -113,7 +71,6 @@ pub fn install() {
     let _ = skyline::patching::Patch::in_text(0xb30dd4).data(0x14000031u32); //Disables automatically summoning Arsene
     let _ = skyline::patching::Patch::in_text(0xb31674).nop(); //Nops the location where Jokers meter is set while Arsene is active
     skyline::install_hooks!(
-        jack_start_initialization,
         jack_reset_initialization,
         jack_death_initialization,
         jack_opff,

@@ -1,8 +1,8 @@
 use {
-    exo_utils::{
+    exo_utils::common::{
         command_input::*,
-        fighter_common::*,
         status_end_control::*,
+        var_reset::*,
     },
     exo_var::{
         dolly::*,

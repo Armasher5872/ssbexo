@@ -1,6 +1,9 @@
 use {
     arcropolis_api::*,
-    exo_var::variables::*,
+    exo_var::{
+        armstrong::*,
+        variables::*,
+    },
     param_config::*,
     smash::{
         hash40,
@@ -27,7 +30,10 @@ pub extern "C" fn mods_mounted(_ev: Event) {
     let mut lowest_color: i32 = -1;
     let mut marked_slots: Vec<i32> = vec![];
     for x in 0..256 {
-        if let Ok(_) = read(format!("mods:/fighter/ganon/model/body/c{:02}/{}", x, MARKER_FILE)) {
+        if let Ok(_) = read(format!(
+            "mods:/fighter/ganon/model/body/c{:02}/{}",
+            x, MARKER_FILE
+        )) {
             unsafe {
                 marked_slots.push(x as _);
                 MARKED_COLORS[x as usize] = true;
@@ -49,6 +55,11 @@ pub extern "C" fn mods_mounted(_ev: Event) {
             index - lowest_color
         }
     };
+    unsafe {
+        set_kirby_inhale_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, marked_slots.clone(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
+        set_villager_pocket_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, marked_slots.clone(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_MISFIRE);
+        set_rosetta_pull_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, marked_slots.clone(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
+    }
     disable_kirby_copy(*FIGHTER_KIND_GANON, marked_slots.clone());
     disable_villager_pocket(*FIGHTER_KIND_GANON, marked_slots.clone(), 0);
     println!("LOWEST: {} - COLOR NUM: {}", lowest_color, color_num);

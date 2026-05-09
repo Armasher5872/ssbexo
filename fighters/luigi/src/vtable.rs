@@ -1,61 +1,11 @@
 use super::*;
 
-const LUIGI_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xca0ce0; //Luigi only
 const LUIGI_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const LUIGI_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xca0cf0; //Luigi only
 const LUIGI_VTABLE_ON_ATTACK_OFFSET: usize = 0xca1380; //Luigi only
 const LUIGI_VTABLE_LINK_EVENT_OFFSET: usize = 0xca0e70; //Luigi only
 const LUIGI_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0xca2960; //Luigi only
 const LUIGI_VTABLE_CHANGE_MOTION_CALLBACK_OFFSET: usize = 0xca1510; //Luigi only
-
-unsafe extern "C" fn luigi_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_BATABATA);
-    WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_N_ATTACK_ACTIVE);
-    WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_THROW);
-    WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_N_HELD_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
-    WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-}
-
-unsafe extern "C" fn luigi_check_jump_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
-    let is_aerial = fighter.global_table[PAD_FLAG].get_i32() & *FIGHTER_PAD_FLAG_ATTACK_TRIGGER != 0;
-    let squat_stick_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("squat_stick_y"));
-    let allow_float = ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) && !is_aerial && stick_y <= squat_stick_y;
-    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON) 
-    || WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL) {
-        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_BATABATA) {
-            if allow_float {
-                fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_BATABATA.into(), true.into());
-                return 1.into();
-            }
-        }
-    }
-    0.into()
-}
-
-unsafe extern "C" fn luigi_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_BATABATA);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
-    }
-    0.into()
-}
-
-//Luigi Startup Initialization
-#[skyline::hook(offset = LUIGI_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn luigi_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    luigi_var(&mut *boma);
-    agent.global_table[CHECK_AIR_JUMP_UNIQ].assign(&L2CValue::Ptr(luigi_check_jump_uniq as *const () as _));
-    agent.global_table[CHECK_AIR_JUMP_AERIAL_UNIQ].assign(&L2CValue::Ptr(luigi_check_jump_uniq as *const () as _));
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(luigi_end_control as *const () as _));
-    original!()(vtable, fighter)
-}
 
 //Luigi Reset Initialization
 #[skyline::hook(offset = LUIGI_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -135,7 +85,6 @@ unsafe extern "C" fn luigi_change_motion_callback(_vtable: u64, _fighter: &mut F
 
 pub fn install() {
 	skyline::install_hooks!(
-        luigi_start_initialization,
         luigi_reset_initialization,
         luigi_death_initialization,
         luigi_on_attack,

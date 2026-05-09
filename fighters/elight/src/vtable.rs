@@ -1,21 +1,9 @@
 use super::*;
 
-const ELIGHT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0xa285e0; //Mythra only
 const ELIGHT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa28640; //Mythra only
 const ELIGHT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xa28a80; //Mythra only
 const ELIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa28dd0; //Mythra only
 const ELIGHT_VTABLE_ON_ATTACK_OFFSET: usize = 0xa29ab0; //Mythra only
-
-//Mythra Startup Initialization
-#[skyline::hook(offset = ELIGHT_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn elight_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
-    common_initialization_variable_reset(&mut *boma);
-    WorkModule::off_flag(boma, *FIGHTER_ELEMENT_INSTANCE_WORK_ID_FLAG_CAN_BLADE_SWITCH);
-    agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    original!()(vtable, fighter)   
-}
 
 //Mythra Reset Initialization
 #[skyline::hook(offset = ELIGHT_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -72,7 +60,6 @@ pub fn install() {
     let _ = skyline::patching::Patch::in_text(0xa28e78).nop();
     let _ = skyline::patching::Patch::in_text(0xa28e84).data(0x140000ACu32);
 	skyline::install_hooks!(
-        elight_start_initialization,
         elight_reset_initialization,
         elight_death_initialization,
         elight_opff,

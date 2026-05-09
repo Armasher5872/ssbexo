@@ -1,22 +1,26 @@
 use {
-  exo_utils::{
-    fighter_common::*,
-    status_end_control::*,
-  },
-  exo_var::{
-    edge::*,
-    globals::*,
-  },
-  smash::{
-    app::{
-      lua_bind::*,
-      *
+    exo_utils::{
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::edge::*,
+        structs::getter_funcs::*,
     },
-    hash40,
-    lib::lua_const::*,
-    lua2cpp::*,
-  },
-  smashline::*,
+    exo_var::{
+        edge::*,
+        globals::*,
+    },
+    smash::{
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
+        lib::lua_const::*,
+        lua2cpp::*,
+    },
+    smashline::*,
 };
 
 mod acmd;

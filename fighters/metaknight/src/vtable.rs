@@ -1,35 +1,9 @@
 use super::*;
 
-const METAKNIGHT_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x68d5a0; //Shared
 const METAKNIGHT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const METAKNIGHT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xd12b90; //Meta Knight only
 const METAKNIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xd12be0; //Meta Knight only
 const METAKNIGHT_VTABLE_SHIELD_ATTACK_TRANSITION_EVENT_OFFSET: usize = 0x68d8d0; //Shared
-
-
-unsafe extern "C" fn metaknight_var(boma: &mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_SHIELD_HIT);
-    WorkModule::off_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_POWER);
-    WorkModule::set_float(boma, 0.0, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_DAMAGE);
-    WorkModule::set_int(boma, 0, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_INT_SPECIAL_LW_EFFECT_HANDLE);
-}
-
-//Meta Knight Startup Initialization
-#[skyline::hook(offset = METAKNIGHT_VTABLE_START_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn metaknight_start_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_METAKNIGHT as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let agent = get_fighter_common_from_accessor(&mut *boma);
-        let shield_data = ShieldDataResource::new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 10.0, Hash40::new("hip"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_UNDEFINED as u8);
-        let shield_datas = &mut (ShieldDatas::new().add(shield_data, 0));
-        let resource = &mut ShieldGroupResource::new(shield_datas, 1, 0, false, false, false);
-        common_initialization_variable_reset(&mut *boma);
-        add_shield_group(boma, resource, *FIGHTER_METAKNIGHT_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
-        metaknight_var(&mut *boma);
-        agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
-    }
-    original!()(vtable, fighter)
-}
 
 //Meta Knight Reset Initialization
 #[skyline::hook(offset = METAKNIGHT_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -120,7 +94,6 @@ unsafe extern "C" fn metaknight_on_damage_event(_vtable: u64, fighter: &mut Figh
 
 pub fn install() {
     skyline::install_hooks!(
-        metaknight_start_initialization,
         metaknight_reset_initialization,
         metaknight_death_initialization,
         metaknight_opff,

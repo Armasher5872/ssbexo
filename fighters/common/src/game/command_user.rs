@@ -1,4 +1,5 @@
 //Credit to WuBoyTH
+#![allow(unused_assignments)] //Addresses value assigned to `param_4` is never read
 use super::*;
 
 //Autoturn Lr Assignment for Special Command Users. Edited to disable Kazuya's Autoturn, but still allow for back walk/dashing

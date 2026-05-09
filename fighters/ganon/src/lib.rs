@@ -1,10 +1,14 @@
 use {
     exo_utils::{
-        armstrong::*,
-        damage::*,
-        fighter_common::*,
-        ganon::*,
-        status_end_control::*,
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::{
+            armstrong::*,
+            ganon::*,
+        },
+        status::damage::*,
     },
     exo_var::{
         consts::*,
@@ -24,11 +28,13 @@ use {
 };
 
 mod acmd;
+mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
+    opff::install();
     status::install();
     vtable::install();
     unsafe {

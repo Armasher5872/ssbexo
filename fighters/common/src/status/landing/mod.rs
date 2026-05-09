@@ -1,5 +1,5 @@
 use {
-    exo_utils::extern_func::*,
+    exo_utils::common::extern_func::*,
     exo_var::{
         consts::*,
         globals::*,
