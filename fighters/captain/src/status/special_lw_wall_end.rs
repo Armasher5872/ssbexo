@@ -13,11 +13,10 @@ unsafe extern "C" fn captain_special_lw_wall_end_main_status(fighter: &mut L2CFi
 
 unsafe extern "C" fn captain_special_lw_wall_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let get_sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            if !fighter.sub_air_check_fall_common().get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
                 return 1.into();
             }
         }
@@ -27,14 +26,16 @@ unsafe extern "C" fn captain_special_lw_wall_end_main_loop(fighter: &mut L2CFigh
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING_LIGHT.into(), false.into());
         }
     }
-    if situation_kind != prev_situation_kind {
-        if situation_kind != *SITUATION_KIND_GROUND {
-            fighter.set_situation(SITUATION_KIND_AIR.into());
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        }
-        else {
-            fighter.set_situation(SITUATION_KIND_GROUND.into());
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+    if !StatusModule::is_changing(fighter.module_accessor) {
+        if StatusModule::is_situation_changed(fighter.module_accessor) {
+                if situation_kind != *SITUATION_KIND_GROUND {
+                fighter.set_situation(SITUATION_KIND_AIR.into());
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            }
+            else {
+                fighter.set_situation(SITUATION_KIND_GROUND.into());
+                GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            }
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {

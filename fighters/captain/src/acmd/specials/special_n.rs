@@ -34,17 +34,9 @@ unsafe extern "C" fn ssbexo_captain_grounded_neutral_special_acmd(agent: &mut L2
 }
 
 unsafe extern "C" fn ssbexo_captain_aerial_neutral_special_acmd(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        KineticModule::add_speed(agent.module_accessor, &Vector3f{x: 0.0, y: 0.2, z: 0.0});
-    }
     frame(agent.lua_state_agent, 15.0);
     if is_excute(agent) {
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_TURN);
-    }
-    frame(agent.lua_state_agent, 51.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_DIR_DECIDE);
-        WorkModule::set_int(agent.module_accessor, 1, *FIGHTER_CAPTAIN_STATUS_WORK_ID_INT_FALCON_PUNCH_AIR_PHASE);
     }
     frame(agent.lua_state_agent, 53.0);
     if is_excute(agent) {
@@ -71,10 +63,6 @@ unsafe extern "C" fn ssbexo_captain_aerial_neutral_special_acmd(agent: &mut L2CA
     wait(agent.lua_state_agent, 5.0);
     if is_excute(agent) {
         AttackModule::clear_all(agent.module_accessor);
-    }
-    wait(agent.lua_state_agent, 12.0);
-    if is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 2, *FIGHTER_CAPTAIN_STATUS_WORK_ID_INT_FALCON_PUNCH_AIR_PHASE);
     }
 }
 

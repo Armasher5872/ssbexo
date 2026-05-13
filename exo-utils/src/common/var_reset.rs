@@ -3,10 +3,9 @@ use super::*;
 //Condenses the initial reseting of variables into one function
 pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleObjectModuleAccessor) {
     let jump_speed_x = WorkModule::get_param_float(boma, hash40("jump_speed_x"), 0);
-    let dash_speed = WorkModule::get_param_float(boma, hash40("dash_speed"), 0);
+    let jump_speed_x_max = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0);
     let run_speed_max = WorkModule::get_param_float(boma, hash40("run_speed_max"), 0);
-    let speed = if dash_speed > run_speed_max {dash_speed} else {run_speed_max};
-    let ratio = speed*jump_speed_x;
+    let ratio = (jump_speed_x_max/run_speed_max)*jump_speed_x;
     let flags = [
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_LANDING, 
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, 
@@ -34,10 +33,9 @@ pub unsafe extern "C" fn common_initialization_variable_reset(boma: &mut BattleO
 //Condenses the reset event reseting of variables into one function
 pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModuleAccessor) {
     let jump_speed_x = WorkModule::get_param_float(boma, hash40("jump_speed_x"), 0);
-    let dash_speed = WorkModule::get_param_float(boma, hash40("dash_speed"), 0);
+    let jump_speed_x_max = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0);
     let run_speed_max = WorkModule::get_param_float(boma, hash40("run_speed_max"), 0);
-    let speed = if dash_speed > run_speed_max {dash_speed} else {run_speed_max};
-    let ratio = speed*jump_speed_x;
+    let ratio = (jump_speed_x_max/run_speed_max)*jump_speed_x;
     let flags = [
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_LANDING, 
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STOCK, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, 
@@ -65,10 +63,9 @@ pub unsafe extern "C" fn common_reset_variable_reset(boma: &mut BattleObjectModu
 //Condenses the reseting of variables on death into one function
 pub unsafe extern "C" fn common_death_variable_reset(boma: &mut BattleObjectModuleAccessor) {
     let jump_speed_x = WorkModule::get_param_float(boma, hash40("jump_speed_x"), 0);
-    let dash_speed = WorkModule::get_param_float(boma, hash40("dash_speed"), 0);
+    let jump_speed_x_max = WorkModule::get_param_float(boma, hash40("jump_speed_x_max"), 0);
     let run_speed_max = WorkModule::get_param_float(boma, hash40("run_speed_max"), 0);
-    let speed = if dash_speed > run_speed_max {dash_speed} else {run_speed_max};
-    let ratio = speed*jump_speed_x;
+    let ratio = (jump_speed_x_max/run_speed_max)*jump_speed_x;
     let flags = [
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_CONTINUE, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_FALL, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_AIR_LANDING,
         *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_ENABLE_GRAVITY, *FIGHTER_INSTANCE_WORK_ID_FLAG_ATTACK_DASH_GRAVITY_ENABLED, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAS_CATCH, 

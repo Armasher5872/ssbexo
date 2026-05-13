@@ -23,7 +23,12 @@ unsafe extern "C" fn gekkouga_death_initialization(vtable: u64, fighter: &mut Fi
     original!()(vtable, fighter, param_3)
 }
 
+unsafe extern "C" fn gekkouga_on_status_change(_vtable: u64, fighter: &mut Fighter) {
+    println!("Gekkouga On Status Change");
+}
+
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x4fbf3a8).data(gekkouga_on_status_change as *const () as u64);
     skyline::install_hooks!(
         gekkouga_reset_initialization,
         gekkouga_death_initialization

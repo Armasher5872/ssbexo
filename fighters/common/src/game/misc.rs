@@ -36,7 +36,6 @@ unsafe extern "C" fn const_allot_hook(unk: *const u8, constant: *const c_char, m
 
 //Installation
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x60eb08).data(0x52800001u32); //Removes Jostle
 	skyline::install_hooks!(
         change_version_string_hook,
         const_allot_hook

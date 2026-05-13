@@ -179,67 +179,8 @@ unsafe extern "C" fn fun_7100014db0(fighter: &mut L2CFighterCommon, falcon_punch
 }
 
 //Neutral Special Exec Status
-unsafe extern "C" fn captain_special_n_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if situation_kind == *SITUATION_KIND_AIR {
-        fun_7100005b30(fighter);
-    }
+unsafe extern "C" fn captain_special_n_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
-}
-
-unsafe extern "C" fn fun_7100005b30(fighter: &mut L2CFighterCommon) {
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
-    let lr = PostureModule::lr(fighter.module_accessor);
-    let falcon_punch_air_phase = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_INT_FALCON_PUNCH_AIR_PHASE);
-    let accel = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_n"), hash40("accel"));
-    let angle = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_n"), hash40("angle"));
-    let red_coef = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_n"), hash40("red_coef"));
-    let stick_y_max = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_n"), hash40("stick_y_max"));
-    let stick_y_min = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_n"), hash40("stick_y_min"));
-    let mut abs_stick_y = stick_y.abs();
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_DIR_DECIDE) {
-        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_DIR_DECIDE_END) {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-            if stick_y_max < abs_stick_y {
-                abs_stick_y = stick_y_max;
-            }
-            abs_stick_y -= stick_y_min;
-            if abs_stick_y < 0.0 {
-                abs_stick_y = 0.0;
-            }
-            if stick_y < 0.0 {
-                abs_stick_y *= -1.0;
-            }
-            let stick_y_rad = ((abs_stick_y/angle)*(stick_y_max-stick_y_min)).to_radians();
-            let x_speed = (stick_y_rad.cos()*accel)*lr;
-            let y_speed = stick_y_rad.sin();
-            sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, x_speed, 0.0);
-            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, x_speed, 0.0);
-            sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, x_speed, 0.0);
-            sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0, 0.0);
-            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_STOP);
-            sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, y_speed);
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_DIR_DECIDE_END);
-        }
-    }
-    if falcon_punch_air_phase != 0 {
-        if falcon_punch_air_phase != 1 {
-            if falcon_punch_air_phase == 2 {
-                if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_NORMAL_FALL) {
-                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_NORMAL_FALL);
-                }
-            }
-        }
-        KineticModule::mul_speed(fighter.module_accessor, &Vector3f{x: red_coef, y: red_coef, z: 1.0}, -1);
-    }
-    else {
-        if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_BRAKE_FALL) {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_CAPTAIN_STATUS_WORK_ID_FLAG_FALCON_PUNCH_BRAKE_FALL);
-        }
-    }
 }
 
 //Neutral Special End Status

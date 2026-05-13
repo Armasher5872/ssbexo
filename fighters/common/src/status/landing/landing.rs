@@ -59,10 +59,6 @@ unsafe extern "C" fn status_landing_main_sub(fighter: &mut L2CFighterCommon) -> 
     fighter.sub_landing_cancel_check_damage_face()
 }
 
-#[skyline::hook(replace=get_ground_correct_kind_air_trans)]
-unsafe extern "C" fn get_ground_correct_kind_air_trans_hook(_boma: &mut BattleObjectModuleAccessor, _something: i32) -> i32 {
-    return *GROUND_CORRECT_KIND_AIR;
-}
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
@@ -75,5 +71,4 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 
 pub fn install() {
     let _ = skyline::nro::add_hook(nro_hook);
-    skyline::install_hook!(get_ground_correct_kind_air_trans_hook);
 }

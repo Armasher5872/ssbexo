@@ -69,17 +69,19 @@ unsafe extern "C" fn captain_special_lw_main_loop(fighter: &mut L2CFighterCommon
             }
         }
     }
-    if situation_kind == *SITUATION_KIND_GROUND
-    && prev_situation_kind == *SITUATION_KIND_AIR {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        fighter.set_situation(SITUATION_KIND_GROUND.into());
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-    }
-    if situation_kind == *SITUATION_KIND_AIR
-    && prev_situation_kind == *SITUATION_KIND_GROUND {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
-        fighter.set_situation(SITUATION_KIND_AIR.into());
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        if !StatusModule::is_changing(fighter.module_accessor) {
+        if situation_kind == *SITUATION_KIND_GROUND
+        && prev_situation_kind == *SITUATION_KIND_AIR {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
+            fighter.set_situation(SITUATION_KIND_GROUND.into());
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        }
+        if situation_kind == *SITUATION_KIND_AIR
+        && prev_situation_kind == *SITUATION_KIND_GROUND {
+            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION_AIR);
+            fighter.set_situation(SITUATION_KIND_AIR.into());
+            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        }
     }
     if MotionModule::is_end(fighter.module_accessor) {
         fighter.change_status(FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_END.into(), false.into());

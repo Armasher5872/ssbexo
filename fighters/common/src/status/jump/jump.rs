@@ -5,6 +5,7 @@ use super::*;
 #[skyline::hook(replace = L2CFighterCommon_status_pre_Jump)]
 unsafe extern "C" fn status_pre_jump(fighter: &mut L2CFighterCommon) -> L2CValue {
     let interrupted = fighter.status_pre_Jump_Common_param(L2CValue::Bool(true)).get_bool();
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
     if !interrupted {
         fighter.status_pre_Jump_sub();
@@ -102,9 +103,9 @@ unsafe extern "C" fn jump1_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let callable: extern "C" fn(u64, u64, u64) -> f32 = std::mem::transmute(ctx.registers[8].x());
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let jump_speed_x_max = callable(work_module, hash40("jump_speed_x_max"), 0);
+    let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    ctx.registers_f[0].set_s(jump_speed_x_max*ratio)
+    ctx.registers_f[0].set_s(run_speed_max*ratio)
 }
 
 #[skyline::hook(offset = 0x6d19f8, inline)]
@@ -112,9 +113,9 @@ unsafe extern "C" fn jump2_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let callable: extern "C" fn(u64, u64, u64) -> f32 = std::mem::transmute(ctx.registers[8].x());
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let jump_speed_x_max = callable(work_module, hash40("jump_speed_x_max"), 0);
+    let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    ctx.registers_f[0].set_s(jump_speed_x_max*ratio)
+    ctx.registers_f[0].set_s(run_speed_max*ratio)
 }
 
 #[skyline::hook(offset = 0x6d1b44, inline)]
@@ -122,9 +123,9 @@ unsafe extern "C" fn jump3_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let callable: extern "C" fn(u64, u64, u64) -> f32 = std::mem::transmute(ctx.registers[8].x());
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let jump_speed_x_max = callable(work_module, hash40("jump_speed_x_max"), 0);
+    let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    ctx.registers_f[0].set_s(jump_speed_x_max*ratio)
+    ctx.registers_f[0].set_s(run_speed_max*ratio)
 }
 
 #[skyline::hook(offset = 0x6d04e4, inline)]
@@ -132,9 +133,9 @@ unsafe extern "C" fn jump4_jump_speed_x_max_hook(ctx: &mut skyline::hooks::Inlin
     let callable: extern "C" fn(u64, u64, u64) -> f32 = std::mem::transmute(ctx.registers[8].x());
     let work_module = ctx.registers[0].x();
     let boma = *(work_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let jump_speed_x_max = callable(work_module, hash40("jump_speed_x_max"), 0);
+    let run_speed_max = callable(work_module, hash40("run_speed_max"), 0);
     let ratio = WorkModule::get_float(boma, *FIGHTER_INSTANCE_WORK_ID_FLOAT_JUMP_SPEED_RATIO);
-    ctx.registers_f[0].set_s(jump_speed_x_max*ratio)
+    ctx.registers_f[0].set_s(run_speed_max*ratio)
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
