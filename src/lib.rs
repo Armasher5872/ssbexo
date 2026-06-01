@@ -1,4 +1,4 @@
-#![feature(proc_macro_hygiene, repr_simd, simd_ffi, seek_stream_len)]
+#![feature(proc_macro_hygiene, simd_ffi)]
 use {
     arcropolis_api::*,
     crate::fighters::mods_mounted,

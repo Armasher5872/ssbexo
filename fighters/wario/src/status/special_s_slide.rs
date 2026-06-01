@@ -57,14 +57,12 @@ unsafe extern "C" fn wario_special_s_slide_exec_status(_fighter: &mut L2CFighter
 
 //Side Special Slide End Status
 unsafe extern "C" fn wario_special_s_slide_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
     0.into()
 }
 
 //Side Special Slide Exit Status
 unsafe extern "C" fn wario_special_s_slide_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
     0.into()
 }

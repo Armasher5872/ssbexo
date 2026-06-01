@@ -49,8 +49,7 @@ unsafe extern "C" fn captain_on_attack(vtable: u64, fighter: &mut Fighter, log: 
     let situation_kind = agent.global_table[SITUATION_KIND].get_i32();
     if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW && situation_kind == *SITUATION_KIND_AIR {
         if collision_kind == 1 {
-            WorkModule::on_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_HIT_JUMP);
-            StatusModule::change_status_request(boma, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_WALL_END, false);
+            StatusModule::change_status_request(boma, *FIGHTER_CAPTAIN_STATUS_KIND_SPECIAL_LW_BOUNCE, false);
         }
     }
     call_original!(vtable, fighter, log)

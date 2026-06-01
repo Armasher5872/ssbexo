@@ -1,38 +1,36 @@
 use super::*;
 
 unsafe extern "C" fn ganon_volley_summon_pre_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    StatusModule::init_settings(weapon.module_accessor, SituationKind(*SITUATION_KIND_AIR), *WEAPON_KINETIC_TYPE_NONE, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
+    let boma = weapon.module_accessor;
+    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_AIR), *WEAPON_KINETIC_TYPE_NONE, *GROUND_CORRECT_KIND_AIR as u32, GroundCliffCheckKind(0), false, 0, 0, 0, 0);
     0.into()
 }
 
 unsafe extern "C" fn ganon_volley_summon_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    ModelModule::set_scale(weapon.module_accessor, 1.0);
-    KineticModule::unable_energy(weapon.module_accessor, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
-    WorkModule::set_int(weapon.module_accessor, 20, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
-    WorkModule::set_int(weapon.module_accessor, 20, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    let boma = weapon.module_accessor;
+    ModelModule::set_scale(boma, 0.85);
+    KineticModule::unable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     0.into()
 }
 
 unsafe extern "C" fn ganon_volley_summon_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("summon_boar"), 0.0, 1.0, false, 0.0, false, false);
+    let boma = weapon.module_accessor;
+    MotionModule::change_motion(boma, Hash40::new("summon_boar"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(ganon_volley_summon_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn ganon_volley_summon_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
     let owner_lr = PostureModule::lr(owner_boma);
     let owner_pos_x = PostureModule::pos_x(owner_boma);
     let owner_pos_y = PostureModule::pos_y(owner_boma);
     let owner_pos_z = PostureModule::pos_z(owner_boma);
-    PostureModule::set_pos(weapon.module_accessor, &Vector3f{x: owner_pos_x+(10.0*owner_lr), y: owner_pos_y+12.0, z: owner_pos_z});
-    if should_remove_projectile(weapon) {
-        notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
-    }
+    PostureModule::set_pos(boma, &Vector3f{x: owner_pos_x+(10.0*owner_lr), y: owner_pos_y+12.0, z: owner_pos_z});
     0.into()
 }
 
-unsafe extern "C" fn ganon_volley_summon_exec_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+unsafe extern "C" fn ganon_volley_summon_exec_status(_weapon: &mut L2CWeaponCommon) -> L2CValue {
     0.into()
 }
 

@@ -5,42 +5,46 @@ unsafe extern "C" fn ssbexo_ganon_grounded_up_special_end_acmd(_agent: &mut L2CA
 
 //Aerial Up Special End ACMD
 unsafe extern "C" fn ssbexo_ganon_aerial_up_special_end_acmd(agent: &mut L2CAgentBase) {
-    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    if !WorkModule::is_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
         if is_excute(agent) {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     }
-    frame(agent.lua_state_agent, 38.0);
-    if !WorkModule::is_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
+    frame(lua_state, 38.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
         if is_excute(agent) {
-            KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+            KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }
-    frame(agent.lua_state_agent, 45.0);
-    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
+    frame(lua_state, 45.0);
+    if WorkModule::is_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
         if is_excute(agent) {
             notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     }
-    frame(agent.lua_state_agent, 48.0);
-    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
+    frame(lua_state, 48.0);
+    if WorkModule::is_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
         if is_excute(agent) {
-            KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+            KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
         }
     }
 }
 
 //Grounded Up Special End Effect
 unsafe extern "C" fn ssbexo_ganon_grounded_up_special_end_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         FLASH(agent, 0, 0, 0, 0.8);
         BURN_COLOR(agent, 0.2, 0, 1.7, 0.4);
-        ColorBlendModule::set_disable_camera_depth_influence(agent.module_accessor, true);
+        ColorBlendModule::set_disable_camera_depth_influence(boma, true);
         EFFECT_FOLLOW(agent, Hash40::new("ganon_entry"), Hash40::new("top"), 0, 15, 0, 0, 0, 0, 1, true);
     }
     for _ in 0..5 {
@@ -48,18 +52,18 @@ unsafe extern "C" fn ssbexo_ganon_grounded_up_special_end_effect(agent: &mut L2C
             EFFECT_FOLLOW(agent, Hash40::new("ganon_entry_aura"), Hash40::new("emit"), 0, 0, 0, 0, 0, 0, 1, true);
         }
     }
-    frame(agent.lua_state_agent, 30.0);
+    frame(lua_state, 30.0);
     if is_excute(agent) {
         BURN_COLOR_FRAME(agent, 15, 0.2, 0, 1.7, 0);
         FLASH_FRM(agent, 15, 0, 0, 0, 0);
     }
-    wait(agent.lua_state_agent, 15.0);
+    wait(lua_state, 15.0);
     if is_excute(agent) {
         BURN_COLOR_NORMAL(agent);
         COL_NORMAL(agent);
-        ColorBlendModule::set_disable_camera_depth_influence(agent.module_accessor, false);
+        ColorBlendModule::set_disable_camera_depth_influence(boma, false);
     }
-    frame(agent.lua_state_agent, 50.0);
+    frame(lua_state, 50.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
@@ -68,11 +72,13 @@ unsafe extern "C" fn ssbexo_ganon_grounded_up_special_end_effect(agent: &mut L2C
 
 //Aerial Up Special End Effect
 unsafe extern "C" fn ssbexo_ganon_aerial_up_special_end_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         FLASH(agent, 0, 0, 0, 0.8);
         BURN_COLOR(agent, 0.2, 0, 1.7, 0.4);
-        ColorBlendModule::set_disable_camera_depth_influence(agent.module_accessor, true);
+        ColorBlendModule::set_disable_camera_depth_influence(boma, true);
         EFFECT(agent, Hash40::new("ganon_entry"), Hash40::new("top"), 6, 15, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
     }
     for _ in 0..5 {
@@ -80,25 +86,26 @@ unsafe extern "C" fn ssbexo_ganon_aerial_up_special_end_effect(agent: &mut L2CAg
             EFFECT_FOLLOW(agent, Hash40::new("ganon_entry_aura"), Hash40::new("emit"), 0, 0, 0, 0, 0, 0, 1, true);
         }
     }
-    frame(agent.lua_state_agent, 30.0);
+    frame(lua_state, 30.0);
     if is_excute(agent) {
         BURN_COLOR_FRAME(agent, 15, 0.2, 0, 1.7, 0);
         FLASH_FRM(agent, 15, 0, 0, 0, 0);
     }
-    wait(agent.lua_state_agent, 15.0);
+    wait(lua_state, 15.0);
     if is_excute(agent) {
         BURN_COLOR_NORMAL(agent);
         COL_NORMAL(agent);
-        ColorBlendModule::set_disable_camera_depth_influence(agent.module_accessor, false);
+        ColorBlendModule::set_disable_camera_depth_influence(boma, false);
     }
 }
 
 //Grounded Up Special End Sound
 unsafe extern "C" fn ssbexo_ganon_grounded_up_special_end_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_appear01"));
     }
-    frame(agent.lua_state_agent, 50.0);
+    frame(lua_state, 50.0);
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_ganon_landing02"));
     }

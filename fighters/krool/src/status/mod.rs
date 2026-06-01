@@ -1,5 +1,8 @@
 use {
-    exo_utils::structs::getter_funcs::*,
+    exo_utils::{
+        fighter::krool::*,
+        structs::getter_funcs::*,
+    },
     exo_var::{
         consts::*,
         globals::*,
@@ -24,6 +27,7 @@ use {
 
 mod attack_lw4;
 mod special_hi_start;
+mod special_hi;
 mod special_lw_charge;
 mod special_lw_launch;
 mod special_lw;
@@ -31,6 +35,7 @@ mod special_lw;
 pub fn install() {
     attack_lw4::install();
     special_hi_start::install();
+    special_hi::install();
     special_lw_charge::install();
     special_lw_launch::install();
     special_lw::install();

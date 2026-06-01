@@ -23,12 +23,14 @@ use {
     },
 };
 
+mod special_air_lw_bounce;
 mod special_air_lw;
 mod special_n_charged;
 mod special_n_hold;
 mod special_n;
 
 pub fn install() {
+    special_air_lw_bounce::install();
     special_air_lw::install();
     special_n_charged::install();
     special_n_hold::install();

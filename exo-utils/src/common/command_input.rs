@@ -18,7 +18,7 @@ pub unsafe extern "C" fn clone_command_input(boma: *mut BattleObjectModuleAccess
 }
 
 //Used to handle custom command inputs
-pub unsafe extern "C" fn get_command_stick_direction(boma: &mut BattleObjectModuleAccessor) -> i32 {
+pub unsafe extern "C" fn get_command_stick_direction(boma: &mut BattleObjectModuleAccessor, stick_sensitivity: f32) -> i32 {
     let status_kind = StatusModule::status_kind(boma);
     let stick_x = if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) {ControlModule::get_sub_stick_x(boma)} else {ControlModule::get_stick_x(boma)};
     let stick_y = if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) {ControlModule::get_sub_stick_y(boma)} else {ControlModule::get_stick_y(boma)};
@@ -26,22 +26,22 @@ pub unsafe extern "C" fn get_command_stick_direction(boma: &mut BattleObjectModu
     if status_kind == *FIGHTER_STATUS_KIND_TURN_RUN {
         lr_stick_x *= -1.0;
     }
-    if lr_stick_x >= 0.2 {
-        if stick_y <= -0.2 {
+    if lr_stick_x >= stick_sensitivity {
+        if stick_y <= -stick_sensitivity {
             return 3;
         }
-        else if stick_y >= 0.2 {
+        else if stick_y >= stick_sensitivity {
             return 9;
         }
         else {
             return 6;
         }
     }
-    else if lr_stick_x <= -0.2 {
-        if stick_y <= -0.2 {
+    else if lr_stick_x <= -stick_sensitivity {
+        if stick_y <= -stick_sensitivity {
             return 1;
         }
-        else if stick_y >= 0.2 {
+        else if stick_y >= stick_sensitivity {
             return 7;
         }
         else {
@@ -49,10 +49,10 @@ pub unsafe extern "C" fn get_command_stick_direction(boma: &mut BattleObjectModu
         }
     }
     else {
-        if stick_y <= -0.2 {
+        if stick_y <= -stick_sensitivity {
             return 2;
         }
-        else if stick_y >= 0.2 {
+        else if stick_y >= stick_sensitivity {
             return 8;
         }
         else {

@@ -2,11 +2,13 @@ use super::*;
 
 //Side Special Bonk ACMD
 unsafe extern "C" fn ssbexo_mario_side_special_bonk_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 9.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 9.0);
     if is_excute(agent) {
-        let lr = PostureModule::lr(agent.module_accessor);
-        KineticModule::unable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-        KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        let lr = PostureModule::lr(boma);
+        KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         sv_kinetic_energy!(set_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_STOP, -1.8*lr, 0.0);
         sv_kinetic_energy!(set_brake, agent, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.05);
     }

@@ -1,5 +1,4 @@
 use {
-    crate::status::common_func::*,
     exo_utils::{
         fighter::littlemac::*,
         status::attack_xx4::*,
@@ -17,7 +16,6 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::*,
-        phx::Vector2f
     },
     smash_script::*,
     smashline::*,
@@ -39,7 +37,6 @@ mod attack_s4_hold;
 mod attack_s4_start;
 mod attack_s4;
 mod attack;
-mod common_func;
 mod guard_damage;
 mod special_hi_jump;
 mod special_hi_start;

@@ -16,12 +16,13 @@ pub unsafe extern "C" fn fun_7100020d60(fighter: &mut L2CFighterCommon) {
 }
 
 pub unsafe extern "C" fn fun_7100020e00(fighter: &mut L2CFighterCommon, bool_check: L2CValue) -> L2CValue {
+    let boma = fighter.module_accessor;
     if !bool_check.get_bool() {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_GRAVITY_ONOFF) {
-            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        if WorkModule::is_flag(boma, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_GRAVITY_ONOFF) {
+            KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         }
         else {
-            KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         }
     }
     0.into()
@@ -33,12 +34,13 @@ pub unsafe extern "C" fn fun_7100020b40(fighter: &mut L2CFighterCommon) {
 }
 
 pub unsafe extern "C" fn fun_7100020be0(fighter: &mut L2CFighterCommon, bool_check: L2CValue) -> L2CValue {
+    let boma = fighter.module_accessor;
     if !bool_check.get_bool() {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_CLIFF_FALL_ONOFF) {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        if WorkModule::is_flag(boma, *FIGHTER_MIIFIGHTER_STATUS_WORK_ID_FLAG_100KICK_CLIFF_FALL_ONOFF) {
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         }
         else {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         }
     }
     0.into()

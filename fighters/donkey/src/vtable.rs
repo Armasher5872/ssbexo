@@ -92,14 +92,11 @@ unsafe extern "C" fn donkey_on_search(vtable: u64, fighter: &mut Fighter, log: u
             if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 {
                 if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_WEAPON {
                     let opponent_boma = smash::app::sv_battle_object::module_accessor(opponent_id);
-                    let opponent_kind = utility::get_kind(&mut *opponent_boma);
-                    if opponent_kind == *WEAPON_KIND_KOOPAJR_CANNONBALL {
-                        if is_barrel(opponent_boma) {
-                            ReflectorModule::set_status_all(opponent_boma, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
-                            WorkModule::set_float(opponent_boma, 0.0, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLOAT_CHARGE);
-                            StatusModule::change_status_request_from_script(opponent_boma, *WEAPON_DONKEY_BARREL_STATUS_KIND_IDLE, false);
-                            StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-                        }
+                    if is_barrel(opponent_boma) {
+                        ReflectorModule::set_status_all(opponent_boma, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+                        WorkModule::set_float(opponent_boma, 0.0, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLOAT_CHARGE);
+                        StatusModule::change_status_request_from_script(opponent_boma, *WEAPON_DONKEY_BARREL_STATUS_KIND_IDLE, false);
+                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
                     }
                 }
             }

@@ -20,9 +20,10 @@ unsafe extern "C" fn ssbexo_cloud_up_special_combo_2_fall_sound(_agent: &mut L2C
 
 //Up Special Combo 2 Fall Expression
 unsafe extern "C" fn ssbexo_cloud_up_special_combo_2_fall_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        AttackModule::set_attack_reference_joint_id(agent.module_accessor, Hash40::new("haver"), AttackDirectionAxis(*ATTACK_DIRECTION_Y), AttackDirectionAxis(*ATTACK_DIRECTION_Z), AttackDirectionAxis(*ATTACK_DIRECTION_X));
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        AttackModule::set_attack_reference_joint_id(boma, Hash40::new("haver"), AttackDirectionAxis(*ATTACK_DIRECTION_Y), AttackDirectionAxis(*ATTACK_DIRECTION_Z), AttackDirectionAxis(*ATTACK_DIRECTION_X));
+        ItemModule::set_have_item_visibility(boma, false, 0);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
         RUMBLE_HIT(agent, Hash40::new("rbkind_slashm"), 0);
     }

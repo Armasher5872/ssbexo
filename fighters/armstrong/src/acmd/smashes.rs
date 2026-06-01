@@ -2,66 +2,71 @@ use super::*;
 
 //Forward Smash Charge Effect
 unsafe extern "C" fn ssbexo_armstrong_forward_smash_charge_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -5, 0, 0, 0, 0, 0, 1, 15, 0, 0, 0, 0, 0, false);
     }
-    wait(agent.lua_state_agent, 5.0);
+    wait(lua_state, 5.0);
     for _ in 0..18 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), -6, 9, 0, 0, 0, 0, 0.5, 4, 4, 4, 0, 0, 0, true);
             EFFECT_FOLLOW(agent, Hash40::new("armstrong_flame_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 0.5, true);
         }
-        wait(agent.lua_state_agent, 8.0);
+        wait(lua_state, 8.0);
     }
 }
 
 //Forward Smash ACMD
 unsafe extern "C" fn ssbexo_armstrong_forward_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 12.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 12.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(agent.lua_state_agent, 13.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 9.5);
-        DamageModule::set_reaction_mul(agent.module_accessor, 0.85);
+        DamageModule::set_reaction_mul(boma, 0.85);
     }
-    frame(agent.lua_state_agent, 24.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("handr"), 24.0, 40, 60, 0, 60, 7.0, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("armr"), 24.0, 40, 60, 0, 60, 6.5, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
         ATTACK(agent, 2, 0, Hash40::new("shoulderr"), 24.0, 40, 60, 0, 60, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
     }
-    frame(agent.lua_state_agent, 27.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
+        AttackModule::clear_all(boma);
+        DamageModule::set_reaction_mul(boma, 1.0);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
     }
 }
 
 //Forward Smash Effect
 unsafe extern "C" fn ssbexo_armstrong_forward_smash_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_flame_start"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
-        EffectModule::enable_sync_init_pos_last(agent.module_accessor);
+        EffectModule::enable_sync_init_pos_last(boma);
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), -3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 0.8);
     }
-    frame(agent.lua_state_agent, 4.0);
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_flame_flash_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(agent.lua_state_agent, 7.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("sys_down_smoke"), false, true);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_flame_flash_hold"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(agent.lua_state_agent, 24.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("armstrong_flame_pillar"), Hash40::new("top"), 0, 12.5, 22.5, 0, -10, 0, 0.6, true);
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
@@ -71,12 +76,13 @@ unsafe extern "C" fn ssbexo_armstrong_forward_smash_effect(agent: &mut L2CAgentB
 
 //Forward Smash Sound
 unsafe extern "C" fn ssbexo_armstrong_forward_smash_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 13.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_smash_start"));
         PLAY_SE(agent, Hash40::new("vc_ganon_attack08"));
     }
-    frame(agent.lua_state_agent, 22.0);
+    frame(lua_state, 22.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_special_n02"));
     }
@@ -84,21 +90,23 @@ unsafe extern "C" fn ssbexo_armstrong_forward_smash_sound(agent: &mut L2CAgentBa
 
 //Forward Smash Expression
 unsafe extern "C" fn ssbexo_armstrong_forward_smash_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
     }
-    frame(agent.lua_state_agent, 12.0);
-    execute(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
+    execute(lua_state, 12.0);
     if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 22.0);
+    frame(lua_state, 22.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl_l"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl_l"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 24.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
     }
@@ -106,36 +114,39 @@ unsafe extern "C" fn ssbexo_armstrong_forward_smash_expression(agent: &mut L2CAg
 
 //Up Smash ACMD
 unsafe extern "C" fn ssbexo_armstrong_up_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 12.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 12.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(agent.lua_state_agent, 13.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 8.5);
-        DamageModule::set_reaction_mul(agent.module_accessor, 0.85);
+        DamageModule::set_reaction_mul(boma, 0.85);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("handr"), 22.0, 80, 70, 0, 40, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("armr"), 22.0, 80, 70, 0, 40, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("shoulderr"), 22.0, 80, 70, 0, 40, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
     }
-    frame(agent.lua_state_agent, 22.0);
+    frame(lua_state, 22.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
+        AttackModule::clear_all(boma);
+        DamageModule::set_reaction_mul(boma, 1.0);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
     }
 }
 
 //Up Smash Effect
 unsafe extern "C" fn ssbexo_armstrong_up_smash_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
 	if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
 	    LAST_EFFECT_SET_RATE(agent, 0.4);
@@ -143,7 +154,7 @@ unsafe extern "C" fn ssbexo_armstrong_up_smash_effect(agent: &mut L2CAgentBase) 
         LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
-    frame(agent.lua_state_agent, 21.0);
+    frame(lua_state, 21.0);
 	if is_excute(agent) {
         EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1.5, true, 0.9);
         LAST_EFFECT_SET_RATE(agent, 2.0);
@@ -152,11 +163,12 @@ unsafe extern "C" fn ssbexo_armstrong_up_smash_effect(agent: &mut L2CAgentBase) 
 
 //Up Smash Sound
 unsafe extern "C" fn ssbexo_armstrong_up_smash_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 13.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_smash_start"));
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("vc_ganon_attack06"));
         PLAY_SE(agent, Hash40::new("se_ganon_smash_h01"));
@@ -165,21 +177,23 @@ unsafe extern "C" fn ssbexo_armstrong_up_smash_sound(agent: &mut L2CAgentBase) {
 
 //Up Smash Expression
 unsafe extern "C" fn ssbexo_armstrong_up_smash_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
     }
-    frame(agent.lua_state_agent, 12.0);
-    execute(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
+    execute(lua_state, 12.0);
     if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl_l"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl_l"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
     }
@@ -187,52 +201,56 @@ unsafe extern "C" fn ssbexo_armstrong_up_smash_expression(agent: &mut L2CAgentBa
 
 //Down Smash Charge Effect
 unsafe extern "C" fn ssbexo_armstrong_down_smash_charge_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     loop {
-        frame(agent.lua_state_agent, 5.0);
+        frame(lua_state, 5.0);
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 1, 15, 0, 10, 0, 0, 0, false);
         }
-        wait(agent.lua_state_agent, 5.0);
+        wait(lua_state, 5.0);
         EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 4, 4, 4, 0, 0, 0, true);
     }
 }
 
 //Down Smash ACMD
 unsafe extern "C" fn ssbexo_armstrong_down_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 4.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 8.0);
-        DamageModule::set_reaction_mul(agent.module_accessor, 0.85);
+        DamageModule::set_reaction_mul(boma, 0.85);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         ATTACK(agent, 1, 0, Hash40::new("handr"), 20.0, 300, 50, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 0, 0, Hash40::new("shoulderr"), 18.0, 361, 50, 0, 50, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
     }
-    frame(agent.lua_state_agent, 25.0);
+    frame(lua_state, 25.0);
     if is_excute(agent) {
-        DamageModule::set_reaction_mul(agent.module_accessor, 1.0);
+        DamageModule::set_reaction_mul(boma, 1.0);
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0.0);
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Down Smash Effect
 unsafe extern "C" fn ssbexo_armstrong_down_smash_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 0.7);
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 10, 0, 0, -40, -90, 1.2, true);
         LAST_EFFECT_SET_COLOR(agent, 0.88, 0.35, 0.13);
@@ -242,12 +260,13 @@ unsafe extern "C" fn ssbexo_armstrong_down_smash_effect(agent: &mut L2CAgentBase
 
 //Down Smash Sound
 unsafe extern "C" fn ssbexo_armstrong_down_smash_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_smash_start"));
         PLAY_SE(agent, Hash40::new("vc_ganon_attack07"));
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_smash_h01"));
     }
@@ -255,49 +274,43 @@ unsafe extern "C" fn ssbexo_armstrong_down_smash_sound(agent: &mut L2CAgentBase)
 
 //Down Smash Expression
 unsafe extern "C" fn ssbexo_armstrong_down_smash_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
     }
-    frame(agent.lua_state_agent, 4.0);
-    execute(agent.lua_state_agent, 4.0);
+    frame(lua_state, 4.0);
+    execute(lua_state, 4.0);
     if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_L);
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl_l"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl_l"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
     }
-    frame(agent.lua_state_agent, 45.0);
+    frame(lua_state, 45.0);
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_R);
     }
-    frame(agent.lua_state_agent, 55.0);
+    frame(lua_state, 55.0);
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
 }
 
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe {
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
     Agent::new("ganon")
-    .set_costume(costume.to_vec())
+    .set_costume(get_armstrong_costumes_acmd())
     .effect_acmd("effect_attacks4charge", ssbexo_armstrong_forward_smash_charge_effect, Low)
     .game_acmd("game_attacks4", ssbexo_armstrong_forward_smash_acmd, Low)
     .effect_acmd("effect_attacks4", ssbexo_armstrong_forward_smash_effect, Low)

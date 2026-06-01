@@ -1,23 +1,25 @@
 use super::*;
 
 unsafe extern "C" fn cloud_special_s_lb_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_NONE, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, (*FIGHTER_STATUS_ATTR_START_TURN | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, 0);
+    let boma = fighter.module_accessor;
+    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_NONE, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_S | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_S as u32, (*FIGHTER_STATUS_ATTR_START_TURN | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, 0);
     0.into()
 }
 
 unsafe extern "C" fn cloud_special_s_lb_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let boma = fighter.module_accessor;
     if situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_NONE);
     }
     else {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        KineticModule::unable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        KineticModule::unable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
-    KineticModule::clear_speed_all(fighter.module_accessor);
+    KineticModule::clear_speed_all(boma);
     0.into()
 }
 
@@ -32,38 +34,39 @@ unsafe extern "C" fn cloud_special_s_lb_main_loop(fighter: &mut L2CFighterCommon
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let air_s2_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_s"), hash40("air_s2_accel_y"));
-    let air_s2_speed_max_y = WorkModule::get_param_float(fighter.module_accessor, hash40("param_special_s"), hash40("air_s2_speed_max_y"));
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+    let boma = fighter.module_accessor;
+    let air_s2_accel_y = WorkModule::get_param_float(boma, hash40("param_special_s"), hash40("air_s2_accel_y"));
+    let air_s2_speed_max_y = WorkModule::get_param_float(boma, hash40("param_special_s"), hash40("air_s2_speed_max_y"));
+    if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
                 return 0.into();
             }
         }
     }
-    if !StatusModule::is_changing(fighter.module_accessor) {
+    if !StatusModule::is_changing(boma) {
         if situation_kind == *SITUATION_KIND_GROUND 
         && prev_situation_kind == *SITUATION_KIND_AIR {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s_lb"), -1.0, 1.0, 0.0, false, false);
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_s_lb"), -1.0, 1.0, 0.0, false, false);
         }
         if situation_kind == *SITUATION_KIND_AIR 
         && prev_situation_kind == *SITUATION_KIND_GROUND {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_NONE);
-            KineticModule::clear_speed_all(fighter.module_accessor);
-            MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_s_lb"), -1.0, 1.0, 0.0, false, false);
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_NONE);
+            KineticModule::clear_speed_all(boma);
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_s_lb"), -1.0, 1.0, 0.0, false, false);
         }
     }
     if current_frame == 50.0 {
         if situation_kind == *SITUATION_KIND_AIR {
-            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+            KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
             sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -air_s2_accel_y);
             sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, air_s2_speed_max_y);
         }
     }
-    if MotionModule::is_end(fighter.module_accessor) {
+    if MotionModule::is_end(boma) {
         if situation_kind != *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
@@ -79,45 +82,47 @@ unsafe extern "C" fn cloud_special_s_lb_exec_status(_fighter: &mut L2CFighterCom
 }
 
 unsafe extern "C" fn cloud_special_s_lb_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
-    MotionAnimcmdModule::enable_skip_delay_update(fighter.module_accessor);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke1_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke1_l"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke2_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke2_l"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke3_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke3_l"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke4_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke4_l"), 5);
-    WorkModule::set_int(fighter.module_accessor, *FIGHTER_LOG_ATTACK_SUB_KIND_NONE, *FIGHTER_INSTANCE_WORK_ID_INT_TRICK_SUB);
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
+    let boma = fighter.module_accessor;
+    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
+    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
+    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
+    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+    MotionAnimcmdModule::enable_skip_delay_update(boma);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke1_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke1_l"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke2_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke2_l"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke3_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke3_l"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke4_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke4_l"), 5);
+    WorkModule::set_int(boma, *FIGHTER_LOG_ATTACK_SUB_KIND_NONE, *FIGHTER_INSTANCE_WORK_ID_INT_TRICK_SUB);
+    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
     display_final_window(false);
     UiManager::set_limit_type(entry_id, 0);
     0.into()
 }
 
 unsafe extern "C" fn cloud_special_s_lb_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let limit_level = WorkModule::get_int(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-    WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLOAT_LIMIT_GAUGE);
-    WorkModule::set_int(fighter.module_accessor, limit_level-1, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
-    MotionAnimcmdModule::enable_skip_delay_update(fighter.module_accessor);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke1_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke1_l"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke2_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke2_l"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke3_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke3_l"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke4_r"), 5);
-    EffectModule::end_kind(fighter.module_accessor, Hash40::new("cloud_kyogiri_stroke4_l"), 5);
-    WorkModule::set_int(fighter.module_accessor, *FIGHTER_LOG_ATTACK_SUB_KIND_NONE, *FIGHTER_INSTANCE_WORK_ID_INT_TRICK_SUB);
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
+    let boma = fighter.module_accessor;
+    let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
+    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
+    WorkModule::set_float(boma, 0.0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLOAT_LIMIT_GAUGE);
+    WorkModule::set_int(boma, limit_level-1, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
+    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
+    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
+    WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+    MotionAnimcmdModule::enable_skip_delay_update(boma);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke1_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke1_l"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke2_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke2_l"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke3_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke3_l"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke4_r"), 5);
+    EffectModule::end_kind(boma, Hash40::new("cloud_kyogiri_stroke4_l"), 5);
+    WorkModule::set_int(boma, *FIGHTER_LOG_ATTACK_SUB_KIND_NONE, *FIGHTER_INSTANCE_WORK_ID_INT_TRICK_SUB);
+    WorkModule::set_int(boma, 0, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_INPUT_WAIT_TIMER);
     display_final_window(false);
     UiManager::set_limit_type(entry_id, 0);
     0.into()

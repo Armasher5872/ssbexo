@@ -9,6 +9,7 @@ unsafe extern "C" fn roy_reset_initialization(vtable: u64, fighter: &mut Fighter
     if fighter.battle_object.kind == *FIGHTER_KIND_ROY as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_reset_variable_reset(&mut *boma);
+        roy_var(&mut *boma);
     }
     original!()(vtable, fighter)
 }
@@ -19,6 +20,7 @@ unsafe extern "C" fn roy_death_initialization(vtable: u64, fighter: &mut Fighter
     if fighter.battle_object.kind == *FIGHTER_KIND_ROY as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_death_variable_reset(&mut *boma);
+        roy_var(&mut *boma);
     }
     original!()(vtable, fighter)
 }

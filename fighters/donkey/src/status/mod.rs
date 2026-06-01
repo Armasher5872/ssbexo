@@ -19,10 +19,7 @@ use {
             lua_const::*,
         },
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        phx::*
     },
     smash_script::{
         macros::*,
@@ -37,6 +34,7 @@ mod barrel_break;
 mod barrel_idle;
 mod barrel_pull;
 mod barrel_roll;
+mod barrel_throw;
 mod catch_pull;
 mod shoulder_start;
 mod special_hi;
@@ -51,6 +49,7 @@ pub fn install() {
     barrel_idle::install();
     barrel_pull::install();
     barrel_roll::install();
+    barrel_throw::install();
     catch_pull::install();
     shoulder_start::install();
     special_hi::install();

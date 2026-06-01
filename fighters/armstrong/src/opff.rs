@@ -1,10 +1,11 @@
 use super::*;
 
 unsafe extern "C" fn armstrong_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(fighter.module_accessor) {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
+    let boma = fighter.module_accessor;
+    if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(boma) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_GLIDE_TIMER);
     }
     0.into()
 }
@@ -18,16 +19,8 @@ unsafe extern "C" fn armstrong_on_start(fighter: &mut L2CFighterCommon) {
 }
 
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe {
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
     Agent::new("ganon")
-    .set_costume(costume.to_vec())
+    .set_costume(get_armstrong_costumes_acmd())
     .on_start(armstrong_on_start)
     .install()
     ;

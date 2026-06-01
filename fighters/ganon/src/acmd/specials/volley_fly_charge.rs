@@ -16,10 +16,11 @@ unsafe extern "C" fn ssbexo_ganon_volley_fly_charge_effect(_agent: &mut L2CAgent
 
 //Volley Fly Charge Sound
 unsafe extern "C" fn ssbexo_ganon_volley_fly_charge_sound(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        let glow = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_special_n05"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, glow as i32, 2.0, 0);
-        SoundModule::set_remain_se(agent.module_accessor, true);
+        let glow = SoundModule::play_se(boma, Hash40::new("se_ganon_special_n05"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, glow as i32, 2.0, 0);
+        SoundModule::set_remain_se(boma, true);
     }
 }
 

@@ -6,38 +6,33 @@ unsafe extern "C" fn armstrong_attack_lw3_main_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn armstrong_attack_lw3_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    armstrong_charge_move(fighter, 3.0, 9.0, 0.03, 4.5, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), true, "footr");
+    let boma = fighter.module_accessor;
+    armstrong_charge_move(fighter, 3.0, 9.0, 0.03, 4.5, ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK), true, "footr");
     fighter.status_AttackLw3_Main()
 }
 
 unsafe extern "C" fn armstrong_attack_lw3_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_NANOMACHINES);
-    armstrong_clear_charge(fighter.module_accessor);
+    let boma = fighter.module_accessor;
+    let attack_kind = WorkModule::get_int64(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+    WorkModule::off_flag(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_NANOMACHINES);
+    armstrong_clear_charge(boma);
     if 0 < attack_kind {
-        FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, attack_kind);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+        FighterStatusModuleImpl::reset_log_action_info(boma, attack_kind);
+        WorkModule::set_int(boma, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     }
     0.into()
 }
 
 unsafe extern "C" fn armstrong_attack_lw3_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_NANOMACHINES);
-    armstrong_clear_charge(fighter.module_accessor);
+    let boma = fighter.module_accessor;
+    WorkModule::off_flag(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_NANOMACHINES);
+    armstrong_clear_charge(boma);
     0.into()
 }
 
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe {
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
     Agent::new("ganon")
-    .set_costume(costume.to_vec())
+    .set_costume(get_armstrong_costumes_acmd())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW3, armstrong_attack_lw3_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_LW3, armstrong_attack_lw3_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_ATTACK_LW3, armstrong_attack_lw3_exit_status)

@@ -41,7 +41,7 @@ unsafe extern "C" fn ken_opff(vtable: u64, fighter: &mut Fighter) {
         let situation_kind = agent.global_table[SITUATION_KIND].get_i32();
         let command_input_timer = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_COMMAND_INPUT_TIMER);
         let attack_command1_counter = WorkModule::get_int(boma, *FIGHTER_KEN_INSTANCE_WORK_ID_INT_ATTACK_COMMAND1_COUNTER);
-        let stick_direction = get_command_stick_direction(&mut *boma);
+        let stick_direction = get_command_stick_direction(&mut *boma, 0.2);
         if situation_kind == *SITUATION_KIND_GROUND
         && status_kind != *FIGHTER_RYU_STATUS_KIND_ATTACK_COMMAND1 {
             if command_input_timer != 0 {

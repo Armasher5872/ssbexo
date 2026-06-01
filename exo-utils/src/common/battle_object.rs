@@ -12,22 +12,34 @@ pub fn get_battle_object_from_entry_id(entry_id: u32) -> Option<*mut BattleObjec
     }
 }
 
+pub fn get_fighter_common_from_entry_id(entry_id: u32) -> Option<&'static mut L2CFighterCommon> {
+    if let Some(object) = get_battle_object_from_entry_id(entry_id) {
+        unsafe {
+            Some(get_fighter_common_from_accessor(std::mem::transmute((*object).module_accessor,)))
+        }
+    } 
+    else {
+        None
+    }
+}
+
 fn get_active_battle_object_id_from_entry_id(entry_id: u32) -> Option<u32> {
     let object = get_battle_object_from_entry_id(entry_id)?;
     if object.is_null() { 
         return None; 
     }
     let object = unsafe {&mut *object};
+    let object_battle_object_id = object.battle_object_id;
     let kind = object.kind as i32;
     let status = unsafe {StatusModule::status_kind(object.module_accessor)};
     if status != *FIGHTER_STATUS_KIND_NONE && status != *FIGHTER_STATUS_KIND_STANDBY {
-        return Some(object.battle_object_id);
+        return Some(object_battle_object_id);
     }
     if [*FIGHTER_KIND_ELIGHT, *FIGHTER_KIND_EFLAME].contains(&kind) {
-        Some(object.battle_object_id + 0x10000)
-    } 
+        Some(object_battle_object_id + 0x10000)
+    }
     else if [*FIGHTER_KIND_PZENIGAME, *FIGHTER_KIND_PFUSHIGISOU, *FIGHTER_KIND_PLIZARDON].contains(&kind) {
-        let next_id = object.battle_object_id+0x10000;
+        let next_id = object_battle_object_id+0x10000;
         let next_object = unsafe {get_battle_object_from_id(next_id)};
         if !next_object.is_null() {
             let next_object = unsafe {&mut *next_object};
@@ -40,11 +52,11 @@ fn get_active_battle_object_id_from_entry_id(entry_id: u32) -> Option<u32> {
             }
         }
         else {
-            Some(object.battle_object_id)
+            Some(object_battle_object_id)
         }
     } 
     else {
-        Some(object.battle_object_id)
+        Some(object_battle_object_id)
     }
 }
 

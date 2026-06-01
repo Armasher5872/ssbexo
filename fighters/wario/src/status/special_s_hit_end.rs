@@ -27,8 +27,12 @@ unsafe extern "C" fn wario_special_s_hit_end_main_status(fighter: &mut L2CFighte
 
 unsafe extern "C" fn wario_special_s_hit_end_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    if CancelModule::is_enable_cancel(fighter.module_accessor) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
-        return 1.into();
+    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 1.into();
+            }
+        }
     }
     if situation_kind == *SITUATION_KIND_GROUND {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
@@ -48,14 +52,12 @@ unsafe extern "C" fn wario_special_s_hit_end_exec_status(_fighter: &mut L2CFight
 
 //Side Special Hit End End Status
 unsafe extern "C" fn wario_special_s_hit_end_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
     0.into()
 }
 
 //Side Special Hit End Exit Status
 unsafe extern "C" fn wario_special_s_hit_end_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
     WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_S_TIMER);
     0.into()
 }

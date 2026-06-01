@@ -27,6 +27,7 @@ use {
     },
 };
 
+mod fireballcloned_kamikaze;
 mod special_air_lw_end;
 mod special_air_lw_land;
 mod special_air_lw_loop;
@@ -55,6 +56,7 @@ mod special_s_slide;
 mod special_s;
 
 pub fn install() {
+    fireballcloned_kamikaze::install();
     special_air_lw_end::install();
     special_air_lw_land::install();
     special_air_lw_loop::install();

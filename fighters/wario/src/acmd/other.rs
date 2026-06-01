@@ -9,9 +9,7 @@ unsafe extern "C" fn ssbexo_wario_slow_walk_effect(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 40.0);
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -24,9 +22,7 @@ unsafe extern "C" fn ssbexo_wario_slow_walk_sound(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 40.0);
         PLAY_STEP(agent, Hash40::new("se_wario_step_left_s"));
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -42,9 +38,7 @@ unsafe extern "C" fn ssbexo_wario_slow_walk_expression(agent: &mut L2CAgentBase)
         }
         frame(agent.lua_state_agent, 40.0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -57,9 +51,7 @@ unsafe extern "C" fn ssbexo_wario_middle_walk_effect(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 40.0);
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -72,9 +64,7 @@ unsafe extern "C" fn ssbexo_wario_middle_walk_sound(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 40.0);
         PLAY_STEP(agent, Hash40::new("se_wario_step_left_s"));
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -90,9 +80,7 @@ unsafe extern "C" fn ssbexo_wario_middle_walk_expression(agent: &mut L2CAgentBas
         }
         frame(agent.lua_state_agent, 40.0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -105,9 +93,7 @@ unsafe extern "C" fn ssbexo_wario_fast_walk_effect(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 24.0);
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -120,9 +106,7 @@ unsafe extern "C" fn ssbexo_wario_fast_walk_sound(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 24.0);
         PLAY_STEP(agent, Hash40::new("se_wario_step_left_s"));
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -138,9 +122,7 @@ unsafe extern "C" fn ssbexo_wario_fast_walk_expression(agent: &mut L2CAgentBase)
         }
         frame(agent.lua_state_agent, 24.0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -199,9 +181,7 @@ unsafe extern "C" fn ssbexo_wario_run_effect(agent: &mut L2CAgentBase) {
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -214,9 +194,7 @@ unsafe extern "C" fn ssbexo_wario_run_sound(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 17.0);
         PLAY_STEP(agent, Hash40::new("se_wario_step_right_m"));
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -232,9 +210,7 @@ unsafe extern "C" fn ssbexo_wario_run_expression(agent: &mut L2CAgentBase) {
         }
         frame(agent.lua_state_agent, 17.0);
         ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_run"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-        agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        wait_loop_clear(agent);
     }
 }
 
@@ -325,7 +301,7 @@ unsafe extern "C" fn ssbexo_wario_toot_taunt_expression(agent: &mut L2CAgentBase
         agent.clear_lua_stack();
         lua_args!(agent, 1, 0.8, 0.02, 1000, 1, 0, 4, 14);
         sv_animcmd::AREA_WIND_2ND_RAD(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+         agent.pop_lua_stack(1);
     }
     frame(agent.lua_state_agent, 23.0);
     if is_excute(agent) {
@@ -334,6 +310,132 @@ unsafe extern "C" fn ssbexo_wario_toot_taunt_expression(agent: &mut L2CAgentBase
     frame(agent.lua_state_agent, 43.0);
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 2);
+    }
+}
+
+//Toot Kamikaze ACMD
+unsafe extern "C" fn ssbexo_wario_toot_kamikaze_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+    }
+    frame(agent.lua_state_agent, 55.0);
+    if is_excute(agent) {
+        SlowModule::set_whole(agent.module_accessor, 20, 30);
+        FT_SET_FINAL_FEAR_FACE(agent, 30);
+    }
+    frame(agent.lua_state_agent, 57.0);
+    if is_excute(agent) {
+        ArticleModule::generate_article(agent.module_accessor, FIGHTER_WARIO_GENERATE_ARTICLE_KAMIKAZE, false, -1);
+    }
+    frame(agent.lua_state_agent, 58.0);
+    if is_excute(agent) {
+        StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_DEAD, false);
+    }
+}
+
+//Toot Kamikaze Effect
+unsafe extern "C" fn ssbexo_wario_toot_kamikaze_effect(agent: &mut L2CAgentBase) {
+    let lr_check = get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("wario_kamikaze_start"), Hash40::new("top"), 0, 6, 0, 0, -60, 0, 1, false);
+    }
+    if lr_check < 0.0 {
+        if is_excute(agent) {
+            EFFECT_FOLLOW(agent, Hash40::new("wario_kamikaze"), Hash40::new("top"), 0, 7, -1, 0, 180, 0, 1, true);
+            LAST_EFFECT_SET_RATE(agent, 0.8);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            EFFECT_FOLLOW(agent, Hash40::new("wario_kamikaze"), Hash40::new("top"), 0, 7, -0.5, 0, 0, 0, 1, true);
+            LAST_EFFECT_SET_RATE(agent, 0.8);
+        }
+    }
+    if is_excute(agent) {
+        agent.clear_lua_stack();
+        lua_args!(agent, true);
+        sv_animcmd::LAST_EFFECT_SET_DISABLE_SYSTEM_SLOW(agent.lua_state_agent);
+    }
+    frame(agent.lua_state_agent, 5.0);
+    if lr_check < 0.0 {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(agent.lua_state_agent, 20.0);
+    if lr_check < 0.0 {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(agent.lua_state_agent, 35.0);
+    if lr_check < 0.0 {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    frame(agent.lua_state_agent, 45.0);
+    
+    if is_excute(agent) {
+        FLASH(agent, 0, 0, 0, 0);
+        ColorBlendModule::set_disable_camera_depth_influence(agent.module_accessor, true);
+        BURN_COLOR(agent, 4, 4, 1.2, 0);
+        ColorBlendModule::set_disable_camera_depth_influence(agent.module_accessor, true);
+    }
+    frame(agent.lua_state_agent, 50.0);
+    if lr_check < 0.0 {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, 100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    else {
+        if is_excute(agent) {
+            EFFECT(agent, Hash40::new("wario_ppe_s"), Hash40::new("top"), 0, 0, 0, 0, -100, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    }
+    if is_excute(agent) {
+        agent.clear_lua_stack();
+        lua_args!(agent, 1.0, 1.0, 1.0, 1);
+        sv_animcmd::FLASH_NO_STOP(agent.lua_state_agent);
+        FLASH_FRM(agent, 50, 1, 1, 1, 1);
+        BURN_COLOR_FRAME(agent, 50, 4, 4, 4, 1);
+    }
+    frame(agent.lua_state_agent, 57.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("wario_shock"), Hash40::new("top"), 3, 0, -4, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("wario_ground_crack"), Hash40::new("top"), 3, 0, -7, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, true);
+        LAST_EFFECT_SET_RATE(agent, 0.5);
+    }
+}
+
+//Toot Kamikaze Sound
+unsafe extern "C" fn ssbexo_wario_toot_kamikaze_sound(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_wario_special_s01"));
+        PLAY_SE(agent, Hash40::new("se_wario_special_s07"));
+    }
+}
+
+//Toot Kamikaze Expression
+unsafe extern "C" fn ssbexo_wario_toot_kamikaze_expression(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_elecattack"), 40, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
@@ -368,7 +470,7 @@ unsafe extern "C" fn ssbexo_wario_win_1_sound(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 115.0);
     if is_excute(agent) {
-        PLAY_SE_NO_3D(agent, Hash40::new("vc_wario_final05"));
+        PLAY_SE_NO_3D(agent, Hash40::new("vc_wario_win02"));
     }
 }
 
@@ -406,6 +508,10 @@ pub fn install() {
     .effect_acmd("effect_appealgas", ssbexo_wario_toot_taunt_effect, Low)
     .sound_acmd("sound_appealgas", ssbexo_wario_toot_taunt_sound, Low)
     .expression_acmd("expression_appealgas", ssbexo_wario_toot_taunt_expression, Low)
+    .game_acmd("game_appealkamikaze", ssbexo_wario_toot_kamikaze_acmd, Low)
+    .effect_acmd("effect_appealkamikaze", ssbexo_wario_toot_kamikaze_effect, Low)
+    .sound_acmd("sound_appealkamikaze", ssbexo_wario_toot_kamikaze_sound, Low)
+    .expression_acmd("expression_appealkamikaze", ssbexo_wario_toot_kamikaze_expression, Low)
     .game_acmd("game_win1", ssbexo_wario_win_1_acmd, Low)
     .effect_acmd("effect_win1", ssbexo_wario_win_1_effect, Low)
     .sound_acmd("sound_win1", ssbexo_wario_win_1_sound, Low)

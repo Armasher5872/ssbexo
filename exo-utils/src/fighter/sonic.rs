@@ -70,20 +70,21 @@ impl SonicMeter {
 pub unsafe extern "C" fn fun_7100015020(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
-    let jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
-    let max_jump_count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX);
+    let boma = fighter.module_accessor;
+    let jump_count = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT);
+    let max_jump_count = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_JUMP_COUNT_MAX);
     let mut ret = 0;
     if situation_kind == *SITUATION_KIND_GROUND {
         if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON != 0 {
             fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPIN_JUMP.into(), true.into());
         }
         else {
-            if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+            if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
                 fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPIN_JUMP.into(), true.into());
             }
             else {
                 if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP != 0 {
-                    if ControlModule::is_enable_flick_jump(fighter.module_accessor) {
+                    if ControlModule::is_enable_flick_jump(boma) {
                         fighter.change_status(FIGHTER_SONIC_STATUS_KIND_SPIN_JUMP.into(), true.into());
                         ret = 1;
                     }
@@ -93,7 +94,7 @@ pub unsafe extern "C" fn fun_7100015020(fighter: &mut L2CFighterCommon) -> L2CVa
     }
     else {
         if !fighter.sub_transition_group_check_air_jump_aerial().get_bool() {
-            if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+            if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
                 if jump_count < max_jump_count {
                     fighter.change_status(FIGHTER_STATUS_KIND_JUMP_AERIAL.into(), true.into());
                     ret = 1;

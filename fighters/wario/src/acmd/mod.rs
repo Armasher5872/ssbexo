@@ -3,7 +3,10 @@ use {
         getter_funcs::*,
         vector::*,
     },
-    exo_var::consts::*,
+    exo_var::{
+        consts::*,
+        wario::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -11,7 +14,6 @@ use {
                 execute,
                 frame,
                 get_value_float,
-                wait_loop_sync_mot,
                 wait
             },
             *

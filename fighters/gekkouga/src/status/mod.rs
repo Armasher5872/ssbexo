@@ -1,9 +1,6 @@
 use {
     exo_utils::{
-        common::{
-            check_attack::*,
-            weapon::*,
-        },
+        common::weapon::*,
         fighter::gekkouga::*,
         structs::getter_funcs::*,
     },
@@ -29,7 +26,6 @@ use {
     smashline::*,
 };
 
-mod attack_air;
 mod mat_fall;
 mod special_lw;
 mod special_s_attack;
@@ -37,7 +33,6 @@ mod special_s_end;
 mod special_s;
 
 pub fn install() {
-    attack_air::install();
     mat_fall::install();
     special_lw::install();
     special_s_attack::install();

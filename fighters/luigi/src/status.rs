@@ -49,6 +49,7 @@ mod obakyumu_special_lw_plunger;
 mod obakyumu_special_lw_start;
 mod obakyumu_special_lw_throw;
 mod obakyumu_special_lw;
+mod obakyumu_win;
 mod special_lw_catch_jump;
 mod special_lw_catch_pull;
 mod special_lw_catch_turn;
@@ -86,6 +87,7 @@ pub fn install() {
     obakyumu_special_lw_start::install();
     obakyumu_special_lw_throw::install();
     obakyumu_special_lw::install();
+    obakyumu_win::install();
     special_lw_catch_jump::install();
     special_lw_catch_pull::install();
     special_lw_catch_turn::install();

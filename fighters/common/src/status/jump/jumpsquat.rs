@@ -51,92 +51,84 @@ unsafe extern "C" fn status_jumpsquat_main(fighter: &mut L2CFighterCommon) -> L2
 #[skyline::hook(replace = L2CFighterCommon_sub_jump_squat_uniq_check_sub_mini_attack)]
 unsafe extern "C" fn sub_jump_squat_uniq_check_sub_mini_attack(fighter: &mut L2CFighterCommon) {
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
+    let boma = fighter.module_accessor;
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
         return;
     }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK) {
-        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON) {
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK) {
+        if WorkModule::is_flag(boma, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON) {
             if current_frame > 0.0 {
-                FighterControlModuleImpl::reserve_on_attack_button(fighter.module_accessor);
-                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON);
+                FighterControlModuleImpl::reserve_on_attack_button(boma);
+                WorkModule::off_flag(boma, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON);
             }
         }
     }
     else {
-        let mut cont = ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK);
+        let mut cont = ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK);
         if cont {
-            cont = ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP);
+            cont = ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP);
             if !cont {
-                cont = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_RESERVE_JUMP_MINI_ATTACK);
+                cont = WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_RESERVE_JUMP_MINI_ATTACK);
             }
         }
         else {
-            cont = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_RESERVE_JUMP_MINI_ATTACK);
+            cont = WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_RESERVE_JUMP_MINI_ATTACK);
         }
         if !cont {
             return;
         }
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE);
-        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
-        //WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON);
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
+        //WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON);
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK);
     }
 }
 
 //Sub Jump Squat Uniq Check Sub, handles dealing with C Stick Drift
 #[skyline::hook(replace = L2CFighterCommon_sub_jump_squat_uniq_check_sub)]
 unsafe extern "C" fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommon, flag: L2CValue) {
-    let c_stick_on = Buttons::from_bits_retain(ControlModule::get_button(fighter.module_accessor)).intersects(Buttons::CStickOverride);
+    let boma = fighter.module_accessor;
+    let c_stick_on = Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride);
     let current_frame = fighter.global_table[CURRENT_FRAME].get_i32();
-    let stick_y = if c_stick_on {ControlModule::get_sub_stick_y(fighter.module_accessor)} else {fighter.global_table[STICK_Y].get_f32()};
-    let jump_neutral_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("jump_neutral_y"));
-    let jump_squat_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("jump_squat_frame"));
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
+    let stick_y = if c_stick_on {ControlModule::get_sub_stick_y(boma)} else {fighter.global_table[STICK_Y].get_f32()};
+    let jump_neutral_y = WorkModule::get_param_float(boma, hash40("common"), hash40("jump_neutral_y"));
+    let jump_squat_frame = WorkModule::get_param_int(boma, hash40("common"), hash40("jump_squat_frame"));
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
         return;
     }
-    if WorkModule::is_flag(fighter.module_accessor, flag.get_i32()) {
-        if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) || ControlModule::is_jump_mini_button(fighter.module_accessor) {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+    if WorkModule::is_flag(boma, flag.get_i32()) {
+        if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_JUMP) || ControlModule::is_jump_mini_button(boma) {
+            WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
         }
         if current_frame >= jump_squat_frame-1 {
-            if c_stick_on || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) {
-                ControlModule::reset_main_stick_x(fighter.module_accessor);
+            if c_stick_on || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) {
+                ControlModule::reset_main_stick_x(boma);
             }
-            if c_stick_on || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) {
-                ControlModule::reset_main_stick_x(fighter.module_accessor);
+            if c_stick_on || ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) {
+                ControlModule::reset_main_stick_x(boma);
             }
         }
     }
     else {
         if c_stick_on {
-            ControlModule::reset_main_stick_x(fighter.module_accessor);
+            ControlModule::reset_main_stick_x(boma);
         }
         if stick_y < jump_neutral_y {
-            if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) || !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+            if !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) || !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
             }
         }
-        if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) {
-            if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) {
+            if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
+                if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+                    WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
                 }
             }
         }
     }
-}
-
-//Status End Jumpsquat, more momentum transfer stuff
-#[skyline::hook(replace = L2CFighterCommon_status_end_JumpSquat)]
-unsafe extern "C" fn status_end_jumpsquat(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    if ![*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT].contains(&status_kind) {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-    }
-    0.into()
 }
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
@@ -144,8 +136,7 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
         skyline::install_hooks!(
             status_jumpsquat_main,
             sub_jump_squat_uniq_check_sub,
-            sub_jump_squat_uniq_check_sub_mini_attack,
-            status_end_jumpsquat
+            sub_jump_squat_uniq_check_sub_mini_attack
         );
     }
 }

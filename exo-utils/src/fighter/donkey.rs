@@ -16,10 +16,22 @@ pub unsafe extern "C" fn is_barrel(object_boma: *mut BattleObjectModuleAccessor)
     return false;
 }
 
+pub unsafe extern "C" fn barrel_rot(boma: *mut BattleObjectModuleAccessor) {
+    let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let mut joint_rot = Vector3f{x: 0.0, y: 0.0, z: 0.0};
+    ModelModule::joint_global_rotation(boma, Hash40::new("rotx"), &mut joint_rot, false);
+    let abs_horizontal_speed = speed_x.abs();
+    let rot_speed_rad = abs_horizontal_speed/7.5;
+    let rot_speed_deg = rot_speed_rad.to_degrees();
+    let model_rot = Vector3f{x: joint_rot.x+rot_speed_deg, y: 0.0, z: 0.0};
+    ModelModule::set_joint_rotate(boma, Hash40::new("rotx"), &model_rot, MotionNodeRotateCompose{_address: *MOTION_NODE_ROTATE_COMPOSE_AFTER as u8}, MotionNodeRotateOrder{_address: *MOTION_NODE_ROTATE_ORDER_XYZ as u8});
+}
+
 pub unsafe extern "C" fn should_remove_barrel(weapon: &mut L2CWeaponCommon) -> bool {
-    let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    let pos_x = PostureModule::pos_x(weapon.module_accessor);
-    let pos_y = PostureModule::pos_y(weapon.module_accessor);
+    let boma = weapon.module_accessor;
+    let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    let pos_x = PostureModule::pos_x(boma);
+    let pos_y = PostureModule::pos_y(boma);
     let dead_range = dead_range(weapon.lua_state_agent);
     let remove_range = pos_x < dead_range.x || pos_x > dead_range.y || pos_y > dead_range.z || pos_y < dead_range.w;
     if life <= 0 || remove_range {

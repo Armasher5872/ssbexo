@@ -1,15 +1,6 @@
 use {
-    exo_utils::{
-        status::{
-            damage::*,
-            knockback_func::*,
-        },
-        structs::vector::*,
-    },
-    exo_var::{
-        consts::*,
-        globals::*,
-    },
+    exo_utils::status::knockback_func::*,
+    exo_var::globals::*,
     skyline::hooks::InlineCtx,
     smash::{
         app::{
@@ -25,24 +16,16 @@ use {
             L2CFighterCommon,
             *
         },
-        phx::{
-            Hash40,
-            Vector3f
-        }
-    },
-    smash_script::*,
+        phx::*,
+    }
 };
 
 mod damage;
-mod damageair;
 mod damagefly;
 mod damageflyroll;
-mod damagesleepfall;
 
 pub fn install() {
     damage::install();
-    damageair::install();
     damagefly::install();
     damageflyroll::install();
-    damagesleepfall::install();
 }

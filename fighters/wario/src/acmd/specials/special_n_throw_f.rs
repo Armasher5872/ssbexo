@@ -5,14 +5,16 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_forward_throw_acmd(agent: &mut
     if is_excute(agent) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 10.0, 56, 55, 0, 73, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        FT_MOTION_RATE(agent, 16.0/18.0);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(agent.lua_state_agent, 17.0);
     if is_excute(agent) {
         CHECK_FINISH_CAMERA(agent, 16, 9);
         lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(agent.lua_state_agent, 18.0);
     if is_excute(agent) {
+        FT_MOTION_RATE(agent, 1.0);
         WorkModule::on_flag(agent.module_accessor, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW);
     }
 }
@@ -23,13 +25,13 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_forward_throw_effect(agent: &m
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 5, 10, 1, 0, -90, -130, 1, true, *EF_FLIP_YZ);
     }
+    frame(agent.lua_state_agent, 18.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 0, 15, 12, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
+    }
     frame(agent.lua_state_agent, 19.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -4, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(agent.lua_state_agent, 20.0);
-    if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 0, 15, 12, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
 }
 
@@ -51,7 +53,7 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_forward_throw_expression(agent
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(agent.lua_state_agent, 18.0);
     if is_excute(agent) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_M);
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);

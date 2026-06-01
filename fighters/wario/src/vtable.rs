@@ -6,7 +6,7 @@ const WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x1286ae0; //Wario onl
 const WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_2_OFFSET: usize = 0x128b0b0; //Wario only
 const WARIO_VTABLE_ON_ATTACK_OFFSET: usize = 0x1287320; //Wario only
 const WARIO_VTABLE_LINK_EVENT_OFFSET: usize = 0x12876c0; //Wario only
-const WARIO_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x12881c0; //Wario only
+const WARIO_VTABLE_ON_DAMAGE_OFFSET: usize = 0x12887e0; //Wario only
 
 //Wario Reset Initialization
 #[skyline::hook(offset = WARIO_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -30,9 +30,11 @@ unsafe extern "C" fn wario_death_initialization(vtable: u64, fighter: &mut Fight
 #[skyline::hook(offset = WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
 unsafe extern "C" fn wario_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     let frame = MotionModule::frame(boma);
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
+    let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
     let head_scale = &Vector3f{x: 0.91, y: 0.91, z: 0.91};
     let foot_scale = &Vector3f{x: 0.9, y: 0.9, z: 0.9};
     let clavicle_scale = &Vector3f{x: 1.19, y: 1.19, z: 1.19};
@@ -54,11 +56,23 @@ unsafe extern "C" fn wario_opff(_vtable: u64, fighter: &mut Fighter) {
         ModelModule::set_joint_scale(boma, Hash40::new("shoulderr"), arm_scale);
         ModelModule::set_joint_scale(boma, Hash40::new("shoulderl"), arm_scale);
     }
+    //Side Taunt Toot Taunt
     if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
         if [hash40("appeal_s_r"), hash40("appeal_s_l")].contains(&motion_kind) && (8.0..=49.0).contains(&frame) {
             if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
                 StatusModule::change_status_request_from_script(boma, *FIGHTER_WARIO_STATUS_KIND_APPEAL_GAS, false);
             }
+        }
+    }
+    //Clears effects and sounds from Toot Kamikaze
+    if status_kind == *FIGHTER_STATUS_KIND_DEAD {
+        if prev_status_kind == *FIGHTER_WARIO_STATUS_KIND_APPEAL_KAMIKAZE {
+            STOP_SE(agent, Hash40::new("se_wario_special_s01"));
+            STOP_SE(agent, Hash40::new("se_wario_special_s07"));
+            STOP_SE(agent, Hash40::new("vc_wario_missfoot01"));
+            STOP_SE(agent, Hash40::new("vc_wario_missfoot02"));
+            EffectModule::kill_kind(boma, Hash40::new("sys_dead2"), true, true);
+            EffectModule::kill_kind(boma, Hash40::new("sys_dead2_ground"), true, true);
         }
     }
 }
@@ -83,15 +97,15 @@ unsafe extern "C" fn wario_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
         if [
             *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_START, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_SEARCH, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_AIR_S, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_AIR_LOOP, 
             *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_JUMPSQUAT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LANDING
-        ].contains(&status_kind) && !WorkModule::is_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION) {
+        ].contains(&status_kind) {
             if collision_kind == 1 {
                 if opponent_battle_object_id >> 0x1C == 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_HIT_END, false);
+                    StatusModule::change_status_request(boma, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_HIT_END, false);
                 }
             }
             if collision_kind == 2 {
                 if opponent_battle_object_id >> 0x1C == 0 {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_WALL_END, false);
+                    StatusModule::change_status_request(boma, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_WALL_END, false);
                 }
             }
         }
@@ -109,56 +123,23 @@ unsafe extern "C" fn wario_link_event(vtable: u64, fighter: &mut Fighter, event:
             capture_event.node = smash2::phx::Hash40::new("throw");
             capture_event.result = true;
             capture_event.constraint = true;
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH, false);
+            StatusModule::change_status_request(boma, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH, false);
         }
         return 1;
     }
     original!()(vtable, fighter, event)
 }
 
-//Wario On Search
-#[skyline::hook(offset = WARIO_VTABLE_ON_SEARCH_EVENT_OFFSET)]
-unsafe extern "C" fn wario_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
+//Wario On Damage
+#[skyline::hook(offset = WARIO_VTABLE_ON_DAMAGE_OFFSET)]
+unsafe extern "C" fn wario_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) {
     let boma = fighter.battle_object.module_accessor;
-    let collision_log = *(log as *const u64).add(0x10/0x8);
-    let collision_log = collision_log as *const CollisionLog;
     let status_kind = StatusModule::status_kind(boma);
-    if [
-        *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_START, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_SEARCH, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_AIR_S, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LOOP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_AIR_LOOP, 
-        *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_JUMPSQUAT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_S_LANDING
-    ].contains(&status_kind) {
-        let opponent_id = (*collision_log).opponent_battle_object_id;
-        if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-            if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-                let opponent_boma = smash::app::sv_battle_object::module_accessor(opponent_id);
-                let opponent_kind = utility::get_kind(&mut *opponent_boma);
-                let opponent_status_kind = StatusModule::status_kind(opponent_boma);
-                let donkey_check = opponent_kind == *FIGHTER_KIND_DONKEY && opponent_status_kind == *FIGHTER_STATUS_KIND_AIR_LASSO;
-                let yoshi_check = opponent_kind == *FIGHTER_KIND_YOSHI && [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_N_1, *FIGHTER_YOSHI_STATUS_KIND_SPECIAL_N_2].contains(&opponent_status_kind);
-                let kirby_check = opponent_kind == *FIGHTER_KIND_KIRBY && [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_KIRBY_STATUS_KIND_SPECIAL_N_LOOP].contains(&opponent_status_kind);
-                let koopa_check = opponent_kind == *FIGHTER_KIND_KOOPA && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S;
-                let ganon_check = opponent_kind == *FIGHTER_KIND_GANON && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S;
-                let mewtwo_check = opponent_kind == *FIGHTER_KIND_MEWTWO && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S;
-                let wario_check = opponent_kind == *FIGHTER_KIND_WARIO && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_N;
-                let diddy_check = opponent_kind == *FIGHTER_KIND_DIDDY && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S;
-                let dedede_check = opponent_kind == *FIGHTER_KIND_DEDEDE && [*FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_DEDEDE_STATUS_KIND_SPECIAL_N_LOOP].contains(&opponent_status_kind);
-                let lucario_check = opponent_kind == *FIGHTER_KIND_LUCARIO && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S;
-                let miifighter_check = opponent_kind == *FIGHTER_KIND_MIIFIGHTER && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_CATCH].contains(&opponent_status_kind);
-                let reflet_check = opponent_kind == *FIGHTER_KIND_REFLET && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW;
-                let ridley_check = opponent_kind == *FIGHTER_KIND_RIDLEY && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S;
-                let shizue_check = opponent_kind == *FIGHTER_KIND_SHIZUE && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_SHIZUE_STATUS_KIND_SPECIAL_S_START].contains(&opponent_status_kind);
-                let gaogaen_check = opponent_kind == *FIGHTER_KIND_GAOGAEN && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S;
-                let jack_check = opponent_kind == *FIGHTER_KIND_JACK && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI;
-                let demon_check = opponent_kind == *FIGHTER_KIND_DEMON && opponent_status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW;
-                if [*FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH_TURN].contains(&opponent_status_kind)
-                || donkey_check || yoshi_check || kirby_check || koopa_check || ganon_check || mewtwo_check || wario_check || diddy_check || dedede_check || lucario_check || miifighter_check || reflet_check || ridley_check || shizue_check || gaogaen_check 
-                || jack_check || demon_check {
-                    WorkModule::on_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_INVALID_TRANSITION);
-                }
-            }
-        }
+    if status_kind == *FIGHTER_WARIO_STATUS_KIND_APPEAL_KAMIKAZE {
+        MotionModule::change_motion(boma, Hash40::new("appeal_kamikaze"), 58.0, 1.0, false, 0.0, false, false);
+        ArticleModule::generate_article(boma, FIGHTER_WARIO_GENERATE_ARTICLE_KAMIKAZE, false, -1);
     }
-    original!()(vtable, fighter, log)
+    original!()(vtable, fighter, on_damage)
 }
 
 pub fn install() {
@@ -169,6 +150,6 @@ pub fn install() {
         wario_opff_2,
         wario_on_attack,
         wario_link_event,
-        wario_on_search
+        wario_on_damage
     );
 }

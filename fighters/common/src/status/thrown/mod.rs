@@ -1,5 +1,6 @@
 use {
     exo_utils::fighter::armstrong::*,
+    exo_var::globals::*,
     smash::{
         app::{
             lua_bind::*,
@@ -15,7 +16,8 @@ use {
             *
         },
         phx::*,
-    }
+    },
+    smash_script::*,
 };
 
 mod catched_air_ganon;

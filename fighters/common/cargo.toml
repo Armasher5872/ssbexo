@@ -7,8 +7,10 @@ edition = "2021"
 exo_utils = { path = "../../exo-utils" }
 exo_var = { path = "../../exo-var" }
 interpolation = "0.2.0"
+ninput = { git = "https://github.com/HDR-Development/ninput" }
 nnsdk = { git = "https://github.com/ultimate-research/nnsdk-rs" }
 param_config = { git = "https://github.com/csharpm7/lib_paramconfig"}
+rand = { git = "https://github.com/skyline-rs/rand" }
 skyline = { git = "https://github.com/ultimate-research/skyline-rs" }
 skyline_smash = { git = "https://github.com/ultimate-research/skyline-smash", features = ["weak_l2cvalue"] }
 skyline-web = { git = "https://github.com/skyline-rs/skyline-web", optional = true }

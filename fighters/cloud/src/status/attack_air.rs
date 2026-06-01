@@ -6,31 +6,34 @@ unsafe extern "C" fn cloud_attack_air_main_status(fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn cloud_sub_attack_air_common(fighter: &mut L2CFighterCommon, value: L2CValue) {
-    ControlModule::reset_trigger(fighter.module_accessor);
-    ControlModule::reset_flick_y(fighter.module_accessor);
-    ControlModule::reset_flick_sub_y(fighter.module_accessor);
+    let boma = fighter.module_accessor;
+    ControlModule::reset_trigger(boma);
+    ControlModule::reset_flick_y(boma);
+    ControlModule::reset_flick_sub_y(boma);
     fighter.global_table[FLICK_Y].assign(&L2CValue::I32(0xFE));
-    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
-    if !StopModule::is_stop(fighter.module_accessor) {
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
+    if !StopModule::is_stop(boma) {
         fighter.attack_air_uniq(false.into());
     }
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_bind_address_call_attack_air_uniq as *const () as _));
     if value.get_bool() {
         cloud_sub_attack_air_kind(fighter);
     }
-    ControlModule::reset_attack_air_kind(fighter.module_accessor);
+    ControlModule::reset_attack_air_kind(boma);
 }
 
 unsafe extern "C" fn cloud_sub_attack_air_kind(fighter: &mut L2CFighterCommon) {
+    let boma = fighter.module_accessor;
     let motion_kind = cloud_sub_attack_air_kind_set_log_info(fighter).get_u64();
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(motion_kind), 0.0, 1.0, false, 0.0, false, false);
-    WorkModule::set_int64(fighter.module_accessor, motion_kind as i64, *FIGHTER_STATUS_ATTACK_AIR_WORK_INT_MOTION_KIND);
+    MotionModule::change_motion(boma, Hash40::new_raw(motion_kind), 0.0, 1.0, false, 0.0, false, false);
+    WorkModule::set_int64(boma, motion_kind as i64, *FIGHTER_STATUS_ATTACK_AIR_WORK_INT_MOTION_KIND);
 }
 
 unsafe extern "C" fn cloud_sub_attack_air_kind_set_log_info(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    let get_attack_air_kind = ControlModule::get_attack_air_kind(boma);
+    let is_punisher = WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
     let attack_air_kind;
-    let get_attack_air_kind = ControlModule::get_attack_air_kind(fighter.module_accessor);
-    let is_punisher = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
     match get_attack_air_kind {
         _ if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F => {
             if is_punisher {

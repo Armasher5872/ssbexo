@@ -19,10 +19,11 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_loop_sound(_agent: &mut
 
 //Neutral Special Volley Loop Expression
 unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_loop_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
         AREA_WIND_2ND_arg10(agent, 0, 2, 75, 2, 1, 0, 12, 50, 30, 50);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_23_hold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_23_hold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 

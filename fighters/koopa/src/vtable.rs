@@ -48,6 +48,11 @@ unsafe extern "C" fn koopa_opff(_vtable: u64, fighter: &mut Fighter) {
         let scale = breath_scale+((fire_scale_max-fire_scale_min)/fire_scale_max_frame);
         WorkModule::set_float(boma, speed_mul.clamp(fire_speed_mul_min, fire_speed_mul_max), *FIGHTER_KOOPA_INSTANCE_WORK_ID_FLOAT_BREATH_SPEED_MUL);
         WorkModule::set_float(boma, scale.clamp(fire_scale_min, fire_scale_max), *FIGHTER_KOOPA_INSTANCE_WORK_ID_FLOAT_BREATH_SCALE);
+        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE) {
+            if !ArticleModule::is_exist(boma, *FIGHTER_KOOPA_GENERATE_ARTICLE_BREATH) {
+                WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE);
+            }
+        }
     }
 }
 

@@ -6,6 +6,7 @@ First Instance Float: 0x4D
 First Instance Int: 0x100000C0
 */
 
+pub static mut ARMSTRONG_MARKED_COLORS: [bool; 256] = [false; 256];
 pub static mut FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR: i32 = 2;
 pub const FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_CLEAR_CHARGE: LuaConst = LuaConst::new(0x200000E8);
 pub const FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLAG_SPECIAL_S_RUN: LuaConst = LuaConst::new(0x200000E9);

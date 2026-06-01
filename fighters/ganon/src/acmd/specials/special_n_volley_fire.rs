@@ -2,33 +2,39 @@ use super::*;
 
 //Neutral Special Volley Fire ACMD
 unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_fire_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 11.0);
     if is_excute(agent) {
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
+        ArticleModule::generate_article(boma, FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
     }
 }
 
 //Grounded Neutral Special Volley Fire Effect
 unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_volley_fire_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        EffectModule::kill_kind(agent.module_accessor, Hash40::new("ganon_volley"), true, true);
-        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
+        EffectModule::kill_kind(boma, Hash40::new("ganon_volley"), true, true);
+        WorkModule::set_int(boma, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
     }
 }
 
 //Aerial Neutral Special Volley Fire Effect
 unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_volley_fire_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("footr"), 0, 0, 0, -0.286, -45, 25, 1, true);
         EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("footl"), 0, 0, 0, -0.286, -45, 25, 1, true);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
-        EffectModule::kill_kind(agent.module_accessor, Hash40::new("ganon_volley"), true, true);
-        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
+        EffectModule::kill_kind(boma, Hash40::new("ganon_volley"), true, true);
+        WorkModule::set_int(boma, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
     }
 }
 
@@ -41,18 +47,20 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_fire_sound(agent: &mut 
 
 //Neutral Special Volley Fire Expression
 unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_fire_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
         AREA_WIND_2ND_arg10(agent, 0, 2, 75, 2, 1, 0, 12, 50, 30, 50);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_23_hold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_23_hold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 34.0);
+    frame(lua_state, 34.0);
     if is_excute(agent) {
-        ItemModule::set_have_item_visibility(agent.module_accessor, true, 0);
+        ItemModule::set_have_item_visibility(boma, true, 0);
     }
 }
 

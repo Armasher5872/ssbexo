@@ -6,55 +6,50 @@ unsafe extern "C" fn armstrong_attack_air_main_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn armstrong_attack_air_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let get_attack_air_kind = ControlModule::get_attack_air_kind(fighter.module_accessor);
-    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+    let boma = fighter.module_accessor;
+    let get_attack_air_kind = ControlModule::get_attack_air_kind(boma);
+    let motion_kind = MotionModule::motion_kind(boma);
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_N || motion_kind == hash40("attack_air_n") {
-        armstrong_charge_move(fighter, 2.0, 7.0, 0.025, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "waist");
+        armstrong_charge_move(fighter, 2.0, 7.0, 0.025, 0.0, ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK), false, "waist");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_F || motion_kind == hash40("attack_air_f") {
-        armstrong_charge_move(fighter, 4.0, 12.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "handr");
+        armstrong_charge_move(fighter, 4.0, 12.0, 0.045, 0.0, ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK), false, "handr");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_B || motion_kind == hash40("attack_air_b") {
-        armstrong_charge_move(fighter, 1.0, 5.0, 0.015, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "footr");
+        armstrong_charge_move(fighter, 1.0, 5.0, 0.015, 0.0, ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK), false, "footr");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_HI || motion_kind == hash40("attack_air_hi") {
-        armstrong_charge_move(fighter, 1.0, 5.0, 0.015, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "handr");
+        armstrong_charge_move(fighter, 1.0, 5.0, 0.015, 0.0, ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK), false, "handr");
     }
     if get_attack_air_kind == *FIGHTER_COMMAND_ATTACK_AIR_KIND_LW || motion_kind == hash40("attack_air_lw") {
-        armstrong_charge_move(fighter, 3.0, 11.0, 0.045, 0.0, ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK), false, "footr");
+        armstrong_charge_move(fighter, 3.0, 11.0, 0.045, 0.0, ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK), false, "footr");
     }
     if !fighter.status_AttackAir_Main().get_bool() {
         fighter.sub_air_check_superleaf_fall_slowly();
         if !fighter.global_table[IS_STOP].get_bool() {
-            FighterUtil::check_cloud_through_out(fighter.module_accessor);
+            FighterUtil::check_cloud_through_out(boma);
         }
     }
     0.into()
 }
 
 unsafe extern "C" fn armstrong_attack_air_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-    armstrong_clear_charge(fighter.module_accessor);
+    let boma = fighter.module_accessor;
+    WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    armstrong_clear_charge(boma);
     0.into()
 }
 
 unsafe extern "C" fn armstrong_attack_air_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
-    armstrong_clear_charge(fighter.module_accessor);
+    let boma = fighter.module_accessor;
+    WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_BOUNCE);
+    armstrong_clear_charge(boma);
     fighter.sub_attack_air_uniq_process_exit()
 }
 
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe {
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
     Agent::new("ganon")
-    .set_costume(costume.to_vec())
+    .set_costume(get_armstrong_costumes_acmd())
     .status(Main, *FIGHTER_STATUS_KIND_ATTACK_AIR, armstrong_attack_air_main_status)
     .status(End, *FIGHTER_STATUS_KIND_ATTACK_AIR, armstrong_attack_air_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_ATTACK_AIR, armstrong_attack_air_exit_status)

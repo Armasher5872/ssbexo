@@ -18,8 +18,9 @@ unsafe extern "C" fn ssbexo_miifighter_rising_tiger_knee_dive_effect(agent: &mut
 
 //Rising Tiger Knee Dive Expression
 unsafe extern "C" fn ssbexo_miifighter_rising_tiger_knee_dive_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 3, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 3, false, *BATTLE_OBJECT_ID_INVALID as u32);
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
     }
 }

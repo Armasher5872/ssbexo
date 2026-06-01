@@ -1,10 +1,11 @@
 use super::*;
 
 unsafe extern "C" fn littlemac_special_s_blow_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
     littlemac_mtrans_smpl_off_flag(fighter);
     sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_MOTION, *ENERGY_MOTION_RESET_TYPE_GROUND_TRANS, 0.0, 0.0, 0.0, 0.0, 0.0);
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_s_blow"), 0.0, 1.0, false, 0.0, false, false);
-    if !StopModule::is_stop(fighter.module_accessor) {
+    MotionModule::change_motion(boma, Hash40::new("special_air_s_blow"), 0.0, 1.0, false, 0.0, false, false);
+    if !StopModule::is_stop(boma) {
         littlemac_special_s_blow_sub_status(fighter, false.into());
     }
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(littlemac_special_s_blow_sub_status as *const () as _));
@@ -12,20 +13,22 @@ unsafe extern "C" fn littlemac_special_s_blow_main_status(fighter: &mut L2CFight
 }
 
 unsafe extern "C" fn littlemac_special_s_blow_sub_status(fighter: &mut L2CFighterCommon, bool_check: L2CValue) -> L2CValue {
+    let boma = fighter.module_accessor;
     if bool_check.get_bool() {
-        WorkModule::dec_int(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_S_DISABLE_LANDING_FRAME);
-        WorkModule::inc_int(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_S_FRAME_COUNT);
+        WorkModule::dec_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_S_DISABLE_LANDING_FRAME);
+        WorkModule::inc_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_S_FRAME_COUNT);
     }
     0.into()
 }
 
 unsafe extern "C" fn littlemac_special_s_blow_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let disable_landing_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_S_DISABLE_LANDING_FRAME);
+    let boma = fighter.module_accessor;
+    let disable_landing_frame = WorkModule::get_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_S_DISABLE_LANDING_FRAME);
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+    if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool()
         && fighter.sub_air_check_fall_common().get_bool() {
             return 1.into();
@@ -41,7 +44,7 @@ unsafe extern "C" fn littlemac_special_s_blow_main_loop(fighter: &mut L2CFighter
         }
     }
     else {
-        if MotionModule::is_end(fighter.module_accessor) {
+        if MotionModule::is_end(boma) {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
         else {
@@ -53,27 +56,28 @@ unsafe extern "C" fn littlemac_special_s_blow_main_loop(fighter: &mut L2CFighter
 
 unsafe extern "C" fn littlemac_special_s_blow_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let star_punch_strength = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+    let boma = fighter.module_accessor;
+    let star_punch_strength = WorkModule::get_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
     if status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_LW_HIT {
-        EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_STATUS_SPECIAL_N_FLAG_RESET_KO_GAUGE);
-        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_KO_GAGE_MAX_KEEP_FRAME);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_REQUEST_KO_GAUGE_MAX_EFFECT);
+        EffectModule::remove_common(boma, Hash40::new("charge_max"));
+        WorkModule::on_flag(boma, *FIGHTER_LITTLEMAC_STATUS_SPECIAL_N_FLAG_RESET_KO_GAUGE);
+        WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+        WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_KO_GAGE_MAX_KEEP_FRAME);
+        WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_REQUEST_KO_GAUGE_MAX_EFFECT);
     }
     match star_punch_strength {
-        1 => WorkModule::sub_float(fighter.module_accessor, 1.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE),
-        2 => WorkModule::sub_float(fighter.module_accessor, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE),
-        3 => WorkModule::sub_float(fighter.module_accessor, 100.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE),
-        _ => WorkModule::sub_float(fighter.module_accessor, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE)
+        1 => WorkModule::sub_float(boma, 1.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE),
+        2 => WorkModule::sub_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE),
+        3 => WorkModule::sub_float(boma, 100.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE),
+        _ => WorkModule::sub_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE)
     }
     if star_punch_strength > 0 {
-        EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_REQUEST_KO_GAUGE_MAX_EFFECT);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_KO_GAGE_MAX_KEEP_FRAME);
+        EffectModule::remove_common(boma, Hash40::new("charge_max"));
+        WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_REQUEST_KO_GAUGE_MAX_EFFECT);
+        WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_KO_GAGE_MAX_KEEP_FRAME);
     }
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_HELD_TIMER);
+    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+    WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_HELD_TIMER);
     0.into()
 }
 

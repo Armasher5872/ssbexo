@@ -1,14 +1,20 @@
 use {
     exo_utils::{
         common::{
+            hook::*,
             status_end_control::*,
             var_reset::*,
         },
         fighter::gekkouga::*,
+        structs::collision_struct::*,
     },
     exo_var::globals::*,
     smash::{
-        app::*,
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
         lib::lua_const::*,
     },
     smashline::*,

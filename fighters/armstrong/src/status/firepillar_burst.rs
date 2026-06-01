@@ -50,16 +50,8 @@ unsafe extern "C" fn armstrong_firepillar_burst_end_status(weapon: &mut L2CWeapo
 }
 
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe {
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
     Agent::new("ganon_firepillar")
-    .set_costume(costume.to_vec())
+    .set_costume(get_armstrong_costumes_acmd())
     .status(Pre, *WEAPON_ARMSTRONG_FIREPILLAR_STATUS_KIND_BURST, armstrong_firepillar_burst_pre_status)
     .status(Init, *WEAPON_ARMSTRONG_FIREPILLAR_STATUS_KIND_BURST, armstrong_firepillar_burst_init_status)
     .status(Main, *WEAPON_ARMSTRONG_FIREPILLAR_STATUS_KIND_BURST, armstrong_firepillar_burst_main_status)

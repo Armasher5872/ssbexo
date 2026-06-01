@@ -12,6 +12,7 @@ unsafe extern "C" fn roy_end_control(fighter: &mut L2CFighterCommon) -> L2CValue
 unsafe extern "C" fn roy_on_start(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
     common_initialization_variable_reset(&mut *boma);
+    roy_var(&mut *boma);
     fighter.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
     fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(roy_end_control as *const () as _));
 }

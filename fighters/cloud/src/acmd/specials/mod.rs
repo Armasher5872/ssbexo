@@ -2,6 +2,7 @@ use {
     exo_utils::{
         common::extern_func::*,
         fighter::cloud::*,
+        structs::ui_manager::*,
     },
     exo_var::cloud::*,
     smash::{

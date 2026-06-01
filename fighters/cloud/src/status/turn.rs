@@ -14,15 +14,16 @@ unsafe extern "C" fn cloud_status_pre_turncommon(fighter: &mut L2CFighterCommon)
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_WALK, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F,
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B
     ];
-    let motion = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_turn"} else {"turn"};
+    let boma = fighter.module_accessor;
+    let motion = if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_turn"} else {"turn"};
     for x in 0..group_terms.len() {
-        WorkModule::enable_transition_term_group(fighter.module_accessor, group_terms[x]);
+        WorkModule::enable_transition_term_group(boma, group_terms[x]);
     }
     for y in 0..group_terms_ex.len() {
-        WorkModule::unable_transition_term_group_ex(fighter.module_accessor, group_terms_ex[y]);
+        WorkModule::unable_transition_term_group_ex(boma, group_terms_ex[y]);
     }
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_TURN_ATTACK_S4_REV_PAD);
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new(motion), 0.0, 1.0, false, 0.0, false, false);
+    WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_TURN_ATTACK_S4_REV_PAD);
+    MotionModule::change_motion(boma, Hash40::new(motion), 0.0, 1.0, false, 0.0, false, false);
 }
 
 pub fn install() {

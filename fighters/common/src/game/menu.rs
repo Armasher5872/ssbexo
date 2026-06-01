@@ -1,3 +1,5 @@
+use super::*;
+
 //Credited to HDR, makes the main menu load quicker
 #[skyline::hook(offset = 0x235cad0, inline)]
 unsafe extern "C" fn main_menu_quick(ctx: &skyline::hooks::InlineCtx) {
@@ -17,9 +19,37 @@ unsafe fn fix_chara_replace(ctx: &skyline::hooks::InlineCtx) {
     *ptr2.add(0x4) = *ptr1.add(0x4);
 }
 
+//Credited to jobrien97, skips the results screen with start button
+#[skyline::hook(offset = 0x36650c0)]
+unsafe fn process_inputs_handheld(controller: &mut exo_utils::structs::controller_struct::Controller) {
+    let entry_count = smash::app::lua_bind::FighterManager::entry_count(singletons::FighterManager());
+    if smash::app::lua_bind::FighterManager::is_result_mode(singletons::FighterManager()) && entry_count > 0 {
+        if is_press(ninput::Buttons::PLUS) {
+            SHOULD_END_RESULT_SCREEN = true;
+        }
+        if is_press(ninput::Buttons::B) {
+            SHOULD_END_RESULT_SCREEN = false;
+        }
+        if SHOULD_END_RESULT_SCREEN {
+            let mut rng = rand::thread_rng();
+            //Need to space apart A-presses so it does not seem like we are holding the button.
+            let n: u32 = rng.gen_range(0..3);
+            if n == 1 {
+                controller.current_buttons.set_a(true);
+                controller.just_down.set_a(true);
+            }
+        }
+    }
+    if entry_count == 0 {
+        SHOULD_END_RESULT_SCREEN = false;
+    }
+    call_original!(controller);
+}
+
 pub fn install() {
 	skyline::install_hooks!(
         main_menu_quick,
-        fix_chara_replace
+        fix_chara_replace,
+        process_inputs_handheld
     );
 }

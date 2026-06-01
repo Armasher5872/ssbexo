@@ -1,4 +1,5 @@
 //The following two are credited to WuBoytH
+#![allow(unused_parens)] //Addresses unnecessary parentheses around type
 use super::*;
 
 bitflags! {
@@ -61,4 +62,42 @@ pub mod cat4 {
     pub const COMMAND_7 : usize = 0x18;
     pub const COMMAND_6N6AB : usize = 0x19;
     pub const COMMAND_323CATCH : usize = 0x1A;
+}
+
+//Credit to HDR, Re-ordered bitfield the game uses for buttons
+#[bitfield]
+#[derive(Debug, Default, Copy, Clone)]
+#[repr(C)]
+pub struct ButtonBitfield {
+    pub dpad_up: bool,
+    pub dpad_right: bool,
+    pub dpad_down: bool,
+    pub dpad_left: bool,
+    pub x: bool,
+    pub a: bool,
+    pub b: bool,
+    pub y: bool,
+    pub l: bool,
+    pub r: bool,
+    pub zl: bool,
+    pub zr: bool,
+    pub left_sl: bool,
+    pub left_sr: bool,
+    pub right_sl: bool,
+    pub right_sr: bool,
+    pub stick_l: bool,
+    pub stick_r: bool,
+    pub plus: bool,
+    pub minus: bool,
+    pub l_up: bool,
+    pub l_right: bool,
+    pub l_down: bool,
+    pub l_left: bool,
+    pub r_up: bool,
+    pub r_right: bool,
+    pub r_down: bool,
+    pub r_left: bool,
+    pub real_digital_l: bool,
+    pub real_digital_r: bool,
+    pub unused: B2,
 }

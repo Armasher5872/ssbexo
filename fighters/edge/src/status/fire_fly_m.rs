@@ -1,13 +1,14 @@
 use super::*;
 
 unsafe extern "C" fn edge_fire_m_fly_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
     let owner_direction = WorkModule::get_int(owner_boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
-    let lr = PostureModule::lr(weapon.module_accessor);
-    let life = WorkModule::get_param_int(weapon.module_accessor, hash40("param_fire"), hash40("life_m"));
-    let speed_x_m = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("speed_x_m"));
-    let accel_x_m = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("accel_x_m"));
-    let max_speed_x_m = WorkModule::get_param_float(weapon.module_accessor, hash40("param_fire"), hash40("max_speed_x_m"));
+    let lr = PostureModule::lr(boma);
+    let life = WorkModule::get_param_int(boma, hash40("param_fire"), hash40("life_m"));
+    let speed_x_m = WorkModule::get_param_float(boma, hash40("param_fire"), hash40("speed_x_m"));
+    let accel_x_m = WorkModule::get_param_float(boma, hash40("param_fire"), hash40("accel_x_m"));
+    let max_speed_x_m = WorkModule::get_param_float(boma, hash40("param_fire"), hash40("max_speed_x_m"));
     let angle: f32 = 20.0;
     let speed_x = angle.to_radians().sin()*speed_x_m*lr;
     let speed_y = angle.to_radians().cos()*speed_x_m;
@@ -33,8 +34,8 @@ unsafe extern "C" fn edge_fire_m_fly_main_status(weapon: &mut L2CWeaponCommon) -
         sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, accel_x_m*lr, 0.0);
         sv_kinetic_energy!(set_limit_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, max_speed_x_m, -1.0);
     }
-    WorkModule::set_int(weapon.module_accessor, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_n2"), 0.0, 1.0, false, 0.0, false, false);
+    WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    MotionModule::change_motion(boma, Hash40::new("special_n2"), 0.0, 1.0, false, 0.0, false, false);
     weapon.fastshift(L2CValue::Ptr(edge_fire_m_fly_main_loop as *const () as _))
 }
 
@@ -44,6 +45,7 @@ unsafe extern "C" fn edge_fire_m_fly_main_loop(weapon: &mut L2CWeaponCommon) -> 
 }
 
 unsafe extern "C" fn edge_fire_m_fly_exec_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
     let owner_status_kind = StatusModule::status_kind(owner_boma);
     let owner_prev_status_kind = StatusModule::prev_status_kind(owner_boma, 0);
@@ -53,7 +55,7 @@ unsafe extern "C" fn edge_fire_m_fly_exec_status(weapon: &mut L2CWeaponCommon) -
             weapon.change_status(WEAPON_EDGE_FIRE_STATUS_KIND_BURST_M.into(), false.into());
         }
     }
-    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    WorkModule::dec_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()
 }
 

@@ -34,6 +34,7 @@ pub mod miifighter;
 pub mod murabito;
 pub mod pfushigisou;
 pub mod pikachu;
+pub mod roy;
 pub mod ryu;
 pub mod samusd;
 pub mod sheik;

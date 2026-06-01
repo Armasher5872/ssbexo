@@ -48,9 +48,9 @@ unsafe extern "C" fn sheik_special_s_main_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn sheik_special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SPECIAL_S_OBJECT_ID);
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
@@ -76,7 +76,7 @@ unsafe extern "C" fn sheik_special_s_main_loop(fighter: &mut L2CFighterCommon) -
         let knife_boma = get_article_boma(fighter.module_accessor, *FIGHTER_SHEIK_GENERATE_ARTICLE_KNIFE);
         LinkModule::set_model_constraint_pos_ort(knife_boma, *LINK_NO_CONSTRAINT, Hash40::new("have"), Hash40::new("throw"), (*CONSTRAINT_FLAG_ORIENTATION | *CONSTRAINT_FLAG_POSITION | *CONSTRAINT_FLAG_OFFSET_TRANSLATE | *CONSTRAINT_FLAG_OFFSET_ROT) as u32, true);
         LinkModule::set_constraint_translate_offset(knife_boma, &Vector3f{x: 0.0, y: 0.0, z: 0.0});
-        LinkModule::set_constraint_rot_offset(knife_boma, &Vector3f{x: 0.0, y: 0.0, z: 0.0});
+        LinkModule::set_constraint_rot_offset(knife_boma, &Vector3f{x: 90.0, y: 0.0, z: 0.0});
     }
     if object_id != *BATTLE_OBJECT_ID_INVALID {
         if frame < 30.0 {
@@ -97,6 +97,11 @@ unsafe extern "C" fn sheik_special_s_main_loop(fighter: &mut L2CFighterCommon) -
             MotionModule::set_rate(opponent_boma, 1.0);
             opponent_agent.FighterStatusCapture_set_invalid_capture();
             WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SPECIAL_S_OBJECT_ID);
+        }
+    }
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT) {
+        if frame >= 42.0 {
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
     }
     if MotionModule::is_end(fighter.module_accessor) {
@@ -125,6 +130,7 @@ unsafe extern "C" fn sheik_special_s_check_attack_status(fighter: &mut L2CFighte
         if collision_kind == *COLLISION_KIND_HIT && collision_kind != *COLLISION_KIND_SHIELD {
             if current_frame < 37.0 {
                 if WorkModule::get_int(opponent_boma, *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CAPTURE_FRAME) <= 0 {
+                    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
                     WorkModule::set_int(fighter.module_accessor, opponent_id as i32, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SPECIAL_S_OBJECT_ID);
                     LinkModule::remove_model_constraint(opponent_boma, true);
                     if LinkModule::is_link(opponent_boma, *LINK_NO_CAPTURE) {
@@ -166,6 +172,7 @@ unsafe extern "C" fn sheik_special_s_end_status(fighter: &mut L2CFighterCommon) 
     }
     ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_SHEIK_GENERATE_ARTICLE_KNIFE, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_SHEIK_GENERATE_ARTICLE_KNIFE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SPECIAL_S_OBJECT_ID);
     0.into()
 }
@@ -188,6 +195,7 @@ unsafe extern "C" fn sheik_special_s_exit_status(fighter: &mut L2CFighterCommon)
     }
     ArticleModule::set_visibility_whole(fighter.module_accessor, *FIGHTER_SHEIK_GENERATE_ARTICLE_KNIFE, false, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_SHEIK_GENERATE_ARTICLE_KNIFE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     WorkModule::set_int(fighter.module_accessor, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SPECIAL_S_OBJECT_ID);
     0.into()
 }

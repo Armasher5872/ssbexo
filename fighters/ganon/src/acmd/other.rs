@@ -2,151 +2,164 @@ use super::*;
 
 //Slow Walk Effect
 unsafe extern "C" fn ssbexo_ganon_slow_walk_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     loop {
-        frame(agent.lua_state_agent, 4.0);
+        frame(lua_state, 4.0);
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
-        frame(agent.lua_state_agent, 85.0);
+        frame(lua_state, 85.0);
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Slow Walk Sound
 unsafe extern "C" fn ssbexo_ganon_slow_walk_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     loop {
-        frame(agent.lua_state_agent, 3.0);
+        frame(lua_state, 3.0);
         if is_excute(agent) {
             PLAY_STEP(agent, Hash40::new("se_ganon_step_right_s"));
         }
-        frame(agent.lua_state_agent, 85.0);
+        frame(lua_state, 85.0);
         PLAY_STEP(agent, Hash40::new("se_ganon_step_left_s"));
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Slow Walk Expression
 unsafe extern "C" fn ssbexo_ganon_slow_walk_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     loop {
         if is_excute(agent) {
             slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 10);
         }
-        frame(agent.lua_state_agent, 62.0);
+        frame(lua_state, 62.0);
         if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+            ControlModule::set_rumble(boma, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         }
-        frame(agent.lua_state_agent, 140.0);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        frame(lua_state, 140.0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Middle Walk Effect
 unsafe extern "C" fn ssbexo_ganon_middle_walk_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     loop {
-        frame(agent.lua_state_agent, 3.0);
+        frame(lua_state, 3.0);
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
-        frame(agent.lua_state_agent, 30.0);
+        frame(lua_state, 30.0);
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Middle Walk Sound
 unsafe extern "C" fn ssbexo_ganon_middle_walk_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     loop {
-        frame(agent.lua_state_agent, 3.0);
+        frame(lua_state, 3.0);
         if is_excute(agent) {
             PLAY_STEP(agent, Hash40::new("se_ganon_step_right_m"));
         }
-        frame(agent.lua_state_agent, 30.0);
+        frame(lua_state, 30.0);
         PLAY_STEP(agent, Hash40::new("se_ganon_step_left_m"));
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Middle Walk Expression
 unsafe extern "C" fn ssbexo_ganon_middle_walk_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     loop {
         if is_excute(agent) {
             slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 7);
         }
-        frame(agent.lua_state_agent, 30.0);
+        frame(lua_state, 30.0);
         if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+            ControlModule::set_rumble(boma, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         }
-        frame(agent.lua_state_agent, 59.0);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        frame(lua_state, 59.0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Fast Walk Effect
 unsafe extern "C" fn ssbexo_ganon_fast_walk_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     loop {
-        frame(agent.lua_state_agent, 2.0);
+        frame(lua_state, 2.0);
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footr"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
-        frame(agent.lua_state_agent, 23.0);
+        frame(lua_state, 23.0);
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("footl"), 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Fast Walk Sound
 unsafe extern "C" fn ssbexo_ganon_fast_walk_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     loop {
-        frame(agent.lua_state_agent, 2.0);
+        frame(lua_state, 2.0);
         if is_excute(agent) {
             PLAY_STEP(agent, Hash40::new("se_ganon_step_right_m"));
         }
-        frame(agent.lua_state_agent, 23.0);
+        frame(lua_state, 23.0);
         PLAY_STEP(agent, Hash40::new("se_ganon_step_left_m"));
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Fast Walk Expression
 unsafe extern "C" fn ssbexo_ganon_fast_walk_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     loop {
         if is_excute(agent) {
             slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 9);
         }
-        frame(agent.lua_state_agent, 23.0);
+        frame(lua_state, 23.0);
         if is_excute(agent) {
-            ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+            ControlModule::set_rumble(boma, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         }
-        frame(agent.lua_state_agent, 48.0);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        frame(lua_state, 48.0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_walk_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         agent.clear_lua_stack();
-        wait_loop_sync_mot(agent.lua_state_agent);
+        wait_loop_sync_mot(lua_state);
         agent.pop_lua_stack(1);
     }
 }
 
 //Dash Sound
 unsafe extern "C" fn ssbexo_ganon_dash_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_dash_start"));
         SET_PLAY_INHIVIT(agent, Hash40::new("se_ganon_dash_start"), 20);
@@ -155,7 +168,8 @@ unsafe extern "C" fn ssbexo_ganon_dash_sound(agent: &mut L2CAgentBase) {
 
 //Turn Dash Sound
 unsafe extern "C" fn ssbexo_ganon_turn_dash_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_dash_start"));
         SET_PLAY_INHIVIT(agent, Hash40::new("se_ganon_dash_start"), 20);
@@ -167,43 +181,50 @@ unsafe extern "C" fn ssbexo_ganon_run_sound(_agent: &mut L2CAgentBase) {}
 
 //Guard On ACMD
 unsafe extern "C" fn ssbexo_ganon_guard_on_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
 
 //Guard Off ACMD
 unsafe extern "C" fn ssbexo_ganon_guard_off_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 4.0);
     if is_excute(agent) {
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
 
 //Guard Off Sound
 unsafe extern "C" fn ssbexo_ganon_guard_off_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_guardoff"));
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
-        let swipe = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_special_n07"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, swipe as i32, 2.0, 0);
+        let swipe = SoundModule::play_se(boma, Hash40::new("se_ganon_special_n07"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, swipe as i32, 2.0, 0);
     }
 }
 
 //Back Roll Effect
 unsafe extern "C" fn ssbexo_ganon_back_roll_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 24.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
@@ -212,11 +233,12 @@ unsafe extern "C" fn ssbexo_ganon_back_roll_effect(agent: &mut L2CAgentBase) {
 
 //Back Roll Sound
 unsafe extern "C" fn ssbexo_ganon_back_roll_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_escape"));
     }
-    frame(agent.lua_state_agent, 24.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_landing01"));
     }
@@ -234,7 +256,8 @@ unsafe extern "C" fn ssbexo_ganon_up_taunt_effect(_agent: &mut L2CAgentBase) {}
 
 //Up Taunt Sound
 unsafe extern "C" fn ssbexo_ganon_up_taunt_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 24.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("vc_ganon_appeal_h01"));
     }
@@ -242,12 +265,13 @@ unsafe extern "C" fn ssbexo_ganon_up_taunt_sound(agent: &mut L2CAgentBase) {
 
 //Side Taunt Effect
 unsafe extern "C" fn ssbexo_ganon_side_taunt_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 12.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_final_hand_triforce"), Hash40::new("haver"), -1.1, -0.3, -0.2, 0, 0, 0, 1, true);
         LAST_EFFECT_SET_RATE(agent, 0.3);
     }
-    frame(agent.lua_state_agent, 100.0);
+    frame(lua_state, 100.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 12, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 12, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
@@ -256,12 +280,14 @@ unsafe extern "C" fn ssbexo_ganon_side_taunt_effect(agent: &mut L2CAgentBase) {
 
 //Side Taunt Sound
 unsafe extern "C" fn ssbexo_ganon_side_taunt_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 7.0);
     if is_excute(agent) {
-        let glow = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_appeal_s03"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, glow as i32, 12.0, 0);
+        let glow = SoundModule::play_se(boma, Hash40::new("se_ganon_appeal_s03"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, glow as i32, 12.0, 0);
     }
-    frame(agent.lua_state_agent, 95.0);
+    frame(lua_state, 95.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("vc_ganon_appeal_s01"));
     }
@@ -269,86 +295,93 @@ unsafe extern "C" fn ssbexo_ganon_side_taunt_sound(agent: &mut L2CAgentBase) {
 
 //Side Taunt Expression
 unsafe extern "C" fn ssbexo_ganon_side_taunt_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 100.0);
+    frame(lua_state, 100.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_elecattack"), 18, true, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_elecattack"), 18, true, *BATTLE_OBJECT_ID_INVALID as u32);
         AREA_WIND_2ND_arg10(agent, 0, 3, 110, 2, 0.6, 0, 15, 30, 30, 40);
     }
-    frame(agent.lua_state_agent, 140.0);
+    frame(lua_state, 140.0);
     if is_excute(agent) {
-        AreaModule::erase_wind(agent.module_accessor, 0);
+        AreaModule::erase_wind(boma, 0);
     }
 }
 
 //Side Taunt Attack ACMD
 unsafe extern "C" fn ssbexo_ganon_side_taunt_attack_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
     }
-    frame(agent.lua_state_agent, 76.0);
+    frame(lua_state, 76.0);
     if is_excute(agent) {
         damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
     }
-    frame(agent.lua_state_agent, 77.0);
+    frame(lua_state, 77.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("shoulderr"), 40.0, 30, 100, 0, 40, 6.0, 2.4, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("bust"), 40.0, 30, 100, 0, 40, 6.0, 0.0, 1.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 2, 0, Hash40::new("armr"), 40.0, 30, 100, 0, 40, 6.0, 5.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
     }
-    frame(agent.lua_state_agent, 80.0);
+    frame(lua_state, 80.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Side Taunt Attack Effect
 unsafe extern "C" fn ssbexo_ganon_side_taunt_attack_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_majinken_start"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
-        EffectModule::enable_sync_init_pos_last(agent.module_accessor);
-        let effect = EffectModule::req_follow(agent.module_accessor, Hash40::new("ganon_final_hand_triforce"), Hash40::new("haver"), &Vector3f{x: -1.1, y: -0.3, z: -0.2}, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true);
-        EffectModule::set_rate(agent.module_accessor, effect as u32, 0.3); 
-        WorkModule::set_int(agent.module_accessor, effect as i32, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
+        EffectModule::enable_sync_init_pos_last(boma);
+        let effect = EffectModule::req_follow(boma, Hash40::new("ganon_final_hand_triforce"), Hash40::new("haver"), &Vector3f{x: -1.1, y: -0.3, z: -0.2}, &Vector3f::zero(), 1.0, true, 0, 0, 0, 0, 0, true, true);
+        EffectModule::set_rate(boma, effect as u32, 0.3); 
+        WorkModule::set_int(boma, effect as i32, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
         LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), -3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 0.8);
     }
-    frame(agent.lua_state_agent, 40.0);
+    frame(lua_state, 40.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_majinken_flash"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(agent.lua_state_agent, 66.0);
+    frame(lua_state, 66.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_majinken_hold"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(agent.lua_state_agent, 77.0);
+    frame(lua_state, 77.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_majinken"), Hash40::new("top"), 0, 12.5, 22.5, 0, -10, 0, 1, true);
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 0.7);
     }
-    frame(agent.lua_state_agent, 100.0);
+    frame(lua_state, 100.0);
     if is_excute(agent) {
-        WorkModule::set_int(agent.module_accessor, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
+        WorkModule::set_int(boma, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
     }
 }
 
 //Side Taunt Attack Sound
 unsafe extern "C" fn ssbexo_ganon_side_taunt_attack_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_ganon_appeal_s03"));
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(lua_state, 15.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("vc_ganon_special_n01"));
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_special_n01"));
     }
-    wait(agent.lua_state_agent, 58.0);
+    wait(lua_state, 58.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_special_n02"));
     }
@@ -356,55 +389,58 @@ unsafe extern "C" fn ssbexo_ganon_side_taunt_attack_sound(agent: &mut L2CAgentBa
 
 //Side Taunt Attack Expression
 unsafe extern "C" fn ssbexo_ganon_side_taunt_attack_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_elecattacks"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_elecattacks"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         AREA_WIND_2ND_arg10(agent, 0, 2, 75, 2, 1, 0, 12, 50, 30, 50);
     }
-    frame(agent.lua_state_agent, 35.0);
+    frame(lua_state, 35.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 36.0);
+    frame(lua_state, 36.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_23_hold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_23_hold"), 0, true, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 56.0);
+    frame(lua_state, 56.0);
     if is_excute(agent) {
-        AreaModule::erase_wind(agent.module_accessor, 0);
+        AreaModule::erase_wind(boma, 0);
     }
-    frame(agent.lua_state_agent, 64.0);
+    frame(lua_state, 64.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_erase"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 68.0);
+    frame(lua_state, 68.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_attackl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_attackl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 70.0);
+    frame(lua_state, 70.0);
     if is_excute(agent) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_L);
         RUMBLE_HIT(agent, Hash40::new("rbkind_attack_critical"), 0);
     }
-    frame(agent.lua_state_agent, 71.0);
+    frame(lua_state, 71.0);
     if is_excute(agent) {
         AREA_WIND_2ND_arg10(agent, 0, 3, 120, 2, 1, 0, 12, 50, 30, 0);
     }
-    frame(agent.lua_state_agent, 101.0);
+    frame(lua_state, 101.0);
     if is_excute(agent) {
-        AreaModule::erase_wind(agent.module_accessor, 0);
+        AreaModule::erase_wind(boma, 0);
     }
 }
 
 //Win 1 Effect
 unsafe extern "C" fn ssbexo_ganon_win_1_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 110.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 110.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_final_hand_triforce"), Hash40::new("haver"), -1.1, -0.3, -0.2, 0, 0, 0, 1, true);
     }
@@ -412,18 +448,20 @@ unsafe extern "C" fn ssbexo_ganon_win_1_effect(agent: &mut L2CAgentBase) {
 
 //Win 1 Sound
 unsafe extern "C" fn ssbexo_ganon_win_1_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 35.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 35.0);
     if is_excute(agent) {
         PLAY_SE_NO_3D(agent, Hash40::new("vc_ganon_win01"));
     }
-    frame(agent.lua_state_agent, 51.0);
+    frame(lua_state, 51.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_swing_l"));
     }
-    frame(agent.lua_state_agent, 110.0);
+    frame(lua_state, 110.0);
     if is_excute(agent) {
-        let glow = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_appeal_s03"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, glow as i32, 12.0, 0);
+        let glow = SoundModule::play_se(boma, Hash40::new("se_ganon_appeal_s03"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, glow as i32, 12.0, 0);
     }
 }
 
@@ -437,10 +475,11 @@ unsafe extern "C" fn ssbexo_ganon_win_1_wait_effect(agent: &mut L2CAgentBase) {
 
 //Win 1 Wait Sound
 unsafe extern "C" fn ssbexo_ganon_win_1_wait_sound(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_ganon_appeal_s03"));
-        let glow = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_appeal_s03"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, glow as i32, 12.0, 0);
+        let glow = SoundModule::play_se(boma, Hash40::new("se_ganon_appeal_s03"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, glow as i32, 12.0, 0);
         LAST_EFFECT_SET_RATE(agent, 0.2);
     }
 }

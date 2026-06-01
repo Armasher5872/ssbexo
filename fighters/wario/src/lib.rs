@@ -7,7 +7,10 @@ use {
         },
         fighter::wario::*,
         status::damage::*,
-        structs::collision_struct::*,
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+        }
     },
     exo_var::{
         consts::*,
@@ -28,6 +31,7 @@ use {
         phx::*
     },
     smashline::*,
+    smash_script::macros::*,
 };
 
 mod acmd;
@@ -40,4 +44,7 @@ pub fn install() {
     opff::install();
     status::install();
     vtable::install();
+    unsafe {
+        FIGHTER_WARIO_GENERATE_ARTICLE_KAMIKAZE += clone_weapon("luigi", *WEAPON_KIND_LUIGI_FIREBALL, "wario", "fireballcloned", false);
+    }
 }

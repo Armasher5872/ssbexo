@@ -4,8 +4,8 @@ use super::*;
 unsafe extern "C" fn ssbexo_ganon_aerial_down_special_landing_effect(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        EFFECT(agent, Hash40::new("ganon_ground_crack"), Hash40::new("top"), -2, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
-        LAST_EFFECT_SET_COLOR(agent, 1.0, 1.0, 0.0);
+        EFFECT(agent, Hash40::new("ganon_ground_smash_crack"), Hash40::new("top"), -2, 0, 4, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("ganon_ground_erupt"), Hash40::new("top"), 0, 0, 5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
 }
 

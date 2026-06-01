@@ -2,22 +2,25 @@ use super::*;
 
 //Neutral Special ACMD
 unsafe extern "C" fn ssbexo_ganon_neutral_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
+        WorkModule::on_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
+        WorkModule::off_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TRANSITION_ENABLE);
     }
 }
 
 //Grounded Neutral Special Effect
 unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_engokua_flash"), Hash40::new("armr"), 7, 0, 0, 0, 0, 0, 1.6, true);
     }
-    frame(agent.lua_state_agent, 5.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_NONE);
     }
@@ -25,7 +28,8 @@ unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_effect(agent: &mut L2
 
 //Aerial Neutral Special Effect
 unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_r"), Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true, *EF_FLIP_NONE);
     }
@@ -40,12 +44,14 @@ unsafe extern "C" fn ssbexo_ganon_grounded_neutral_special_sound(agent: &mut L2C
 
 //Aerial Neutral Special Sound
 unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
-        let swipe = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_special_n07"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, swipe as i32, 3.0, 0);
+        let swipe = SoundModule::play_se(boma, Hash40::new("se_ganon_special_n07"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, swipe as i32, 3.0, 0);
     }
-    frame(agent.lua_state_agent, 7.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_jump02"));
     }
@@ -53,17 +59,19 @@ unsafe extern "C" fn ssbexo_ganon_aerial_neutral_special_sound(agent: &mut L2CAg
 
 //Neutral Special Expression
 unsafe extern "C" fn ssbexo_ganon_neutral_special_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE);
-        ItemModule::set_have_item_visibility(agent.module_accessor, false, 0);
+        ItemModule::set_have_item_visibility(boma, false, 0);
     }
-    frame(agent.lua_state_agent, 5.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         AREA_WIND_2ND_arg10(agent, 0, 1, 0, 300, 0.5, 12, 10, 30, 20, 50);
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(lua_state, 15.0);
     if is_excute(agent) {
-        AreaModule::erase_wind(agent.module_accessor, 0);
+        AreaModule::erase_wind(boma, 0);
     }
 }
 

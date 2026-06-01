@@ -9,7 +9,8 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_end_acmd(agent: &mut
 
 //Grounded Side Special End Effect
 unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_end_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
@@ -17,11 +18,12 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_end_effect(agent: &m
 
 //Grounded Side Special End Sound
 unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_end_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_right_m"));
     }
-    frame(agent.lua_state_agent, 38.0);
+    frame(lua_state, 38.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_left_m"));
     }
@@ -43,7 +45,8 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_end_acmd(agent: &mut L
 
 //Aerial Side Special End Effect
 unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_end_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
@@ -51,11 +54,12 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_end_effect(agent: &mut
 
 //Aerial Side Special End Sound
 unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_end_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_right_m"));
     }
-    frame(agent.lua_state_agent, 38.0);
+    frame(lua_state, 38.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_left_m"));
     }
@@ -69,16 +73,8 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_end_expression(agent: 
 }
 
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe {
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
     Agent::new("ganon")
-    .set_costume(costume.to_vec())
+    .set_costume(get_armstrong_costumes_acmd())
     .game_acmd("game_specialsend", ssbexo_armstrong_grounded_side_special_end_acmd, Low)
     .effect_acmd("effect_specialsend", ssbexo_armstrong_grounded_side_special_end_effect, Low)
     .sound_acmd("sound_specialsend", ssbexo_armstrong_grounded_side_special_end_sound, Low)

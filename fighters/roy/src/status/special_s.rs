@@ -28,15 +28,16 @@ unsafe extern "C" fn roy_special_s_main_status(fighter: &mut L2CFighterCommon) -
 unsafe extern "C" fn roy_special_s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let frame = MotionModule::frame(fighter.module_accessor);
+    if fighter.sub_transition_group_check_air_cliff().get_bool() {
+        return 1.into();
+    }
     if CancelModule::is_enable_cancel(fighter.module_accessor) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
                 return 1.into();
             }
         }
-    }
-    if fighter.sub_transition_group_check_air_cliff().get_bool() {
-        return 1.into();
     }
     if !StatusModule::is_changing(fighter.module_accessor) {
         if prev_situation_kind == *SITUATION_KIND_GROUND 
@@ -52,6 +53,11 @@ unsafe extern "C" fn roy_special_s_main_loop(fighter: &mut L2CFighterCommon) -> 
             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s"), -1.0, 1.0, 0.0, false, false);
         }
     }
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT) {
+        if frame >= 60.0 {
+            CancelModule::enable_cancel(fighter.module_accessor);
+        }
+    }
     if MotionModule::is_end(fighter.module_accessor) {
         if situation_kind != *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
@@ -63,15 +69,29 @@ unsafe extern "C" fn roy_special_s_main_loop(fighter: &mut L2CFighterCommon) -> 
     0.into()
 }
 
+unsafe extern "C" fn roy_special_s_check_attack_status(fighter: &mut L2CFighterCommon, _param_2: &L2CValue, param_3: &L2CValue) -> L2CValue {
+    let table = param_3.get_table() as *mut smash2::lib::L2CTable;
+    let category = get_table_value(table, "object_category_").try_integer().unwrap() as i32;
+    let collision_kind = get_table_value(table, "kind_").try_integer().unwrap() as i32;
+    if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        if collision_kind == *COLLISION_KIND_HIT && collision_kind != *COLLISION_KIND_SHIELD {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
+        }
+    }
+    0.into()
+}
+
 unsafe extern "C" fn roy_special_s_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-unsafe extern "C" fn roy_special_s_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn roy_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     0.into()
 }
 
-unsafe extern "C" fn roy_special_s_exit_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn roy_special_s_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     0.into()
 }
 
@@ -81,6 +101,7 @@ pub fn install() {
     .status(Pre, *FIGHTER_STATUS_KIND_SPECIAL_S, roy_special_s_pre_status)
     .status(Init, *FIGHTER_STATUS_KIND_SPECIAL_S, roy_special_s_init_status)
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_S, roy_special_s_main_status)
+    .status(CheckAttack, *FIGHTER_STATUS_KIND_SPECIAL_S, roy_special_s_check_attack_status)
     .status(Exec, *FIGHTER_STATUS_KIND_SPECIAL_S, roy_special_s_exec_status)
     .status(End, *FIGHTER_STATUS_KIND_SPECIAL_S, roy_special_s_end_status)
     .status(Exit, *FIGHTER_STATUS_KIND_SPECIAL_S, roy_special_s_exit_status)

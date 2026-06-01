@@ -6,16 +6,17 @@ unsafe extern "C" fn link_attack_lw_4_main_status(fighter: &mut L2CFighterCommon
 }
 
 unsafe extern "C" fn link_attack_lw_4_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !StatusModule::is_changing(fighter.module_accessor) {
-        let combo = ComboModule::count(fighter.module_accessor) as i32;
-        let lw4_combo_max = WorkModule::get_param_int(fighter.module_accessor, hash40("lw4_combo_max"), 0);
+    let boma = fighter.module_accessor;
+    if !StatusModule::is_changing(boma) {
+        let combo = ComboModule::count(boma) as i32;
+        let lw4_combo_max = WorkModule::get_param_int(boma, hash40("lw4_combo_max"), 0);
         if combo < lw4_combo_max
         && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N != 0
-        && WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
+        && WorkModule::is_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO) {
             fighter.attack_lw4_mtrans_common(hash40("attack_lw4").into());
         }
     }
-    if CancelModule::is_enable_cancel(fighter.module_accessor)
+    if CancelModule::is_enable_cancel(boma)
     && fighter.sub_wait_ground_check_common(false.into()).get_bool() {
         return 1.into();
     }
@@ -23,15 +24,16 @@ unsafe extern "C" fn link_attack_lw_4_main_loop(fighter: &mut L2CFighterCommon) 
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         return 1.into();
     }
-    if MotionModule::is_end(fighter.module_accessor) {
+    if MotionModule::is_end(boma) {
         fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
     }
     0.into()
 }
 
 unsafe extern "C" fn link_attack_lw_4_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    let boma = fighter.module_accessor;
+    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
+    WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 

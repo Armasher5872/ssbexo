@@ -18,8 +18,8 @@ unsafe extern "C" fn wario_special_n_throw_lw_init_status(fighter: &mut L2CFight
         let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
         let shouldered_frame_add= WorkModule::get_param_float(capture_boma, hash40("common"), hash40("shouldered_frame_add"));
         let damage = DamageModule::damage(capture_boma, 0);
-        let total_time = damage+shouldered_frame_add;
-        ControlModule::start_clatter(capture_boma, total_time, 0.0, 10.0, 127, 0, false, false);
+        let total_time = (damage+shouldered_frame_add)*1.3;
+        ControlModule::start_clatter(capture_boma, total_time, 0.0, 6.0, 127, 0, false, false);
     }
     0.into()
 }

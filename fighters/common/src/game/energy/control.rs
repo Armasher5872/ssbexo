@@ -301,19 +301,19 @@ unsafe extern "C" fn control_initialize(energy: &mut FighterKineticEnergyControl
             if reset_type == StopCeil {
                 speed_x_stable *= stop_ceil_speed_x_stable_mul;
             }
+            energy.speed_max = PaddedVec2::new(speed_x_stable, -1.0);
+            energy.speed_brake = PaddedVec2::new(air_brake_x, 0.0);
             let air_x_speed_max = if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT) && energy.unk[2] == 0 {
                 air_speed_x_limit
             } 
             else {
-                if [*FIGHTER_STATUS_KIND_JUMP, *FIGHTER_STATUS_KIND_ATTACK_AIR].contains(&status_kind) {
+                if status_kind == *FIGHTER_STATUS_KIND_JUMP {
                     jump_speed_x_max
                 } 
                 else {
                     -1.0
                 }
             };
-            energy.speed_max = PaddedVec2::new(speed_x_stable, -1.0);
-            energy.speed_brake = PaddedVec2::new(air_brake_x, 0.0);
             energy.speed_limit = PaddedVec2::new(air_x_speed_max, 0.0);
             energy.accel_mul_x = air_accel_x_mul;
             energy.accel_add_x = air_accel_x_add;

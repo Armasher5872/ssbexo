@@ -1,7 +1,7 @@
 use {
-    exo_utils::structs::{
-        getter_funcs::*,
-        vector::*,
+    exo_utils::{
+        common::check_attack::*,
+        structs::vector::*,
     },
     exo_var::{
         consts::*,
@@ -21,16 +21,21 @@ use {
         },
         phx::Vector3f
     },
-    smash_script::*,
+    smash_script::{
+        macros::*,
+        *
+    },
     smashline::*,
 };
 
+mod attack_s4;
 mod firebreath_move;
 mod special_hi_a;
 mod special_lw_a;
 mod special_n;
 
 pub fn install() {
+    attack_s4::install();
     firebreath_move::install();
     special_hi_a::install();
     special_lw_a::install();

@@ -6,21 +6,20 @@ use {
             sv_animcmd::{
                 execute,
                 frame,
-                wait,
-                wait_loop_sync_mot
+                wait
             },
             *
         },
         lib::lua_const::*,
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector2f
-        }
+        phx::*
     },
     smash_script::{
+        macros::{
+            ATTACK_ABS,
+            *
+        },
         *,
-        macros::*
     },
     smashline::{
         *,

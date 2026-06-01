@@ -2,13 +2,15 @@ use super::*;
 
 //Neutral Special Start Sound
 unsafe extern "C" fn ssbexo_link_special_n_start_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 13.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         PLAY_STATUS(agent, Hash40::new("se_link_special_n01"));
     }
-    frame(agent.lua_state_agent, 50.0);
-    if ArticleModule::is_exist(agent.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
-        let bow_arrow_boma = get_article_boma(agent.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
+    frame(lua_state, 50.0);
+    if ArticleModule::is_exist(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
+        let bow_arrow_boma = get_article_boma(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
         let arrow_type = WorkModule::get_int(bow_arrow_boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_ARROW_TYPE);
         if arrow_type == *WN_LINK_BOWARROW_LIGHT_ARROW {
             if is_excute(agent) {

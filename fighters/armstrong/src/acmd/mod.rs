@@ -4,10 +4,7 @@ use {
         status::catch::*,
         structs::getter_funcs::*,
     },
-    exo_var::{
-        consts::*,
-        variables::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,

@@ -2,13 +2,15 @@ use super::*;
 
 //Rising Tiger Knee Land ACMD
 unsafe extern "C" fn ssbexo_miifighter_rising_tiger_knee_land_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 1.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 65, 100, 0, 50, 4.0, 0.0, 5.5, 10.0, Some(0.0), Some(5.5), Some(-10.0), 2.0, 1.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
     }
-    frame(agent.lua_state_agent, 7.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
@@ -31,8 +33,9 @@ unsafe extern "C" fn ssbexo_miifighter_rising_tiger_knee_land_sound(agent: &mut 
 
 //Rising Tiger Knee Land Expression
 unsafe extern "C" fn ssbexo_miifighter_rising_tiger_knee_land_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 3, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 3, false, *BATTLE_OBJECT_ID_INVALID as u32);
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackl"), 0);
     }
 }

@@ -2,7 +2,8 @@ use super::*;
 
 //Barrel Break Sound
 unsafe extern "C" fn ssbexo_donkey_barrel_break_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 15.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 15.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_item_barrel_break"));
     }

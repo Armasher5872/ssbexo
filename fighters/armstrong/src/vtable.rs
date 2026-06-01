@@ -103,20 +103,19 @@ unsafe extern "C" fn armstrong_link_event(_vtable: u64, fighter: &mut Fighter, l
                     return 0;
                 }
             }
-            if captured_status == *FIGHTER_STATUS_KIND_THROWN {
+            if status == *FIGHTER_STATUS_KIND_SPECIAL_HI && capture_event.status == *FIGHTER_STATUS_KIND_CLUNG_GANON {
                 capture_event.node = smash2::phx::Hash40::new("throw");
                 capture_event.result = true;
-                if status == *FIGHTER_STATUS_KIND_FINAL {
-                    capture_event.motion_offset = offset;
-                    capture_event.motion_offset_lw = offset_lw;
-                    StatusModule::change_status_request(boma, *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW, false);
-                }
-                if status == *FIGHTER_STATUS_KIND_SPECIAL_HI {
-                    capture_event.motion_offset = offset;
-                    capture_event.motion_offset_lw = offset_lw;
-                    StatusModule::change_status_request(boma, *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_THROW, false);
-                    return 0;
-                }
+                capture_event.motion_offset = offset;
+                capture_event.motion_offset_lw = offset_lw;
+                StatusModule::change_status_request(boma, *FIGHTER_GANON_STATUS_KIND_SPECIAL_HI_CLING, false);
+            }
+            if status == *FIGHTER_STATUS_KIND_FINAL && captured_status == *FIGHTER_STATUS_KIND_THROWN {
+                capture_event.node = smash2::phx::Hash40::new("throw");
+                capture_event.result = true;
+                capture_event.motion_offset = offset;
+                capture_event.motion_offset_lw = offset_lw;
+                StatusModule::change_status_request(boma, *FIGHTER_ARMSTRONG_STATUS_KIND_FINAL_THROW, false);
                 return 0;
             }
         }

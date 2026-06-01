@@ -1,9 +1,10 @@
 use super::*;
 
 unsafe extern "C" fn littlemac_guard_damage_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_JUST_SHIELD) {
+    let boma = fighter.module_accessor;
+    if WorkModule::is_flag(boma, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_JUST_SHIELD) {
         //Adds a third of the meter if Little Mac parries
-        WorkModule::add_float(fighter.module_accessor, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+        WorkModule::add_float(boma, 34.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
     }
     fighter.sub_ftStatusUniqProcessGuardDamage_initStatus()
 }

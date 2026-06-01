@@ -34,18 +34,15 @@ use {
         lua2cpp::L2CFighterCommon,
         phx::*,
     },
-    smashline::*,
     smash_script::macros::*,
 };
 
 mod acmd;
-mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
     vtable::install();
 }

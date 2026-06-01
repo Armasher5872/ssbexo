@@ -1,93 +1,162 @@
-#![allow(unused_assignments)] //Addresses warning: value assigned to `fall_check` is never read
 use super::*;
 
 static mut IS_CALCULATING: Option<(u32, u32)> = None;
 
-#[skyline::hook(replace = L2CFighterCommon_status_Damage_Main)]
-unsafe extern "C" fn status_damage_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let break_to_death = fighter.FighterStatusDamage__check_dolly_stadium_wall_break_to_death().get_bool();
-    let is_damage_stop = FighterStopModuleImpl::is_damage_stop(fighter.module_accessor);
-    let get_damage_speed_x = {
-        fighter.clear_lua_stack();
-        lua_args!(fighter, *FIGHTER_KINETIC_ENERGY_ID_DAMAGE);
-        smash::app::sv_kinetic_energy::get_speed_x(fighter.lua_state_agent)
-    };
-    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let damage_fly_reflect_speed = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("damage_fly_reflect_speed"));
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
-        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            return 0.into();
+//Runs as you leave hitstop, used for ASDI
+#[skyline::hook(replace = L2CFighterCommon_FighterStatusUniqProcessDamage_leave_stop)]
+unsafe extern "C" fn fighter_status_uniq_process_damage_leave_stop(fighter: &mut L2CFighterCommon, _param_2: L2CValue, param_3: L2CValue) -> L2CValue {
+    let module_accessor = fighter.global_table[MODULE_ACCESSOR].get_ptr() as *mut BattleObjectModuleAccessor;
+    let damage_2 = fighter.local_func__fighter_status_damage_2();
+    let get_damage_fly_angle_compose = fighter.sub_FighterStatusDamage_get_damage_fly_angle_compose();
+    let reaction_frame_mul_speed_up = fighter.reaction_frame_mul_speed_up();
+    let boma = fighter.module_accessor;
+    let lr = PostureModule::lr(boma);
+    let status_kind = StatusModule::status_kind(boma);
+    let damage_lr = WorkModule::get_float(boma, *FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR);
+    let release_action = WorkModule::get_int(boma, *FIGHTER_STATUS_DAMAGE_WORK_INT_STOP_RELEASE_ACTION);
+    let mut damage_motion_kind = WorkModule::get_int64(boma, *FIGHTER_STATUS_DAMAGE_WORK_INT_MOTION_KIND);
+    let back_damage_effective_frame = WorkModule::get_param_int(boma, hash40("common"), hash40("back_damage_effective_frame"));
+    let is_absolute = damage_2["absolute_"].get_bool();
+    //let attr = {fighter.clear_lua_stack(); lua_args!(fighter, hash40("attr")); sv_information::damage_log_value(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_u64()};
+    let mut start_frame = 0.0;
+    if !param_3.get_bool() {
+        return 0.into();
+    }
+    if !is_absolute /*|| (is_absolute && attr == hash40("collision_attr_auto_shift"))*/ {
+        fighter.FighterStatusUniqProcessDamage_check_hit_stop_delay(damage_2);
+    }
+    FighterUtil::cheer_damage(module_accessor);
+    fighter.check_ryu_final_damage_03(true.into());
+    if release_action != *FIGHTER_STATUS_DAMAGE_STOP_RELEASE_ACTION_GROUND_TO_AIR {
+        /*
+        The original code here called to WorkModule::get_int(boma, *FIGHTER_STATUS_DAMAGE_WORK_INT_STOP_RELEASE_ACTION), assigned it to LStack_a0, 
+        assigned *FIGHTER_STATUS_DAMAGE_STOP_RELEASE_ACTION_GROUND_TO_GROUND to LStack_80, then assigned LStack_80 to LStack_a0 and clears LStack_a0. I think what it was intending on doing was assigning
+        the ground_to_ground const to the release action, but got fucked up in translation to Ghidra
+        */
+        WorkModule::set_int(boma, *FIGHTER_STATUS_DAMAGE_STOP_RELEASE_ACTION_GROUND_TO_GROUND, *FIGHTER_STATUS_DAMAGE_WORK_INT_STOP_RELEASE_ACTION);
+    }
+    else {
+        StatusModule::set_situation_kind(boma, SituationKind(*SITUATION_KIND_AIR), false);
+        let situation_kind = fighter.global_table[SITUATION_KIND].clone();
+        fighter.global_table[PREV_SITUATION_KIND].assign(&situation_kind);
+        fighter.global_table[SITUATION_KIND].assign(&SITUATION_KIND_AIR.into());
+        GroundModule::set_correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DAMAGE_FLY_AIR);
+    }
+    WorkModule::set_int(boma, *FIGHTER_STATUS_DAMAGE_STOP_RELEASE_ACTION_NONE, *FIGHTER_STATUS_DAMAGE_WORK_INT_STOP_RELEASE_ACTION);
+    if damage_motion_kind == hash40("damage_fly_roll") {
+        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINISH_CAMERA_TARGET) {
+            damage_motion_kind = hash40("damage_fly_n");
         }
     }
-    if situation_kind == *SITUATION_KIND_AIR {
-        if GroundModule::is_miss_foot(fighter.module_accessor) {
-            fighter.change_status(FIGHTER_STATUS_KIND_MISS_FOOT.into(), false.into());   
+    if damage_lr != 0.0 {
+        if damage_lr*lr >= 0.0 || status_kind == *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL || status_kind == *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR {
+            PostureModule::set_lr(boma, damage_lr);
+            PostureModule::update_rot_y_lr(boma);
+            WorkModule::set_float(boma, 0.0, *FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR);
         }
-        if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DAMAGE_FALL) {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION) {
-                fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FALL.into(), false.into());
+        else {
+            let cont = if status_kind == *FIGHTER_STATUS_KIND_DAMAGE_FLY {
+                if damage_motion_kind != hash40("wall_damage")
+                && MotionModule::motion_kind(boma) != hash40("wall_damage") {
+                    false
+                }
+                else {
+                    true
+                }
             }
             else {
-                fighter.change_status(FIGHTER_STATUS_KIND_MISS_FOOT.into(), false.into()); 
+                false
+            };
+            if cont || WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_KNOCKOUT) {
+                WorkModule::set_float(boma, 0.0, *FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR);
+            }
+            else {
+                TurnModule::set_turn(boma, Hash40::new("back_damage"), lr, false, false, true);
+                PostureModule::reverse_lr(boma);
+                WorkModule::set_int(boma, back_damage_effective_frame, *FIGHTER_INSTANCE_WORK_ID_INT_BACK_DAMAGE_EFFECTIVE_FRAME);
             }
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_FLAG_END_REACTION) {
-        if MotionModule::is_end(fighter.module_accessor) {
-            if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL) {
-                if situation_kind == *SITUATION_KIND_AIR {
-                    fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into()); 
-                }
-            }
-            if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {
-                if situation_kind == *SITUATION_KIND_GROUND {
-                    fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into()); 
-                }
+    if damage_motion_kind != hash40("invalid") {
+        if damage_motion_kind == hash40("wall_damage") {
+            start_frame = WorkModule::get_param_float(boma, hash40("common"), hash40("wall_damage_start_frame"));
+            if MotionModule::is_flag_start_1_frame_from_motion_kind(boma, Hash40::new("wall_damage")) {
+                start_frame -= 1.0;
             }
         }
-    }
-    if !is_damage_stop {
-        if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_LEFT as u32) {
-            if damage_fly_reflect_speed < -get_damage_speed_x {
-                if break_to_death {
-                    fighter.change_status(FIGHTER_STATUS_KIND_DOLLY_STAGE_DEAD.into(), false.into());
+        if status_kind == *FIGHTER_STATUS_KIND_DAMAGE_FLY {
+            if fighter.global_table[DAMAGE_MOTION_KIND_CALLBACK].get_bool() {
+                let callable: extern "C" fn(&mut L2CFighterCommon, L2CValue) -> L2CValue = std::mem::transmute(fighter.global_table[DAMAGE_MOTION_KIND_CALLBACK].get_ptr());
+                damage_motion_kind = callable(fighter, damage_motion_kind.into()).get_u64();
+            }
+        }
+        MotionModule::change_motion(boma, Hash40::new_raw(damage_motion_kind), start_frame, 1.0, false, 0.0, false, false);
+        if status_kind != *FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL {
+            if [*FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_DAMAGE_FLY, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR].contains(&status_kind) {
+                fighter.set_damage_motion_rate(damage_motion_kind.into(), start_frame.into(), WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_TO_PIERCE).into());
+                let damage_fly_angle = FighterUtil::set_damage_fly_angle(boma, 0.0, 1.0, 360.0, MotionNodeRotateCompose { _address: get_damage_fly_angle_compose.get_i32() as u8 });
+                WorkModule::set_float(boma, damage_fly_angle, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_ROT_ANGLE);
+                WorkModule::on_flag(boma, *FIGHTER_STATUS_DAMAGE_FLAG_FLY_ROLL_SET_ANGLE);
+            }
+        }
+        else {
+            if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINISH_CAMERA_TARGET) {
+                let damage_fly_angle = FighterUtil::set_damage_fly_angle(boma, 0.0, 1.0, 180.0, MotionNodeRotateCompose { _address: get_damage_fly_angle_compose.get_i32() as u8 });
+                WorkModule::set_float(boma, damage_fly_angle, *FIGHTER_STATUS_DAMAGE_WORK_FLOAT_ROT_ANGLE);
+                WorkModule::on_flag(boma, *FIGHTER_STATUS_DAMAGE_FLAG_FLY_ROLL_SET_ANGLE);
+            }
+            let mut cancel_frame = FighterMotionModuleImpl::get_cancel_frame(boma, Hash40::new_raw(damage_motion_kind), true);
+            if cancel_frame <= 0.0 {
+                cancel_frame = MotionModule::end_frame(boma);
+            }
+            if 0.0 < reaction_frame_mul_speed_up.get_f32() {
+                if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINISH_CAMERA_TARGET) {
+                    let frame_sub = WorkModule::get_param_float(boma, hash40("common"), 0x255c556cd3);
+                    let diff = reaction_frame_mul_speed_up.get_f32()-frame_sub;
+                    let modulo = diff % cancel_frame;
+                    if 0.0 < modulo {
+                        MotionModule::set_frame(boma, cancel_frame-modulo, true);
+                    }
                 }
                 else {
-                    fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR.into(), false.into());
+                    MotionModule::set_rate(boma, cancel_frame/reaction_frame_mul_speed_up.get_f32());
                 }
             }
         }
-        if GroundModule::is_touch(fighter.module_accessor, *GROUND_TOUCH_FLAG_RIGHT as u32) {
-            if damage_fly_reflect_speed < get_damage_speed_x {
-                if break_to_death {
-                    fighter.change_status(FIGHTER_STATUS_KIND_DOLLY_STAGE_DEAD.into(), false.into());
-                }
-                else {
-                    fighter.change_status(FIGHTER_STATUS_KIND_DAMAGE_FLY_REFLECT_LR.into(), false.into());
-                }
-            }
-        }
-        return 1.into();
+        WorkModule::set_int64(boma, hash40("invalid") as i64, *FIGHTER_STATUS_DAMAGE_WORK_INT_MOTION_KIND);
     }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_KNOCKOUT) {
-        if !is_damage_stop {
-            if [hash40("damage_n_1"), hash40("damage_n_2"), hash40("damage_n_3"), hash40("damage_hi_1"), hash40("damage_hi_2"), hash40("damage_hi_3"), hash40("damage_lw_1"), hash40("damage_lw_2"), hash40("damage_lw_3")].contains(&motion_kind) {
-                fighter.change_status(FIGHTER_STATUS_KIND_DOWN_SPOT.into(), false.into());   
-                return 0.into();
-            } 
-        }
-    }
-    asdi_check(fighter);
-    asdi_function(fighter);
     0.into()
 }
 
-#[skyline::hook(replace = L2CFighterCommon_status_end_Damage)]
-unsafe extern "C" fn status_end_damage(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let flags = [*FIGHTER_INSTANCE_WORK_ID_FLAG_ASDI_START, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_N_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE];
-    for x in 0..flags.len() {
-        WorkModule::off_flag(fighter.module_accessor, flags[x]);
+#[skyline::hook(replace = L2CFighterCommon_sub_damage_uniq_process_mainStop)]
+unsafe extern "C" fn sub_damage_uniq_process_main_stop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let status_kind_interrupt = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
+    let boma = fighter.module_accessor;
+    if !WorkModule::is_flag(boma, *FIGHTER_STATUS_DAMAGE_FLAG_ELEC) {
+        let get_damage_stop_frame = FighterStopModuleImpl::get_damage_stop_frame(boma);
+        if get_damage_stop_frame == 1 {
+            fighter.FighterStatusDamage__req_fly_roll_smoke_first();
+        }
+        fighter.sub_FighterStatusDamage_correctDamageVectorExecStop();
+    }
+    else {
+        fighter.exec_damage_elec_hit_stop();
+    }
+    /*
+    //Removes SDI functionality
+    if StopModule::is_damage(boma) {
+        let is_absolute = {fighter.clear_lua_stack(); lua_args!(fighter, hash40("absolute")); sv_information::damage_log_value(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_bool()};
+        if !is_absolute {
+            if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_PARALYZE_STOP) {
+                let damage_2_func = fighter.local_func__fighter_status_damage_2();
+                fighter.FighterStatusUniqProcessDamage_check_hit_stop_delay_flick(damage_2_func);
+            }
+        }
+    }
+    */
+    if [*FIGHTER_STATUS_KIND_DAMAGE_FLY_ROLL, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR].contains(&status_kind_interrupt) {
+        fighter.sub_ftStatusUniqProcessDamageFlyRoll_execStop();
     }
     0.into()
 }
@@ -117,8 +186,8 @@ unsafe extern "C" fn process_knockback(ctx: &InlineCtx) {
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
-            status_damage_main,
-            status_end_damage
+            fighter_status_uniq_process_damage_leave_stop,
+            sub_damage_uniq_process_main_stop
         );
     }
 }

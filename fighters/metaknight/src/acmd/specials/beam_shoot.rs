@@ -16,10 +16,11 @@ unsafe extern "C" fn ssbexo_metaknight_beam_shoot_effect(agent: &mut L2CAgentBas
 }
 
 unsafe extern "C" fn ssbexo_metaknight_beam_shoot_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("se_metaknight_attackair_f03"));
-        SET_TAKEOUT_SE_STATUS(agent.lua_state_agent);
+        SET_TAKEOUT_SE_STATUS(lua_state);
     }
 }
 

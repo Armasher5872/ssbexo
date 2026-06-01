@@ -28,8 +28,15 @@ unsafe extern "C" fn wario_appeal_gas_main_loop(fighter: &mut L2CFighterCommon) 
     }
     if current_frame <= 63.0 {
         if damage >= 100.0 {
-            if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_DEAD, false);
+            if damage >= 200.0 {
+                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+                    fighter.change_status(FIGHTER_WARIO_STATUS_KIND_APPEAL_KAMIKAZE.into(), false.into());
+                }
+            }
+            else {
+                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+                    StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_STATUS_KIND_DEAD, false);
+                }
             }
         }
     }

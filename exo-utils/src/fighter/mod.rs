@@ -42,9 +42,9 @@ use {
         miifighter::*,
         murabito::*,
         pikachu::*,
+        roy::*,
         sheik::*,
         sonic::*,
-        variables::*,
         wario::*,
     },
     smash::{
@@ -97,6 +97,7 @@ pub mod murabito_shizue_common;
 pub mod pfushigisou;
 pub mod pikachu;
 pub mod robot;
+pub mod roy;
 pub mod sheik;
 pub mod shizue;
 pub mod sonic;

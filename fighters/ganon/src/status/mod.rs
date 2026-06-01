@@ -44,11 +44,13 @@ mod special_hi_end;
 mod special_hi_move;
 mod special_hi_start;
 mod special_hi_throw;
+mod special_lw;
 mod special_n_cape;
 mod special_n_volley_fire;
 mod special_n_volley_loop;
 mod special_n_volley_start;
 mod special_n;
+mod special_s_catch;
 mod volley_fly;
 mod volley_summon;
 
@@ -62,11 +64,13 @@ pub fn install() {
     special_hi_move::install();
     special_hi_start::install();
     special_hi_throw::install();
+    special_lw::install();
     special_n_cape::install();
     special_n_volley_fire::install();
     special_n_volley_loop::install();
     special_n_volley_start::install();
     special_n::install();
+    special_s_catch::install();
     volley_fly::install();
     volley_summon::install();
 }

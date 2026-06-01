@@ -7,8 +7,9 @@ unsafe extern "C" fn cloud_run_main_status(fighter: &mut L2CFighterCommon) -> L2
 
 unsafe extern "C" fn cloud_status_run_sub(fighter: &mut L2CFighterCommon) {
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
-    let start_frame = if [*FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN_DASH].contains(&prev_status_kind) {WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_RUN_WORK_FLOAT_START_FRAME)} else {0.0};
-    let motion = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_run"} else {"run"};
+    let boma = fighter.module_accessor;
+    let start_frame = if [*FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN_DASH].contains(&prev_status_kind) {WorkModule::get_float(boma, *FIGHTER_STATUS_RUN_WORK_FLOAT_START_FRAME)} else {0.0};
+    let motion = if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_run"} else {"run"};
     /* The transition terms from ITEM_THROW_DASH to TURN_RUN are vanilla, and anything past that is modded */
     let transition_terms = [ 
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_S4_START, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI, 
@@ -22,15 +23,15 @@ unsafe extern "C" fn cloud_status_run_sub(fighter: &mut L2CFighterCommon) {
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U, 
         *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW
     ];
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new(motion), start_frame, 1.0, false, 0.0, false, false);
-    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_SPECIAL);
-    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD);
-    WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
+    MotionModule::change_motion(boma, Hash40::new(motion), start_frame, 1.0, false, 0.0, false, false);
+    WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_SPECIAL);
+    WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD);
+    WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
     for term in transition_terms.iter() {
-        WorkModule::enable_transition_term(fighter.module_accessor, *term);
+        WorkModule::enable_transition_term(boma, *term);
     }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_GEKIKARA) {
-        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_GEKIKARA_RUN_BRAKE);
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GEKIKARA) {
+        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_GEKIKARA_RUN_BRAKE);
     }
 }
 

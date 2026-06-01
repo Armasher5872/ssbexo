@@ -51,13 +51,13 @@ unsafe extern "C" fn luigi_link_event(vtable: u64, fighter: &mut Fighter, event:
             capture_event.result = true;
             capture_event.motion_offset = offset;
             capture_event.motion_offset_lw = offset_lw;
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, false);
+            StatusModule::change_status_request(boma, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, false);
         }
         if capture_event.status == *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_START && status_kind == *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_LOOP {
             capture_event.node = smash2::phx::Hash40::new("throw");
             capture_event.result = true;
             capture_event.constraint = true;
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, false);
+            StatusModule::change_status_request(boma, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, false);
         }
         return 1;
     }
@@ -83,7 +83,26 @@ unsafe extern "C" fn luigi_on_search(_vtable: u64, fighter: &mut Fighter, log: u
 #[skyline::hook(offset = LUIGI_VTABLE_CHANGE_MOTION_CALLBACK_OFFSET)]
 unsafe extern "C" fn luigi_change_motion_callback(_vtable: u64, _fighter: &mut Fighter, _some_struct: u64) {}
 
+//Luigi Fireball On Attack Offset
+unsafe extern "C" fn luigi_fireball_on_attack(vtable: u64, weapon: *mut smash::app::Weapon, collision_bitmask: u32) -> u64 {
+    let boma = (*weapon).battle_object.module_accessor;
+    let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let owner_boma = sv_battle_object::module_accessor(owner_id);
+    let owner_kind = utility::get_kind(&mut *owner_boma);
+    if owner_kind == *FIGHTER_KIND_LUIGI {
+        *(weapon as *mut bool).add(0x90) = false;
+    }
+    if owner_kind == *FIGHTER_KIND_GANON {
+        *(weapon as *mut bool).add(0x90) = false;
+    }
+    if owner_kind == *FIGHTER_KIND_WARIO {
+        *(weapon as *mut bool).add(0x90) = true;
+    }
+    normal_weapon_hit_handler(vtable, weapon, collision_bitmask)
+}
+
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x51e1898).data(luigi_fireball_on_attack as *const () as u64);
 	skyline::install_hooks!(
         luigi_reset_initialization,
         luigi_death_initialization,

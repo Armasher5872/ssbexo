@@ -5,18 +5,17 @@ use {
             var_reset::*,
         },
         fighter::krool::*,
-        status::damage::*,
     },
     exo_var::{
         consts::*,
         globals::*,
+        krool::*,
     },
     smash::{
         app::{
             lua_bind::*,
             *
         },
-        lib::lua_const::*,
         lua2cpp::L2CFighterCommon,
     },
     smashline::*,

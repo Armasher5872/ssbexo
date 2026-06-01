@@ -1,20 +1,5 @@
 use super::*;
 
-#[skyline::from_offset(0x59970)]
-pub unsafe fn find_pane_by_name_recursive(pane: *const Pane, s: *const c_char) -> *mut Pane;
-
-#[skyline::from_offset(0x583c0)]
-pub unsafe fn find_pane_by_name(pane: *const Pane, s: *const c_char, recursive: bool) -> *mut Pane;
-
-#[skyline::from_offset(0x37a22f0)]
-pub unsafe fn pane_set_text_string(pane: *mut TextBox, s: *const c_char);
-
-#[skyline::from_offset(0x58290)]
-pub unsafe fn pane_remove_child(pane: *mut Pane, child: *const Pane);
-
-#[skyline::from_offset(0x58250)]
-pub unsafe fn pane_append_child(pane: *mut Pane, child: *const Pane);
-
 macro_rules! c_str {
     ($l:tt) => {
         [$l.as_bytes(), "\u{0}".as_bytes()].concat().as_ptr()

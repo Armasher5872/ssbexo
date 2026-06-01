@@ -11,8 +11,9 @@ unsafe fn status_attacks4hold_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 //Attack S4 End, clears the full smash attack flags
 #[skyline::hook(replace = L2CFighterCommon_status_end_AttackS4)]
 unsafe fn status_end_attacks4(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
+    let boma = fighter.module_accessor;
+    WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }
 

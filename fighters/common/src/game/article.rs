@@ -23,6 +23,9 @@ pub fn install() {
         set_kirby_inhale_behavior(FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_DELETE);
         set_villager_pocket_behavior(FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_MISFIRE);
         set_rosetta_pull_behavior(FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_DELETE);
+        set_kirby_inhale_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, get_armstrong_costumes_non_acmd(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
+        set_villager_pocket_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, get_armstrong_costumes_non_acmd(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_MISFIRE);
+        set_rosetta_pull_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, get_armstrong_costumes_non_acmd(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
     }
     set_kirby_inhale_behavior(*FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_DELETE);
     set_villager_pocket_behavior(*FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_MISFIRE);

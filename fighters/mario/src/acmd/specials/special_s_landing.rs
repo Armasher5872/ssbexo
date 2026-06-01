@@ -2,14 +2,16 @@ use super::*;
 
 //Side Special Landing ACMD
 unsafe extern "C" fn ssbexo_mario_side_special_landing_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 7.0);
     if is_excute(agent) {
-        let sum_speed_x = KineticModule::get_sum_speed_x(agent.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+        let sum_speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
         SA_SET(agent, *SITUATION_KIND_AIR);
-        GroundModule::correct(agent.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(agent.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-        KineticModule::enable_energy(agent.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
         sv_kinetic_energy!(set_speed, agent, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, sum_speed_x/1.5, 1.3);
     }
 }
@@ -23,10 +25,11 @@ unsafe extern "C" fn ssbexo_mario_side_special_landing_effect(agent: &mut L2CAge
 
 //Side Special Landing Sound
 unsafe extern "C" fn ssbexo_mario_side_special_landing_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("vc_mario_passive"));
     }
-    frame(agent.lua_state_agent, 2.0);
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_mario_landing02"));
     }

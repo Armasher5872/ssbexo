@@ -2,52 +2,58 @@ use super::*;
 
 //Grounded Down Special ACMD
 unsafe extern "C" fn ssbexo_ganon_grounded_down_special_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 10.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 10.0);
     if is_excute(agent) {
-        FighterAreaModuleImpl::enable_fix_jostle_area_xy(agent.module_accessor, 3.0, 6.0, 8.5, 9.5);
+        FighterAreaModuleImpl::enable_fix_jostle_area_xy(boma, 3.0, 6.0, 8.5, 9.5);
     }
-    frame(agent.lua_state_agent, 13.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
-        FighterAreaModuleImpl::enable_fix_jostle_area_xy(agent.module_accessor, 2.0, 6.0, 8.5, 10.0);
+        FighterAreaModuleImpl::enable_fix_jostle_area_xy(boma, 2.0, 6.0, 8.5, 10.0);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("armr"), 16.0, 45, 65, 0, 65, 5.0, 2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_purple"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
-        JostleModule::set_status(agent.module_accessor, false);
-        ArticleModule::generate_article(agent.module_accessor, FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
+        set_main_body_model_visibility(&mut *boma, false);
+        ArticleModule::generate_article(boma, FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, false, -1);
     }
-    wait(agent.lua_state_agent, 1.0);
+    wait(lua_state, 1.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_GANON_STATUS_WORK_ID_FLAG_GANON_KICK_WALL_CHECK);
+        WorkModule::on_flag(boma, *FIGHTER_GANON_STATUS_WORK_ID_FLAG_GANON_KICK_WALL_CHECK);
     }
-    frame(agent.lua_state_agent, 35.0);
+    frame(lua_state, 35.0);
     if is_excute(agent) {
-        FighterAreaModuleImpl::enable_fix_jostle_area_xy(agent.module_accessor, 8.0, 8.0, 8.0, 4.0);
+        FighterAreaModuleImpl::enable_fix_jostle_area_xy(boma, 8.0, 8.0, 8.0, 4.0);
     }
-    frame(agent.lua_state_agent, 36.0);
+    frame(lua_state, 36.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        JostleModule::set_status(agent.module_accessor, true);
+        AttackModule::clear_all(boma);
+        JostleModule::set_status(boma, true);
+        set_main_body_model_visibility(&mut *boma, true);
+        ArticleModule::remove_exist(boma, FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY, ArticleOperationTarget(0));
     }
 }
 
 //Grounded Down Special Effect
 unsafe extern "C" fn ssbexo_ganon_grounded_down_special_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), -5.5, 4.0, 3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, 2, 0.5, 1);
-        sv_animcmd::EFFECT_COLOR(agent.lua_state_agent);
+        sv_animcmd::EFFECT_COLOR(lua_state);
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(lua_state, 15.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("ganon_rekkikyaku"), Hash40::new("top"), 0, 3, 10, 0, 0, 0, 1, true);
-        EffectModule::enable_sync_init_pos_last(agent.module_accessor);
+        EffectModule::enable_sync_init_pos_last(boma);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    wait(agent.lua_state_agent, 6.0);
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_sliding_smoke"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
@@ -55,19 +61,21 @@ unsafe extern "C" fn ssbexo_ganon_grounded_down_special_effect(agent: &mut L2CAg
 
 //Grounded Down Special Sound
 unsafe extern "C" fn ssbexo_ganon_grounded_down_special_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_dash_start"));
     }
-    wait(agent.lua_state_agent, 12.0);
+    wait(lua_state, 12.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_special_l01"));
         PLAY_SE(agent, Hash40::new("vc_ganon_special_l01"));
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
-        let boar = SoundModule::play_se(agent.module_accessor, Hash40::new("se_ganon_final04"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, boar as i32, 0.5, 0);
+        let boar = SoundModule::play_se(boma, Hash40::new("se_ganon_final04"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, boar as i32, 0.5, 0);
     }
 }
 

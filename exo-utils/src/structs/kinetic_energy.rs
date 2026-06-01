@@ -117,3 +117,118 @@ impl DerefMut for FighterKineticEnergyControl {
         &mut self.parent
     }
 }
+
+#[repr(C)]
+pub struct FighterKineticEnergyMotion {
+    parent: KineticEnergy,
+    pub lr: f32,
+    pub angle: f32,
+    pub angle_whole: f32,
+    pub angle_intp_end: f32,
+    pub angle_intp_frames_remaining: i32,
+    pub speed_mul: f32,
+    pub prev_speed: PaddedVec2,
+    pub speed_mul_2nd: PaddedVec2,
+    pub update_flag: bool,
+    // ...
+}
+
+impl Deref for FighterKineticEnergyMotion {
+    type Target = KineticEnergy;
+    fn deref(&self) -> &Self::Target {
+        &self.parent
+    }
+}
+
+impl DerefMut for FighterKineticEnergyMotion {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.parent
+    }
+}
+
+impl FighterKineticEnergyMotion {
+    //Calls a MotionModule vtable function to update the trans move speed (2nd)
+    pub fn update_trans_move_speed_2nd(boma: &mut BattleObjectModuleAccessor) {
+        unsafe {
+            let motion_module = *(boma as *const BattleObjectModuleAccessor as *const u64).add(0x88/0x8);
+            let motion_module_vtable = *(motion_module as *const *const u64);
+            let function: extern "C" fn(u64) = std::mem::transmute(*motion_module_vtable.add(0x220/0x8));
+            function(motion_module);
+        }
+    }
+    //Checks if the motion (2nd) is updating the kinetic energy
+    pub fn is_motion_2nd_updating_energy(boma: &mut BattleObjectModuleAccessor) -> bool {
+        unsafe {
+            let motion_module = *(boma as *const BattleObjectModuleAccessor as *const u64).add(0x88/0x8);
+            let motion_module_vtable = *(motion_module as *const *const u64);
+            let function: extern "C" fn(u64) -> bool = std::mem::transmute(*motion_module_vtable.add(0x1f0/0x8));
+            function(motion_module)
+        }
+    }
+    //Checks if the motion is updating the kinetic energy
+    pub fn is_main_motion_updating_energy(boma: &mut BattleObjectModuleAccessor) -> bool {
+        unsafe {
+            let motion_module = *(boma as *const BattleObjectModuleAccessor as *const u64).add(0x88/0x8);
+            let motion_module_vtable = *(motion_module as *const *const u64);
+            let function: extern "C" fn(u64) -> bool = std::mem::transmute(*motion_module_vtable.add(0x1e8/0x8));
+            function(motion_module)
+        }
+    }
+    pub fn trans_move_speed_correct(boma: &mut BattleObjectModuleAccessor) -> Vector3f {
+        unsafe {
+            let func: extern "C" fn(&mut BattleObjectModuleAccessor) -> smash2::cpp::simd::Vector3 = std::mem::transmute(MotionModule::trans_move_speed as *const ());
+            let vec = func(boma);
+            Vector3f{x: vec.x(), y: vec.y(), z: vec.z()}
+        }
+    }
+    pub fn trans_move_speed_2nd_correct(boma: &mut BattleObjectModuleAccessor) -> Vector3f {
+        unsafe {
+            let func: extern "C" fn(&mut BattleObjectModuleAccessor) -> smash2::cpp::simd::Vector3 = std::mem::transmute(MotionModule::trans_move_speed_2nd as *const ());
+            let vec = func(boma);
+            Vector3f{x: vec.x(), y: vec.y(), z: vec.z()}
+        }
+    }
+    /// Sets some of the main behavioral values of the KineticEnergy and performs processing on it
+    /// # Arguments
+    /// * `accel` - The acceleration of the energy
+    /// * `max_speed` - The maximum speed of the energy
+    /// * `speed` - The speed that we are attempting to accelerate to
+    pub fn set_values_and_process(&mut self, accel: PaddedVec2, max_speed: PaddedVec2, speed: PaddedVec2, boma: &mut BattleObjectModuleAccessor) {
+        self.accel = accel;
+        self.speed_max = max_speed;
+        self.process(boma);
+        self.active_flag = true;
+        self.prev_speed = speed;
+    }
+    /// Gets the translation based on the specified energy reset type
+    /// # Arguments
+    /// * `boma` - The BattleObjectModuleAccessor
+    /// * `reset_type` - The reset type of the current energy
+    /// # Returns
+    /// The translation as a Vec2
+    pub fn get_translation_by_reset_type(boma: &mut BattleObjectModuleAccessor, reset_type: EnergyMotionResetType) -> PaddedVec2 {
+        let translation = unsafe {
+            if reset_type.is_2nd() {
+                Self::update_trans_move_speed_2nd(boma);
+                Self::trans_move_speed_2nd_correct(boma)
+            } 
+            else {
+                MotionModule::update_trans_move_speed(boma);
+                Self::trans_move_speed_correct(boma)
+            }
+        };
+        PaddedVec2::new(translation.z, translation.y)
+    }
+    /// Checks if the animation is updating the kinetic energy, depending on the EnergyMotionResetType
+    /// # Arguments
+    /// * `boma` - The BattleObjectModuleAccessor
+    /// * `reset_type` - The reset type of the current energy
+    pub fn is_motion_updating_energy(boma: &mut BattleObjectModuleAccessor, reset_type: EnergyMotionResetType) -> bool {
+        if reset_type.is_2nd() {
+            Self::is_motion_2nd_updating_energy(boma)
+        } 
+        else {
+            Self::is_main_motion_updating_energy(boma)
+        }
+    }
+}

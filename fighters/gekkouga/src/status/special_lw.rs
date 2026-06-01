@@ -3,22 +3,24 @@ use super::*;
 unsafe extern "C" fn gekkouga_special_lw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let status_attr = if situation_kind == *SITUATION_KIND_AIR {*FIGHTER_STATUS_ATTR_START_TURN} else {0};
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, status_attr as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
+    let boma = fighter.module_accessor;
+    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_SPECIAL_LW | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON) as u64, status_attr as u32, *FIGHTER_POWER_UP_ATTACK_BIT_SPECIAL_LW as u32, 0);
     0.into()
 }
 
 unsafe extern "C" fn gekkouga_special_lw_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let boma = fighter.module_accessor;
     if situation_kind != *SITUATION_KIND_GROUND {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
     }
     else {
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_MOTION);
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
+    WorkModule::on_flag(boma, *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLAG_SPECIAL_S_IS_DISABLE);
     0.into()
 }
 
@@ -30,7 +32,8 @@ unsafe extern "C" fn gekkouga_special_lw_main_status(fighter: &mut L2CFighterCom
 unsafe extern "C" fn gekkouga_special_lw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+    let boma = fighter.module_accessor;
+    if CancelModule::is_enable_cancel(boma) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             return 1.into();
         }
@@ -38,21 +41,21 @@ unsafe extern "C" fn gekkouga_special_lw_main_loop(fighter: &mut L2CFighterCommo
     if fighter.sub_air_check_fall_common().get_bool() {
         return 1.into();
     }
-    if !StatusModule::is_changing(fighter.module_accessor) {
+    if !StatusModule::is_changing(boma) {
         if situation_kind == *SITUATION_KIND_GROUND
         && prev_situation_kind == *SITUATION_KIND_AIR {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
             fighter.change_status(FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL.into(), false.into());
         }
         if situation_kind == *SITUATION_KIND_AIR
         && prev_situation_kind == *SITUATION_KIND_GROUND {
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
     }
-    if MotionModule::is_end(fighter.module_accessor) {
+    if MotionModule::is_end(boma) {
         if situation_kind != *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
@@ -69,22 +72,24 @@ unsafe extern "C" fn gekkouga_special_lw_exec_status(_fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn gekkouga_special_lw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
-        let article_boma = get_article_boma(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
+    let boma = fighter.module_accessor;
+    if ArticleModule::is_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
+        let article_boma = get_article_boma(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
         let article_motion_kind = MotionModule::motion_kind(article_boma);
         if article_motion_kind == hash40("special_lw") {
-            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            ArticleModule::remove_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         }
     }
     0.into()
 }
 
 unsafe extern "C" fn gekkouga_special_lw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
-        let article_boma = get_article_boma(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
+    let boma = fighter.module_accessor;
+    if ArticleModule::is_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
+        let article_boma = get_article_boma(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
         let article_motion_kind = MotionModule::motion_kind(article_boma);
         if article_motion_kind == hash40("special_lw") {
-            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            ArticleModule::remove_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         }
     }
     0.into()

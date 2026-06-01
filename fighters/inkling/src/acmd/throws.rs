@@ -2,73 +2,79 @@ use super::*;
 
 //Standing Grab ACMD
 unsafe extern "C" fn ssbexo_inkling_grab_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        GrabModule::set_rebound(agent.module_accessor, true);
-        MotionModule::set_rate(agent.module_accessor, 1.333);
+        GrabModule::set_rebound(boma, true);
+        MotionModule::set_rate(boma, 1.333);
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
-        MotionModule::set_rate(agent.module_accessor, 1.0);
+        MotionModule::set_rate(boma, 1.0);
         CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(8.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
-    wait(agent.lua_state_agent, 2.0);
+    wait(lua_state, 2.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
-        GrabModule::set_rebound(agent.module_accessor, false);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
+        GrabModule::set_rebound(boma, false);
     }
 }
 
 //Dash Grab ACMD
 unsafe extern "C" fn ssbexo_inkling_dash_grab_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        GrabModule::set_rebound(agent.module_accessor, true);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
+        GrabModule::set_rebound(boma, true);
+        WorkModule::on_flag(boma, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
         inkling_generate_squid_helper(agent);
-        MotionModule::set_rate(agent.module_accessor, 1.125);
+        MotionModule::set_rate(boma, 1.125);
     }
-    frame(agent.lua_state_agent, 1.0);
+    frame(lua_state, 1.0);
     if is_excute(agent) {
-        VisibilityModule::set_whole(agent.module_accessor, true);
-        ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        VisibilityModule::set_whole(boma, true);
+        ArticleModule::set_visibility_whole(boma, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(lua_state, 9.0);
     if is_excute(agent) {
-        MotionModule::set_rate(agent.module_accessor, 1.0);
+        MotionModule::set_rate(boma, 1.0);
         CATCH(agent, 0, Hash40::new("top"), 2.6, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.6), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
-    wait(agent.lua_state_agent, 2.0);
+    wait(lua_state, 2.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
-        GrabModule::set_rebound(agent.module_accessor, false);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
+        GrabModule::set_rebound(boma, false);
     }
 }
 
 //Pivot Grab ACMD
 unsafe extern "C" fn ssbexo_inkling_pivot_grab_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
+        WorkModule::on_flag(boma, *FIGHTER_INKLING_INSTANCE_WORK_ID_FLAG_NO_FLIP_SQUID);
         inkling_generate_squid_helper(agent);
-        GrabModule::set_rebound(agent.module_accessor, true);
+        GrabModule::set_rebound(boma, true);
     }
-    frame(agent.lua_state_agent, 1.0);
+    frame(lua_state, 1.0);
     if is_excute(agent) {
-        VisibilityModule::set_whole(agent.module_accessor, true);
-        ArticleModule::set_visibility_whole(agent.module_accessor, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        VisibilityModule::set_whole(boma, true);
+        ArticleModule::set_visibility_whole(boma, *FIGHTER_INKLING_GENERATE_ARTICLE_SQUID, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -4.0, Some(0.0), Some(6.6), Some(-14.7), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
-    wait(agent.lua_state_agent, 2.0);
+    wait(lua_state, 2.0);
     if is_excute(agent) {
         grab!(agent, *MA_MSC_CMD_GRAB_CLEAR_ALL);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
-        GrabModule::set_rebound(agent.module_accessor, false);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
+        GrabModule::set_rebound(boma, false);
     }
 }
 

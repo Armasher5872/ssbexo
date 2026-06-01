@@ -5,31 +5,32 @@ unsafe extern "C" fn ssbexo_link_special_hi_hold_acmd(_agent: &mut L2CAgentBase)
 
 //Up Special Hold Effect
 unsafe extern "C" fn ssbexo_link_special_hi_hold_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 28.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 28.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
-    frame(agent.lua_state_agent, 40.0);
+    frame(lua_state, 40.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
-    frame(agent.lua_state_agent, 50.0);
+    frame(lua_state, 50.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
-    frame(agent.lua_state_agent, 60.0);
+    frame(lua_state, 60.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
-    frame(agent.lua_state_agent, 65.0);
+    frame(lua_state, 65.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
-    frame(agent.lua_state_agent, 70.0);
+    frame(lua_state, 70.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
-    frame(agent.lua_state_agent, 75.0);
+    frame(lua_state, 75.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
@@ -37,10 +38,11 @@ unsafe extern "C" fn ssbexo_link_special_hi_hold_effect(agent: &mut L2CAgentBase
 
 //Up Special Hold Sound
 unsafe extern "C" fn ssbexo_link_special_hi_hold_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_special_h01"));
     }
-    frame(agent.lua_state_agent, 24.0);
+    frame(lua_state, 24.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_special_h03"));
     }
@@ -48,10 +50,11 @@ unsafe extern "C" fn ssbexo_link_special_hi_hold_sound(agent: &mut L2CAgentBase)
 
 //Up Special Hold Expression
 unsafe extern "C" fn ssbexo_link_special_hi_hold_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
+        VisibilityModule::set_int64(boma, hash40("shield") as i64, hash40("shield_back") as i64);
+        VisibilityModule::set_int64(boma, hash40("sword") as i64, hash40("sword_back") as i64);
     }
 }
 

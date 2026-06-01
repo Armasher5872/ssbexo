@@ -2,49 +2,54 @@ use super::*;
 
 //Wait 2 Expression
 unsafe extern "C" fn ssbexo_koopa_wait_2_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, 0);
     }
-    frame(agent.lua_state_agent, 56.0);
+    frame(lua_state, 56.0);
     for _ in 0..5 {
         if is_excute(agent) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
-        wait(agent.lua_state_agent, 10.0);
+        wait(lua_state, 10.0);
     }
 }
 
 //Wait 3 Expression
 unsafe extern "C" fn ssbexo_koopa_wait_3_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, 0);
     }
-    frame(agent.lua_state_agent, 34.0);
+    frame(lua_state, 34.0);
     if is_excute(agent) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
-    frame(agent.lua_state_agent, 63.0);
+    frame(lua_state, 63.0);
     if is_excute(agent) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
-    frame(agent.lua_state_agent, 106.0);
+    frame(lua_state, 106.0);
     for _ in 0..7 {
         if is_excute(agent) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
-        wait(agent.lua_state_agent, 10.0);
+        wait(lua_state, 10.0);
     }
 }
 
 //Up Taunt Effect
 unsafe extern "C" fn ssbexo_koopa_up_taunt_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 40.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 40.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("koopa_wait_breath"), Hash40::new("head"), 0, 4, 0, 0, 0, 0, 1, true);
     }
-    frame(agent.lua_state_agent, 90.0);
+    frame(lua_state, 90.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("koopa_wait_breath"), false, true);
     }
@@ -52,7 +57,8 @@ unsafe extern "C" fn ssbexo_koopa_up_taunt_effect(agent: &mut L2CAgentBase) {
 
 //Up Taunt Sound
 unsafe extern "C" fn ssbexo_koopa_up_taunt_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 40.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 40.0);
     if is_excute(agent) {
         PLAY_SE_REMAIN(agent, Hash40::new("vc_koopa_attack07"));
     }
@@ -60,92 +66,101 @@ unsafe extern "C" fn ssbexo_koopa_up_taunt_sound(agent: &mut L2CAgentBase) {
 
 //Up Taunt Expression
 unsafe extern "C" fn ssbexo_koopa_up_taunt_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, 0);
     }
-    frame(agent.lua_state_agent, 40.0);
+    frame(lua_state, 40.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, 0);
     }
-    frame(agent.lua_state_agent, 45.0);
+    frame(lua_state, 45.0);
     for _ in 0..4 {
         if is_excute(agent) {
             QUAKE(agent, *CAMERA_QUAKE_KIND_S);
         }
-        wait(agent.lua_state_agent, 10.0);
+        wait(lua_state, 10.0);
     }
 }
 
 //Side Taunt ACMD
 unsafe extern "C" fn ssbexo_koopa_side_taunt_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 32.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 32.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("head"), 6.0, 40, 60, 0, 80, 6.0, 2.4, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HEAD);
     }
-    frame(agent.lua_state_agent, 36.0);
+    frame(lua_state, 36.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 56.0);
+    frame(lua_state, 56.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("head"), 6.0, 40, 60, 0, 80, 6.0, 2.4, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HEAD);
     }
-    frame(agent.lua_state_agent, 60.0);
+    frame(lua_state, 60.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 73.0);
+    frame(lua_state, 73.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("head"), 6.0, 40, 60, 0, 80, 6.0, 2.4, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HEAD);
     }
-    frame(agent.lua_state_agent, 77.0);
+    frame(lua_state, 77.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Side Taunt Expression
 unsafe extern "C" fn ssbexo_koopa_side_taunt_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 34.0);
+    frame(lua_state, 34.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, 0);
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
-    frame(agent.lua_state_agent, 56.0);
+    frame(lua_state, 56.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, 0);
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
-    frame(agent.lua_state_agent, 73.0);
+    frame(lua_state, 73.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitl"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitl"), 0, false, 0);
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
 }
 
 //Dash Attack ACMD
 unsafe extern "C" fn ssbexo_koopa_dash_attack_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 14.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 361, 45, 0, 95, 7.0, 0.0, 8.0, 5.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_BODY);
     }
-    wait(agent.lua_state_agent, 1.0);
+    wait(lua_state, 1.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_CAN_GATLING);
     }  
-    frame(agent.lua_state_agent, 27.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Dash Attack Effect
 unsafe extern "C" fn ssbexo_koopa_dash_attack_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 14.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
@@ -153,19 +168,20 @@ unsafe extern "C" fn ssbexo_koopa_dash_attack_effect(agent: &mut L2CAgentBase) {
 
 //Dash Attack Sound
 unsafe extern "C" fn ssbexo_koopa_dash_attack_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 14.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_koopa_attackdash"));
     }
-    frame(agent.lua_state_agent, 27.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_koopa_landing02"));
     }
-    frame(agent.lua_state_agent, 45.0);
+    frame(lua_state, 45.0);
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_koopa_landing02"));
     }
-    frame(agent.lua_state_agent, 72.0);
+    frame(lua_state, 72.0);
     if is_excute(agent) {
         PLAY_STEP_FLIPPABLE(agent, Hash40::new("se_koopa_step_right_m"), Hash40::new("se_koopa_step_left_m"));
     }
@@ -173,24 +189,26 @@ unsafe extern "C" fn ssbexo_koopa_dash_attack_sound(agent: &mut L2CAgentBase) {
 
 //Dash Attack Expression
 unsafe extern "C" fn ssbexo_koopa_dash_attack_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 13.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_NONE);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 4);
     }
-    frame(agent.lua_state_agent, 44.0);
+    frame(lua_state, 44.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_landl_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_landl_hv"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 8);
     }
 }

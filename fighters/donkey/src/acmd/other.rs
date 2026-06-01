@@ -2,11 +2,13 @@ use super::*;
 
 //Back Dash ACMD
 unsafe extern "C" fn ssbexo_donkey_turn_dash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("legl"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("legr"), *HIT_STATUS_XLU);
@@ -15,74 +17,27 @@ unsafe extern "C" fn ssbexo_donkey_turn_dash_acmd(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("footl"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("footr"), *HIT_STATUS_XLU);
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
-        WorkModule::enable_transition_term(agent.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
     }
-    frame(agent.lua_state_agent, 23.0);
+    frame(lua_state, 23.0);
     if is_excute(agent) {
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
-    }
-}
-
-//Item Heavy Forward Throw ACMD
-unsafe extern "C" fn ssbexo_donkey_item_heavy_forward_throw_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 18.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
-        agent.clear_lua_stack();
-        lua_args!(agent, 21, 10, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
-        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
-    }
-}
-
-//Item Heavy Back Throw ACMD
-unsafe extern "C" fn ssbexo_donkey_item_heavy_back_throw_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 20.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
-        agent.clear_lua_stack();
-        lua_args!(agent, -23, 10, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
-        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
-        REVERSE_LR(agent);
-    }
-}
-
-//Item Heavy Up Throw ACMD
-unsafe extern "C" fn ssbexo_donkey_item_heavy_up_throw_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
-        agent.clear_lua_stack();
-        lua_args!(agent, 0, 42, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
-        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
-    }
-}
-
-//Item Heavy Down Throw ACMD
-unsafe extern "C" fn ssbexo_donkey_item_heavy_down_throw_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 14.0);
-    if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK);
-        agent.clear_lua_stack();
-        lua_args!(agent, 0, 1, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_ANGLE, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_SPEED, *ITEM_FIGHTER_VAR_FLOAT_ITEM_THROW_POWER);
-        sv_animcmd::THROW_ITEM_OFFSET(agent.lua_state_agent);
-        agent.pop_lua_stack(1);
+        HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
 }
 
 //Final Smash Start ACMD
 unsafe extern "C" fn ssbexo_donkey_final_smash_start_acmd(agent: &mut L2CAgentBase) {
-    let scale = PostureModule::scale(agent.module_accessor);
-    if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_CHARGE) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    let scale = PostureModule::scale(boma);
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_CHARGE) {
         if is_excute(agent) {
             CHECK_VALID_FINAL_START_CAMERA(agent, 0, 7, 20, 0, 0, 0);
         }
-        frame(agent.lua_state_agent, 5.0);
-        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
+        frame(lua_state, 5.0);
+        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
             if is_excute(agent) {
                 FT_SET_FINAL_FEAR_FACE(agent, 20);
                 REQ_FINAL_START_CAMERA(agent, Hash40::new("d04finalstart.nuanmb"), false);
@@ -95,26 +50,26 @@ unsafe extern "C" fn ssbexo_donkey_final_smash_start_acmd(agent: &mut L2CAgentBa
                 FT_START_CUTIN(agent);
             }
         }
-        frame(agent.lua_state_agent, 25.0);
+        frame(lua_state, 25.0);
         if is_excute(agent) {
             CAM_ZOOM_OUT(agent);
         }
-        frame(agent.lua_state_agent, 29.0);
+        frame(lua_state, 29.0);
         if is_excute(agent) {
             ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 0, 0, 0, 13.0, 0.0, 10.0, 8.0, Some(0.0), Some(10.0), Some(28.0), 5.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
-            AttackModule::set_no_dead_all(agent.module_accessor, true, false);
+            AttackModule::set_no_dead_all(boma, true, false);
         }
-        frame(agent.lua_state_agent, 34.0);
+        frame(lua_state, 34.0);
         if is_excute(agent) {
             CAM_ZOOM_OUT(agent);
         }
-        frame(agent.lua_state_agent, 35.0);
+        frame(lua_state, 35.0);
         if is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
+            AttackModule::clear_all(boma);
         }
-        frame(agent.lua_state_agent, 37.0);
+        frame(lua_state, 37.0);
         if is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_STATUS_FINAL_FLAG_TO_ATTACK);
+            WorkModule::on_flag(boma, *FIGHTER_DONKEY_STATUS_FINAL_FLAG_TO_ATTACK);
         }
     }
     else {
@@ -123,8 +78,8 @@ unsafe extern "C" fn ssbexo_donkey_final_smash_start_acmd(agent: &mut L2CAgentBa
             CHECK_VALID_FINAL_START_CAMERA(agent, 0, 7, 20, 0, 0, 0);
             SLOW_OPPONENT(agent, 7.0, 30.0);
         }
-        frame(agent.lua_state_agent, 5.0);
-        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
+        frame(lua_state, 5.0);
+        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
             if is_excute(agent) {
                 FT_SET_FINAL_FEAR_FACE(agent, 20);
                 REQ_FINAL_START_CAMERA(agent, Hash40::new("d04finalstart.nuanmb"), false);
@@ -137,42 +92,42 @@ unsafe extern "C" fn ssbexo_donkey_final_smash_start_acmd(agent: &mut L2CAgentBa
                 FT_START_CUTIN(agent);
             }
         }
-        frame(agent.lua_state_agent, 15.0);
-        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
+        frame(lua_state, 15.0);
+        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
             if is_excute(agent) {
-                SlowModule::set_whole(agent.module_accessor, 30, 0);
+                SlowModule::set_whole(boma, 30, 0);
             }
         }
-        frame(agent.lua_state_agent, 16.0);
-        if WorkModule::is_flag(agent.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
+        frame(lua_state, 16.0);
+        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
             if is_excute(agent) {
-                SlowModule::clear_whole(agent.module_accessor);
+                SlowModule::clear_whole(boma);
             }
         }
-        frame(agent.lua_state_agent, 24.0);
+        frame(lua_state, 24.0);
         if is_excute(agent) {
-            SlowModule::clear_whole(agent.module_accessor);
+            SlowModule::clear_whole(boma);
         }
-        frame(agent.lua_state_agent, 25.0);
+        frame(lua_state, 25.0);
         if is_excute(agent) {
             CAM_ZOOM_OUT(agent);
         }
-        frame(agent.lua_state_agent, 29.0);
+        frame(lua_state, 29.0);
         if is_excute(agent) {
             ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 0, 0, 0, 13.0, 0.0, 10.0, 8.0, Some(0.0), Some(10.0), Some(28.0), 5.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
-            AttackModule::set_no_dead_all(agent.module_accessor, true, false);
+            AttackModule::set_no_dead_all(boma, true, false);
         }
-        frame(agent.lua_state_agent, 34.0);
+        frame(lua_state, 34.0);
         if is_excute(agent) {
             CAM_ZOOM_OUT(agent);
         }
-        frame(agent.lua_state_agent, 35.0);
+        frame(lua_state, 35.0);
         if is_excute(agent) {
-            AttackModule::clear_all(agent.module_accessor);
+            AttackModule::clear_all(boma);
         }
-        frame(agent.lua_state_agent, 37.0);
+        frame(lua_state, 37.0);
         if is_excute(agent) {
-            WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_STATUS_FINAL_FLAG_TO_ATTACK);
+            WorkModule::on_flag(boma, *FIGHTER_DONKEY_STATUS_FINAL_FLAG_TO_ATTACK);
         }
     }
 }
@@ -181,14 +136,6 @@ pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .game_acmd("game_turndash", ssbexo_donkey_turn_dash_acmd, Low)
-    .game_acmd("game_itemheavythrowf", ssbexo_donkey_item_heavy_forward_throw_acmd, Low)
-    .game_acmd("game_itemheavythrowf4", ssbexo_donkey_item_heavy_forward_throw_acmd, Low)
-    .game_acmd("game_itemheavythrowb", ssbexo_donkey_item_heavy_back_throw_acmd, Low)
-    .game_acmd("game_itemheavythrowb4", ssbexo_donkey_item_heavy_back_throw_acmd, Low)
-    .game_acmd("game_itemheavythrowhi", ssbexo_donkey_item_heavy_up_throw_acmd, Low)
-    .game_acmd("game_itemheavythrowhi4", ssbexo_donkey_item_heavy_up_throw_acmd, Low)
-    .game_acmd("game_itemheavythrowlw", ssbexo_donkey_item_heavy_down_throw_acmd, Low)
-    .game_acmd("game_itemheavythrowlw4", ssbexo_donkey_item_heavy_down_throw_acmd, Low)
     .game_acmd("game_finalstart", ssbexo_donkey_final_smash_start_acmd, Low)
     .game_acmd("game_finalairstart", ssbexo_donkey_final_smash_start_acmd, Low)
     .install()

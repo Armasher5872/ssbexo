@@ -2,111 +2,114 @@ use super::*;
 
 //Nair ACMD
 unsafe extern "C" fn ssbexo_donkey_nair_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        MotionModule::set_rate(agent.module_accessor, 1.433);
+        MotionModule::set_rate(boma, 1.433);
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
-        MotionModule::set_rate(agent.module_accessor, 1.0);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        MotionModule::set_rate(boma, 1.0);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         ATTACK(agent, 0, 0, Hash40::new("armr"), 12.0, 361, 100, 0, 20, 5.0, 5.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("arml"), 12.0, 361, 100, 0, 20, 5.0, 5.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 2, 0, Hash40::new("hip"), 12.0, 361, 100, 0, 20, 5.7, 1.6, 3.1, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 3, 0, Hash40::new("top"), 12.0, 361, 100, 0, 20, 5.0, 0.0, 8.0, 15.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
     }
-    wait(agent.lua_state_agent, 1.0);
+    wait(lua_state, 1.0);
     if is_excute(agent) {
-        AttackModule::clear(agent.module_accessor, 3, false);
+        AttackModule::clear(boma, 3, false);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("armr"), 9.0, 361, 100, 0, 10, 5.0, 5.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("arml"), 9.0, 361, 100, 0, 10, 5.0, 5.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
         ATTACK(agent, 2, 0, Hash40::new("hip"), 9.0, 361, 100, 0, 10, 5.7, 1.6, 3.1, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_BODY);
     }
-    frame(agent.lua_state_agent, 27.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        AttackModule::clear_all(boma);
+        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
 //Uair ACMD
 unsafe extern "C" fn ssbexo_donkey_uair_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         FT_MOTION_RATE(agent, 5.0/6.0);
     }
-    frame(agent.lua_state_agent, 5.0);
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_XLU);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         FT_MOTION_RATE(agent, 1.0);
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         ATTACK(agent, 0, 0, Hash40::new("head"), 13.0, 90, 90, 0, 32, 7.5, 2.5, 2.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HEAD);
         ATK_SET_SHIELD_SETOFF_MUL2(agent, 0, 0.1);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-        HitModule::set_status_all(agent.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        AttackModule::clear_all(boma);
+        HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
-    frame(agent.lua_state_agent, 26.0);
+    frame(lua_state, 26.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
 //Dair ACMD
 unsafe extern "C" fn ssbexo_donkey_dair_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 270, 10, 0, 90, 7.0, 0.0, -5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 1, 0, Hash40::new("top"), 13.0, 361, 90, 0, 20, 5.8, 0.0, 6.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 50.0);
+    frame(lua_state, 50.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
 //Zair ACMD
 unsafe extern "C" fn ssbexo_donkey_zair_acmd(agent: &mut L2CAgentBase) {
-    if is_excute(agent) {
-        SEARCH(agent, 0, 0, Hash40::new("top"), 7.0, 0.0, 7.0, 4.0, Some(0.0), Some(7.0), Some(16.0), *COLLISION_KIND_MASK_ALL, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, true);
-    }
-    frame(agent.lua_state_agent, 15.0);
-    if is_excute(agent) {
-        search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
-    }
-    frame(agent.lua_state_agent, 16.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 0.0, 361, 100, 0, 0, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         CATCH(agent, 0, Hash40::new("top"), 7.0, 0.0, 7.0, 4.0, Some(0.0), Some(7.0), Some(16.0), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        SEARCH(agent, 0, 0, Hash40::new("top"), 7.0, 0.0, 7.0, 4.0, Some(0.0), Some(7.0), Some(16.0), *COLLISION_KIND_MASK_ALL, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, true);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
         grab!(agent, MA_MSC_CMD_GRAB_CLEAR_ALL);
+        search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
     }
 }
 
 //Zair Effect
 unsafe extern "C" fn ssbexo_donkey_zair_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 14.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("donkey_smash_slap"), Hash40::new("donkey_smash_slap"), Hash40::new("top"), 3, 15, 2.5, -53, -69, -99, 1.9, true, *EF_FLIP_YZ, 1);
         LAST_EFFECT_SET_RATE(agent, 1.4);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 22, 8, 0, 0, 0, 0, 2.3, 0, 0, 0, 0, 0, 360, false);
     }
@@ -114,11 +117,12 @@ unsafe extern "C" fn ssbexo_donkey_zair_effect(agent: &mut L2CAgentBase) {
 
 //Zair Sound
 unsafe extern "C" fn ssbexo_donkey_zair_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 14.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_swing_10"));
     }
-    wait(agent.lua_state_agent, 6.0);
+    wait(lua_state, 6.0);
     if is_excute(agent) {
         STOP_SE(agent, Hash40::new("se_common_swing_10"));
     }
@@ -126,7 +130,8 @@ unsafe extern "C" fn ssbexo_donkey_zair_sound(agent: &mut L2CAgentBase) {
 
 //Zair Expression
 unsafe extern "C" fn ssbexo_donkey_zair_expression(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 16.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_nohits"), 0);
     }

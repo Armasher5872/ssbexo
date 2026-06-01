@@ -2,9 +2,11 @@ use super::*;
 
 //Up Special Glide Drop ACMD
 unsafe extern "C" fn ssbexo_link_special_hi_glide_drop_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 7.0);
     if is_excute(agent) {
-        ArticleModule::remove_exist(agent.module_accessor, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::remove_exist(boma, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
 }
 
@@ -17,10 +19,11 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_drop_sound(agent: &mut L2CAgen
 
 //Up Special Glide Drop Expression
 unsafe extern "C" fn ssbexo_link_special_hi_glide_drop_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        ItemModule::set_attach_item_visibility(agent.module_accessor, false, 0);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("sword") as i64, hash40("sword_back") as i64);
-        VisibilityModule::set_int64(agent.module_accessor, hash40("shield") as i64, hash40("shield_back") as i64);
+        ItemModule::set_attach_item_visibility(boma, false, 0);
+        VisibilityModule::set_int64(boma, hash40("sword") as i64, hash40("sword_back") as i64);
+        VisibilityModule::set_int64(boma, hash40("shield") as i64, hash40("shield_back") as i64);
     }
 }
 

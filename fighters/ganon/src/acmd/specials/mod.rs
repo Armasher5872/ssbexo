@@ -1,5 +1,8 @@
 use {
-    exo_utils::structs::vector::*,
+    exo_utils::{
+        fighter::ganon::*,
+        structs::vector::*,
+    },
     exo_var::ganon::*,
     smash::{
         app::{

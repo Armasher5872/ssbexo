@@ -1,44 +1,47 @@
 use super::*;
 
 unsafe extern "C" fn luigi_obakyumu_special_lw_pre_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    StatusModule::init_settings(weapon.module_accessor, SituationKind(*SITUATION_KIND_NONE), *WEAPON_KINETIC_TYPE_RESET, *GROUND_CORRECT_KIND_NONE as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *WEAPON_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *WEAPON_STATUS_WORK_KEEP_FLAG_NONE_INT, *WEAPON_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    let boma = weapon.module_accessor;
+    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_NONE), *WEAPON_KINETIC_TYPE_RESET, *GROUND_CORRECT_KIND_NONE as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *WEAPON_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *WEAPON_STATUS_WORK_KEEP_FLAG_NONE_INT, *WEAPON_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
     0.into()
 }
 
 unsafe extern "C" fn luigi_obakyumu_special_lw_main_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
+    let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
     let owner_lr = PostureModule::lr(owner_boma);
     let owner_status_kind = StatusModule::status_kind(owner_boma);
     if owner_lr == -1.0 {
         if owner_status_kind != *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw_l"), 59.0, 1.0, false, 0.0, false, false);
+            MotionModule::change_motion(boma, Hash40::new("special_lw_l"), 59.0, 1.0, false, 0.0, false, false);
         }
         else {
-            WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
-            WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-            MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw_l"), 0.0, 1.0, false, 0.0, false, false);
+            WorkModule::set_int(boma, 300, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+            WorkModule::set_int(boma, 300, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+            MotionModule::change_motion(boma, Hash40::new("special_lw_l"), 0.0, 1.0, false, 0.0, false, false);
         }
-        MotionModule::set_flip(weapon.module_accessor, false, true, true);
+        MotionModule::set_flip(boma, false, true, true);
     }
     else {
         if owner_status_kind != *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw"), 59.0, 1.0, false, 0.0, false, false);
+            MotionModule::change_motion(boma, Hash40::new("special_lw"), 59.0, 1.0, false, 0.0, false, false);
         }
         else {
-            WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
-            WorkModule::set_int(weapon.module_accessor, 300, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-            MotionModule::change_motion(weapon.module_accessor, Hash40::new("special_lw"), 0.0, 1.0, false, 0.0, false, false);
+            WorkModule::set_int(boma, 300, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
+            WorkModule::set_int(boma, 300, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+            MotionModule::change_motion(boma, Hash40::new("special_lw"), 0.0, 1.0, false, 0.0, false, false);
         }
     }
     weapon.fastshift(L2CValue::Ptr(luigi_obakyumu_special_lw_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn luigi_obakyumu_special_lw_main_loop(weapon: &mut L2CWeaponCommon) -> L2CValue {
-    let pos = *PostureModule::pos(weapon.module_accessor);
-    let life = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
-    WorkModule::dec_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    let boma = weapon.module_accessor;
+    let pos = *PostureModule::pos(boma);
+    let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
+    WorkModule::dec_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     if life <= 0 {
-        EffectModule::req(weapon.module_accessor, Hash40::new("sys_erace_smoke"), &Vector3f{x: pos.x, y: pos.y+8.0, z: pos.z}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
+        EffectModule::req(boma, Hash40::new("sys_erace_smoke"), &Vector3f{x: pos.x, y: pos.y+8.0, z: pos.z}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
         notify_event_msc_cmd!(weapon, Hash40::new_raw(0x18b78d41a0));
         notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
     }

@@ -5,14 +5,15 @@ unsafe extern "C" fn ssbexo_mario_side_special_jump_acmd(_agent: &mut L2CAgentBa
 
 //Side Special Jump Effect
 unsafe extern "C" fn ssbexo_mario_side_special_jump_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 3.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 3, 0.5, 0, 0, -90, 0.6, true, 0.7);
         LAST_EFFECT_SET_RATE(agent, 1.4);
         EFFECT_FOLLOW_ALPHA(agent, Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 3, 0.5, 0, 90, -90, 0.8, false, 0.5);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_jump_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, false);
     }
@@ -20,7 +21,8 @@ unsafe extern "C" fn ssbexo_mario_side_special_jump_effect(agent: &mut L2CAgentB
 
 //Side Special Jump Sound
 unsafe extern "C" fn ssbexo_mario_side_special_jump_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 8.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_mario_jump01"));
     }

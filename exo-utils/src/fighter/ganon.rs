@@ -17,13 +17,23 @@ pub unsafe extern "C" fn ganon_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::set_int(boma, 0, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_EFFECT_HANDLE);
 }
 
+pub unsafe extern "C" fn set_main_body_model_visibility(boma: &mut BattleObjectModuleAccessor, hide: bool) {
+    ModelModule::set_mesh_visibility(boma, Hash40::new("gamemodel"), hide);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("ganon_blink_facen"), hide);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("ganon_eye_facen"), hide);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("ganon_eyeblow_facen"), hide);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("ganon_mouth_final"), hide);
+    ModelModule::set_mesh_visibility(boma, Hash40::new("rigid"), hide);
+}
+
 pub unsafe extern "C" fn volley_removal(weapon: &mut L2CWeaponCommon) {
-    let pos = *PostureModule::pos(weapon.module_accessor);
-    let owner_id = WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let boma = weapon.module_accessor;
+    let pos = *PostureModule::pos(boma);
+    let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = smash::app::sv_battle_object::module_accessor(owner_id);
     WorkModule::off_flag(owner_boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_HAS_ACTIVE_VOLLEY);
-    EffectModule::req(weapon.module_accessor, Hash40::new("ganon_appeal_aura"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
-    EffectModule::kill_kind(weapon.module_accessor, Hash40::new("ganon_volley"), false, false);
+    EffectModule::req(boma, Hash40::new("ganon_appeal_aura"), &Vector3f{x: pos.x, y: pos.y, z: pos.z+5.0}, &Vector3f::zero(), 1.0, 0, -1, false, 0);
+    EffectModule::kill_kind(boma, Hash40::new("ganon_volley"), false, false);
     notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
     weapon.pop_lua_stack(1);
 }

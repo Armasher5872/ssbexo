@@ -29,8 +29,8 @@ unsafe extern "C" fn wario_special_n_catch_init_status(fighter: &mut L2CFighterC
         let shouldered_frame_add= WorkModule::get_param_float(capture_boma, hash40("common"), hash40("shouldered_frame_add"));
         let damage = DamageModule::damage(capture_boma, 0);
         let get_clatter_time = ControlModule::get_clatter_time(capture_boma, 0);
-        let total_time = damage+shouldered_frame_add+get_clatter_time;
-        ControlModule::start_clatter(capture_boma, total_time, 0.0, 10.0, 127, 0, false, false);
+        let total_time = damage+(shouldered_frame_add*1.3)+get_clatter_time;
+        ControlModule::start_clatter(capture_boma, total_time, 0.0, 9.0, 127, 0, false, false);
     }
     0.into()
 }

@@ -1,7 +1,9 @@
 use {
+    exo_utils::common::check_attack::*,
     exo_var::{
         consts::*,
         globals::*,
+        roy::*,
     },
     smash::{
         app::{

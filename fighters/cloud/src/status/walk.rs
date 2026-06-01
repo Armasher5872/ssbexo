@@ -1,7 +1,8 @@
 use super::*;
 
 unsafe extern "C" fn cloud_walk_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let is_punisher = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
+    let boma = fighter.module_accessor;
+    let is_punisher = WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
     let fast_walk_motion = if is_punisher {"punish_walk_fast"} else {"walk_fast"};
     let middle_walk_motion = if is_punisher {"punish_walk_middle"} else {"walk_middle"};
     let slow_walk_motion = if is_punisher {"punish_walk_slow"} else {"walk_slow"};
@@ -10,7 +11,8 @@ unsafe extern "C" fn cloud_walk_init_status(fighter: &mut L2CFighterCommon) -> L
 }
 
 unsafe extern "C" fn cloud_walk_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let is_punisher = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
+    let boma = fighter.module_accessor;
+    let is_punisher = WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE);
     let fast_walk_motion = if is_punisher {"punish_walk_fast"} else {"walk_fast"};
     let middle_walk_motion = if is_punisher {"punish_walk_middle"} else {"walk_middle"};
     let slow_walk_motion = if is_punisher {"punish_walk_slow"} else {"walk_slow"};

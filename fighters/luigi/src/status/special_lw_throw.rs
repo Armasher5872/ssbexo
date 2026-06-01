@@ -1,21 +1,23 @@
 use super::*;
 
 unsafe extern "C" fn luigi_special_lw_throw_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, *FS_SUCCEEDS_KEEP_ATTACK_ABSOLUTE);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, 0, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, 0, 0);
+    let boma = fighter.module_accessor;
+    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, *FS_SUCCEEDS_KEEP_ATTACK_ABSOLUTE);
+    FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, true, false, 0, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, 0, 0);
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let plunger_throw = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+    let boma = fighter.module_accessor;
+    let plunger_throw = WorkModule::is_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+    let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
     }
     else {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
     }
     if capture_id != 0x50000000 {
         let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
@@ -27,15 +29,16 @@ unsafe extern "C" fn luigi_special_lw_throw_init_status(fighter: &mut L2CFighter
             grabbed_anim_selector(fighter, "barrel_screw", 0.0, 0.0);
         }
     }
-    HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_INVINCIBLE), 0);
+    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_INVINCIBLE), 0);
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-    ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW_THROW, ArticleOperationTarget(0));
+    let boma = fighter.module_accessor;
+    let direction = WorkModule::get_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+    ArticleModule::change_status(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW_THROW, ArticleOperationTarget(0));
     luigi_special_lw_throw_sub_status(fighter);
-    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW) {
+    if !WorkModule::is_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW) {
         if direction == 2 {
             fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_lw_throw_hi"), L2CValue::Hash40s("special_air_lw_throw_hi"), false.into());
             grabbed_anim_selector(fighter, "special_lw_thrown_hi", 0.0, 1.0);
@@ -57,8 +60,9 @@ unsafe extern "C" fn luigi_special_lw_throw_main_status(fighter: &mut L2CFighter
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_sub_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
-    if !StopModule::is_stop(fighter.module_accessor) {
+    let boma = fighter.module_accessor;
+    ItemModule::set_have_item_visibility(boma, false, 0);
+    if !StopModule::is_stop(boma) {
         fighter.ThrowUniq();
     }
     fighter.global_table[PREV_SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_bind_address_call_ThrowUniq as *const () as _));
@@ -69,62 +73,63 @@ unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let sum_speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
-    let motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let direction = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-    let plunger_throw = WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    let air_accel_y = WorkModule::get_param_float(fighter.module_accessor, hash40("air_accel_y"), 0);
-    if CancelModule::is_enable_cancel(fighter.module_accessor) {
+    let boma = fighter.module_accessor;
+    let sum_speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+    let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
+    let motion_kind = MotionModule::motion_kind(boma);
+    let direction = WorkModule::get_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+    let plunger_throw = WorkModule::is_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+    let air_accel_y = WorkModule::get_param_float(boma, hash40("air_accel_y"), 0);
+    if CancelModule::is_enable_cancel(boma) {
         if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
             return 1.into();
         }
     }
-    if !StatusModule::is_changing(fighter.module_accessor) {
+    if !StatusModule::is_changing(boma) {
         if situation_kind == *SITUATION_KIND_GROUND
         && prev_situation_kind == *SITUATION_KIND_AIR {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
             if !plunger_throw {
                 if direction == 2 {
                     if current_frame <= 17.0 {
-                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_throw_hi"), -1.0, 1.0, 0.0, false, false);
+                        MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_lw_throw_hi"), -1.0, 1.0, 0.0, false, false);
                     }
                     else {
                         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
                     }
                 }
                 else if direction == 1 {
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_throw_b"), -1.0, 1.0, 0.0, false, false);
+                    MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_lw_throw_b"), -1.0, 1.0, 0.0, false, false);
                 }
                 else {
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_throw_f"), -1.0, 1.0, 0.0, false, false);
+                    MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_lw_throw_f"), -1.0, 1.0, 0.0, false, false);
                 }
             }
             else {
-                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_lw_throw_plunger"), -1.0, 1.0, 0.0, false, false);
+                MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_lw_throw_plunger"), -1.0, 1.0, 0.0, false, false);
             }
         }
         if situation_kind == *SITUATION_KIND_AIR
         && prev_situation_kind == *SITUATION_KIND_GROUND {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             if !plunger_throw {
                 if direction == 2 {
-                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_hi"), -1.0, 1.0, 0.0, false, false);
+                    KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+                    MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_lw_throw_hi"), -1.0, 1.0, 0.0, false, false);
                 }
                 else if direction == 1 {
-                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_b"), -1.0, 1.0, 0.0, false, false);
+                    KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+                    MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_lw_throw_b"), -1.0, 1.0, 0.0, false, false);
                 }
                 else {
-                    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_f"), -1.0, 1.0, 0.0, false, false);
+                    KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+                    MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_lw_throw_f"), -1.0, 1.0, 0.0, false, false);
                 }
             }
             else {
-                MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_air_lw_throw_plunger"), -1.0, 1.0, 0.0, false, false);
+                MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_lw_throw_plunger"), -1.0, 1.0, 0.0, false, false);
             }
         }
     }
@@ -158,16 +163,16 @@ unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
             PostureModule::set_scale(capture_boma, 0.001, false);
         }
     }
-    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_THROW) {
+    if WorkModule::is_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_THROW) {
         if capture_id != 0x50000000 {
             let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
             PostureModule::set_scale(capture_boma, 1.0, false);
-            AttackModule::hit_absolute_joint(fighter.module_accessor, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, capture_id as u32, Hash40::new("throw"), 0, 0);
+            AttackModule::hit_absolute_joint(boma, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, capture_id as u32, Hash40::new("throw"), 0, 0);
         }
-        HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_THROW);
+        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
+        WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_THROW);
     }
-    if MotionModule::is_end(fighter.module_accessor) {
+    if MotionModule::is_end(boma) {
         if situation_kind != *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
@@ -180,33 +185,35 @@ unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let object_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-    if CatchModule::is_catch(fighter.module_accessor) {
-        let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+    let boma = fighter.module_accessor;
+    let object_id = WorkModule::get_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
+    if CatchModule::is_catch(boma) {
+        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
         if capture_id != 0x50000000 {
             let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-            let pos = *PostureModule::pos(fighter.module_accessor);
+            let pos = *PostureModule::pos(boma);
             PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
         }
-        CatchModule::set_send_cut_event(fighter.module_accessor, true);
-        CatchModule::catch_cut(fighter.module_accessor, false, false);
-        HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+        CatchModule::set_send_cut_event(boma, true);
+        CatchModule::catch_cut(boma, false, false);
+        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     }
-    ArticleModule::remove_exist_object_id(fighter.module_accessor, object_id as u32);
-    ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+    ArticleModule::remove_exist_object_id(boma, object_id as u32);
+    ArticleModule::remove_exist(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+    WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_throw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    if LinkModule::is_link(fighter.module_accessor, *LINK_NO_CAPTURE) {
-        let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+    let boma = fighter.module_accessor;
+    WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
+    WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
+    if LinkModule::is_link(boma, *LINK_NO_CAPTURE) {
+        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
         if capture_id != 0x50000000 {
             let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-            let pos = *PostureModule::pos(fighter.module_accessor);
+            let pos = *PostureModule::pos(boma);
             PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
         }
         fighter.clear_lua_stack();
@@ -214,7 +221,7 @@ unsafe extern "C" fn luigi_special_lw_throw_exit_status(fighter: &mut L2CFighter
         sv_module_access::_catch(fighter.lua_state_agent);
         fighter.pop_lua_stack(1);
     }
-    HitModule::set_whole(fighter.module_accessor, HitStatus(*HIT_STATUS_NORMAL), 0);
+    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     0.into()
 }
 

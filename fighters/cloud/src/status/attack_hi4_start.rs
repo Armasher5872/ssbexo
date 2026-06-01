@@ -1,7 +1,8 @@
 use super::*;
 
 unsafe extern "C" fn cloud_attack_hi4_start_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let motion = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {0x11f196e053u64} else {0xa5598d745u64};
+    let boma = fighter.module_accessor;
+    let motion = if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {0x11f196e053u64} else {0xa5598d745u64};
     fighter.status_AttackHi4Start_common(motion.into());
     0.into()
 }

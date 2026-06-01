@@ -1,77 +1,97 @@
 use super::*;
 
 unsafe extern "C" fn luigi_special_lw_loop_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    StatusModule::init_settings(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
-    FighterStatusModuleImpl::set_fighter_status_data(fighter.module_accessor, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_CATCH as u64, 0, 0, 0);
+    let boma = fighter.module_accessor;
+    StatusModule::init_settings(boma, smash::app::SituationKind(*SITUATION_KIND_NONE), *FIGHTER_KINETIC_TYPE_UNIQ, *GROUND_CORRECT_KIND_KEEP as u32, smash::app::GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_CATCH as u64, 0, 0, 0);
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_loop_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let boma = fighter.module_accessor;
     if situation_kind == *SITUATION_KIND_GROUND {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
     }
     else {
-        GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_STOP);
-        KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
+        KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
     }
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    PLAY_STATUS(fighter, Hash40::new("se_luigi_final02"));
-    ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW_LOOP, ArticleOperationTarget(0));
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
+    let boma = fighter.module_accessor;
+    //let lr = PostureModule::lr(boma);
+    ArticleModule::change_status(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW_LOOP, ArticleOperationTarget(0));
+    /*
+    if lr == -1.0 {
+        MotionModule::change_motion(boma, Hash40::new("special_lw_loop_l"), 0.0, 1.0, false, 0.0, false, false);
+        MotionModule::set_flip(boma, false, true, true);
+    }
+    else {
+        MotionModule::change_motion(boma, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
+    }
+    */
+    MotionModule::change_motion(boma, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(luigi_special_lw_loop_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn luigi_special_lw_loop_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let special_lw_timer = WorkModule::get_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
-    if !StatusModule::is_changing(fighter.module_accessor) {
+    let boma = fighter.module_accessor;
+    let special_lw_timer = WorkModule::get_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
+    if !StatusModule::is_changing(boma) {
         if situation_kind == *SITUATION_KIND_GROUND
         && prev_situation_kind == *SITUATION_KIND_AIR {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
         }
         if situation_kind == *SITUATION_KIND_AIR
         && prev_situation_kind == *SITUATION_KIND_GROUND {
-            GroundModule::correct(fighter.module_accessor, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-            KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_FALL);
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
         }
     }
-    WorkModule::inc_int(fighter.module_accessor, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
+    WorkModule::inc_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
+    if special_lw_timer == 8 {
+        PLAY_SE(fighter, Hash40::new("se_luigi_special_l03"));
+    }
+    if special_lw_timer == 140 {
+        PLAY_SE(fighter, Hash40::new("se_luigi_special_l03"));
+    }
     /*
-    if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+    if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
         fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER.into(), false.into());
     }
     */
-    if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) || special_lw_timer > 180 {
+    if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_SPECIAL) || special_lw_timer > 180 {
         fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
     }
-    if MotionModule::is_end(fighter.module_accessor) {
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
+    if MotionModule::is_end(boma) {
+        MotionModule::change_motion(boma, Hash40::new("special_lw_loop"), 0.0, 1.0, false, 0.0, false, false);
     }
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    let boma = fighter.module_accessor;
     if [*FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_END].contains(&status_kind) {
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
+        WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_TIMER);
     }
     else {
-        ArticleModule::change_status(fighter.module_accessor, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW, ArticleOperationTarget(0));
+        ArticleModule::change_status(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW, ArticleOperationTarget(0));
     }
     if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL {
-        if LinkModule::is_link(fighter.module_accessor, *LINK_NO_CAPTURE) {
-            let capture_id = LinkModule::get_node_object_id(fighter.module_accessor, *LINK_NO_CAPTURE);
+        if LinkModule::is_link(boma, *LINK_NO_CAPTURE) {
+            let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
             if capture_id != 0x50000000 {
                 let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-                let pos = *PostureModule::pos(fighter.module_accessor);
+                let pos = *PostureModule::pos(boma);
                 PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
             }
             fighter.clear_lua_stack();
@@ -80,6 +100,7 @@ unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCo
             fighter.pop_lua_stack(1);
         }
     }
+    STOP_SE(fighter, Hash40::new("se_luigi_special_l03"));
     0.into()
 }
 

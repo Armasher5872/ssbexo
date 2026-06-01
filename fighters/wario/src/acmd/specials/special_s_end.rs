@@ -3,7 +3,6 @@ use super::*;
 //Side Special End ACMD
 unsafe extern "C" fn ssbexo_wario_side_special_end_acmd(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
-        search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
         AttackModule::clear_all(agent.module_accessor);
     }
 }

@@ -1,6 +1,7 @@
 use super::*;
 
 pub unsafe extern "C" fn sheik_var(boma: &mut BattleObjectModuleAccessor) {
+    WorkModule::off_flag(boma, *FIGHTER_SHEIK_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_SHEIK_INSTANCE_WORK_ID_INT_SPECIAL_S_OBJECT_ID);
 }
 

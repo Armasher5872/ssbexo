@@ -9,6 +9,7 @@ use {
     exo_var::{
         consts::*,
         globals::*,
+        wario::*,
     },
     smash::{
         app::{

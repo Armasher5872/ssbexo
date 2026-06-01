@@ -2,25 +2,27 @@ use super::*;
 
 unsafe extern "C" fn littlemac_special_hi_start_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+    let boma = fighter.module_accessor;
+    WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
     if situation_kind != *SITUATION_KIND_GROUND {
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_FLAG_IS_START_AIR);
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_air_hi_start"), 0.0, 1.0, false, 0.0, false, false);
+        WorkModule::on_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_FLAG_IS_START_AIR);
+        MotionModule::change_motion(boma, Hash40::new("special_air_hi_start"), 0.0, 1.0, false, 0.0, false, false);
     }
     else {
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_FLAG_IS_START_AIR);
-        MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_hi_start"), 0.0, 1.0, false, 0.0, false, false);
+        WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_FLAG_IS_START_AIR);
+        MotionModule::change_motion(boma, Hash40::new("special_hi_start"), 0.0, 1.0, false, 0.0, false, false);
     }
     fighter.sub_shift_status_main(L2CValue::Ptr(littlemac_special_hi_start_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn littlemac_special_hi_start_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
     littlemac_handle_star_strength(fighter);
     if littlemac_can_cancel_into_dash(fighter).get_bool() {
         fighter.change_status(FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_LW_HIT.into(), false.into());
         return 1.into();
     }
-    if MotionModule::is_end(fighter.module_accessor) {
+    if MotionModule::is_end(boma) {
         fighter.change_status(FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_HI_JUMP.into(), false.into());
     }
     0.into()
@@ -28,14 +30,15 @@ unsafe extern "C" fn littlemac_special_hi_start_main_loop(fighter: &mut L2CFight
 
 unsafe extern "C" fn littlemac_special_hi_start_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let status_kind = fighter.global_table[STATUS_KIND].get_i32();
+    let boma = fighter.module_accessor;
     if status_kind == *FIGHTER_LITTLEMAC_STATUS_KIND_SPECIAL_LW_HIT {
-        EffectModule::remove_common(fighter.module_accessor, Hash40::new("charge_max"));
-        WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_STATUS_SPECIAL_N_FLAG_RESET_KO_GAUGE);
-        WorkModule::set_float(fighter.module_accessor, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_KO_GAGE_MAX_KEEP_FRAME);
-        WorkModule::off_flag(fighter.module_accessor, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_REQUEST_KO_GAUGE_MAX_EFFECT);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
-        WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_HELD_TIMER);
+        EffectModule::remove_common(boma, Hash40::new("charge_max"));
+        WorkModule::on_flag(boma, *FIGHTER_LITTLEMAC_STATUS_SPECIAL_N_FLAG_RESET_KO_GAUGE);
+        WorkModule::set_float(boma, 0.0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLOAT_KO_GAGE);
+        WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_KO_GAGE_MAX_KEEP_FRAME);
+        WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_REQUEST_KO_GAUGE_MAX_EFFECT);
+        WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_STAR_PUNCH_STRENGTH);
+        WorkModule::set_int(boma, 0, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SPECIAL_HELD_TIMER);
     }
     0.into()
 }

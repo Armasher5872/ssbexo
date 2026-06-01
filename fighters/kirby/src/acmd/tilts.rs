@@ -2,7 +2,9 @@ use super::*;
 
 //Forward Tilt ACMD
 unsafe extern "C" fn ssbexo_kirby_forward_tilt_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         ATTACK(agent, 1, 0, Hash40::new("footl"), 8.0, 361, 100, 0, 40, 3.1, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 0, 0, Hash40::new("footl"), 8.0, 361, 100, 0, 40, 3.3, 1.0, -4.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
@@ -10,25 +12,26 @@ unsafe extern "C" fn ssbexo_kirby_forward_tilt_acmd(agent: &mut L2CAgentBase) {
         HIT_NODE(agent, Hash40::new("footl"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("toel"), *HIT_STATUS_XLU);
     }
-    wait(agent.lua_state_agent, 4.0);
+    wait(lua_state, 4.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("footl"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("toel"), *HIT_STATUS_NORMAL);
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Forward Tilt Effect
 unsafe extern "C" fn ssbexo_kirby_forward_tilt_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 10, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 2.0);
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kirby_ultrasword1"), Hash40::new("tex_kirby_ultrasword2"), 5, Hash40::new("toel"), -2.0, 0.0, 0.0, Hash40::new("toel"), 4.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("toel"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
         LAST_EFFECT_SET_RATE(agent, 1.2);
     }
-    frame(agent.lua_state_agent, 9.0);
+    frame(lua_state, 9.0);
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 4);
     }
@@ -36,14 +39,15 @@ unsafe extern "C" fn ssbexo_kirby_forward_tilt_effect(agent: &mut L2CAgentBase) 
 
 //Up Tilt Effect
 unsafe extern "C" fn ssbexo_kirby_up_tilt_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 10, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 3.0);
+    frame(lua_state, 3.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kirby_ultrasword1"), Hash40::new("tex_kirby_ultrasword2"), 5, Hash40::new("footr"), 0.0, 0.0, 0.0, Hash40::new("toer"), 4.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("footr"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 4);
     }
@@ -51,30 +55,33 @@ unsafe extern "C" fn ssbexo_kirby_up_tilt_effect(agent: &mut L2CAgentBase) {
 
 //Down Tilt ACMD
 unsafe extern "C" fn ssbexo_kirby_down_tilt_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("toer"), 6.0, 65, 85, 0, 30, 3.7, 4.3, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATTACK(agent, 1, 0, Hash40::new("toer"), 6.0, 65, 85, 0, 30, 3.7, -2.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        AttackModule::set_attack_height_all(agent.module_accessor, AttackHeight(*ATTACK_HEIGHT_LOW), false);
+        AttackModule::set_attack_height_all(boma, AttackHeight(*ATTACK_HEIGHT_LOW), false);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Down Tilt Effect
 unsafe extern "C" fn ssbexo_kirby_down_tilt_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 3.0);
+    frame(lua_state, 3.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_kirby_ultrasword1"), Hash40::new("tex_kirby_ultrasword2"), 5, Hash40::new("toer"), -2.0, 0.0, 0.0, Hash40::new("toer"), 4.0, 0.0, 0.0, true, Hash40::new(""), Hash40::new("toer"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.29999995, 0.100000001);
         LAST_EFFECT_SET_RATE(agent, 1.2);
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         AFTER_IMAGE_OFF(agent, 4);
     }

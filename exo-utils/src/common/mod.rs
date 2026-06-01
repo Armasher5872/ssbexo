@@ -4,20 +4,25 @@ use {
         common::{
             extern_func::*,
             hook::*,
+            state_manipulation::*,
         },
         status::damage::*,
         structs::{
+            buttons::*,
             create_item_param::*,
             command_input_struct::*,
+            getter_funcs::*,
             module_init::*,
             rect::*,
             shielddata_struct::*,
             stat_change::*,
+            vector::*,
         }
     },
     exo_var::{
         consts::*,
         globals::*,
+        variables::*,
     },
     nnsdk::ui2d::{
         Pane,
@@ -47,7 +52,9 @@ pub mod command_input;
 pub mod extern_func;
 pub mod fighter_common;
 pub mod hook;
+pub mod salty_runback;
 pub mod status_end_control;
+pub mod state_manipulation;
 pub mod ui_utility;
 pub mod ui2d;
 pub mod var_reset;

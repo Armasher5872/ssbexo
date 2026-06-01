@@ -7,13 +7,19 @@ unsafe extern "C" fn ssbexo_luigi_down_special_end_acmd(_agent: &mut L2CAgentBas
 unsafe extern "C" fn ssbexo_luigi_down_special_end_effect(_agent: &mut L2CAgentBase) {}
 
 //Down Special End Sound
-unsafe extern "C" fn ssbexo_luigi_down_special_end_sound(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_luigi_down_special_end_sound(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_luigi_special_l04"));
+    }
+}
 
 //Down Special End Expression
 unsafe extern "C" fn ssbexo_luigi_down_special_end_expression(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 

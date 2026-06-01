@@ -1,14 +1,7 @@
 use {
     arcropolis_api::*,
-    exo_var::{
-        armstrong::*,
-        variables::*,
-    },
-    param_config::*,
-    smash::{
-        hash40,
-        lib::lua_const::*,
-    },
+    exo_var::armstrong::*,
+    smash::hash40,
     std::{
         collections::HashMap,
         fs::*,
@@ -36,7 +29,7 @@ pub extern "C" fn mods_mounted(_ev: Event) {
         )) {
             unsafe {
                 marked_slots.push(x as _);
-                MARKED_COLORS[x as usize] = true;
+                ARMSTRONG_MARKED_COLORS[x as usize] = true;
                 if lowest_color == -1 {
                     lowest_color = x as _ ;
                 }
@@ -49,19 +42,12 @@ pub extern "C" fn mods_mounted(_ev: Event) {
     let color_num = {
         unsafe {
             let mut index = lowest_color;
-            while index < 256 && MARKED_COLORS[index as usize] {
+            while index < 256 && ARMSTRONG_MARKED_COLORS[index as usize] {
                 index += 1;
             }
             index - lowest_color
         }
     };
-    unsafe {
-        set_kirby_inhale_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, marked_slots.clone(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
-        set_villager_pocket_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, marked_slots.clone(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_MISFIRE);
-        set_rosetta_pull_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, marked_slots.clone(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
-    }
-    disable_kirby_copy(*FIGHTER_KIND_GANON, marked_slots.clone());
-    disable_villager_pocket(*FIGHTER_KIND_GANON, marked_slots.clone(), 0);
     println!("LOWEST: {} - COLOR NUM: {}", lowest_color, color_num);
     add_chara_db_entry_info(
         CharacterDatabaseEntry {

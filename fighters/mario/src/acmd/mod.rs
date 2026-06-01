@@ -5,8 +5,7 @@ use {
             lua_bind::*,
             sv_animcmd::{
                 frame,
-                wait,
-                wait_loop_sync_mot
+                wait
             },
             *
         },

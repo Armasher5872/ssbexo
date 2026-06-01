@@ -6,29 +6,30 @@ unsafe extern "C" fn cloud_attack_s4_main_status(fighter: &mut L2CFighterCommon)
 }
 
 unsafe extern "C" fn cloud_sub_attack_s4(fighter: &mut L2CFighterCommon, angled_smash_attack: L2CValue) {
-    let get_stick_dir = ControlModule::get_stick_dir(fighter.module_accessor);
-    let attack_s4_stick_dir_hi = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("attack_s4_stick_dir_hi"));
-    let attack_s4_stick_dir_lw = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("attack_s4_stick_dir_lw"));
-    let motion = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_attack_s4_s"} else {"attack_s4_s"};
-    let motion_hi = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_attack_s4_hi"} else {"attack_s4_hi"};
-    let motion_lw = if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_attack_s4_lw"} else {"attack_s4_lw"};
+    let boma = fighter.module_accessor;
+    let get_stick_dir = ControlModule::get_stick_dir(boma);
+    let attack_s4_stick_dir_hi = WorkModule::get_param_float(boma, hash40("common"), hash40("attack_s4_stick_dir_hi"));
+    let attack_s4_stick_dir_lw = WorkModule::get_param_float(boma, hash40("common"), hash40("attack_s4_stick_dir_lw"));
+    let motion = if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_attack_s4_s"} else {"attack_s4_s"};
+    let motion_hi = if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_attack_s4_hi"} else {"attack_s4_hi"};
+    let motion_lw = if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISHER_MODE) {"punish_attack_s4_lw"} else {"attack_s4_lw"};
     if !angled_smash_attack.get_bool() {
-        WorkModule::set_int64(fighter.module_accessor, hash40(motion) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
+        WorkModule::set_int64(boma, hash40(motion) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
     }
     else {
-        if MotionModule::is_anim_resource(fighter.module_accessor, Hash40::new(motion_hi)) {
+        if MotionModule::is_anim_resource(boma, Hash40::new(motion_hi)) {
             if attack_s4_stick_dir_hi < get_stick_dir {
-                WorkModule::set_int64(fighter.module_accessor, hash40(motion_hi) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
+                WorkModule::set_int64(boma, hash40(motion_hi) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
+                WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
             }
         }
-        if MotionModule::is_anim_resource(fighter.module_accessor, Hash40::new(motion_lw)) {
+        if MotionModule::is_anim_resource(boma, Hash40::new(motion_lw)) {
             if get_stick_dir < attack_s4_stick_dir_lw {
-                WorkModule::set_int64(fighter.module_accessor, hash40(motion_lw) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
+                WorkModule::set_int64(boma, hash40(motion_lw) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
+                WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK);
             }
         }
-        WorkModule::set_int64(fighter.module_accessor, hash40(motion) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
+        WorkModule::set_int64(boma, hash40(motion) as i64, *FIGHTER_STATUS_ATTACK_WORK_INT_MOTION_KIND);
     }
 }
 

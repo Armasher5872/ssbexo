@@ -2,10 +2,13 @@ use {
     exo_utils::{
         common::{
             extern_func::*,
+            fighter_common::*,
             hook::*,
+            //salty_runback::*,
             ui2d::*,
         },
         fighter::{
+            armstrong::*,
             cloud::*,
             ice_climber_meter::*,
             link::*,
@@ -14,20 +17,18 @@ use {
             sonic::*,
         },
         status::{
-            damage::*,
+            //damage::*,
             knockback_func::*,
         },
         structs::{
-            buttons::*,
-            flydata::*,
             getter_funcs::*,
-            kinetic_energy::*,
+            hashed_string::*,
             ui_manager::*,
             ui_object::*,
-            vector::*,
         }
     },
     exo_var::{
+        armstrong::*,
         consts::*,
         donkey::*,
         ganon::*,
@@ -39,7 +40,9 @@ use {
         pfushigisou::*,
         variables::*,
     },
+    ninput::any::*,
     param_config::*,
+    rand::Rng,
     skyline::{
         c_str,
         from_c_str,
@@ -62,16 +65,14 @@ use {
             L2CValue,
             lua_const::*,
         },
-        phx::{
-            Hash40,
-            Vector2f,
-            Vector3f
-        }
+        phx::*
     },
-    smash_script::macros::*,
     std::{
         ffi::CStr,
-        os::raw::c_char,
+        os::raw::{
+            c_char,
+            c_void
+        },
         sync::atomic::{
             AtomicBool,
             Ordering

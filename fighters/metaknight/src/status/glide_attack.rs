@@ -1,8 +1,9 @@
 use super::*;
 
 unsafe extern "C" fn metaknight_glide_attack_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("glide_attack"), 0.0, 1.0, false, 0.0, false, false);
-    if !StopModule::is_stop(fighter.module_accessor) {
+    let boma = fighter.module_accessor;
+    MotionModule::change_motion(boma, Hash40::new("glide_attack"), 0.0, 1.0, false, 0.0, false, false);
+    if !StopModule::is_stop(boma) {
         fighter.sub_fall_common_uniq(false.into());
     }
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_bind_address_call_sub_fall_common_uniq as *const () as _));
@@ -12,6 +13,7 @@ unsafe extern "C" fn metaknight_glide_attack_main_status(fighter: &mut L2CFighte
 unsafe extern "C" fn metaknight_glide_attack_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let boma = fighter.module_accessor;
     if fighter.sub_transition_group_check_air_landing().get_bool() {
         return 0.into();
     }
@@ -21,7 +23,7 @@ unsafe extern "C" fn metaknight_glide_attack_main_loop(fighter: &mut L2CFighterC
     if situation_kind == *SITUATION_KIND_AIR && prev_situation_kind == *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
-    if MotionModule::is_end(fighter.module_accessor) {
+    if MotionModule::is_end(boma) {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL_SPECIAL.into(), false.into());
     }
     0.into()

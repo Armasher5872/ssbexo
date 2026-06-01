@@ -26,6 +26,7 @@ unsafe extern "C" fn edge_death_initialization(vtable: u64, fighter: &mut Fighte
 #[skyline::hook(offset = EDGE_VTABLE_ONCE_PER_FIGHTER_FRAME)]
 unsafe extern "C" fn edge_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
+    let agent = get_fighter_common_from_accessor(&mut *boma);
     let frame = MotionModule::frame(boma);
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
@@ -59,6 +60,10 @@ unsafe extern "C" fn edge_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             CancelModule::enable_cancel(boma);
         }
     }
+    //One Winged Functions
+    if agent.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_APPEAL_LW != 0 {
+        WorkModule::on_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_CHANGE);
+    }
     if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
         if [*FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_RUSH, *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_LANDING, *FIGHTER_EDGE_STATUS_KIND_SPECIAL_HI_END].contains(&status_kind) {
             if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_RUSH_CANCEL) {
@@ -76,10 +81,20 @@ unsafe extern "C" fn edge_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     original!()(vtable, fighter)
 }
 
+//Found in Sephiroth's OPFF Vtable
+#[skyline::hook(offset = 0x9dcaa8, inline)]
+unsafe extern "C" fn edge_winged_form_true_check(ctx: &mut skyline::hooks::InlineCtx) {
+    let boma = ctx.registers[21].x() as *mut BattleObjectModuleAccessor;
+    if !WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_CHANGE) {
+        ctx.registers[8].set_w(0x0);
+    }
+}
+
 pub fn install() {
 	skyline::install_hooks!(
         edge_reset_initialization,
         edge_death_initialization,
-        edge_opff
+        edge_opff//,
+        //edge_winged_form_true_check
     );
 }

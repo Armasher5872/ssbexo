@@ -29,3 +29,30 @@ pub fn get_weapon_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAcces
         std::mem::transmute(*((lua_module + 0x1D8) as *mut *mut L2CWeaponCommon))
     }
 }
+
+/*OTHER*/
+
+pub fn offset_to_addr<T>(offset: usize) -> *const T {
+    unsafe {
+        (skyline::hooks::getRegionAddress(skyline::hooks::Region::Text) as *const u8).add(offset) as _
+    }
+}
+
+//Credit to HDR. Only pulls the game state to perform actions on
+pub fn get_game_state() -> *const u64 {
+    unsafe {
+        let p_p_p_game_state = *offset_to_addr::<*const *const *const u64>(0x52c2760);
+        if p_p_p_game_state.is_null() {
+            return std::ptr::null();
+        }
+        let p_p_game_state = *p_p_p_game_state;
+        if p_p_game_state.is_null() {
+            return std::ptr::null();
+        }
+        let p_game_state = *p_p_game_state;
+        if p_game_state.is_null() {
+            return std::ptr::null();
+        }
+        p_game_state
+    }
+}

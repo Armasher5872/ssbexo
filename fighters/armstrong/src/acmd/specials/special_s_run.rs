@@ -11,20 +11,22 @@ unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_run_acmd(agent: &mut
 
 //Grounded Side Special Run Effect
 unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_run_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     for _ in 0..3 {
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 2, 0, 4, 0, 0, 0, false);
         }
-        wait(agent.lua_state_agent, 4.0);
+        wait(lua_state, 4.0);
     }
 }
 
 //Grounded Side Special Run Sound
 unsafe extern "C" fn ssbexo_armstrong_grounded_side_special_run_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_right_m"));
     }
-    frame(agent.lua_state_agent, 7.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_left_m"));
     }
@@ -48,20 +50,22 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_run_acmd(agent: &mut L
 
 //Aerial Side Special Run Effect
 unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_run_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     for _ in 0..3 {
         if is_excute(agent) {
             FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 2, 0, 4, 0, 0, 0, false);
         }
-        wait(agent.lua_state_agent, 4.0);
+        wait(lua_state, 4.0);
     }
 }
 
 //Aerial Side Special Run Sound
 unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_run_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_right_m"));
     }
-    frame(agent.lua_state_agent, 7.0);
+    frame(lua_state, 7.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_ganon_step_left_m"));
     }
@@ -75,16 +79,8 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_run_expression(agent: 
 }
 
 pub fn install() {
-    let mut costume = &mut Vec::new();
-    unsafe {
-        for i in 0..MARKED_COLORS.len() {
-            if MARKED_COLORS[i] {
-                costume.push(i);
-            }
-        }
-    }
     Agent::new("ganon")
-    .set_costume(costume.to_vec())
+    .set_costume(get_armstrong_costumes_acmd())
     .game_acmd("game_specialsrun", ssbexo_armstrong_grounded_side_special_run_acmd, Low)
     .effect_acmd("effect_specialsrun", ssbexo_armstrong_grounded_side_special_run_effect, Low)
     .sound_acmd("sound_specialsrun", ssbexo_armstrong_grounded_side_special_run_sound, Low)

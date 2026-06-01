@@ -9,6 +9,7 @@ use {
         fighter::metaknight::*,
         structs::{
             collision_struct::*,
+            getter_funcs::*,
             shielddata_struct::*,
             vector::*,
         }
@@ -35,13 +36,11 @@ use {
 };
 
 mod acmd;
-mod opff;
 mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
-    opff::install();
     status::install();
     vtable::install();
     clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "metaknight", "beam", false);

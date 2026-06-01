@@ -4,6 +4,7 @@ use {
             status_end_control::*,
             var_reset::*,
         },
+        fighter::roy::*,
         status::damage::*,
     },
     exo_var::{

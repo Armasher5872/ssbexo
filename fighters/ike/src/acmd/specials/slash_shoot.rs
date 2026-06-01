@@ -26,10 +26,11 @@ unsafe extern "C" fn ssbexo_ike_slash_effect(agent: &mut L2CAgentBase) {
 
 //Slash Sound
 unsafe extern "C" fn ssbexo_ike_slash_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, Hash40::new("se_ike_swing_l"));
-        sv_animcmd::SET_TAKEOUT_SE_STATUS(agent.lua_state_agent);
+        sv_animcmd::SET_TAKEOUT_SE_STATUS(lua_state);
     }
 }
 
