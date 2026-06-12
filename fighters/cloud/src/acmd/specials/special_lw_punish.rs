@@ -100,14 +100,14 @@ unsafe extern "C" fn ssbexo_cloud_punisher_down_special_expression(agent: &mut L
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_punishspeciallw", ssbexo_cloud_punisher_down_special_acmd, Low)
-    .game_acmd("game_punishspecialairlw", ssbexo_cloud_punisher_down_special_acmd, Low)
-    .effect_acmd("effect_punishspeciallw", ssbexo_cloud_grounded_punisher_down_special_effect, Low)
-    .effect_acmd("effect_punishspecialairlw", ssbexo_cloud_aerial_punisher_down_special_effect, Low)
-    .sound_acmd("sound_punishspeciallw", ssbexo_cloud_punisher_down_special_sound, Low)
-    .sound_acmd("sound_punishspecialairlw", ssbexo_cloud_punisher_down_special_sound, Low)
-    .expression_acmd("expression_punishspeciallw", ssbexo_cloud_punisher_down_special_expression, Low)
-    .expression_acmd("expression_punishspecialairlw", ssbexo_cloud_punisher_down_special_expression, Low)
+    .acmd("game_punishspeciallw", ssbexo_cloud_punisher_down_special_acmd, Low)
+    .acmd("game_punishspecialairlw", ssbexo_cloud_punisher_down_special_acmd, Low)
+    .acmd("effect_punishspeciallw", ssbexo_cloud_grounded_punisher_down_special_effect, Low)
+    .acmd("effect_punishspecialairlw", ssbexo_cloud_aerial_punisher_down_special_effect, Low)
+    .acmd("sound_punishspeciallw", ssbexo_cloud_punisher_down_special_sound, Low)
+    .acmd("sound_punishspecialairlw", ssbexo_cloud_punisher_down_special_sound, Low)
+    .acmd("expression_punishspeciallw", ssbexo_cloud_punisher_down_special_expression, Low)
+    .acmd("expression_punishspecialairlw", ssbexo_cloud_punisher_down_special_expression, Low)
     .install()
     ;
 }

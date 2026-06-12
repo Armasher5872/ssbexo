@@ -21,7 +21,7 @@ unsafe extern "C" fn buddy_attack_lw4_main_loop(fighter: &mut L2CFighterCommon) 
     let fall_loop_frame = 11.0;
     let landing_frame = 12.0;
     if CancelModule::is_enable_cancel(boma) {
-        if !fighter.sub_wait_ground_check_common(false.into()).get_bool()
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool()
         || fighter.sub_air_check_fall_common().get_bool() {
             return 1.into();
         }

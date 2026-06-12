@@ -260,18 +260,6 @@ unsafe extern "C" fn link_special_n_exit_status(fighter: &mut L2CFighterCommon) 
     else {
         ArticleModule::change_status_exist(boma, bow_article_id, *WN_LINK_BOW_STATUS_KIND_BACK);
     }
-    if ArticleModule::is_exist(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
-        if ArticleModule::is_flag(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-            let item_id = ArticleModule::get_int(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-            let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
-            LinkModule::remove_model_constraint(item_boma, true);
-            if LinkModule::is_link(item_boma, *ITEM_LINK_NO_HAVE) {
-                LinkModule::unlink_all(item_boma);
-                StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
-            }
-            WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_INIT_FUSE);
-        }
-    }
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE);
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_DEGREE);
     ArticleModule::remove_exist(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, ArticleOperationTarget(0));

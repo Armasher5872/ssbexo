@@ -94,10 +94,10 @@ unsafe extern "C" fn ssbexo_miifighter_down_smash_acmd(agent: &mut L2CAgentBase)
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_miifighter_forward_smash_acmd, Low)
-    .game_acmd("game_attacks4hi", ssbexo_miifighter_forward_smash_hi_acmd, Low)
-    .game_acmd("game_attacks4lw", ssbexo_miifighter_forward_smash_lw_acmd, Low)
-    .game_acmd("game_attacklw4", ssbexo_miifighter_down_smash_acmd, Low)
+    .acmd("game_attacks4", ssbexo_miifighter_forward_smash_acmd, Low)
+    .acmd("game_attacks4hi", ssbexo_miifighter_forward_smash_hi_acmd, Low)
+    .acmd("game_attacks4lw", ssbexo_miifighter_forward_smash_lw_acmd, Low)
+    .acmd("game_attacklw4", ssbexo_miifighter_down_smash_acmd, Low)
     .install()
     ;
 }

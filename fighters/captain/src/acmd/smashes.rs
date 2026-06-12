@@ -95,7 +95,7 @@ unsafe extern "C" fn ssbexo_captain_up_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("shoulderr"), 13.0, 110, 29, 0, 80, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("shoulderr"), 13.0, 110, 69, 0, 80, 6.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 11.0);
     if is_excute(agent) {
@@ -290,19 +290,19 @@ unsafe extern "C" fn ssbexo_captain_down_smash_expression(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("captain")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .effect_acmd("effect_attacks4", ssbexo_captain_forward_smash_effect, Low)
-    .effect_acmd("effect_attacks4hi", ssbexo_captain_forward_smash_hi_effect, Low)
-    .effect_acmd("effect_attacks4lw", ssbexo_captain_forward_smash_lw_effect, Low)
-    .effect_acmd("effect_attackhi4charge", ssbexo_captain_up_smash_charge_effect, Low)
-    .game_acmd("game_attackhi4", ssbexo_captain_up_smash_acmd, Low)
-    .effect_acmd("effect_attackhi4", ssbexo_captain_up_smash_effect, Low)
-    .sound_acmd("sound_attackhi4", ssbexo_captain_up_smash_sound, Low)
-    .expression_acmd("expression_attackhi4", ssbexo_captain_up_smash_expression, Low)
-    .effect_acmd("effect_attacklw4charge", ssbexo_captain_down_smash_charge_effect, Low)
-    .game_acmd("game_attacklw4", ssbexo_captain_down_smash_acmd, Low)
-    .effect_acmd("effect_attacklw4", ssbexo_captain_down_smash_effect, Low)
-    .sound_acmd("sound_attacklw4", ssbexo_captain_down_smash_sound, Low)
-    .expression_acmd("expression_attacklw4", ssbexo_captain_down_smash_expression, Low)
+    .acmd("effect_attacks4", ssbexo_captain_forward_smash_effect, Low)
+    .acmd("effect_attacks4hi", ssbexo_captain_forward_smash_hi_effect, Low)
+    .acmd("effect_attacks4lw", ssbexo_captain_forward_smash_lw_effect, Low)
+    .acmd("effect_attackhi4charge", ssbexo_captain_up_smash_charge_effect, Low)
+    .acmd("game_attackhi4", ssbexo_captain_up_smash_acmd, Low)
+    .acmd("effect_attackhi4", ssbexo_captain_up_smash_effect, Low)
+    .acmd("sound_attackhi4", ssbexo_captain_up_smash_sound, Low)
+    .acmd("expression_attackhi4", ssbexo_captain_up_smash_expression, Low)
+    .acmd("effect_attacklw4charge", ssbexo_captain_down_smash_charge_effect, Low)
+    .acmd("game_attacklw4", ssbexo_captain_down_smash_acmd, Low)
+    .acmd("effect_attacklw4", ssbexo_captain_down_smash_effect, Low)
+    .acmd("sound_attacklw4", ssbexo_captain_down_smash_sound, Low)
+    .acmd("expression_attacklw4", ssbexo_captain_down_smash_expression, Low)
     .install()
     ;
 }

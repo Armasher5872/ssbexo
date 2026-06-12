@@ -81,10 +81,10 @@ unsafe extern "C" fn ssbexo_ike_dash_attack_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("ike")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_appeallwr", ssbexo_ike_down_taunt_acmd, Low)
-    .game_acmd("game_appeallwl", ssbexo_ike_down_taunt_acmd, Low)
-    .sound_acmd("sound_attack13", ssbexo_ike_jab_3_sound, Low)
-    .game_acmd("game_attackdash", ssbexo_ike_dash_attack_acmd, Low)
+    .acmd("game_appeallwr", ssbexo_ike_down_taunt_acmd, Low)
+    .acmd("game_appeallwl", ssbexo_ike_down_taunt_acmd, Low)
+    .acmd("sound_attack13", ssbexo_ike_jab_3_sound, Low)
+    .acmd("game_attackdash", ssbexo_ike_dash_attack_acmd, Low)
     .install()
     ;
 }

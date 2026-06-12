@@ -12,7 +12,7 @@ unsafe extern "C" fn ssbexo_ganon_aerial_down_special_landing_effect(agent: &mut
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .effect_acmd("effect_specialairlwend", ssbexo_ganon_aerial_down_special_landing_effect, Low)
+    .acmd("effect_specialairlwend", ssbexo_ganon_aerial_down_special_landing_effect, Low)
     .install()
     ;
 }

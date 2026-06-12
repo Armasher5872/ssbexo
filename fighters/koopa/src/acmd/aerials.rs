@@ -134,7 +134,7 @@ unsafe extern "C" fn ssbexo_koopa_dair_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 44.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 65, 60, 0, 40, 7.0, 0.0, -3.0, -1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 6.0, 20, 60, 0, 40, 7.0, 0.0, -3.0, -1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
     }
     frame(lua_state, 50.0);
     if is_excute(agent) {
@@ -153,11 +153,11 @@ unsafe extern "C" fn ssbexo_koopa_dair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("koopa")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairn", ssbexo_koopa_nair_acmd, Low)
-    .effect_acmd("effect_attackairn", ssbexo_koopa_nair_effect, Low)
-    .sound_acmd("sound_attackairn", ssbexo_koopa_nair_sound, Low)
-    .expression_acmd("expression_attackairn", ssbexo_koopa_nair_expression, Low)
-    .game_acmd("game_attackairlw", ssbexo_koopa_dair_acmd, Low)
+    .acmd("game_attackairn", ssbexo_koopa_nair_acmd, Low)
+    .acmd("effect_attackairn", ssbexo_koopa_nair_effect, Low)
+    .acmd("sound_attackairn", ssbexo_koopa_nair_sound, Low)
+    .acmd("expression_attackairn", ssbexo_koopa_nair_expression, Low)
+    .acmd("game_attackairlw", ssbexo_koopa_dair_acmd, Low)
     .install()
     ;
 }

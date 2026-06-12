@@ -744,10 +744,10 @@ unsafe extern "C" fn ssbexo_elight_aerial_neutral_special_2_acmd(agent: &mut L2C
 pub fn install() {
     Agent::new("elight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn", ssbexo_elight_grounded_neutral_special_1_acmd, Low)
-    .game_acmd("game_specialn2", ssbexo_elight_grounded_neutral_special_2_acmd, Low)
-    .game_acmd("game_specialairn", ssbexo_elight_aerial_neutral_special_1_acmd, Low)
-    .game_acmd("game_specialairn2", ssbexo_elight_aerial_neutral_special_2_acmd, Low)
+    .acmd("game_specialn", ssbexo_elight_grounded_neutral_special_1_acmd, Low)
+    .acmd("game_specialn2", ssbexo_elight_grounded_neutral_special_2_acmd, Low)
+    .acmd("game_specialairn", ssbexo_elight_aerial_neutral_special_1_acmd, Low)
+    .acmd("game_specialairn2", ssbexo_elight_aerial_neutral_special_2_acmd, Low)
     .install()
     ;
 }

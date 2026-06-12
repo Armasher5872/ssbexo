@@ -317,17 +317,17 @@ unsafe extern "C" fn ssbexo_ken_aerial_true_shoryuken_acmd(agent: &mut L2CAgentB
 pub fn install() {
     Agent::new("ken")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhi", ssbexo_ken_grounded_shoryuken_acmd, Low)
-    .game_acmd("game_specialairhi", ssbexo_ken_aerial_shoryuken_acmd, Low)
-    .game_acmd("game_specialhicommand", ssbexo_ken_grounded_true_shoryuken_acmd, Low)
-    .game_acmd("game_specialairhicommand", ssbexo_ken_aerial_true_shoryuken_acmd, Low)
+    .acmd("game_specialhi", ssbexo_ken_grounded_shoryuken_acmd, Low)
+    .acmd("game_specialairhi", ssbexo_ken_aerial_shoryuken_acmd, Low)
+    .acmd("game_specialhicommand", ssbexo_ken_grounded_true_shoryuken_acmd, Low)
+    .acmd("game_specialairhicommand", ssbexo_ken_aerial_true_shoryuken_acmd, Low)
     .install()
     ;
     Agent::new("ken_hadoken")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_movew", ssbexo_ken_hadoken_move_w_acmd, Low)
-    .game_acmd("game_movem", ssbexo_ken_hadoken_move_m_acmd, Low)
-    .game_acmd("game_moves", ssbexo_ken_hadoken_move_s_acmd, Low)
+    .acmd("game_movew", ssbexo_ken_hadoken_move_w_acmd, Low)
+    .acmd("game_movem", ssbexo_ken_hadoken_move_m_acmd, Low)
+    .acmd("game_moves", ssbexo_ken_hadoken_move_s_acmd, Low)
     .install()
     ;
 }

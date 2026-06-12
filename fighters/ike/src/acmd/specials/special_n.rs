@@ -168,14 +168,14 @@ unsafe extern "C" fn ssbexo_ike_aerial_neutral_special_expression(agent: &mut L2
 pub fn install() {
     Agent::new("ike")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnstart", ssbexo_ike_neutral_special_acmd, Low)
-    .game_acmd("game_specialairnstart", ssbexo_ike_neutral_special_acmd, Low)
-    .effect_acmd("effect_specialnstart", ssbexo_ike_grounded_neutral_special_effect, Low)
-    .effect_acmd("effect_specialairnstart", ssbexo_ike_aerial_neutral_special_effect, Low)
-    .sound_acmd("sound_specialnstart", ssbexo_ike_grounded_neutral_special_sound, Low)
-    .sound_acmd("sound_specialairnstart", ssbexo_ike_aerial_neutral_special_sound, Low)
-    .expression_acmd("expression_specialnstart", ssbexo_ike_grounded_neutral_special_expression, Low)
-    .expression_acmd("expression_specialairnstart", ssbexo_ike_aerial_neutral_special_expression, Low)
+    .acmd("game_specialnstart", ssbexo_ike_neutral_special_acmd, Low)
+    .acmd("game_specialairnstart", ssbexo_ike_neutral_special_acmd, Low)
+    .acmd("effect_specialnstart", ssbexo_ike_grounded_neutral_special_effect, Low)
+    .acmd("effect_specialairnstart", ssbexo_ike_aerial_neutral_special_effect, Low)
+    .acmd("sound_specialnstart", ssbexo_ike_grounded_neutral_special_sound, Low)
+    .acmd("sound_specialairnstart", ssbexo_ike_aerial_neutral_special_sound, Low)
+    .acmd("expression_specialnstart", ssbexo_ike_grounded_neutral_special_expression, Low)
+    .acmd("expression_specialairnstart", ssbexo_ike_aerial_neutral_special_expression, Low)
     .install()
     ;
 }

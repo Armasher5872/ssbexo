@@ -334,14 +334,14 @@ unsafe extern "C" fn ssbexo_cloud_limit_break_cross_slash_expression(agent: &mut
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialslb", ssbexo_cloud_limit_break_cross_slash_acmd, Low)
-    .game_acmd("game_specialairslb", ssbexo_cloud_limit_break_cross_slash_acmd, Low)
-    .effect_acmd("effect_specialslb", ssbexo_cloud_limit_break_cross_slash_effect, Low)
-    .effect_acmd("effect_specialairslb", ssbexo_cloud_limit_break_cross_slash_effect, Low)
-    .sound_acmd("sound_specialslb", ssbexo_cloud_limit_break_cross_slash_sound, Low)
-    .sound_acmd("sound_specialairslb", ssbexo_cloud_limit_break_cross_slash_sound, Low)
-    .expression_acmd("expression_specialslb", ssbexo_cloud_limit_break_cross_slash_expression, Low)
-    .expression_acmd("expression_specialairslb", ssbexo_cloud_limit_break_cross_slash_expression, Low)
+    .acmd("game_specialslb", ssbexo_cloud_limit_break_cross_slash_acmd, Low)
+    .acmd("game_specialairslb", ssbexo_cloud_limit_break_cross_slash_acmd, Low)
+    .acmd("effect_specialslb", ssbexo_cloud_limit_break_cross_slash_effect, Low)
+    .acmd("effect_specialairslb", ssbexo_cloud_limit_break_cross_slash_effect, Low)
+    .acmd("sound_specialslb", ssbexo_cloud_limit_break_cross_slash_sound, Low)
+    .acmd("sound_specialairslb", ssbexo_cloud_limit_break_cross_slash_sound, Low)
+    .acmd("expression_specialslb", ssbexo_cloud_limit_break_cross_slash_expression, Low)
+    .acmd("expression_specialairslb", ssbexo_cloud_limit_break_cross_slash_expression, Low)
     .install()
     ;
 }

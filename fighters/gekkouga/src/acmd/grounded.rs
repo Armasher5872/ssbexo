@@ -129,10 +129,10 @@ unsafe extern "C" fn ssbexo_gekkouga_dash_attack_acmd(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attack12", ssbexo_gekkouga_jab_2_acmd, Low)
-    .game_acmd("game_attack13", ssbexo_gekkouga_jab_3_acmd, Low)
-    .game_acmd("game_attack100", ssbexo_gekkouga_rapid_jab_acmd, Low)
-    .game_acmd("game_attackdash", ssbexo_gekkouga_dash_attack_acmd, Low)
+    .acmd("game_attack12", ssbexo_gekkouga_jab_2_acmd, Low)
+    .acmd("game_attack13", ssbexo_gekkouga_jab_3_acmd, Low)
+    .acmd("game_attack100", ssbexo_gekkouga_rapid_jab_acmd, Low)
+    .acmd("game_attackdash", ssbexo_gekkouga_dash_attack_acmd, Low)
     .install()
     ;
 }

@@ -59,10 +59,10 @@ unsafe extern "C" fn ssbexo_cloud_up_special_combo_2_land_expression(agent: &mut
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_acmd, Low)
-    .effect_acmd("effect_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_effect, Low)
-    .sound_acmd("sound_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_sound, Low)
-    .expression_acmd("expression_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_expression, Low)
+    .acmd("game_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_acmd, Low)
+    .acmd("effect_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_effect, Low)
+    .acmd("sound_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_sound, Low)
+    .acmd("expression_specialhicombo2land", ssbexo_cloud_up_special_combo_2_land_expression, Low)
     .install()
     ;
 }

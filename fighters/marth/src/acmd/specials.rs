@@ -19,8 +19,8 @@ unsafe extern "C" fn ssbexo_marth_dancing_blade_4_neutral_acmd(agent: &mut L2CAg
 pub fn install() {
     Agent::new("marth")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specials4s", ssbexo_marth_dancing_blade_4_neutral_acmd, Low)
-    .game_acmd("game_specialairs4s", ssbexo_marth_dancing_blade_4_neutral_acmd, Low)
+    .acmd("game_specials4s", ssbexo_marth_dancing_blade_4_neutral_acmd, Low)
+    .acmd("game_specialairs4s", ssbexo_marth_dancing_blade_4_neutral_acmd, Low)
     .install()
     ;
 }

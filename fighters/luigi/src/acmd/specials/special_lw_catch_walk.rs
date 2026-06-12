@@ -44,10 +44,10 @@ unsafe extern "C" fn ssbexo_luigi_down_special_catch_walk_expression(agent: &mut
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_acmd, Low)
-    .effect_acmd("effect_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_effect, Low)
-    .sound_acmd("sound_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_sound, Low)
-    .expression_acmd("expression_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_expression, Low)
+    .acmd("game_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_acmd, Low)
+    .acmd("effect_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_effect, Low)
+    .acmd("sound_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_sound, Low)
+    .acmd("expression_speciallwcatchwalk", ssbexo_luigi_down_special_catch_walk_expression, Low)
     .install()
     ;
 }

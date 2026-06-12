@@ -120,10 +120,10 @@ unsafe extern "C" fn ssbexo_cloud_up_special_combo_1_expression(agent: &mut L2CA
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhicombo1", ssbexo_cloud_up_special_combo_1_acmd, Low)
-    .effect_acmd("effect_specialhicombo1", ssbexo_cloud_up_special_combo_1_effect, Low)
-    .sound_acmd("sound_specialhicombo1", ssbexo_cloud_up_special_combo_1_sound, Low)
-    .expression_acmd("expression_specialhicombo1", ssbexo_cloud_up_special_combo_1_expression, Low)
+    .acmd("game_specialhicombo1", ssbexo_cloud_up_special_combo_1_acmd, Low)
+    .acmd("effect_specialhicombo1", ssbexo_cloud_up_special_combo_1_effect, Low)
+    .acmd("sound_specialhicombo1", ssbexo_cloud_up_special_combo_1_sound, Low)
+    .acmd("expression_specialhicombo1", ssbexo_cloud_up_special_combo_1_expression, Low)
     .install()
     ;
 }

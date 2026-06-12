@@ -38,10 +38,10 @@ unsafe extern "C" fn ssbexo_mario_side_special_jump_expression(agent: &mut L2CAg
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialsjump", ssbexo_mario_side_special_jump_acmd, Low)
-    .effect_acmd("effect_specialsjump", ssbexo_mario_side_special_jump_effect, Low)
-    .sound_acmd("sound_specialsjump", ssbexo_mario_side_special_jump_sound, Low)
-    .expression_acmd("expression_specialsjump", ssbexo_mario_side_special_jump_expression, Low)
+    .acmd("game_specialsjump", ssbexo_mario_side_special_jump_acmd, Low)
+    .acmd("effect_specialsjump", ssbexo_mario_side_special_jump_effect, Low)
+    .acmd("sound_specialsjump", ssbexo_mario_side_special_jump_sound, Low)
+    .acmd("expression_specialsjump", ssbexo_mario_side_special_jump_expression, Low)
     .install()
     ;
 }

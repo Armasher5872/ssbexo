@@ -29,7 +29,6 @@ use {
 };
 
 mod arrow_fly;
-mod arrow_stick;
 mod boomerang_fly;
 mod boomerang_turn;
 mod parasail_glide_drop;
@@ -50,7 +49,6 @@ mod special_n_start;
 
 pub fn install() {
     arrow_fly::install();
-    arrow_stick::install();
     boomerang_fly::install();
     boomerang_turn::install();
     parasail_glide_drop::install();

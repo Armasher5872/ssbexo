@@ -144,14 +144,14 @@ unsafe extern "C" fn ssbexo_chrom_bair_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("chrom")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairn", ssbexo_chrom_nair_acmd, Low)
-    .effect_acmd("effect_attackairn", ssbexo_chrom_nair_effect, Low)
-    .sound_acmd("sound_attackairn", ssbexo_chrom_nair_sound, Low)
-    .expression_acmd("expression_attackairn", ssbexo_chrom_nair_expression, Low)
-    .game_acmd("game_attackairb", ssbexo_chrom_bair_acmd, Low)
-    .effect_acmd("effect_attackairb", ssbexo_chrom_bair_effect, Low)
-    .sound_acmd("sound_attackairb", ssbexo_chrom_bair_sound, Low)
-    .expression_acmd("expression_attackairb", ssbexo_chrom_bair_expression, Low)
+    .acmd("game_attackairn", ssbexo_chrom_nair_acmd, Low)
+    .acmd("effect_attackairn", ssbexo_chrom_nair_effect, Low)
+    .acmd("sound_attackairn", ssbexo_chrom_nair_sound, Low)
+    .acmd("expression_attackairn", ssbexo_chrom_nair_expression, Low)
+    .acmd("game_attackairb", ssbexo_chrom_bair_acmd, Low)
+    .acmd("effect_attackairb", ssbexo_chrom_bair_effect, Low)
+    .acmd("sound_attackairb", ssbexo_chrom_bair_sound, Low)
+    .acmd("expression_attackairb", ssbexo_chrom_bair_expression, Low)
     .install()
     ;
 }

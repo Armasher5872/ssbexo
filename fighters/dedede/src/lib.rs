@@ -1,31 +1,12 @@
 use {
-    exo_utils::{
-        common::{
-            status_end_control::*,
-            var_reset::*,
-        },
-        fighter::{
-            dedede::*,
-            link::*,
-        }
+    exo_utils::common::{
+        status_end_control::*,
+        var_reset::*,
     },
-    exo_var::{
-        dedede::*,
-        globals::*,
-        kirby::*,
-        link::*,
-        murabito::*,
-    },
+    exo_var::globals::*,
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        lib::{
-            L2CValue,
-            lua_const::*,
-        },
-        phx::Vector3f
+        app::*,
+        lib::L2CValue
     },
     smashline::*,
 };

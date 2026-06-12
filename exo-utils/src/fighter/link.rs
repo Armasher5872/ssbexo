@@ -1,31 +1,13 @@
 #![allow(improper_ctypes_definitions)] //Addresses warning: `extern` fn uses type `Vector2`, which is not FFI-safe
 use super::*;
 
-pub struct FuseKind();
-
-impl FuseKind {
-    pub const FUSE: i32 = 0;
-    pub const REFUSE: i32 = 1;
-}
-pub struct FuseType();
-
-impl FuseType {
-    pub const NORMAL: i32 = 0;
-    pub const POWER: i32 = 1;
-    pub const ELEMENTAL: i32 = 2;
-}
-
 pub unsafe extern "C" fn link_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_URBOSA_FURY);
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE);
-    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_INIT_FUSE);
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_JUMP);
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN);
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_DEGREE);
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
-    WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-    WorkModule::set_int(boma, TeamModule::team_no(boma) as i32, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_TEAM_NO);
-    WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
     WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
     WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE_ID);
     WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
@@ -34,85 +16,6 @@ pub unsafe extern "C" fn link_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_2);
     WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_3);
     WorkModule::set_int(boma, 0, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_4);
-}
-
-pub unsafe extern "C" fn set_arrow_fuse_params(boma: *mut BattleObjectModuleAccessor, item_kind: i32, fuse_kind: i32) {
-    if ![*ITEM_KIND_NONE, *ITEM_KIND_ASSIST, *ITEM_KIND_LINKARROW].contains(&item_kind) || [*ITEM_KIND_BANANAGUN, *ITEM_KIND_FIREFLOWER].contains(&item_kind) {
-        WorkModule::on_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
-    }
-    else {
-        WorkModule::off_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED);
-    }
-    if WorkModule::is_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-        let owner_boma = smash::app::sv_battle_object::module_accessor((WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-        let owner_kind = smash::app::utility::get_kind(&mut *owner_boma);
-        WorkModule::set_int(boma, item_kind, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_KIND);
-        if fuse_kind == FuseKind::FUSE {
-            if owner_kind == *FIGHTER_KIND_LINK {
-                WorkModule::set_int(owner_boma, item_kind, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
-            }
-            else if owner_kind == *FIGHTER_KIND_KIRBY {
-                WorkModule::set_int(owner_boma, item_kind, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_CURRENT_ARROW_FUSE);
-            }
-            let item_id = ItemModule::get_have_item_id(owner_boma, 0) as i32;
-            WorkModule::set_int(boma, item_id, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-        }
-        else if fuse_kind == FuseKind::REFUSE {
-            let pos_x = PostureModule::pos_x(boma);
-            let pos_y = PostureModule::pos_y(boma);
-            let pos_z = PostureModule::pos_z(boma);
-            let mut params = CreateItemParam {
-                founder_pos: Vector4f{x: pos_x, y: pos_y, z: pos_z, w: 0.0},
-                item_pos: Vector4f{x: pos_x, y: pos_y, z: pos_z, w: 0.0},
-                item_kind: smash::app::ItemKind(item_kind),
-                another_battle_object_id: *BATTLE_OBJECT_ID_INVALID as u32,
-                variation_kind: *ITEM_VARIATION_NONE,
-                lr_dir: PostureModule::lr(boma),
-                owner_id: (*(boma)).battle_object_id,
-                unk_20: 20,
-                pokeball_or_assist_kind: *ITEM_KIND_NONE,
-                unk_0: 0,
-                weird_flag: 0x633F800000,
-                unk_1_weird: 1,
-                unk_approx_0: 0.0,
-                unk_02: 0.0
-            };
-            let item_manager = *(singletons::ItemManager() as *mut *mut smash::app::ItemManager);
-            let battle_object = create_item(item_manager, &mut params, false, false, false);
-            let item_boma = (*battle_object).module_accessor;
-            if ![*ITEM_KIND_HEALBALL, *ITEM_KIND_CHEWING, *ITEM_KIND_BOOMERANG].contains(&item_kind) {
-                StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_HAVE, false);
-            }
-            if item_kind == *ITEM_KIND_LINKBOMB {
-                PostureModule::set_scale(item_boma, 1.35, false);
-            }
-            let item_id = (*(item_boma)).battle_object_id as i32;
-            WorkModule::set_int(boma, item_id, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-            if [*FIGHTER_KIND_MURABITO, *FIGHTER_KIND_SHIZUE].contains(&owner_kind) {
-                WorkModule::set_int(owner_boma, *ITEM_KIND_NONE, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_LINK_ARROW_FUSE_ITEM);
-            }
-        }
-        if item_kind == *ITEM_KIND_BOMBER {
-            WorkModule::set_int(boma, FuseType::NORMAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_BOMBER_STATUS_KIND_BORN2, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
-        }
-        else if [*ITEM_KIND_KILLER, *ITEM_KIND_BANANAGUN, *ITEM_KIND_DOLPHINBOMB].contains(&item_kind) {
-            WorkModule::set_int(boma, FuseType::POWER, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_THROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
-        }
-        else if item_kind == *ITEM_KIND_FIREFLOWER {
-            WorkModule::set_int(boma, FuseType::ELEMENTAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_LOST, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
-        }
-        else if item_kind == *ITEM_KIND_LINKBOMB {
-            WorkModule::set_int(boma, FuseType::NORMAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_BORN, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
-        }
-        else {
-            WorkModule::set_int(boma, FuseType::NORMAL, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_FLAG);
-            WorkModule::set_int(boma, *ITEM_STATUS_KIND_THROW, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_SPECIAL_STATUS);
-        }
-    }
 }
 
 pub unsafe extern "C" fn link_decide_arrow(fighter: &mut L2CFighterCommon) {
@@ -241,19 +144,6 @@ pub unsafe extern "C" fn link_shoot_arrow(fighter: &mut L2CFighterCommon) {
     ArticleModule::set_visibility_whole(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOW, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::set_visibility_whole(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ArticleModule::shoot(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW, ArticleOperationTarget(*ARTICLE_OPE_TARGET_FIRST), true);
-}
-
-pub unsafe extern "C" fn find_ascendable_ground(boma: *mut BattleObjectModuleAccessor, pos_x: f32, min_pos_y: f32, pos_y: f32, height: f32) -> f32 {
-    let ground_hit_pos = &mut Vector2f{x: 0.0, y: 0.0};
-    if GroundModule::ray_check_hit_pos(boma, &Vector2f{x: pos_x, y: pos_y}, &Vector2f{x: 0.0, y: -100.0}, ground_hit_pos, true) {
-        if ground_hit_pos.y < min_pos_y {
-            return pos_y;
-        }
-        return find_ascendable_ground(boma, pos_x, min_pos_y, ground_hit_pos.y-height, height);
-    }
-    else {
-        return pos_y;
-    }
 }
 
 #[derive(Default, Copy, Clone)]

@@ -2,7 +2,6 @@ use super::*;
 
 const MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
 const MURABITO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xdbad80; //Murabito Only
-const MURABITO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xdbb070; //Murabito Only
 
 //Villager Reset Initialization
 #[skyline::hook(offset = MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -10,7 +9,6 @@ unsafe extern "C" fn murabito_reset_initialization(vtable: u64, fighter: &mut Fi
     if fighter.battle_object.kind == *FIGHTER_KIND_MURABITO as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_reset_variable_reset(&mut *boma);
-        murabito_var(&mut *boma);
         WorkModule::set_int(boma, 0, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_SPECIAL_N_OBJECT_NUM);
         WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_SPECIAL_N_OBJECT_ID);
         WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x100000C8);
@@ -26,22 +24,12 @@ unsafe extern "C" fn murabito_reset_initialization(vtable: u64, fighter: &mut Fi
 unsafe extern "C" fn murabito_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
-    murabito_var(&mut *boma);
-    original!()(vtable, fighter)
-}
-
-//Villager Once Per Fighter Frame
-#[skyline::hook(offset = MURABITO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn murabito_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    let boma = fighter.battle_object.module_accessor;
-    ac_common(boma);
     original!()(vtable, fighter)
 }
 
 pub fn install() {
 	skyline::install_hooks!(
         murabito_reset_initialization,
-        murabito_death_initialization,
-        murabito_opff
+        murabito_death_initialization
     );
 }

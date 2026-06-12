@@ -307,11 +307,11 @@ unsafe extern "C" fn ssbexo_elight_dair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("elight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_landingairn", ssbexo_elight_nair_landing_acmd, Low)
-    .game_acmd("game_attackairf", ssbexo_elight_fair_acmd, Low)
-    .game_acmd("game_attackairb", ssbexo_elight_bair_acmd, Low)
-    .game_acmd("game_attackairhi", ssbexo_elight_uair_acmd, Low)
-    .game_acmd("game_attackairlw", ssbexo_elight_dair_acmd, Low)
+    .acmd("game_landingairn", ssbexo_elight_nair_landing_acmd, Low)
+    .acmd("game_attackairf", ssbexo_elight_fair_acmd, Low)
+    .acmd("game_attackairb", ssbexo_elight_bair_acmd, Low)
+    .acmd("game_attackairhi", ssbexo_elight_uair_acmd, Low)
+    .acmd("game_attackairlw", ssbexo_elight_dair_acmd, Low)
     .install()
     ;
 }

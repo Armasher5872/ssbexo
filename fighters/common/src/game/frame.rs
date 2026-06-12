@@ -5,13 +5,11 @@ use super::*;
 unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
     original!()(fighter);
 	let boma = fighter.battle_object.module_accessor;
-	//let agent = get_fighter_common_from_accessor(&mut *boma);
-	//let status_kind = agent.global_table[STATUS_KIND].get_i32();
+	let agent = get_fighter_common_from_accessor(&mut *boma);
+	let status_kind = agent.global_table[STATUS_KIND].get_i32();
 	let final_zoom_counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
 	let effect_handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
-    /*let invalid_runback_states = !sv_information::is_ready_go() || !is_on_ryujinx() || [
-        *FIGHTER_STATUS_KIND_DEMO, *FIGHTER_STATUS_KIND_WIN, *FIGHTER_STATUS_KIND_LOSE, *FIGHTER_STATUS_KIND_ENTRY, *FIGHTER_STATUS_KIND_ROULETTE_FURAFURA, *FIGHTER_STATUS_KIND_ROULETTE, *FIGHTER_STATUS_KIND_STANDBY
-    ].contains(&status_kind);*/
+    let invalid_runback_states = !sv_information::is_ready_go() && [*FIGHTER_STATUS_KIND_DEMO, *FIGHTER_STATUS_KIND_WIN, *FIGHTER_STATUS_KIND_LOSE, *FIGHTER_STATUS_KIND_ENTRY, *FIGHTER_STATUS_KIND_ROULETTE_FURAFURA, *FIGHTER_STATUS_KIND_ROULETTE, *FIGHTER_STATUS_KIND_STANDBY].contains(&status_kind);
 	//Final Zoom Clearing
 	if final_zoom_counter > 0 {
 		if final_zoom_counter == 40 {
@@ -41,7 +39,6 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
         final_zoom_effect_remove(boma, effect_handle);
 	}
     //Credited to HDR. Salty Runback/Match Exit
-    /*
     if invalid_runback_states {
         IS_SALTY_RUNBACK = false;
         IS_SALTY_MATCH_EXIT = false;
@@ -52,7 +49,6 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
     if salty_quit_check(agent) {
         IS_SALTY_MATCH_EXIT = true;
     }
-    */
 }
 
 pub fn install() {

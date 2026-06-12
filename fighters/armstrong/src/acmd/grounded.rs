@@ -81,10 +81,10 @@ unsafe extern "C" fn ssbexo_armstrong_dash_attack_effect(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_attack11", ssbexo_armstrong_jab_acmd, Low)
-    .effect_acmd("effect_attack11", ssbexo_armstrong_jab_effect, Low)
-    .game_acmd("game_attackdash", ssbexo_armstrong_dash_attack_acmd, Low)
-    .effect_acmd("effect_attackdash", ssbexo_armstrong_dash_attack_effect, Low)
+    .acmd("game_attack11", ssbexo_armstrong_jab_acmd, Low)
+    .acmd("effect_attack11", ssbexo_armstrong_jab_effect, Low)
+    .acmd("game_attackdash", ssbexo_armstrong_dash_attack_acmd, Low)
+    .acmd("effect_attackdash", ssbexo_armstrong_dash_attack_effect, Low)
     .install()
     ;
 }

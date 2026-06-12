@@ -72,14 +72,14 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_cape_expression(agent: &mut L2
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialncape", ssbexo_ganon_neutral_special_cape_acmd, Low)
-    .effect_acmd("effect_specialncape", ssbexo_ganon_neutral_special_cape_effect, Low)
-    .sound_acmd("sound_specialncape", ssbexo_ganon_neutral_special_cape_sound, Low)
-    .expression_acmd("expression_specialncape", ssbexo_ganon_neutral_special_cape_expression, Low)
-    .game_acmd("game_specialairncape", ssbexo_ganon_neutral_special_cape_acmd, Low)
-    .effect_acmd("effect_specialairncape", ssbexo_ganon_neutral_special_cape_effect, Low)
-    .sound_acmd("sound_specialairncape", ssbexo_ganon_neutral_special_cape_sound, Low)
-    .expression_acmd("expression_specialairncape", ssbexo_ganon_neutral_special_cape_expression, Low)
+    .acmd("game_specialncape", ssbexo_ganon_neutral_special_cape_acmd, Low)
+    .acmd("effect_specialncape", ssbexo_ganon_neutral_special_cape_effect, Low)
+    .acmd("sound_specialncape", ssbexo_ganon_neutral_special_cape_sound, Low)
+    .acmd("expression_specialncape", ssbexo_ganon_neutral_special_cape_expression, Low)
+    .acmd("game_specialairncape", ssbexo_ganon_neutral_special_cape_acmd, Low)
+    .acmd("effect_specialairncape", ssbexo_ganon_neutral_special_cape_effect, Low)
+    .acmd("sound_specialairncape", ssbexo_ganon_neutral_special_cape_sound, Low)
+    .acmd("expression_specialairncape", ssbexo_ganon_neutral_special_cape_expression, Low)
     .install()
     ;
 }

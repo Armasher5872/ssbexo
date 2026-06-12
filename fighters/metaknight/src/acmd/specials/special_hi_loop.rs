@@ -71,9 +71,9 @@ unsafe extern "C" fn ssbexo_metaknight_up_special_loop_sound(agent: &mut L2CAgen
 pub fn install() {
     Agent::new("metaknight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhiloop", ssbexo_metaknight_up_special_loop_acmd, Low)
-    .effect_acmd("effect_specialhiloop", ssbexo_metaknight_up_special_loop_effect, Low)
-    .sound_acmd("sound_specialhiloop", ssbexo_metaknight_up_special_loop_sound, Low)
+    .acmd("game_specialhiloop", ssbexo_metaknight_up_special_loop_acmd, Low)
+    .acmd("effect_specialhiloop", ssbexo_metaknight_up_special_loop_effect, Low)
+    .acmd("sound_specialhiloop", ssbexo_metaknight_up_special_loop_sound, Low)
     .install()
     ;
 }

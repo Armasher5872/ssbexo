@@ -95,20 +95,20 @@ unsafe extern "C" fn ssbexo_jack_wings_of_rebellion_start_acmd(agent: &mut L2CAg
 pub fn install() {
     Agent::new("jack")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specials2", ssbexo_jack_grounded_eiagon_fire_acmd, Low)
-    .game_acmd("game_specialairs2", ssbexo_jack_aerial_eiagon_fire_acmd, Low)
-    .game_acmd("game_specialhistart", ssbexo_jack_wings_of_rebellion_start_acmd, Low)
-    .game_acmd("game_specialairhistart", ssbexo_jack_wings_of_rebellion_start_acmd, Low)
+    .acmd("game_specials2", ssbexo_jack_grounded_eiagon_fire_acmd, Low)
+    .acmd("game_specialairs2", ssbexo_jack_aerial_eiagon_fire_acmd, Low)
+    .acmd("game_specialhistart", ssbexo_jack_wings_of_rebellion_start_acmd, Low)
+    .acmd("game_specialairhistart", ssbexo_jack_wings_of_rebellion_start_acmd, Low)
     .install()
     ;
     Agent::new("jack_fire")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_hit", ssbexo_jack_eiha_hit_acmd, Low)
+    .acmd("game_hit", ssbexo_jack_eiha_hit_acmd, Low)
     .install()
     ;
     Agent::new("jack_fire2")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_hit", ssbexo_jack_eiagon_hit_acmd, Low)
+    .acmd("game_hit", ssbexo_jack_eiagon_hit_acmd, Low)
     .install()
     ;
 }

@@ -3,15 +3,9 @@ use {
         status_end_control::*,
         var_reset::*,
     },
-    exo_var::{
-        globals::*,
-        link::*,
-    },
+    exo_var::globals::*,
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::*,
         lib::lua_const::*,
     },
     smashline::*,

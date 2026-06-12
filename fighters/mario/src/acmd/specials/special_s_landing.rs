@@ -45,10 +45,10 @@ unsafe extern "C" fn ssbexo_mario_side_special_landing_expression(agent: &mut L2
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialslanding", ssbexo_mario_side_special_landing_acmd, Low)
-    .effect_acmd("effect_specialslanding", ssbexo_mario_side_special_landing_effect, Low)
-    .sound_acmd("sound_specialslanding", ssbexo_mario_side_special_landing_sound, Low)
-    .expression_acmd("expression_specialslanding", ssbexo_mario_side_special_landing_expression, Low)
+    .acmd("game_specialslanding", ssbexo_mario_side_special_landing_acmd, Low)
+    .acmd("effect_specialslanding", ssbexo_mario_side_special_landing_effect, Low)
+    .acmd("sound_specialslanding", ssbexo_mario_side_special_landing_sound, Low)
+    .acmd("expression_specialslanding", ssbexo_mario_side_special_landing_expression, Low)
     .install()
     ;
 }

@@ -44,7 +44,7 @@ unsafe extern "C" fn ssbexo_mariod_drcapsule_regular_acmd(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("mariod_drcapsule")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_regular", ssbexo_mariod_drcapsule_regular_acmd, Low)
+    .acmd("game_regular", ssbexo_mariod_drcapsule_regular_acmd, Low)
     .install()
     ;
 }

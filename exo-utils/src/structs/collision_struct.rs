@@ -1,23 +1,4 @@
-use super::*;
-
 //Collision Log
-#[repr(C)]
-pub struct CollisionLog {
-    pub _next: *mut CollisionLog,
-    pub _end: *mut CollisionLog,
-    pub location: Vector3f,
-    pub _padding_0: u32,
-    pub _padding_1: u32,
-    pub opponent_battle_object_id: u32,
-    pub _padding_2: [u8;7],
-    pub _collision_kind: u8,
-    pub _receiver_part_id: u8,
-    pub _collider_part_id: u8,
-    pub _receiver_id: u8,
-    pub _collider_id: u8,
-    pub _padding_3: [u8;10]
-}
-
 #[repr(C)]
 pub struct CollisionLogScuffed {
     pub x00: *const u64,
@@ -63,47 +44,3 @@ pub struct ShieldAttackCollisionEvent {
     pub unk6: u8,
     pub unk7: u8,
 }
-
-/*
-impl ShieldAttackCollisionEvent {
-    pub fn new(
-        vtable: u64,
-        shield_id: u32,
-        unk: u8,
-        unk1: u8,
-        unk2: u8,
-        unk3: u8,
-        attack_module: u64,
-        raw_power: f32,
-        real_power: f32,
-        collision_log: *const CollisionLogScuffed,
-        group_index: i32,
-        pos_x: f32,
-        lr: f32,
-        unk4: u8,
-        unk5: u8,
-        unk6: u8,
-        unk7: u8
-    ) -> Self {
-        ShieldAttackCollisionEvent {
-            vtable: vtable,
-            shield_id: shield_id,
-            unk: unk,
-            unk1: unk1,
-            unk2: unk2,
-            unk3: unk3,
-            attack_module: attack_module,
-            raw_power: raw_power,
-            real_power: real_power,
-            collision_log: collision_log,
-            group_index: group_index,
-            pos_x: pos_x,
-            lr: lr,
-            unk4: unk4,
-            unk5: unk5,
-            unk6: unk6,
-            unk7: unk7
-        }
-    }
-}
-*/

@@ -14,7 +14,7 @@ unsafe extern "C" fn ssbexo_ganon_up_special_move_acmd(agent: &mut L2CAgentBase)
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhimove", ssbexo_ganon_up_special_move_acmd, Low)
+    .acmd("game_specialhimove", ssbexo_ganon_up_special_move_acmd, Low)
     .install()
     ;
 }

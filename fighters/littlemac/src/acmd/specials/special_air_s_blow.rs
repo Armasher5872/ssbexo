@@ -80,8 +80,8 @@ unsafe extern "C" fn ssbexo_littlemac_jolt_haymaker_attack_effect(agent: &mut L2
 pub fn install() {
     Agent::new("littlemac")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialairsblow", ssbexo_littlemac_jolt_haymaker_attack_acmd, Low)
-    .effect_acmd("effect_specialairsblow", ssbexo_littlemac_jolt_haymaker_attack_effect, Low)
+    .acmd("game_specialairsblow", ssbexo_littlemac_jolt_haymaker_attack_acmd, Low)
+    .acmd("effect_specialairsblow", ssbexo_littlemac_jolt_haymaker_attack_effect, Low)
     .install()
     ;
 }

@@ -81,20 +81,10 @@ unsafe extern "C" fn edge_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     original!()(vtable, fighter)
 }
 
-//Found in Sephiroth's OPFF Vtable
-#[skyline::hook(offset = 0x9dcaa8, inline)]
-unsafe extern "C" fn edge_winged_form_true_check(ctx: &mut skyline::hooks::InlineCtx) {
-    let boma = ctx.registers[21].x() as *mut BattleObjectModuleAccessor;
-    if !WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_CHANGE) {
-        ctx.registers[8].set_w(0x0);
-    }
-}
-
 pub fn install() {
 	skyline::install_hooks!(
         edge_reset_initialization,
         edge_death_initialization,
-        edge_opff//,
-        //edge_winged_form_true_check
+        edge_opff
     );
 }

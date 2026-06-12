@@ -133,10 +133,10 @@ unsafe extern "C" fn ssbexo_inkling_dair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("inkling")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairn", ssbexo_inkling_nair_acmd, Low)
-    .game_acmd("game_attackairf", ssbexo_inkling_fair_acmd, Low)
-    .game_acmd("game_attackairhi", ssbexo_inkling_uair_acmd, Low)
-    .game_acmd("game_attackairlw", ssbexo_inkling_dair_acmd, Low)
+    .acmd("game_attackairn", ssbexo_inkling_nair_acmd, Low)
+    .acmd("game_attackairf", ssbexo_inkling_fair_acmd, Low)
+    .acmd("game_attackairhi", ssbexo_inkling_uair_acmd, Low)
+    .acmd("game_attackairlw", ssbexo_inkling_dair_acmd, Low)
     .install()
     ;
 }

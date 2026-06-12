@@ -20,9 +20,10 @@ unsafe extern "C" fn ssbexo_wario_side_special_landing_effect(agent: &mut L2CAge
 
 //Side Special Landing Sound
 unsafe extern "C" fn ssbexo_wario_side_special_landing_sound(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        let charge_sfx = SoundModule::play_se(agent.module_accessor, Hash40::new("se_wario_special_s04"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, charge_sfx as i32, 1.27, 0);
+        let charge_sfx = SoundModule::play_se(boma, Hash40::new("se_wario_special_s04"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, charge_sfx as i32, 1.27, 0);
         STOP_SE(agent, Hash40::new("se_common_011"));
         PLAY_LANDING_SE(agent, Hash40::new("se_wario_landing02"));
     }
@@ -30,20 +31,21 @@ unsafe extern "C" fn ssbexo_wario_side_special_landing_sound(agent: &mut L2CAgen
 
 //Side Special Landing Expression
 unsafe extern "C" fn ssbexo_wario_side_special_landing_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 pub fn install() {
     Agent::new("wario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialslanding", ssbexo_wario_side_special_landing_acmd, Low)
-    .effect_acmd("effect_specialslanding", ssbexo_wario_side_special_landing_effect, Low)
-    .sound_acmd("sound_specialslanding", ssbexo_wario_side_special_landing_sound, Low)
-    .expression_acmd("expression_specialslanding", ssbexo_wario_side_special_landing_expression, Low)
+    .acmd("game_specialslanding", ssbexo_wario_side_special_landing_acmd, Low)
+    .acmd("effect_specialslanding", ssbexo_wario_side_special_landing_effect, Low)
+    .acmd("sound_specialslanding", ssbexo_wario_side_special_landing_sound, Low)
+    .acmd("expression_specialslanding", ssbexo_wario_side_special_landing_expression, Low)
     .install()
     ;
 }

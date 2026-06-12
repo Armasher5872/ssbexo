@@ -46,8 +46,8 @@ unsafe extern "C" fn ssbexo_ike_down_special_end_middle_acmd(agent: &mut L2CAgen
 pub fn install() {
     Agent::new("ike")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnendmdl", ssbexo_ike_down_special_end_middle_acmd, Low)
-    .game_acmd("game_specialairnendmdl", ssbexo_ike_down_special_end_middle_acmd, Low)
+    .acmd("game_specialnendmdl", ssbexo_ike_down_special_end_middle_acmd, Low)
+    .acmd("game_specialairnendmdl", ssbexo_ike_down_special_end_middle_acmd, Low)
     .install()
     ;
 }

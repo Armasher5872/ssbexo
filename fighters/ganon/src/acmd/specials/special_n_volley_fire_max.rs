@@ -74,14 +74,14 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_max_fire_expression(age
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_acmd, Low)
-    .effect_acmd("effect_specialnvolleyfiremax", ssbexo_ganon_grounded_neutral_special_volley_max_fire_effect, Low)
-    .sound_acmd("sound_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_sound, Low)
-    .expression_acmd("expression_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_expression, Low)
-    .game_acmd("game_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_acmd, Low)
-    .effect_acmd("effect_specialairnvolleyfiremax", ssbexo_ganon_aerial_neutral_special_volley_max_fire_effect, Low)
-    .sound_acmd("sound_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_sound, Low)
-    .expression_acmd("expression_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_expression, Low)
+    .acmd("game_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_acmd, Low)
+    .acmd("effect_specialnvolleyfiremax", ssbexo_ganon_grounded_neutral_special_volley_max_fire_effect, Low)
+    .acmd("sound_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_sound, Low)
+    .acmd("expression_specialnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_expression, Low)
+    .acmd("game_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_acmd, Low)
+    .acmd("effect_specialairnvolleyfiremax", ssbexo_ganon_aerial_neutral_special_volley_max_fire_effect, Low)
+    .acmd("sound_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_sound, Low)
+    .acmd("expression_specialairnvolleyfiremax", ssbexo_ganon_neutral_special_volley_max_fire_expression, Low)
     .install()
     ;
 }

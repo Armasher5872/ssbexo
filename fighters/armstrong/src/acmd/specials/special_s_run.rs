@@ -81,14 +81,14 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_run_expression(agent: 
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialsrun", ssbexo_armstrong_grounded_side_special_run_acmd, Low)
-    .effect_acmd("effect_specialsrun", ssbexo_armstrong_grounded_side_special_run_effect, Low)
-    .sound_acmd("sound_specialsrun", ssbexo_armstrong_grounded_side_special_run_sound, Low)
-    .expression_acmd("expression_specialsrun", ssbexo_armstrong_grounded_side_special_run_expression, Low)
-    .game_acmd("game_specialairsrun", ssbexo_armstrong_aerial_side_special_run_acmd, Low)
-    .effect_acmd("effect_specialairsrun", ssbexo_armstrong_aerial_side_special_run_effect, Low)
-    .sound_acmd("sound_specialairsrun", ssbexo_armstrong_aerial_side_special_run_sound, Low)
-    .expression_acmd("expression_specialairsrun", ssbexo_armstrong_aerial_side_special_run_expression, Low)
+    .acmd("game_specialsrun", ssbexo_armstrong_grounded_side_special_run_acmd, Low)
+    .acmd("effect_specialsrun", ssbexo_armstrong_grounded_side_special_run_effect, Low)
+    .acmd("sound_specialsrun", ssbexo_armstrong_grounded_side_special_run_sound, Low)
+    .acmd("expression_specialsrun", ssbexo_armstrong_grounded_side_special_run_expression, Low)
+    .acmd("game_specialairsrun", ssbexo_armstrong_aerial_side_special_run_acmd, Low)
+    .acmd("effect_specialairsrun", ssbexo_armstrong_aerial_side_special_run_effect, Low)
+    .acmd("sound_specialairsrun", ssbexo_armstrong_aerial_side_special_run_sound, Low)
+    .acmd("expression_specialairsrun", ssbexo_armstrong_aerial_side_special_run_expression, Low)
     .install()
     ;
 }

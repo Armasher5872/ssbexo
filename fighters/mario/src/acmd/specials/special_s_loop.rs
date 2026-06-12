@@ -29,10 +29,10 @@ unsafe extern "C" fn ssbexo_mario_side_special_loop_expression(agent: &mut L2CAg
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialsloop", ssbexo_mario_side_special_loop_acmd, Low)
-    .effect_acmd("effect_specialsloop", ssbexo_mario_side_special_loop_effect, Low)
-    .sound_acmd("sound_specialsloop", ssbexo_mario_side_special_loop_sound, Low)
-    .expression_acmd("expression_specialsloop", ssbexo_mario_side_special_loop_expression, Low)
+    .acmd("game_specialsloop", ssbexo_mario_side_special_loop_acmd, Low)
+    .acmd("effect_specialsloop", ssbexo_mario_side_special_loop_effect, Low)
+    .acmd("sound_specialsloop", ssbexo_mario_side_special_loop_sound, Low)
+    .acmd("expression_specialsloop", ssbexo_mario_side_special_loop_expression, Low)
     .install()
     ;
 }

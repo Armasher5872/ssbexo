@@ -76,14 +76,14 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_plunger_expression(agent: &
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_acmd, Low)
-    .game_acmd("game_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_acmd, Low)
-    .effect_acmd("effect_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_effect, Low)
-    .effect_acmd("effect_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_effect, Low)
-    .sound_acmd("sound_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_sound, Low)
-    .sound_acmd("sound_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_sound, Low)
-    .expression_acmd("expression_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_expression, Low)
-    .expression_acmd("expression_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_expression, Low)
+    .acmd("game_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_acmd, Low)
+    .acmd("game_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_acmd, Low)
+    .acmd("effect_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_effect, Low)
+    .acmd("effect_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_effect, Low)
+    .acmd("sound_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_sound, Low)
+    .acmd("sound_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_sound, Low)
+    .acmd("expression_speciallwthrowplunger", ssbexo_luigi_down_special_throw_plunger_expression, Low)
+    .acmd("expression_specialairlwthrowplunger", ssbexo_luigi_down_special_throw_plunger_expression, Low)
     .install()
     ;
 }

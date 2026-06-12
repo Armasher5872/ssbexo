@@ -165,16 +165,109 @@ unsafe extern "C" fn ssbexo_mario_forward_throw_expression(agent: &mut L2CAgentB
     }
 }
 
+//Down Throw ACMD
+unsafe extern "C" fn ssbexo_mario_down_throw_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    if is_excute(agent) {
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 3.0, 68, 120, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+    }
+    frame(lua_state, 23.0);
+    if is_excute(agent) {
+        ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 361, 100, 0, 30, 5.0, 0.0, 3.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_HIP);
+        AttackModule::set_catch_only_all(boma, true, false);
+    }
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        CHECK_FINISH_CAMERA(agent, 10, 6);
+        lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
+        lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 0.0, y: 0.0, z: 0.0});
+    }
+    frame(lua_state, 31.0);
+    if is_excute(agent) {
+        let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+        AttackModule::clear_all(boma);
+    }
+}
+
+//Down Throw Effect
+unsafe extern "C" fn ssbexo_mario_down_throw_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 22.0);
+    if is_excute(agent) {
+        EFFECT_ALPHA(agent, Hash40::new("sys_attack_speedline"), Hash40::new("top"), 0, 22, 0, 90, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, 0.7);
+    }
+    frame(lua_state, 23.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_crown"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+//Down Throw Sound
+unsafe extern "C" fn ssbexo_mario_down_throw_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    frame(lua_state, 17.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_mario_rnd_attack"));
+    }
+    frame(lua_state, 22.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_03"));
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        PLAY_DOWN_SE(agent, Hash40::new("se_common_down_soil_s"));
+        PLAY_SE(agent, Hash40::new("se_common_kick_hit_m"));
+    }
+}
+
+//Down Throw Expression
+unsafe extern "C" fn ssbexo_mario_down_throw_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_NONE, 3);
+    }
+    frame(lua_state, 23.0);
+    if is_excute(agent) {
+        QUAKE(agent, *CAMERA_QUAKE_KIND_M);
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
+    }
+}
+
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_mario_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_mario_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_mario_pivot_grab_acmd, Low)
-    .game_acmd("game_throwf", ssbexo_mario_forward_throw_acmd, Low)
-    .effect_acmd("effect_throwf", ssbexo_mario_forward_throw_effect, Low)
-    .sound_acmd("sound_throwf", ssbexo_mario_forward_throw_sound, Low)
-    .expression_acmd("expression_throwf", ssbexo_mario_forward_throw_expression, Low)
+    .acmd("game_catch", ssbexo_mario_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_mario_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_mario_pivot_grab_acmd, Low)
+    .acmd("game_throwf", ssbexo_mario_forward_throw_acmd, Low)
+    .acmd("effect_throwf", ssbexo_mario_forward_throw_effect, Low)
+    .acmd("sound_throwf", ssbexo_mario_forward_throw_sound, Low)
+    .acmd("expression_throwf", ssbexo_mario_forward_throw_expression, Low)
+    .acmd("game_throwlw", ssbexo_mario_down_throw_acmd, Low)
+    .acmd("effect_throwlw", ssbexo_mario_down_throw_effect, Low)
+    .acmd("sound_throwlw", ssbexo_mario_down_throw_sound, Low)
+    .acmd("expression_throwlw", ssbexo_mario_down_throw_expression, Low)
     .install()
     ;
 }

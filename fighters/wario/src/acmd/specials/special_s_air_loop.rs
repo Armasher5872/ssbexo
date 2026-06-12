@@ -19,27 +19,29 @@ unsafe extern "C" fn ssbexo_wario_side_special_air_loop_effect(agent: &mut L2CAg
 
 //Side Special Air Loop Sound
 unsafe extern "C" fn ssbexo_wario_side_special_air_loop_sound(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        let charge_sfx = SoundModule::play_se(agent.module_accessor, Hash40::new("se_wario_special_s04"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, charge_sfx as i32, 1.27, 0);
+        let charge_sfx = SoundModule::play_se(boma, Hash40::new("se_wario_special_s04"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, charge_sfx as i32, 1.27, 0);
     }
 }
 
 //Side Special Air Loop Expression
 unsafe extern "C" fn ssbexo_wario_side_special_air_loop_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 pub fn install() {
     Agent::new("wario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialsairloop", ssbexo_wario_side_special_air_loop_acmd, Low)
-    .effect_acmd("effect_specialsairloop", ssbexo_wario_side_special_air_loop_effect, Low)
-    .sound_acmd("sound_specialsairloop", ssbexo_wario_side_special_air_loop_sound, Low)
-    .expression_acmd("expression_specialsairloop", ssbexo_wario_side_special_air_loop_expression, Low)
+    .acmd("game_specialsairloop", ssbexo_wario_side_special_air_loop_acmd, Low)
+    .acmd("effect_specialsairloop", ssbexo_wario_side_special_air_loop_effect, Low)
+    .acmd("sound_specialsairloop", ssbexo_wario_side_special_air_loop_sound, Low)
+    .acmd("expression_specialsairloop", ssbexo_wario_side_special_air_loop_expression, Low)
     .install()
     ;
 }

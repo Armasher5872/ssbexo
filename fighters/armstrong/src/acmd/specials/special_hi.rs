@@ -81,14 +81,14 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_expression(agent: &mut L2CAgent
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialhi", ssbexo_armstrong_up_special_acmd, Low)
-    .effect_acmd("effect_specialhi", ssbexo_armstrong_up_special_effect, Low)
-    .sound_acmd("sound_specialhi", ssbexo_armstrong_up_special_sound, Low)
-    .expression_acmd("expression_specialhi", ssbexo_armstrong_up_special_expression, Low)
-    .game_acmd("game_specialairhi", ssbexo_armstrong_up_special_acmd, Low)
-    .effect_acmd("effect_specialairhi", ssbexo_armstrong_up_special_effect, Low)
-    .sound_acmd("sound_specialairhi", ssbexo_armstrong_up_special_sound, Low)
-    .expression_acmd("expression_specialairhi", ssbexo_armstrong_up_special_expression, Low)
+    .acmd("game_specialhi", ssbexo_armstrong_up_special_acmd, Low)
+    .acmd("effect_specialhi", ssbexo_armstrong_up_special_effect, Low)
+    .acmd("sound_specialhi", ssbexo_armstrong_up_special_sound, Low)
+    .acmd("expression_specialhi", ssbexo_armstrong_up_special_expression, Low)
+    .acmd("game_specialairhi", ssbexo_armstrong_up_special_acmd, Low)
+    .acmd("effect_specialairhi", ssbexo_armstrong_up_special_effect, Low)
+    .acmd("sound_specialairhi", ssbexo_armstrong_up_special_sound, Low)
+    .acmd("expression_specialairhi", ssbexo_armstrong_up_special_expression, Low)
     .install()
     ;
 }

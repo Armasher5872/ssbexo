@@ -213,14 +213,14 @@ unsafe extern "C" fn ssbexo_armstrong_final_smash_throw_expression(agent: &mut L
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_finalthrow", ssbexo_armstrong_final_smash_throw_acmd, Low)
-    .game_acmd("game_finalairthrow", ssbexo_armstrong_final_smash_throw_acmd, Low)
-    .effect_acmd("effect_finalthrow", ssbexo_armstrong_final_smash_throw_effect, Low)
-    .effect_acmd("effect_finalairthrow", ssbexo_armstrong_final_smash_throw_effect, Low)
-    .sound_acmd("sound_finalthrow", ssbexo_armstrong_final_smash_throw_sound, Low)
-    .sound_acmd("sound_finalairthrow", ssbexo_armstrong_final_smash_throw_sound, Low)
-    .expression_acmd("expression_finalthrow", ssbexo_armstrong_final_smash_throw_expression, Low)
-    .expression_acmd("expression_finalairthrow", ssbexo_armstrong_final_smash_throw_expression, Low)
+    .acmd("game_finalthrow", ssbexo_armstrong_final_smash_throw_acmd, Low)
+    .acmd("game_finalairthrow", ssbexo_armstrong_final_smash_throw_acmd, Low)
+    .acmd("effect_finalthrow", ssbexo_armstrong_final_smash_throw_effect, Low)
+    .acmd("effect_finalairthrow", ssbexo_armstrong_final_smash_throw_effect, Low)
+    .acmd("sound_finalthrow", ssbexo_armstrong_final_smash_throw_sound, Low)
+    .acmd("sound_finalairthrow", ssbexo_armstrong_final_smash_throw_sound, Low)
+    .acmd("expression_finalthrow", ssbexo_armstrong_final_smash_throw_expression, Low)
+    .acmd("expression_finalairthrow", ssbexo_armstrong_final_smash_throw_expression, Low)
     .install()
     ;
 }

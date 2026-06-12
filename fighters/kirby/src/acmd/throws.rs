@@ -193,13 +193,13 @@ unsafe extern "C" fn ssbexo_kirby_down_throw_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("kirby")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_kirby_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_kirby_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_kirby_pivot_grab_acmd, Low)
-    .game_acmd("game_throwf", ssbexo_kirby_forward_throw_acmd, Low)
-    .game_acmd("game_throwb", ssbexo_kirby_back_throw_acmd, Low)
-    .game_acmd("game_throwhi", ssbexo_kirby_up_throw_acmd, Low)
-    .game_acmd("game_throwlw", ssbexo_kirby_down_throw_acmd, Low)
+    .acmd("game_catch", ssbexo_kirby_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_kirby_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_kirby_pivot_grab_acmd, Low)
+    .acmd("game_throwf", ssbexo_kirby_forward_throw_acmd, Low)
+    .acmd("game_throwb", ssbexo_kirby_back_throw_acmd, Low)
+    .acmd("game_throwhi", ssbexo_kirby_up_throw_acmd, Low)
+    .acmd("game_throwlw", ssbexo_kirby_down_throw_acmd, Low)
     .install()
     ;
 }

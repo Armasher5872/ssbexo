@@ -101,14 +101,14 @@ unsafe extern "C" fn ssbexo_cloud_aerial_operator_down_special_expression(agent:
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwstart", ssbexo_cloud_operator_down_special_acmd, Low)
-    .game_acmd("game_specialairlwstart", ssbexo_cloud_operator_down_special_acmd, Low)
-    .effect_acmd("effect_speciallwstart", ssbexo_cloud_grounded_operator_down_special_effect, Low)
-    .effect_acmd("effect_specialairlwstart", ssbexo_cloud_aerial_operator_down_special_effect, Low)
-    .sound_acmd("sound_speciallwstart", ssbexo_cloud_grounded_operator_down_special_sound, Low)
-    .sound_acmd("sound_specialairlwstart", ssbexo_cloud_aerial_operator_down_special_sound, Low)
-    .expression_acmd("expression_speciallwstart", ssbexo_cloud_grounded_operator_down_special_expression, Low)
-    .expression_acmd("expression_specialairlwstart", ssbexo_cloud_aerial_operator_down_special_expression, Low)
+    .acmd("game_speciallwstart", ssbexo_cloud_operator_down_special_acmd, Low)
+    .acmd("game_specialairlwstart", ssbexo_cloud_operator_down_special_acmd, Low)
+    .acmd("effect_speciallwstart", ssbexo_cloud_grounded_operator_down_special_effect, Low)
+    .acmd("effect_specialairlwstart", ssbexo_cloud_aerial_operator_down_special_effect, Low)
+    .acmd("sound_speciallwstart", ssbexo_cloud_grounded_operator_down_special_sound, Low)
+    .acmd("sound_specialairlwstart", ssbexo_cloud_aerial_operator_down_special_sound, Low)
+    .acmd("expression_speciallwstart", ssbexo_cloud_grounded_operator_down_special_expression, Low)
+    .acmd("expression_specialairlwstart", ssbexo_cloud_aerial_operator_down_special_expression, Low)
     .install()
     ;
 }

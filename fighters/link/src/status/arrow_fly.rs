@@ -171,30 +171,12 @@ unsafe extern "C" fn link_bowarrow_fly_main_loop(weapon: &mut L2CWeaponCommon) -
             notify_event_msc_cmd!(weapon, Hash40::new_raw(0x199c462b5d));
         }
     }
-    if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_REFLECTOR) && WorkModule::is_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) {
-        WorkModule::on_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_FUSE_REFLECT);
-        let item_id = WorkModule::get_int(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-        let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
-        let team_no = TeamModule::team_no(boma) as i32;
-        let team_owner_id = TeamModule::team_owner_id(boma) as u32;
-        TeamModule::set_team(item_boma, team_no, true);
-        TeamModule::set_team_owner_id(item_boma, team_owner_id);
-    }
     ret.into()
 }
 
 unsafe extern "C" fn link_bowarrow_fly_end_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
-    let status_kind_next = StatusModule::status_kind_next(boma);
-    let item_id = WorkModule::get_int(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-    let item_boma = smash::app::sv_battle_object::module_accessor(item_id);
-    if ![*WN_LINK_BOWARROW_STATUS_KIND_STICK, *WN_LINK_BOWARROW_STATUS_KIND_HIT_STICK].contains(&status_kind_next) {
-        if WorkModule::is_flag(boma, *WN_LINK_BOWARROW_INSTANCE_WORK_ID_FLAG_ITEM_FUSED) && sv_battle_object::is_active(item_id) {
-            LinkModule::remove_model_constraint(item_boma, true);
-            StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
-        }
-    }
     WorkModule::off_flag(owner_boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE);
     EffectModule::detach_all(boma, 5);
     0.into()

@@ -23,8 +23,8 @@ unsafe extern "C" fn ssbexo_link_special_n_start_sound(agent: &mut L2CAgentBase)
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .sound_acmd("sound_specialnstart", ssbexo_link_special_n_start_sound, Low)
-    .sound_acmd("sound_specialairnstart", ssbexo_link_special_n_start_sound, Low)
+    .acmd("sound_specialnstart", ssbexo_link_special_n_start_sound, Low)
+    .acmd("sound_specialairnstart", ssbexo_link_special_n_start_sound, Low)
     .install()
     ;
 }

@@ -96,10 +96,10 @@ unsafe extern "C" fn ssbexo_koopa_down_throw_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("koopa")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_koopa_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_koopa_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_koopa_pivot_grab_acmd, Low)
-    .game_acmd("game_throwlw", ssbexo_koopa_down_throw_acmd, Low)
+    .acmd("game_catch", ssbexo_koopa_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_koopa_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_koopa_pivot_grab_acmd, Low)
+    .acmd("game_throwlw", ssbexo_koopa_down_throw_acmd, Low)
     .install()
     ;
 }

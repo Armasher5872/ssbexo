@@ -159,12 +159,12 @@ unsafe extern "C" fn ssbexo_mariod_side_special_sound(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("mariod")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specials", ssbexo_mariod_grounded_side_special_acmd, Low)
-    .game_acmd("game_specialairs", ssbexo_mariod_aerial_side_special_acmd, Low)
-    .effect_acmd("effect_specials", ssbexo_mariod_grounded_side_special_effect, Low)
-    .effect_acmd("effect_specialairs", ssbexo_mariod_aerial_side_special_effect, Low)
-    .sound_acmd("sound_specials", ssbexo_mariod_side_special_sound, Low)
-    .sound_acmd("sound_specialairs", ssbexo_mariod_side_special_sound, Low)
+    .acmd("game_specials", ssbexo_mariod_grounded_side_special_acmd, Low)
+    .acmd("game_specialairs", ssbexo_mariod_aerial_side_special_acmd, Low)
+    .acmd("effect_specials", ssbexo_mariod_grounded_side_special_effect, Low)
+    .acmd("effect_specialairs", ssbexo_mariod_aerial_side_special_effect, Low)
+    .acmd("sound_specials", ssbexo_mariod_side_special_sound, Low)
+    .acmd("sound_specialairs", ssbexo_mariod_side_special_sound, Low)
     .install()
     ;
 }

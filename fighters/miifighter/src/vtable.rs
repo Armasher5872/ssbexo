@@ -44,17 +44,19 @@ unsafe extern "C" fn miifighter_opff(vtable: u64, fighter: &mut Fighter) -> u64 
 unsafe extern "C" fn miifighter_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = *(log as *const u64).add(0x10/0x8);
-    let collision_log = collision_log as *const CollisionLog;
+    let collision_log = collision_log as *mut CollisionLogScuffed;
     let status_kind = StatusModule::status_kind(boma);
     let customize_to = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO);
     if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_3 {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            let opponent_id = (*collision_log).opponent_battle_object_id;
-            WorkModule::set_int(boma, opponent_id as i32, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
+            let opponent_object_id = (*collision_log).opponent_object_id;
+            WorkModule::set_int(boma, opponent_object_id as i32, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_INT_COUNTER_THROW_OBJECT_ID);
             WorkModule::on_flag(boma, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_COUNTER_THROW_IS_LINK);
-            if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-                if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-                    let counter_throw_boma = sv_battle_object::module_accessor(opponent_id as u32);
+            if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+                let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+                let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+                if sv_battle_object::category(opponent_battle_object_id) == *BATTLE_OBJECT_CATEGORY_WEAPON {
+                    let counter_throw_boma = sv_battle_object::module_accessor(opponent_battle_object_id as u32);
                     LinkModule::remove_model_constraint(counter_throw_boma, true);
                     if LinkModule::is_link(counter_throw_boma, *LINK_NO_ARTICLE) {
                         LinkModule::unlink(counter_throw_boma, *LINK_NO_ARTICLE);
@@ -72,8 +74,8 @@ unsafe extern "C" fn miifighter_on_search(vtable: u64, fighter: &mut Fighter, lo
                     WorkModule::on_flag(boma, *FIGHTER_MIIFIGHTER_STATUS_COUNTER_THROW_FLAG_THROW_AFTER_LANDING);
                     StatusModule::change_status_request_from_script(boma, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW3_THROW, false);
                 }
-                if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_ITEM {
-                    let counter_throw_boma = sv_battle_object::module_accessor(opponent_id as u32);
+                if sv_battle_object::category(opponent_battle_object_id) == *BATTLE_OBJECT_CATEGORY_ITEM {
+                    let counter_throw_boma = sv_battle_object::module_accessor(opponent_battle_object_id as u32);
                     LinkModule::remove_model_constraint(counter_throw_boma, true);
                     if LinkModule::is_link(counter_throw_boma, *ITEM_LINK_NO_HAVE) {
                         LinkModule::unlink(counter_throw_boma, *ITEM_LINK_NO_HAVE);

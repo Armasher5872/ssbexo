@@ -30,9 +30,9 @@ unsafe extern "C" fn ssbexo_brave_hatchet_man_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("brave")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialairlw10", ssbexo_brave_aerial_kaclang_acmd, Low)
-    .game_acmd("game_speciallw20", ssbexo_brave_hatchet_man_acmd, Low)
-    .game_acmd("game_specialairlw20", ssbexo_brave_hatchet_man_acmd, Low)
+    .acmd("game_specialairlw10", ssbexo_brave_aerial_kaclang_acmd, Low)
+    .acmd("game_speciallw20", ssbexo_brave_hatchet_man_acmd, Low)
+    .acmd("game_specialairlw20", ssbexo_brave_hatchet_man_acmd, Low)
     .install()
     ;
 }

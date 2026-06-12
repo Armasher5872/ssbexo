@@ -78,11 +78,11 @@ unsafe extern "C" fn ssbexo_donkey_aerial_dash_attack_expression(agent: &mut L2C
 pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackdash", ssbexo_donkey_dash_attack_acmd, Low)
-    .game_acmd("game_attackairdash", ssbexo_donkey_aerial_dash_attack_acmd, Low)
-    .effect_acmd("effect_attackairdash", ssbexo_donkey_aerial_dash_attack_effect, Low)
-    .sound_acmd("sound_attackairdash", ssbexo_donkey_aerial_dash_attack_sound, Low)
-    .expression_acmd("expression_attackairdash", ssbexo_donkey_aerial_dash_attack_expression, Low)
+    .acmd("game_attackdash", ssbexo_donkey_dash_attack_acmd, Low)
+    .acmd("game_attackairdash", ssbexo_donkey_aerial_dash_attack_acmd, Low)
+    .acmd("effect_attackairdash", ssbexo_donkey_aerial_dash_attack_effect, Low)
+    .acmd("sound_attackairdash", ssbexo_donkey_aerial_dash_attack_sound, Low)
+    .acmd("expression_attackairdash", ssbexo_donkey_aerial_dash_attack_expression, Low)
     .install()
     ;
 }

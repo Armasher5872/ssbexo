@@ -4,7 +4,7 @@ use {
             extern_func::*,
             fighter_common::*,
             hook::*,
-            //salty_runback::*,
+            salty_runback::*,
             ui2d::*,
         },
         fighter::{
@@ -16,13 +16,9 @@ use {
             robot::*,
             sonic::*,
         },
-        status::{
-            //damage::*,
-            knockback_func::*,
-        },
+        status::knockback_func::*,
         structs::{
             getter_funcs::*,
-            hashed_string::*,
             ui_manager::*,
             ui_object::*,
         }
@@ -66,17 +62,6 @@ use {
             lua_const::*,
         },
         phx::*
-    },
-    std::{
-        ffi::CStr,
-        os::raw::{
-            c_char,
-            c_void
-        },
-        sync::atomic::{
-            AtomicBool,
-            Ordering
-        }
     }
 };
 
@@ -84,7 +69,6 @@ mod article;
 mod attack;
 mod command_user;
 mod control;
-mod delay;
 mod effect;
 mod energy;
 mod frame;
@@ -98,7 +82,6 @@ pub fn install() {
     attack::install();
     command_user::install();
     control::install();
-    delay::install();
     effect::install();
     energy::install();
     frame::install();

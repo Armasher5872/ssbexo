@@ -89,14 +89,14 @@ unsafe extern "C" fn ssbexo_ganon_up_special_start_expression(agent: &mut L2CAge
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhi", ssbexo_ganon_up_special_start_acmd, Low)
-    .effect_acmd("effect_specialhi", ssbexo_ganon_grounded_up_special_start_effect, Low)
-    .sound_acmd("sound_specialhi", ssbexo_ganon_up_special_start_sound, Low)
-    .expression_acmd("expression_specialhi", ssbexo_ganon_up_special_start_expression, Low)
-    .game_acmd("game_specialairhi", ssbexo_ganon_up_special_start_acmd, Low)
-    .effect_acmd("effect_specialairhi", ssbexo_ganon_aerial_up_special_start_effect, Low)
-    .sound_acmd("sound_specialairhi", ssbexo_ganon_up_special_start_sound, Low)
-    .expression_acmd("expression_specialairhi", ssbexo_ganon_up_special_start_expression, Low)
+    .acmd("game_specialhi", ssbexo_ganon_up_special_start_acmd, Low)
+    .acmd("effect_specialhi", ssbexo_ganon_grounded_up_special_start_effect, Low)
+    .acmd("sound_specialhi", ssbexo_ganon_up_special_start_sound, Low)
+    .acmd("expression_specialhi", ssbexo_ganon_up_special_start_expression, Low)
+    .acmd("game_specialairhi", ssbexo_ganon_up_special_start_acmd, Low)
+    .acmd("effect_specialairhi", ssbexo_ganon_aerial_up_special_start_effect, Low)
+    .acmd("sound_specialairhi", ssbexo_ganon_up_special_start_sound, Low)
+    .acmd("expression_specialairhi", ssbexo_ganon_up_special_start_expression, Low)
     .install()
     ;
 }

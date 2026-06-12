@@ -82,9 +82,9 @@ unsafe extern "C" fn ssbexo_ganon_grounded_down_special_sound(agent: &mut L2CAge
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallw", ssbexo_ganon_grounded_down_special_acmd, Low)
-    .effect_acmd("effect_speciallw", ssbexo_ganon_grounded_down_special_effect, Low)
-    .sound_acmd("sound_speciallw", ssbexo_ganon_grounded_down_special_sound, Low)
+    .acmd("game_speciallw", ssbexo_ganon_grounded_down_special_acmd, Low)
+    .acmd("effect_speciallw", ssbexo_ganon_grounded_down_special_effect, Low)
+    .acmd("sound_speciallw", ssbexo_ganon_grounded_down_special_sound, Low)
     .install()
     ;
 }

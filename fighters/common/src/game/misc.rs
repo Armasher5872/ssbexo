@@ -1,7 +1,5 @@
 use super::*;
 
-const CONSTANT_OFFSET: usize = 0x3728410;
-
 //Changes the title screen version
 #[skyline::hook(replace = change_version_string)]
 fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
@@ -25,29 +23,8 @@ fn change_version_string_hook(arg: u64, string: *const skyline::libc::c_char) {
 	}
 }
 
-//Credit to Claude
-#[skyline::hook(offset = CONSTANT_OFFSET)]
-unsafe extern "C" fn const_allot_hook(unk: *const u8, constant: *const c_char, mut value: u32) {
-    if CStr::from_ptr(constant as _).to_str().unwrap().contains("FIGHTER_MIIFIGHTER_STATUS_KIND_NUM") {
-        value = 0x20D;
-    }
-    original!()(unk,constant,value)
-}
-
-//Credit to HDR: This is a hook on the main scene transition function. key_str is the scene name. Add anything requiring a scene transition check here
-#[skyline::hook(offset = 0x3726120)]
-unsafe fn scene_transition(list_ptr: *mut c_void, key_struct: *const HashedString, context_struct: *const HashedString, factory: *mut c_void) {
-    MATCH_EXITING.store(false, Ordering::Relaxed);
-    call_original!(list_ptr, key_struct, context_struct, factory);
-}
-
 //Installation
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x60eb08).data(0x52800001u32); //Removes Jostle
-	skyline::install_hooks!(
-        change_version_string_hook,
-        const_allot_hook/*,
-        scene_transition
-        */
-    );
+	skyline::install_hook!(change_version_string_hook);
 }

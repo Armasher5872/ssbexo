@@ -172,13 +172,13 @@ unsafe extern "C" fn ssbexo_gekkouga_down_throw_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_gekkouga_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_gekkouga_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_gekkouga_pivot_grab_acmd, Low)
-    .game_acmd("game_throwf", ssbexo_gekkouga_forward_throw_acmd, Low)
-    .game_acmd("game_throwb", ssbexo_gekkouga_back_throw_acmd, Low)
-    .game_acmd("game_throwhi", ssbexo_gekkouga_up_throw_acmd, Low)
-    .game_acmd("game_throwlw", ssbexo_gekkouga_down_throw_acmd, Low)
+    .acmd("game_catch", ssbexo_gekkouga_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_gekkouga_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_gekkouga_pivot_grab_acmd, Low)
+    .acmd("game_throwf", ssbexo_gekkouga_forward_throw_acmd, Low)
+    .acmd("game_throwb", ssbexo_gekkouga_back_throw_acmd, Low)
+    .acmd("game_throwhi", ssbexo_gekkouga_up_throw_acmd, Low)
+    .acmd("game_throwlw", ssbexo_gekkouga_down_throw_acmd, Low)
     .install()
     ;
 }

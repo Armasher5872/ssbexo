@@ -75,10 +75,10 @@ unsafe extern "C" fn ssbexo_luigi_win_1_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_win1", ssbexo_luigi_win_1_acmd, Low)
-    .effect_acmd("effect_win1", ssbexo_luigi_win_1_effect, Low)
-    .sound_acmd("sound_win1", ssbexo_luigi_win_1_sound, Low)
-    .expression_acmd("expression_win1", ssbexo_luigi_win_1_expression, Low)
+    .acmd("game_win1", ssbexo_luigi_win_1_acmd, Low)
+    .acmd("effect_win1", ssbexo_luigi_win_1_effect, Low)
+    .acmd("sound_win1", ssbexo_luigi_win_1_sound, Low)
+    .acmd("expression_win1", ssbexo_luigi_win_1_expression, Low)
     .install()
     ;
 }

@@ -1,6 +1,4 @@
 //The following section is credited to WuBoyTH, and is utilized to handle held buffer
-use super::*;
-
 const PRECEDE_EXTENSION: u8 = 6;
 
 #[skyline::hook(offset = 0x6bd5b4, inline)]
@@ -30,7 +28,7 @@ unsafe fn set_release_value_internal(ctx: &mut skyline::hooks::InlineCtx) {
 
 //The following section is credited to HewDraw Remix, and is utilized to fix control stick issues
 
-//These 2 hooks prevent buffered nair after inputting C-stick on first few frames of jumpsquat. Both found in ControlModule::exec_command
+//This hook prevents buffered nair after inputting C-stick on first few frames of jumpsquat. It is found in ControlModule::exec_command
 #[skyline::hook(offset = 0x6be630)]
 unsafe fn set_attack_air_stick_hook(control_module: u64, arg: u32) {
     //This check passes on the frame FighterControlModuleImpl::reserve_on_attack_button is called. Only happens during jumpsquat currently
@@ -38,20 +36,6 @@ unsafe fn set_attack_air_stick_hook(control_module: u64, arg: u32) {
         return;
     }
     call_original!(control_module, arg);
-}
-
-/*
-For some reason, the game resets your attack_air_kind value every frame even though it resets as soon as you perform an aerial attack. 
-We don't want this to reset while in jumpsquat to allow the game to use your initial C-stick input during jumpsquat for your attack_air_kind
-*/
-#[skyline::hook(offset = 0x6bd6c4, inline)]
-unsafe fn exec_command_reset_attack_air_kind_hook(ctx: &mut skyline::hooks::InlineCtx) {
-    let control_module = ctx.registers[21].x();
-    let boma = *(control_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let status_kind = StatusModule::status_kind(boma);
-    if status_kind != *FIGHTER_STATUS_KIND_JUMP_SQUAT {
-        ControlModule::reset_attack_air_kind(boma);
-    }
 }
 
 pub fn install() {
@@ -64,7 +48,6 @@ pub fn install() {
         set_hold_buffer_value,
         set_release_value_in_hitstop,
         set_release_value,
-        set_attack_air_stick_hook,
-        exec_command_reset_attack_air_kind_hook
+        set_attack_air_stick_hook
     );
 }

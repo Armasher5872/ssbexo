@@ -2,7 +2,6 @@ use {
     exo_utils::{
         common::{
             check_attack::*,
-            extern_func::*,
             fighter_common::*,
         },
         fighter::link::*,
@@ -15,9 +14,7 @@ use {
     exo_var::{
         consts::*,
         globals::*,
-        kirby::*,
         link::*,
-        murabito::*,
     },
     smash::{
         app::{
@@ -43,7 +40,6 @@ use {
 mod arrow_fly;
 mod arrow_haved;
 mod arrow_hit_stick;
-mod arrow_stick;
 mod attach_wall;
 mod attack_hi4_hold;
 mod attack_hi4;
@@ -73,7 +69,6 @@ pub fn install() {
     arrow_fly::install();
     arrow_haved::install();
     arrow_hit_stick::install();
-    arrow_stick::install();
     attach_wall::install();
     attack_hi4_hold::install();
     attack_hi4::install();

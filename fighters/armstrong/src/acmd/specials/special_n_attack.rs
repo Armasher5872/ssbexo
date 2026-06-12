@@ -155,14 +155,14 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_neutral_special_attack_expression(a
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialnattack", ssbexo_armstrong_grounded_neutral_special_attack_acmd, Low)
-    .effect_acmd("effect_specialnattack", ssbexo_armstrong_neutral_special_attack_effect, Low)
-    .sound_acmd("sound_specialnattack", ssbexo_armstrong_neutral_special_attack_sound, Low)
-    .expression_acmd("expression_specialnattack", ssbexo_armstrong_grounded_neutral_special_attack_expression, Low)
-    .game_acmd("game_specialairnattack", ssbexo_armstrong_aerial_neutral_special_attack_acmd, Low)
-    .effect_acmd("effect_specialairnattack", ssbexo_armstrong_neutral_special_attack_effect, Low)
-    .sound_acmd("sound_specialairnattack", ssbexo_armstrong_neutral_special_attack_sound, Low)
-    .expression_acmd("expression_specialairnattack", ssbexo_armstrong_aerial_neutral_special_attack_expression, Low)
+    .acmd("game_specialnattack", ssbexo_armstrong_grounded_neutral_special_attack_acmd, Low)
+    .acmd("effect_specialnattack", ssbexo_armstrong_neutral_special_attack_effect, Low)
+    .acmd("sound_specialnattack", ssbexo_armstrong_neutral_special_attack_sound, Low)
+    .acmd("expression_specialnattack", ssbexo_armstrong_grounded_neutral_special_attack_expression, Low)
+    .acmd("game_specialairnattack", ssbexo_armstrong_aerial_neutral_special_attack_acmd, Low)
+    .acmd("effect_specialairnattack", ssbexo_armstrong_neutral_special_attack_effect, Low)
+    .acmd("sound_specialairnattack", ssbexo_armstrong_neutral_special_attack_sound, Low)
+    .acmd("expression_specialairnattack", ssbexo_armstrong_aerial_neutral_special_attack_expression, Low)
     .install()
     ;
 }

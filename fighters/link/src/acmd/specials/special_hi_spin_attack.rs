@@ -215,10 +215,10 @@ unsafe extern "C" fn ssbexo_link_special_hi_spin_attack_expression(agent: &mut L
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhispinattack", ssbexo_link_special_hi_spin_attack_acmd, Low)
-    .effect_acmd("effect_specialhispinattack", ssbexo_link_special_hi_spin_attack_effect, Low)
-    .sound_acmd("sound_specialhispinattack", ssbexo_link_special_hi_spin_attack_sound, Low)
-    .expression_acmd("expression_specialhispinattack", ssbexo_link_special_hi_spin_attack_expression, Low)
+    .acmd("game_specialhispinattack", ssbexo_link_special_hi_spin_attack_acmd, Low)
+    .acmd("effect_specialhispinattack", ssbexo_link_special_hi_spin_attack_effect, Low)
+    .acmd("sound_specialhispinattack", ssbexo_link_special_hi_spin_attack_sound, Low)
+    .acmd("expression_specialhispinattack", ssbexo_link_special_hi_spin_attack_expression, Low)
     .install()
     ;
 }

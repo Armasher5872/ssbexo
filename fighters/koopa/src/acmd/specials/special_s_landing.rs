@@ -23,7 +23,7 @@ unsafe extern "C" fn ssbexo_koopa_flying_slam_landing_acmd(agent: &mut L2CAgentB
 pub fn install() {
     Agent::new("koopa")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialslanding", ssbexo_koopa_flying_slam_landing_acmd, Low)
+    .acmd("game_specialslanding", ssbexo_koopa_flying_slam_landing_acmd, Low)
     .install()
     ;
 }

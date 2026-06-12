@@ -14,7 +14,7 @@ unsafe extern "C" fn ssbexo_mario_final_smash_acmd(agent: &mut L2CAgentBase) {
             ArticleModule::generate_article(boma, *FIGHTER_MARIO_GENERATE_ARTICLE_HUGE_FLAME, false, -1);
         }
         frame(lua_state, 10.0);
-        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {      
+        if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {      
             if is_excute(agent) {
                 FT_SET_FINAL_FEAR_FACE(agent, 60);
                 REQ_FINAL_START_CAMERA_arg3(agent, Hash40::new("d04final.nuanmb"), false, false);
@@ -53,7 +53,7 @@ unsafe extern "C" fn ssbexo_mario_final_smash_acmd(agent: &mut L2CAgentBase) {
             ArticleModule::generate_article(boma, *FIGHTER_MARIO_GENERATE_ARTICLE_HUGE_FLAME, false, -1);
         }
         frame(lua_state, 10.0);
-        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {      
+        if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {      
             if is_excute(agent) {
                 FT_SET_FINAL_FEAR_FACE(agent, 60);
                 REQ_FINAL_START_CAMERA_arg3(agent, Hash40::new("d04final.nuanmb"), false, false);
@@ -86,8 +86,8 @@ unsafe extern "C" fn ssbexo_mario_final_smash_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_final", ssbexo_mario_final_smash_acmd, Low)
-    .game_acmd("game_finalair", ssbexo_mario_final_smash_acmd, Low)
+    .acmd("game_final", ssbexo_mario_final_smash_acmd, Low)
+    .acmd("game_finalair", ssbexo_mario_final_smash_acmd, Low)
     .install()
     ;
 }

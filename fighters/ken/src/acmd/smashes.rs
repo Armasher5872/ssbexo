@@ -24,7 +24,7 @@ unsafe extern "C" fn ssbexo_ken_forward_smash_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("ken")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_ken_forward_smash_acmd, Low)
+    .acmd("game_attacks4", ssbexo_ken_forward_smash_acmd, Low)
     .install()
     ;
 }

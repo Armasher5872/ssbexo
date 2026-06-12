@@ -36,10 +36,10 @@ unsafe extern "C" fn ssbexo_armstrong_up_special_catch_expression(agent: &mut L2
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialhicatch", ssbexo_armstrong_up_special_catch_acmd, Low)
-    .effect_acmd("effect_specialhicatch", ssbexo_armstrong_up_special_catch_effect, Low)
-    .sound_acmd("sound_specialhicatch", ssbexo_armstrong_up_special_catch_sound, Low)
-    .expression_acmd("expression_specialhicatch", ssbexo_armstrong_up_special_catch_expression, Low)
+    .acmd("game_specialhicatch", ssbexo_armstrong_up_special_catch_acmd, Low)
+    .acmd("effect_specialhicatch", ssbexo_armstrong_up_special_catch_effect, Low)
+    .acmd("sound_specialhicatch", ssbexo_armstrong_up_special_catch_sound, Low)
+    .acmd("expression_specialhicatch", ssbexo_armstrong_up_special_catch_expression, Low)
     .install()
     ;
 }

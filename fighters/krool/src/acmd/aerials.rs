@@ -112,9 +112,9 @@ unsafe extern "C" fn ssbexo_krool_uair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("krool")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairf", ssbexo_krool_fair_acmd, Low)
-    .game_acmd("game_attackairb", ssbexo_krool_bair_acmd, Low)
-    .game_acmd("game_attackairhi", ssbexo_krool_uair_acmd, Low)
+    .acmd("game_attackairf", ssbexo_krool_fair_acmd, Low)
+    .acmd("game_attackairb", ssbexo_krool_bair_acmd, Low)
+    .acmd("game_attackairhi", ssbexo_krool_uair_acmd, Low)
     .install()
     ;
 }

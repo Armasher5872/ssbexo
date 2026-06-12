@@ -63,10 +63,10 @@ unsafe extern "C" fn ssbexo_metaknight_fair_expression(agent: &mut L2CAgentBase)
 pub fn install() {
     Agent::new("metaknight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairf", ssbexo_metaknight_fair_acmd, Low)
-    .effect_acmd("effect_attackairf", ssbexo_metaknight_fair_effect, Low)
-    .sound_acmd("sound_attackairf", ssbexo_metaknight_fair_sound, Low)
-    .expression_acmd("expression_attackairf", ssbexo_metaknight_fair_expression, Low)
+    .acmd("game_attackairf", ssbexo_metaknight_fair_acmd, Low)
+    .acmd("effect_attackairf", ssbexo_metaknight_fair_effect, Low)
+    .acmd("sound_attackairf", ssbexo_metaknight_fair_sound, Low)
+    .acmd("expression_attackairf", ssbexo_metaknight_fair_expression, Low)
     .install()
     ;
 }

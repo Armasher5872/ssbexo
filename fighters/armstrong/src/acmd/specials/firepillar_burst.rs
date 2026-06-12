@@ -59,9 +59,9 @@ unsafe extern "C" fn ssbexo_armstrong_firepillar_burst_sound(agent: &mut L2CAgen
 pub fn install() {
     Agent::new("ganon_firepillar")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_burst", ssbexo_armstrong_firepillar_burst_acmd, Low)
-    .effect_acmd("effect_burst", ssbexo_armstrong_firepillar_burst_effect, Low)
-    .sound_acmd("sound_burst", ssbexo_armstrong_firepillar_burst_sound, Low)
+    .acmd("game_burst", ssbexo_armstrong_firepillar_burst_acmd, Low)
+    .acmd("effect_burst", ssbexo_armstrong_firepillar_burst_effect, Low)
+    .acmd("sound_burst", ssbexo_armstrong_firepillar_burst_sound, Low)
     .install()
     ;
 }

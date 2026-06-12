@@ -1,14 +1,21 @@
 use {
     exo_utils::{
         common::{
+            hook::*,
             status_end_control::*,
             var_reset::*,
         },
         fighter::demon::*,
+        structs::{
+            buttons::*,
+            collision_struct::*,
+            getter_funcs::*,
+        }
     },
     exo_var::{
         demon::*,
         globals::*,
+        variables::*,
     },
     smash::{
         app::{
@@ -22,7 +29,14 @@ use {
         },
         lua2cpp::*,
     },
+    /*
+    smash2::app::{
+        LinkEvent,
+        LinkEventCapture
+    },
+    */
     smashline::*,
+    smash_script::macros::*,
 };
 
 mod acmd;

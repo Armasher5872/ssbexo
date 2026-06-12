@@ -78,10 +78,10 @@ unsafe extern "C" fn ssbexo_ike_down_special_end_max_expression(agent: &mut L2CA
 pub fn install() {
     Agent::new("ike")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnendmax", ssbexo_ike_down_special_end_max_acmd, Low)
-    .game_acmd("game_specialairnendmax", ssbexo_ike_down_special_end_max_acmd, Low)
-    .expression_acmd("expression_specialnendmax", ssbexo_ike_down_special_end_max_expression, Low)
-    .expression_acmd("expression_specialairnendmax", ssbexo_ike_down_special_end_max_expression, Low)
+    .acmd("game_specialnendmax", ssbexo_ike_down_special_end_max_acmd, Low)
+    .acmd("game_specialairnendmax", ssbexo_ike_down_special_end_max_acmd, Low)
+    .acmd("expression_specialnendmax", ssbexo_ike_down_special_end_max_expression, Low)
+    .acmd("expression_specialairnendmax", ssbexo_ike_down_special_end_max_expression, Low)
     .install()
     ;
 }

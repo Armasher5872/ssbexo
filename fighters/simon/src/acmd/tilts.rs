@@ -2,38 +2,42 @@ use super::*;
 
 //Up Tilt ACMD
 unsafe extern "C" fn ssbexo_simon_up_tilt_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 8.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         ATTACK(agent, 4, 0, Hash40::new("top"), 3.0, 90, 57, 0, 88, 5.0, 0.0, 3.5, 3.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
         ATTACK(agent, 5, 0, Hash40::new("top"), 3.0, 90, 57, 0, 88, 4.0, 0.0, 3.5, -4.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
         ATTACK(agent, 6, 0, Hash40::new("top"), 3.0, 90, 57, 0, 88, 4.0, 0.0, 3.5, 10.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
-        AttackModule::clear(agent.module_accessor, 4, false);
-        AttackModule::clear(agent.module_accessor, 5, false);
-        AttackModule::clear(agent.module_accessor, 6, false);
+        AttackModule::clear(boma, 4, false);
+        AttackModule::clear(boma, 5, false);
+        AttackModule::clear(boma, 6, false);
         ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 93, 57, 0, 88, 5.0, 0.0, 25.5, 3.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_whip"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SIMON_WHIP, *ATTACK_REGION_WHIP);
         ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 93, 57, 0, 88, 4.0, 0.0, 25.5, -4.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_whip"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SIMON_WHIP, *ATTACK_REGION_WHIP);
         ATTACK(agent, 2, 0, Hash40::new("top"), 10.0, 93, 57, 0, 88, 4.0, 0.0, 25.5, 10.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_whip"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SIMON_WHIP, *ATTACK_REGION_WHIP);
         ATTACK(agent, 3, 0, Hash40::new("top"), 2.0, 93, 82, 0, 88, 4.5, 0.0, 17.5, 3.5, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
     }
-    frame(agent.lua_state_agent, 23.0);
+    frame(lua_state, 23.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Down Tilt ACMD
 unsafe extern "C" fn ssbexo_simon_down_tilt_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 10.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         SEARCH(agent, 0, 0, Hash40::new("top"), 2.5, 0.0, 5.0, 15.0, Some(0.0), Some(5.0), Some(34.0), *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_IG, *COLLISION_PART_MASK_ALL, false);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         agent.clear_lua_stack();
-        let object = sv_system::battle_object(agent.lua_state_agent) as *mut BattleObject;
+        let object = sv_system::battle_object(lua_state) as *mut BattleObject;
         if !object.is_null() {
             FighterSpecializer_Simon::set_whip_reflect_attack_off_id(object as *mut Fighter, 0, 1, -1, -1, -1, -1, -1, -1, -1, -1);
         }
@@ -42,19 +46,20 @@ unsafe extern "C" fn ssbexo_simon_down_tilt_acmd(agent: &mut L2CAgentBase) {
         ATTACK(agent, 2, 0, Hash40::new("top"), 2.0, 361, 65, 0, 65, 4.5, 0.0, 5.0, 7.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         search!(agent, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR_ALL);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
 //Down Tilt Effect
 unsafe extern "C" fn ssbexo_simon_down_tilt_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 8.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), -4, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("simon_whip_straight"), Hash40::new("haver"), 0, 0, 0, 4, 30, 4, 0.98, true);
     }
@@ -62,14 +67,15 @@ unsafe extern "C" fn ssbexo_simon_down_tilt_effect(agent: &mut L2CAgentBase) {
 
 //Down Tilt Sound
 unsafe extern "C" fn ssbexo_simon_down_tilt_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_simon_whip_holding"));
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_simon_attackhard_s01"));
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         PLAY_SEQUENCE(agent, Hash40::new("seq_simon_rnd_attack"));
     }
@@ -77,14 +83,16 @@ unsafe extern "C" fn ssbexo_simon_down_tilt_sound(agent: &mut L2CAgentBase) {
 
 //Down Tilt Expression
 unsafe extern "C" fn ssbexo_simon_down_tilt_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
     }
@@ -92,31 +100,34 @@ unsafe extern "C" fn ssbexo_simon_down_tilt_expression(agent: &mut L2CAgentBase)
 
 //Whip Down Tilt ACMD
 unsafe extern "C" fn ssbexo_simon_whip_down_tilt_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 1.0);
     if is_excute(agent) {
-        PhysicsModule::set_2nd_status(agent.module_accessor, *PH2NDARY_CRAW_NONE);
+        PhysicsModule::set_2nd_status(boma, *PH2NDARY_CRAW_NONE);
         agent.clear_lua_stack();
-        let object = sv_system::battle_object(agent.lua_state_agent) as *mut BattleObject;
+        let object = sv_system::battle_object(lua_state) as *mut BattleObject;
         if !object.is_null() {
             WeaponSpecializer_SimonWhip::reset_node_fix_flag_list(object as *mut smash::app::Weapon);
         }
     }
-    frame(agent.lua_state_agent, 8.0);
+    frame(lua_state, 8.0);
     if is_excute(agent) {
-        PhysicsModule::set_2nd_status(agent.module_accessor, *PH2NDARY_CRAW_COLLIDE);
+        PhysicsModule::set_2nd_status(boma, *PH2NDARY_CRAW_COLLIDE);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
-        PhysicsModule::set_2nd_status(agent.module_accessor, *PH2NDARY_CRAW_MOVE);
+        PhysicsModule::set_2nd_status(boma, *PH2NDARY_CRAW_MOVE);
     }
 }
 
 //Whip Down Tilt Effect
 unsafe extern "C" fn ssbexo_simon_whip_down_tilt_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 11.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         agent.clear_lua_stack();
-        let object = sv_system::battle_object(agent.lua_state_agent) as *mut BattleObject;
+        let object = sv_system::battle_object(lua_state) as *mut BattleObject;
         if !object.is_null() {
             WeaponSpecializer_SimonWhip::set_chain_2_visibility(object as *mut smash::app::Weapon, true);
         }
@@ -124,10 +135,10 @@ unsafe extern "C" fn ssbexo_simon_whip_down_tilt_effect(agent: &mut L2CAgentBase
         LAST_EFFECT_SET_RATE(agent, 1.3);
         EFFECT_FOLLOW(agent, Hash40::new("simon_whip_flash_top"), Hash40::new("hookshot27"), 1, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(lua_state, 15.0);
     if is_excute(agent) {
         agent.clear_lua_stack();
-        let object = sv_system::battle_object(agent.lua_state_agent) as *mut BattleObject;
+        let object = sv_system::battle_object(lua_state) as *mut BattleObject;
         if !object.is_null() {
             WeaponSpecializer_SimonWhip::set_chain_2_visibility(object as *mut smash::app::Weapon, false);
         }
@@ -137,17 +148,17 @@ unsafe extern "C" fn ssbexo_simon_whip_down_tilt_effect(agent: &mut L2CAgentBase
 pub fn install() {
     Agent::new("simon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackhi3", ssbexo_simon_up_tilt_acmd, Low)
-    .game_acmd("game_attacklw3", ssbexo_simon_down_tilt_acmd, Low)
-    .effect_acmd("effect_attacklw3", ssbexo_simon_down_tilt_effect, Low)
-    .sound_acmd("sound_attacklw3", ssbexo_simon_down_tilt_sound, Low)
-    .expression_acmd("expression_attacklw3", ssbexo_simon_down_tilt_expression, Low)
+    .acmd("game_attackhi3", ssbexo_simon_up_tilt_acmd, Low)
+    .acmd("game_attacklw3", ssbexo_simon_down_tilt_acmd, Low)
+    .acmd("effect_attacklw3", ssbexo_simon_down_tilt_effect, Low)
+    .acmd("sound_attacklw3", ssbexo_simon_down_tilt_sound, Low)
+    .acmd("expression_attacklw3", ssbexo_simon_down_tilt_expression, Low)
     .install()
     ;
     Agent::new("simon_whip")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacklw3", ssbexo_simon_whip_down_tilt_acmd, Low)
-    .effect_acmd("effect_attacklw3", ssbexo_simon_whip_down_tilt_effect, Low)
+    .acmd("game_attacklw3", ssbexo_simon_whip_down_tilt_acmd, Low)
+    .acmd("effect_attacklw3", ssbexo_simon_whip_down_tilt_effect, Low)
     .install()
     ;
 }

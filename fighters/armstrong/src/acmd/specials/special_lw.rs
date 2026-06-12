@@ -182,14 +182,14 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_down_special_expression(agent: &mut
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_speciallw", ssbexo_armstrong_grounded_down_special_acmd, Low)
-    .effect_acmd("effect_speciallw", ssbexo_armstrong_grounded_down_special_effect, Low)
-    .sound_acmd("sound_speciallw", ssbexo_armstrong_grounded_down_special_sound, Low)
-    .expression_acmd("expression_speciallw", ssbexo_armstrong_grounded_down_special_expression, Low)
-    .game_acmd("game_specialairlw", ssbexo_armstrong_aerial_down_special_acmd, Low)
-    .effect_acmd("effect_specialairlw", ssbexo_armstrong_aerial_down_special_effect, Low)
-    .sound_acmd("sound_specialairlw", ssbexo_armstrong_aerial_down_special_sound, Low)
-    .expression_acmd("expression_specialairlw", ssbexo_armstrong_aerial_down_special_expression, Low)
+    .acmd("game_speciallw", ssbexo_armstrong_grounded_down_special_acmd, Low)
+    .acmd("effect_speciallw", ssbexo_armstrong_grounded_down_special_effect, Low)
+    .acmd("sound_speciallw", ssbexo_armstrong_grounded_down_special_sound, Low)
+    .acmd("expression_speciallw", ssbexo_armstrong_grounded_down_special_expression, Low)
+    .acmd("game_specialairlw", ssbexo_armstrong_aerial_down_special_acmd, Low)
+    .acmd("effect_specialairlw", ssbexo_armstrong_aerial_down_special_effect, Low)
+    .acmd("sound_specialairlw", ssbexo_armstrong_aerial_down_special_sound, Low)
+    .acmd("expression_specialairlw", ssbexo_armstrong_aerial_down_special_expression, Low)
     .install()
     ;
 }

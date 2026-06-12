@@ -25,9 +25,9 @@ unsafe extern "C" fn armstrong_reset_initialization(vtable: u64, fighter: &mut F
 
 //Armstrong Death Initialization
 #[skyline::hook(offset = ARMSTRONG_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn armstrong_death_initialization(vtable: u64, fighter: &mut Fighter) {
+unsafe extern "C" fn armstrong_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
-    if is_armstrong_slots(fighter.battle_object.module_accessor) {
+    if is_armstrong_slots(boma) {
         common_death_variable_reset(&mut *boma);
         armstrong_var(&mut *boma);
     }
@@ -35,7 +35,6 @@ unsafe extern "C" fn armstrong_death_initialization(vtable: u64, fighter: &mut F
         ganon_var(&mut *boma);
     }
     common_death_variable_reset(&mut *boma);
-    original!()(vtable, fighter)
 }
 
 //Armstrong On Attack

@@ -1,0 +1,102 @@
+use super::*;
+
+unsafe extern "C" fn demon_catch_back_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_GROUND), *FIGHTER_KINETIC_TYPE_GROUND_STOP, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLAG, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_INT, *FIGHTER_STATUS_WORK_KEEP_FLAG_THROW_FLOAT, 0);
+    FighterStatusModuleImpl::set_fighter_status_data(boma, false, *FIGHTER_TREADED_KIND_NO_REAC, false, false, false, (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_CATCH | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON | *FIGHTER_LOG_MASK_FLAG_SHOOT) as u64, (*FIGHTER_STATUS_ATTR_DISABLE_JUMP_BOARD_EFFECT | *FIGHTER_STATUS_ATTR_DISABLE_TURN_DAMAGE) as u32, *FIGHTER_POWER_UP_ATTACK_BIT_CATCH as u32, 0);
+    0.into()
+}
+
+unsafe extern "C" fn demon_catch_back_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.clear_lua_stack();
+    lua_args!(fighter, *MA_MSC_SET_IGNORE_CATCHING, true);
+    sv_module_access::capture(fighter.lua_state_agent);
+    fighter.pop_lua_stack(1);
+    0.into()
+}
+
+unsafe extern "C" fn demon_catch_back_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    grabbed_anim_selector(fighter, "down_damage", 0.0, 1.0);
+    MotionModule::change_motion(boma, Hash40::new("throw_f"), 0.0, 1.0, false, 0.0, false, false);
+    fighter.sub_shift_status_main(L2CValue::Ptr(demon_catch_back_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn demon_catch_back_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
+    if CancelModule::is_enable_cancel(boma) {
+        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            return 1.into();
+        }
+    }
+    if situation_kind == *SITUATION_KIND_AIR {
+        fighter.change_status(FIGHTER_STATUS_KIND_CATCH_CUT.into(), false.into());
+        return 1.into();
+    }
+    if WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_THROW) {
+        if capture_id != 0x50000000 {
+            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+            VisibilityModule::set_whole(capture_boma, true);
+            AttackModule::hit_absolute_joint(boma, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, capture_id as u32, Hash40::new("throw"), 0, 0);
+        }
+        WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_THROW);
+    }
+    if MotionModule::is_end(boma) {
+        fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+        return 1.into();
+    }
+    0.into()
+}
+
+unsafe extern "C" fn demon_catch_back_exec_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+    0.into()
+}
+
+unsafe extern "C" fn demon_catch_back_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    if CatchModule::is_catch(boma) {
+        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
+        if capture_id != 0x50000000 {
+            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+            let pos = *PostureModule::pos(boma);
+            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
+        }
+        CatchModule::set_send_cut_event(boma, true);
+        CatchModule::catch_cut(boma, false, false);
+    }
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_THROW);
+    0.into()
+}
+
+unsafe extern "C" fn demon_catch_back_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    if LinkModule::is_link(boma, *LINK_NO_CAPTURE) {
+        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
+        if capture_id != 0x50000000 {
+            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+            let pos = *PostureModule::pos(boma);
+            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
+        }
+        fighter.clear_lua_stack();
+        lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
+        sv_module_access::_catch(fighter.lua_state_agent);
+        fighter.pop_lua_stack(1);
+    }
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_THROW);
+    0.into()
+}
+
+pub fn install() {
+    Agent::new("ganon")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .status(Pre, *FIGHTER_DEMON_STATUS_KIND_CATCH_BACK, demon_catch_back_pre_status)
+    .status(Init, *FIGHTER_DEMON_STATUS_KIND_CATCH_BACK, demon_catch_back_init_status)
+    .status(Main, *FIGHTER_DEMON_STATUS_KIND_CATCH_BACK, demon_catch_back_main_status)
+    .status(Exec, *FIGHTER_DEMON_STATUS_KIND_CATCH_BACK, demon_catch_back_exec_status)
+    .status(End, *FIGHTER_DEMON_STATUS_KIND_CATCH_BACK, demon_catch_back_end_status)
+    .status(Exit, *FIGHTER_DEMON_STATUS_KIND_CATCH_BACK, demon_catch_back_exit_status)
+    .install()
+    ;
+}

@@ -85,13 +85,15 @@ unsafe extern "C" fn donkey_on_search(vtable: u64, fighter: &mut Fighter, log: u
     if fighter.battle_object.kind == *FIGHTER_KIND_DONKEY as u32 {
         let boma = fighter.battle_object.module_accessor;
         let collision_log = *(log as *const u64).add(0x10/0x8);
-        let collision_log = collision_log as *const CollisionLog;
+        let collision_log = collision_log as *mut CollisionLogScuffed;
         let status_kind = StatusModule::status_kind(boma);
         if [*FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH_TURN, *FIGHTER_STATUS_KIND_AIR_LASSO].contains(&status_kind) {
-            let opponent_id = (*collision_log).opponent_battle_object_id;
-            if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-                if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-                    let opponent_boma = smash::app::sv_battle_object::module_accessor(opponent_id);
+            let opponent_object_id = (*collision_log).opponent_object_id;
+            if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+                let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+                let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+                if sv_battle_object::category(opponent_battle_object_id) == *BATTLE_OBJECT_CATEGORY_WEAPON {
+                    let opponent_boma = (*opponent_battle_object).module_accessor;
                     if is_barrel(opponent_boma) {
                         ReflectorModule::set_status_all(opponent_boma, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
                         WorkModule::set_float(opponent_boma, 0.0, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLOAT_CHARGE);

@@ -19,10 +19,10 @@ unsafe extern "C" fn ssbexo_luigi_down_special_catch_expression(agent: &mut L2CA
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwcatch", ssbexo_luigi_down_special_catch_acmd, Low)
-    .effect_acmd("effect_speciallwcatch", ssbexo_luigi_down_special_catch_effect, Low)
-    .sound_acmd("sound_speciallwcatch", ssbexo_luigi_down_special_catch_sound, Low)
-    .expression_acmd("expression_speciallwcatch", ssbexo_luigi_down_special_catch_expression, Low)
+    .acmd("game_speciallwcatch", ssbexo_luigi_down_special_catch_acmd, Low)
+    .acmd("effect_speciallwcatch", ssbexo_luigi_down_special_catch_effect, Low)
+    .acmd("sound_speciallwcatch", ssbexo_luigi_down_special_catch_sound, Low)
+    .acmd("expression_speciallwcatch", ssbexo_luigi_down_special_catch_expression, Low)
     .install()
     ;
 }

@@ -62,22 +62,21 @@ unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     original!()(vtable, fighter)
 }
 
-unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut smash::app::Weapon, log: *mut CollisionLogScuffed) {
+unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut smash::app::Weapon, log: u64) {
     let boma = (*weapon).battle_object.module_accessor;
+    let collision_log = *(log as *const u64).add(0x10 / 0x8);
+    let collision_log = collision_log as *const CollisionLogScuffed;
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
-    let opponent_object_id = (*log).opponent_object_id;
-    println!("Opponent Object ID: {}", opponent_object_id);
+    let opponent_object_id = (*collision_log).opponent_object_id;
     if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
         let opponent_category = sv_battle_object::category(opponent_object_id);
         let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
         let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
         let opponent_boma = (*opponent_battle_object).module_accessor;
-        println!("Opponent Category: {}", opponent_category);
         if opponent_category == *BATTLE_OBJECT_CATEGORY_ITEM {
             WorkModule::set_int(boma, opponent_battle_object_id as i32, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
-            println!("Fuse ID: {}", WorkModule::get_int(boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID));
             LinkModule::remove_model_constraint(opponent_boma, true);
             if LinkModule::is_link(opponent_boma, *ITEM_LINK_NO_HAVE) {
                 LinkModule::unlink(opponent_boma, *ITEM_LINK_NO_HAVE);

@@ -70,10 +70,10 @@ unsafe extern "C" fn ssbexo_chrom_up_tilt_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("chrom")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackhi3", ssbexo_chrom_up_tilt_acmd, Low)
-    .effect_acmd("effect_attackhi3", ssbexo_chrom_up_tilt_effect, Low)
-    .sound_acmd("sound_attackhi3", ssbexo_chrom_up_tilt_sound, Low)
-    .expression_acmd("expression_attackhi3", ssbexo_chrom_up_tilt_expression, Low)
+    .acmd("game_attackhi3", ssbexo_chrom_up_tilt_acmd, Low)
+    .acmd("effect_attackhi3", ssbexo_chrom_up_tilt_effect, Low)
+    .acmd("sound_attackhi3", ssbexo_chrom_up_tilt_sound, Low)
+    .acmd("expression_attackhi3", ssbexo_chrom_up_tilt_expression, Low)
     .install()
     ;
 }

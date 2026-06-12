@@ -65,9 +65,9 @@ unsafe extern "C" fn ssbexo_inkling_down_tilt_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("inkling")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks3", ssbexo_inkling_forward_tilt_acmd, Low)
-    .game_acmd("game_attackhi3", ssbexo_inkling_up_tilt_acmd, Low)
-    .game_acmd("game_attacklw3", ssbexo_inkling_down_tilt_acmd, Low)
+    .acmd("game_attacks3", ssbexo_inkling_forward_tilt_acmd, Low)
+    .acmd("game_attackhi3", ssbexo_inkling_up_tilt_acmd, Low)
+    .acmd("game_attacklw3", ssbexo_inkling_down_tilt_acmd, Low)
     .install()
     ;
 }

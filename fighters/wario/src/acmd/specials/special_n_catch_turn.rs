@@ -21,10 +21,10 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_catch_turn_expression(agent: &
 pub fn install() {
     Agent::new("wario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_acmd, Low)
-    .effect_acmd("effect_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_effect, Low)
-    .sound_acmd("sound_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_sound, Low)
-    .expression_acmd("expression_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_expression, Low)
+    .acmd("game_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_acmd, Low)
+    .acmd("effect_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_effect, Low)
+    .acmd("sound_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_sound, Low)
+    .acmd("expression_specialncatchturn", ssbexo_wario_neutral_special_catch_turn_expression, Low)
     .install()
     ;
 }

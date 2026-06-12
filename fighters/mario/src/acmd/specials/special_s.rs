@@ -66,14 +66,14 @@ unsafe extern "C" fn ssbexo_mario_side_special_expression(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specials", ssbexo_mario_side_special_acmd, Low)
-    .game_acmd("game_specialairs", ssbexo_mario_side_special_acmd, Low)
-    .effect_acmd("effect_specials", ssbexo_mario_side_special_effect, Low)
-    .effect_acmd("effect_specialairs", ssbexo_mario_side_special_effect, Low)
-    .sound_acmd("sound_specials", ssbexo_mario_side_special_sound, Low)
-    .sound_acmd("sound_specialairs", ssbexo_mario_side_special_sound, Low)
-    .expression_acmd("expression_specials", ssbexo_mario_side_special_expression, Low)
-    .expression_acmd("expression_specialairs", ssbexo_mario_side_special_expression, Low)
+    .acmd("game_specials", ssbexo_mario_side_special_acmd, Low)
+    .acmd("game_specialairs", ssbexo_mario_side_special_acmd, Low)
+    .acmd("effect_specials", ssbexo_mario_side_special_effect, Low)
+    .acmd("effect_specialairs", ssbexo_mario_side_special_effect, Low)
+    .acmd("sound_specials", ssbexo_mario_side_special_sound, Low)
+    .acmd("sound_specialairs", ssbexo_mario_side_special_sound, Low)
+    .acmd("expression_specials", ssbexo_mario_side_special_expression, Low)
+    .acmd("expression_specialairs", ssbexo_mario_side_special_expression, Low)
     .install()
     ;
 }

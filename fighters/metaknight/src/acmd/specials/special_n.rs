@@ -13,7 +13,7 @@ unsafe extern "C" fn ssbexo_metaknight_mach_tornado_loop_acmd(agent: &mut L2CAge
 pub fn install() {
     Agent::new("metaknight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnspin", ssbexo_metaknight_mach_tornado_loop_acmd, Low)
+    .acmd("game_specialnspin", ssbexo_metaknight_mach_tornado_loop_acmd, Low)
     .install()
     ;
 }

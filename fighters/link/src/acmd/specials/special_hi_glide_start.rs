@@ -27,10 +27,10 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_start_expression(agent: &mut L
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhiglidestart", ssbexo_link_special_hi_glide_start_acmd, Low)
-    .effect_acmd("effect_specialhiglidestart", ssbexo_link_special_hi_glide_start_effect, Low)
-    .sound_acmd("sound_specialhiglidestart", ssbexo_link_special_hi_glide_start_sound, Low)
-    .expression_acmd("expression_specialhiglidestart", ssbexo_link_special_hi_glide_start_expression, Low)
+    .acmd("game_specialhiglidestart", ssbexo_link_special_hi_glide_start_acmd, Low)
+    .acmd("effect_specialhiglidestart", ssbexo_link_special_hi_glide_start_effect, Low)
+    .acmd("sound_specialhiglidestart", ssbexo_link_special_hi_glide_start_sound, Low)
+    .acmd("expression_specialhiglidestart", ssbexo_link_special_hi_glide_start_expression, Low)
     .install()
     ;
 }

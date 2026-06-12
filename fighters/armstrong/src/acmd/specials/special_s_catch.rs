@@ -100,14 +100,14 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_catch_expression(agent
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specials", ssbexo_armstrong_grounded_side_special_catch_acmd, Low)
-    .effect_acmd("effect_specials", ssbexo_armstrong_grounded_side_special_catch_effect, Low)
-    .sound_acmd("sound_specials", ssbexo_armstrong_grounded_side_special_catch_sound, Low)
-    .expression_acmd("expression_specials", ssbexo_armstrong_grounded_side_special_catch_expression, Low)
-    .game_acmd("game_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_acmd, Low)
-    .effect_acmd("effect_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_effect, Low)
-    .sound_acmd("sound_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_sound, Low)
-    .expression_acmd("expression_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_expression, Low)
+    .acmd("game_specials", ssbexo_armstrong_grounded_side_special_catch_acmd, Low)
+    .acmd("effect_specials", ssbexo_armstrong_grounded_side_special_catch_effect, Low)
+    .acmd("sound_specials", ssbexo_armstrong_grounded_side_special_catch_sound, Low)
+    .acmd("expression_specials", ssbexo_armstrong_grounded_side_special_catch_expression, Low)
+    .acmd("game_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_acmd, Low)
+    .acmd("effect_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_effect, Low)
+    .acmd("sound_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_sound, Low)
+    .acmd("expression_specialairscatch", ssbexo_armstrong_aerial_side_special_catch_expression, Low)
     .install()
     ;
 }

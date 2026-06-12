@@ -84,14 +84,14 @@ unsafe extern "C" fn ssbexo_luigi_down_special_throw_b_expression(agent: &mut L2
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwthrowb", ssbexo_luigi_down_special_throw_b_acmd, Low)
-    .game_acmd("game_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_acmd, Low)
-    .effect_acmd("effect_speciallwthrowb", ssbexo_luigi_down_special_throw_b_effect, Low)
-    .effect_acmd("effect_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_effect, Low)
-    .sound_acmd("sound_speciallwthrowb", ssbexo_luigi_down_special_throw_b_sound, Low)
-    .sound_acmd("sound_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_sound, Low)
-    .expression_acmd("expression_speciallwthrowb", ssbexo_luigi_down_special_throw_b_expression, Low)
-    .expression_acmd("expression_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_expression, Low)
+    .acmd("game_speciallwthrowb", ssbexo_luigi_down_special_throw_b_acmd, Low)
+    .acmd("game_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_acmd, Low)
+    .acmd("effect_speciallwthrowb", ssbexo_luigi_down_special_throw_b_effect, Low)
+    .acmd("effect_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_effect, Low)
+    .acmd("sound_speciallwthrowb", ssbexo_luigi_down_special_throw_b_sound, Low)
+    .acmd("sound_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_sound, Low)
+    .acmd("expression_speciallwthrowb", ssbexo_luigi_down_special_throw_b_expression, Low)
+    .acmd("expression_specialairlwthrowb", ssbexo_luigi_down_special_throw_b_expression, Low)
     .install()
     ;
 }

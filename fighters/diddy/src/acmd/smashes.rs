@@ -219,13 +219,13 @@ unsafe extern "C" fn ssbexo_diddy_down_smash_expression(agent: &mut L2CAgentBase
 pub fn install() {
     Agent::new("diddy")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_diddy_forward_smash_acmd, Low)
-    .game_acmd("game_attackhi4", ssbexo_diddy_up_smash_acmd, Low)
-    .effect_acmd("effect_attacklw4charge", ssbexo_diddy_down_smash_charge_effect, Low)
-    .game_acmd("game_attacklw4", ssbexo_diddy_down_smash_acmd, Low)
-    .effect_acmd("effect_attacklw4", ssbexo_diddy_down_smash_effect, Low)
-    .sound_acmd("sound_attacklw4", ssbexo_diddy_down_smash_sound, Low)
-    .expression_acmd("expression_attacklw4", ssbexo_diddy_down_smash_expression, Low)
+    .acmd("game_attacks4", ssbexo_diddy_forward_smash_acmd, Low)
+    .acmd("game_attackhi4", ssbexo_diddy_up_smash_acmd, Low)
+    .acmd("effect_attacklw4charge", ssbexo_diddy_down_smash_charge_effect, Low)
+    .acmd("game_attacklw4", ssbexo_diddy_down_smash_acmd, Low)
+    .acmd("effect_attacklw4", ssbexo_diddy_down_smash_effect, Low)
+    .acmd("sound_attacklw4", ssbexo_diddy_down_smash_sound, Low)
+    .acmd("expression_attacklw4", ssbexo_diddy_down_smash_expression, Low)
     .install()
     ;
 }

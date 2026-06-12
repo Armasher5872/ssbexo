@@ -67,14 +67,14 @@ unsafe extern "C" fn ssbexo_ganon_neutral_special_volley_fire_expression(agent: 
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_acmd, Low)
-    .effect_acmd("effect_specialnvolleyfire", ssbexo_ganon_grounded_neutral_special_volley_fire_effect, Low)
-    .sound_acmd("sound_specialnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_sound, Low)
-    .expression_acmd("expression_specialnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_expression, Low)
-    .game_acmd("game_specialairnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_acmd, Low)
-    .effect_acmd("effect_specialairnvolleyfire", ssbexo_ganon_aerial_neutral_special_volley_fire_effect, Low)
-    .sound_acmd("sound_specialairnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_sound, Low)
-    .expression_acmd("expression_specialairnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_expression, Low)
+    .acmd("game_specialnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_acmd, Low)
+    .acmd("effect_specialnvolleyfire", ssbexo_ganon_grounded_neutral_special_volley_fire_effect, Low)
+    .acmd("sound_specialnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_sound, Low)
+    .acmd("expression_specialnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_expression, Low)
+    .acmd("game_specialairnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_acmd, Low)
+    .acmd("effect_specialairnvolleyfire", ssbexo_ganon_aerial_neutral_special_volley_fire_effect, Low)
+    .acmd("sound_specialairnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_sound, Low)
+    .acmd("expression_specialairnvolleyfire", ssbexo_ganon_neutral_special_volley_fire_expression, Low)
     .install()
     ;
 }

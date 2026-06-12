@@ -42,11 +42,11 @@ unsafe extern "C" fn ssbexo_diddy_special_lw_laugh_sound(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("diddy")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnblow", ssbexo_diddy_neutral_special_explode_acmd, Low)
-    .game_acmd("game_specialairnblow", ssbexo_diddy_neutral_special_explode_acmd, Low)
-    .game_acmd("game_specialairsjump", ssbexo_diddy_special_air_s_jump_acmd, Low)
-    .sound_acmd("sound_speciallwlaugh", ssbexo_diddy_special_lw_laugh_sound, Low)
-    .sound_acmd("sound_specialairlwlaugh", ssbexo_diddy_special_lw_laugh_sound, Low)
+    .acmd("game_specialnblow", ssbexo_diddy_neutral_special_explode_acmd, Low)
+    .acmd("game_specialairnblow", ssbexo_diddy_neutral_special_explode_acmd, Low)
+    .acmd("game_specialairsjump", ssbexo_diddy_special_air_s_jump_acmd, Low)
+    .acmd("sound_speciallwlaugh", ssbexo_diddy_special_lw_laugh_sound, Low)
+    .acmd("sound_specialairlwlaugh", ssbexo_diddy_special_lw_laugh_sound, Low)
     .install()
     ;
 }

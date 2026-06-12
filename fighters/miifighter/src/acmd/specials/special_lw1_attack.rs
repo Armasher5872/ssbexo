@@ -117,14 +117,14 @@ unsafe extern "C" fn ssbexo_miifighter_armor_crushing_thunder_kick_attack_expres
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_acmd, Low)
-    .game_acmd("game_specialairlw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_acmd, Low)
-    .effect_acmd("effect_speciallw1attack", ssbexo_miifighter_grounded_armor_crushing_thunder_kick_attack_effect, Low)
-    .effect_acmd("effect_specialairlw1attack", ssbexo_miifighter_aerial_armor_crushing_thunder_kick_attack_effect, Low)
-    .sound_acmd("sound_speciallw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_sound, Low)
-    .sound_acmd("sound_specialairlw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_sound, Low)
-    .expression_acmd("expression_speciallw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_expression, Low)
-    .expression_acmd("expression_specialairlw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_expression, Low)
+    .acmd("game_speciallw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_acmd, Low)
+    .acmd("game_specialairlw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_acmd, Low)
+    .acmd("effect_speciallw1attack", ssbexo_miifighter_grounded_armor_crushing_thunder_kick_attack_effect, Low)
+    .acmd("effect_specialairlw1attack", ssbexo_miifighter_aerial_armor_crushing_thunder_kick_attack_effect, Low)
+    .acmd("sound_speciallw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_sound, Low)
+    .acmd("sound_specialairlw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_sound, Low)
+    .acmd("expression_speciallw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_expression, Low)
+    .acmd("expression_specialairlw1attack", ssbexo_miifighter_armor_crushing_thunder_kick_attack_expression, Low)
     .install()
     ;
 }

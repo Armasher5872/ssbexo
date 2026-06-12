@@ -2,15 +2,17 @@ use super::*;
 
 //Flamethrower Move ACMD
 unsafe extern "C" fn ssbexo_plizardon_flamethrower_move_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 45, 50, 0, 30, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 0.7, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LIZARDON_FIRE, *ATTACK_REGION_NONE);
-        AttackModule::enable_safe_pos(agent.module_accessor);
+        AttackModule::enable_safe_pos(boma);
     }
-    wait(agent.lua_state_agent, 4.0);
+    wait(lua_state, 4.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 58, 30, 0, 15, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 0.7, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LIZARDON_FIRE, *ATTACK_REGION_NONE);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 58, 30, 0, 15, 5.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 0.7, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_LIZARDON_FIRE, *ATTACK_REGION_NONE);
     }
@@ -27,12 +29,12 @@ unsafe extern "C" fn ssbexo_plizardon_explosion_start_acmd(agent: &mut L2CAgentB
 pub fn install() {
     Agent::new("plizardon_breath")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_move", ssbexo_plizardon_flamethrower_move_acmd, Low)
+    .acmd("game_move", ssbexo_plizardon_flamethrower_move_acmd, Low)
     .install()
     ;
     Agent::new("plizardon_explosion")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_start", ssbexo_plizardon_explosion_start_acmd, Low)
+    .acmd("game_start", ssbexo_plizardon_explosion_start_acmd, Low)
     .install()
     ;
 }

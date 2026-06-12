@@ -1,5 +1,4 @@
 use {
-    exo_utils::structs::vector::*,
     exo_var::{
         consts::*,
         globals::*,
@@ -28,9 +27,11 @@ use {
 };
 
 mod guard;
-mod guarddamage;
+mod guard_on;
+mod guard_damage;
 
 pub fn install() {
     guard::install();
-    guarddamage::install();
+    guard_on::install();
+    guard_damage::install();
 }

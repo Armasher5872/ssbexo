@@ -32,10 +32,10 @@ unsafe extern "C" fn ssbexo_luigi_down_special_loop_expression(agent: &mut L2CAg
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwloop", ssbexo_luigi_down_special_loop_acmd, Low)
-    .effect_acmd("effect_speciallwloop", ssbexo_luigi_down_special_loop_effect, Low)
-    .sound_acmd("sound_speciallwloop", ssbexo_luigi_down_special_loop_sound, Low)
-    .expression_acmd("expression_speciallwloop", ssbexo_luigi_down_special_loop_expression, Low)
+    .acmd("game_speciallwloop", ssbexo_luigi_down_special_loop_acmd, Low)
+    .acmd("effect_speciallwloop", ssbexo_luigi_down_special_loop_effect, Low)
+    .acmd("sound_speciallwloop", ssbexo_luigi_down_special_loop_sound, Low)
+    .acmd("expression_speciallwloop", ssbexo_luigi_down_special_loop_expression, Low)
     .install()
     ;
 }

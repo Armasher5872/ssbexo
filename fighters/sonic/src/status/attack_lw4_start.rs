@@ -1,7 +1,8 @@
 use super::*;
 
 unsafe extern "C" fn sonic_attack_lw4_start_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_BOOSTED_MOTION_RATE);
+    let boma = fighter.module_accessor;
+    WorkModule::off_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_PHANTOM_BOOSTED_MOTION_RATE);
     fighter.status_end_AttackXX4Start();
     0.into()
 }

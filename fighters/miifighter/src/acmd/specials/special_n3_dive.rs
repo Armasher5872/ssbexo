@@ -28,9 +28,9 @@ unsafe extern "C" fn ssbexo_miifighter_rising_tiger_knee_dive_expression(agent: 
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn3dive", ssbexo_miifighter_rising_tiger_knee_dive_acmd, Low)
-    .effect_acmd("effect_specialn3dive", ssbexo_miifighter_rising_tiger_knee_dive_effect, Low)
-    .expression_acmd("expression_specialn3dive", ssbexo_miifighter_rising_tiger_knee_dive_expression, Low)
+    .acmd("game_specialn3dive", ssbexo_miifighter_rising_tiger_knee_dive_acmd, Low)
+    .acmd("effect_specialn3dive", ssbexo_miifighter_rising_tiger_knee_dive_effect, Low)
+    .acmd("expression_specialn3dive", ssbexo_miifighter_rising_tiger_knee_dive_expression, Low)
     .install()
     ;
 }

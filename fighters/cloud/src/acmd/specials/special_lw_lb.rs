@@ -53,8 +53,8 @@ unsafe extern "C" fn ssbexo_cloud_limit_break_finishing_touch_acmd(agent: &mut L
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallw", ssbexo_cloud_limit_break_finishing_touch_acmd, Low)
-    .game_acmd("game_specialairlw", ssbexo_cloud_limit_break_finishing_touch_acmd, Low)
+    .acmd("game_speciallw", ssbexo_cloud_limit_break_finishing_touch_acmd, Low)
+    .acmd("game_specialairlw", ssbexo_cloud_limit_break_finishing_touch_acmd, Low)
     .install()
     ;
 }

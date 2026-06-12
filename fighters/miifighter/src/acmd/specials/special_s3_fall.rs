@@ -14,7 +14,7 @@ unsafe extern "C" fn ssbexo_miifighter_suplex_fall_acmd(agent: &mut L2CAgentBase
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialairs3fall", ssbexo_miifighter_suplex_fall_acmd, Low)
+    .acmd("game_specialairs3fall", ssbexo_miifighter_suplex_fall_acmd, Low)
     .install()
     ;
 }

@@ -2,11 +2,13 @@ use super::*;
 
 //Forward Smash ACMD
 unsafe extern "C" fn ssbexo_wiifit_forward_smash_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 7.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 7.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("arml"), 15.5, 361, 106, 0, 26, 4.3, 4.0, 0.0, 1.3, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("armr"), 15.5, 361, 106, 0, 26, 4.3, 4.0, 0.0, -1.3, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -14,33 +16,34 @@ unsafe extern "C" fn ssbexo_wiifit_forward_smash_acmd(agent: &mut L2CAgentBase) 
         ATTACK(agent, 3, 0, Hash40::new("armr"), 14.0, 361, 106, 0, 26, 3.1, 0.0, 0.0, -1.3, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 4, 0, Hash40::new("footl"), 12.0, 340, 40, 0, 40, 3.1, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
     }
-    wait(agent.lua_state_agent, 1.0);
+    wait(lua_state, 1.0);
     if is_excute(agent) {
-        AttackModule::clear(agent.module_accessor, 4, false);
+        AttackModule::clear(boma, 4, false);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(lua_state, 20.0);
     FT_MOTION_RATE(agent, 0.88);
-    frame(agent.lua_state_agent, 62.0);
+    frame(lua_state, 62.0);
 }
 
 //Forward Smash Effect
 unsafe extern "C" fn ssbexo_wiifit_forward_smash_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handl"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(lua_state, 15.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, -10, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_COLOR(agent, 0.5, 0.5, 0.5);
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 11.8, 11, -180, 0, 0, 0.8, true);
         LAST_EFFECT_SET_COLOR(agent, 0.5, 0.5, 0.5);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         EFFECT_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 12, 10.0, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true, 0.8);
         EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), -10.0, 14.0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 360, false);
@@ -50,16 +53,17 @@ unsafe extern "C" fn ssbexo_wiifit_forward_smash_effect(agent: &mut L2CAgentBase
 
 //Up Smash Effect
 unsafe extern "C" fn ssbexo_wiifit_up_smash_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("top"), 0, 20, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 6, 0, -90, 0, 0, 1.3, true);
         LAST_EFFECT_SET_COLOR(agent, 0.5, 0.5, 0.5);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 22, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 360, false);
     }
@@ -67,11 +71,12 @@ unsafe extern "C" fn ssbexo_wiifit_up_smash_effect(agent: &mut L2CAgentBase) {
 
 //Down Smash Effect
 unsafe extern "C" fn ssbexo_wiifit_down_smash_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("handr"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
     }
-    frame(agent.lua_state_agent, 17.0);
+    frame(lua_state, 17.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), -2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 3.0, -10, 0, 0, 0, 1.6, 0, 0, 0, 0, 0, 0, true);
@@ -79,7 +84,7 @@ unsafe extern "C" fn ssbexo_wiifit_down_smash_effect(agent: &mut L2CAgentBase) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), 0, 3.0, 11, -180, 0, 0, 1.25, true);
         LAST_EFFECT_SET_COLOR(agent, 0.5, 0.5, 0.5);
     }
-    frame(agent.lua_state_agent, 18.0);
+    frame(lua_state, 18.0);
     if is_excute(agent) {
         EFFECT_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 2.0, 14.0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, true, 0.8);
         EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), -8.0, 4.5, 0.0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 360, false);
@@ -90,10 +95,10 @@ unsafe extern "C" fn ssbexo_wiifit_down_smash_effect(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("wiifit")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_wiifit_forward_smash_acmd, Low)
-    .effect_acmd("effect_attacks4", ssbexo_wiifit_forward_smash_effect, Low)
-    .effect_acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect, Low)
-    .effect_acmd("effect_attacklw4", ssbexo_wiifit_down_smash_effect, Low)
+    .acmd("game_attacks4", ssbexo_wiifit_forward_smash_acmd, Low)
+    .acmd("effect_attacks4", ssbexo_wiifit_forward_smash_effect, Low)
+    .acmd("effect_attackhi4", ssbexo_wiifit_up_smash_effect, Low)
+    .acmd("effect_attacklw4", ssbexo_wiifit_down_smash_effect, Low)
     .install()
     ;
 }

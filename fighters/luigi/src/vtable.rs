@@ -69,12 +69,16 @@ unsafe extern "C" fn luigi_link_event(vtable: u64, fighter: &mut Fighter, event:
 unsafe extern "C" fn luigi_on_search(_vtable: u64, fighter: &mut Fighter, log: u64) {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = *(log as *const u64).add(0x10/0x8);
-    let collision_log = collision_log as *const CollisionLog;
-    let opponent_battle_object_id = (*collision_log).opponent_battle_object_id;
+    let collision_log = collision_log as *mut CollisionLogScuffed;
+    let opponent_object_id = (*collision_log).opponent_object_id;
     let status_kind = StatusModule::status_kind(boma);
     if status_kind == *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_PLUNGER {
-        if opponent_battle_object_id >> 0x1C == 0 {
-            WorkModule::on_flag(boma, 0x200000e6 /*FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_CATCH_SEARCH*/);
+        if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+            let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+            let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+            if opponent_battle_object_id >> 0x1C == 0 {
+                WorkModule::on_flag(boma, 0x200000e6 /*FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_CATCH_SEARCH*/);
+            }
         }
     }
 }

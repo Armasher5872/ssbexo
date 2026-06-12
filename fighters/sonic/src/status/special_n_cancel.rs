@@ -1,12 +1,14 @@
 use super::*;
 
 unsafe extern "C" fn sonic_special_n_cancel_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 120, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
+    let boma = fighter.module_accessor;
+    WorkModule::set_int(boma, 120, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
     0.into()
 }
 
 unsafe extern "C" fn sonic_special_n_cancel_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    WorkModule::set_int(fighter.module_accessor, 120, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
+    let boma = fighter.module_accessor;
+    WorkModule::set_int(boma, 120, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_COOLDOWN_TIMER);
     0.into()
 }
 

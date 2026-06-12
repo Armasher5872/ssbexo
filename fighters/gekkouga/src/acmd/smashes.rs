@@ -90,9 +90,9 @@ unsafe extern "C" fn ssbexo_gekkouga_down_smash_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_gekkouga_forward_smash_acmd, Low)
-    .game_acmd("game_attackhi4", ssbexo_gekkouga_up_smash_acmd, Low)
-    .game_acmd("game_attacklw4", ssbexo_gekkouga_down_smash_acmd, Low)
+    .acmd("game_attacks4", ssbexo_gekkouga_forward_smash_acmd, Low)
+    .acmd("game_attackhi4", ssbexo_gekkouga_up_smash_acmd, Low)
+    .acmd("game_attacklw4", ssbexo_gekkouga_down_smash_acmd, Low)
     .install()
     ;
 }

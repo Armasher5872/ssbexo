@@ -89,8 +89,8 @@ unsafe extern "C" fn ssbexo_mariod_aerial_down_special_acmd(agent: &mut L2CAgent
 pub fn install() {
     Agent::new("mariod")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallw", ssbexo_mariod_grounded_down_special_acmd, Low)
-    .game_acmd("game_specialairlw", ssbexo_mariod_aerial_down_special_acmd, Low)
+    .acmd("game_speciallw", ssbexo_mariod_grounded_down_special_acmd, Low)
+    .acmd("game_specialairlw", ssbexo_mariod_aerial_down_special_acmd, Low)
     .install()
     ;
 }

@@ -31,12 +31,12 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_expression(agent: &mut L2CAgen
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .sound_acmd("sound_specialhiglide", ssbexo_link_special_hi_glide_sound, Low)
-    .expression_acmd("expression_specialhiglide", ssbexo_link_special_hi_glide_expression, Low)
-    .sound_acmd("sound_specialhiglidef", ssbexo_link_special_hi_glide_sound, Low)
-    .expression_acmd("expression_specialhiglidef", ssbexo_link_special_hi_glide_expression, Low)
-    .sound_acmd("sound_specialhiglideb", ssbexo_link_special_hi_glide_sound, Low)
-    .expression_acmd("expression_specialhiglideb", ssbexo_link_special_hi_glide_expression, Low)
+    .acmd("sound_specialhiglide", ssbexo_link_special_hi_glide_sound, Low)
+    .acmd("expression_specialhiglide", ssbexo_link_special_hi_glide_expression, Low)
+    .acmd("sound_specialhiglidef", ssbexo_link_special_hi_glide_sound, Low)
+    .acmd("expression_specialhiglidef", ssbexo_link_special_hi_glide_expression, Low)
+    .acmd("sound_specialhiglideb", ssbexo_link_special_hi_glide_sound, Low)
+    .acmd("expression_specialhiglideb", ssbexo_link_special_hi_glide_expression, Low)
     .install()
     ;
 }

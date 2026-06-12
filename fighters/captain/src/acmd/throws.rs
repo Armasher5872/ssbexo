@@ -89,10 +89,10 @@ unsafe extern "C" fn ssbexo_captain_up_throw_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("captain")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_captain_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_captain_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_captain_pivot_grab_acmd, Low)
-    .game_acmd("game_throwhi", ssbexo_captain_up_throw_acmd, Low)
+    .acmd("game_catch", ssbexo_captain_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_captain_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_captain_pivot_grab_acmd, Low)
+    .acmd("game_throwhi", ssbexo_captain_up_throw_acmd, Low)
     .install()
     ;
 }

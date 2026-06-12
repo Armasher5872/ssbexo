@@ -103,14 +103,14 @@ unsafe extern "C" fn ssbexo_krool_down_special_launch_expression(agent: &mut L2C
 pub fn install() {
     Agent::new("krool")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwlaunch", ssbexo_krool_grounded_down_special_launch_acmd, Low)
-    .effect_acmd("effect_speciallwlaunch", ssbexo_krool_down_special_launch_effect, Low)
-    .sound_acmd("sound_speciallwlaunch", ssbexo_krool_down_special_launch_sound, Low)
-    .expression_acmd("expression_speciallwlaunch", ssbexo_krool_down_special_launch_expression, Low)
-    .game_acmd("game_specialairlwlaunch", ssbexo_krool_aerial_down_special_launch_acmd, Low)
-    .effect_acmd("effect_specialairlwlaunch", ssbexo_krool_down_special_launch_effect, Low)
-    .sound_acmd("sound_specialairlwlaunch", ssbexo_krool_down_special_launch_sound, Low)
-    .expression_acmd("expression_specialairlwlaunch", ssbexo_krool_down_special_launch_expression, Low)
+    .acmd("game_speciallwlaunch", ssbexo_krool_grounded_down_special_launch_acmd, Low)
+    .acmd("effect_speciallwlaunch", ssbexo_krool_down_special_launch_effect, Low)
+    .acmd("sound_speciallwlaunch", ssbexo_krool_down_special_launch_sound, Low)
+    .acmd("expression_speciallwlaunch", ssbexo_krool_down_special_launch_expression, Low)
+    .acmd("game_specialairlwlaunch", ssbexo_krool_aerial_down_special_launch_acmd, Low)
+    .acmd("effect_specialairlwlaunch", ssbexo_krool_down_special_launch_effect, Low)
+    .acmd("sound_specialairlwlaunch", ssbexo_krool_down_special_launch_sound, Low)
+    .acmd("expression_specialairlwlaunch", ssbexo_krool_down_special_launch_expression, Low)
     .install()
     ;
 }

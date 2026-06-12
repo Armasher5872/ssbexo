@@ -43,10 +43,10 @@ unsafe extern "C" fn ssbexo_miifighter_rising_tiger_knee_land_expression(agent: 
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_acmd, Low)
-    .effect_acmd("effect_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_effect, Low)
-    .sound_acmd("sound_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_sound, Low)
-    .expression_acmd("expression_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_expression, Low)
+    .acmd("game_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_acmd, Low)
+    .acmd("effect_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_effect, Low)
+    .acmd("sound_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_sound, Low)
+    .acmd("expression_specialn3land", ssbexo_miifighter_rising_tiger_knee_land_expression, Low)
     .install()
     ;
 }

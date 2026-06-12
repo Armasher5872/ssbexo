@@ -41,15 +41,6 @@ pub unsafe extern "C" fn inkling_handle_tank_fill(boma: *mut BattleObjectModuleA
 #[skyline::from_offset(0x159fb20)]
 pub unsafe extern "C" fn set_stage_visibility(module_accessor: *mut smash::app::BattleObjectModuleAccessor, param_2: u32);
 
-//Creates items
-#[skyline::hook(offset = 0x15db0b0)]
-pub unsafe extern "C" fn create_item(item_manager: *mut smash::app::ItemManager, create_item_param: *mut CreateItemParam, unk: bool, unk2: bool, unk3: bool) -> *mut BattleObject {
-    if (*create_item_param).variation_kind > 7 {
-        (*create_item_param).variation_kind = 0;
-    }
-    original!()(item_manager, create_item_param, unk, unk2, unk3)
-}
-
 //The common on hit function for weapons
 #[skyline::from_offset(0x33bd9c0)]
 pub unsafe extern "C" fn normal_weapon_hit_handler(vtable: u64, weapon: *mut smash::app::Weapon, collision_bitmask: u32) -> u64;

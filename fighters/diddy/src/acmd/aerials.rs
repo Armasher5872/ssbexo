@@ -104,10 +104,10 @@ unsafe extern "C" fn ssbexo_diddy_dair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("diddy")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairf", ssbexo_diddy_fair_acmd, Low)
-    .effect_acmd("effect_attackairf", ssbexo_diddy_fair_effect, Low)
-    .game_acmd("game_attackairb", ssbexo_diddy_bair_acmd, Low)
-    .game_acmd("game_attackairlw", ssbexo_diddy_dair_acmd, Low)
+    .acmd("game_attackairf", ssbexo_diddy_fair_acmd, Low)
+    .acmd("effect_attackairf", ssbexo_diddy_fair_effect, Low)
+    .acmd("game_attackairb", ssbexo_diddy_bair_acmd, Low)
+    .acmd("game_attackairlw", ssbexo_diddy_dair_acmd, Low)
     .install()
     ;
 }

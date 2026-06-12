@@ -27,9 +27,9 @@ unsafe extern "C" fn ssbexo_metaknight_beam_shoot_sound(agent: &mut L2CAgentBase
 pub fn install() {
     Agent::new("metaknight_beam")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_shoot", ssbexo_metaknight_beam_shoot_acmd, Low)
-    .effect_acmd("effect_shoot", ssbexo_metaknight_beam_shoot_effect, Low)
-    .sound_acmd("sound_shoot", ssbexo_metaknight_beam_shoot_sound, Low)
+    .acmd("game_shoot", ssbexo_metaknight_beam_shoot_acmd, Low)
+    .acmd("effect_shoot", ssbexo_metaknight_beam_shoot_effect, Low)
+    .acmd("sound_shoot", ssbexo_metaknight_beam_shoot_sound, Low)
     .install()
     ;
 }

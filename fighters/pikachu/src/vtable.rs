@@ -34,16 +34,20 @@ unsafe extern "C" fn pikachu_on_attack(vtable: u64, fighter: &mut Fighter, log: 
     let collision_log = log as *mut CollisionLogScuffed;
     let collision_kind = (*collision_log).collision_kind;
     let opponent_object_id = (*collision_log).opponent_object_id;
-    let opponent_object = get_battle_object_from_id(opponent_object_id);
-    let opponent_battle_object_id = (*opponent_object).battle_object_id;
-    if [1, 2].contains(&collision_kind) {
-        if opponent_battle_object_id >> 0x1C == 0 {
-            if status_kind == *FIGHTER_STATUS_KIND_ATTACK {
-                WorkModule::inc_int(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_INT_ATTACK_11_COUNT);
+    if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+        let opponent_object = get_battle_object_from_id(opponent_object_id);
+        let opponent_battle_object_id = (*opponent_object).battle_object_id;
+        if [1, 2].contains(&collision_kind) {
+            if opponent_battle_object_id >> 0x1C == 0 {
+                if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+                    if LAST_ATTACK_HITBOX_ID == 1 {
+                        WorkModule::on_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_WEAK);
+                    }
+                }
             }
         }
     }
-    call_original!(vtable, fighter, log)
+    original!()(vtable, fighter, log)
 }
 
 pub fn install() {

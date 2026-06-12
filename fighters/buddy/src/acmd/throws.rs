@@ -125,11 +125,11 @@ unsafe extern "C" fn ssbexo_buddy_up_throw_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("buddy")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_buddy_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_buddy_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_buddy_pivot_grab_acmd, Low)
-    .game_acmd("game_throwf", ssbexo_buddy_forward_throw_acmd, Low)
-    .game_acmd("game_throwhi", ssbexo_buddy_up_throw_acmd, Low)
+    .acmd("game_catch", ssbexo_buddy_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_buddy_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_buddy_pivot_grab_acmd, Low)
+    .acmd("game_throwf", ssbexo_buddy_forward_throw_acmd, Low)
+    .acmd("game_throwhi", ssbexo_buddy_up_throw_acmd, Low)
     .install()
     ;
 }

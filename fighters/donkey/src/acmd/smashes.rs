@@ -138,11 +138,11 @@ unsafe extern "C" fn ssbexo_donkey_down_smash_expression(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .effect_acmd("effect_attackhi4", ssbexo_donkey_up_smash_effect, Low)
-    .game_acmd("game_attacklw4", ssbexo_donkey_down_smash_acmd, Low)
-    .effect_acmd("effect_attacklw4", ssbexo_donkey_down_smash_effect, Low)
-    .sound_acmd("sound_attacklw4", ssbexo_donkey_down_smash_sound, Low)
-    .expression_acmd("expression_attacklw4", ssbexo_donkey_down_smash_expression, Low)
+    .acmd("effect_attackhi4", ssbexo_donkey_up_smash_effect, Low)
+    .acmd("game_attacklw4", ssbexo_donkey_down_smash_acmd, Low)
+    .acmd("effect_attacklw4", ssbexo_donkey_down_smash_effect, Low)
+    .acmd("sound_attacklw4", ssbexo_donkey_down_smash_sound, Low)
+    .acmd("expression_attacklw4", ssbexo_donkey_down_smash_expression, Low)
     .install()
     ;
 }

@@ -35,9 +35,9 @@ unsafe extern "C" fn ssbexo_koopa_firebreath_move_sound(agent: &mut L2CAgentBase
 pub fn install() {
     Agent::new("koopa_breath")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_move", ssbexo_koopa_firebreath_move_acmd, Low)
-    .effect_acmd("effect_move", ssbexo_koopa_firebreath_move_effect, Low)
-    .sound_acmd("sound_move", ssbexo_koopa_firebreath_move_sound, Low)
+    .acmd("game_move", ssbexo_koopa_firebreath_move_acmd, Low)
+    .acmd("effect_move", ssbexo_koopa_firebreath_move_effect, Low)
+    .acmd("sound_move", ssbexo_koopa_firebreath_move_sound, Low)
     .install()
     ;
 }

@@ -141,14 +141,14 @@ unsafe extern "C" fn ssbexo_mario_neutral_special_attack_expression(agent: &mut 
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialnattack", ssbexo_mario_grounded_neutral_special_attack_acmd, Low)
-    .game_acmd("game_specialairnattack", ssbexo_mario_aerial_neutral_special_attack_acmd, Low)
-    .effect_acmd("effect_specialnattack", ssbexo_mario_grounded_neutral_special_attack_effect, Low)
-    .effect_acmd("effect_specialairnattack", ssbexo_mario_aerial_neutral_special_attack_effect, Low)
-    .sound_acmd("sound_specialnattack", ssbexo_mario_neutral_special_attack_sound, Low)
-    .sound_acmd("sound_specialairnattack", ssbexo_mario_neutral_special_attack_sound, Low)
-    .expression_acmd("expression_specialnattack", ssbexo_mario_neutral_special_attack_expression, Low)
-    .expression_acmd("expression_specialairnattack", ssbexo_mario_neutral_special_attack_expression, Low)
+    .acmd("game_specialnattack", ssbexo_mario_grounded_neutral_special_attack_acmd, Low)
+    .acmd("game_specialairnattack", ssbexo_mario_aerial_neutral_special_attack_acmd, Low)
+    .acmd("effect_specialnattack", ssbexo_mario_grounded_neutral_special_attack_effect, Low)
+    .acmd("effect_specialairnattack", ssbexo_mario_aerial_neutral_special_attack_effect, Low)
+    .acmd("sound_specialnattack", ssbexo_mario_neutral_special_attack_sound, Low)
+    .acmd("sound_specialairnattack", ssbexo_mario_neutral_special_attack_sound, Low)
+    .acmd("expression_specialnattack", ssbexo_mario_neutral_special_attack_expression, Low)
+    .acmd("expression_specialairnattack", ssbexo_mario_neutral_special_attack_expression, Low)
     .install()
     ;
 }

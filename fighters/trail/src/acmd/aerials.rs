@@ -2,37 +2,40 @@ use super::*;
 
 //Nair ACMD
 unsafe extern "C" fn ssbexo_trail_nair_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 3.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 3.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("waist"), 11.0, 361, 70, 0, 53, 3.2, 0.0, -0.8, 0.0, Some(0.0), Some(-0.8), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("haver"), 11.0, 361, 70, 0, 53, 3.8, 0.4, 0.0, 0.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
         ATTACK(agent, 2, 0, Hash40::new("haver"), 11.0, 361, 70, 0, 53, 3.8, 0.4, 3.2, 0.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
         ATTACK(agent, 3, 0, Hash40::new("haver"), 11.0, 361, 70, 0, 53, 3.8, 0.4, 6.4, 0.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 44.0);
+    frame(lua_state, 44.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
 //Nair Effect
 unsafe extern "C" fn ssbexo_trail_nair_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 4.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 10, 0, 0, 0, 0, 0.65, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.25);
         EFFECT_FOLLOW(agent, Hash40::new("trail_keyblade_flare"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_trail_keyblade1"), Hash40::new("tex_trail_keyblade2"), 7, Hash40::new("haver"), 0, 2, 0, Hash40::new("haver"), 0, 13.8, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("trail_keyblade_flare"), false, true);
         AFTER_IMAGE_OFF(agent, 3);
@@ -41,15 +44,16 @@ unsafe extern "C" fn ssbexo_trail_nair_effect(agent: &mut L2CAgentBase) {
 
 //Nair Sound
 unsafe extern "C" fn ssbexo_trail_nair_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 1.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_trail_attackair_l01"));
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         PLAY_SEQUENCE(agent, Hash40::new("seq_trail_rnd_attack03"));
     }
-    frame(agent.lua_state_agent, 13.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_trail_attackair_l03"));
     }
@@ -57,21 +61,24 @@ unsafe extern "C" fn ssbexo_trail_nair_sound(agent: &mut L2CAgentBase) {
 
 //Nair Expression
 unsafe extern "C" fn ssbexo_trail_nair_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_81_attackm1_1"), 0);
     }
-    frame(agent.lua_state_agent, 15.0);
+    frame(lua_state, 15.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 //Nair Landing Effect
 unsafe extern "C" fn ssbexo_trail_nair_landing_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
     }
-    if sv_animcmd::get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+    if sv_animcmd::get_value_float(lua_state, *SO_VAR_FLOAT_LR) < 0.0 {
         if is_excute(agent) {
             EFFECT(agent, Hash40::new("trail_air_lw_impact"), Hash40::new("top"), 0, 0, 0, 0, 180, 0, 1, 0, 0, 0, 0, 0, 0, false);
         }
@@ -85,11 +92,12 @@ unsafe extern "C" fn ssbexo_trail_nair_landing_effect(agent: &mut L2CAgentBase) 
 
 //Nair Landing Sound
 unsafe extern "C" fn ssbexo_trail_nair_landing_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 1.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 1.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_trail_attackair_l05"));
     }
-    frame(agent.lua_state_agent, 2.0);
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_trail_landing02"));
     }
@@ -97,52 +105,56 @@ unsafe extern "C" fn ssbexo_trail_nair_landing_sound(agent: &mut L2CAgentBase) {
 
 //Nair Landing Expression
 unsafe extern "C" fn ssbexo_trail_nair_landing_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_81_landingairlw"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_81_landingairlw"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         QUAKE(agent, *CAMERA_QUAKE_KIND_S);
     }
-    frame(agent.lua_state_agent, 25.0);
-    if ItemModule::is_have_item(agent.module_accessor, 0) {
+    frame(lua_state, 25.0);
+    if ItemModule::is_have_item(boma, 0) {
         if is_excute(agent) {
             agent.clear_lua_stack();
             lua_args!(agent, true, 0);
-            sv_animcmd::FT_MOTION_INTP_WAIT_ITEM(agent.lua_state_agent);
+            sv_animcmd::FT_MOTION_INTP_WAIT_ITEM(lua_state);
         }
     }
-    frame(agent.lua_state_agent, 27.0);
+    frame(lua_state, 27.0);
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, true, 0.08);
-        sv_animcmd::FT_MOTION_INTP_WAIT_ITEM(agent.lua_state_agent);
+        sv_animcmd::FT_MOTION_INTP_WAIT_ITEM(lua_state);
     }
-    frame(agent.lua_state_agent, 32.0);
+    frame(lua_state, 32.0);
     if is_excute(agent) {
         agent.clear_lua_stack();
         lua_args!(agent, true, 0.03);
-        sv_animcmd::FT_MOTION_INTP_WAIT_ITEM(agent.lua_state_agent);
+        sv_animcmd::FT_MOTION_INTP_WAIT_ITEM(lua_state);
     }
 }
 
 //Bair ACMD
 unsafe extern "C" fn ssbexo_trail_bair_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(agent.lua_state_agent, 13.0);
+    frame(lua_state, 13.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("top"), 13.2, 361, 92, 0, 26, 5.4, 0.0, 5.4, -7.2, Some(0.0), Some(5.4), Some(-13.8), 1.15, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 37.0);
+    frame(lua_state, 37.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(agent.lua_state_agent, 50.0);
+    frame(lua_state, 50.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
@@ -150,12 +162,13 @@ unsafe extern "C" fn ssbexo_trail_bair_acmd(agent: &mut L2CAgentBase) {
 
 //Bair Effect
 unsafe extern "C" fn ssbexo_trail_bair_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 12.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("trail_keyblade_flare"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
     }
-    frame(agent.lua_state_agent, 13.0);
-    if sv_animcmd::get_value_float(agent.lua_state_agent, *SO_VAR_FLOAT_LR) < 0.0 {
+    frame(lua_state, 13.0);
+    if sv_animcmd::get_value_float(lua_state, *SO_VAR_FLOAT_LR) < 0.0 {
         if is_excute(agent) {
             EFFECT_FOLLOW(agent, Hash40::new("trail_atk_slash_air_b"), Hash40::new("top"), 0.8, -1, 0.7, 0, 0, 5, 1.04, true);
         }
@@ -165,7 +178,7 @@ unsafe extern "C" fn ssbexo_trail_bair_effect(agent: &mut L2CAgentBase) {
             EFFECT_FOLLOW(agent, Hash40::new("trail_atk_slash_air_b"), Hash40::new("top"), 0, -0.2, -0.1, 0, 0, 0, 1, true);
         }
     }
-    frame(agent.lua_state_agent, 16.0);
+    frame(lua_state, 16.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("trail_keyblade_flare"), false, true);
     }
@@ -173,11 +186,13 @@ unsafe extern "C" fn ssbexo_trail_bair_effect(agent: &mut L2CAgentBase) {
 
 //Uair ACMD
 unsafe extern "C" fn ssbexo_trail_uair_acmd(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(agent.lua_state_agent, 10.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("haver"), 12.2, 80, 44, 0, 44, 3.8, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("haver"), 12.2, 80, 44, 0, 44, 3.8, 0.0, 4.1, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE, *ATTACK_REGION_SWORD);
@@ -185,27 +200,27 @@ unsafe extern "C" fn ssbexo_trail_uair_acmd(agent: &mut L2CAgentBase) {
         ATTACK(agent, 3, 0, Hash40::new("haver"), 12.2, 80, 44, 0, 44, 3.8, 0.0, 8.2, -7.1, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE, *ATTACK_REGION_SWORD);
         ATTACK(agent, 4, 0, Hash40::new("top"), 12.2, 80, 44, 0, 44, 4.6, 0.0, 6.4, 8.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE, *ATTACK_REGION_SWORD);
     }
-    wait(agent.lua_state_agent, 2.0);
+    wait(lua_state, 2.0);
     if is_excute(agent) {
-        AttackModule::clear(agent.module_accessor, 4, false);
+        AttackModule::clear(boma, 4, false);
     }
-    wait(agent.lua_state_agent, 2.0);
+    wait(lua_state, 2.0);
     if is_excute(agent) {
         attack!(agent, *MA_MSC_CMD_ATTACK_NODE, 3, Hash40::new("haver"), 0, 7.2, -7.1);
     }
-    wait(agent.lua_state_agent, 3.0);
+    wait(lua_state, 3.0);
     if is_excute(agent) {
         attack!(agent, *MA_MSC_CMD_ATTACK_NODE, 3, Hash40::new("haver"), 1.8, 7.2, -7.1);
     }
-    wait(agent.lua_state_agent, 2.0);
+    wait(lua_state, 2.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 32.0);
+    frame(lua_state, 32.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(agent.lua_state_agent, 50.0);
+    frame(lua_state, 50.0);
     if is_excute(agent) {
         notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
     }
@@ -213,46 +228,49 @@ unsafe extern "C" fn ssbexo_trail_uair_acmd(agent: &mut L2CAgentBase) {
 
 //Dair ACMD
 unsafe extern "C" fn ssbexo_trail_dair_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         ATTACK(agent, 0, 0, Hash40::new("haver"), 10.0, 361, 85, 0, 45, 3.8, 0.4, 0.0, 0.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("haver"), 10.0, 361, 85, 0, 45, 3.8, 0.4, 3.2, 0.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
         ATTACK(agent, 2, 0, Hash40::new("haver"), 10.0, 361, 85, 0, 45, 3.8, 0.4, 6.4, 0.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
     }
-    frame(agent.lua_state_agent, 14.0);
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         ATTACK(agent, 2, 0, Hash40::new("haver"), 12.0, 270, 85, 0, 20, 3.8, 0.4, 6.4, 0.8, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
     }
-    frame(agent.lua_state_agent, 17.0);
+    frame(lua_state, 17.0);
     if is_excute(agent) {
         ATTACK(agent, 2, 0, Hash40::new("haver"), 10.0, 361, 85, 0, 45, 3.8, 0.4, 6.4, 0.8, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TRAIL_CLEAVE_SINGLE, *ATTACK_REGION_SWORD);
     }
-    frame(agent.lua_state_agent, 19.0);
+    frame(lua_state, 19.0);
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
-    frame(agent.lua_state_agent, 52.0);
+    frame(lua_state, 52.0);
     if is_excute(agent) {
-        WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
     }
 }
 
 //Dair Effect
 unsafe extern "C" fn ssbexo_trail_dair_effect(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_smash_flash"), Hash40::new("haver"), 0, 10, 0, 0, 0, 0, 0.65, 0, 0, 0, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.25);
     }
-    frame(agent.lua_state_agent, 11.0);
+    frame(lua_state, 11.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("trail_keyblade_flare"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, true);
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_trail_keyblade1"), Hash40::new("tex_trail_keyblade2"), 7, Hash40::new("haver"), 0, 2, 0, Hash40::new("haver"), 0, 13.8, 0, true, Hash40::new("null"), Hash40::new("haver"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.2);
     }
-    frame(agent.lua_state_agent, 20.0);
+    frame(lua_state, 20.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("trail_keyblade_flare"), false, true);
         AFTER_IMAGE_OFF(agent, 3);
@@ -261,11 +279,12 @@ unsafe extern "C" fn ssbexo_trail_dair_effect(agent: &mut L2CAgentBase) {
 
 //Dair Sound
 unsafe extern "C" fn ssbexo_trail_dair_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 8.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 8.0);
     if is_excute(agent) {
         PLAY_SEQUENCE(agent, Hash40::new("seq_trail_rnd_attack03"));
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_trail_attackair_n03"));
     }
@@ -273,11 +292,13 @@ unsafe extern "C" fn ssbexo_trail_dair_sound(agent: &mut L2CAgentBase) {
 
 //Dair Expression
 unsafe extern "C" fn ssbexo_trail_dair_expression(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 10.0);
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 10.0);
     if is_excute(agent) {
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_nohitm"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohitm"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
-    frame(agent.lua_state_agent, 12.0);
+    frame(lua_state, 12.0);
     if is_excute(agent) {
         RUMBLE_HIT(agent, Hash40::new("rbkind_81_attackl"), 0);
     }
@@ -285,8 +306,9 @@ unsafe extern "C" fn ssbexo_trail_dair_expression(agent: &mut L2CAgentBase) {
 
 //Dair Landing ACMD
 unsafe extern "C" fn ssbexo_trail_dair_landing_acmd(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
@@ -299,7 +321,8 @@ unsafe extern "C" fn ssbexo_trail_dair_landing_effect(agent: &mut L2CAgentBase) 
 
 //Dair Landing Sound
 unsafe extern "C" fn ssbexo_trail_dair_landing_sound(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 2.0);
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
     if is_excute(agent) {
         PLAY_LANDING_SE(agent, Hash40::new("se_trail_landing02"));
     }
@@ -307,33 +330,34 @@ unsafe extern "C" fn ssbexo_trail_dair_landing_sound(agent: &mut L2CAgentBase) {
 
 //Dair Landing Expression
 unsafe extern "C" fn ssbexo_trail_dair_landing_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_81_landingairlw"), 0, false, 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_81_landingairlw"), 0, false, 0);
     }
 }
 
 pub fn install() {
     Agent::new("trail")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairn", ssbexo_trail_nair_acmd, Low)
-    .effect_acmd("effect_attackairn", ssbexo_trail_nair_effect, Low)
-    .sound_acmd("sound_attackairn", ssbexo_trail_nair_sound, Low)
-    .expression_acmd("expression_attackairn", ssbexo_trail_nair_expression, Low)
-    .effect_acmd("effect_landingairn", ssbexo_trail_nair_landing_effect, Low)
-    .sound_acmd("sound_landingairn", ssbexo_trail_nair_landing_sound, Low)
-    .expression_acmd("expression_landingairn", ssbexo_trail_nair_landing_expression, Low)
-    .game_acmd("game_attackairb", ssbexo_trail_bair_acmd, Low)
-    .effect_acmd("effect_attackairb", ssbexo_trail_bair_effect, Low)
-    .game_acmd("game_attackairhi", ssbexo_trail_uair_acmd, Low)
-    .game_acmd("game_attackairlw", ssbexo_trail_dair_acmd, Low)
-    .effect_acmd("effect_attackairlw", ssbexo_trail_dair_effect, Low)
-    .sound_acmd("sound_attackairlw", ssbexo_trail_dair_sound, Low)
-    .expression_acmd("expression_attackairlw", ssbexo_trail_dair_expression, Low)
-    .game_acmd("game_landingairlw", ssbexo_trail_dair_landing_acmd, Low)
-    .effect_acmd("effect_landingairlw", ssbexo_trail_dair_landing_effect, Low)
-    .sound_acmd("sound_landingairlw", ssbexo_trail_dair_landing_sound, Low)
-    .expression_acmd("expression_landingairlw", ssbexo_trail_dair_landing_expression, Low)
+    .acmd("game_attackairn", ssbexo_trail_nair_acmd, Low)
+    .acmd("effect_attackairn", ssbexo_trail_nair_effect, Low)
+    .acmd("sound_attackairn", ssbexo_trail_nair_sound, Low)
+    .acmd("expression_attackairn", ssbexo_trail_nair_expression, Low)
+    .acmd("effect_landingairn", ssbexo_trail_nair_landing_effect, Low)
+    .acmd("sound_landingairn", ssbexo_trail_nair_landing_sound, Low)
+    .acmd("expression_landingairn", ssbexo_trail_nair_landing_expression, Low)
+    .acmd("game_attackairb", ssbexo_trail_bair_acmd, Low)
+    .acmd("effect_attackairb", ssbexo_trail_bair_effect, Low)
+    .acmd("game_attackairhi", ssbexo_trail_uair_acmd, Low)
+    .acmd("game_attackairlw", ssbexo_trail_dair_acmd, Low)
+    .acmd("effect_attackairlw", ssbexo_trail_dair_effect, Low)
+    .acmd("sound_attackairlw", ssbexo_trail_dair_sound, Low)
+    .acmd("expression_attackairlw", ssbexo_trail_dair_expression, Low)
+    .acmd("game_landingairlw", ssbexo_trail_dair_landing_acmd, Low)
+    .acmd("effect_landingairlw", ssbexo_trail_dair_landing_effect, Low)
+    .acmd("sound_landingairlw", ssbexo_trail_dair_landing_sound, Low)
+    .acmd("expression_landingairlw", ssbexo_trail_dair_landing_expression, Low)
     .install()
     ;
 }

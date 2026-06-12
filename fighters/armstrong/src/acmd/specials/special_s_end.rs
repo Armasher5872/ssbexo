@@ -75,14 +75,14 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_side_special_end_expression(agent: 
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialsend", ssbexo_armstrong_grounded_side_special_end_acmd, Low)
-    .effect_acmd("effect_specialsend", ssbexo_armstrong_grounded_side_special_end_effect, Low)
-    .sound_acmd("sound_specialsend", ssbexo_armstrong_grounded_side_special_end_sound, Low)
-    .expression_acmd("expression_specialsend", ssbexo_armstrong_grounded_side_special_end_expression, Low)
-    .game_acmd("game_specialairsend", ssbexo_armstrong_aerial_side_special_end_acmd, Low)
-    .effect_acmd("effect_specialairsend", ssbexo_armstrong_aerial_side_special_end_effect, Low)
-    .sound_acmd("sound_specialairsend", ssbexo_armstrong_aerial_side_special_end_sound, Low)
-    .expression_acmd("expression_specialairsend", ssbexo_armstrong_aerial_side_special_end_expression, Low)
+    .acmd("game_specialsend", ssbexo_armstrong_grounded_side_special_end_acmd, Low)
+    .acmd("effect_specialsend", ssbexo_armstrong_grounded_side_special_end_effect, Low)
+    .acmd("sound_specialsend", ssbexo_armstrong_grounded_side_special_end_sound, Low)
+    .acmd("expression_specialsend", ssbexo_armstrong_grounded_side_special_end_expression, Low)
+    .acmd("game_specialairsend", ssbexo_armstrong_aerial_side_special_end_acmd, Low)
+    .acmd("effect_specialairsend", ssbexo_armstrong_aerial_side_special_end_effect, Low)
+    .acmd("sound_specialairsend", ssbexo_armstrong_aerial_side_special_end_sound, Low)
+    .acmd("expression_specialairsend", ssbexo_armstrong_aerial_side_special_end_expression, Low)
     .install()
     ;
 }

@@ -56,14 +56,14 @@ unsafe extern "C" fn ssbexo_armstrong_neutral_special_charge_expression(agent: &
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialncharge", ssbexo_armstrong_neutral_special_charge_acmd, Low)
-    .effect_acmd("effect_specialncharge", ssbexo_armstrong_neutral_special_charge_effect, Low)
-    .sound_acmd("sound_specialncharge", ssbexo_armstrong_neutral_special_charge_sound, Low)
-    .expression_acmd("expression_specialncharge", ssbexo_armstrong_neutral_special_charge_expression, Low)
-    .game_acmd("game_specialairncharge", ssbexo_armstrong_neutral_special_charge_acmd, Low)
-    .effect_acmd("effect_specialairncharge", ssbexo_armstrong_neutral_special_charge_effect, Low)
-    .sound_acmd("sound_specialairncharge", ssbexo_armstrong_neutral_special_charge_sound, Low)
-    .expression_acmd("expression_specialairncharge", ssbexo_armstrong_neutral_special_charge_expression, Low)
+    .acmd("game_specialncharge", ssbexo_armstrong_neutral_special_charge_acmd, Low)
+    .acmd("effect_specialncharge", ssbexo_armstrong_neutral_special_charge_effect, Low)
+    .acmd("sound_specialncharge", ssbexo_armstrong_neutral_special_charge_sound, Low)
+    .acmd("expression_specialncharge", ssbexo_armstrong_neutral_special_charge_expression, Low)
+    .acmd("game_specialairncharge", ssbexo_armstrong_neutral_special_charge_acmd, Low)
+    .acmd("effect_specialairncharge", ssbexo_armstrong_neutral_special_charge_effect, Low)
+    .acmd("sound_specialairncharge", ssbexo_armstrong_neutral_special_charge_sound, Low)
+    .acmd("expression_specialairncharge", ssbexo_armstrong_neutral_special_charge_expression, Low)
     .install()
     ;
 }

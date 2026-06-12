@@ -11,7 +11,7 @@ unsafe extern "C" fn ssbexo_link_parasail_glide_drop_effect(agent: &mut L2CAgent
 pub fn install() {
     Agent::new("link_parasail")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .effect_acmd("effect_glidedrop", ssbexo_link_parasail_glide_drop_effect, Low)
+    .acmd("effect_glidedrop", ssbexo_link_parasail_glide_drop_effect, Low)
     .install()
     ;
 }

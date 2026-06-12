@@ -59,10 +59,10 @@ unsafe extern "C" fn ssbexo_captain_neutral_special_charged_expression(agent: &m
 pub fn install() {
     Agent::new("captain")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialncharged", ssbexo_captain_neutral_special_charged_acmd, Low)
-    .effect_acmd("effect_specialncharged", ssbexo_captain_neutral_special_charged_effect, Low)
-    .sound_acmd("sound_specialncharged", ssbexo_captain_neutral_special_charged_sound, Low)
-    .expression_acmd("expression_specialncharged", ssbexo_captain_neutral_special_charged_expression, Low)
+    .acmd("game_specialncharged", ssbexo_captain_neutral_special_charged_acmd, Low)
+    .acmd("effect_specialncharged", ssbexo_captain_neutral_special_charged_effect, Low)
+    .acmd("sound_specialncharged", ssbexo_captain_neutral_special_charged_sound, Low)
+    .acmd("expression_specialncharged", ssbexo_captain_neutral_special_charged_expression, Low)
     .install()
     ;
 }

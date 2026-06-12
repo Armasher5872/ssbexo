@@ -53,10 +53,10 @@ unsafe extern "C" fn ssbexo_captain_aerial_down_special_bounce_expression(agent:
 pub fn install() {
     Agent::new("captain")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_acmd, Low)
-    .effect_acmd("effect_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_effect, Low)
-    .sound_acmd("sound_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_sound, Low)
-    .expression_acmd("expression_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_expression, Low)
+    .acmd("game_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_acmd, Low)
+    .acmd("effect_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_effect, Low)
+    .acmd("sound_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_sound, Low)
+    .acmd("expression_specialairlwbounce", ssbexo_captain_aerial_down_special_bounce_expression, Low)
     .install()
     ;
 }

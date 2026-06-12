@@ -157,14 +157,14 @@ unsafe extern "C" fn ssbexo_luigi_aerial_down_special_throw_hi_expression(agent:
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_acmd, Low)
-    .game_acmd("game_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_acmd, Low)
-    .effect_acmd("effect_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_effect, Low)
-    .effect_acmd("effect_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_effect, Low)
-    .sound_acmd("sound_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_sound, Low)
-    .sound_acmd("sound_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_sound, Low)
-    .expression_acmd("expression_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_expression, Low)
-    .expression_acmd("expression_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_expression, Low)
+    .acmd("game_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_acmd, Low)
+    .acmd("game_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_acmd, Low)
+    .acmd("effect_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_effect, Low)
+    .acmd("effect_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_effect, Low)
+    .acmd("sound_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_sound, Low)
+    .acmd("sound_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_sound, Low)
+    .acmd("expression_speciallwthrowhi", ssbexo_luigi_grounded_down_special_throw_hi_expression, Low)
+    .acmd("expression_specialairlwthrowhi", ssbexo_luigi_aerial_down_special_throw_hi_expression, Low)
     .install()
     ;
 }

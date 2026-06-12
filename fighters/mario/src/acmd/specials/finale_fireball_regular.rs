@@ -60,7 +60,7 @@ unsafe extern "C" fn ssbexo_mario_finale_fireball_regular_acmd(agent: &mut L2CAg
 pub fn install() {
     Agent::new("mario_hugeflame")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_regular", ssbexo_mario_finale_fireball_regular_acmd, Low)
+    .acmd("game_regular", ssbexo_mario_finale_fireball_regular_acmd, Low)
     .install()
     ;
 }

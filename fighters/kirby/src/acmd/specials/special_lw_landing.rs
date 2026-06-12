@@ -20,7 +20,7 @@ unsafe extern "C" fn ssbexo_kirby_down_special_landing_acmd(agent: &mut L2CAgent
 pub fn install() {
     Agent::new("kirby")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwtoground", ssbexo_kirby_down_special_landing_acmd, Low)
+    .acmd("game_speciallwtoground", ssbexo_kirby_down_special_landing_acmd, Low)
     .install()
     ;
 }

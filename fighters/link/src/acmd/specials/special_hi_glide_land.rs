@@ -38,9 +38,9 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_land_expression(agent: &mut L2
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhiglideland", ssbexo_link_special_hi_glide_land_acmd, Low)
-    .sound_acmd("sound_specialhiglideland", ssbexo_link_special_hi_glide_land_sound, Low)
-    .expression_acmd("expression_specialhiglideland", ssbexo_link_special_hi_glide_land_expression, Low)
+    .acmd("game_specialhiglideland", ssbexo_link_special_hi_glide_land_acmd, Low)
+    .acmd("sound_specialhiglideland", ssbexo_link_special_hi_glide_land_sound, Low)
+    .acmd("expression_specialhiglideland", ssbexo_link_special_hi_glide_land_expression, Low)
     .install()
     ;
 }

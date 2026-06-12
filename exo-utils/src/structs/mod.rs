@@ -46,12 +46,10 @@ use {
     }
 };
 
-pub mod attackinfo_struct;
 pub mod buttons;
 pub mod collision_struct;
 pub mod command_input_struct;
 pub mod controller_struct;
-pub mod create_item_param;
 pub mod energy_motion_reset_type;
 pub mod flydata;
 pub mod getter_funcs;

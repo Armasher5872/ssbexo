@@ -140,13 +140,13 @@ unsafe extern "C" fn ssbexo_donkey_zair_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairn", ssbexo_donkey_nair_acmd, Low)
-    .game_acmd("game_attackairhi", ssbexo_donkey_uair_acmd, Low)
-    .game_acmd("game_attackairlw", ssbexo_donkey_dair_acmd, Low)
-    .game_acmd("game_aircatch", ssbexo_donkey_zair_acmd, Low)
-    .effect_acmd("effect_aircatch", ssbexo_donkey_zair_effect, Low)
-    .sound_acmd("sound_aircatch", ssbexo_donkey_zair_sound, Low)
-    .expression_acmd("expression_aircatch", ssbexo_donkey_zair_expression, Low)
+    .acmd("game_attackairn", ssbexo_donkey_nair_acmd, Low)
+    .acmd("game_attackairhi", ssbexo_donkey_uair_acmd, Low)
+    .acmd("game_attackairlw", ssbexo_donkey_dair_acmd, Low)
+    .acmd("game_aircatch", ssbexo_donkey_zair_acmd, Low)
+    .acmd("effect_aircatch", ssbexo_donkey_zair_effect, Low)
+    .acmd("sound_aircatch", ssbexo_donkey_zair_sound, Low)
+    .acmd("expression_aircatch", ssbexo_donkey_zair_expression, Low)
     .install()
     ;
 }

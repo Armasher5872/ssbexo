@@ -554,12 +554,12 @@ unsafe extern "C" fn ssbexo_eflame_neutral_special_3_common_acmd(agent: &mut L2C
 pub fn install() {
     Agent::new("eflame")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn1", ssbexo_eflame_neutral_special_1_acmd, Low)
-    .game_acmd("game_specialn1common", ssbexo_eflame_neutral_special_1_common_acmd, Low)
-    .game_acmd("game_specialn2", ssbexo_eflame_neutral_special_2_acmd, Low)
-    .game_acmd("game_specialn2common", ssbexo_eflame_neutral_special_2_common_acmd, Low)
-    .game_acmd("game_specialn3", ssbexo_eflame_neutral_special_3_acmd, Low)
-    .game_acmd("game_specialn3common", ssbexo_eflame_neutral_special_3_common_acmd, Low)
+    .acmd("game_specialn1", ssbexo_eflame_neutral_special_1_acmd, Low)
+    .acmd("game_specialn1common", ssbexo_eflame_neutral_special_1_common_acmd, Low)
+    .acmd("game_specialn2", ssbexo_eflame_neutral_special_2_acmd, Low)
+    .acmd("game_specialn2common", ssbexo_eflame_neutral_special_2_common_acmd, Low)
+    .acmd("game_specialn3", ssbexo_eflame_neutral_special_3_acmd, Low)
+    .acmd("game_specialn3common", ssbexo_eflame_neutral_special_3_common_acmd, Low)
     .install()
     ;
 }

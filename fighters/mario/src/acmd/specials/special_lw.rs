@@ -118,14 +118,14 @@ unsafe extern "C" fn ssbexo_mario_down_special_expression(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallw", ssbexo_mario_down_special_acmd, Low)
-    .game_acmd("game_specialairlw", ssbexo_mario_down_special_acmd, Low)
-    .effect_acmd("effect_speciallw", ssbexo_mario_down_special_effect, Low)
-    .effect_acmd("effect_specialairlw", ssbexo_mario_down_special_effect, Low)
-    .sound_acmd("sound_speciallw", ssbexo_mario_down_special_sound, Low)
-    .sound_acmd("sound_specialairlw", ssbexo_mario_down_special_sound, Low)
-    .expression_acmd("expression_speciallw", ssbexo_mario_down_special_expression, Low)
-    .expression_acmd("expression_specialairlw", ssbexo_mario_down_special_expression, Low)
+    .acmd("game_speciallw", ssbexo_mario_down_special_acmd, Low)
+    .acmd("game_specialairlw", ssbexo_mario_down_special_acmd, Low)
+    .acmd("effect_speciallw", ssbexo_mario_down_special_effect, Low)
+    .acmd("effect_specialairlw", ssbexo_mario_down_special_effect, Low)
+    .acmd("sound_speciallw", ssbexo_mario_down_special_sound, Low)
+    .acmd("sound_specialairlw", ssbexo_mario_down_special_sound, Low)
+    .acmd("expression_speciallw", ssbexo_mario_down_special_expression, Low)
+    .acmd("expression_specialairlw", ssbexo_mario_down_special_expression, Low)
     .install()
     ;
 }

@@ -2,8 +2,9 @@ use super::*;
 
 //Side Special Slide ACMD
 unsafe extern "C" fn ssbexo_wario_side_special_slide_acmd(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
+        AttackModule::clear_all(boma);
     }
 }
 
@@ -17,26 +18,28 @@ unsafe extern "C" fn ssbexo_wario_side_special_slide_effect(agent: &mut L2CAgent
 
 //Side Special Slide Sound
 unsafe extern "C" fn ssbexo_wario_side_special_slide_sound(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        SoundModule::play_se(agent.module_accessor, Hash40::new("se_wario_special_s05"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::play_se(boma, Hash40::new("se_wario_special_s05"), true, false, false, false, smash::app::enSEType(0));
     }
 }
 
 //Side Special Slide Expression
 unsafe extern "C" fn ssbexo_wario_side_special_slide_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 9);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 pub fn install() {
     Agent::new("wario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialsslide", ssbexo_wario_side_special_slide_acmd, Low)
-    .effect_acmd("effect_specialsslide", ssbexo_wario_side_special_slide_effect, Low)
-    .sound_acmd("sound_specialsslide", ssbexo_wario_side_special_slide_sound, Low)
-    .expression_acmd("expression_specialsslide", ssbexo_wario_side_special_slide_expression, Low)
+    .acmd("game_specialsslide", ssbexo_wario_side_special_slide_acmd, Low)
+    .acmd("effect_specialsslide", ssbexo_wario_side_special_slide_effect, Low)
+    .acmd("sound_specialsslide", ssbexo_wario_side_special_slide_sound, Low)
+    .acmd("expression_specialsslide", ssbexo_wario_side_special_slide_expression, Low)
     .install()
     ;
 }

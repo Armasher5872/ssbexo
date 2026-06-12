@@ -71,9 +71,9 @@ unsafe extern "C" fn ssbexo_elight_pivot_grab_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("elight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_elight_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_elight_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_elight_pivot_grab_acmd, Low)
+    .acmd("game_catch", ssbexo_elight_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_elight_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_elight_pivot_grab_acmd, Low)
     .install()
     ;
 }

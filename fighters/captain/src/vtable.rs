@@ -35,6 +35,7 @@ unsafe extern "C" fn captain_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
             WorkModule::set_int(boma, fist as i32, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_INT_SPECIAL_N_EFFECT_HANDLE);
         }
     }
+    captain_training_mode_features(boma);
     original!()(vtable, fighter)
 }
 

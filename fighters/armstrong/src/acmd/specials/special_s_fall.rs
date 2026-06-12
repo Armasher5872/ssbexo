@@ -20,10 +20,10 @@ unsafe extern "C" fn ssbexo_armstrong_side_special_fall_expression(_agent: &mut 
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialairsfall", ssbexo_armstrong_side_special_fall_acmd, Low)
-    .effect_acmd("effect_specialairsfall", ssbexo_armstrong_side_special_fall_effect, Low)
-    .sound_acmd("sound_specialairsfall", ssbexo_armstrong_side_special_fall_sound, Low)
-    .expression_acmd("expression_specialairsfall", ssbexo_armstrong_side_special_fall_expression, Low)
+    .acmd("game_specialairsfall", ssbexo_armstrong_side_special_fall_acmd, Low)
+    .acmd("effect_specialairsfall", ssbexo_armstrong_side_special_fall_effect, Low)
+    .acmd("sound_specialairsfall", ssbexo_armstrong_side_special_fall_sound, Low)
+    .acmd("expression_specialairsfall", ssbexo_armstrong_side_special_fall_expression, Low)
     .install()
     ;
 }

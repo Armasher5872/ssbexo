@@ -161,14 +161,14 @@ unsafe extern "C" fn ssbexo_kirby_dair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("kirby")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairf", ssbexo_kirby_fair_acmd, Low)
-    .effect_acmd("effect_attackairf", ssbexo_kirby_fair_effect, Low)
-    .sound_acmd("sound_attackairf", ssbexo_kirby_fair_sound, Low)
-    .expression_acmd("expression_attackairf", ssbexo_kirby_fair_expression, Low)
-    .game_acmd("game_attackairb", ssbexo_kirby_bair_acmd, Low)
-    .game_acmd("game_attackairhi", ssbexo_kirby_uair_acmd, Low)
-    .effect_acmd("effect_attackairhi", ssbexo_kirby_uair_effect, Low)
-    .game_acmd("game_attackairlw", ssbexo_kirby_dair_acmd, Low)
+    .acmd("game_attackairf", ssbexo_kirby_fair_acmd, Low)
+    .acmd("effect_attackairf", ssbexo_kirby_fair_effect, Low)
+    .acmd("sound_attackairf", ssbexo_kirby_fair_sound, Low)
+    .acmd("expression_attackairf", ssbexo_kirby_fair_expression, Low)
+    .acmd("game_attackairb", ssbexo_kirby_bair_acmd, Low)
+    .acmd("game_attackairhi", ssbexo_kirby_uair_acmd, Low)
+    .acmd("effect_attackairhi", ssbexo_kirby_uair_effect, Low)
+    .acmd("game_attackairlw", ssbexo_kirby_dair_acmd, Low)
     .install()
     ;
 }

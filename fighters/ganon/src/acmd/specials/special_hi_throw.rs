@@ -87,10 +87,10 @@ unsafe extern "C" fn ssbexo_ganon_up_special_throw_expression(agent: &mut L2CAge
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhithrow", ssbexo_ganon_up_special_throw_acmd, Low)
-    .effect_acmd("effect_specialhithrow", ssbexo_ganon_up_special_throw_effect, Low)
-    .sound_acmd("sound_specialhithrow", ssbexo_ganon_up_special_throw_sound, Low)
-    .expression_acmd("expression_specialhithrow", ssbexo_ganon_up_special_throw_expression, Low)
+    .acmd("game_specialhithrow", ssbexo_ganon_up_special_throw_acmd, Low)
+    .acmd("effect_specialhithrow", ssbexo_ganon_up_special_throw_effect, Low)
+    .acmd("sound_specialhithrow", ssbexo_ganon_up_special_throw_sound, Low)
+    .acmd("expression_specialhithrow", ssbexo_ganon_up_special_throw_expression, Low)
     .install()
     ;
 }

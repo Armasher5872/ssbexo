@@ -30,10 +30,10 @@ unsafe extern "C" fn ssbexo_kirby_up_special_4_expression(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("kirby")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhi4", ssbexo_kirby_up_special_4_acmd, Low)
-    .effect_acmd("effect_specialhi4", ssbexo_kirby_up_special_4_effect, Low)
-    .sound_acmd("sound_specialhi4", ssbexo_kirby_up_special_4_sound, Low)
-    .expression_acmd("expression_specialhi4", ssbexo_kirby_up_special_4_expression, Low)
+    .acmd("game_specialhi4", ssbexo_kirby_up_special_4_acmd, Low)
+    .acmd("effect_specialhi4", ssbexo_kirby_up_special_4_effect, Low)
+    .acmd("sound_specialhi4", ssbexo_kirby_up_special_4_sound, Low)
+    .acmd("expression_specialhi4", ssbexo_kirby_up_special_4_expression, Low)
     .install()
     ;
 }

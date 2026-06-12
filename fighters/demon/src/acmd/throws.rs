@@ -10,7 +10,8 @@ unsafe extern "C" fn ssbexo_demon_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        //CATCH(agent, 0, Hash40::new("top"), 3.4, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.5), *FIGHTER_STATUS_KIND_THROWN, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 1, Hash40::new("top"), 3.3, 0.0, 6.6, 4.0, Some(0.0), Some(6.6), Some(10.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -55,7 +56,8 @@ unsafe extern "C" fn ssbexo_demon_dash_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.6, 0.0, 6.6, 5.0, Some(0.0), Some(6.6), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        //CATCH(agent, 0, Hash40::new("top"), 3.7, 0.0, 6.6, 5.0, Some(0.0), Some(6.6), Some(11.5), *FIGHTER_STATUS_KIND_THROWN, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 1, Hash40::new("top"), 3.6, 0.0, 6.6, 5.0, Some(0.0), Some(6.6), Some(11.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -76,7 +78,8 @@ unsafe extern "C" fn ssbexo_demon_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
-        CATCH(agent, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -5.0, Some(0.0), Some(6.6), Some(-13.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
+        //CATCH(agent, 0, Hash40::new("top"), 3.4, 0.0, 6.6, -5.0, Some(0.0), Some(6.6), Some(-13.5), *FIGHTER_STATUS_KIND_THROWN, *COLLISION_SITUATION_MASK_GA);
+        CATCH(agent, 1, Hash40::new("top"), 3.3, 0.0, 6.6, -5.0, Some(0.0), Some(6.6), Some(-13.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_GA);
     }
     game_CaptureCutCommon(agent);
     wait(lua_state, 2.0);
@@ -87,130 +90,93 @@ unsafe extern "C" fn ssbexo_demon_pivot_grab_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
-//Up Throw Laser ACMD
-unsafe extern "C" fn ssbexo_demon_laser_up_throw_acmd(agent: &mut L2CAgentBase) {
+//Skull Smash ACMD
+unsafe extern "C" fn ssbexo_demon_skull_smash_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
-    let scale = PostureModule::scale(boma);
-    if scale > 1.4 {
-        if is_excute(agent) {
-            ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 55, 62, 0, 85, 6.0, 0.0, 0.0, 1.0, None, None, None, 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-            ATTACK(agent, 1, 0, Hash40::new("top"), 11.0, 55, 62, 0, 85, 6.0, 0.0, 0.0, 5.0, None, None, None, 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-            ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 1.1);
-            ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 1.1);
-        }
-    }
-    else {
-        if scale < 0.5 {
-            if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 55, 62, 0, 85, 8.0, 0.0, 0.0, 1.0, None, None, None, 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-                ATTACK(agent, 1, 0, Hash40::new("top"), 11.0, 55, 62, 0, 85, 8.0, 0.0, 0.0, 5.0, None, None, None, 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-                ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 1.1);
-                ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 1.1);
-            }
-        }
-        else {
-            if is_excute(agent) {
-                ATTACK(agent, 0, 0, Hash40::new("top"), 11.0, 55, 62, 0, 85, 6.0, 0.0, 0.0, 1.0, None, None, None, 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-                ATTACK(agent, 1, 0, Hash40::new("top"), 11.0, 55, 62, 0, 85, 6.0, 0.0, 0.0, 5.0, None, None, None, 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-                ATK_SET_SHIELD_SETOFF_MUL(agent, 0, 1.1);
-                ATK_SET_SHIELD_SETOFF_MUL(agent, 1, 1.1);
-            }
-        }
-    }
-    frame(lua_state, 1.0);
     if is_excute(agent) {
-        AttackModule::clear(boma, 1, false);
-    }
-}
-
-//Gates of Hell Throw ACMD
-unsafe extern "C" fn ssbexo_demon_gates_of_hell_throw_acmd(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.module_accessor;
-    let scale = PostureModule::scale(boma);
-    if !smash2::app::FighterCutInManager::is_vr_mode() {
-        if smash2::app::FighterCutInManager::is_one_on_one_including_thrown(&*(boma as *const smash2::app::BattleObjectModuleAccessor)) {
-            if is_excute(agent) {
-                FighterSpecializer_Demon::check_disabled_motion_camera_of_scale(boma);
-                FighterSpecializer_Demon::check_disabled_motion_camera_of_stage(boma);
-            }
-            if WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_THROW_MOTION_CAMERA) {
-                if is_excute(agent) {
-                    CHECK_VALID_START_CAMERA(agent, 0, 0, 0, 0, 0, 0, false);
-                }
-                if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DISABLE_THROW_MOTION_CAMERA) {
-                    if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_FINAL_START_CAMERA) {
-                        if is_excute(agent) {
-                            REQ_MOTION_CAMERA(agent, Hash40::new("e01throwcommand.nuanmb"), false);
-                        }
-                    }
-                }
-                if is_excute(agent) {
-                    CAM_ZOOM_IN_arg5(agent, 7.0, 0.0, scale*1.5, 0.0, 0.0);
-                } 
-            }
-        }
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        REVERSE_LR(agent);
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 1.0, 165, 150, 0, 65, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 3.0, 270, 40, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 32.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 9.0, 60, 80, 0, 50, 5.0, 0.0, 8.0, -3.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_THROWCOMMAND, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 80, 100, 0, 30, 8.0, 0.0, 8.0, 8.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
         AttackModule::set_catch_only_all(boma, true, false);
+    }
+    frame(lua_state, 33.0);
+    if is_excute(agent) {
+        CHECK_FINISH_CAMERA(agent, 11.0, 0.0);
     }
     frame(lua_state, 34.0);
     if is_excute(agent) {
-        AttackModule::clear_all(boma);
+        WorkModule::on_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_THROW);
     }
-    frame(lua_state, 80.0);
+}
+
+//Skull Smash Effect
+unsafe extern "C" fn ssbexo_demon_skull_smash_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 15.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 19, 50, 0, 45, 6.0, 0.0, 7.5, -14.0, Some(0.0), Some(6.0), Some(-14.0), 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_THROWCOMMAND, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 10.0, 19, 50, 0, 45, 4.0, 0.0, 8.0, -6.0, None, None, None, 0.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_THROWCOMMAND, *ATTACK_REGION_KICK);
-        AttackModule::set_catch_only_all(boma, true, false);
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("demon_s_fujinken_elec"), Hash40::new("waist"), 2, 0, 0, 0, 0, 0, 1, true);
     }
-    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_STATUS_THROW_COMMAND_FLAG_USE_OTHER_PARAM) {
-        if is_excute(agent) {
-            CHECK_FINISH_CAMERA(agent, 18, 2);
-        }
-    }
-    else {
-        if is_excute(agent) {
-            CHECK_FINISH_CAMERA(agent, 18, 15);
-        }
-    }
+    frame(lua_state, 31.0);
     if is_excute(agent) {
-        smash::app::lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.3);
-        smash::app::lua_bind::FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 9.0, y: 2.0, z: 0.0});
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("demon_combo_elec"), Hash40::new("armr"), 0.5, 0, -0.5, 0, 0, 0, 1, true);
     }
-    frame(lua_state, 81.0);
+    frame(lua_state, 33.0);
     if is_excute(agent) {
-        let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
-        let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
-        let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
-        AttackModule::clear_all(boma);
-        ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
-        CAM_ZOOM_OUT(agent);
+        EFFECT_ALPHA(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 0, 8, 8, 0, 0, 0, 0.35, 0, 0, 0, 0, 0, 360, true, 0.2);
+        FOOT_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 35.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("demon_s_fujinken_elec"), false, false);
+    }
+    frame(lua_state, 38.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("demon_combo_elec"), false, false);
+    }
+}
+
+//Skull Smash Sound
+unsafe extern "C" fn ssbexo_demon_skull_smash_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 30.0);
+    if is_excute(agent) {
+        PLAY_SEQUENCE(agent, Hash40::new("seq_demon_rnd_attack_s_03"));
+        PLAY_SE(agent, Hash40::new("se_demon_attackstep2l_01"));
+    }
+}
+
+//Skull Smash Expression
+unsafe extern "C" fn ssbexo_demon_skull_smash_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        RUMBLE_HIT(agent, Hash40::new("rbkind_80_attack_special_t"), 0);
+    }
+    frame(lua_state, 33.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_80_nohitll"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 pub fn install() {
     Agent::new("demon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_demon_grab_acmd, Low)
-    .game_acmd("game_catchcommand", ssbexo_demon_gates_of_hell_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_demon_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_demon_pivot_grab_acmd, Low)
-    .game_acmd("game_throwcommand", ssbexo_demon_gates_of_hell_throw_acmd, Low)
-    .install()
-    ;
-    Agent::new("demon_blaster")
-    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_flythrow", ssbexo_demon_laser_up_throw_acmd, Low)
+    .acmd("game_catch", ssbexo_demon_grab_acmd, Low)
+    .acmd("game_catchcommand", ssbexo_demon_gates_of_hell_acmd, Low)
+    .acmd("game_catchdash", ssbexo_demon_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_demon_pivot_grab_acmd, Low)
+    .acmd("game_throwsmash", ssbexo_demon_skull_smash_acmd, Low)
+    .acmd("effect_throwsmash", ssbexo_demon_skull_smash_effect, Low)
+    .acmd("sound_throwsmash", ssbexo_demon_skull_smash_sound, Low)
+    .acmd("expression_throwsmash", ssbexo_demon_skull_smash_expression, Low)
     .install()
     ;
 }

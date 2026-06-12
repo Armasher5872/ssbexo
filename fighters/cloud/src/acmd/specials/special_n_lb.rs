@@ -32,8 +32,8 @@ unsafe extern "C" fn ssbexo_cloud_limit_break_blade_beam_acmd(agent: &mut L2CAge
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn_lb", ssbexo_cloud_limit_break_blade_beam_acmd, Low)
-    .game_acmd("game_specialairn_lb", ssbexo_cloud_limit_break_blade_beam_acmd, Low)
+    .acmd("game_specialn_lb", ssbexo_cloud_limit_break_blade_beam_acmd, Low)
+    .acmd("game_specialairn_lb", ssbexo_cloud_limit_break_blade_beam_acmd, Low)
     .install()
     ;
 }

@@ -12,7 +12,7 @@ unsafe extern "C" fn ssbexo_donkey_barrel_break_sound(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("donkey_barrel")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .sound_acmd("sound_break", ssbexo_donkey_barrel_break_sound, Low)
+    .acmd("sound_break", ssbexo_donkey_barrel_break_sound, Low)
     .install()
     ;
 }

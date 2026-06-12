@@ -56,7 +56,7 @@ unsafe extern "C" fn ssbexo_edge_dair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("edge")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairlw", ssbexo_edge_dair_acmd, Low)
+    .acmd("game_attackairlw", ssbexo_edge_dair_acmd, Low)
     .install()
     ;
 }

@@ -93,9 +93,9 @@ unsafe extern "C" fn ssbexo_metaknight_up_special_sound(agent: &mut L2CAgentBase
 pub fn install() {
     Agent::new("metaknight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhi", ssbexo_metaknight_up_special_acmd, Low)
-    .effect_acmd("effect_specialhi", ssbexo_metaknight_up_special_effect, Low)
-    .sound_acmd("sound_specialhi", ssbexo_metaknight_up_special_sound, Low)
+    .acmd("game_specialhi", ssbexo_metaknight_up_special_acmd, Low)
+    .acmd("effect_specialhi", ssbexo_metaknight_up_special_effect, Low)
+    .acmd("sound_specialhi", ssbexo_metaknight_up_special_sound, Low)
     .install()
     ;
 }

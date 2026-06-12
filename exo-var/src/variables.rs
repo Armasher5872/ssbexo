@@ -6,4 +6,3 @@ pub static mut LAST_ATTACK_HITBOX_LOCATION_X: f32 = 0.0;
 pub static mut LAST_ATTACK_HITBOX_LOCATION_Y: f32 = 0.0;
 pub static mut LAST_ATTACK_HITBOX_LOCATION_Z: f32 = 0.0;
 pub static mut SHOULD_END_RESULT_SCREEN: bool = false;
-pub static MATCH_EXITING: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);

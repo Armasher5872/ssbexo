@@ -194,14 +194,14 @@ unsafe extern "C" fn ssbexo_cloud_up_special_1_expression(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhi", ssbexo_cloud_grounded_up_special_1_acmd, Low)
-    .game_acmd("game_specialairhi", ssbexo_cloud_aerial_up_special_1_acmd, Low)
-    .effect_acmd("effect_specialhi", ssbexo_cloud_up_special_1_effect, Low)
-    .effect_acmd("effect_specialairhi", ssbexo_cloud_up_special_1_effect, Low)
-    .sound_acmd("sound_specialhi", ssbexo_cloud_up_special_1_sound, Low)
-    .sound_acmd("sound_specialairhi", ssbexo_cloud_up_special_1_sound, Low)
-    .expression_acmd("expression_specialhi", ssbexo_cloud_up_special_1_expression, Low)
-    .expression_acmd("expression_specialairhi", ssbexo_cloud_up_special_1_expression, Low)
+    .acmd("game_specialhi", ssbexo_cloud_grounded_up_special_1_acmd, Low)
+    .acmd("game_specialairhi", ssbexo_cloud_aerial_up_special_1_acmd, Low)
+    .acmd("effect_specialhi", ssbexo_cloud_up_special_1_effect, Low)
+    .acmd("effect_specialairhi", ssbexo_cloud_up_special_1_effect, Low)
+    .acmd("sound_specialhi", ssbexo_cloud_up_special_1_sound, Low)
+    .acmd("sound_specialairhi", ssbexo_cloud_up_special_1_sound, Low)
+    .acmd("expression_specialhi", ssbexo_cloud_up_special_1_expression, Low)
+    .acmd("expression_specialairhi", ssbexo_cloud_up_special_1_expression, Low)
     .install()
     ;
 }

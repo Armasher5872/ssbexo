@@ -39,10 +39,10 @@ unsafe extern "C" fn ssbexo_mario_side_special_bonk_expression(agent: &mut L2CAg
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialsbonk", ssbexo_mario_side_special_bonk_acmd, Low)
-    .effect_acmd("effect_specialsbonk", ssbexo_mario_side_special_bonk_effect, Low)
-    .sound_acmd("sound_specialsbonk", ssbexo_mario_side_special_bonk_sound, Low)
-    .expression_acmd("expression_specialsbonk", ssbexo_mario_side_special_bonk_expression, Low)
+    .acmd("game_specialsbonk", ssbexo_mario_side_special_bonk_acmd, Low)
+    .acmd("effect_specialsbonk", ssbexo_mario_side_special_bonk_effect, Low)
+    .acmd("sound_specialsbonk", ssbexo_mario_side_special_bonk_sound, Low)
+    .acmd("expression_specialsbonk", ssbexo_mario_side_special_bonk_expression, Low)
     .install()
     ;
 }

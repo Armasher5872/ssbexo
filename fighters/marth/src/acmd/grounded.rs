@@ -140,13 +140,13 @@ unsafe extern "C" fn ssbexo_marth_dash_attack_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("marth")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attack11", ssbexo_marth_jab_1_acmd, Low)
-    .game_acmd("game_attack12", ssbexo_marth_jab_2_acmd, Low)
-    .game_acmd("game_attack13", ssbexo_marth_jab_3_acmd, Low)
-    .effect_acmd("effect_attack13", ssbexo_marth_jab_3_effect, Low)
-    .sound_acmd("sound_attack13", ssbexo_marth_jab_3_sound, Low)
-    .expression_acmd("expression_attack13", ssbexo_marth_jab_3_expression, Low)
-    .game_acmd("game_attackdash", ssbexo_marth_dash_attack_acmd, Low)
+    .acmd("game_attack11", ssbexo_marth_jab_1_acmd, Low)
+    .acmd("game_attack12", ssbexo_marth_jab_2_acmd, Low)
+    .acmd("game_attack13", ssbexo_marth_jab_3_acmd, Low)
+    .acmd("effect_attack13", ssbexo_marth_jab_3_effect, Low)
+    .acmd("sound_attack13", ssbexo_marth_jab_3_sound, Low)
+    .acmd("expression_attack13", ssbexo_marth_jab_3_expression, Low)
+    .acmd("game_attackdash", ssbexo_marth_dash_attack_acmd, Low)
     .install()
     ;
 }

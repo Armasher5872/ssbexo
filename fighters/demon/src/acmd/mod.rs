@@ -1,8 +1,5 @@
 use {
-    exo_var::{
-        consts::*,
-        demon::*,
-    },
+    exo_var::demon::*,
     smash::{
         app::{
             lua_bind::*,
@@ -14,10 +11,7 @@ use {
         },
         lib::lua_const::*,
         lua2cpp::*,
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        phx::*
     },
     smash_script::{
         macros::{
@@ -27,11 +21,12 @@ use {
         *
     },
     smashline::{
-        *,
-        Priority::Low
+        Priority::Low,
+        *
     },
 };
 
+mod aerials;
 mod grounded;
 mod smashes;
 mod specials;
@@ -39,6 +34,7 @@ mod throws;
 mod tilts;
 
 pub fn install() {
+    aerials::install();
     grounded::install();
     smashes::install();
     specials::install();

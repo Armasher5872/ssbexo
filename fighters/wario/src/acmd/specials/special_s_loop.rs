@@ -12,12 +12,13 @@ unsafe extern "C" fn ssbexo_wario_side_special_loop_acmd(agent: &mut L2CAgentBas
 
 //Side Special Loop Effect
 unsafe extern "C" fn ssbexo_wario_side_special_loop_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("wario_attack_dash"), Hash40::new("top"), 0, 4, 16, 0, 0, 0, 1, true);
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 9, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
         LAST_EFFECT_SET_RATE(agent, 0.6);
     }
-    frame(agent.lua_state_agent, 6.0);
+    frame(lua_state, 6.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 9, 0, 0, 0, 0, 0, 1.3, 0, 0, 0, 0, 0, 0, false);
     }
@@ -25,28 +26,30 @@ unsafe extern "C" fn ssbexo_wario_side_special_loop_effect(agent: &mut L2CAgentB
 
 //Side Special Loop Sound
 unsafe extern "C" fn ssbexo_wario_side_special_loop_sound(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
-        let charge_sfx = SoundModule::play_se(agent.module_accessor, Hash40::new("se_wario_special_s04"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(agent.module_accessor, charge_sfx as i32, 1.27, 0);
+        let charge_sfx = SoundModule::play_se(boma, Hash40::new("se_wario_special_s04"), true, false, false, false, smash::app::enSEType(0));
+        SoundModule::set_se_vol(boma, charge_sfx as i32, 1.27, 0);
     }
 }
 
 //Side Special Loop Expression
 unsafe extern "C" fn ssbexo_wario_side_special_loop_expression(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
     if is_excute(agent) {
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 9);
         RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
-        ControlModule::set_rumble(agent.module_accessor, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_dash"), 7, false, *BATTLE_OBJECT_ID_INVALID as u32);
     }
 }
 
 pub fn install() {
     Agent::new("wario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialsloop", ssbexo_wario_side_special_loop_acmd, Low)
-    .effect_acmd("effect_specialsloop", ssbexo_wario_side_special_loop_effect, Low)
-    .sound_acmd("sound_specialsloop", ssbexo_wario_side_special_loop_sound, Low)
-    .expression_acmd("expression_specialsloop", ssbexo_wario_side_special_loop_expression, Low)
+    .acmd("game_specialsloop", ssbexo_wario_side_special_loop_acmd, Low)
+    .acmd("effect_specialsloop", ssbexo_wario_side_special_loop_effect, Low)
+    .acmd("sound_specialsloop", ssbexo_wario_side_special_loop_sound, Low)
+    .acmd("expression_specialsloop", ssbexo_wario_side_special_loop_expression, Low)
     .install()
     ;
 }

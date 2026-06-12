@@ -47,14 +47,14 @@ unsafe extern "C" fn ssbexo_koopajr_down_special_acmd(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("koopajr")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallw", ssbexo_koopajr_down_special_acmd, Low)
-    .game_acmd("game_specialairlw", ssbexo_koopajr_down_special_acmd, Low)
+    .acmd("game_speciallw", ssbexo_koopajr_down_special_acmd, Low)
+    .acmd("game_specialairlw", ssbexo_koopajr_down_special_acmd, Low)
     .install()
     ;
     Agent::new("koopajr_cannonball")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_shoot", ssbexo_koopajr_cannonball_shoot_acmd, Low)
-    .effect_acmd("effect_shoot", ssbexo_koopajr_cannonball_shoot_effect, Low)
+    .acmd("game_shoot", ssbexo_koopajr_cannonball_shoot_acmd, Low)
+    .acmd("effect_shoot", ssbexo_koopajr_cannonball_shoot_effect, Low)
     .install()
     ;
 }

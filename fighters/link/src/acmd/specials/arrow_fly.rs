@@ -111,9 +111,9 @@ unsafe extern "C" fn ssbexo_link_bowarrow_fly_sound(_agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("link_bowarrow")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_fly", ssbexo_link_bowarrow_fly_acmd, Low)
-    .effect_acmd("effect_fly", ssbexo_link_bowarrow_fly_effect, Low)
-    .sound_acmd("sound_fly", ssbexo_link_bowarrow_fly_sound, Low)
+    .acmd("game_fly", ssbexo_link_bowarrow_fly_acmd, Low)
+    .acmd("effect_fly", ssbexo_link_bowarrow_fly_effect, Low)
+    .acmd("sound_fly", ssbexo_link_bowarrow_fly_sound, Low)
     .install()
     ;
 }

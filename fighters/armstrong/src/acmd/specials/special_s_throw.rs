@@ -52,10 +52,10 @@ unsafe extern "C" fn ssbexo_armstrong_side_special_throw_expression(agent: &mut 
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_specialairs", ssbexo_armstrong_side_special_throw_acmd, Low)
-    .effect_acmd("effect_specialairs", ssbexo_armstrong_side_special_throw_effect, Low)
-    .sound_acmd("sound_specialairs", ssbexo_armstrong_side_special_throw_sound, Low)
-    .expression_acmd("expression_specialairs", ssbexo_armstrong_side_special_throw_expression, Low)
+    .acmd("game_specialairs", ssbexo_armstrong_side_special_throw_acmd, Low)
+    .acmd("effect_specialairs", ssbexo_armstrong_side_special_throw_effect, Low)
+    .acmd("sound_specialairs", ssbexo_armstrong_side_special_throw_sound, Low)
+    .acmd("expression_specialairs", ssbexo_armstrong_side_special_throw_expression, Low)
     .install()
     ;
 }

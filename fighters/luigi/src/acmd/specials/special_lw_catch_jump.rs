@@ -39,10 +39,10 @@ unsafe extern "C" fn ssbexo_luigi_down_special_catch_jump_expression(agent: &mut
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_acmd, Low)
-    .effect_acmd("effect_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_effect, Low)
-    .sound_acmd("sound_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_sound, Low)
-    .expression_acmd("expression_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_expression, Low)
+    .acmd("game_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_acmd, Low)
+    .acmd("effect_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_effect, Low)
+    .acmd("sound_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_sound, Low)
+    .acmd("expression_speciallwcatchjump", ssbexo_luigi_down_special_catch_jump_expression, Low)
     .install()
     ;
 }

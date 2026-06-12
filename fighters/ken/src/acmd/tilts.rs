@@ -120,12 +120,12 @@ unsafe extern "C" fn ssbexo_ken_heavy_forward_tilt_expression(agent: &mut L2CAge
 pub fn install() {
     Agent::new("ken")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacknearw", ssbexo_ken_light_close_forward_tilt_acmd, Low)
-    .game_acmd("game_attacks3w", ssbexo_ken_light_far_forward_tilt_acmd, Low)
-    .game_acmd("game_attacks3s", ssbexo_ken_heavy_forward_tilt_acmd, Low)
-    .effect_acmd("effect_attacks3s", ssbexo_ken_heavy_forward_tilt_effect, Low)
-    .sound_acmd("sound_attacks3s", ssbexo_ken_heavy_forward_tilt_sound, Low)
-    .expression_acmd("expression_attacks3s", ssbexo_ken_heavy_forward_tilt_expression, Low)
+    .acmd("game_attacknearw", ssbexo_ken_light_close_forward_tilt_acmd, Low)
+    .acmd("game_attacks3w", ssbexo_ken_light_far_forward_tilt_acmd, Low)
+    .acmd("game_attacks3s", ssbexo_ken_heavy_forward_tilt_acmd, Low)
+    .acmd("effect_attacks3s", ssbexo_ken_heavy_forward_tilt_effect, Low)
+    .acmd("sound_attacks3s", ssbexo_ken_heavy_forward_tilt_sound, Low)
+    .acmd("expression_attacks3s", ssbexo_ken_heavy_forward_tilt_expression, Low)
     .install()
     ;
 }

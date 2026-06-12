@@ -77,14 +77,14 @@ unsafe extern "C" fn ssbexo_metaknight_down_special_end_expression(agent: &mut L
 pub fn install() {
     Agent::new("metaknight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwend", ssbexo_metaknight_down_special_end_acmd, Low)
-    .game_acmd("game_specialairlwend", ssbexo_metaknight_down_special_end_acmd, Low)
-    .effect_acmd("effect_speciallwend", ssbexo_metaknight_down_special_end_effect, Low)
-    .effect_acmd("effect_specialairlwend", ssbexo_metaknight_down_special_end_effect, Low)
-    .sound_acmd("sound_speciallwend", ssbexo_metaknight_down_special_end_sound, Low)
-    .sound_acmd("sound_specialairlwend", ssbexo_metaknight_down_special_end_sound, Low)
-    .expression_acmd("expression_speciallwend", ssbexo_metaknight_down_special_end_expression, Low)
-    .expression_acmd("expression_specialairlwend", ssbexo_metaknight_down_special_end_expression, Low)
+    .acmd("game_speciallwend", ssbexo_metaknight_down_special_end_acmd, Low)
+    .acmd("game_specialairlwend", ssbexo_metaknight_down_special_end_acmd, Low)
+    .acmd("effect_speciallwend", ssbexo_metaknight_down_special_end_effect, Low)
+    .acmd("effect_specialairlwend", ssbexo_metaknight_down_special_end_effect, Low)
+    .acmd("sound_speciallwend", ssbexo_metaknight_down_special_end_sound, Low)
+    .acmd("sound_specialairlwend", ssbexo_metaknight_down_special_end_sound, Low)
+    .acmd("expression_speciallwend", ssbexo_metaknight_down_special_end_expression, Low)
+    .acmd("expression_specialairlwend", ssbexo_metaknight_down_special_end_expression, Low)
     .install()
     ;
 }

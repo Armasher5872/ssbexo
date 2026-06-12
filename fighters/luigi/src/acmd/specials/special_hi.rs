@@ -70,8 +70,8 @@ unsafe extern "C" fn ssbexo_luigi_aerial_up_special_acmd(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhi", ssbexo_luigi_grounded_up_special_acmd, Low)
-    .game_acmd("game_specialairhi", ssbexo_luigi_aerial_up_special_acmd, Low)
+    .acmd("game_specialhi", ssbexo_luigi_grounded_up_special_acmd, Low)
+    .acmd("game_specialairhi", ssbexo_luigi_aerial_up_special_acmd, Low)
     .install()
     ;
 }

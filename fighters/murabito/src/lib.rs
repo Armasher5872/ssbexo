@@ -1,10 +1,7 @@
 use {
-    exo_utils::{
-        common::{
-            status_end_control::*,
-            var_reset::*,
-        },
-        fighter::murabito_shizue_common::*,
+    exo_utils::common::{
+        status_end_control::*,
+        var_reset::*,
     },
     exo_var::globals::*,
     smash::{

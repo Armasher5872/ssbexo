@@ -200,12 +200,12 @@ unsafe extern "C" fn ssbexo_gamewatch_down_throw_acmd(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("gamewatch")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_catch", ssbexo_gamewatch_grab_acmd, Low)
-    .game_acmd("game_catchdash", ssbexo_gamewatch_dash_grab_acmd, Low)
-    .game_acmd("game_catchturn", ssbexo_gamewatch_pivot_grab_acmd, Low)
-    .game_acmd("game_throwf", ssbexo_gamewatch_forward_throw_acmd, Low)
-    .game_acmd("game_throwb", ssbexo_gamewatch_back_throw_acmd, Low)
-    .game_acmd("game_throwlw", ssbexo_gamewatch_down_throw_acmd, Low)
+    .acmd("game_catch", ssbexo_gamewatch_grab_acmd, Low)
+    .acmd("game_catchdash", ssbexo_gamewatch_dash_grab_acmd, Low)
+    .acmd("game_catchturn", ssbexo_gamewatch_pivot_grab_acmd, Low)
+    .acmd("game_throwf", ssbexo_gamewatch_forward_throw_acmd, Low)
+    .acmd("game_throwb", ssbexo_gamewatch_back_throw_acmd, Low)
+    .acmd("game_throwlw", ssbexo_gamewatch_down_throw_acmd, Low)
     .install()
     ;
 }

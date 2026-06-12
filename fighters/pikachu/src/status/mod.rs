@@ -1,4 +1,8 @@
 use {
+    exo_utils::{
+        common::check_attack::*,
+        structs::getter_funcs::*,
+    },
     exo_var::{
         consts::*,
         globals::*,
@@ -15,23 +19,16 @@ use {
             lua_const::*,
         },
         lua2cpp::*,
-        phx::Hash40
+        phx::*
     },
     smashline::*,
+    smash_script::macros::*
 };
 
-mod attack;
-mod special_s_attack;
-mod special_s_end;
-mod special_s_hold;
-mod special_s_weak;
+mod special_hi;
 mod special_s;
 
 pub fn install() {
-    attack::install();
-    special_s_attack::install();
-    special_s_end::install();
-    special_s_hold::install();
-    special_s_weak::install();
+    special_hi::install();
     special_s::install();
 }

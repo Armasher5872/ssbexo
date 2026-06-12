@@ -90,9 +90,9 @@ unsafe extern "C" fn ssbexo_marth_dair_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("marth")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackairn", ssbexo_marth_nair_acmd, Low)
-    .game_acmd("game_attackairhi", ssbexo_marth_uair_acmd, Low)
-    .game_acmd("game_attackairlw", ssbexo_marth_dair_acmd, Low)
+    .acmd("game_attackairn", ssbexo_marth_nair_acmd, Low)
+    .acmd("game_attackairhi", ssbexo_marth_uair_acmd, Low)
+    .acmd("game_attackairlw", ssbexo_marth_dair_acmd, Low)
     .install()
     ;
 }

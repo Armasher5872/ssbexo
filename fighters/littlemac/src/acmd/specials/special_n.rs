@@ -272,10 +272,10 @@ unsafe extern "C" fn ssbexo_littlemac_aerial_star_punch_effect(agent: &mut L2CAg
 pub fn install() {
     Agent::new("littlemac")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn2", ssbexo_littlemac_grounded_star_punch_acmd, Low)
-    .effect_acmd("effect_specialn2", ssbexo_littlemac_grounded_star_punch_effect, Low)
-    .game_acmd("game_specialairn2", ssbexo_littlemac_aerial_star_punch_acmd, Low)
-    .effect_acmd("effect_specialairn2", ssbexo_littlemac_aerial_star_punch_effect, Low)
+    .acmd("game_specialn2", ssbexo_littlemac_grounded_star_punch_acmd, Low)
+    .acmd("effect_specialn2", ssbexo_littlemac_grounded_star_punch_effect, Low)
+    .acmd("game_specialairn2", ssbexo_littlemac_aerial_star_punch_acmd, Low)
+    .acmd("effect_specialairn2", ssbexo_littlemac_aerial_star_punch_effect, Low)
     .install()
     ;
 }

@@ -44,7 +44,7 @@ unsafe extern "C" fn ssbexo_miifighter_suplex_throw_acmd(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialairs3landing", ssbexo_miifighter_suplex_throw_acmd, Low)
+    .acmd("game_specialairs3landing", ssbexo_miifighter_suplex_throw_acmd, Low)
     .install()
     ;
 }

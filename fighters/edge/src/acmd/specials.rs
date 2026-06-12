@@ -76,17 +76,17 @@ unsafe extern "C" fn ssbexo_edge_scintilla_attack_acmd(agent: &mut L2CAgentBase)
 pub fn install() {
     Agent::new("edge_fire")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_bursts", ssbexo_edge_fire_burst_s_acmd, Low)
+    .acmd("game_bursts", ssbexo_edge_fire_burst_s_acmd, Low)
     .install()
     ;
     Agent::new("edge_flare1")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_fly", ssbexo_edge_shadow_flare_fly_acmd, Low)
+    .acmd("game_fly", ssbexo_edge_shadow_flare_fly_acmd, Low)
     .install()
     ;
     Agent::new("edge_flash")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attack", ssbexo_edge_scintilla_attack_acmd, Low)
+    .acmd("game_attack", ssbexo_edge_scintilla_attack_acmd, Low)
     .install()
     ;
 }

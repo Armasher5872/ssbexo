@@ -30,9 +30,9 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_drop_expression(agent: &mut L2
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhiglidedrop", ssbexo_link_special_hi_glide_drop_acmd, Low)
-    .sound_acmd("sound_specialhiglidedrop", ssbexo_link_special_hi_glide_drop_sound, Low)
-    .expression_acmd("expression_specialhiglidedrop", ssbexo_link_special_hi_glide_drop_expression, Low)
+    .acmd("game_specialhiglidedrop", ssbexo_link_special_hi_glide_drop_acmd, Low)
+    .acmd("sound_specialhiglidedrop", ssbexo_link_special_hi_glide_drop_sound, Low)
+    .acmd("expression_specialhiglidedrop", ssbexo_link_special_hi_glide_drop_expression, Low)
     .install()
     ;
 }

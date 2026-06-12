@@ -328,8 +328,8 @@ unsafe extern "C" fn ssbexo_gaogaen_aerial_neutral_special_acmd(agent: &mut L2CA
 pub fn install() {
     Agent::new("gaogaen")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn", ssbexo_gaogaen_grounded_neutral_special_acmd, Low)
-    .game_acmd("game_specialairn", ssbexo_gaogaen_aerial_neutral_special_acmd, Low)
+    .acmd("game_specialn", ssbexo_gaogaen_grounded_neutral_special_acmd, Low)
+    .acmd("game_specialairn", ssbexo_gaogaen_aerial_neutral_special_acmd, Low)
     .install()
     ;
 }

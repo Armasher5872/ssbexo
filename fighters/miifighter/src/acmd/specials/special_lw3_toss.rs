@@ -215,14 +215,14 @@ unsafe extern "C" fn ssbexo_miifighter_aerial_counter_throw_throw_toss_expressio
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_acmd, Low)
-    .game_acmd("game_specialairlw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_acmd, Low)
-    .effect_acmd("effect_speciallw3throwtoss", ssbexo_miifighter_grounded_counter_throw_throw_toss_effect, Low)
-    .effect_acmd("effect_specialairlw3throwtoss", ssbexo_miifighter_aerial_counter_throw_throw_toss_effect, Low)
-    .sound_acmd("sound_speciallw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_sound, Low)
-    .sound_acmd("sound_specialairlw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_sound, Low)
-    .expression_acmd("expression_speciallw3throwtoss", ssbexo_miifighter_grounded_counter_throw_throw_toss_expression, Low)
-    .expression_acmd("expression_specialairlw3throwtoss", ssbexo_miifighter_aerial_counter_throw_throw_toss_expression, Low)
+    .acmd("game_speciallw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_acmd, Low)
+    .acmd("game_specialairlw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_acmd, Low)
+    .acmd("effect_speciallw3throwtoss", ssbexo_miifighter_grounded_counter_throw_throw_toss_effect, Low)
+    .acmd("effect_specialairlw3throwtoss", ssbexo_miifighter_aerial_counter_throw_throw_toss_effect, Low)
+    .acmd("sound_speciallw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_sound, Low)
+    .acmd("sound_specialairlw3throwtoss", ssbexo_miifighter_counter_throw_throw_toss_sound, Low)
+    .acmd("expression_speciallw3throwtoss", ssbexo_miifighter_grounded_counter_throw_throw_toss_expression, Low)
+    .acmd("expression_specialairlw3throwtoss", ssbexo_miifighter_aerial_counter_throw_throw_toss_expression, Low)
     .install()
     ;
 }

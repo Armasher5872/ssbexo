@@ -11,7 +11,7 @@ unsafe extern "C" fn ssbexo_link_parasail_special_hi_glide_start_effect(agent: &
 pub fn install() {
     Agent::new("link_parasail")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .effect_acmd("effect_specialhiglidestart", ssbexo_link_parasail_special_hi_glide_start_effect, Low)
+    .acmd("effect_specialhiglidestart", ssbexo_link_parasail_special_hi_glide_start_effect, Low)
     .install()
     ;
 }

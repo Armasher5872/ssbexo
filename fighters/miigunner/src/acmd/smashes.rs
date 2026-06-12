@@ -58,8 +58,8 @@ unsafe extern "C" fn ssbexo_miigunner_down_smash_acmd(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("miigunner")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_miigunner_forward_smash_acmd, Low)
-    .game_acmd("game_attacklw4", ssbexo_miigunner_down_smash_acmd, Low)
+    .acmd("game_attacks4", ssbexo_miigunner_forward_smash_acmd, Low)
+    .acmd("game_attacklw4", ssbexo_miigunner_down_smash_acmd, Low)
     .install()
     ;
 }

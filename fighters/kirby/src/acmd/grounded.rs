@@ -151,12 +151,12 @@ unsafe extern "C" fn ssbexo_kirby_dash_attack_expression(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("kirby")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attack100", ssbexo_kirby_rapid_jab_acmd, Low)
-    .effect_acmd("effect_attack100end", ssbexo_kirby_rapid_jab_finisher_effect, Low)
-    .game_acmd("game_attackdash", ssbexo_kirby_dash_attack_acmd, Low)
-    .effect_acmd("effect_attackdash", ssbexo_kirby_dash_attack_effect, Low)
-    .sound_acmd("sound_attackdash", ssbexo_kirby_dash_attack_sound, Low)
-    .expression_acmd("expression_attackdash", ssbexo_kirby_dash_attack_expression, Low)
+    .acmd("game_attack100", ssbexo_kirby_rapid_jab_acmd, Low)
+    .acmd("effect_attack100end", ssbexo_kirby_rapid_jab_finisher_effect, Low)
+    .acmd("game_attackdash", ssbexo_kirby_dash_attack_acmd, Low)
+    .acmd("effect_attackdash", ssbexo_kirby_dash_attack_effect, Low)
+    .acmd("sound_attackdash", ssbexo_kirby_dash_attack_sound, Low)
+    .acmd("expression_attackdash", ssbexo_kirby_dash_attack_expression, Low)
     .install()
     ;
 }

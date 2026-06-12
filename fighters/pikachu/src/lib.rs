@@ -12,6 +12,7 @@ use {
     exo_var::{
         consts::*,
         globals::*,
+        variables::*,
         pikachu::*,
     },
     smash::{
@@ -23,7 +24,7 @@ use {
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::L2CFighterCommon,
+        lua2cpp::L2CFighterCommon
     },
     smashline::*,
 };
@@ -38,4 +39,5 @@ pub fn install() {
     opff::install();
     status::install();
     vtable::install();
+    clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "pikachu", "swordcloned", false);
 }

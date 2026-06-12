@@ -11,7 +11,7 @@ unsafe extern "C" fn ssbexo_link_parasail_special_hi_effect(agent: &mut L2CAgent
 pub fn install() {
     Agent::new("link_parasail")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .effect_acmd("effect_specialhi", ssbexo_link_parasail_special_hi_effect, Low)
+    .acmd("effect_specialhi", ssbexo_link_parasail_special_hi_effect, Low)
     .install()
     ;
 }

@@ -136,8 +136,8 @@ unsafe extern "C" fn ssbexo_miifighter_aerial_onslaught_end_acmd(agent: &mut L2C
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specials1end", ssbexo_miifighter_grounded_onslaught_end_acmd, Low)
-    .game_acmd("game_specialairs1end", ssbexo_miifighter_aerial_onslaught_end_acmd, Low)
+    .acmd("game_specials1end", ssbexo_miifighter_grounded_onslaught_end_acmd, Low)
+    .acmd("game_specialairs1end", ssbexo_miifighter_aerial_onslaught_end_acmd, Low)
     .install()
     ;
 }

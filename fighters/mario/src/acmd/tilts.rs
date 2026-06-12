@@ -22,7 +22,7 @@ unsafe extern "C" fn ssbexo_mario_up_tilt_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackhi3", ssbexo_mario_up_tilt_acmd, Low)
+    .acmd("game_attackhi3", ssbexo_mario_up_tilt_acmd, Low)
     .install()
     ;
 }

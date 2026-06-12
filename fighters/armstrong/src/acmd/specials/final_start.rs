@@ -159,14 +159,14 @@ unsafe extern "C" fn ssbexo_armstrong_aerial_final_smash_start_expression(agent:
 pub fn install() {
     Agent::new("ganon")
     .set_costume(get_armstrong_costumes_acmd())
-    .game_acmd("game_finalstart", ssbexo_armstrong_final_smash_start_acmd, Low)
-    .game_acmd("game_finalairstart", ssbexo_armstrong_final_smash_start_acmd, Low)
-    .effect_acmd("effect_finalstart", ssbexo_armstrong_grounded_final_smash_start_effect, Low)
-    .effect_acmd("effect_finalairstart", ssbexo_armstrong_aerial_final_smash_start_effect, Low)
-    .sound_acmd("sound_finalstart", ssbexo_armstrong_final_smash_start_sound, Low)
-    .sound_acmd("sound_finalairstart", ssbexo_armstrong_final_smash_start_sound, Low)
-    .expression_acmd("expression_finalstart", ssbexo_armstrong_grounded_final_smash_start_expression, Low)
-    .expression_acmd("expression_finalairstart", ssbexo_armstrong_aerial_final_smash_start_expression, Low)
+    .acmd("game_finalstart", ssbexo_armstrong_final_smash_start_acmd, Low)
+    .acmd("game_finalairstart", ssbexo_armstrong_final_smash_start_acmd, Low)
+    .acmd("effect_finalstart", ssbexo_armstrong_grounded_final_smash_start_effect, Low)
+    .acmd("effect_finalairstart", ssbexo_armstrong_aerial_final_smash_start_effect, Low)
+    .acmd("sound_finalstart", ssbexo_armstrong_final_smash_start_sound, Low)
+    .acmd("sound_finalairstart", ssbexo_armstrong_final_smash_start_sound, Low)
+    .acmd("expression_finalstart", ssbexo_armstrong_grounded_final_smash_start_expression, Low)
+    .acmd("expression_finalairstart", ssbexo_armstrong_aerial_final_smash_start_expression, Low)
     .install()
     ;
 }

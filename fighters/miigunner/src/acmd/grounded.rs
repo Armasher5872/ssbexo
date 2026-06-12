@@ -24,7 +24,7 @@ unsafe extern "C" fn ssbexo_miigunner_dash_attack_acmd(agent: &mut L2CAgentBase)
 pub fn install() {
     Agent::new("miigunner")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attackdash", ssbexo_miigunner_dash_attack_acmd, Low)
+    .acmd("game_attackdash", ssbexo_miigunner_dash_attack_acmd, Low)
     .install()
     ;
 }

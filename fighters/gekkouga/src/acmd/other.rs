@@ -23,8 +23,8 @@ unsafe extern "C" fn ssbexo_gekkouga_jump_aerial_back_acmd(agent: &mut L2CAgentB
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_dash", ssbexo_gekkouga_dash_acmd, Low)
-    .game_acmd("game_jumpaerialback", ssbexo_gekkouga_jump_aerial_back_acmd, Low)
+    .acmd("game_dash", ssbexo_gekkouga_dash_acmd, Low)
+    .acmd("game_jumpaerialback", ssbexo_gekkouga_jump_aerial_back_acmd, Low)
     .install()
     ;
 }

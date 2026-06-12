@@ -61,14 +61,14 @@ unsafe extern "C" fn ssbexo_krool_down_special_charge_expression(agent: &mut L2C
 pub fn install() {
     Agent::new("krool")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_speciallwcharge", ssbexo_krool_down_special_charge_acmd, Low)
-    .effect_acmd("effect_speciallwcharge", ssbexo_krool_down_special_charge_effect, Low)
-    .sound_acmd("sound_speciallwcharge", ssbexo_krool_down_special_charge_sound, Low)
-    .expression_acmd("expression_speciallwcharge", ssbexo_krool_down_special_charge_expression, Low)
-    .game_acmd("game_specialairlwcharge", ssbexo_krool_down_special_charge_acmd, Low)
-    .effect_acmd("effect_specialairlwcharge", ssbexo_krool_down_special_charge_effect, Low)
-    .sound_acmd("sound_specialairlwcharge", ssbexo_krool_down_special_charge_sound, Low)
-    .expression_acmd("expression_specialairlwcharge", ssbexo_krool_down_special_charge_expression, Low)
+    .acmd("game_speciallwcharge", ssbexo_krool_down_special_charge_acmd, Low)
+    .acmd("effect_speciallwcharge", ssbexo_krool_down_special_charge_effect, Low)
+    .acmd("sound_speciallwcharge", ssbexo_krool_down_special_charge_sound, Low)
+    .acmd("expression_speciallwcharge", ssbexo_krool_down_special_charge_expression, Low)
+    .acmd("game_specialairlwcharge", ssbexo_krool_down_special_charge_acmd, Low)
+    .acmd("effect_specialairlwcharge", ssbexo_krool_down_special_charge_effect, Low)
+    .acmd("sound_specialairlwcharge", ssbexo_krool_down_special_charge_sound, Low)
+    .acmd("expression_specialairlwcharge", ssbexo_krool_down_special_charge_expression, Low)
     .install()
     ;
 }

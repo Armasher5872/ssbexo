@@ -186,16 +186,18 @@ unsafe extern "C" fn sonic_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
 unsafe extern "C" fn sonic_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = *(log as *const u64).add(0x10/0x8);
-    let collision_log = collision_log as *const CollisionLog;
+    let collision_log = collision_log as *mut CollisionLogScuffed;
     let status_kind = StatusModule::status_kind(boma);
     let neutral_special_statuses = [
         *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING_START, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HOMING, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_FAIL, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_CANCEL, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_LANDING, 
         *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_REBOUND, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HIT
     ].contains(&status_kind);
     if !neutral_special_statuses && !WorkModule::is_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED) {
-        let opponent_id = (*collision_log).opponent_battle_object_id;
-        if opponent_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-            if sv_battle_object::category(opponent_id) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        let opponent_object_id = (*collision_log).opponent_object_id;
+        if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+            let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+            let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+            if sv_battle_object::category(opponent_battle_object_id) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
                 let tracking = SoundModule::play_se(boma, Hash40::new("se_sonic_tracking"), true, false, false, false, smash::app::enSEType(0));
                 SoundModule::set_se_vol(boma, tracking as i32, 3.0, 0);
                 ArticleModule::generate_article(boma, *FIGHTER_SONIC_GENERATE_ARTICLE_HOMINGTARGET, false, -1);
@@ -203,7 +205,7 @@ unsafe extern "C" fn sonic_on_search(vtable: u64, fighter: &mut Fighter, log: u6
                     let homingtarget_boma = get_article_boma(boma, *FIGHTER_SONIC_GENERATE_ARTICLE_HOMINGTARGET);
                     WorkModule::set_int(homingtarget_boma, 130, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
                     WorkModule::set_int(homingtarget_boma, 130, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
-                    WorkModule::set_int(homingtarget_boma, opponent_id as i32, 0x1000000A /*WEAPON_SONIC_HOMINGTARGET_INSTANCE_WORK_ID_INT_OBJECT_ID*/);
+                    WorkModule::set_int(homingtarget_boma, opponent_battle_object_id as i32, 0x1000000A /*WEAPON_SONIC_HOMINGTARGET_INSTANCE_WORK_ID_INT_OBJECT_ID*/);
                 }
                 WorkModule::set_int(boma, 0, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_SEARCH_MISS_TIMER);
                 WorkModule::on_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_N_TARGET_DETECTED);

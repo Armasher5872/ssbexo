@@ -114,10 +114,10 @@ unsafe extern "C" fn ssbexo_cloud_limit_break_climhazzard_effect(agent: &mut L2C
 pub fn install() {
     Agent::new("cloud")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialhi_lb", ssbexo_cloud_limit_break_climhazzard_acmd, Low)
-    .game_acmd("game_specialairhi_lb", ssbexo_cloud_limit_break_climhazzard_acmd, Low)
-    .effect_acmd("effect_specialhi_lb", ssbexo_cloud_limit_break_climhazzard_effect, Low)
-    .effect_acmd("effect_specialairhi_lb", ssbexo_cloud_limit_break_climhazzard_effect, Low)
+    .acmd("game_specialhi_lb", ssbexo_cloud_limit_break_climhazzard_acmd, Low)
+    .acmd("game_specialairhi_lb", ssbexo_cloud_limit_break_climhazzard_acmd, Low)
+    .acmd("effect_specialhi_lb", ssbexo_cloud_limit_break_climhazzard_effect, Low)
+    .acmd("effect_specialairhi_lb", ssbexo_cloud_limit_break_climhazzard_effect, Low)
     .install()
     ;
 }

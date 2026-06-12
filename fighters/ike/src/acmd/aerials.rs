@@ -12,7 +12,7 @@ unsafe extern "C" fn ssbexo_ike_fair_sound(agent: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
     if is_excute(agent) {
         let swing = SoundModule::play_se(boma, Hash40::new("se_ike_appeal_stab"), true, false, false, false, smash::app::enSEType(0));
-        SoundModule::set_se_vol(boma, swing as i32, 2.5, 0);
+        SoundModule::set_se_vol(boma, swing as i32, 2.0, 0);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
@@ -35,7 +35,7 @@ unsafe extern "C" fn ssbexo_ike_uair_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
         let swing = SoundModule::play_se(boma, Hash40::new("se_ike_appeal_stab"), true, false, false, false, smash::app::enSEType(0));
         PLAY_SEQUENCE(agent, Hash40::new("seq_ike_rnd_attack"));
-        SoundModule::set_se_vol(boma, swing as i32, 1.6, 0);
+        SoundModule::set_se_vol(boma, swing as i32, 1.0, 0);
     }
     wait(lua_state, 2.0);
     if is_excute(agent) {
@@ -46,8 +46,8 @@ unsafe extern "C" fn ssbexo_ike_uair_sound(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("ike")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .sound_acmd("sound_attackairf", ssbexo_ike_fair_sound, Low)
-    .sound_acmd("sound_attackairhi", ssbexo_ike_uair_sound, Low)
+    .acmd("sound_attackairf", ssbexo_ike_fair_sound, Low)
+    .acmd("sound_attackairhi", ssbexo_ike_uair_sound, Low)
     .install()
     ;
 }

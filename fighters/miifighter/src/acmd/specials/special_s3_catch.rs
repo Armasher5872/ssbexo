@@ -40,8 +40,8 @@ unsafe extern "C" fn ssbexo_miifighter_suplex_catch_acmd(agent: &mut L2CAgentBas
 pub fn install() {
     Agent::new("miifighter")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specials3throw", ssbexo_miifighter_suplex_catch_acmd, Low)
-    .game_acmd("game_specialairs3catch", ssbexo_miifighter_suplex_catch_acmd, Low)
+    .acmd("game_specials3throw", ssbexo_miifighter_suplex_catch_acmd, Low)
+    .acmd("game_specialairs3catch", ssbexo_miifighter_suplex_catch_acmd, Low)
     .install()
     ;
 }

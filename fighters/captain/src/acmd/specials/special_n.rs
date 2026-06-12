@@ -171,14 +171,14 @@ unsafe extern "C" fn ssbexo_captain_neutral_special_expression(agent: &mut L2CAg
 pub fn install() {
     Agent::new("captain")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialn", ssbexo_captain_grounded_neutral_special_acmd, Low)
-    .game_acmd("game_specialairn", ssbexo_captain_aerial_neutral_special_acmd, Low)
-    .effect_acmd("effect_specialn", ssbexo_captain_neutral_special_effect, Low)
-    .effect_acmd("effect_specialairn", ssbexo_captain_neutral_special_effect, Low)
-    .sound_acmd("sound_specialn", ssbexo_captain_neutral_special_sound, Low)
-    .sound_acmd("sound_specialairn", ssbexo_captain_neutral_special_sound, Low)
-    .expression_acmd("expression_specialn", ssbexo_captain_neutral_special_expression, Low)
-    .expression_acmd("expression_specialairn", ssbexo_captain_neutral_special_expression, Low)
+    .acmd("game_specialn", ssbexo_captain_grounded_neutral_special_acmd, Low)
+    .acmd("game_specialairn", ssbexo_captain_aerial_neutral_special_acmd, Low)
+    .acmd("effect_specialn", ssbexo_captain_neutral_special_effect, Low)
+    .acmd("effect_specialairn", ssbexo_captain_neutral_special_effect, Low)
+    .acmd("sound_specialn", ssbexo_captain_neutral_special_sound, Low)
+    .acmd("sound_specialairn", ssbexo_captain_neutral_special_sound, Low)
+    .acmd("expression_specialn", ssbexo_captain_neutral_special_expression, Low)
+    .acmd("expression_specialairn", ssbexo_captain_neutral_special_expression, Low)
     .install()
     ;
 }

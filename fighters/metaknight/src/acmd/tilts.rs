@@ -105,11 +105,11 @@ unsafe extern "C" fn ssbexo_metaknight_down_tilt_acmd(agent: &mut L2CAgentBase) 
 pub fn install() {
     Agent::new("metaknight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks3", ssbexo_metaknight_forward_tilt_1_acmd, Low)
-    .game_acmd("game_attacks3s2", ssbexo_metaknight_forward_tilt_2_acmd, Low)
-    .game_acmd("game_attacks3s3", ssbexo_metaknight_forward_tilt_3_acmd, Low)
-    .game_acmd("game_attackhi3", ssbexo_metaknight_up_tilt_acmd, Low)
-    .game_acmd("game_attacklw3", ssbexo_metaknight_down_tilt_acmd, Low)
+    .acmd("game_attacks3", ssbexo_metaknight_forward_tilt_1_acmd, Low)
+    .acmd("game_attacks3s2", ssbexo_metaknight_forward_tilt_2_acmd, Low)
+    .acmd("game_attacks3s3", ssbexo_metaknight_forward_tilt_3_acmd, Low)
+    .acmd("game_attackhi3", ssbexo_metaknight_up_tilt_acmd, Low)
+    .acmd("game_attacklw3", ssbexo_metaknight_down_tilt_acmd, Low)
     .install()
     ;
 }

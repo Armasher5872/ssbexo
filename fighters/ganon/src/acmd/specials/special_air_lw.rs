@@ -45,8 +45,8 @@ unsafe extern "C" fn ssbexo_ganon_aerial_down_special_effect(agent: &mut L2CAgen
 pub fn install() {
     Agent::new("ganon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_specialairlw", ssbexo_ganon_aerial_down_special_acmd, Low)
-    .effect_acmd("effect_specialairlw", ssbexo_ganon_aerial_down_special_effect, Low)
+    .acmd("game_specialairlw", ssbexo_ganon_aerial_down_special_acmd, Low)
+    .acmd("effect_specialairlw", ssbexo_ganon_aerial_down_special_effect, Low)
     .install()
     ;
 }

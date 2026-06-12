@@ -22,7 +22,7 @@ unsafe extern "C" fn ssbexo_metaknight_forward_smash_acmd(agent: &mut L2CAgentBa
 pub fn install() {
     Agent::new("metaknight")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .game_acmd("game_attacks4", ssbexo_metaknight_forward_smash_acmd, Low)
+    .acmd("game_attacks4", ssbexo_metaknight_forward_smash_acmd, Low)
     .install()
     ;
 }
