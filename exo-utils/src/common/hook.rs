@@ -17,6 +17,9 @@ pub unsafe fn find_pane_by_name(pane: *const Pane, s: *const c_char, recursive: 
 #[skyline::from_offset(0x59970)]
 pub unsafe fn find_pane_by_name_recursive(pane: *const Pane, s: *const c_char) -> *mut Pane;
 
+#[skyline::from_offset(0x646fe0)]
+pub unsafe extern "C" fn singleton_fighter_hook(fighter: &mut smash::app::Fighter) -> u64;
+
 //Deals damage to characters who are in water
 #[skyline::from_offset(0x6924e0)]
 pub unsafe extern "C" fn add_water_damage(boma: *mut BattleObjectModuleAccessor, work_id_const: i32);
@@ -39,7 +42,7 @@ pub unsafe extern "C" fn inkling_handle_tank_fill(boma: *mut BattleObjectModuleA
 
 //Disables stage visibility
 #[skyline::from_offset(0x159fb20)]
-pub unsafe extern "C" fn set_stage_visibility(module_accessor: *mut smash::app::BattleObjectModuleAccessor, param_2: u32);
+pub unsafe extern "C" fn set_stage_visibility(module_accessor: *mut BattleObjectModuleAccessor, param_2: u32);
 
 //The common on hit function for weapons
 #[skyline::from_offset(0x33bd9c0)]

@@ -78,3 +78,21 @@ pub fn get_pane_from_layout(layout_data: u64, name: &str) -> Option<u64> {
         }
     }
 }
+
+pub fn set_pane_pos(pane: u64, x: f32, y: f32) {
+    unsafe {
+        let internal = *(pane as *const u64);
+        *(internal as *mut f32).add(0x30/0x4) = x;
+        *(internal as *mut f32).add(0x34/0x4) = y;
+    }
+}
+
+pub fn get_pane_pos(pane: u64) -> (f32, f32) {
+    unsafe {
+        let internal = *(pane as *const u64);
+        (
+            *(internal as *mut f32).add(0x30/0x4),
+            *(internal as *mut f32).add(0x34/0x4),
+        )
+    }
+}

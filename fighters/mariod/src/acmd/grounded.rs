@@ -6,9 +6,9 @@ unsafe extern "C" fn ssbexo_mariod_jab_1_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.3, 6.7, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.3, 9.3, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.3, 12.5, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.3, 6.7, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.3, 9.3, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.3, 12.5, None, None, None, 1.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
     }
     wait(lua_state, 2.0);
     if is_excute(agent) {
@@ -26,10 +26,11 @@ unsafe extern "C" fn ssbexo_mariod_jab_1_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 2.0);
     if is_excute(agent) {
         EFFECT_FLIP(agent, Hash40::new("sys_attack_line"), Hash40::new("sys_attack_line"), Hash40::new("top"), -6, 6.2, 1, 0, 0, 0, 0.95, 0, 1, 0, 0, 0, 0, false, *EF_FLIP_YZ);
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("handl"), 2.0, 0.0, 0.0, 0, 0, 0, 0.3, true);
     }
     frame(lua_state, 3.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 10, 6.2, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 360, false);
+        EFFECT(agent, Hash40::new("mariod_smash_impact"), Hash40::new("top"), 10, 6.2, 1, 0, 0, 0, 0.3, 0, 1, 0, 0, 0, 360, false);
         LAST_EFFECT_SET_ALPHA(agent, 0.7);
     }
 }
@@ -40,6 +41,7 @@ unsafe extern "C" fn ssbexo_mariod_jab_1_sound(agent: &mut L2CAgentBase) {
     frame(lua_state, 3.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_punch_kick_swing_s"));
+        PLAY_SE(agent, Hash40::new("se_common_spirits_floor_elec_spark2"));
     }
 }
 
@@ -67,9 +69,9 @@ unsafe extern "C" fn ssbexo_mariod_jab_2_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 5.0, 4.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.0, 7.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 2, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 4.0, 0.0, 6.3, 12.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 5.0, 4.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 3.0, 0.0, 6.0, 7.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 2, 0, Hash40::new("top"), 3.0, 0, 40, 0, 20, 4.0, 0.0, 6.3, 12.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
     }
     wait(lua_state, 2.0);
     if is_excute(agent) {
@@ -87,10 +89,11 @@ unsafe extern "C" fn ssbexo_mariod_jab_2_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 3.0);
     if is_excute(agent) {
         EFFECT_FLIP(agent, Hash40::new("sys_attack_line"), Hash40::new("sys_attack_line"), Hash40::new("top"), -7, 5.9, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_YZ);
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("handr"), 2.0, 0.0, 0.0, 0, 0, 0, 0.3, true);
     }
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("sys_attack_impact"), Hash40::new("top"), 9, 5.8, -2.5, 0, 0, 0, 1, 0, 1, 1, 0, 0, 360, false);
+        EFFECT(agent, Hash40::new("mariod_smash_impact"), Hash40::new("top"), 9, 5.8, -2.5, 0, 0, 0, 0.3, 0, 1, 0, 0, 0, 360, false);
         LAST_EFFECT_SET_ALPHA(agent, 0.7);
     }
 }
@@ -101,6 +104,7 @@ unsafe extern "C" fn ssbexo_mariod_jab_2_sound(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_punch_kick_swing_m"));
+        PLAY_SE(agent, Hash40::new("se_common_spirits_floor_elec_spark2"));
     }
 }
 
@@ -128,10 +132,10 @@ unsafe extern "C" fn ssbexo_mariod_jab_3_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("armr"), 6.0, 361, 120, 0, 60, 4.2, 0.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("armr"), 6.0, 361, 120, 0, 60, 5.0, 4.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 2, 0, Hash40::new("arml"), 6.0, 361, 120, 0, 60, 4.2, 0.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 3, 0, Hash40::new("arml"), 6.0, 361, 120, 0, 60, 5.0, 4.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("armr"), 6.0, 361, 120, 0, 60, 4.2, 0.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("armr"), 6.0, 361, 120, 0, 60, 5.0, 4.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 2, 0, Hash40::new("arml"), 6.0, 361, 120, 0, 60, 4.2, 0.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 3, 0, Hash40::new("arml"), 6.0, 361, 120, 0, 60, 5.0, 4.0, 0.0, 0.0, None, None, None, 1.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
     }
     wait(lua_state, 3.0);
     if is_excute(agent) {
@@ -145,9 +149,12 @@ unsafe extern "C" fn ssbexo_mariod_jab_3_effect(agent: &mut L2CAgentBase) {
     frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("sys_attack_arc_d"), Hash40::new("top"), 0, 0, 0, 0, -40, -90, 0.75, true);
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("handl"), 2.0, 0.0, 0.0, 0, 0, 0, 0.3, true);
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("handr"), 2.0, 0.0, 0.0, 0, 0, 0, 0.3, true);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
+        EFFECT(agent, Hash40::new("mariod_smash_impact"), Hash40::new("top"), 10, 1.2, 1, 0, 0, 0, 0.3, 0, 1, 0, 0, 0, 360, false);
         LANDING_EFFECT(agent, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
     }
     frame(lua_state, 32.0);
@@ -162,10 +169,12 @@ unsafe extern "C" fn ssbexo_mariod_jab_3_sound(agent: &mut L2CAgentBase) {
     frame(lua_state, 5.0);
     if is_excute(agent) {
         PLAY_SEQUENCE(agent, Hash40::new("seq_mariod_rnd_attack"));
+        PLAY_SE(agent, Hash40::new("se_common_spirits_floor_elec_spark2"));
     }
     frame(lua_state, 6.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_common_punch_kick_swing_m"));
+        PLAY_SE(agent, Hash40::new("se_common_spirits_floor_elec_spark1"));
     }
 }
 
@@ -201,9 +210,9 @@ unsafe extern "C" fn ssbexo_mariod_dash_attack_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 9.8, 90, 38, 0, 90, 3.5, 0.0, 1.5, 5.4, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 1, 0, Hash40::new("kneel"), 9.8, 90, 38, 0, 90, 3.5, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-        ATTACK(agent, 2, 0, Hash40::new("hip"), 9.8, 90, 38, 0, 90, 0.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 9.8, 90, 38, 0, 90, 3.5, 0.0, 1.5, 5.4, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        ATTACK(agent, 1, 0, Hash40::new("kneel"), 9.8, 90, 38, 0, 90, 3.5, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_KICK);
+        ATTACK(agent, 2, 0, Hash40::new("hip"), 9.8, 90, 38, 0, 90, 0.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATK_SET_SHIELD_SETOFF_MUL_arg4(agent, 0, 1, 2, 1.875);
         AttackModule::set_attack_height_all(boma, AttackHeight(*ATTACK_HEIGHT_LOW), false);
         FighterAreaModuleImpl::enable_fix_jostle_area(boma, 4.0, 6.0);
@@ -219,6 +228,9 @@ unsafe extern "C" fn ssbexo_mariod_dash_attack_acmd(agent: &mut L2CAgentBase) {
         ATTACK(agent, 2, 0, Hash40::new("hip"), 6.0, 90, 42, 0, 90, 0.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         ATK_SET_SHIELD_SETOFF_MUL_arg4(agent, 0, 1, 2, 1.875);
         AttackModule::set_attack_height_all(boma, AttackHeight(*ATTACK_HEIGHT_LOW), false);
+        AttackModule::set_add_reaction_frame_revised(boma, 0, 8.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 1, 8.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 2, 8.0, false);
     }
     wait(lua_state, 16.0);
     if is_excute(agent) {
@@ -231,6 +243,47 @@ unsafe extern "C" fn ssbexo_mariod_dash_attack_acmd(agent: &mut L2CAgentBase) {
     frame(lua_state, 41.0);
     if is_excute(agent) {
         FighterAreaModuleImpl::enable_fix_jostle_area(boma, 3.0, 3.0);
+    }
+}
+
+//Dash Attack Effect
+unsafe extern "C" fn ssbexo_mariod_dash_attack_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 4.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("footl"), 2.0, 0.0, 0.0, 0, 0, 0, 0.6, true);
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 5, 0, 0, 0, 0, 0, 0.7, 0, 0, 0, 0, 0, 0, false);
+        EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new("footl"), 1.0, 0, 0, 0, 0, 0, 0.3, true, *EF_FLIP_YZ);
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        LANDING_EFFECT(agent, Hash40::new("sys_sliding_smoke"), Hash40::new("top"), 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(lua_state, 16.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    wait(lua_state, 5.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+}
+
+//Dash Attack Sound
+unsafe extern "C" fn ssbexo_mariod_dash_attack_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_spirits_floor_elec_spark2"));
+    }
+    frame(lua_state, 6.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_mariod_attackdash"));
+        PLAY_SEQUENCE(agent, Hash40::new("seq_mariod_rnd_attack"));
+        PLAY_SE(agent, Hash40::new("se_common_spirits_floor_elec_spark1"));
     }
 }
 
@@ -250,6 +303,8 @@ pub fn install() {
     .acmd("sound_attack13", ssbexo_mariod_jab_3_sound, Low)
     .acmd("expression_attack13", ssbexo_mariod_jab_3_expression, Low)
     .acmd("game_attackdash", ssbexo_mariod_dash_attack_acmd, Low)
+    .acmd("effect_attackdash", ssbexo_mariod_dash_attack_effect, Low)
+    .acmd("sound_attackdash", ssbexo_mariod_dash_attack_sound, Low)
     .install()
     ;
 }

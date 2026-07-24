@@ -26,16 +26,13 @@ unsafe extern "C" fn ssbexo_ike_slash_effect(agent: &mut L2CAgentBase) {
 
 //Slash Sound
 unsafe extern "C" fn ssbexo_ike_slash_sound(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("se_ike_swing_l"));
-        sv_animcmd::SET_TAKEOUT_SE_STATUS(lua_state);
+        PLAY_STATUS(agent, Hash40::new("se_ike_swing_l"));
     }
 }
 
 pub fn install() {
-    Agent::new("ike_slash")
+    Agent::new("ike_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_shoot", ssbexo_ike_slash_acmd, Low)
     .acmd("effect_shoot", ssbexo_ike_slash_effect, Low)

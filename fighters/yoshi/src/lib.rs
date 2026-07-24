@@ -14,10 +14,12 @@ use {
 
 mod acmd;
 mod opff;
+mod status;
 mod vtable;
 
 pub fn install() {
     acmd::install();
     opff::install();
+    status::install();
     vtable::install();
 }

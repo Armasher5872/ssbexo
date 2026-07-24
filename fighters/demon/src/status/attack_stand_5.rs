@@ -32,9 +32,9 @@ unsafe extern "C" fn demon_attack_stand_5_change_motion(fighter: &mut L2CFighter
 }
 
 unsafe extern "C" fn demon_attack_stand_5_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = fighter.global_table[CURRENT_FRAME].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
-    let frame = MotionModule::frame(boma);
     let combo_count = WorkModule::get_int(boma, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_WORK_INT_COMBO);
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
@@ -49,7 +49,7 @@ unsafe extern "C" fn demon_attack_stand_5_main_loop(fighter: &mut L2CFighterComm
         if WorkModule::is_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_FLASH_PUNCH) {
             WorkModule::off_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_COMBO_FLAG_FLASH_PUNCH);
             if combo_count == 0 {
-                if frame % 2.0 == 0.0 {
+                if frame % 2 == 0 {
                     demon_attack_stand_5_change_motion(fighter, 2.into());
                 }
                 else {

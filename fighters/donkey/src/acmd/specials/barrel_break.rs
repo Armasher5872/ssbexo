@@ -10,7 +10,7 @@ unsafe extern "C" fn ssbexo_donkey_barrel_break_sound(agent: &mut L2CAgentBase) 
 }
 
 pub fn install() {
-    Agent::new("donkey_barrel")
+    Agent::new("donkey_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("sound_break", ssbexo_donkey_barrel_break_sound, Low)
     .install()

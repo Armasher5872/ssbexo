@@ -5,6 +5,7 @@ use {
         app::{
             lua_bind::*,
             sv_animcmd::{
+                execute,
                 frame,
                 wait
             },

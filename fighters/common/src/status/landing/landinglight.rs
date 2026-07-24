@@ -6,7 +6,15 @@ unsafe extern "C" fn status_pre_landing_light_param(fighter: &mut L2CFighterComm
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let boma = fighter.module_accessor;
     if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
+        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_DASH);
+        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
+        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
+        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE);
+        ControlModule::reset_main_stick_x(boma);
+        ControlModule::reset_flick_x(boma);
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ENABLE_LANDING_CLIFF_STOP); //Makes wavedashes edge cancelable
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);
     }
     StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_GROUND), param_5.get_i32(), *GROUND_CORRECT_KIND_GROUND as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, param_2.get_i32(), param_3.get_i32(), param_4.get_i32(), param_6.get_i32());
     FighterStatusModuleImpl::set_fighter_status_data(boma, true, *FIGHTER_TREADED_KIND_ENABLE, false, false, false, 0, *FIGHTER_STATUS_ATTR_INTO_DOOR as u32, 0, 0);
@@ -27,17 +35,10 @@ unsafe extern "C" fn status_landinglight_main(fighter: &mut L2CFighterCommon) ->
         return 1.into();
     }
     if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
-        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
-        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);
-        ControlModule::clear_command(boma, true);
-        ControlModule::reset_main_stick_x(boma);
         if GroundModule::is_passable_ground(boma) && flick_y < pass_flick_y {
             fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
             return 1.into();
         }
-    }
-    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-        ControlModule::clear_command(boma, true);
     }
     if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GENESISSET)
     || WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAMMER)

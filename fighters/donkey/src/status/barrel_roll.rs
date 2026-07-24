@@ -11,8 +11,8 @@ unsafe extern "C" fn donkey_barrel_roll_init_status(weapon: &mut L2CWeaponCommon
     let boma = weapon.module_accessor;
     let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let brake_x = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("brake_x"));
-    let gravity = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("gravity"));
+    let brake_x = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("brake_x"));
+    let gravity = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("gravity"));
     WorkModule::set_int(boma, -1, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_GRAVITY_FRAME);
     KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     if situation_kind == *SITUATION_KIND_GROUND {
@@ -57,8 +57,8 @@ unsafe extern "C" fn donkey_barrel_roll_main_loop(weapon: &mut L2CWeaponCommon) 
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
-    let brake_x = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("brake_x"));
-    let gravity = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("gravity"));
+    let brake_x = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("brake_x"));
+    let gravity = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("gravity"));
     let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     barrel_rot(boma);
@@ -123,7 +123,7 @@ unsafe extern "C" fn donkey_barrel_roll_exit_status(_weapon: &mut L2CWeaponCommo
 }
 
 pub fn install() {
-    Agent::new("donkey_barrel")
+    Agent::new("donkey_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_DONKEY_BARREL_STATUS_KIND_ROLL, donkey_barrel_roll_pre_status)
     .status(Init, *WEAPON_DONKEY_BARREL_STATUS_KIND_ROLL, donkey_barrel_roll_init_status)

@@ -1,22 +1,35 @@
 use {
     exo_utils::{
         common::{
+            hook::*,
             status_end_control::*,
             var_reset::*,
+            weapon::*,
         },
-        fighter::krool::*,
+        fighter::{
+            krool::*,
+            springtrap::*,
+        },
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+            module_init::*,
+        }
     },
     exo_var::{
         consts::*,
         globals::*,
         krool::*,
+        springtrap::*,
     },
     smash::{
         app::{
             lua_bind::*,
             *
         },
+        lib::lua_const::*,
         lua2cpp::L2CFighterCommon,
+        phx::*,
     },
     smashline::*,
 };

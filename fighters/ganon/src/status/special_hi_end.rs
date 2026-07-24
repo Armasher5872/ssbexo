@@ -32,6 +32,7 @@ unsafe extern "C" fn ganon_special_hi_end_main_status(fighter: &mut L2CFighterCo
     let boma = fighter.module_accessor;
     if !WorkModule::is_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_STARTED_GROUNDED) {
         WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
     }
     if !WorkModule::is_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED) {
         fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_hi_end"), L2CValue::Hash40s("special_air_hi_end"), false.into());

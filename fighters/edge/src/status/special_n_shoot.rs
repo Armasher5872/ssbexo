@@ -2,8 +2,9 @@ use super::*;
 
 unsafe extern "C" fn edge_special_n_shoot_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    let mut bool_check = false;
+    let is_wing = WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED);
     let charge_kind = WorkModule::get_int(boma, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CHARGE_KIND);
+    let mut bool_check = false;
     if charge_kind == *FIGHTER_EDGE_SPECIAL_N_S {
         WorkModule::set_int64(boma, hash40("special_n1") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_MOTION);
         WorkModule::set_int64(boma, hash40("special_air_n1") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_AIR_MOTION);
@@ -13,8 +14,20 @@ unsafe extern "C" fn edge_special_n_shoot_main_status(fighter: &mut L2CFighterCo
         WorkModule::set_int64(boma, hash40("special_air_n2") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_AIR_MOTION);
     }
     if charge_kind == *FIGHTER_EDGE_SPECIAL_N_L {
-        WorkModule::set_int64(boma, hash40("special_n_start") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_MOTION);
-        WorkModule::set_int64(boma, hash40("special_air_n_start") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_AIR_MOTION);
+        if is_wing {
+            WorkModule::set_int64(boma, hash40("special_n3") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_MOTION);
+            WorkModule::set_int64(boma, hash40("special_air_n3") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_AIR_MOTION);
+        }
+        else {
+            WorkModule::set_int64(boma, hash40("special_n_start") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_MOTION);
+            WorkModule::set_int64(boma, hash40("special_air_n_start") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_AIR_MOTION);
+            bool_check = true;
+        }
+        WorkModule::on_flag(boma, *FIGHTER_EDGE_STATUS_SPECIAL_N_FLAG_CANCEL_SCREEN_EFFECT);
+    }
+    if charge_kind == *FIGHTER_EDGE_SPECIAL_N_XL {
+        WorkModule::set_int64(boma, hash40("special_n_start_wing") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_MOTION);
+        WorkModule::set_int64(boma, hash40("special_air_n_start_wing") as i64, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_AIR_MOTION);
         WorkModule::on_flag(boma, *FIGHTER_EDGE_STATUS_SPECIAL_N_FLAG_CANCEL_SCREEN_EFFECT);
         bool_check = true;
     }
@@ -28,15 +41,14 @@ unsafe extern "C" fn edge_special_n_shoot_main_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn edge_special_n_shoot_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let mut bool_check = false;
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let boma = fighter.module_accessor;
     let air_accel_y = WorkModule::get_param_float(boma, hash40("air_accel_y"), 0);
     let air_speed_y_stable = WorkModule::get_param_float(boma, hash40("air_speed_y_stable"), 0);
     let ground_motion = WorkModule::get_int64(boma, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_MOTION);
     let air_motion = WorkModule::get_int64(boma, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_SHOOT_AIR_MOTION);
+    let mut bool_check = false;
     if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -67,17 +79,6 @@ unsafe extern "C" fn edge_special_n_shoot_main_loop(fighter: &mut L2CFighterComm
         }
         WorkModule::off_flag(boma, *FIGHTER_EDGE_STATUS_SPECIAL_N_FLAG_ENABLE_FALL_SPEED_END_INIT);
     }
-    if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
-        if stick_y >= 0.7 {
-            WorkModule::set_int(boma, 1, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
-        }
-        else if stick_y <= -0.7 {
-            WorkModule::set_int(boma, 2, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
-        }
-        else {
-            WorkModule::set_int(boma, 0, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
-        }
-    }
     if MotionModule::is_end(boma) {
         if situation_kind != *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
@@ -89,17 +90,10 @@ unsafe extern "C" fn edge_special_n_shoot_main_loop(fighter: &mut L2CFighterComm
     0.into()
 }
 
-unsafe extern "C" fn edge_special_n_shoot_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = fighter.module_accessor;
-    WorkModule::set_int(boma, 0, *FIGHTER_EDGE_INSTANCE_WORK_ID_INT_ONE_WINGED_SPECIAL_N_DIRECTION);
-    0.into()
-}
-
 pub fn install() {
     Agent::new("edge")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Main, *FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_SHOOT, edge_special_n_shoot_main_status)
-    .status(End, *FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_SHOOT, edge_special_n_shoot_end_status)
     .install()
     ;
 }

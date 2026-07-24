@@ -27,5 +27,7 @@ pub fn install() {
     opff::install();
     status::install();
     vtable::install();
-    clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "ike", "slash", false);
+    unsafe {
+        FIGHTER_IKE_GENERATE_ARTICLE_SLASH += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "ike", "cannonballcloned", false);
+    }
 }

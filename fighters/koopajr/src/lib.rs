@@ -9,6 +9,7 @@ use {
         fighter::{
             ganon::*,
             koopajr::*,
+            springtrap::*,
         },
         status::{
             attack::*,
@@ -29,6 +30,7 @@ use {
         gekkouga::*,
         globals::*,
         koopajr::*,
+        springtrap::*,
         variables::*,
     },
     smash::{

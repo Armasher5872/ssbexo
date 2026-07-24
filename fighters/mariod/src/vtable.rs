@@ -42,6 +42,7 @@ unsafe extern "C" fn mariod_opff(_vtable: u64, fighter: &mut Fighter) {
 unsafe extern "C" fn mariod_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_MARIOD as u32 {
         let boma = fighter.battle_object.module_accessor;
+        let collision_log = log as *mut CollisionLogScuffed;
         let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
         let status_kind = StatusModule::status_kind(boma);
         if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_DASH].contains(&status_kind) {
@@ -59,13 +60,34 @@ unsafe extern "C" fn mariod_on_attack(vtable: u64, fighter: &mut Fighter, log: u
         if [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
             UiManager::set_mariod_meter_info(entry_id, 0);
             WorkModule::set_int(boma, UiManager::get_mariod_pill_id(entry_id), *FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_PILL_ID);
+            if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
+                println!("Is Side B");
+                let opponent_object_id = (*collision_log).opponent_object_id;
+                if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+                    println!("Isn't an invalid id");
+                    let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+                    let opponent_battle_object_vtable: extern "C" fn(*mut BattleObject) -> bool = std::mem::transmute(**(opponent_battle_object as *const *const u64));
+                    if !opponent_battle_object_vtable(opponent_battle_object) && 3 < *(opponent_battle_object as *const u8).add(0x34) {
+                        println!("Battle Object Methods Work");
+                        let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+                        if opponent_battle_object_id >> 0x1C == 0 {
+                            println!("Is a fighter");
+                            let opponent_boma = (*opponent_battle_object).module_accessor;
+                            StopModule::set_hit_stop_frame_fix(opponent_boma, 50);
+                            WorkModule::set_int(opponent_boma, 50, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_FRAME);
+                            WorkModule::set_int(opponent_boma, 50, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_MAG);
+                        }
+                    }
+                }
+            }
         }
     }
     original!()(vtable, fighter, log)
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x34417a8).nop(); //The following removes a horizontal speed initialization so it can be assigned dynamically in a weapon init status
+    let _ = skyline::patching::Patch::in_text(0x34414dc).nop(); //The following removes the life initialization so it can be assigned dynamically in a weapon init status
+    let _ = skyline::patching::Patch::in_text(0x34417a8).nop(); //The following removes the horizontal speed initialization so it can be assigned dynamically in a weapon init status
     let _ = skyline::patching::Patch::in_text(0x34417cc).nop(); //The following removes the initial gravity acceleration so it can be assigned dynamically in a weapon init status
     skyline::install_hooks!(
         mariod_reset_initialization,

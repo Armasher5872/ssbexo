@@ -12,8 +12,6 @@ unsafe extern "C" fn metaknight_special_lw_end_pre_status(fighter: &mut L2CFight
 unsafe extern "C" fn metaknight_special_lw_end_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
-    PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
-    PostureModule::update_rot_y_lr(fighter.module_accessor);
     if situation_kind == *SITUATION_KIND_GROUND {
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
@@ -37,8 +35,12 @@ unsafe extern "C" fn metaknight_special_lw_end_main_loop(fighter: &mut L2CFighte
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
-    if CancelModule::is_enable_cancel(boma) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
-        return 1.into();
+    if CancelModule::is_enable_cancel(boma) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 1.into();
+            }
+        }
     }
     if !StatusModule::is_changing(boma) {
         if situation_kind == *SITUATION_KIND_GROUND

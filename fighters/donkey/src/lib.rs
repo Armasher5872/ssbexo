@@ -35,6 +35,8 @@ pub fn install() {
     opff::install();
     status::install();
     vtable::install();
-    clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "donkey", "barrel", false);
-    clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "donkey", "barrel_cannon", false);
+    unsafe {
+        FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "donkey", "cannonballcloned", false);
+        FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON += clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "donkey", "swordcloned", false);
+    }
 }

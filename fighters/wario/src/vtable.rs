@@ -31,8 +31,6 @@ unsafe extern "C" fn wario_death_initialization(vtable: u64, fighter: &mut Fight
 unsafe extern "C" fn wario_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
-    let frame = MotionModule::frame(boma);
-    let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
     let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
     let head_scale = &Vector3f{x: 0.91, y: 0.91, z: 0.91};
@@ -55,14 +53,6 @@ unsafe extern "C" fn wario_opff(_vtable: u64, fighter: &mut Fighter) {
         ModelModule::set_joint_scale(boma, Hash40::new("claviclel"), clavicle_scale);
         ModelModule::set_joint_scale(boma, Hash40::new("shoulderr"), arm_scale);
         ModelModule::set_joint_scale(boma, Hash40::new("shoulderl"), arm_scale);
-    }
-    //Side Taunt Toot Taunt
-    if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
-        if [hash40("appeal_s_r"), hash40("appeal_s_l")].contains(&motion_kind) && (8.0..=49.0).contains(&frame) {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                StatusModule::change_status_request_from_script(boma, *FIGHTER_WARIO_STATUS_KIND_APPEAL_GAS, false);
-            }
-        }
     }
     //Clears effects and sounds from Toot Kamikaze
     if status_kind == *FIGHTER_STATUS_KIND_DEAD {

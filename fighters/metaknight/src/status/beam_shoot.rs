@@ -13,8 +13,8 @@ unsafe extern "C" fn metaknight_beam_shoot_init_status(weapon: &mut L2CWeaponCom
     let owner_pos_x = PostureModule::pos_x(owner_boma);
     let owner_pos_y = PostureModule::pos_y(owner_boma);
     let owner_pos_z = PostureModule::pos_z(owner_boma);
-    let life = WorkModule::get_param_int(boma, hash40("param_beam"), hash40("life"));
-    let speed_max = WorkModule::get_param_float(boma, hash40("param_beam"), hash40("speed_max"));
+    let life = WorkModule::get_param_int(boma, hash40("param_cannonballcloned"), hash40("life"));
+    let speed_max = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("speed_max"));
     let lr = PostureModule::lr(boma);
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
@@ -61,7 +61,7 @@ unsafe extern "C" fn metaknight_beam_shoot_end_status(weapon: &mut L2CWeaponComm
 }
 
 pub fn install() {
-    Agent::new("metaknight_beam")
+    Agent::new("metaknight_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_METAKNIGHT_BEAM_STATUS_KIND_SHOOT, metaknight_beam_shoot_pre_status)
     .status(Init, *WEAPON_METAKNIGHT_BEAM_STATUS_KIND_SHOOT, metaknight_beam_shoot_init_status)

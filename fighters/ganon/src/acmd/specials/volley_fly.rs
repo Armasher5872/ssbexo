@@ -34,7 +34,7 @@ unsafe extern "C" fn ssbexo_ganon_volley_sound(agent: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    Agent::new("ganon_volley")
+    Agent::new("ganon_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_fly", ssbexo_ganon_volley_acmd, Low)
     .acmd("effect_fly", ssbexo_ganon_volley_effect, Low)

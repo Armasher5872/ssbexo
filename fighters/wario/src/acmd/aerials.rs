@@ -44,13 +44,13 @@ unsafe extern "C" fn ssbexo_wario_nair_sound(agent: &mut L2CAgentBase) {
         if rand > 80.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack01"));
         }
-        else if rand <= 80.0 && rand > 60.0 {
+        else if rand > 60.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack02"));
         }
-        else if rand <= 60.0 && rand > 40.0 {
+        else if rand > 40.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack03"));
         }
-        else if rand <= 40.0 && rand > 20.0 {
+        else if rand > 20.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack04"));
         }
     }
@@ -77,12 +77,18 @@ unsafe extern "C" fn ssbexo_wario_fair_acmd(agent: &mut L2CAgentBase) {
     frame(lua_state, 9.0);
     if is_excute(agent) {
         HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_XLU);
-        ATTACK(agent, 0, 0, Hash40::new("handr"), 4.7, 55, 75, 0, 28, 5.7, 1.5, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("armr"), 4.7, 55, 75, 0, 28, 4.3, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 2, 0, Hash40::new("shoulderr"), 4.7, 55, 75, 0, 28, 3.0, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 3, 0, Hash40::new("handr"), 4.7, 367, 75, 0, 28, 5.7, 1.5, 0.0, 0.6, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 4, 0, Hash40::new("armr"), 4.7, 367, 75, 0, 28, 4.3, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 5, 0, Hash40::new("shoulderr"), 4.7, 367, 75, 0, 28, 3.0, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("handr"), 4.7, 55, 75, 28, 0, 5.7, 1.5, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("armr"), 4.7, 55, 75, 28, 0, 4.3, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 2, 0, Hash40::new("shoulderr"), 4.7, 55, 75, 28, 0, 3.0, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 3, 0, Hash40::new("handr"), 4.7, 367, 75, 28, 0, 5.7, 1.5, 0.0, 0.6, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 4, 0, Hash40::new("armr"), 4.7, 367, 75, 28, 0, 4.3, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 5, 0, Hash40::new("shoulderr"), 4.7, 367, 75, 28, 0, 3.0, 0.0, 0.0, -3.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        AttackModule::set_add_reaction_frame_revised(boma, 0, 8.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 1, 8.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 2, 8.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 3, 8.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 4, 8.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 5, 8.0, false);
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
@@ -140,10 +146,10 @@ unsafe extern "C" fn ssbexo_wario_fair_sound(agent: &mut L2CAgentBase) {
         if rand > 75.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack01"));
         }
-        else if rand <= 75.0 && rand > 50.0 {
+        else if rand > 50.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack02"));
         }
-        else if rand <= 50.0 && rand > 25.0 {
+        else if rand > 25.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack03"));
         }
     }
@@ -154,7 +160,7 @@ unsafe extern "C" fn ssbexo_wario_fair_sound(agent: &mut L2CAgentBase) {
         if rand > 66.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack03"));
         }
-        else if rand <= 66.0 && rand > 33.0 {
+        else if rand > 33.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_007"));
         }
         else {
@@ -232,7 +238,7 @@ unsafe extern "C" fn ssbexo_wario_bair_sound(agent: &mut L2CAgentBase) {
         if rand > 66.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack01"));
         }
-        else if rand <= 66.0 && rand > 33.0 {
+        else if rand > 33.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack02"));
         }
         else {
@@ -328,19 +334,19 @@ unsafe extern "C" fn ssbexo_wario_dair_sound(agent: &mut L2CAgentBase) {
         if rand > 90.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack01"));
         }
-        else if rand <= 90.0 && rand > 76.0 {
+        else if rand > 76.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack02"));
         }
-        else if rand <= 76.0 && rand > 55.0 {
+        else if rand > 55.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack03"));
         }
-        else if rand <= 55.0 && rand > 42.0 {
+        else if rand > 42.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack04"));
         }
-        else if rand <= 42.0 && rand > 30.0 {
+        else if rand > 30.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_007"));
         }
-        else if rand <= 30.0 && rand > 16.0 {
+        else if rand > 16.0 {
             let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final04"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
         }

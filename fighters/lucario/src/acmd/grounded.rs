@@ -4,9 +4,9 @@ use super::*;
 unsafe extern "C" fn ssbexo_lucario_up_taunt_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        ArticleModule::generate_article(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
-        ArticleModule::change_motion(boma, *FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("appeal_hi_r"), false, -1.0);
+        ArticleModule::remove_exist(boma, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(boma, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, false, -1);
+        ArticleModule::change_motion(boma, FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE, Hash40::new("appeal_hi_r"), false, -1.0);
     }
 }
 

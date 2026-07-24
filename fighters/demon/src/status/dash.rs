@@ -28,8 +28,8 @@ unsafe extern "C" fn demon_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2C
 
 unsafe extern "C" fn demon_dash_main_common(fighter: &mut L2CFighterCommon, param_1: L2CValue) -> L2CValue {
     let stick_x = fighter.global_table[STICK_X].get_f32();
-    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let pad_flag = fighter.global_table[PAD_FLAG].get_i32();
+    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let boma = fighter.module_accessor;
     let is_have_item = ItemModule::is_have_item(boma, 0);
     let lr = PostureModule::lr(boma);
@@ -215,8 +215,8 @@ unsafe extern "C" fn demon_dash_main_common(fighter: &mut L2CFighterCommon, para
         }
     }
     if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH) 
-    && cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN != 0 {
-        fighter.change_status(FIGHTER_STATUS_KIND_TURN.into(), true.into());
+    && cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH != 0 {
+        fighter.change_status(FIGHTER_STATUS_KIND_TURN_DASH.into(), true.into());
         return 1.into();
     }
     if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH != 0 && {

@@ -15,10 +15,13 @@ Stabb, for a few balance tweaks
 Members of the SSBEXO server, for various balance suggestions
 SMN8 for multiple animations
 MilktoastMonika for Captain Falcon's Up Smash Anims
-WTails358 for redoing Senator Armstrong's textures
-GreenRedMario for redesigning the Senator Armstrong Model, and adding the taunts/victory anims
+Mokl for the Crystal Glove on Daisy
+Devory for the Wario Throne Model
+Asalazar for the Wario Throne Textures
 LilyLambda for the Dynamic Monado Art Trails for Shulk
 Silent/Mokl for the Monado Rage/Enchant/Armor Monado Art UI/Voices
+WTails358 for redoing Senator Armstrong's textures
+GreenRedMario for redesigning the Senator Armstrong Model, and adding the taunts/victory anims
 
 ## Legal Disclaimer
 Super Smash Bros: EXO and its creators do not condone any forms of piracy or other illegal actions that may damage Nintendo or other relevant copyright holders.

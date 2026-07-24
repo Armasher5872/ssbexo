@@ -1,6 +1,12 @@
 use {
-    exo_utils::status::knockback_func::*,
-    exo_var::globals::*,
+    exo_utils::{
+        status::knockback_func::*,
+        structs::vector::*,
+    },
+    exo_var::{
+        consts::*,
+        globals::*,
+    },
     skyline::hooks::InlineCtx,
     smash::{
         app::{
@@ -17,15 +23,23 @@ use {
             *
         },
         phx::*,
-    }
+    },
+    smash_script::{
+        macros::*,
+        *
+    },
 };
 
 mod damage;
 mod damagefly;
 mod damageflyroll;
+mod shield_break_fall;
+mod shield_break_fly;
 
 pub fn install() {
     damage::install();
     damagefly::install();
     damageflyroll::install();
+    shield_break_fall::install();
+    shield_break_fly::install();
 }

@@ -3,7 +3,10 @@ use {
         status_end_control::*,
         var_reset::*,
     },
-    exo_var::globals::*,
+    exo_var::{
+        globals::*,
+        lucario::*,
+    },
     smash::{
         app::*,
         lib::lua_const::*,
@@ -19,5 +22,7 @@ pub fn install() {
     acmd::install();
     opff::install();
     vtable::install();
-    clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "lucario", "bone", false);
+    unsafe {
+        FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE += clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "lucario", "swordcloned", false);
+    }
 }

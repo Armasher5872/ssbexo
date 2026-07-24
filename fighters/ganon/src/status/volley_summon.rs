@@ -43,7 +43,7 @@ unsafe extern "C" fn ganon_volley_summon_exit_status(_weapon: &mut L2CWeaponComm
 }
 
 pub fn install() {
-    Agent::new("ganon_volley")
+    Agent::new("ganon_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_GANON_VOLLEY_STATUS_KIND_SUMMON, ganon_volley_summon_pre_status)
     .status(Init, *WEAPON_GANON_VOLLEY_STATUS_KIND_SUMMON, ganon_volley_summon_init_status)

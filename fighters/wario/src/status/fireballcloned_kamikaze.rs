@@ -8,7 +8,7 @@ unsafe extern "C" fn wario_kamikaze_burst_pre_status(weapon: &mut L2CWeaponCommo
 
 unsafe extern "C" fn wario_kamikaze_burst_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let life = WorkModule::get_param_int(boma, hash40("param_kamikaze"), hash40("life"));
+    let life = WorkModule::get_param_int(boma, hash40("param_fireballcloned"), hash40("life"));
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     0.into()

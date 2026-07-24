@@ -58,6 +58,13 @@ pub trait SonicUiObject {
     fn is_enabled(&self) -> bool;
 }
 
+pub trait EdgeUiObject {
+    fn update(&mut self);
+    fn is_valid(&self) -> bool;
+    fn set_enable(&mut self, enable: bool);
+    fn is_enabled(&self) -> bool;
+}
+
 impl ROBUiObject for RobotMeter {
     fn update(&mut self) {
         self.set_tex_coords();
@@ -248,6 +255,29 @@ impl SonicUiObject for SonicMeter {
             set_pane_visible(self.base_bar, false);
             set_pane_visible(self.bar1, false);
             set_pane_visible(self.bar2, false);
+        }
+        self.enabled = enable;
+    }
+    fn is_enabled(&self) -> bool {
+        self.enabled
+    }
+}
+
+impl EdgeUiObject for EdgeMateria {
+    fn update(&mut self) {
+        self.update_percent();
+    }
+    fn is_valid(&self) -> bool {
+        is_pane_valid(self.base_pane) && is_pane_valid(self.sphere) && is_pane_valid(self.full_pane)
+    }
+    fn set_enable(&mut self, enable: bool) {
+        if enable && !self.enabled {
+            self.reset();
+        } 
+        else if !enable {
+            set_pane_visible(self.base_pane, false);
+            set_pane_visible(self.sphere, false);
+            set_pane_visible(self.full_pane, false);
         }
         self.enabled = enable;
     }

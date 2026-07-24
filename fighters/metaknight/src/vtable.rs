@@ -60,17 +60,16 @@ unsafe extern "C" fn metaknight_opff(vtable: u64, fighter: &mut Fighter) -> u64 
 //Meta Knight Shield Attack Detection Event
 unsafe extern "C" fn metaknight_shield_attack_detection_event(_vtable: u64, fighter: &mut Fighter, event: *mut ShieldAttackCollisionEvent) {
     let boma = fighter.battle_object.module_accessor;
-    let collision_log = (*event).collision_log;
-    let opponent_object_id = (*collision_log).opponent_object_id;
-    let opponent_object = get_battle_object_from_id(opponent_object_id);
     let status_kind = StatusModule::status_kind(boma);
     let pos = *PostureModule::pos(boma);
-    if (*opponent_object).battle_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+    let collision_log = (*event).collision_log;
+    let opponent_object_id = (*collision_log).opponent_object_id;
+    if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            let opponent_boma = (*opponent_object).module_accessor;
+            let opponent_boma = sv_battle_object::module_accessor(opponent_object_id);
             let attack_data = *AttackModule::attack_data(opponent_boma, (*collision_log).collider_id as i32, (*collision_log).x35);
             let opponent_pos = *PostureModule::pos(opponent_boma);
-            let new_lr = if pos.x <= opponent_pos.x {-1.0} else {1.0};
+            let new_lr = if pos.x <= opponent_pos.x {1.0} else {-1.0};
             PostureModule::set_lr(boma, new_lr);
             PostureModule::update_rot_y_lr(boma);
             WorkModule::on_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_SHIELD_HIT);
@@ -111,8 +110,8 @@ unsafe extern "C" fn metaknight_on_damage_event(_vtable: u64, fighter: &mut Figh
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4FEB410).data(metaknight_shield_attack_detection_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4FEB4A0).data(metaknight_on_damage_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x4feb410).data(metaknight_shield_attack_detection_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x4feb4a0).data(metaknight_on_damage_event as *const () as u64);
     skyline::install_hooks!(
         metaknight_start_initialization,
         metaknight_reset_initialization,

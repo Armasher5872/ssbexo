@@ -5,7 +5,10 @@ use {
             fighter_common::*,
         },
         fighter::link::*,
-        status::attack_xx4::*,
+        status::{
+            appeal::*,
+            attack_xx4::*,
+        },
         structs::{
             getter_funcs::*,
             vector::*,
@@ -37,6 +40,7 @@ use {
     smashline::*,
 };
 
+mod appeal;
 mod arrow_fly;
 mod arrow_haved;
 mod arrow_hit_stick;
@@ -66,6 +70,7 @@ mod special_s;
 mod swordbeam_fly;
 
 pub fn install() {
+    appeal::install();
     arrow_fly::install();
     arrow_haved::install();
     arrow_hit_stick::install();

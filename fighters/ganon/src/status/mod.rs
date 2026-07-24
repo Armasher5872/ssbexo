@@ -2,6 +2,7 @@ use {
     exo_utils::{
         common::weapon::*,
         fighter::ganon::*,
+        status::appeal::*,
         structs::{
             getter_funcs::*,
             vector::*,

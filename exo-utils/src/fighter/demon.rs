@@ -1,14 +1,19 @@
 use super::*;
 
 pub unsafe extern "C" fn demon_var(boma: &mut BattleObjectModuleAccessor) {
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE);
     WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_HIGH_POUNCE_ACTIVE);
-    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_MIST_STEP_ACTIVE);
     WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_SOBAT_TURN);
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_DEMON_GOD_FIST_TURN);
+    WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_MIST_STEP_ACTIVE);
     WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ELECTRIC_DRAGON_UPPERCUT);
     WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_RAGE_DRIVE);
     WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_HEAVENS_DOOR);
     WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_THROW);
     WorkModule::set_int(boma, 0, *FIGHTER_DEMON_INSTANCE_WORK_ID_INT_SPECIAL_N_HOLD_FRAME);
+    if MotionModule::motion_kind_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_DEVIL) != hash40("invalid") {
+        MotionModule::remove_motion_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_DEVIL, false);
+    }
 }
 
 pub unsafe extern "C" fn fun_710002aed0(fighter: &mut L2CFighterCommon) -> L2CValue {

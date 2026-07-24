@@ -22,6 +22,24 @@ unsafe extern "C" fn sub_guard_cont_pre(fighter: &mut L2CFighterCommon) {
     WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
 }
 
+//Status Guard On Main, makes shield effects show up frame 1 instead of 2
+#[skyline::hook(replace = L2CFighterCommon_status_GuardOn_Main)]
+unsafe extern "C" fn status_guardon_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    if !WorkModule::is_flag(boma, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_EFFECT) {
+        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x262a7a102d));
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_EFFECT);
+    }
+    if !fighter.sub_status_guard_on_main_air_common().get_bool()
+    && !fighter.sub_guard_cont().get_bool()
+    && !fighter.status_guard_main_common().get_bool() {
+        if MotionModule::is_end(boma) {
+            fighter.change_status(FIGHTER_STATUS_KIND_GUARD.into(), false.into());
+        }
+    }
+    0.into()
+}
+
 //Sub Guard Cont, handles Shield Dropping
 #[skyline::hook(replace = L2CFighterCommon_sub_guard_cont)]
 unsafe extern "C" fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -97,35 +115,6 @@ unsafe extern "C" fn sub_guard_cont(fighter: &mut L2CFighterCommon) -> L2CValue 
         return true.into();
     }
     false.into()
-}
-
-//Sub Ft Status Uniq Process Guard On Init Status Common, adds the shield grabbox
-#[skyline::hook(replace = L2CFighterCommon_sub_ftStatusUniqProcessGuardOn_initStatus_common)]
-unsafe extern "C" fn sub_ftstatusuniqprocessguardon_initstatus_common(fighter: &mut L2CFighterCommon) {
-    let boma = fighter.module_accessor;
-    let shield_setoff_mul = WorkModule::get_param_float(boma, hash40("common"), 0x20d241cd64);
-    let guard_off_disable_shield_recovery = WorkModule::get_param_int(boma, hash40("common"), hash40("guard_off_disable_shield_recovery"));
-    ShieldModule::set_status(boma, *FIGHTER_STATUS_KIND_GUARD, ShieldStatus(*SHIELD_STATUS_NORMAL), 0);
-    ShieldModule::set_hit_stop_mul(boma, shield_setoff_mul);
-    WorkModule::set_int(boma, guard_off_disable_shield_recovery, *FIGHTER_INSTANCE_WORK_ID_INT_DISABLE_SHIELD_RECOVERY_FRAME);
-}
-
-//Status Guard On Main, makes shield effects show up frame 1 instead of 2
-#[skyline::hook(replace = L2CFighterCommon_status_GuardOn_Main)]
-unsafe extern "C" fn status_guardon_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = fighter.module_accessor;
-    if !WorkModule::is_flag(boma, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_EFFECT) {
-        notify_event_msc_cmd!(fighter, Hash40::new_raw(0x262a7a102d));
-        WorkModule::on_flag(boma, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_EFFECT);
-    }
-    if !fighter.sub_status_guard_on_main_air_common().get_bool()
-    && !fighter.sub_guard_cont().get_bool()
-    && !fighter.status_guard_main_common().get_bool()  {
-        if MotionModule::is_end(boma) {
-            fighter.change_status(FIGHTER_STATUS_KIND_GUARD.into(), false.into());
-        }
-    }
-    0.into()
 }
 
 //Effect Guard On Common, deals with Shield Effects

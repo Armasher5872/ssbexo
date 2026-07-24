@@ -1,9 +1,9 @@
 use super::*;
 
 /*
-First Instance Flag: 0x200000E1
-First Instance Float: 0x4D
-First Instance Int: 0x100000C0
+First Instance Flag: 0x200000E8
+First Instance Float: 0x50
+First Instance Int: 0x100000C7
 */
 
 pub static mut ARMSTRONG_MARKED_COLORS: [bool; 256] = [false; 256];

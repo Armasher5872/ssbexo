@@ -102,11 +102,11 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_sound(agent: &mut L
         if rand > 80.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_007"));
         }
-        else if rand <= 80.0 && rand > 60.0 {
+        else if rand > 60.0 {
             let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final04"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
         }
-        else if rand <= 60.0 && rand > 40.0 {
+        else if rand > 40.0 {
             let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final05"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
         }

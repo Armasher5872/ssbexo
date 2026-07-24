@@ -8,7 +8,8 @@ pub static UI_MANAGER: Lazy<RwLock<UiManager>> = Lazy::new(|| {
             mariod_meter: [MarioDMeter::default(); 8],
             cloud_meter: [CloudMeter::default(); 8],
             link_stamina: [LinkStamina::default(); 8],
-            sonic_meter: [SonicMeter::default(); 8]
+            sonic_meter: [SonicMeter::default(); 8],
+            edge_materia: [EdgeMateria::default(); 8]
         }
     )}
 );
@@ -20,7 +21,8 @@ pub struct UiManager {
     pub mariod_meter: [MarioDMeter; 8],
     pub cloud_meter: [CloudMeter; 8],
     pub link_stamina: [LinkStamina; 8],
-    pub sonic_meter: [SonicMeter; 8]
+    pub sonic_meter: [SonicMeter; 8],
+    pub edge_materia: [EdgeMateria; 8]
 }
 
 impl UiManager {
@@ -153,5 +155,21 @@ impl UiManager {
     pub extern "C" fn reset_sonic_meter(entry_id: u32) {
         let mut manager = UI_MANAGER.write();
         manager.sonic_meter[Self::get_ui_index_from_entry_id(entry_id) as usize].reset();
+    }
+    //Edge
+    #[export_name = "UiManager__set_edge_materia_enable"]
+    pub extern "C" fn set_edge_materia_enable(entry_id: u32, enable: bool) {
+        let mut manager = UI_MANAGER.write();
+        manager.edge_materia[Self::get_ui_index_from_entry_id(entry_id) as usize].set_enable(enable);
+    }
+    #[export_name = "UiManager__set_edge_materia_info"]
+    pub extern "C" fn set_edge_materia_info(entry_id: u32, nom: f32, den: f32, is_winged: bool) {
+        let mut manager = UI_MANAGER.write();
+        manager.edge_materia[Self::get_ui_index_from_entry_id(entry_id) as usize].set_percent(nom, den, is_winged);
+    }
+    #[export_name = "UiManager__reset_edge_materia"]
+    pub extern "C" fn reset_edge_materia(entry_id: u32) {
+        let mut manager = UI_MANAGER.write();
+        manager.edge_materia[Self::get_ui_index_from_entry_id(entry_id) as usize].reset();
     }
 }

@@ -36,10 +36,20 @@ unsafe extern "C" fn ssbexo_demon_tsunami_kick_1_acmd(agent: &mut L2CAgentBase) 
     }
 }
 
+//Tsunami Kick 1 Crumple ACMD
+unsafe extern "C" fn ssbexo_demon_tsunami_kick_1_crumple_acmd(agent: &mut L2CAgentBase) {
+    let boma = agent.module_accessor;
+    if is_excute(agent) {
+        ATTACK(agent, 6, 1, Hash40::new("top"), 0.0, 270, 0, 0, 45, 3.6, 0.0, 17.0, 11.0, Some(0.0), Some(4.2), Some(3.5), 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+        AttackModule::set_add_reaction_frame(boma, 6, 18.0, false);
+    }
+}
+
 pub fn install() {
     Agent::new("demon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_attackstand31", ssbexo_demon_tsunami_kick_1_acmd, Low)
+    .acmd("game_attackstand31saving", ssbexo_demon_tsunami_kick_1_crumple_acmd, Low)
     .install()
     ;
 }

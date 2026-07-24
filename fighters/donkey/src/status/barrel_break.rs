@@ -43,7 +43,7 @@ unsafe extern "C" fn donkey_barrel_break_exit_status(_weapon: &mut L2CWeaponComm
 }
 
 pub fn install() {
-    Agent::new("donkey_barrel")
+    Agent::new("donkey_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_DONKEY_BARREL_STATUS_KIND_BREAK, donkey_barrel_break_pre_status)
     .status(Init, *WEAPON_DONKEY_BARREL_STATUS_KIND_BREAK, donkey_barrel_break_init_status)

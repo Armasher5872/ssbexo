@@ -31,10 +31,12 @@ unsafe extern "C" fn ssbexo_plizardon_forward_smash_acmd(agent: &mut L2CAgentBas
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         ATTACK(agent, 0, 0, Hash40::new("top"), 21.0, 361, 50, 0, 75, 10.0, 0.0, 5.0, 10.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, -10, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_ENERGY);
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         AttackModule::clear_all(boma);
     }
 }
@@ -115,12 +117,14 @@ unsafe extern "C" fn ssbexo_plizardon_up_smash_acmd(agent: &mut L2CAgentBase) {
     FT_START_ADJUST_MOTION_FRAME_arg1(agent, 1.0);
     frame(lua_state, 16.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         ATTACK(agent, 0, 0, Hash40::new("wingr2"), 11.0, 83, 75, 0, 40, 5.5, 3.6, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("wingr4"), 11.0, 83, 75, 0, 40, 5.0, 2.7, -2.0, -2.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
         ATTACK(agent, 2, 0, Hash40::new("wingr7"), 11.0, 83, 75, 0, 40, 4.5, 6.5, 0.0, 6.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
     }
     wait(lua_state, 6.0);
     if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         AttackModule::clear_all(boma);
     }
 }
@@ -135,6 +139,7 @@ unsafe extern "C" fn ssbexo_plizardon_down_smash_acmd(agent: &mut L2CAgentBase) 
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         ATTACK(agent, 0, 0, Hash40::new("top"), 16.0, 80, 79, 0, 40, 6.0, 0.0, 5.0, 21.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         ATTACK(agent, 1, 0, Hash40::new("top"), 16.0, 80, 79, 0, 40, 6.0, 0.0, 5.0, -15.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         ATTACK(agent, 2, 0, Hash40::new("top"), 16.0, 80, 79, 0, 40, 10.0, 0.0, 5.5, 8.5, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
@@ -143,6 +148,7 @@ unsafe extern "C" fn ssbexo_plizardon_down_smash_acmd(agent: &mut L2CAgentBase) 
     }
     wait(lua_state, 3.0);
     if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         AttackModule::clear_all(boma);
     }
 }

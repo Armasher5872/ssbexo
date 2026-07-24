@@ -4,12 +4,10 @@ use {
     crate::fighters::mods_mounted,
     exo_utils::common::extern_func::is_on_ryujinx,
     skyline_web::dialog_ok::DialogOk,
-    smash::hash40,
     std::{
         panic::*,
         path::Path
-    },
-    the_csk_collection_api::*,
+    }
 };
 
 #[cfg(feature = "skyline-web")]
@@ -105,31 +103,8 @@ pub fn main() {
         }
         arcrop_register_event_callback(Event::ModFilesystemMounted, mods_mounted);
         allow_ui_chara_hash_online(0x12540231f0); //ui_chara_armstrong
+        allow_ui_chara_hash_online(0x139a45e3cb); //ui_chara_springtrap
     }
-    add_assigned_info_entry_info(&AssignedInfoEntry { 
-        info_id: hash40("info_zz09_f_armstrong"),
-        stream_id: Hash40Type::Overwrite(hash40("stream_zz09_f_armstrong")),
-        condition: Hash40Type::Overwrite(hash40("sound_condition_none")),
-        condition_process: Hash40Type::Overwrite(hash40("sound_condition_process_add")),
-        change_fadeout_frame: IntType::Overwrite(60),
-        menu_change_fadeout_frame: IntType::Overwrite(60),
-        ..Default::default()
-    });
-    add_bgm_db_entry_info(&BgmDatabaseRootEntry {ui_bgm_id: hash40("ui_bgm_zz09_f_armstrong"), clone_from_ui_bgm_id: Some(hash40("ui_bgm_z20_f_ganon")), stream_set_id: Hash40Type::Overwrite(hash40("set_zz09_f_armstrong")), ..Default::default()});
-    add_narration_characall_entry("vc_narration_characall_armstrong");
-    add_new_bgm_property_entry(&smash_bgm_property::BgmPropertyEntry {
-        stream_name: hash40::Hash40::new("zz09_f_armstrong"),
-        loop_start_ms: 0,
-        loop_start_sample: 0,
-        loop_end_ms: 0,
-        loop_end_sample: 0,
-        duration_ms: 7659,
-        duration_sample: 359424 
-    });
-    add_stream_property_entry_info(&StreamPropertyEntry {stream_id: hash40("stream_zz09_f_armstrong"), data_name0: StringType::Overwrite(CStrCSK::new("zz09_f_armstrong")), ..Default::default()});
-    add_stream_set_entry_info(&StreamSetEntry {stream_set_id: hash40("set_zz09_f_armstrong"), info0: Hash40Type::Overwrite(hash40("info_zz09_f_armstrong")), ..Default::default()}); 
-    fighters::install();
-    set_fighter_jingle(hash40("ui_chara_armstrong"), "zz09_f_armstrong");
     set_hook(Box::new(|info: &PanicHookInfo<'_>| {
         let location: &Location<'_> = info.location().unwrap();
         let message: &str = match info.payload().downcast_ref::<&'static str>() {

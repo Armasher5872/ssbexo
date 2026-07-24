@@ -69,7 +69,7 @@ unsafe extern "C" fn gekkouga_mat_fall_end_status(_weapon: &mut L2CWeaponCommon)
 }
 
 pub fn install() {
-    Agent::new("gekkouga_mat")
+    Agent::new("gekkouga_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_GEKKOUGA_MAT_STATUS_KIND_FALL, gekkouga_mat_fall_pre_status)
     .status(Init, *WEAPON_GEKKOUGA_MAT_STATUS_KIND_FALL, gekkouga_mat_fall_init_status)

@@ -1,7 +1,10 @@
 use {
     exo_utils::{
         common::check_attack::*,
-        status::catch::*,
+        status::{
+            appeal::*,
+            catch::*,
+        },
         structs::getter_funcs::*,
     },
     exo_var::{
@@ -32,6 +35,7 @@ use {
 
 mod appeal_gas;
 mod appeal_kamikaze;
+mod appeal;
 mod fireballcloned_kamikaze;
 mod special_air_lw_end;
 mod special_air_lw_land;
@@ -66,6 +70,7 @@ mod special_s;
 pub fn install() {
     appeal_gas::install();
     appeal_kamikaze::install();
+    appeal::install();
     fireballcloned_kamikaze::install();
     special_air_lw_end::install();
     special_air_lw_land::install();

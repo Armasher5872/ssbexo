@@ -1,3 +1,1 @@
-use super::*;
-
-pub const FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE: LuaConst = LuaConst::new(0x3);
+pub static mut FIGHTER_LUCARIO_GENERATE_ARTICLE_BONE: i32 = 3;

@@ -40,8 +40,12 @@ unsafe extern "C" fn metaknight_special_lw_attack_main_loop(fighter: &mut L2CFig
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
-    if CancelModule::is_enable_cancel(boma) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
-        return 1.into();
+    if CancelModule::is_enable_cancel(boma) {
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 1.into();
+            }
+        }
     }
     if !StatusModule::is_changing(boma) {
         if situation_kind == *SITUATION_KIND_GROUND

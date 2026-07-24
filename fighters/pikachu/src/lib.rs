@@ -39,5 +39,7 @@ pub fn install() {
     opff::install();
     status::install();
     vtable::install();
-    clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "pikachu", "swordcloned", false);
+    unsafe {
+        FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL += clone_weapon("ganon", *WEAPON_KIND_GANON_SWORD, "pikachu", "swordcloned", false);
+    }
 }

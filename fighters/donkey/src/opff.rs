@@ -2,7 +2,7 @@ use super::*;
 
 unsafe extern "C" fn donkey_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if !ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
+    if !ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
     }
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(boma) {

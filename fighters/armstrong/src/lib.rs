@@ -10,6 +10,7 @@ use {
         fighter::{
             armstrong::*,
             ganon::*,
+            springtrap::*,
         },
         status::damage::*,
         structs::{
@@ -22,6 +23,7 @@ use {
         consts::*,
         ganon::*,
         globals::*,
+        springtrap::*,
     },
     param_config::*,
     smash::{

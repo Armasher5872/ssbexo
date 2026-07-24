@@ -1,6 +1,4 @@
 use {
-    exo_utils::structs::getter_funcs::*,
-    exo_var::mariod::*,
     smash::{
         app::{
             lua_bind::*,
@@ -25,11 +23,13 @@ use {
 };
 
 mod drcapsule_regular;
+mod special_hi;
 mod special_lw;
 mod special_s;
 
 pub fn install() {
     drcapsule_regular::install();
+    special_hi::install();
     special_lw::install();
     special_s::install();
 }

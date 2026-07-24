@@ -6,12 +6,19 @@ unsafe extern "C" fn ssbexo_demon_jawbreaker_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 12.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 361, 10, 10, 0, 6.0, 0.0, 9.5, 5.0, Some(0.0), Some(9.5), Some(8.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 300, 40, 50, 0, 6.0, 0.0, 9.5, 5.0, Some(0.0), Some(9.5), Some(8.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("top"), 15.0, 361, 10, 10, 0, 6.0, 0.0, 9.5, 5.0, Some(0.0), Some(9.5), Some(8.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("top"), 15.0, 300, 40, 50, 0, 6.0, 0.0, 9.5, 5.0, Some(0.0), Some(9.5), Some(8.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
         AttackModule::clear_all(boma);
+    }
+}
+
+//Jawbreaker Tripped ACMD
+unsafe extern "C" fn ssbexo_demon_jawbreaker_tripped_acmd(agent: &mut L2CAgentBase) {
+    if is_excute(agent) {
+        ATTACK(agent, 6, 1, Hash40::new("top"), 0.0, 30, 100, 0, 100, 6.0, 0.0, 9.5, 5.0, Some(0.0), Some(9.5), Some(8.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
     }
 }
 
@@ -57,6 +64,7 @@ pub fn install() {
     Agent::new("demon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_escapeattack", ssbexo_demon_jawbreaker_acmd, Low)
+    .acmd("game_escapeattacktrip", ssbexo_demon_jawbreaker_tripped_acmd, Low)
     .acmd("effect_escapeattack", ssbexo_demon_jawbreaker_effect, Low)
     .acmd("sound_escapeattack", ssbexo_demon_jawbreaker_sound, Low)
     .acmd("expression_escapeattack", ssbexo_demon_jawbreaker_expression, Low)

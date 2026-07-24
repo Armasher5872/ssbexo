@@ -8,7 +8,7 @@ unsafe extern "C" fn donkey_barrel_pull_pre_status(weapon: &mut L2CWeaponCommon)
 
 unsafe extern "C" fn donkey_barrel_pull_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let life = WorkModule::get_param_int(boma, hash40("param_barrel"), hash40("life"));
+    let life = WorkModule::get_param_int(boma, hash40("param_cannonballcloned"), hash40("life"));
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
     WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     WorkModule::set_float(boma, 4.0, *WEAPON_DONKEY_BARREL_INSTANCE_WORK_ID_FLOAT_HP);
@@ -47,7 +47,7 @@ unsafe extern "C" fn donkey_barrel_pull_exit_status(_weapon: &mut L2CWeaponCommo
 }
 
 pub fn install() {
-    Agent::new("donkey_barrel")
+    Agent::new("donkey_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_DONKEY_BARREL_STATUS_KIND_PULL, donkey_barrel_pull_pre_status)
     .status(Init, *WEAPON_DONKEY_BARREL_STATUS_KIND_PULL, donkey_barrel_pull_init_status)

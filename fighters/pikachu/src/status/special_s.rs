@@ -24,9 +24,9 @@ unsafe extern "C" fn pikachu_special_s_init_status(fighter: &mut L2CFighterCommo
 unsafe extern "C" fn pikachu_special_s_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
-    ArticleModule::generate_article(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, false, -1);
-    if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-        let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+    ArticleModule::generate_article(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, false, -1);
+    if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+        let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
         ModelModule::set_joint_scale(boma, Hash40::new("tail1"), &Vector3f{x: 0.001, y: 0.001, z: 0.001});
         LinkModule::set_model_constraint_pos_ort(tail_boma, *LINK_NO_CONSTRAINT, Hash40::new("tail1"), Hash40::new("tail1"), (*CONSTRAINT_FLAG_ORIENTATION | *CONSTRAINT_FLAG_POSITION) as u32, true);
     }
@@ -65,8 +65,8 @@ unsafe extern "C" fn pikachu_special_s_loop(fighter: &mut L2CFighterCommon) -> L
             MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_s"), -1.0, 1.0, 0.0, false, false);
         }
     }
-    if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-        let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+    if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+        let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
         ModelModule::set_joint_scale(boma, Hash40::new("tail1"), &Vector3f{x: 0.001, y: 0.001, z: 0.001});
         if [8.0, 12.0].contains(&frame) {
             ModelModule::set_joint_scale(tail_boma, Hash40::new("tail1"), &Vector3f{x: 1.1, y: 1.1, z: 1.1});
@@ -131,7 +131,7 @@ unsafe extern "C" fn pikachu_special_s_end_status(fighter: &mut L2CFighterCommon
     let boma = fighter.module_accessor;
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     WorkModule::off_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ENABLE_LANDING);
-    ArticleModule::remove_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    ArticleModule::remove_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ModelModule::set_joint_scale(boma, Hash40::new("tail1"), &Vector3f{x: 1.0, y: 1.0, z: 1.0});
     0.into()
 }
@@ -140,7 +140,7 @@ unsafe extern "C" fn pikachu_special_s_exit_status(fighter: &mut L2CFighterCommo
     let boma = fighter.module_accessor;
     WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
     WorkModule::off_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ENABLE_LANDING);
-    ArticleModule::remove_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    ArticleModule::remove_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     ModelModule::set_joint_scale(boma, Hash40::new("tail1"), &Vector3f{x: 1.0, y: 1.0, z: 1.0});
     0.into()
 }

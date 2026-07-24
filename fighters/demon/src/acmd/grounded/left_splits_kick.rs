@@ -40,62 +40,10 @@ unsafe extern "C" fn ssbexo_demon_left_splits_kick_acmd(agent: &mut L2CAgentBase
     }
 }
 
-//Left Splits Kick Effect
-unsafe extern "C" fn ssbexo_demon_left_splits_kick_effect(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    if is_excute(agent) {
-        FOOT_EFFECT(agent, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -2, 0, -1, 0, 0, 0, 0.75, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(lua_state, 7.0);
-    if is_excute(agent) {
-        FOOT_EFFECT(agent, Hash40::new("null"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-    }
-    frame(lua_state, 10.0);
-    if is_excute(agent) {
-        EFFECT_ALPHA(agent, Hash40::new("demon_attack_arc"), Hash40::new("top"), 1.5, 14.2, 4.5, 0, -63, 90, 0.7, 0, 0, 0, 0, 0, 0, true, 0.7);
-        LAST_EFFECT_SET_RATE(agent, 1.1);
-    }
-}
-
-//Left Splits Kick Sound
-unsafe extern "C" fn ssbexo_demon_left_splits_kick_sound(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-     frame(lua_state, 15.0);
-    if is_excute(agent) {
-        PLAY_SE(agent, Hash40::new("se_demon_attackstand1"));
-        PLAY_SEQUENCE(agent, Hash40::new("seq_demon_rnd_attack_s_03"));
-    }
-}
-
-//Left Splits Kick Expression
-unsafe extern "C" fn ssbexo_demon_left_splits_kick_expression(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
-    let boma = agent.module_accessor;
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-        RUMBLE_HIT(agent, Hash40::new("rbkind_80_attackm"), 0);
-    }
-    frame(lua_state, 4.0);
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_R, 2);
-    }
-    frame(lua_state, 17.0);
-    if is_excute(agent) {
-        ControlModule::set_rumble(boma, Hash40::new("rbkind_80_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(lua_state, 28.0);
-    if is_excute(agent) {
-        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 3);
-    }
-}
-
 pub fn install() {
     Agent::new("demon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .acmd("game_attackstep2k", ssbexo_demon_left_splits_kick_acmd, Low)
-    .acmd("effect_attackstep2k", ssbexo_demon_left_splits_kick_effect, Low)
-    .acmd("sound_attackstep2k", ssbexo_demon_left_splits_kick_sound, Low)
-    .acmd("expression_attackstep2k", ssbexo_demon_left_splits_kick_expression, Low)
+    .acmd("game_attackstand1", ssbexo_demon_left_splits_kick_acmd, Low)
     .install()
     ;
 }

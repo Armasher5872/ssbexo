@@ -14,9 +14,9 @@ unsafe extern "C" fn donkey_barrel_throw_init_status(weapon: &mut L2CWeaponCommo
     let owner_pos_y = PostureModule::pos_y(owner_boma);
     let owner_pos_z = PostureModule::pos_z(owner_boma);
     let owner_situation_kind = StatusModule::situation_kind(owner_boma);
-    let speed = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("speed_min"));
-    let brake_x = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("brake_x"));
-    let gravity = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("gravity"));
+    let speed = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("speed_min"));
+    let brake_x = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("brake_x"));
+    let gravity = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("gravity"));
     let angle = 25.0f32;
     let speed_x = angle.to_radians().sin()*speed*owner_lr;
     let speed_y = angle.to_radians().cos()*speed;
@@ -91,7 +91,7 @@ unsafe extern "C" fn donkey_barrel_throw_exit_status(_weapon: &mut L2CWeaponComm
 }
 
 pub fn install() {
-    Agent::new("donkey_barrel")
+    Agent::new("donkey_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_DONKEY_BARREL_STATUS_KIND_THROW, donkey_barrel_throw_pre_status)
     .status(Init, *WEAPON_DONKEY_BARREL_STATUS_KIND_THROW, donkey_barrel_throw_init_status)

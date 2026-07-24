@@ -2,6 +2,7 @@ use super::*;
 
 const DEMON_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x930ff0; //Kazuya only
 const DEMON_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x931680; //Kazuya only
+const DEMON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x932a00; //Kazuya only
 const DEMON_VTABLE_ON_ATTACK_OFFSET: usize = 0x932f50; //Kazuya only
 //const DEMON_VTABLE_LINK_EVENT_OFFSET: usize = 0x933800; //Kazuya only
 const DEMON_VTABLE_ON_GRAB_OFFSET: usize = 0x934310; //Kazuya only
@@ -24,11 +25,39 @@ unsafe extern "C" fn demon_death_initialization(vtable: u64, fighter: &mut Fight
     original!()(vtable, fighter)
 }
 
+//Kazuya Once Per Fighter Frame
+#[skyline::hook(offset = DEMON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn demon_opff(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    let battle_object_slow = singletons::BattleObjectSlow() as *mut u8;
+    if *battle_object_slow.add(0x8) == 0 || *(battle_object_slow as *const u32) == 2 {
+        //Added
+        if WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+            WorkModule::set_flag(boma, WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL), *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_PREV);
+            WorkModule::on_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL);
+            if MotionModule::motion_kind_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_WING) != hash40("invalid") {
+                MotionModule::remove_motion_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_WING, false);
+            }
+            if MotionModule::motion_kind_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_DEVIL) == hash40("invalid") || MotionModule::is_end_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_DEVIL) {
+                MotionModule::add_motion_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_DEVIL, Hash40::new("devil_form"), 0.0, 0.0, false, false, 0.0, true, true, false);
+            }
+        }
+        else {
+            if WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_CLOSE_WING) {
+                MotionModule::add_motion_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_WING, Hash40::new_raw(0xacc7ac1bf), 6.0, 0.0, false, false, 0.0, true, true, false);
+                WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_CLOSE_WING);
+            }
+            if MotionModule::motion_kind_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_WING) != hash40("invalid") && MotionModule::is_end_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_WING) {
+                MotionModule::remove_motion_partial(boma, *FIGHTER_DEMON_MOTION_PART_SET_KIND_WING, false);
+            }
+        }
+    }
+}
+
 //Kazuya On Attack
 #[skyline::hook(offset = DEMON_VTABLE_ON_ATTACK_OFFSET)]
 unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
-    let agent = get_fighter_common_from_accessor(&mut *boma);
     let frame = MotionModule::frame(boma);
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
@@ -40,30 +69,26 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
             let opponent_object = get_battle_object_from_id(opponent_object_id);
             let opponent_battle_object_id = (*opponent_object).battle_object_id;
             let opponent_boma = (*opponent_object).module_accessor;
-            let get_status = HitModule::get_status(opponent_boma, (*collision_log).receiver_id as i32, 0);
-            if opponent_battle_object_id >> 0x1C == 0 && get_status == 0 {
+            if opponent_battle_object_id >> 0x1C == 0 {
                 let opponent_status_kind = StatusModule::status_kind(opponent_boma);
+                println!("Last Attack Hitbox ID: {}", LAST_ATTACK_HITBOX_ID);
                 if status_kind == *FIGHTER_DEMON_STATUS_KIND_ESCAPE_ATTACK {
                     if LAST_ATTACK_HITBOX_ID == 0 {
                         if collision_kind == 1 {
                             if [*FIGHTER_STATUS_KIND_SLIP, *FIGHTER_STATUS_KIND_SAVING_DAMAGE, *FIGHTER_STATUS_KIND_FIST_DOWN, *FIGHTER_STATUS_KIND_FIST_DOWN2, *FIGHTER_STATUS_KIND_FIST_DOWN3].contains(&opponent_status_kind) {
-                                AttackModule::clear_all(boma);
-                                ATTACK(agent, 2, 1, Hash40::new("top"), 0.0, 30, 100, 0, 100, 6.0, 0.0, 9.5, 5.0, Some(0.0), Some(9.5), Some(8.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
+                                MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_escapeattacktrip"), -1);
                             }
                         }
                     }
-                    if LAST_ATTACK_HITBOX_ID == 1 {
+                    if LAST_ATTACK_HITBOX_ID == 6 {
                         if collision_kind == 1 {
-                            StatusModule::change_status_force(opponent_boma, *FIGHTER_STATUS_KIND_DAMAGE_FLY_METEOR, false);
-                            WorkModule::on_flag(opponent_boma, *FIGHTER_STATUS_DAMAGE_FLAG_FLY_DISABLE_PASSIVE);
+                            StatusModule::change_status_force(opponent_boma, *FIGHTER_STATUS_KIND_TREAD_DAMAGE_AIR, false);
                         }
                     }
                 }
-                if status_kind == *FIGHTER_DEMON_STATUS_KIND_ATTACK_STAND_1 {
-                    if LAST_ATTACK_HITBOX_ID == 0 {
-                        if collision_kind == 1 {
-                            StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_DAMAGE_FALL, false);
-                        }
+                if status_kind == *FIGHTER_DEMON_STATUS_KIND_ATTACK_DASH_3 {
+                    if LAST_ATTACK_HITBOX_ID < 3 {
+                        MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_attackdash3hit"), -1);
                     }
                 }
                 if [hash40("attack_stand_22"), hash40("attack_stand_23")].contains(&motion_kind) {
@@ -75,9 +100,7 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
                 if motion_kind == hash40("attack_stand_31") {
                     if [*FIGHTER_STATUS_KIND_SLIP, *FIGHTER_STATUS_KIND_SAVING_DAMAGE, *FIGHTER_STATUS_KIND_FIST_DOWN, *FIGHTER_STATUS_KIND_FIST_DOWN2, *FIGHTER_STATUS_KIND_FIST_DOWN3].contains(&opponent_status_kind) {
                         if collision_kind == 1 {
-                            AttackModule::clear_all(boma);
-                            ATTACK(agent, 6, 1, Hash40::new("top"), 0.0, 270, 0, 0, 45, 3.6, 0.0, 17.0, 11.0, Some(0.0), Some(4.2), Some(3.5), 0.4, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
-                            AttackModule::set_add_reaction_frame(boma, 6, 18.0, false);
+                            MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_attackstand31saving"), -1);
                         }
                     }
                 }
@@ -173,6 +196,7 @@ pub fn install() {
     skyline::install_hooks!(
         demon_reset_initialization,
         demon_death_initialization,
+        demon_opff,
         demon_on_attack,
         //demon_link_event,
         demon_on_grab

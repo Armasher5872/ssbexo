@@ -15,7 +15,7 @@ unsafe extern "C" fn link_special_hi_loop_init_status(fighter: &mut L2CFighterCo
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.0);
         sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.15);
-        sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.005);
+        sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.05);
     }
     else {
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -25,7 +25,9 @@ unsafe extern "C" fn link_special_hi_loop_init_status(fighter: &mut L2CFighterCo
 }
 
 unsafe extern "C" fn link_special_hi_loop_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
     fighter.sub_change_motion_by_situation(Hash40::new("special_hi_hold").into(), Hash40::new("special_air_hi_hold").into(), false.into());
+    MotionModule::set_rate(boma, 1.02);
     fighter.sub_shift_status_main(L2CValue::Ptr(link_special_hi_loop_main_loop as *const () as _))
 }
 

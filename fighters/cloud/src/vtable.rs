@@ -3,9 +3,7 @@ use super::*;
 const CLOUD_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8dacd0; //Cloud only
 const CLOUD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8db3b0; //Cloud only
 const CLOUD_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x8db780; //Cloud only
-const CLOUD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x68d670; //Shared
 const CLOUD_VTABLE_ON_ATTACK_OFFSET: usize = 0x8dc4f0; //Cloud only
-const CLOUD_VTABLE_SHIELD_ATTACK_TRANSITION_EVENT_OFFSET: usize = 0x68d8d0; //Shared
 const CLOUD_VTABLE_ON_DAMAGE_OFFSET: usize = 0x8dd510; //Cloud only
 const CLOUD_LIMIT_MANAGER_OFFSET: usize = 0x8dc160; //Cloud only
 
@@ -97,23 +95,19 @@ unsafe extern "C" fn cloud_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Cloud Once Per Fighter Frame
-#[skyline::hook(offset = CLOUD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn cloud_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_CLOUD as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-        let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
-        if limit_level > 0 {
-            UiManager::set_cloud_meter_enable(entry_id, true);
-            UiManager::set_cloud_meter_info(entry_id, limit_level-1);
-        }
-        else {
-            UiManager::set_cloud_meter_enable(entry_id, false);
-            UiManager::set_cloud_meter_info(entry_id, 0);
-        }
-        cloud_training_mode_features(boma);
+unsafe extern "C" fn cloud_opff(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
+    let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
+    if limit_level > 0 {
+        UiManager::set_cloud_meter_enable(entry_id, true);
+        UiManager::set_cloud_meter_info(entry_id, limit_level-1);
     }
-    original!()(vtable, fighter)
+    else {
+        UiManager::set_cloud_meter_enable(entry_id, false);
+        UiManager::set_cloud_meter_info(entry_id, 0);
+    }
+    cloud_training_mode_features(boma);
 }
 
 //Cloud On Attack
@@ -176,16 +170,12 @@ unsafe extern "C" fn cloud_shield_attack_detection_event(_vtable: u64, fighter: 
 }
 
 //Cloud Shield Attack Transition Event
-#[skyline::hook(offset = CLOUD_VTABLE_SHIELD_ATTACK_TRANSITION_EVENT_OFFSET)]
-unsafe extern "C" fn cloud_shield_attack_transition_event(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_CLOUD as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER) {
-            StatusModule::change_status_request_from_script(boma, *FIGHTER_CLOUD_STATUS_KIND_COUNTER_ATTACK, false);
-            WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
-        }
+unsafe extern "C" fn cloud_shield_attack_transition_event(_vtable: u64, fighter: &mut Fighter, _log: u64) {
+    let boma = fighter.battle_object.module_accessor;
+    if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER) {
+        StatusModule::change_status_request_from_script(boma, *FIGHTER_CLOUD_STATUS_KIND_COUNTER_ATTACK, false);
+        WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
     }
-    original!()(vtable, fighter, log)
 }
 
 //Cloud On Damage
@@ -262,18 +252,16 @@ unsafe extern "C" fn cloud_limit_manager(limit: f32, boma: *mut BattleObjectModu
 }
 
 pub fn install() {
-    //The following nop disables Cloud's Waza Customize being enabled for Neutral Special, thusly preventing Limit Break Neutral Special from being used
-    let _ = skyline::patching::Patch::in_text(0x8dd868).nop();
-    //Disables on attack limit manager
-    let _ = skyline::patching::Patch::in_text(0x8dc8a0).nop();
-    let _ = skyline::patching::Patch::in_text(0x4F9BA78).data(cloud_shield_attack_detection_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x8dd868).nop(); //The following nop disables Cloud's Waza Customize being enabled for Neutral Special, thusly preventing Limit Break Blade Beam from being used
+    let _ = skyline::patching::Patch::in_text(0x8dc8a0).nop(); //Disables on attack limit manager
+    let _ = skyline::patching::Patch::in_text(0x4f9b950).data(cloud_opff as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x4f9ba78).data(cloud_shield_attack_detection_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x4f9ba80).data(cloud_shield_attack_transition_event as *const () as u64);
 	skyline::install_hooks!(
         cloud_start_initialization,
         cloud_reset_initialization,
         cloud_death_initialization,
-        cloud_opff,
         cloud_on_attack,
-        cloud_shield_attack_transition_event,
         cloud_on_damage,
         cloud_limit_manager
     );

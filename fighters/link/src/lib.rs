@@ -17,6 +17,7 @@ use {
     },
     exo_var::{
         consts::*,
+        edge::*,
         globals::*,
         link::*,
     },
@@ -25,7 +26,6 @@ use {
             lua_bind::*,
             *
         },
-        hash40,
         lib::{
             L2CValue,
             lua_const::*,

@@ -1,5 +1,9 @@
 use {
-    exo_var::wario::*,
+    exo_utils::structs::getter_funcs::*,
+    exo_var::{
+        consts::*,
+        wario::*,
+    },
     smash::{
         app::{
             lua_bind::*,

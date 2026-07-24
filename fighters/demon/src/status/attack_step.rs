@@ -33,25 +33,26 @@ unsafe extern "C" fn fun_710002f880(fighter: &mut L2CFighterCommon, bool_check: 
 }
 
 unsafe extern "C" fn demon_attack_step_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let frame = fighter.global_table[CURRENT_FRAME].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let cmd_cat4 = fighter.global_table[CMD_CAT4].get_i32();
     let boma = fighter.module_accessor;
-    let button = ControlModule::get_button(boma);
     let rage_system = WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_RAGE_SYSTEM);
     let special_command_neutral_threshold = WorkModule::get_param_float(boma, hash40("common"), hash40("special_command_neutral_threshold"));
+    let step2f_frame = WorkModule::get_param_int(boma, hash40("param_attack_step"), hash40("step2f_frame"));
     let vec = fighter.Vector2__create(stick_x.into(), stick_y.into());
     let len = fighter.Vector2__length(vec).get_f32();
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
-    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+    if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
         fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2S.into(), true.into()); //Spinning Demon to Left Hook
     }
     if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623ALONG != 0 {
-        if Buttons::from_bits_retain(button).intersects(Buttons::Special) && rage_system {
+        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY != 0 && rage_system {
             WorkModule::set_flag(boma, rage_system, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_HEAVENS_DOOR);
             fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE.into(), true.into()); //Rage Drive
         }
@@ -62,12 +63,23 @@ unsafe extern "C" fn demon_attack_step_main_loop(fighter: &mut L2CFighterCommon)
     }
     if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_323CATCH != 0 {
         fighter.change_status(FIGHTER_DEMON_STATUS_KIND_CATCH_COMMAND.into(), true.into()); //Gates of Hell
+        return 0.into();
     }
     if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623A != 0 {
         fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2.into(), true.into()); //Wind God Fist
+        return 0.into();
     }
-    if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 != 0 {
-        fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2K.into(), true.into()); //Left Splits Kick
+    if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623STRICT != 0 {
+        if frame <= step2f_frame {
+            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2F.into(), true.into()); //I'm not gonna sugarcoat it
+            return 0.into();
+        }
+    }
+    if WorkModule::is_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_FLAG_NEUTRAL) {
+        if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_6 != 0 {
+            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STAND_1.into(), true.into()); //Left Splits Kick
+            return 0.into();
+        }
     }
     if !WorkModule::is_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_FLAG_NEUTRAL) {
         if len <= special_command_neutral_threshold {

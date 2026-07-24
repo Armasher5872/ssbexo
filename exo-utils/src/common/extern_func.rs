@@ -26,6 +26,9 @@ unsafe extern "C" {
     #[link_name = "_ZN3app19sv_fighter_audience20notify_event_msc_cmdEP9lua_State"]
     pub fn sv_fighter_audience_notify_event_msc_cmd(lua_state: u64);
 
+    #[link_name = "_ZN3app23FighterSpecializer_Edge32set_one_winged_light_weight_dataERNS_7FighterEb"]
+    pub fn set_one_winged_light_weight_data(fighter: &mut smash::app::Fighter, bool_check: bool);
+
     #[link_name = "_ZN3app24FighterSpecializer_Cloud20display_final_windowEb"]
 	pub fn display_final_window(param_1: bool);
 
@@ -35,11 +38,11 @@ unsafe extern "C" {
     #[link_name = "_ZN3app24FighterSpecializer_Demon15sub_rage_systemERNS_7FighterEb"]
     pub fn sub_rage_system(fighter: *mut smash::app::Fighter, param: bool);
 
+    #[link_name = "_ZN3app26WeaponSpecializer_EdgeFire14request_effectERNS_26BattleObjectModuleAccessorE"]
+    pub fn weapon_specializer_edge_fire_request_effect(boma: *mut BattleObjectModuleAccessor);
+
     #[link_name = "_ZN3app28FighterInklingLinkEventPaint13new_l2c_tableEv"]
     pub fn FighterInklingLinkEventPaint__new_l2c_table() -> smash::lib::L2CValue;
-
-    #[link_name = "_ZN3app30WeaponSpecializer_LinkBowarrow7to_itemERNS_26BattleObjectModuleAccessorE"]
-    pub fn to_item(boma: *mut BattleObjectModuleAccessor);
 
     pub fn change_version_string(arg: u64, string: *const std::os::raw::c_char);
 }

@@ -12,7 +12,7 @@ unsafe extern "C" fn ssbexo_ike_neutral_special_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 22.0);
     if is_excute(agent) {
-        ArticleModule::generate_article(boma, *FIGHTER_IKE_GENERATE_ARTICLE_SLASH, false, -1);
+        ArticleModule::generate_article(boma, FIGHTER_IKE_GENERATE_ARTICLE_SLASH, false, -1);
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {

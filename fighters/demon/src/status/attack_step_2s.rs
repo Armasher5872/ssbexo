@@ -20,6 +20,7 @@ unsafe extern "C" fn demon_attack_step_2s_main_status(fighter: &mut L2CFighterCo
 
 unsafe extern "C" fn demon_attack_step_2s_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let cmd_cat4 = fighter.global_table[CMD_CAT4].get_i32();
     let boma = fighter.module_accessor;
     if situation_kind == *SITUATION_KIND_AIR {
@@ -32,7 +33,7 @@ unsafe extern "C" fn demon_attack_step_2s_main_loop(fighter: &mut L2CFighterComm
         }
     }
     if WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_RAGE_DRIVE) {
-        if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::Special) {
+        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY != 0 {
             if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623A != 0 {
                 fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE.into(), false.into());
                 return 1.into();

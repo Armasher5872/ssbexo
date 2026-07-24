@@ -5,20 +5,16 @@ use super::*;
 unsafe extern "C" fn hit_module_handle_attack_event(ctx: &InlineCtx) {
     let data = ctx.registers[1].x() as *mut u32;
     let attacker_id = *data;
-    let collision_id = *data.add(1);
     let battle_object = &mut *get_battle_object_from_id(attacker_id);
     let category = smash::app::utility::get_category(&mut (*battle_object.module_accessor));
     if ![*BATTLE_OBJECT_CATEGORY_FIGHTER, *BATTLE_OBJECT_CATEGORY_WEAPON, *BATTLE_OBJECT_CATEGORY_ITEM].contains(&category) {
         return;
     }
     let collision_data = ctx.registers[27].x() as *mut f32;
-    let loc_x = *collision_data.add(4);
-    let loc_y = *collision_data.add(5);
-    let loc_z = *collision_data.add(6);
-    LAST_ATTACK_HITBOX_ID = collision_id as i32;
-    LAST_ATTACK_HITBOX_LOCATION_X = loc_x;
-    LAST_ATTACK_HITBOX_LOCATION_Y = loc_y;
-    LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
+    LAST_ATTACK_HITBOX_ID = *data.add(1) as i32;
+    LAST_ATTACK_HITBOX_LOCATION_X = *collision_data.add(4);
+    LAST_ATTACK_HITBOX_LOCATION_Y = *collision_data.add(5);
+    LAST_ATTACK_HITBOX_LOCATION_Z = *collision_data.add(6);
 }
 
 //Shield Module Send Shield Attack Collision Event, basically does the same thing as 0x46ae64, but on shield
@@ -30,14 +26,10 @@ unsafe extern "C" fn shield_module_send_shield_attack_collision_event(shield_mod
     if ![*BATTLE_OBJECT_CATEGORY_FIGHTER, *BATTLE_OBJECT_CATEGORY_WEAPON, *BATTLE_OBJECT_CATEGORY_ITEM].contains(&attacker_category) {
         return;
     }
-    let hitbox_id = *(collision.add(0x33) as *const u8);
-    let loc_x = *(collision.add(0x10) as *const f32);
-    let loc_y = *(collision.add(0x14) as *const f32);
-    let loc_z = *(collision.add(0x18) as *const f32);
-    LAST_ATTACK_HITBOX_ID = hitbox_id as i32;
-    LAST_ATTACK_HITBOX_LOCATION_X = loc_x;
-    LAST_ATTACK_HITBOX_LOCATION_Y = loc_y;
-    LAST_ATTACK_HITBOX_LOCATION_Z = loc_z;
+    LAST_ATTACK_HITBOX_ID = *(collision.add(0x33) as *const u8) as i32;
+    LAST_ATTACK_HITBOX_LOCATION_X = *(collision.add(0x10) as *const f32);
+    LAST_ATTACK_HITBOX_LOCATION_Y = *(collision.add(0x14) as *const f32);
+    LAST_ATTACK_HITBOX_LOCATION_Z = *(collision.add(0x18) as *const f32);
     call_original!(shield_module, opp_attack_module, collision, group_index, raw_power, real_power, pos_x, lr);
 }
 

@@ -70,9 +70,9 @@ unsafe extern "C" fn pfushigisou_sludge_shoot_pre_status(weapon: &mut L2CWeaponC
 
 unsafe extern "C" fn pfushigisou_sludge_shoot_init_status(weapon: &mut L2CWeaponCommon) -> L2CValue {
     let boma = weapon.module_accessor;
-    let life = WorkModule::get_param_int(boma, hash40("param_sludge"), hash40("life"));
-    let speed_max = WorkModule::get_param_float(boma, hash40("param_sludge"), hash40("speed_max"));
-    let gravity = WorkModule::get_param_float(boma, hash40("param_sludge"), hash40("gravity"));
+    let life = WorkModule::get_param_int(boma, hash40("param_cannonballcloned"), hash40("life"));
+    let speed_max = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("speed_max"));
+    let gravity = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("gravity"));
     let angle: f32 = 80.0;
     let lr = PostureModule::lr(boma);
     let speed_x = angle.to_radians().sin()*speed_max*lr;
@@ -124,7 +124,7 @@ pub fn install() {
     .status(Main, *FIGHTER_STATUS_KIND_SPECIAL_N, pfushigisou_special_n_main_status)
     .install()
     ;
-    Agent::new("pfushigisou_sludge")
+    Agent::new("pfushigisou_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_pre_status)
     .status(Init, *WEAPON_PFUSHIGISOU_SLUDGE_STATUS_KIND_SHOOT, pfushigisou_sludge_shoot_init_status)

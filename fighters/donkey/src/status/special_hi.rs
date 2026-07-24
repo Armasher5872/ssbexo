@@ -28,11 +28,11 @@ unsafe extern "C" fn donkey_special_hi_init_status(fighter: &mut L2CFighterCommo
 //Special Hi Main Status
 unsafe extern "C" fn donkey_special_hi_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    ArticleModule::generate_article(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, false, -1);
-    ArticleModule::set_visibility_whole(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-    ArticleModule::change_motion(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, Hash40::new("shoot"), true, -1.0);
-    if ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON) {
-        let barrel_cannon_boma = get_article_boma(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON);
+    ArticleModule::generate_article(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, false, -1);
+    ArticleModule::set_visibility_whole(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    ArticleModule::change_motion(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, Hash40::new("shoot"), true, -1.0);
+    if ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON) {
+        let barrel_cannon_boma = get_article_boma(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON);
         LinkModule::set_model_constraint_pos_ort(barrel_cannon_boma, *LINK_NO_CONSTRAINT, Hash40::new("rotx"), Hash40::new("throw"), (*CONSTRAINT_FLAG_ORIENTATION | *CONSTRAINT_FLAG_POSITION | *CONSTRAINT_FLAG_OFFSET_TRANSLATE | *CONSTRAINT_FLAG_OFFSET_ROT) as u32, true);
     }
     sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
@@ -76,8 +76,8 @@ unsafe extern "C" fn donkey_special_hi_exec_status(_fighter: &mut L2CFighterComm
 unsafe extern "C" fn donkey_special_hi_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     VisibilityModule::set_model_visible(boma, true);
-    if ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON) {
-        ArticleModule::remove_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    if ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON) {
+        ArticleModule::remove_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     0.into()
 }
@@ -86,8 +86,8 @@ unsafe extern "C" fn donkey_special_hi_end_status(fighter: &mut L2CFighterCommon
 unsafe extern "C" fn donkey_special_hi_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     VisibilityModule::set_model_visible(boma, true);
-    if ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON) {
-        ArticleModule::remove_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+    if ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON) {
+        ArticleModule::remove_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     0.into()
 }

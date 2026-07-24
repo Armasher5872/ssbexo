@@ -10,9 +10,9 @@ unsafe extern "C" fn ganon_volley_fly_init_status(weapon: &mut L2CWeaponCommon) 
     let boma = weapon.module_accessor;
     let owner_boma = get_owner_boma(weapon);
     let owner_status_kind = StatusModule::status_kind(owner_boma);
-    let life = WorkModule::get_param_int(boma, hash40("param_volley"), hash40("life"));
-    let speed_min = WorkModule::get_param_float(boma, hash40("param_volley"), hash40("speed_min"));
-    let speed_max = WorkModule::get_param_float(boma, hash40("param_volley"), hash40("speed_max"));
+    let life = WorkModule::get_param_int(boma, hash40("param_cannonballcloned"), hash40("life"));
+    let speed_min = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("speed_min"));
+    let speed_max = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("speed_max"));
     let lr = PostureModule::lr(boma);
     let owner_lr = PostureModule::lr(owner_boma);
     let owner_pos_x = PostureModule::pos_x(owner_boma);
@@ -130,7 +130,7 @@ unsafe extern "C" fn ganon_volley_fly_exit_status(weapon: &mut L2CWeaponCommon) 
 }
 
 pub fn install() {
-    Agent::new("ganon_volley")
+    Agent::new("ganon_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_GANON_VOLLEY_STATUS_KIND_FLY, ganon_volley_fly_pre_status)
     .status(Init, *WEAPON_GANON_VOLLEY_STATUS_KIND_FLY, ganon_volley_fly_init_status)

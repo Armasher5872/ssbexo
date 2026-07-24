@@ -9,6 +9,7 @@ use {
         },
         fighter::{
             cloud::*,
+            edge::*,
             ice_climber_meter::*,
             link::*,
             mariod_meter::*,
@@ -46,6 +47,7 @@ use {
     }
 };
 
+pub mod attackinfo_struct;
 pub mod buttons;
 pub mod collision_struct;
 pub mod command_input_struct;
@@ -53,7 +55,6 @@ pub mod controller_struct;
 pub mod energy_motion_reset_type;
 pub mod flydata;
 pub mod getter_funcs;
-pub mod hashed_string;
 pub mod kinetic_energy;
 pub mod knockback_calc_context;
 pub mod module_init;

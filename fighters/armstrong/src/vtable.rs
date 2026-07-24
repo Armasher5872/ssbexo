@@ -1,26 +1,22 @@
 use super::*;
 
-const ARMSTRONG_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const ARMSTRONG_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xaa6520; //Armstrong only
 const ARMSTRONG_VTABLE_ON_ATTACK_OFFSET: usize = 0xaa6540; //Armstrong only
-const ARMSTRONG_VTABLE_ON_DAMAGE_OFFSET: usize = 0x68d9e0; //Shared
 const ARMSTRONG_VTABLE_LINK_EVENT_OFFSET: usize = 0xaa6990; //Armstrong only
 
 //Armstrong Reset Initialization
-#[skyline::hook(offset = ARMSTRONG_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn armstrong_reset_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_GANON as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        if is_armstrong_slots(boma) {
-            common_reset_variable_reset(&mut *boma);
-            armstrong_var(&mut *boma);
-        }
-        else {
-            ganon_var(&mut *boma);
-        }
-        common_reset_variable_reset(&mut *boma);
+unsafe extern "C" fn armstrong_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    if is_armstrong_slots(boma) {
+        armstrong_var(&mut *boma);
     }
-    original!()(vtable, fighter)
+    else if is_springtrap_slots(boma) {
+        springtrap_var(boma);
+    }
+    else {
+        ganon_var(&mut *boma);
+    }
+    common_reset_variable_reset(&mut *boma);
 }
 
 //Armstrong Death Initialization
@@ -28,8 +24,10 @@ unsafe extern "C" fn armstrong_reset_initialization(vtable: u64, fighter: &mut F
 unsafe extern "C" fn armstrong_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     if is_armstrong_slots(boma) {
-        common_death_variable_reset(&mut *boma);
         armstrong_var(&mut *boma);
+    }
+    else if is_springtrap_slots(boma) {
+        springtrap_var(boma);
     }
     else {
         ganon_var(&mut *boma);
@@ -44,32 +42,63 @@ unsafe extern "C" fn armstrong_on_attack(vtable: u64, fighter: &mut Fighter, log
     let collision_log = log as *mut CollisionLogScuffed;
     let collision_kind = (*collision_log).collision_kind;
     let opponent_object_id = (*collision_log).opponent_object_id;
-    let opponent_object = get_battle_object_from_id(opponent_object_id);
-    let opponent_battle_object_id = (*opponent_object).battle_object_id;
-    let status_kind = StatusModule::status_kind(boma);
-    if is_armstrong_slots(boma) {
-        let charge = WorkModule::get_float(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_NEUTRAL_SPECIAL_CHARGE);
-        if status_kind == *FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_ATTACK && charge > 0.75 {
-            call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
-        }
-        if [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind) && WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
-            call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
-        }
-        if collision_kind == 1 {
-            if opponent_battle_object_id >> 0x1C == 0 && HitModule::get_status((*opponent_object).module_accessor, (*collision_log).receiver_id as i32, 0) == 0 {
-                if status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 {
-                    let opponent_boma = sv_battle_object::module_accessor(opponent_battle_object_id);
-                    let opponent_situation_kind = StatusModule::situation_kind(opponent_boma);
-                    if opponent_situation_kind == *SITUATION_KIND_GROUND {
-                        StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_DOWN, false);
+    if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+        let opponent_object = get_battle_object_from_id(opponent_object_id);
+        let opponent_battle_object_id = (*opponent_object).battle_object_id;
+        let opponent_boma = (*opponent_object).module_accessor;
+        let attack_data = *AttackModule::attack_data(boma, (*collision_log).collider_id as i32, (*collision_log).x35);
+        let lr = PostureModule::lr(boma);
+        let status_kind = StatusModule::status_kind(boma);
+        let sound_attr = attack_data.sound_attr as i32;
+        let sound_level = attack_data.sound_level as i32;
+        if is_armstrong_slots(boma) {
+            let charge = WorkModule::get_float(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_NEUTRAL_SPECIAL_CHARGE);
+            if status_kind == *FIGHTER_ARMSTRONG_STATUS_KIND_SPECIAL_N_ATTACK && charge > 0.75 {
+                call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
+            }
+            if [*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind) && WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
+                call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
+            }
+            if collision_kind == 1 {
+                if opponent_battle_object_id >> 0x1C == 0 && HitModule::get_status(opponent_boma, (*collision_log).receiver_id as i32, 0) == 0 {
+                    if status_kind == *FIGHTER_STATUS_KIND_ATTACK_LW4 {
+                        let opponent_situation_kind = StatusModule::situation_kind(opponent_boma);
+                        if opponent_situation_kind == *SITUATION_KIND_GROUND {
+                            StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_DOWN, false);
+                        }
                     }
                 }
             }
         }
-    }
-    else {
-        if status_kind == *FIGHTER_GANON_STATUS_KIND_APPEAL_ATTACK {
-            call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
+        else if is_springtrap_slots(boma) {
+            if opponent_battle_object_id >> 0x1C == 0 {
+                let opponent_lr = PostureModule::lr(opponent_boma);
+                let opponent_pos = *PostureModule::pos(opponent_boma);
+                if opponent_lr == lr {
+                    EffectModule::req(opponent_boma, Hash40::new("springtrap_soul_burst"), &Vector3f{x: opponent_pos.x, y: opponent_pos.y+12.0, z: opponent_pos.z}, &Vector3f{x: 90.0, y: 90.0, z: 0.0}, 1.0, 0, -1, false, 0);
+                }
+                if status_kind == *FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK {
+                    if collision_kind != *COLLISION_KIND_SHIELD as u8 && attack_data.attr == hash40("collision_attr_saving") && WorkModule::get_float(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE) >= 1.0 {
+                        WorkModule::on_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT);
+                    }
+                }
+            }
+            if sound_attr == *COLLISION_SOUND_ATTR_SPRINGTRAP_KNIFE {
+                let volume = match sound_level {
+                    0 => {0.3},
+                    1 => {0.5},
+                    2 => {0.7},
+                    3 => {1.0},
+                    _ => {1.0}
+                };
+                let crit = SoundModule::play_se(boma, Hash40::new("se_ganon_attackhard_h03"), true, false, false, false, enSEType(0));
+                SoundModule::set_se_vol(boma, crit as i32, volume, 0);
+            }
+        }
+        else {
+            if status_kind == *FIGHTER_GANON_STATUS_KIND_APPEAL_ATTACK {
+                call_special_zoom(boma, log, *FIGHTER_KIND_GANON, hash40("param_special_n"), 1, 0, 0, 0, 0);
+            }
         }
     }
     original!()(vtable, fighter, log)
@@ -200,8 +229,7 @@ unsafe extern "C" fn armstrong_link_event(_vtable: u64, fighter: &mut Fighter, l
 }
 
 //Armstrong On Damage
-#[skyline::hook(offset = ARMSTRONG_VTABLE_ON_DAMAGE_OFFSET)]
-unsafe extern "C" fn armstrong_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) {
+unsafe extern "C" fn armstrong_on_damage(_vtable: u64, fighter: &mut Fighter, _on_damage: u64) {
     if fighter.battle_object.kind == *FIGHTER_KIND_GANON as u32 {
         if is_armstrong_slots(fighter.battle_object.module_accessor) {
             let boma = fighter.battle_object.module_accessor;
@@ -232,16 +260,15 @@ unsafe extern "C" fn armstrong_on_damage(vtable: u64, fighter: &mut Fighter, on_
             }
         }
     }
-    original!()(vtable, fighter, on_damage)
 }
 
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0xaa6618).nop(); //Nops the original location where Neutral Special inflicts critical zoom, as I want both Ganon and Armstrong to have different places where they inflict critical zoom
+    let _ = skyline::patching::Patch::in_text(0x4fbb308).data(armstrong_reset_initialization as *const () as *const u64);
+    let _ = skyline::patching::Patch::in_text(0x4fbb508).data(armstrong_on_damage as *const () as *const u64);
 	skyline::install_hooks!(
-        armstrong_reset_initialization,
         armstrong_death_initialization,
         armstrong_on_attack,
-        armstrong_link_event,
-        armstrong_on_damage
+        armstrong_link_event
     );
 }

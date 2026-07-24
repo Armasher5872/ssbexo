@@ -21,43 +21,38 @@ unsafe extern "C" fn fun_7100031280(fighter: &mut L2CFighterCommon, combo_index:
                         if combo_index.get_i32() != 5 {
                             if combo_index.get_i32() != 6 {
                                 if combo_index.get_i32() != 7 {
-                                    if combo_index.get_i32() != 8 {
-                                        motion_kind = Hash40::new("attack_110");
-                                    }
-                                    else {
-                                        motion_kind = Hash40::new("attack_19");
-                                    }
+                                    motion_kind = Hash40::new("attack_110");
                                 }
                                 else {
-                                    motion_kind = Hash40::new("attack_18");
+                                    motion_kind = Hash40::new("attack_19");
                                 }
                             }
                             else {
-                                motion_kind = Hash40::new("attack_17");
+                                motion_kind = Hash40::new("attack_18");
                             }
                         }
                         else {
-                            motion_kind = Hash40::new("attack_16");
+                            motion_kind = Hash40::new("attack_17");
                         }
                     }
                     else {
-                        motion_kind = Hash40::new("attack_15");
+                        motion_kind = Hash40::new("attack_16");
                     }
                 }
                 else {
-                    motion_kind = Hash40::new("attack_14");
+                    motion_kind = Hash40::new("attack_15");
                 }
             }
             else {
-                motion_kind = Hash40::new("attack_13");
+                motion_kind = Hash40::new("attack_14");
             }
         }
         else {
-            motion_kind = Hash40::new("attack_12_combo");
+            motion_kind = Hash40::new("attack_13");
         }
     }
     else {
-        motion_kind = Hash40::new("attack_11_combo");
+        motion_kind = Hash40::new("attack_12_combo");
     }
     MotionModule::change_motion(boma, motion_kind, 0.0, 1.0, false, 0.0, false, false);
 }

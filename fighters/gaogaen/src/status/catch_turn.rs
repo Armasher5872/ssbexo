@@ -3,42 +3,61 @@ use super::*;
 unsafe extern "C" fn gaogaen_catch_turn_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     ItemModule::set_have_item_visibility(boma, false, 0);
-    fighter.sub_status_CatchTurn();
-    WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+    gaogaen_sub_status_catch_turn(fighter);
     fighter.sub_shift_status_main(L2CValue::Ptr(gaogaen_catch_turn_main_loop as *const () as _))
+}
+
+unsafe extern "C" fn gaogaen_sub_status_catch_turn(fighter: &mut L2CFighterCommon) {
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+    let boma = fighter.module_accessor;
+    let frame = MotionModule::frame(boma);
+    if prev_status_kind != *FIGHTER_STATUS_KIND_TURN_RUN {
+        if stick_y >= 0.7 {
+            MotionModule::change_motion(boma, Hash40::new("catch_turn_hi"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else if stick_y <= -0.7 {
+            MotionModule::change_motion(boma, Hash40::new("catch_turn_lw"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion(boma, Hash40::new("catch_turn"), 0.0, 1.0, false, 0.0, false, false);
+        }
+    }
+    else {
+        if stick_y >= 0.7 {
+            MotionModule::change_motion(boma, Hash40::new("catch_turn_hi"), frame, 1.0, false, 0.0, false, false);
+        }
+        else if stick_y <= -0.7 {
+            MotionModule::change_motion(boma, Hash40::new("catch_turn_lw"), frame, 1.0, false, 0.0, false, false);
+        }
+        else {
+            MotionModule::change_motion(boma, Hash40::new("catch_turn"), frame, 1.0, false, 0.0, false, false);
+        }
+    }
+    PostureModule::reverse_lr(boma);
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT);
 }
 
 unsafe extern "C" fn gaogaen_catch_turn_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
-    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let boma = fighter.module_accessor;
     if CancelModule::is_enable_cancel(boma) {
-        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() && fighter.sub_air_check_fall_common().get_bool() {
-            return 0.into();
+        if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+            if fighter.sub_air_check_fall_common().get_bool() {
+                return 0.into();
+            }
         }
     }
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         return 1.into();
     }
-    if WorkModule::is_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
-    && MotionModule::motion_kind(boma) == hash40("catch") {
-        if stick_y >= 0.7 {
-            MotionModule::change_motion_inherit_frame(boma, Hash40::new("catch_hi"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
-        }
-        else if stick_y <= -0.7 {
-            MotionModule::change_motion_inherit_frame(boma, Hash40::new("catch_lw"), -1.0, 1.0, 0.0, false, false);
-            WorkModule::off_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
-        }
-    }
     if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {
         if MotionModule::is_end(boma) {
-            if situation_kind != *SITUATION_KIND_GROUND {
-                return 0.into();
+            if situation_kind == *SITUATION_KIND_GROUND {
+                fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+                return 1.into();
             }
-            fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
-            return 1.into();
         }
     }
     0.into()

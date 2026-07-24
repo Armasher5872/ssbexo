@@ -73,11 +73,11 @@ unsafe extern "C" fn gekkouga_special_lw_exec_status(_fighter: &mut L2CFighterCo
 
 unsafe extern "C" fn gekkouga_special_lw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if ArticleModule::is_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
-        let article_boma = get_article_boma(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
+    if ArticleModule::is_exist(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
+        let article_boma = get_article_boma(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
         let article_motion_kind = MotionModule::motion_kind(article_boma);
         if article_motion_kind == hash40("special_lw") {
-            ArticleModule::remove_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            ArticleModule::remove_exist(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         }
     }
     0.into()
@@ -85,11 +85,11 @@ unsafe extern "C" fn gekkouga_special_lw_end_status(fighter: &mut L2CFighterComm
 
 unsafe extern "C" fn gekkouga_special_lw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if ArticleModule::is_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
-        let article_boma = get_article_boma(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
+    if ArticleModule::is_exist(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT) {
+        let article_boma = get_article_boma(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT);
         let article_motion_kind = MotionModule::motion_kind(article_boma);
         if article_motion_kind == hash40("special_lw") {
-            ArticleModule::remove_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+            ArticleModule::remove_exist(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         }
     }
     0.into()

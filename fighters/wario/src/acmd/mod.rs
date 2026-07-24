@@ -1,12 +1,6 @@
 use {
-    exo_utils::structs::{
-        getter_funcs::*,
-        vector::*,
-    },
-    exo_var::{
-        consts::*,
-        wario::*,
-    },
+    exo_utils::structs::vector::*,
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,

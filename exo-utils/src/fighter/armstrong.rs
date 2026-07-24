@@ -56,7 +56,7 @@ pub unsafe extern "C" fn armstrong_charge_move(fighter: &mut L2CFighterCommon, c
     let damage_multiplier = WorkModule::get_float(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_DAMAGE_CHARGE_MULTIPLIER);
     let charge_frames = WorkModule::get_int(boma, *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_INT_CHARGE_FRAME);
     let max_charge: f32 = 20.0;
-    let motion_rate= motion_rate_mul*(charge_frames as f32);
+    let motion_rate = motion_rate_mul*(charge_frames as f32);
     if (charge_start..charge_end).contains(&current_frame) && charge_frames <= (max_charge as i32) && charging {
         MotionModule::set_rate(boma, motion_rate);
         WorkModule::set_float(boma, 1.0+((1.0/14.0)*(charge_frames as f32)), *FIGHTER_ARMSTRONG_INSTANCE_WORK_ID_FLOAT_ARMOR_CHARGE_MULTIPLIER);

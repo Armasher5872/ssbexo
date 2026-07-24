@@ -19,6 +19,7 @@ unsafe extern "C" fn ssbexo_demon_demon_god_fist_acmd(agent: &mut L2CAgentBase) 
     }
     frame(lua_state, 12.0);
     if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_DEMON_GOD_FIST_TURN);
         HIT_NODE(agent, Hash40::new("shoulderr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         ATTACK(agent, 0, 0, Hash40::new("top"), 12.0, 361, 50, 0, 60, 2.0, 0.0, 11.25, 9.0, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fist_down2"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEMON_ATTACKSQUAT4, *ATTACK_REGION_PUNCH);

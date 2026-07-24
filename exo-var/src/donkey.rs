@@ -10,8 +10,8 @@ First Cannonball Instance Float: 0x5
 First Cannonball Instance Int: 0x1000000D
 */
 
-pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL: LuaConst = LuaConst::new(0x1);
-pub const FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON: LuaConst = LuaConst::new(0x2);
+pub static mut FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL: i32 = 1;
+pub static mut FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON: i32 = 1;
 pub const FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK: LuaConst = LuaConst::new(0x200000E3);
 pub const FIGHTER_DONKEY_STATUS_KIND_AIR_LASSO_LANDING: LuaConst = LuaConst::new(0x203);
 pub const WEAPON_DONKEY_BARREL_STATUS_KIND_PULL: LuaConst = LuaConst::new(0x0);

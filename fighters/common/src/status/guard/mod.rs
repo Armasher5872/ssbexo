@@ -1,7 +1,18 @@
 use {
+    exo_utils::{
+        common::{
+            hook::*,
+            vtable_funcs::*,
+        },
+        structs::{
+            attackinfo_struct::*,
+            vector::*,
+        }
+    },
     exo_var::{
         consts::*,
         globals::*,
+        variables::*,
     },
     smash::{
         app::{
@@ -26,12 +37,14 @@ use {
     smash_script::*,
 };
 
-mod guard;
-mod guard_on;
 mod guard_damage;
+mod guard_off;
+mod guard_on;
+mod guard;
 
 pub fn install() {
-    guard::install();
-    guard_on::install();
     guard_damage::install();
+    guard_off::install();
+    guard_on::install();
+    guard::install();
 }

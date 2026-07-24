@@ -7,9 +7,9 @@ unsafe extern "C" fn ssbexo_pfushigisou_neutral_special_acmd(agent: &mut L2CAgen
     let speed = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
     let lr = PostureModule::lr(boma);
     frame(lua_state, 20.0);
-    if !IS_EXIST_ARTICLE(agent, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE)  {
+    if !IS_EXIST_ARTICLE(agent, FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE)  {
         if is_excute(agent) {
-            ArticleModule::generate_article(boma, *FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE, false, -1);
+            ArticleModule::generate_article(boma, FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE, false, -1);
         }
     }
     if is_excute(agent) {

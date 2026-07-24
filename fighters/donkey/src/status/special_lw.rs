@@ -20,8 +20,8 @@ unsafe extern "C" fn donkey_special_lw_init_status(fighter: &mut L2CFighterCommo
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
     }
-    if !ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
-        ArticleModule::generate_article(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL, false, -1);
+    if !ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
+        ArticleModule::generate_article(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL, false, -1);
     }
     0.into()
 }
@@ -29,8 +29,8 @@ unsafe extern "C" fn donkey_special_lw_init_status(fighter: &mut L2CFighterCommo
 //Special Lw Main Status
 unsafe extern "C" fn donkey_special_lw_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
-        let barrel_boma = get_article_boma(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
+    if ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
+        let barrel_boma = get_article_boma(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
         LinkModule::set_model_constraint_pos_ort(barrel_boma, *LINK_NO_CONSTRAINT, Hash40::new("rotx"), Hash40::new("throw"), (*CONSTRAINT_FLAG_ORIENTATION | *CONSTRAINT_FLAG_POSITION | *CONSTRAINT_FLAG_OFFSET_TRANSLATE | *CONSTRAINT_FLAG_OFFSET_ROT) as u32, true);
         LinkModule::set_constraint_rot_offset(barrel_boma, &Vector3f{x: 0.0, y: 0.0, z: 0.0});
     }
@@ -64,8 +64,8 @@ unsafe extern "C" fn donkey_special_lw_loop(fighter: &mut L2CFighterCommon) -> L
         }
     }
     if WorkModule::is_flag(boma, *FIGHTER_DONKEY_INSTANCE_WORK_ID_FLAG_BARREL_UNLINK) {
-        if ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
-            let barrel_boma = get_article_boma(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
+        if ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
+            let barrel_boma = get_article_boma(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
             LinkModule::remove_model_constraint(barrel_boma, true);
             StatusModule::change_status_request(barrel_boma, *WEAPON_DONKEY_BARREL_STATUS_KIND_THROW, false);
         }
@@ -91,8 +91,8 @@ unsafe extern "C" fn donkey_special_lw_exec_status(_fighter: &mut L2CFighterComm
 //Special Lw End Status
 unsafe extern "C" fn donkey_special_lw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
-        let barrel_boma = get_article_boma(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
+    if ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
+        let barrel_boma = get_article_boma(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
         let barrel_status_kind = StatusModule::status_kind(barrel_boma);
         if barrel_status_kind == *WEAPON_DONKEY_BARREL_STATUS_KIND_PULL {
             LinkModule::remove_model_constraint(barrel_boma, true);
@@ -106,8 +106,8 @@ unsafe extern "C" fn donkey_special_lw_end_status(fighter: &mut L2CFighterCommon
 //Special Lw Exit Status
 unsafe extern "C" fn donkey_special_lw_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if ArticleModule::is_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
-        let barrel_boma = get_article_boma(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
+    if ArticleModule::is_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL) {
+        let barrel_boma = get_article_boma(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL);
         let barrel_status_kind = StatusModule::status_kind(barrel_boma);
         if barrel_status_kind == *WEAPON_DONKEY_BARREL_STATUS_KIND_PULL {
             LinkModule::remove_model_constraint(barrel_boma, true);

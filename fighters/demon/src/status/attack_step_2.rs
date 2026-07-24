@@ -22,6 +22,7 @@ unsafe extern "C" fn demon_attack_step_2_main_status(fighter: &mut L2CFighterCom
 unsafe extern "C" fn demon_attack_step_2_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
+    let frame = MotionModule::frame(boma);
     let step_hold_frame = WorkModule::get_int(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_WORK_INT_HOLD_FRAME);
     let hold_frame = WorkModule::get_param_int(boma, hash40("param_attack_step"), hash40("hold_frame"));
     if situation_kind == *SITUATION_KIND_AIR {
@@ -33,17 +34,19 @@ unsafe extern "C" fn demon_attack_step_2_main_loop(fighter: &mut L2CFighterCommo
             return 1.into();
         }
     }
-    if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
-        if !fighter.global_table[IS_STOP].get_bool() {
-            WorkModule::inc_int(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_WORK_INT_HOLD_FRAME);
+    if frame <= 8.0 {
+        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
+            if !fighter.global_table[IS_STOP].get_bool() {
+                WorkModule::inc_int(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_WORK_INT_HOLD_FRAME);
+            }
+            if step_hold_frame >= hold_frame {
+                WorkModule::on_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_FLAG_2_TO_2L);
+                fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2L.into(), false.into());
+            }
         }
-        if step_hold_frame >= hold_frame {
-            WorkModule::on_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_FLAG_2_TO_2L);
-            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2L.into(), false.into());
+        else {
+            WorkModule::set_int(boma, -1, *FIGHTER_DEMON_STATUS_ATTACK_STEP_WORK_INT_HOLD_FRAME);
         }
-    }
-    else {
-        WorkModule::set_int(boma, -1, *FIGHTER_DEMON_STATUS_ATTACK_STEP_WORK_INT_HOLD_FRAME);
     }
     if MotionModule::is_end(boma) {
         fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());

@@ -73,16 +73,16 @@ unsafe extern "C" fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue
                 fighter.clear_lua_stack();
                 lua_args!(fighter, MA_MSC_ITEM_CHECK_HAVE_ITEM_TRAIT, ITEM_TRAIT_FLAG_THROW);
                 sv_module_access::item(fighter.lua_state_agent);
-                let mut throw = fighter.pop_lua_stack(1).get_bool();
-                if !throw {
+                let mut item_throw = fighter.pop_lua_stack(1).get_bool();
+                if !item_throw {
                     fighter.clear_lua_stack();
                     lua_args!(fighter, MA_MSC_ITEM_CHECK_HAVE_ITEM_TRAIT, ITEM_TRAIT_FLAG_SHOOT);
                     sv_module_access::item(fighter.lua_state_agent);
                     if fighter.pop_lua_stack(1).get_bool() {
-                        throw = ItemModule::get_shoot_item_bullet(boma, 0) <= 0;
+                        item_throw = ItemModule::get_shoot_item_bullet(boma, 0) <= 0;
                     }
                 }
-                if throw {
+                if item_throw {
                     fighter.change_status(FIGHTER_STATUS_KIND_ITEM_THROW.into(), false.into());
                     return 0.into();
                 }
@@ -261,7 +261,7 @@ unsafe extern "C" fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue
 
 //Run Brake
 #[skyline::hook(replace = L2CFighterCommon_status_RunBrake_Main)]
-unsafe fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let const_stick_x = fighter.global_table[STICK_X].get_f32();
     let boma = fighter.module_accessor;
     let lr = PostureModule::lr(boma);

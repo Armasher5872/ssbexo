@@ -41,5 +41,7 @@ pub fn install() {
     opff::install();
     status::install();
     vtable::install();
-    clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "pfushigisou", "sludge", false);
+    unsafe {
+        FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "pfushigisou", "sludge", false);
+    }
 }

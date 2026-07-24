@@ -7,6 +7,7 @@ use {
         fighter::{
             armstrong::*,
             ganon::*,
+            springtrap::*,
         },
         status::damage::*,
     },
@@ -14,6 +15,7 @@ use {
         consts::*,
         ganon::*,
         globals::*,
+        springtrap::*,
     },
     param_config::*,
     smash::{
@@ -38,7 +40,7 @@ pub fn install() {
     status::install();
     vtable::install();
     unsafe {
-        FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "ganon", "volley", false);
+        FIGHTER_GANON_GENERATE_ARTICLE_VOLLEY += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "ganon", "cannonballcloned", false);
     }
     update_float_2(*FIGHTER_KIND_GANON, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("run_speed_max"), 0, 1.38));
     update_float_2(*FIGHTER_KIND_GANON, vec![0, 1, 2, 3, 4, 5, 6, 7].clone(), (hash40("jump_speed_x"), 0, 0.802));

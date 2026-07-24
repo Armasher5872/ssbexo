@@ -51,7 +51,7 @@ unsafe extern "C" fn sub_status_cliffcatch_maincommon(fighter: &mut L2CFighterCo
     let dir_y = normalize.y;
     let atan2 = dir_y.atan2(dir_x.abs());
     let degrees = atan2.to_degrees();
-    let speed_x = if length < 0.25 {1.0} else if degrees >= 70.0 {0.75} else if degrees >= 45.0 {1.0} else {1.1};
+    let speed_x = if length < 0.25 {1.2} else if degrees >= 70.0 {0.75} else if degrees >= 45.0 {1.0} else {1.1};
     let speed_y = if length < 0.25 {2.0} else if degrees >= 70.0 {2.4} else if degrees >= 45.0 {2.0} else {1.4};
     WorkModule::set_float(boma, speed_x, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_X);
     WorkModule::set_float(boma, speed_y, *FIGHTER_INSTANCE_WORK_ID_FLOAT_CLIFF_ROBBED_SPEED_Y);

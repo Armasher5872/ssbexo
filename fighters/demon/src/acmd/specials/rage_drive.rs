@@ -6,7 +6,9 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     let to_heavens_door = WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_HEAVENS_DOOR);
     if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ATTACK_RAGE_CAPTURE) {
-        FighterSpecializer_Demon::set_devil(boma, true, 10.0);
+        if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+            FighterSpecializer_Demon::set_devil(boma, true, 10.0);
+        }
         FT_MOTION_RATE(agent, 0.7);
         if is_excute(agent) {
             ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
@@ -146,10 +148,14 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
         frame(lua_state, 38.0);
         FT_MOTION_RATE(agent, 1.3);
         frame(lua_state, 52.0);
-        FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+        if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+            FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+        }
     }
     else {
-        FighterSpecializer_Demon::set_devil(boma, true, 10.0);
+        if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+            FighterSpecializer_Demon::set_devil(boma, true, 10.0);
+        }
         if is_excute(agent) {
             ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
         }
@@ -232,7 +238,9 @@ unsafe extern "C" fn ssbexo_demon_rage_drive_acmd(agent: &mut L2CAgentBase) {
         frame(lua_state, 38.0);
         FT_MOTION_RATE(agent, 1.3);
         frame(lua_state, 52.0);
-        FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+        if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+            FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+        }
     }
 }
 
@@ -240,6 +248,7 @@ pub fn install() {
     Agent::new("demon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_attackragedrive", ssbexo_demon_rage_drive_acmd, Low)
+    .acmd("game_attackairragedrive", ssbexo_demon_rage_drive_acmd, Low)
     .install()
     ;
 }

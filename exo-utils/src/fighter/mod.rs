@@ -3,6 +3,7 @@ use {
     crate::{
         common::{
             extern_func::*,
+            hook::*,
             ui_utility::*,
             vtable_funcs::*,
         },
@@ -41,6 +42,7 @@ use {
         roy::*,
         sheik::*,
         sonic::*,
+        springtrap::*,
         wario::*,
     },
     smash::{
@@ -94,4 +96,5 @@ pub mod robot;
 pub mod roy;
 pub mod sheik;
 pub mod sonic;
+pub mod springtrap;
 pub mod wario;

@@ -32,6 +32,7 @@ use {
     }
 };
 
+pub mod appeal;
 pub mod attack_dash;
 pub mod attack_xx4;
 pub mod attack;

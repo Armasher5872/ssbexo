@@ -1,6 +1,12 @@
 use {
-    exo_utils::common::command_input::*,
-    exo_var::globals::*,
+    exo_utils::{
+        common::command_input::*,
+        status::appeal::*,
+    },
+    exo_var::{
+        consts::*,
+        globals::*,
+    },
     smash::{
         app::{
             lua_bind::*,
@@ -20,12 +26,14 @@ use {
     smash_script::*,
 };
 
+mod appeal;
 mod dash;
 mod run;
 mod turndash;
 mod wait;
 
 pub fn install() {
+    appeal::install();
     dash::install();
     run::install();
     turndash::install();

@@ -122,9 +122,9 @@ unsafe extern "C" fn ssbexo_gekkouga_grounded_down_special_acmd(agent: &mut L2CA
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     if is_excute(agent) {
-        ArticleModule::generate_article(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, false, -1);
-        ArticleModule::change_motion(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, Hash40::new("special_lw"), false, -1.0);
-        ArticleModule::set_visibility_whole(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, false, -1);
+        ArticleModule::change_motion(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, Hash40::new("special_lw"), false, -1.0);
+        ArticleModule::set_visibility_whole(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {
@@ -138,7 +138,7 @@ unsafe extern "C" fn ssbexo_gekkouga_grounded_down_special_acmd(agent: &mut L2CA
     }
     frame(lua_state, 35.0);
     if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::remove_exist(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
 }
 
@@ -162,9 +162,9 @@ unsafe extern "C" fn ssbexo_gekkouga_aerial_down_special_acmd(agent: &mut L2CAge
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     if is_excute(agent) {
-        ArticleModule::generate_article(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, false, -1);
-        ArticleModule::change_motion(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, Hash40::new("special_air_lw_start"), false, -1.0);
-        ArticleModule::set_visibility_whole(boma, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::generate_article(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, false, -1);
+        ArticleModule::change_motion(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, Hash40::new("special_air_lw_start"), false, -1.0);
+        ArticleModule::set_visibility_whole(boma, FIGHTER_GEKKOUGA_GENERATE_ARTICLE_MAT, true, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
     frame(lua_state, 28.0);
     if is_excute(agent) {
@@ -282,7 +282,7 @@ pub fn install() {
     .acmd("expression_specialairlw", ssbexo_gekkouga_down_special_expression, Low)
     .install()
     ;
-    Agent::new("gekkouga_mat")
+    Agent::new("gekkouga_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_speciallw", ssbexo_gekkouga_mat_grounded_down_special_acmd, Low)
     .acmd("game_specialairlw", ssbexo_gekkouga_mat_fall_acmd, Low)

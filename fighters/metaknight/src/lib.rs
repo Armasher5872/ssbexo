@@ -1,7 +1,6 @@
 use {
     exo_utils::{
         common::{
-            hook::*,
             status_end_control::*,
             var_reset::*,
             vtable_funcs::*,
@@ -43,5 +42,7 @@ pub fn install() {
     acmd::install();
     status::install();
     vtable::install();
-    clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "metaknight", "beam", false);
+    unsafe {
+        FIGHTER_METAKNIGHT_GENERATE_ARTICLE_BEAM += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "metaknight", "cannonballcloned", false);
+    }
 }

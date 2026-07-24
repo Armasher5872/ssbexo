@@ -3,13 +3,16 @@ use super::*;
 unsafe extern "C" fn ssbexo_wario_kamikaze_burst_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
+    let owner_boma = get_owner_boma(agent);
     frame(lua_state, 2.0);
     if is_excute(agent) {
+        WorkModule::on_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         ATTACK(agent, 0, 0, Hash40::new("top"), 50.0, 60, 45, 0, 30, 30.0, 0.0, 0.0, 0.0, None, None, None, 4.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, f32::NAN, 0.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_BOMB, *ATTACK_REGION_MAGIC);
         ATTACK(agent, 1, 0, Hash40::new("top"), 0.0, 361, 80, 150, 0, 35.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 1.0, 0, false, false, false, true, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_MAGIC);
     }
     frame(lua_state, 10.0);
     if is_excute(agent) {
+        WorkModule::off_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         AttackModule::clear(boma, 0, false);
     }
     frame(lua_state, 13.0);

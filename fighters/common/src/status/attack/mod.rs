@@ -33,7 +33,7 @@ use {
 };
 
 mod attack;
-pub mod attackair;
+mod attackair;
 mod attackdash;
 mod attackhi4;
 mod attacklw4;

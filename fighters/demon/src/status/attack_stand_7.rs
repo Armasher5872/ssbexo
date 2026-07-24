@@ -17,6 +17,7 @@ unsafe extern "C" fn demon_attack_stand_7_init_status(_fighter: &mut L2CFighterC
 unsafe extern "C" fn demon_attack_stand_7_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     if !fun_710002aed0(fighter).get_bool() {
+        WorkModule::on_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_DEMON_GOD_FIST_TURN);
         MotionModule::change_motion(boma, Hash40::new("attack_stand_7"), 0.0, 1.0, false, 0.0, false, false);
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2b94de0d96), *FIGHTER_LOG_ACTION_CATEGORY_ATTACK, *FIGHTER_LOG_ATTACK_KIND_ADDITIONS_ATTACK_09);
         MotionModule::set_trans_move_speed_no_scale(boma, false);
@@ -29,8 +30,10 @@ unsafe extern "C" fn demon_attack_stand_7_main_status(fighter: &mut L2CFighterCo
 
 unsafe extern "C" fn demon_attack_stand_7_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
+    let stick_x = fighter.global_table[STICK_X].get_f32();
     let cmd_cat4 = fighter.global_table[CMD_CAT4].get_i32();
     let boma = fighter.module_accessor;
+    let lr = PostureModule::lr(boma);
     let command_life_extend = WorkModule::get_param_int(boma, hash40("param_private"), 0x2b87c7acb0);
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
@@ -43,6 +46,11 @@ unsafe extern "C" fn demon_attack_stand_7_main_loop(fighter: &mut L2CFighterComm
     }
     if !WorkModule::is_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_SQUAT_4_FLAG_ATTACK) {
         return 1.into();
+    }
+    if stick_x*lr < -0.7 && WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_DEMON_GOD_FIST_TURN) {
+        WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_DEMON_GOD_FIST_TURN);
+        PostureModule::reverse_lr(boma);
+        PostureModule::update_rot_y_lr(boma);
     }
     if !WorkModule::is_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_SQUAT_4_FLAG_EXTEND_SPECIAL_HI_COMMAND) {
         if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_SPECIAL_HI_COMMAND != 0 {
@@ -81,7 +89,7 @@ unsafe extern "C" fn demon_attack_stand_7_main_loop(fighter: &mut L2CFighterComm
         }
     }
     if MotionModule::is_end(boma) {
-        fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
+        fighter.change_status(FIGHTER_STATUS_KIND_SQUAT_WAIT.into(), false.into());
         return 1.into();
     }
     0.into()

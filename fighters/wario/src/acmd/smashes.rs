@@ -10,6 +10,7 @@ unsafe extern "C" fn ssbexo_wario_forward_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 20.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_XLU);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_XLU);
         ATTACK(agent, 0, 0, Hash40::new("handr"), 17.0, 361, 80, 0, 34, 5.7, 0.0, 0.0, 0.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
@@ -18,6 +19,7 @@ unsafe extern "C" fn ssbexo_wario_forward_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 23.0);
     if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_NORMAL);
         HIT_NODE(agent, Hash40::new("armr"), *HIT_STATUS_NORMAL);
         AttackModule::clear_all(boma);
@@ -108,6 +110,38 @@ unsafe extern "C" fn ssbexo_wario_forward_smash_expression(agent: &mut L2CAgentB
     }
 }
 
+//Up Smash ACMD
+unsafe extern "C" fn ssbexo_wario_up_smash_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        HIT_NODE(agent, Hash40::new("head"), *HIT_STATUS_XLU);
+    }
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
+        ATTACK(agent, 0, 0, Hash40::new("head"), 17.0, 95, 85, 0, 35, 7.0, 4.5, 2.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HEAD);
+    }
+    wait(lua_state, 2.0);
+    if is_excute(agent) {
+        ATK_POWER(agent, 0, 13);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
+        AttackModule::clear_all(boma);
+    }
+    wait(lua_state, 1.0);
+    if is_excute(agent) {
+        HitModule::set_status_all(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
+    }
+}
+
 //Down Smash Charge Effect
 unsafe extern "C" fn ssbexo_wario_down_smash_charge_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -132,6 +166,7 @@ unsafe extern "C" fn ssbexo_wario_down_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         ATTACK(agent, 0, 0, Hash40::new("top"), 16.7, 270, 80, 0, 20, 6.2, 0.0, 4.0, 0.0, Some(0.0), Some(10.0), Some(0.0), 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 8, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
         ATTACK(agent, 1, 0, Hash40::new("top"), 12.7, 43, 75, 0, 58, 6.2, 0.0, 4.0, 0.0, Some(0.0), Some(10.0), Some(0.0), 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 8, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_HEAVY, *ATTACK_REGION_PUNCH);
     }
@@ -141,6 +176,7 @@ unsafe extern "C" fn ssbexo_wario_down_smash_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         AttackModule::clear(boma, 0, false);
         AttackModule::clear(boma, 1, false);
     }
@@ -194,7 +230,7 @@ unsafe extern "C" fn ssbexo_wario_down_smash_sound(agent: &mut L2CAgentBase) {
         if rand > 66.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack05"));
         }
-        else if rand <= 66.0 && rand > 33.0 {
+        else if rand > 33.0 {
             let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final03"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
         }
@@ -251,6 +287,7 @@ pub fn install() {
     .acmd("effect_attacks4", ssbexo_wario_forward_smash_effect, Low)
     .acmd("sound_attacks4", ssbexo_wario_forward_smash_sound, Low)
     .acmd("expression_attacks4", ssbexo_wario_forward_smash_expression, Low)
+    .acmd("game_attackhi4", ssbexo_wario_up_smash_acmd, Low)
     .acmd("effect_attacklw4charge", ssbexo_wario_down_smash_charge_effect, Low)
     .acmd("game_attacklw4", ssbexo_wario_down_smash_acmd, Low)
     .acmd("effect_attacklw4", ssbexo_wario_down_smash_effect, Low)

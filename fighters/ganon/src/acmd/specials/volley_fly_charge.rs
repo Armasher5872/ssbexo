@@ -25,7 +25,7 @@ unsafe extern "C" fn ssbexo_ganon_volley_fly_charge_sound(agent: &mut L2CAgentBa
 }
 
 pub fn install() {
-    Agent::new("ganon_volley")
+    Agent::new("ganon_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_flycharge", ssbexo_ganon_volley_fly_charge_acmd, Low)
     .acmd("effect_flycharge", ssbexo_ganon_volley_fly_charge_effect, Low)

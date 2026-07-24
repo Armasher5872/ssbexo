@@ -1,31 +1,19 @@
 use super::*;
 
-const CHROM_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
-const CHROM_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10bb700; //Shared
-
 //Chrom Reset Initialization
-#[skyline::hook(offset = CHROM_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn chrom_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_CHROM as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
-    }
-    original!()(vtable, fighter)
+unsafe extern "C" fn chrom_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    common_reset_variable_reset(&mut *boma);
 }
 
 //Chrom Death Initialization
-#[skyline::hook(offset = CHROM_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn chrom_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_CHROM as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_death_variable_reset(&mut *boma);
-    }
-    original!()(vtable, fighter)
+unsafe extern "C" fn chrom_death_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    WorkModule::set_int(boma, 0, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SPECIAL_HI_CLIFF_NUM);
+    common_death_variable_reset(&mut *boma);
 }
 
 pub fn install() {
-	skyline::install_hooks!(
-        chrom_reset_initialization,
-        chrom_death_initialization
-    );
+    let _ = skyline::patching::Patch::in_text(0x5030f78).data(chrom_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x5030f90).data(chrom_death_initialization as *const () as u64);
 }

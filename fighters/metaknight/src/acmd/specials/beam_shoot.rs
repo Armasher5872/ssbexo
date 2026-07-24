@@ -16,16 +16,13 @@ unsafe extern "C" fn ssbexo_metaknight_beam_shoot_effect(agent: &mut L2CAgentBas
 }
 
 unsafe extern "C" fn ssbexo_metaknight_beam_shoot_sound(agent: &mut L2CAgentBase) {
-    let lua_state = agent.lua_state_agent;
     if is_excute(agent) {
-        agent.clear_lua_stack();
-        lua_args!(agent, Hash40::new("se_metaknight_attackair_f03"));
-        SET_TAKEOUT_SE_STATUS(lua_state);
+        PLAY_STATUS(agent, Hash40::new("se_metaknight_attackair_f03"));
     }
 }
 
 pub fn install() {
-    Agent::new("metaknight_beam")
+    Agent::new("metaknight_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_shoot", ssbexo_metaknight_beam_shoot_acmd, Low)
     .acmd("effect_shoot", ssbexo_metaknight_beam_shoot_effect, Low)

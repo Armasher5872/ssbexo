@@ -166,6 +166,72 @@ unsafe extern "C" fn ssbexo_demon_skull_smash_expression(agent: &mut L2CAgentBas
     }
 }
 
+//Up Throw ACMD
+unsafe extern "C" fn ssbexo_demon_up_throw_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 10.0);
+    }
+    if is_excute(agent) {
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 2.0, 76, 45, 10, 65, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        let target = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT);
+        let target_group = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP);
+        let target_no = WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO);
+        ATK_HIT_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), target, target_group, target_no);
+    }
+    frame(lua_state, 38.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 4.0);
+    }
+    frame(lua_state, 40.0);
+    if is_excute(agent) {
+        ArticleModule::generate_article(boma, *FIGHTER_DEMON_GENERATE_ARTICLE_BLASTER, false, -1);
+        ArticleModule::shoot_exist(boma, *FIGHTER_DEMON_GENERATE_ARTICLE_BLASTER, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
+        WorkModule::on_flag(boma, *FIGHTER_DEMON_STATUS_SPECIAL_N_FLAG_FOLLOW_NODE);
+    }
+    frame(lua_state, 43.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 3.0);
+    }
+    frame(lua_state, 48.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 2.0);
+    }
+    frame(lua_state, 56.0);
+    if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_DEMON_STATUS_SPECIAL_N_FLAG_FOLLOW_NODE);
+    }
+    frame(lua_state, 63.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 3.0);
+    }
+    frame(lua_state, 70.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 4.0);
+    }
+    frame(lua_state, 72.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 5.0);
+    }
+    frame(lua_state, 73.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 6.0);
+    }
+    frame(lua_state, 74.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, true, 8.0);
+    }
+    frame(lua_state, 75.0);
+    if !WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_DEVIL_FORM_ACTIVE) {
+        FighterSpecializer_Demon::set_devil(boma, false, 0.0);
+    }
+}
+
 pub fn install() {
     Agent::new("demon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
@@ -177,6 +243,7 @@ pub fn install() {
     .acmd("effect_throwsmash", ssbexo_demon_skull_smash_effect, Low)
     .acmd("sound_throwsmash", ssbexo_demon_skull_smash_sound, Low)
     .acmd("expression_throwsmash", ssbexo_demon_skull_smash_expression, Low)
+    .acmd("game_throwhi", ssbexo_demon_up_throw_acmd, Low)
     .install()
     ;
 }

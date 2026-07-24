@@ -9,7 +9,7 @@ unsafe extern "C" fn ssbexo_metaknight_down_special_end_acmd(agent: &mut L2CAgen
     }
     frame(lua_state, 5.0);
     if is_excute(agent) {
-        ArticleModule::generate_article(boma, *FIGHTER_METAKNIGHT_GENERATE_ARTICLE_BEAM, false, -1);
+        ArticleModule::generate_article(boma, FIGHTER_METAKNIGHT_GENERATE_ARTICLE_BEAM, false, -1);
     }
 }
 

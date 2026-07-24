@@ -1,0 +1,98 @@
+use super::*;
+
+//Color denotion
+pub static mut SPRINGTRAP_MARKED_COLORS: [bool; 256] = [false; 256];
+pub static mut GLITCHTRAP_MARKED_COLORS: [bool; 256] = [false; 256];
+
+//Articles
+pub static mut FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE: i32 = 2;
+pub static mut FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM: i32 = 2;
+
+/*
+Springtrap Instance Work ID
+
+First Instance Flag: 0x200000EE
+First Instance Float: 0x56
+First Instance Int: 0x100000CA
+*/
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE: LuaConst = LuaConst::new(0x200000EE);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED: LuaConst = LuaConst::new(0x200000EF);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT: LuaConst = LuaConst::new(0x200000F0);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM: LuaConst = LuaConst::new(0x200000F1);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE: LuaConst = LuaConst::new(0x56);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_S_CRIT_TIME: LuaConst = LuaConst::new(0x100000CA);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE: LuaConst = LuaConst::new(0x100000CB);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME: LuaConst = LuaConst::new(0x100000CC);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID: LuaConst = LuaConst::new(0x100000CD);
+pub const FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_LW_PHANTOM_TYPE: LuaConst = LuaConst::new(0x100000CE);
+
+/*
+Springtrap Status Kind
+
+First Status Kind: 0x1F9
+*/
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_CHARGE_LOOP: LuaConst = LuaConst::new(0x1F9);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_LOW_FIRE: LuaConst = LuaConst::new(0x1FA);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE: LuaConst = LuaConst::new(0x1FB);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_START: LuaConst = LuaConst::new(0x1FC);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_LOOP: LuaConst = LuaConst::new(0x1FD);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_RECALL_END: LuaConst = LuaConst::new(0x1FE);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_HOLD: LuaConst = LuaConst::new(0x1FF);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_S_ATTACK: LuaConst = LuaConst::new(0x200);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_MOVE: LuaConst = LuaConst::new(0x201);
+pub const FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_HI_END: LuaConst = LuaConst::new(0x202);
+
+/* 
+Springtrap Axe Instance Work ID
+
+Axe Flag Start: 0x2000000B
+Axe Float Start: 0x8
+Axe Int Start: 0x10000017
+*/
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_CAN_LINK: LuaConst = LuaConst::new(0x2000000B);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_LINKED: LuaConst = LuaConst::new(0x2000000C);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLAG_GROUNDED: LuaConst = LuaConst::new(0x2000000D);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_FLOAT_SLOPE_ROT_ANGLE: LuaConst = LuaConst::new(0x8);
+pub const WEAPON_SPRINGTRAP_AXE_INSTANCE_WORK_ID_INT_OBJECT_ID: LuaConst = LuaConst::new(0x10000017);
+
+//Springtrap Axe Status Kind
+pub const WEAPON_SPRINGTRAP_AXE_STATUS_KIND_FLY: LuaConst = LuaConst::new(0x0);
+pub const WEAPON_SPRINGTRAP_AXE_STATUS_KIND_STICK: LuaConst = LuaConst::new(0x1);
+pub const WEAPON_SPRINGTRAP_AXE_STATUS_KIND_HIT_STICK: LuaConst = LuaConst::new(0x2);
+pub const WEAPON_SPRINGTRAP_AXE_STATUS_KIND_RECALL: LuaConst = LuaConst::new(0x3);
+
+/*
+Springtrap Phantom Instance Work ID
+
+Phantom Flag Start: 0x2000000C
+Phantom Float Start: 0x8
+Phantom Int Start: 0x10000017
+*/
+pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE: LuaConst = LuaConst::new(0x2000000C);
+pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR: LuaConst = LuaConst::new(0x8);
+pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X: LuaConst = LuaConst::new(0x9);
+pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y: LuaConst = LuaConst::new(0xA);
+pub const WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE: LuaConst = LuaConst::new(0x10000018);
+
+//Springtrap Phantom Status Kind
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_SUMMON: LuaConst = LuaConst::new(0x0);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_MOVE: LuaConst = LuaConst::new(0x1);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_TURN: LuaConst = LuaConst::new(0x2);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_ATTACK: LuaConst = LuaConst::new(0x3);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_EXPLODE: LuaConst = LuaConst::new(0x4);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_BREAK: LuaConst = LuaConst::new(0x5);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE: LuaConst = LuaConst::new(0x6);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL: LuaConst = LuaConst::new(0x7);
+pub const WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_FOXY_ATTACK: LuaConst = LuaConst::new(0x8);
+
+//Phantom IDs
+pub const SPRINGTRAP_PHANTOM_TYPE_BALLOON_BOY: LuaConst = LuaConst::new(0x0);
+pub const SPRINGTRAP_PHANTOM_TYPE_CHICA: LuaConst = LuaConst::new(0x1);
+pub const SPRINGTRAP_PHANTOM_TYPE_FOXY: LuaConst = LuaConst::new(0x2);
+pub const SPRINGTRAP_PHANTOM_TYPE_FREDDY: LuaConst = LuaConst::new(0x3);
+
+//Phantom Hurtbox
+pub const WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY: LuaConst = LuaConst::new(0x0);
+
+//Collision Sound
+pub const COLLISION_SOUND_ATTR_SPRINGTRAP_KNIFE: LuaConst = LuaConst::new(0x8D);

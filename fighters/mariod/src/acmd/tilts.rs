@@ -21,6 +21,7 @@ unsafe extern "C" fn ssbexo_mariod_forward_tilt_effect(agent: &mut L2CAgentBase)
     frame(lua_state, 6.0);
     if is_excute(agent) {
         EFFECT(agent, Hash40::new("sys_attack_line"), Hash40::new("top"), -3, 5, 0, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, true);
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("footl"), 2.0, 0.0, 0.0, 0, 0, 0, 0.5, true);
     }
     frame(lua_state, 7.0);
     if is_excute(agent) {
@@ -72,9 +73,9 @@ unsafe extern "C" fn ssbexo_mariod_up_tilt_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
     frame(lua_state, 4.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("head"), 8.0, 102, 130, 0, 15, 3.5, -0.5, -0.8, 0.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 1, 0, Hash40::new("arml"), 8.0, 102, 130, 0, 15, 4.2, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-        ATTACK(agent, 2, 0, Hash40::new("arml"), 8.0, 102, 130, 0, 15, 5.0, 4.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 0, 0, Hash40::new("head"), 8.0, 102, 115, 0, 35, 3.5, -0.5, -0.8, 0.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 1, 0, Hash40::new("arml"), 8.0, 102, 115, 0, 35, 4.2, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+        ATTACK(agent, 2, 0, Hash40::new("arml"), 8.0, 102, 115, 0, 35, 5.0, 4.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
     }
     wait(lua_state, 10.0);
     if is_excute(agent) {
@@ -85,7 +86,11 @@ unsafe extern "C" fn ssbexo_mariod_up_tilt_acmd(agent: &mut L2CAgentBase) {
 //Up Tilt Effect
 unsafe extern "C" fn ssbexo_mariod_up_tilt_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    frame(lua_state, 5.0);
+    frame(lua_state, 3.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("handl"), 2.0, 0.0, 0.0, 0, 0, 0, 0.5, true);
+    }
+    frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_atkhi3_arc"), Hash40::new("mariod_atkhi3_arc"), Hash40::new("top"), 2, 12, 1, 0, 4, 103, 1, true, *EF_FLIP_YZ);
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("mariod_smash_impact"), Hash40::new("mariod_smash_impact"), Hash40::new("handl"), 1.0, 0, 0, 0, 0, 0, 0.3, true, *EF_FLIP_YZ);
@@ -114,6 +119,10 @@ unsafe extern "C" fn ssbexo_mariod_up_tilt_sound(agent: &mut L2CAgentBase) {
 //Down Tilt Effect
 unsafe extern "C" fn ssbexo_mariod_down_tilt_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW(agent, Hash40::new("mariod_smash_aura"), Hash40::new("footl"), 2.0, 0.0, 0.0, 0, 0, 0, 0.5, true);
+    }
     frame(lua_state, 4.0);
     if is_excute(agent) {
         FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 3, 0, -3, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);

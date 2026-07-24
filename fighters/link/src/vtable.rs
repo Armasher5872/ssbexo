@@ -35,19 +35,10 @@ unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         let boma = fighter.battle_object.module_accessor;
         let agent = get_fighter_common_from_accessor(&mut *boma);
         let status_kind = agent.global_table[STATUS_KIND].get_i32();
-        let frame = agent.global_table[CURRENT_FRAME].get_f32();
-        let motion_kind = MotionModule::motion_kind(boma);
         let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
         let stamina = WorkModule::get_int(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
         let wheel_value = if stamina >= 283 {0} else if stamina >= 264 {1} else if stamina >= 246 {2} else if stamina >= 228 {3} else if stamina >= 210 {4} else if stamina >= 192 {5} else if stamina >= 174 {6} else if stamina >= 156 {7} 
         else if stamina >= 138 {8} else if stamina >= 120 {9} else if stamina >= 102 {10} else if stamina >= 84 {11} else if stamina >= 66 {12} else if stamina >= 48 {13} else if stamina >= 30 {14} else if stamina >= 1 {15} else {16};
-        if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
-            if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind) && (80.0..=95.0).contains(&frame) {
-                if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                    StatusModule::change_status_request_from_script(boma, *FIGHTER_LINK_STATUS_KIND_MORTAL_DRAW_LOOP, false);
-                }
-            }
-        }
         if [
             *FIGHTER_STATUS_KIND_ATTACH_WALL, *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE_START, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_HOLD, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAUNCH, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_GLIDE
         ].contains(&status_kind) {
@@ -62,21 +53,29 @@ unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     original!()(vtable, fighter)
 }
 
-unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut smash::app::Weapon, log: u64) {
+unsafe extern "C" fn link_swordbeam_on_attack_event(vtable: u64, weapon: *mut smash::app::Weapon, collision_bitmask: u32) -> u64 {
     let boma = (*weapon).battle_object.module_accessor;
-    let collision_log = *(log as *const u64).add(0x10 / 0x8);
-    let collision_log = collision_log as *const CollisionLogScuffed;
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
-    let opponent_object_id = (*collision_log).opponent_object_id;
+    if owner_kind == *FIGHTER_KIND_EDGE {
+        *(weapon as *mut bool).add(0x90) = true;
+        StatusModule::change_status_request(boma, *WEAPON_EDGE_ZANSHIN_SHOT_STATUS_KIND_HIT, false);
+    }
+    normal_weapon_hit_handler(vtable, weapon, collision_bitmask)
+}
+
+unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut smash::app::Weapon, log: *mut CollisionLogScuffed) {
+    let boma = (*weapon).battle_object.module_accessor;
+    let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+    let owner_boma = sv_battle_object::module_accessor(owner_id);
+    let owner_kind = utility::get_kind(&mut *owner_boma);
+    let opponent_object_id = (*log).opponent_object_id;
+    let opponent_category = (*log).opponent_object_category;
     if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-        let opponent_category = sv_battle_object::category(opponent_object_id);
-        let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
-        let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
-        let opponent_boma = (*opponent_battle_object).module_accessor;
-        if opponent_category == *BATTLE_OBJECT_CATEGORY_ITEM {
-            WorkModule::set_int(boma, opponent_battle_object_id as i32, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+        let opponent_boma = sv_battle_object::module_accessor(opponent_object_id);
+        if opponent_category == 4 {
+            WorkModule::set_int(boma, opponent_object_id as i32, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
             LinkModule::remove_model_constraint(opponent_boma, true);
             if LinkModule::is_link(opponent_boma, *ITEM_LINK_NO_HAVE) {
                 LinkModule::unlink(opponent_boma, *ITEM_LINK_NO_HAVE);
@@ -87,11 +86,11 @@ unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut s
                 LinkModule::set_model_constraint_pos_ort(opponent_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("top"), *CONSTRAINT_FLAG_ORIENTATION as u32 | *CONSTRAINT_FLAG_POSITION as u32, true);
             }
         }
-        if opponent_category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            if opponent_object_id == owner_id || opponent_battle_object_id == owner_id {
+        if opponent_category == 0 {
+            if opponent_object_id == owner_id {
                 if owner_kind == *FIGHTER_KIND_LINK {
                     let fuse_item_id = WorkModule::get_int(boma, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID) as u32;
-                    let item_boma = smash::app::sv_battle_object::module_accessor(fuse_item_id);
+                    let item_boma = sv_battle_object::module_accessor(fuse_item_id);
                     if fuse_item_id != *BATTLE_OBJECT_ID_INVALID as u32 && sv_battle_object::is_active(fuse_item_id) {
                         LinkModule::remove_model_constraint(item_boma, true);
                         StatusModule::change_status_request(item_boma, *ITEM_STATUS_KIND_FALL, false);
@@ -104,7 +103,8 @@ unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut s
 
 pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_LINK_BOOMERANG, ModuleInitModules::SearchModule);
-    let _ = skyline::patching::Patch::in_text(0x51dbb08).data(link_boomerang_on_search_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x51dcca8).data(link_swordbeam_on_attack_event as *const () as u64); //029
+    let _ = skyline::patching::Patch::in_text(0x51dbb10).data(link_boomerang_on_search_event as *const () as u64); //035
 	skyline::install_hooks!(
         link_reset_initialization,
         link_death_initialization,

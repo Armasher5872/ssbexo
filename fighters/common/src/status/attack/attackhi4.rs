@@ -22,6 +22,7 @@ unsafe fn status_attackhi4hold_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe fn status_attackhi4_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+    WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
     WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK);
     0.into()
 }

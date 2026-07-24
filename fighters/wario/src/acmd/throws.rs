@@ -185,14 +185,14 @@ unsafe extern "C" fn ssbexo_wario_back_throw_sound(agent: &mut L2CAgentBase) {
         if rand > 80.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_007"));
         }
-        else if rand <= 80.0 && rand > 60.0 {
+        else if rand > 60.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack04"));
         }
-        else if rand <= 60.0 && rand > 40.0 {
+        else if rand > 40.0 {
             let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final03"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
         }
-        else if rand <= 40.0 && rand > 20.0 {
+        else if rand > 20.0 {
             let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final05"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
         }
@@ -258,12 +258,12 @@ unsafe extern "C" fn ssbexo_wario_down_throw_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     if is_excute(agent) {
-        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 5.6, 70, 85, 0, 71, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 3.0, 80, 50, 0, 76, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
     }
     frame(lua_state, 31.0);
     if is_excute(agent) {
-        ATTACK(agent, 0, 0, Hash40::new("footl"), 2.0, 85, 65, 0, 60, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+        ATTACK(agent, 0, 0, Hash40::new("footl"), 2.6, 85, 65, 0, 60, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
         AttackModule::set_catch_only_all(boma, true, false);
         CHECK_FINISH_CAMERA(agent, 3, 3);
         lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
@@ -304,10 +304,10 @@ unsafe extern "C" fn ssbexo_wario_down_throw_sound(agent: &mut L2CAgentBase) {
         if rand > 75.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack01"));
         }
-        else if rand <= 75.0 && rand > 50.0 {
+        else if rand > 50.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack02"));
         }
-        else if rand <= 50.0 && rand > 25.0 {
+        else if rand > 25.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack03"));
         }
         else {

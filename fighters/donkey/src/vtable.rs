@@ -2,9 +2,7 @@ use super::*;
 
 const DONKEY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x993ae0; //Donkey Kong only
 const DONKEY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x993b40; //Donkey Kong only
-const DONKEY_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0x68d670; //Shared
 const DONKEY_VTABLE_LINK_EVENT_OFFSET: usize = 0x993ee0; //Donkey Kong only
-const DONKEY_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x68d8a0; //Shared
 
 //Donkey Kong Reset Initialization
 #[skyline::hook(offset = DONKEY_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -25,35 +23,30 @@ unsafe extern "C" fn donkey_death_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Donkey Kong Once Per Fighter Frame
-#[skyline::hook(offset = DONKEY_VTABLE_ONCE_PER_FIGHTER_FRAME)]
-unsafe extern "C" fn donkey_opff(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_DONKEY as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let frame = MotionModule::frame(boma);
-        let motion_kind = MotionModule::motion_kind(boma);
-        let status_kind = StatusModule::status_kind(boma);
-        let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
-        //DK Taunt Holding
-        if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
-            if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind)
-            && frame >= 48.0 {
-                if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                    MotionModule::set_frame_sync_anim_cmd(boma, 32.0, true, true, false);
-                }
-            }
-        }
-        //Cargo
-        if status_kind == *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_START {
-            if motion_kind == hash40("throw_f") {
-                MotionModule::change_motion(boma, Hash40::new("throw_hi"), 0.0, 1.0, false, 0.0, false, false);
-            }
-            if prev_status_kind == *FIGHTER_STATUS_KIND_CATCH_PULL {
-                WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
-                WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
+unsafe extern "C" fn donkey_opff(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    let frame = MotionModule::frame(boma);
+    let motion_kind = MotionModule::motion_kind(boma);
+    let status_kind = StatusModule::status_kind(boma);
+    let prev_status_kind = StatusModule::prev_status_kind(boma, 0);
+    //DK Taunt Holding
+    if status_kind == *FIGHTER_STATUS_KIND_APPEAL {
+        if [hash40("appeal_hi_r"), hash40("appeal_hi_l")].contains(&motion_kind) && frame >= 48.0 {
+            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) || ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                MotionModule::set_frame_sync_anim_cmd(boma, 32.0, true, true, false);
             }
         }
     }
-    original!()(vtable, fighter)
+    //Cargo
+    if status_kind == *FIGHTER_DONKEY_STATUS_KIND_SHOULDER_START {
+        if motion_kind == hash40("throw_f") {
+            MotionModule::change_motion(boma, Hash40::new("throw_hi"), 0.0, 1.0, false, 0.0, false, false);
+        }
+        if prev_status_kind == *FIGHTER_STATUS_KIND_CATCH_PULL {
+            WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
+            WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
+        }
+    }
 }
 
 //Donkey Kong Link Event
@@ -80,39 +73,35 @@ unsafe extern "C" fn donkey_link_event(vtable: u64, fighter: &mut Fighter, event
 }
 
 //Donkey Kong On Search
-#[skyline::hook(offset = DONKEY_VTABLE_ON_SEARCH_EVENT_OFFSET)]
-unsafe extern "C" fn donkey_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_DONKEY as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let collision_log = *(log as *const u64).add(0x10/0x8);
-        let collision_log = collision_log as *mut CollisionLogScuffed;
-        let status_kind = StatusModule::status_kind(boma);
-        if [*FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH_TURN, *FIGHTER_STATUS_KIND_AIR_LASSO].contains(&status_kind) {
-            let opponent_object_id = (*collision_log).opponent_object_id;
-            if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-                let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
-                let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
-                if sv_battle_object::category(opponent_battle_object_id) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-                    let opponent_boma = (*opponent_battle_object).module_accessor;
-                    if is_barrel(opponent_boma) {
-                        ReflectorModule::set_status_all(opponent_boma, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
-                        WorkModule::set_float(opponent_boma, 0.0, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLOAT_CHARGE);
-                        StatusModule::change_status_request_from_script(opponent_boma, *WEAPON_DONKEY_BARREL_STATUS_KIND_IDLE, false);
-                        StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
-                    }
+unsafe extern "C" fn donkey_on_search(_vtable: u64, fighter: &mut Fighter, log: u64) {
+    let boma = fighter.battle_object.module_accessor;
+    let collision_log = *(log as *const u64).add(0x10/0x8);
+    let collision_log = collision_log as *mut CollisionLogScuffed;
+    let status_kind = StatusModule::status_kind(boma);
+    if [*FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH_TURN, *FIGHTER_STATUS_KIND_AIR_LASSO].contains(&status_kind) {
+        let opponent_object_id = (*collision_log).opponent_object_id;
+        if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+            let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+            let opponent_battle_object_id = (*opponent_battle_object).battle_object_id;
+            if sv_battle_object::category(opponent_battle_object_id) == *BATTLE_OBJECT_CATEGORY_WEAPON {
+                let opponent_boma = (*opponent_battle_object).module_accessor;
+                if is_barrel(opponent_boma) {
+                    ReflectorModule::set_status_all(opponent_boma, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+                    WorkModule::set_float(opponent_boma, 0.0, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_FLOAT_CHARGE);
+                    StatusModule::change_status_request_from_script(opponent_boma, *WEAPON_DONKEY_BARREL_STATUS_KIND_IDLE, false);
+                    StatusModule::change_status_request_from_script(boma, *FIGHTER_STATUS_KIND_SPECIAL_LW, false);
                 }
             }
         }
     }
-    original!()(vtable, fighter, log)
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x4fa8ce8).data(donkey_opff as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x4fa8e00).data(donkey_on_search as *const () as u64);
 	skyline::install_hooks!(
         donkey_reset_initialization,
         donkey_death_initialization,
-        donkey_opff,
-        donkey_link_event,
-        donkey_on_search
+        donkey_link_event
     );
 }

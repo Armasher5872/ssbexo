@@ -26,7 +26,7 @@ unsafe extern "C" fn ssbexo_pikachu_side_special_attack_acmd(agent: &mut L2CAgen
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::remove_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
         WorkModule::on_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_SPECIAL_S_ENABLE_LANDING);
     }
@@ -38,8 +38,8 @@ unsafe extern "C" fn ssbexo_pikachu_grounded_side_special_attack_effect(agent: &
     let boma = agent.module_accessor;
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-            let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+        if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+            let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
             let tail_agent = get_weapon_common_from_accessor(&mut *tail_boma);
             EFFECT(tail_agent, Hash40::new("sys_smash_flash_s"), Hash40::new("tail3"), 4, 0, 4, 0, 0, 0, 1.5, 4, 4, 4, 0, 0, 0, true);
         }
@@ -53,16 +53,16 @@ unsafe extern "C" fn ssbexo_pikachu_grounded_side_special_attack_effect(agent: &
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 6.0, 0, 0, 0, -90, 0.8, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 2.0);
-        if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-            let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+        if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+            let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
             let tail_agent = get_weapon_common_from_accessor(&mut *tail_boma);
             AFTER_IMAGE4_ON_arg29(tail_agent, Hash40::new("tex_pikachu_met_tail1"), Hash40::new("tex_pikachu_met_tail2"), 6, Hash40::new("tail4"), 0, 0, 0, Hash40::new("tail4"), 0, 0, 6.0, true, Hash40::new("null"), Hash40::new("tail4"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
         }
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-            let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+        if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+            let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
             let tail_agent = get_weapon_common_from_accessor(&mut *tail_boma);
             AFTER_IMAGE_OFF(tail_agent, 2);
         }
@@ -79,8 +79,8 @@ unsafe extern "C" fn ssbexo_pikachu_aerial_side_special_attack_effect(agent: &mu
     let boma = agent.module_accessor;
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-            let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+        if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+            let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
             let tail_agent = get_weapon_common_from_accessor(&mut *tail_boma);
             EFFECT(tail_agent, Hash40::new("sys_smash_flash_s"), Hash40::new("tail3"), 4, 0, 4, 0, 0, 0, 1.5, 4, 4, 4, 0, 0, 0, true);
         }
@@ -94,16 +94,16 @@ unsafe extern "C" fn ssbexo_pikachu_aerial_side_special_attack_effect(agent: &mu
     if is_excute(agent) {
         EFFECT_FOLLOW_FLIP(agent, Hash40::new("sys_spin_wind"), Hash40::new("sys_spin_wind"), Hash40::new("top"), 0, 6.0, 0, 0, 0, -90, 0.8, true, *EF_FLIP_YZ);
         LAST_EFFECT_SET_RATE(agent, 2.0);
-        if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-            let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+        if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+            let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
             let tail_agent = get_weapon_common_from_accessor(&mut *tail_boma);
             AFTER_IMAGE4_ON_arg29(tail_agent, Hash40::new("tex_pikachu_met_tail1"), Hash40::new("tex_pikachu_met_tail2"), 6, Hash40::new("tail4"), 0, 0, 0, Hash40::new("tail4"), 0, 0, 6.0, true, Hash40::new("null"), Hash40::new("tail4"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.1);
         }
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
-        if ArticleModule::is_exist(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
-            let tail_boma = get_article_boma(boma, *FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
+        if ArticleModule::is_exist(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL) {
+            let tail_boma = get_article_boma(boma, FIGHTER_PIKACHU_GENERATE_ARTICLE_TAIL);
             let tail_agent = get_weapon_common_from_accessor(&mut *tail_boma);
             AFTER_IMAGE_OFF(tail_agent, 2);
         }

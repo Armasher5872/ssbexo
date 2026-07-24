@@ -59,7 +59,7 @@ unsafe extern "C" fn ike_slash_shoot_end_status(weapon: &mut L2CWeaponCommon) ->
 }
 
 pub fn install() {
-    Agent::new("ike_slash")
+    Agent::new("ike_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_pre_status)
     .status(Init, *WEAPON_IKE_SLASH_STATUS_KIND_SHOOT, ike_slash_shoot_init_status)

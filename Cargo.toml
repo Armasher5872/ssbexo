@@ -93,6 +93,7 @@ shulk = {path = "fighters/shulk"}
 simon = {path = "fighters/simon"}
 snake = {path = "fighters/snake"}
 sonic = {path = "fighters/sonic"}
+springtrap = {path = "fighters/springtrap"}
 szerosuit = {path = "fighters/szerosuit"}
 tantan = {path = "fighters/tantan"}
 toonlink = {path = "fighters/toonlink"}
@@ -210,6 +211,7 @@ shulk = { workspace = true, optional = true }
 simon = { workspace = true, optional = true }
 snake = { workspace = true, optional = true }
 sonic = { workspace = true, optional = true }
+springtrap = { workspace = true, optional = true }
 szerosuit = { workspace = true, optional = true }
 tantan = { workspace = true, optional = true }
 toonlink = { workspace = true, optional = true }
@@ -311,6 +313,7 @@ default = [
     "skyline-web",
     "snake",
     "sonic",
+    "springtrap",
     "szerosuit",
     "tantan",
     "toonlink",

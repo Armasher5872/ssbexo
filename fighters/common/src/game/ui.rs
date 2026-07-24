@@ -27,6 +27,7 @@ unsafe fn get_set_info_alpha(ctx: &skyline::hooks::InlineCtx) {
     manager.cloud_meter[index] = CloudMeter::new(layout_udata);
     manager.link_stamina[index] = LinkStamina::new(layout_udata);
     manager.sonic_meter[index] = SonicMeter::new(layout_udata);
+    manager.edge_materia[index] = EdgeMateria::new(layout_udata);
 }
 
 #[skyline::hook(offset = 0x138a710, inline)]
@@ -74,6 +75,11 @@ fn hud_update(_: &skyline::hooks::InlineCtx) {
     for sonic_meter in mgr.sonic_meter.iter_mut() {
         if sonic_meter.is_valid() && sonic_meter.is_enabled() {
             sonic_meter.update();
+        }
+    }
+    for edge_materia in mgr.edge_materia.iter_mut() {
+        if edge_materia.is_valid() && edge_materia.is_enabled() {
+            edge_materia.update();
         }
     }
 }

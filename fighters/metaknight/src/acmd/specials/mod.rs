@@ -11,7 +11,6 @@ use {
             sv_animcmd::{
                 frame,
                 get_value_float,
-                SET_TAKEOUT_SE_STATUS,
                 wait
             }
         },

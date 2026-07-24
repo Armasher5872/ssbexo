@@ -1,4 +1,5 @@
 use {
+    exo_utils::structs::vector::*,
     exo_var::{
         consts::*,
         gaogaen::*,
@@ -6,17 +7,20 @@ use {
     },
     smash::{
         app::{
-        lua_bind::*,
-        *
+            lua_bind::*,
+            *
         },
         hash40,
         lib::lua_const::*,
-        lua2cpp::L2CFighterCommon,
-        phx::Vector3f
+        lua2cpp::{
+            L2CFighterCommon,
+            *
+        },
+        phx::*
     },
     smash_script::{
-        *,
-        macros::*
+        macros::*,
+        *
     },
     smashline::*,
 };

@@ -1,6 +1,56 @@
 /* The hooks and status_kind edits are credited to the HDR Code Repository and WuBoyTH's source code from the WuBor Patch */
 use super::*;
 
+//Status Jumpsquat Common, enables JC grab
+#[skyline::hook(replace = L2CFighterCommon_status_JumpSquat_common)]
+unsafe extern "C" fn status_jumpsquat_common(fighter: &mut L2CFighterCommon, param_2: L2CValue) {
+    let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
+    let boma = fighter.module_accessor;
+    let stick_jump_command_life = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_STICK_JUMP_COMMAND_LIFE);
+    if stick_jump_command_life == 0 || fighter.global_table[FLICK_Y_DIR].get_i32() <= 0 {
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_JUMP_FLAG_BUTTON);
+        if ControlModule::is_jump_mini_button(boma) {
+            WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        }
+    }
+    WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_STICK_JUMP_COMMAND_LIFE);
+    if param_2.get_bool() {
+        PostureModule::set_stick_lr(boma, 0.0);
+        PostureModule::update_rot_y_lr(boma);
+    }
+    ControlModule::reset_flick_y(boma);
+    ControlModule::reset_flick_sub_y(boma);
+    fighter.global_table[FLICK_Y].assign(&0xFE.into());
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_FALL);
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE);
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
+    WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_JUMP_START);
+    WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_STAND);
+    if ![*FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_OFF].contains(&prev_status_kind) {
+        WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH); //Added
+    }
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ABNORMAL_MINIJUMP_SLOWWALK) {
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+    }
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK) {
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON);
+        WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
+        MotionAnimcmdModule::enable_skip_delay_update(boma);
+    }
+    if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_RESERVE_JUMP_MINI_ATTACK) {
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE);
+        WorkModule::unable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
+    }
+}
+
 //Status Jumpsquat Main, enables Wavedash out of Jumpsquat
 #[skyline::hook(replace = L2CFighterCommon_status_JumpSquat_Main)]
 unsafe extern "C" fn status_jumpsquat_main(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -34,7 +84,7 @@ unsafe extern "C" fn status_jumpsquat_main(fighter: &mut L2CFighterCommon) -> L2
                         if fighter.global_table[CHECK_ATTACK_HI4_UNIQ].get_bool() && {let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[CHECK_ATTACK_HI4_UNIQ].get_ptr()); callable(fighter).get_bool()} {
                             return 0.into();
                         }
-                        if fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 != 0 {
+                        if fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_ATTACK_DASH_ATTACK_HI4 != 0 {
                             if situation_kind == *SITUATION_KIND_GROUND {
                                 fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI4_START.into(), true.into());
                             }
@@ -134,6 +184,7 @@ unsafe extern "C" fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommo
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
+            status_jumpsquat_common,
             status_jumpsquat_main,
             sub_jump_squat_uniq_check_sub,
             sub_jump_squat_uniq_check_sub_mini_attack

@@ -6,11 +6,7 @@ use {
             var_reset::*,
         },
         fighter::demon::*,
-        structs::{
-            buttons::*,
-            collision_struct::*,
-            getter_funcs::*,
-        }
+        structs::collision_struct::*,
     },
     exo_var::{
         demon::*,
@@ -28,6 +24,7 @@ use {
             lua_const::*,
         },
         lua2cpp::*,
+        phx::*,
     },
     /*
     smash2::app::{
@@ -35,8 +32,7 @@ use {
         LinkEventCapture
     },
     */
-    smashline::*,
-    smash_script::macros::*,
+    smashline::*
 };
 
 mod acmd;

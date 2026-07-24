@@ -9,16 +9,16 @@ unsafe extern "C" fn status_pre_escapeair(fighter: &mut L2CFighterCommon) -> L2C
     let pos = *PostureModule::pos(boma);
     let scale = PostureModule::scale(boma);
     let dir_y = WorkModule::get_float(boma, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y);
-    let lower_bound = Vector2f::new(pos.x, pos.y-(3.0*scale));
+    let lower_bound = Vector2f::new(pos.x, pos.y-(6.0*scale));
     let ground_pos_any = &mut Vector2f::zero();
     let ground_pos_stage = &mut Vector2f::zero();
-    let is_touch_any = GroundModule::line_segment_check(boma, &Vector2f::new(pos.x, pos.y+(3.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_any, true);
-    let is_touch_stage = GroundModule::line_segment_check(boma, &Vector2f::new(pos.x, pos.y+(3.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_stage, false);
+    let is_touch_any = GroundModule::line_segment_check(boma, &Vector2f::new(pos.x, pos.y+(6.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_any, true);
+    let is_touch_stage = GroundModule::line_segment_check(boma, &Vector2f::new(pos.x, pos.y+(6.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_stage, false);
     let can_snap = !(is_touch_any == 0 as *const *const u64 || (is_touch_stage != 0 as *const *const u64 && dir_y > 0.0));
     if prev_status_kind != *FIGHTER_STATUS_KIND_DAMAGE_FALL && WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH) && can_snap {
         GroundModule::attach_ground(boma, true);
         GroundModule::set_correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        PostureModule::set_pos(boma, &Vector3f::new(pos.x, ground_pos_any.y+(0.1*scale), pos.z));
+        PostureModule::set_pos(boma, &Vector3f::new(pos.x, ground_pos_any.y, pos.z));
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
         fighter.set_situation(SITUATION_KIND_GROUND.into());
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
@@ -39,7 +39,7 @@ unsafe extern "C" fn status_escapeair(fighter: &mut L2CFighterCommon) -> L2CValu
         let stick_y = fighter.global_table[STICK_Y].get_f32();
         let stick_vec = sv_math::vec2_normalize(stick_x, stick_y);
         let escape_air_angle = (stick_vec.y/stick_vec.x.abs()).atan().to_degrees();
-        if escape_air_angle > 60.0 {
+        if escape_air_angle > 80.0 {
             MotionModule::change_motion(boma, Hash40::new("escape_air_slide"), 0.0, 1.0, false, 0.0, false, false);
         }
         else {
@@ -55,16 +55,25 @@ unsafe extern "C" fn status_escapeair(fighter: &mut L2CFighterCommon) -> L2CValu
 unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     let frame = fighter.global_table[CURRENT_FRAME].get_f32();
+    let dir_x = WorkModule::get_float(boma, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_X);
+    let dir_y = WorkModule::get_float(boma, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y);
+    let angle = (dir_y/dir_x).atan().to_degrees();
+    let freeze_start_frame = if angle > 80.0 {14.0} else if angle > 45.0 {16.0} else {18.0};
+    let freeze_end_frame = if angle > 80.0 {40.0} else if angle > 45.0 {38.0} else {36.0};
+    let ledge_grab_enable_frame = if angle > 80.0 {50.0} else if angle > 45.0 {47.0} else {44.0};
     if !fighter.sub_escape_air_common_main().get_bool() {
         fighter.sub_escape_check_rumble();
     }
     if WorkModule::is_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
-        if (25.0..=46.0).contains(&frame) {
+        if (freeze_start_frame..=freeze_end_frame).contains(&frame) {
             KineticModule::unable_energy_all(boma);
             KineticModule::clear_speed_all(boma);
         }
-        if frame > 46.0 {
+        if frame > freeze_end_frame {
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+        }
+        if frame >= ledge_grab_enable_frame {
             fighter.sub_transition_group_check_air_cliff();
             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }

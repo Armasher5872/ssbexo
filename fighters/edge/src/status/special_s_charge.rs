@@ -4,20 +4,11 @@ unsafe extern "C" fn edge_special_s_charge_main_status(fighter: &mut L2CFighterC
     let boma = fighter.module_accessor;
     fighter.sub_change_motion_by_situation(Hash40::new("special_s_hold").into(), Hash40::new("special_s_air_hold").into(), false.into());
     WorkModule::set_int(boma, 0, *FIGHTER_EDGE_STATUS_SPECIAL_S_INT_HOLD_FRAME);
-    if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
-        WorkModule::set_int(boma, -1, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-        WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_GUARD);
-        WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ESCAPE);
-        WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_JUMP);
-        WorkModule::enable_transition_term_group(boma, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_ESCAPE);
-    }
     fighter.sub_shift_status_main(L2CValue::Ptr(edge_special_s_charge_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn edge_special_s_charge_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let boma = fighter.module_accessor;
     let hold_max = WorkModule::get_param_int(boma, hash40("param_special_s"), hash40("hold_max"));
     let hold_frame = WorkModule::get_int(boma, *FIGHTER_EDGE_STATUS_SPECIAL_S_INT_HOLD_FRAME);
@@ -39,36 +30,9 @@ unsafe extern "C" fn edge_special_s_charge_main_loop(fighter: &mut L2CFighterCom
         }
     }
     if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
-        if hold_frame >= 5 {
-            if fighter.sub_check_command_guard().get_bool() {
-                if situation_kind == *SITUATION_KIND_GROUND {
-                    WorkModule::set_int(boma, *FIGHTER_STATUS_KIND_GUARD_ON, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                    fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
-                    return 1.into()
-                }
-                else {
-                    if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR) {
-                        WorkModule::set_int(boma, *FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                        fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), false.into());
-                        return 1.into()
-                    }
-                }
-            }
-            else {
-                if situation_kind == *SITUATION_KIND_AIR {
-                    if fighter.sub_check_jump_in_charging().get_bool() {
-                        WorkModule::set_int(boma, *FIGHTER_STATUS_KIND_JUMP_AERIAL, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                        fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
-                    }
-                }
-                else {
-                    if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON != 0
-                    || (ControlModule::is_enable_flick_jump(boma) && (cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP != 0) && fighter.sub_check_button_frick().get_bool()) {
-                        WorkModule::set_int(boma, *FIGHTER_STATUS_KIND_JUMP_SQUAT, *FIGHTER_EDGE_STATUS_SPECIAL_N_WORK_INT_CANCEL_STATUS);
-                        fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_N_CANCEL.into(), true.into());
-                    }
-                }
-            }
+        if fighter.sub_check_command_guard().get_bool() {
+            fighter.change_status(FIGHTER_EDGE_STATUS_KIND_SPECIAL_S_CANCEL.into(), false.into());
+            return 1.into();
         }
     }
     if hold_max <= hold_frame {

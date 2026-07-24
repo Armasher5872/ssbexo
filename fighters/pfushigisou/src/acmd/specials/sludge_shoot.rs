@@ -17,7 +17,7 @@ unsafe extern "C" fn ssbexo_pfushigisou_sludge_bomb_effect(agent: &mut L2CAgentB
 }
 
 pub fn install() {
-    Agent::new("pfushigisou_sludge")
+    Agent::new("pfushigisou_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_shoot", ssbexo_pfushigisou_sludge_bomb_acmd, Low)
     .acmd("effect_shoot", ssbexo_pfushigisou_sludge_bomb_effect, Low)

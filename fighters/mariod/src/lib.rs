@@ -1,10 +1,12 @@
 use {
     exo_utils::{
         common::{
+            hook::*,
             status_end_control::*,
             var_reset::*,
         },
         structs::{
+            collision_struct::*,
             getter_funcs::*,
             ui_manager::*,
         }
@@ -36,4 +38,5 @@ pub fn install() {
     opff::install();
     status::install();
     vtable::install();
+    update_weapon_count(*WEAPON_KIND_MARIOD_DRCAPSULE, 1);
 }

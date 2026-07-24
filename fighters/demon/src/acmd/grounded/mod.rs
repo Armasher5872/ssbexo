@@ -26,7 +26,6 @@ use {
     },
 };
 
-mod attack_11_combo;
 mod attack_11;
 mod attack_12_combo;
 mod attack_12;
@@ -40,7 +39,6 @@ mod attack_dash;
 mod dash;
 mod demon_god_fist;
 mod demon_slayer;
-mod devils_steel_pedal;
 mod double_back_fist;
 mod dragon_uppercut;
 mod electric_dragon_uppercut;
@@ -58,7 +56,6 @@ mod wind_god_fist;
 mod zankyosho;
 
 pub fn install() {
-    attack_11_combo::install();
     attack_11::install();
     attack_12_combo::install();
     attack_12::install();
@@ -72,7 +69,6 @@ pub fn install() {
     dash::install();
     demon_god_fist::install();
     demon_slayer::install();
-    devils_steel_pedal::install();
     double_back_fist::install();
     dragon_uppercut::install();
     electric_dragon_uppercut::install();

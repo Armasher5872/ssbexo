@@ -40,10 +40,10 @@ unsafe extern "C" fn ssbexo_wario_aerial_down_special_start_sound(agent: &mut L2
         if rand > 75.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack01"));
         }
-        else if rand <= 75.0 && rand > 50.0 {
+        else if rand > 50.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_attack02"));
         }
-        else if rand <= 50.0 && rand > 25.0 {
+        else if rand > 25.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_007"));
         }
     }

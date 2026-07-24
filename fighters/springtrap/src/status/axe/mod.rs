@@ -1,0 +1,34 @@
+use {
+    exo_utils::{
+        fighter::springtrap::*,
+        structs::getter_funcs::*,
+    },
+    exo_var::{
+        globals::*,
+        springtrap::*,
+    },
+    smash::{
+        app::{
+            lua_bind::*,
+            *
+        },
+        hash40,
+        lib::lua_const::*,
+        lua2cpp::*,
+        phx::*
+    },
+    smash_script::*,
+    smashline::*,
+};
+
+mod axe_fly;
+mod axe_hit_stick;
+mod axe_recall;
+mod axe_stick;
+
+pub fn install() {
+    axe_fly::install();
+    axe_hit_stick::install();
+    axe_recall::install();
+    axe_stick::install();
+}

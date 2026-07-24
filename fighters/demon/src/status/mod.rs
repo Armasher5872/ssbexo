@@ -3,7 +3,6 @@ use {
         common::extern_func::*,
         fighter::demon::*,
         status::catch::*,
-        structs::buttons::*,
     },
     exo_var::{
         demon::*,
@@ -39,7 +38,6 @@ mod attack_stand_7;
 mod attack_step_2;
 mod attack_step_2f;
 mod attack_step_2h;
-mod attack_step_2k;
 mod attack_step_2l;
 mod attack_step_2s;
 mod attack_step;
@@ -72,7 +70,6 @@ pub fn install() {
     attack_step_2::install();
     attack_step_2f::install();
     attack_step_2h::install();
-    attack_step_2k::install();
     attack_step_2l::install();
     attack_step_2s::install();
     attack_step::install();

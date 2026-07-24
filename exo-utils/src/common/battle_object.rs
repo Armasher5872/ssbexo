@@ -12,17 +12,6 @@ pub fn get_battle_object_from_entry_id(entry_id: u32) -> Option<*mut BattleObjec
     }
 }
 
-pub fn get_fighter_common_from_entry_id(entry_id: u32) -> Option<&'static mut L2CFighterCommon> {
-    if let Some(object) = get_battle_object_from_entry_id(entry_id) {
-        unsafe {
-            Some(get_fighter_common_from_accessor(std::mem::transmute((*object).module_accessor,)))
-        }
-    } 
-    else {
-        None
-    }
-}
-
 fn get_active_battle_object_id_from_entry_id(entry_id: u32) -> Option<u32> {
     let object = get_battle_object_from_entry_id(entry_id)?;
     if object.is_null() { 

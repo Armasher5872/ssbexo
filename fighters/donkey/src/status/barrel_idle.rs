@@ -10,7 +10,7 @@ unsafe extern "C" fn donkey_barrel_idle_init_status(weapon: &mut L2CWeaponCommon
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let boma = weapon.module_accessor;
     let speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-    let gravity = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("gravity"));
+    let gravity = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("gravity"));
     if situation_kind == *SITUATION_KIND_GROUND {
         sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
         sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, 0.0);
@@ -42,7 +42,7 @@ unsafe extern "C" fn donkey_barrel_idle_main_loop(weapon: &mut L2CWeaponCommon) 
     let situation_kind = weapon.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = weapon.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = weapon.module_accessor;
-    let gravity = WorkModule::get_param_float(boma, hash40("param_barrel"), hash40("gravity"));
+    let gravity = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("gravity"));
     let life = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     let owner_boma = get_owner_boma(weapon);
     WorkModule::on_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_DISABLE);
@@ -93,7 +93,7 @@ unsafe extern "C" fn donkey_barrel_idle_exit_status(_weapon: &mut L2CWeaponCommo
 }
 
 pub fn install() {
-    Agent::new("donkey_barrel")
+    Agent::new("donkey_cannonballcloned")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .status(Pre, *WEAPON_DONKEY_BARREL_STATUS_KIND_IDLE, donkey_barrel_idle_pre_status)
     .status(Init, *WEAPON_DONKEY_BARREL_STATUS_KIND_IDLE, donkey_barrel_idle_init_status)

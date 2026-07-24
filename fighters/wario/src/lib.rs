@@ -46,5 +46,6 @@ pub fn install() {
     vtable::install();
     unsafe {
         FIGHTER_WARIO_GENERATE_ARTICLE_KAMIKAZE += clone_weapon("luigi", *WEAPON_KIND_LUIGI_FIREBALL, "wario", "fireballcloned", false);
+        FIGHTER_WARIO_GENERATE_ARTICLE_CHAIR += clone_weapon("duckhunt", *WEAPON_KIND_DUCKHUNT_GRASS, "wario", "grasscloned", false);
     }
 }

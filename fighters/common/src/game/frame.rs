@@ -10,7 +10,16 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
 	let final_zoom_counter = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER);
 	let effect_handle = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_HANDLE);
     let invalid_runback_states = !sv_information::is_ready_go() && [*FIGHTER_STATUS_KIND_DEMO, *FIGHTER_STATUS_KIND_WIN, *FIGHTER_STATUS_KIND_LOSE, *FIGHTER_STATUS_KIND_ENTRY, *FIGHTER_STATUS_KIND_ROULETTE_FURAFURA, *FIGHTER_STATUS_KIND_ROULETTE, *FIGHTER_STATUS_KIND_STANDBY].contains(&status_kind);
-	//Final Zoom Clearing
+	//Chaingrab Mechanics
+    if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CAPTURE_COOLDOWN) > 0 {
+        WorkModule::dec_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CAPTURE_COOLDOWN);
+    }
+    else {
+        if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CAPTURE_TIMER_MULTIPLIER) > 1 {
+            WorkModule::set_int(boma, 1, *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CAPTURE_TIMER_MULTIPLIER);
+        }
+    }
+    //Final Zoom Clearing
 	if final_zoom_counter > 0 {
 		if final_zoom_counter == 40 {
 			if is_final_killing_hit(&mut *boma) {
@@ -50,6 +59,7 @@ unsafe extern "C" fn global_once_per_fighter_frame(fighter: &mut Fighter) {
         IS_SALTY_MATCH_EXIT = true;
     }
 }
+
 
 pub fn install() {
     skyline::install_hook!(global_once_per_fighter_frame);

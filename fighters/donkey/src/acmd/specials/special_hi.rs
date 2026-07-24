@@ -20,7 +20,7 @@ unsafe extern "C" fn ssbexo_donkey_up_special_acmd(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 40.0);
     if is_excute(agent) {
-        ArticleModule::remove_exist(boma, *FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
+        ArticleModule::remove_exist(boma, FIGHTER_DONKEY_GENERATE_ARTICLE_BARREL_CANNON, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
         ATK_POWER(agent, 1, 4.0);
     }
     frame(lua_state, 45.0);
