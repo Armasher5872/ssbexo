@@ -1,33 +1,20 @@
 use {
-    exo_utils::{
-        common::{
-            status_end_control::*,
-            var_reset::*,
-            weapon::*,
-        },
-        fighter::pfushigisou::*,
+    exo_utils::common::{
+        status_end_control::*,
+        var_reset::*,
     },
     exo_var::{
         globals::*,
         pfushigisou::*,
     },
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
+        app::*,
         lib::{
             L2CValue,
             lua_const::*,
         },
-        lua2cpp::L2CFighterCommon,
-        phx::{
-            Hash40,
-            Vector3f
-        }
+        lua2cpp::L2CFighterCommon
     },
-    smash_script::*,
     smashline::*,
 };
 
@@ -42,6 +29,6 @@ pub fn install() {
     status::install();
     vtable::install();
     unsafe {
-        FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "pfushigisou", "sludge", false);
+        FIGHTER_PFUSHIGISOU_GENERATE_ARTICLE_SLUDGE += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "pfushigisou", "cannonballcloned", false);
     }
 }

@@ -56,11 +56,16 @@ unsafe extern "C" fn ssbexo_snake_entry_expression(agent: &mut L2CAgentBase) {
     }
 }
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_snake_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 pub fn install() {
     Agent::new("snake")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("expression_entryr", ssbexo_snake_entry_expression, Low)
     .acmd("expression_entryl", ssbexo_snake_entry_expression, Low)
+    .acmd("game_escapeair", ssbexo_snake_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_snake_airdodge_acmd, Low)
     .install()
     ;
 }

@@ -1,6 +1,7 @@
 use {
     exo_utils::{
         common::check_attack::*,
+        fighter::wario::*,
         status::{
             appeal::*,
             catch::*,

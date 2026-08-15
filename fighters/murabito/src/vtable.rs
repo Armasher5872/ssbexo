@@ -1,11 +1,11 @@
 use super::*;
 
-const MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
+const MURABITO_SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
 const MURABITO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xdbad80; //Murabito Only
 
-//Villager Reset Initialization
-#[skyline::hook(offset = MURABITO_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn murabito_reset_initialization(vtable: u64, fighter: &mut Fighter) {
+//Villager & Isabelle Reset Initialization
+#[skyline::hook(offset = MURABITO_SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET)]
+unsafe extern "C" fn murabito_shizue_reset_initialization(vtable: u64, fighter: &mut Fighter) {
     if fighter.battle_object.kind == *FIGHTER_KIND_MURABITO as u32 {
         let boma = fighter.battle_object.module_accessor;
         common_reset_variable_reset(&mut *boma);
@@ -29,7 +29,7 @@ unsafe extern "C" fn murabito_death_initialization(vtable: u64, fighter: &mut Fi
 
 pub fn install() {
 	skyline::install_hooks!(
-        murabito_reset_initialization,
+        murabito_shizue_reset_initialization,
         murabito_death_initialization
     );
 }

@@ -9,13 +9,9 @@ use {
     exo_var::{
         globals::*,
         consts::*,
-        variables::*,
     },
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::lua_bind::*,
         lib::{
             L2CValue,
             lua_const::*,
@@ -27,10 +23,8 @@ use {
 
 mod acmd;
 mod opff;
-mod vtable;
 
 pub fn install() {
     acmd::install();
     opff::install();
-    vtable::install();
 }

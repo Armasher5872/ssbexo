@@ -293,7 +293,7 @@ unsafe extern "C" fn ssbexo_edge_aerial_retaliation_stance_attack_sound(agent: &
     frame(lua_state, 20.0);
     if charge >= 2 {
         if is_excute(agent) {
-            PLAY_SE(agent, Hash40::new("se_edge_final03_03"));
+            PLAY_SE(agent, Hash40::new("se_edge_final01_02"));
         }
     }
     else {

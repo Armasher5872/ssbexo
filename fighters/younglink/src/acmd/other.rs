@@ -1,5 +1,8 @@
 use super::*;
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_younglink_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Down Taunt ACMD
 unsafe extern "C" fn ssbexo_younglink_down_taunt_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
@@ -42,6 +45,8 @@ unsafe extern "C" fn ssbexo_younglink_down_taunt_expression(agent: &mut L2CAgent
 pub fn install() {
     Agent::new("younglink")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .acmd("game_escapeair", ssbexo_younglink_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_younglink_airdodge_acmd, Low)
     .acmd("game_appeallwl", ssbexo_younglink_down_taunt_acmd, Low)
     .acmd("game_appeallwr", ssbexo_younglink_down_taunt_acmd, Low)
     .acmd("expression_appeallwl", ssbexo_younglink_down_taunt_expression, Low)

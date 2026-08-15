@@ -35,27 +35,18 @@ unsafe extern "C" fn wario_special_n_catch_walk_main_loop(fighter: &mut L2CFight
     let walk_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("walk_stick_x"));
     let run_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("run_stick_x"));
     let jump_neutral_y = WorkModule::get_param_float(boma, hash40("common"), hash40("jump_neutral_y"));
-    let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-    if capture_id != 0x50000000 {
-        let pos = *PostureModule::pos(boma);
-        let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-        let clatter_time = ControlModule::get_clatter_time(capture_boma, 0);
-        ControlModule::set_clatter_time(capture_boma, clatter_time-1.0, 0);
-        if clatter_time <= 0.0 {
-            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            fighter.change_status(FIGHTER_STATUS_KIND_CATCH_CUT.into(), false.into());
-        }
-    }
+    handle_mash(fighter);
     if x_stick > run_stick_x && is_attack {
         fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_F.into(), false.into());
     }
     if x_stick < -run_stick_x && is_attack {
-        if situation_kind == *SITUATION_KIND_GROUND {
-            fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_B.into(), false.into());
-        }
+        fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_B.into(), false.into());
     }
     if stick_y > jump_neutral_y && is_attack {
         fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_HI.into(), false.into());
+    }
+    if stick_y < -jump_neutral_y && is_attack {
+        fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_LW.into(), false.into());
     }
     if x_stick < walk_stick_x && x_stick > -walk_stick_x {
         fighter.change_status(FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_WAIT.into(), false.into());
@@ -85,47 +76,13 @@ unsafe extern "C" fn wario_special_n_catch_walk_exec_status(_fighter: &mut L2CFi
 
 //Neutral Special Catch Walk End Status
 unsafe extern "C" fn wario_special_n_catch_walk_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let boma = fighter.module_accessor;
-    if ![
-        *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_WAIT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_TURN, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_WALK, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_JUMP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_F, 
-        *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_B, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_HI, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_LW, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_LW_FALL, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_LW_LAND
-    ].contains(&status_kind) {
-        if CatchModule::is_catch(boma) {
-            let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-            if capture_id != 0x50000000 {
-                let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-                let pos = *PostureModule::pos(boma);
-                PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            }
-            CatchModule::set_send_cut_event(boma, true);
-            CatchModule::catch_cut(boma, false, false);
-        }
-    }
+    wario_special_n_end(fighter, false);
     0.into()
 }
 
 //Neutral Special Catch Walk Exit Status
 unsafe extern "C" fn wario_special_n_catch_walk_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let boma = fighter.module_accessor;
-    if ![
-        *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_WAIT, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_TURN, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_WALK, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_CATCH_JUMP, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_F, 
-        *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_B, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_HI, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_LW, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_LW_FALL, *FIGHTER_WARIO_STATUS_KIND_SPECIAL_N_THROW_LW_LAND
-    ].contains(&status_kind) {
-        if LinkModule::is_link(boma, *LINK_NO_CAPTURE) {
-            let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-            if capture_id != 0x50000000 {
-                let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-                let pos = *PostureModule::pos(boma);
-                PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            }
-            fighter.clear_lua_stack();
-            lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
-            sv_module_access::_catch(fighter.lua_state_agent);
-            fighter.pop_lua_stack(1);
-        }
-    }
+    wario_special_n_exit(fighter, false);
     0.into()
 }
 

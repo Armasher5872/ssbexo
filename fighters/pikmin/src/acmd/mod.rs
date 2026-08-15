@@ -20,7 +20,9 @@ use {
 };
 
 mod grounded;
+mod other;
 
 pub fn install() {
     grounded::install();
+    other::install();
 }

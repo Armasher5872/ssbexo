@@ -25,10 +25,12 @@ use {
 
 mod aerials;
 mod grounded;
+mod other;
 mod throws;
 
 pub fn install() {
     aerials::install();
     grounded::install();
+    other::install();
     throws::install();
 }

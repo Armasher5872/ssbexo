@@ -20,18 +20,12 @@ unsafe extern "C" fn wario_special_n_throw_f_init_status(fighter: &mut L2CFighte
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
     }
-    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_INVINCIBLE), 0);
+    damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0.0);
     0.into()
 }
 
 //Neutral Special Forward Throw Main Status
 unsafe extern "C" fn wario_special_n_throw_f_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let boma = fighter.module_accessor;
-    let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-    if capture_id != 0x50000000 {
-        let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-        StatusModule::change_status_force(capture_boma, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN, false);
-    }
     grabbed_anim_selector(fighter, "barrel_screw", 0.0, 0.0);
     fighter.sub_change_motion_by_situation(L2CValue::Hash40s("special_n_throw_f"), L2CValue::Hash40s("special_air_n_throw_f"), false.into());
     fighter.sub_shift_status_main(L2CValue::Ptr(wario_special_n_throw_f_main_loop as *const () as _))
@@ -42,7 +36,8 @@ unsafe extern "C" fn wario_special_n_throw_f_main_loop(fighter: &mut L2CFighterC
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
     let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-    if CancelModule::is_enable_cancel(boma) && fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool() {
+    let frame = MotionModule::frame(boma);
+    if CancelModule::is_enable_cancel(boma) && (fighter.sub_wait_ground_check_common(false.into()).get_bool() || fighter.sub_air_check_fall_common().get_bool()) {
         return 1.into();
     }
     if !StatusModule::is_changing(boma) {
@@ -59,11 +54,24 @@ unsafe extern "C" fn wario_special_n_throw_f_main_loop(fighter: &mut L2CFighterC
             MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_air_n_throw_f"), -1.0, 1.0, 0.0, false, false);
         }
     }
+    if frame < 17.0 {
+        wario_try_charge(fighter, 7.0, 0.005, 18.0/16.0);
+    }
+    if WorkModule::is_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED) {
+        AttackModule::set_power_up(boma, 1.5);
+        AttackModule::set_reaction_mul(boma, 1.1);
+    }
+    handle_mash(fighter);
     if WorkModule::is_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW) {
         if capture_id != 0x50000000 {
+            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
+            StatusModule::change_status_force(capture_boma, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN, false);
             AttackModule::hit_absolute_joint(boma, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, capture_id as u32, Hash40::new("throw"), 0, 0);
         }
-        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
+        damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+        if situation_kind == *SITUATION_KIND_AIR {
+            sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.8);
+        }
         WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW);
     }
     if MotionModule::is_end(boma) {
@@ -86,36 +94,26 @@ unsafe extern "C" fn wario_special_n_throw_f_exec_status(_fighter: &mut L2CFight
 //Neutral Special Forward Throw End Status
 unsafe extern "C" fn wario_special_n_throw_f_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if CatchModule::is_catch(boma) {
-        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-        if capture_id != 0x50000000 {
-            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-            let pos = *PostureModule::pos(boma);
-            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-        }
-        CatchModule::set_send_cut_event(boma, true);
-        CatchModule::catch_cut(boma, false, false);
-        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
-    }
+    wario_special_n_end(fighter, true);
+    STOP_SE(fighter, Hash40::new("se_wario_special_l02"));
+    AttackModule::set_power_up(boma, 1.0);
+    AttackModule::set_reaction_mul(boma, 1.0);
+    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW);
+    WorkModule::set_int(boma, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_N_CHARGE);
     0.into()
 }
 
 //Neutral Special Forward Throw Exit Status
 unsafe extern "C" fn wario_special_n_throw_f_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if LinkModule::is_link(boma, *LINK_NO_CAPTURE) {
-        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-        if capture_id != 0x50000000 {
-            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-            let pos = *PostureModule::pos(boma);
-            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-        }
-        fighter.clear_lua_stack();
-        lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
-        sv_module_access::_catch(fighter.lua_state_agent);
-        fighter.pop_lua_stack(1);
-    }
-    HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
+    wario_special_n_exit(fighter, true);
+    STOP_SE(fighter, Hash40::new("se_wario_special_l02"));
+    AttackModule::set_power_up(boma, 1.0);
+    AttackModule::set_reaction_mul(boma, 1.0);
+    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
+    WorkModule::off_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW);
+    WorkModule::set_int(boma, 0, *FIGHTER_WARIO_INSTANCE_WORK_ID_INT_SPECIAL_N_CHARGE);
     0.into()
 }
 

@@ -26,6 +26,10 @@ unsafe extern "C" fn demon_check_special_command(fighter: &mut L2CFighterCommon)
             }
             return 1.into();
         }
+        if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623BLONG != 0 {
+            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2S.into(), true.into());
+            return 1.into();
+        }
         if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623ALONG != 0 {
             if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY != 0 && rage_system {
                 fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE.into(), true.into());

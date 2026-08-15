@@ -6,11 +6,8 @@ unsafe extern "C" fn ssbexo_demon_nair_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     if is_excute(agent) {
-        WorkModule::on_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_HIGH_POUNCE_ACTIVE);
-    }
-    frame(lua_state, 3.0);
-    if is_excute(agent) {
         WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        WorkModule::on_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_HIGH_POUNCE_ACTIVE);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {

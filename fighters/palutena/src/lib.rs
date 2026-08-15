@@ -1,11 +1,15 @@
 use {
     exo_utils::common::{
+        extern_func::*,
         status_end_control::*,
         var_reset::*,
     },
     exo_var::globals::*,
     smash::{
-        app::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         lib::lua_const::*,
     },
     smashline::*,

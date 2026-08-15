@@ -5,17 +5,8 @@ use {
     },
     exo_var::globals::*,
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
-        hash40,
-        lib::lua_const::*,
+        app::*,
         lua2cpp::L2CFighterCommon
-    },
-    smash_script::{
-        macros::*,
-        *
     },
     smashline::*,
 };

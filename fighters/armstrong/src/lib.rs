@@ -2,58 +2,33 @@
 use {
     exo_utils::{
         common::{
-            hook::*,
             status_end_control::*,
             var_reset::*,
-            vtable_funcs::*,
         },
-        fighter::{
-            armstrong::*,
-            ganon::*,
-            springtrap::*,
-        },
+        fighter::armstrong::*,
         status::damage::*,
-        structs::{
-            collision_struct::*,
-            getter_funcs::*,
-        }
     },
     exo_var::{
         armstrong::*,
         consts::*,
-        ganon::*,
         globals::*,
-        springtrap::*,
     },
     param_config::*,
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::lua_bind::*,
         hash40,
         lib::{
             L2CValue,
             lua_const::*,
         },
         lua2cpp::L2CFighterCommon,
-        phx::{
-            Hash40,
-            Vector3f
-        }
     },
-    smash2::app::{
-        LinkEvent,
-        LinkEventCapture
-    },
-    smash_script::macros::*,
     smashline::*,
 };
 
 mod acmd;
 mod opff;
 mod status;
-mod vtable;
 
 pub fn install() {
     disable_kirby_copy(*FIGHTER_KIND_GANON, get_armstrong_costumes_non_acmd());
@@ -92,7 +67,6 @@ pub fn install() {
     acmd::install();
     opff::install();
     status::install();
-    vtable::install();
     unsafe {
         FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR += clone_weapon("luigi", *WEAPON_KIND_LUIGI_FIREBALL, "ganon", "firepillar", false);
     }

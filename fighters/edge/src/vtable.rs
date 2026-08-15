@@ -95,11 +95,6 @@ unsafe fn edge_opff_winged_form_check(ctx: &mut skyline::hooks::InlineCtx) {
         WorkModule::off_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_HAIR_OFF_CHANGED);
         fun_71009de890(fighter);
         SoundModule::play_se(boma, Hash40::new("se_edge_winged_on"), true, false, false, false, enSEType(0));
-        /*
-        if *(singletons::FighterParamAccessor2() as *const u8).add(0xBC) < 1 {
-            MotionAnimcmdModule::call_script_single(boma, 2, Hash40::new("sound_wingstart"), -1);
-        }
-        */
         MotionAnimcmdModule::call_script_single(boma, 2, Hash40::new("sound_wingstart"), -1);
         MotionAnimcmdModule::call_script_single(boma, 3, Hash40::new("effect_wingstart"), -1);
         MotionAnimcmdModule::call_script_single(boma, 1, Hash40::new("expression_wingstart"), -1);
@@ -177,9 +172,6 @@ unsafe extern "C" fn edge_shield_attack_detection_event(_vtable: u64, fighter: &
                         WorkModule::set_int(opponent_boma, 50, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_MAG);
                         EFFECT(opponent_agent, Hash40::new("edge_throwlw_gravity"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
                         EFFECT(opponent_agent, Hash40::new("edge_shadowflare_hold"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, true);
-                        StopModule::set_hit_stop_frame_fix(boma, 12);
-                        WorkModule::set_int(boma, 12, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_FRAME);
-                        WorkModule::set_int(boma, 50, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_MAG);
                     }
                 }
                 if shield_group_index == 2 {
@@ -189,9 +181,6 @@ unsafe extern "C" fn edge_shield_attack_detection_event(_vtable: u64, fighter: &
                         StopModule::set_hit_stop_frame_fix(opponent_boma, 20);
                         WorkModule::set_int(opponent_boma, 20, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_FRAME);
                         WorkModule::set_int(opponent_boma, 50, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_MAG);
-                        StopModule::set_hit_stop_frame_fix(boma, 20);
-                        WorkModule::set_int(boma, 20, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_FRAME);
-                        WorkModule::set_int(boma, 50, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_SLOW_MAG);
                     }
                 }
             }

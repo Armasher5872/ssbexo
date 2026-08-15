@@ -59,6 +59,9 @@ unsafe extern "C" fn ssbexo_armstrong_entry_expression(agent: &mut L2CAgentBase)
 //Taunt Effect
 unsafe extern "C" fn ssbexo_armstrong_taunt_effect(_agent: &mut L2CAgentBase) {}
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_armstrong_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Up Taunt Sound
 unsafe extern "C" fn ssbexo_armstrong_up_taunt_sound(agent: &mut L2CAgentBase) {
     if is_excute(agent) {
@@ -225,6 +228,8 @@ pub fn install() {
     .acmd("sound_entryl", ssbexo_armstrong_entry_sound, Low)
     .acmd("expression_entryr", ssbexo_armstrong_entry_expression, Low)
     .acmd("expression_entryl", ssbexo_armstrong_entry_expression, Low)
+    .acmd("game_escapeair", ssbexo_armstrong_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_armstrong_airdodge_acmd, Low)
     .acmd("effect_appealhir", ssbexo_armstrong_taunt_effect, Low)
     .acmd("effect_appealhil", ssbexo_armstrong_taunt_effect, Low)
     .acmd("effect_appealsr", ssbexo_armstrong_taunt_effect, Low)

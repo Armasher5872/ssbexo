@@ -30,6 +30,7 @@ mod appeal_hi;
 mod appeal_kamikaze;
 mod appeal_lw;
 mod dash;
+mod escape_air;
 mod run;
 mod walk_fast;
 mod walk_middle;
@@ -43,6 +44,7 @@ pub fn install() {
     appeal_kamikaze::install();
     appeal_lw::install();
     dash::install();
+    escape_air::install();
     run::install();
     walk_fast::install();
     walk_middle::install();

@@ -1,21 +1,16 @@
 use super::*;
 
-const LUIGI_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const LUIGI_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xca0cf0; //Luigi only
-const LUIGI_VTABLE_ON_ATTACK_OFFSET: usize = 0xca1380; //Luigi only
+const LUIGI_VTABLE_ON_ATTACK_OFFSET: usize = 0xca13a0; //Luigi only
 const LUIGI_VTABLE_LINK_EVENT_OFFSET: usize = 0xca0e70; //Luigi only
 const LUIGI_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0xca2960; //Luigi only
 const LUIGI_VTABLE_CHANGE_MOTION_CALLBACK_OFFSET: usize = 0xca1510; //Luigi only
 
 //Luigi Reset Initialization
-#[skyline::hook(offset = LUIGI_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn luigi_reset_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_LUIGI as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
-        luigi_var(&mut *boma);
-    }
-    original!()(vtable, fighter)
+unsafe extern "C" fn luigi_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    common_reset_variable_reset(&mut *boma);
+    luigi_var(&mut *boma);
 }
 
 //Luigi Death Initialization
@@ -106,9 +101,9 @@ unsafe extern "C" fn luigi_fireball_on_attack(vtable: u64, weapon: *mut smash::a
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x4fe1158).data(luigi_reset_initialization as *const () as u64);
     let _ = skyline::patching::Patch::in_text(0x51e1898).data(luigi_fireball_on_attack as *const () as u64);
 	skyline::install_hooks!(
-        luigi_reset_initialization,
         luigi_death_initialization,
         luigi_on_attack,
         luigi_link_event,

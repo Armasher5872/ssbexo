@@ -56,7 +56,7 @@ unsafe extern "C" fn koopajr_cannonball_initialization_event(vtable: u64, weapon
     }
     if owner_kind == *FIGHTER_KIND_GANON {
         if !is_springtrap_slots(owner_boma) {
-            let shield_data = ShieldData::new(6.0, 0.0, 0.0, 6.0, 0.0, 0.0, 8.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
+            let shield_data = ShieldData::new(6.0, 0.0, 0.0, 6.0, 0.0, 0.0, 10.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
             let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
             let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
             set_shield_group2(reflector_module, resource, *WEAPON_GANON_VOLLEY_SHIELD_KIND_BODY);
@@ -165,37 +165,6 @@ unsafe extern "C" fn koopajr_cannonball_on_attack(vtable: u64, weapon: *mut smas
         *(weapon as *mut bool).add(0x90) = false;
     }
     normal_weapon_hit_handler(vtable, weapon, collision_bitmask)
-}
-
-//Bowser Jr Cannonball On Reflect Event Offset
-unsafe extern "C" fn koopajr_cannonball_on_reflect_event(_vtable: u64, battle_object: *mut BattleObject) {
-    let boma = (*battle_object).module_accessor;
-    let agent = get_weapon_common_from_accessor(&mut *boma);
-    let reflect_team_no = ReflectModule::team_no(boma);
-    let reflect_object_id = ReflectModule::object_id(boma);
-    let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
-    let owner_boma = sv_battle_object::module_accessor(owner_id);
-    let owner_kind = utility::get_kind(&mut *owner_boma);
-    PostureModule::reverse_lr(boma);
-    PostureModule::update_rot_y_lr(boma);
-    if owner_kind != *FIGHTER_KIND_GANON {
-        TeamModule::set_team(boma, reflect_team_no as i32, true);
-        TeamModule::set_hit_team(boma, reflect_team_no as i32);
-        TeamModule::set_team_owner_id(boma, reflect_object_id as u32);
-    }
-    else {
-        let scale = WorkModule::get_float(boma, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_FLOAT_SCALE);
-        TeamModule::set_team(boma, *TEAM_NONE, false);
-        TeamModule::set_hit_team(boma, *TEAM_NONE);
-        TeamModule::set_team_owner_id(boma, *BATTLE_OBJECT_ID_INVALID as u32);
-        EffectModule::kill_kind(boma, Hash40::new("ganon_volley"), true, true);
-        if scale > 1.0 {
-            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3.8+scale, true);
-        }
-        else {
-            EFFECT_FOLLOW(agent, Hash40::new("ganon_volley"), Hash40::new("rot"), 0, 0, 0, 0, 0, 0, 3.8, true);
-        }
-    }
 }
 
 unsafe extern "C" fn koopajr_cannonball_on_search_event(_vtable: u64, weapon: &mut smash::app::Weapon, log: *mut CollisionLogScuffed) {
@@ -325,7 +294,6 @@ pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_KOOPAJR_CANNONBALL, ModuleInitModules::ReflectorModule);
     let _ = skyline::patching::Patch::in_text(0x51d8348).data(koopajr_cannonball_reflector_clean_event as *const () as u64);
     let _ = skyline::patching::Patch::in_text(0x51d83e8).data(koopajr_cannonball_on_attack as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x51d8400).data(koopajr_cannonball_on_reflect_event as *const () as u64);
     let _ = skyline::patching::Patch::in_text(0x51d8418).data(koopajr_cannonball_on_search_event as *const () as u64);
     let _ = skyline::patching::Patch::in_text(0x51d8468).data(koopajr_cannonball_on_reflection_event as *const () as u64);
 	skyline::install_hooks!(

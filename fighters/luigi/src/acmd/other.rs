@@ -1,5 +1,8 @@
 use super::*;
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_luigi_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Win 1 ACMD
 unsafe extern "C" fn ssbexo_luigi_win_1_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
@@ -75,6 +78,8 @@ unsafe extern "C" fn ssbexo_luigi_win_1_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("luigi")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .acmd("game_escapeair", ssbexo_luigi_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_luigi_airdodge_acmd, Low)
     .acmd("game_win1", ssbexo_luigi_win_1_acmd, Low)
     .acmd("effect_win1", ssbexo_luigi_win_1_effect, Low)
     .acmd("sound_win1", ssbexo_luigi_win_1_sound, Low)

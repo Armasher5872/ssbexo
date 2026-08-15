@@ -34,12 +34,13 @@ unsafe extern "C" fn demon_attack_step_2f_main_loop(fighter: &mut L2CFighterComm
             return 1.into();
         }
     }
-    if frame <= 8.0 {
+    if frame <= 12.0 {
         if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
             if !fighter.global_table[IS_STOP].get_bool() {
                 WorkModule::inc_int(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_WORK_INT_HOLD_FRAME);
             }
             if step_hold_frame >= hold_frame {
+                WorkModule::on_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ELECTRIC_DRAGON_UPPERCUT);
                 WorkModule::on_flag(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_FLAG_2_TO_2L);
                 fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2L.into(), false.into());
             }

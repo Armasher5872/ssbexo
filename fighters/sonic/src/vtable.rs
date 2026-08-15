@@ -1,6 +1,5 @@
 use super::*;
 
-const SONIC_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const SONIC_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11d5820; //Sonic only
 const SONIC_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11d7b20; //Sonic only
 const SONIC_VTABLE_ON_ATTACK_OFFSET: usize = 0x11d5a00; //Sonic only
@@ -8,14 +7,10 @@ const SONIC_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x11d63d0; //Sonic only
 const SONIC_VTABLE_ON_DAMAGE_OFFSET: usize = 0x11d7910; //Sonic only
 
 //Sonic Reset Initialization
-#[skyline::hook(offset = SONIC_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn sonic_reset_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_SONIC as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
-        sonic_var(&mut *boma);
-    }
-    original!()(vtable, fighter)
+unsafe extern "C" fn sonic_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    common_reset_variable_reset(&mut *boma);
+    sonic_var(&mut *boma);
 }
 
 //Sonic Death Initialization
@@ -49,7 +44,7 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_REBOUND, *FIGHTER_SONIC_STATUS_KIND_SPECIAL_N_HIT
     ].contains(&status_kind);
     //Homing Attack Start
-    if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N) && !target_detected && neutral_special_check {
+    if /*WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N) &&*/ !target_detected && neutral_special_check && !neutral_special_statuses {
         if cooldown <= 0 {
             SEARCH(agent, 0, 0, Hash40::new("top"), 65.0, 0.0, 10.0, 55.0, None, None, None, *COLLISION_KIND_MASK_HIT, *HIT_STATUS_MASK_NORMAL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIEB, *COLLISION_PART_MASK_BODY_HEAD, false);
             WorkModule::inc_int(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_INT_SPECIAL_N_SEARCH_MISS_TIMER);
@@ -234,8 +229,8 @@ unsafe extern "C" fn sonic_on_damage(_vtable: u64, fighter: &mut Fighter, on_dam
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x5045570).data(sonic_reset_initialization as *const () as u64);
     skyline::install_hooks!(
-        sonic_reset_initialization,
         sonic_death_initialization,
         sonic_opff,
         sonic_on_attack,

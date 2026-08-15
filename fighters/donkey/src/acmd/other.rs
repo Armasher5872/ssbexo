@@ -27,6 +27,9 @@ unsafe extern "C" fn ssbexo_donkey_turn_dash_acmd(agent: &mut L2CAgentBase) {
     }
 }
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_donkey_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Final Smash Start ACMD
 unsafe extern "C" fn ssbexo_donkey_final_smash_start_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -136,6 +139,8 @@ pub fn install() {
     Agent::new("donkey")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_turndash", ssbexo_donkey_turn_dash_acmd, Low)
+    .acmd("game_escapeair", ssbexo_donkey_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_donkey_airdodge_acmd, Low)
     .acmd("game_finalstart", ssbexo_donkey_final_smash_start_acmd, Low)
     .acmd("game_finalairstart", ssbexo_donkey_final_smash_start_acmd, Low)
     .install()

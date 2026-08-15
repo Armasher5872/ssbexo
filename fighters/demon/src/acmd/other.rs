@@ -1,5 +1,8 @@
 use super::*;
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_demon_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Up Taunt ACMD
 unsafe extern "C" fn ssbexo_demon_up_taunt_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -186,6 +189,8 @@ unsafe extern "C" fn ssbexo_demon_down_taunt_sound(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("demon")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .acmd("game_escapeair", ssbexo_demon_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_demon_airdodge_acmd, Low)
     .acmd("game_appealhil", ssbexo_demon_up_taunt_acmd, Low)
     .acmd("game_appealhir", ssbexo_demon_up_taunt_acmd, Low)
     .acmd("effect_appealhil", ssbexo_demon_up_taunt_effect, Low)

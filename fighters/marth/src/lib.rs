@@ -6,10 +6,7 @@ use {
     exo_var::globals::*,
     smash::{
         app::*,
-        lib::{
-            L2CValue,
-            lua_const::*,
-        },
+        lib::L2CValue,
         lua2cpp::*,
     },
     smashline::*,

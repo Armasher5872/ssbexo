@@ -11,9 +11,75 @@ unsafe extern "C" fn status_pre_attackair(fighter: &mut L2CFighterCommon) -> L2C
     0.into()
 }
 
+//Sub Attack Air Inherit Jump Aerial Motion Uniq Process Init, DJC related stuff
+#[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_init)]
+unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let kind = fighter.global_table[FIGHTER_KIND].get_i32();
+    let valid_djc_kind = [*FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&kind);
+    let boma = fighter.module_accessor;
+    let motion_kind = MotionModule::motion_kind(boma);
+    let frame  = MotionModule::frame(boma);
+    fighter.sub_attack_air_kind();
+    if [hash40("jump_aerial_f"), hash40("jump_aerial_b")].contains(&motion_kind) {
+        if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_IGNORE_2ND_MOTION) {
+            WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
+            KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND);
+        }
+        else {
+            MotionModule::add_motion_2nd(boma, Hash40::new_raw(motion_kind), frame, 1.0, false, 1.0);
+            MotionModule::set_weight(boma, 1.0, true);
+            if valid_djc_kind {
+                if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP) || frame < 2.0 {
+                    KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND);
+                }
+                else {
+                    WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
+                    KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_FALL); 
+                }
+            }
+            else {
+                WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
+                KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_FALL); 
+            }
+        }
+    }
+    else {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
+        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_FALL);   
+    }
+    fighter.sub_attack_air_uniq_process_init();
+    0.into()
+}
+
+//Sub Attack Air Inherit Jump Aerial Motion Uniq Process Exec, DJC related stuff
+#[skyline::hook(replace = L2CFighterCommon_sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec)]
+unsafe extern "C" fn sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let kind = fighter.global_table[FIGHTER_KIND].get_i32();
+    let valid_djc_kind = [*FIGHTER_KIND_NESS, *FIGHTER_KIND_MEWTWO, *FIGHTER_KIND_LUCAS].contains(&kind);
+    let boma = fighter.module_accessor;
+    if valid_djc_kind {
+        if KineticModule::get_kinetic_type(boma) == *FIGHTER_KINETIC_TYPE_JUMP_AERIAL_MOTION_2ND {
+            if MotionModule::frame_2nd(boma) >= 2.0 {
+                if fighter.global_table[CURRENT_FRAME].get_i32() <= 6 {
+                    if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_JUMP) {
+                        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
+                        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION_FALL);
+                    }
+                }
+            }
+        }
+    }
+    FighterUtil::check_cloud_through_out(boma);
+    0.into()
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hook!(status_pre_attackair);
+        skyline::install_hooks!(
+            status_pre_attackair,
+            sub_attack_air_inherit_jump_aerial_motion_uniq_process_init,
+            sub_attack_air_inherit_jump_aerial_motion_uniq_process_exec
+        );
     }
 }
 

@@ -27,7 +27,7 @@ unsafe extern "C" fn ssbexo_edge_shadow_flare_cancel_effect(agent: &mut L2CAgent
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 2.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("edge_shadowflare_hold"), Hash40::new("handr"), 1.7, 0, 1.3, 0, 0, 0, 0.6, true);
+        EFFECT_FOLLOW(agent, Hash40::new("edge_shadowflare_hold"), Hash40::new("handr"), -1.7, 0.2, 0.6, 0, 0, 0, 0.6, true);
     }
     frame(lua_state, 19.0);
     if is_excute(agent) {

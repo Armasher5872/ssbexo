@@ -1,46 +1,37 @@
 use super::*;
 
-const MARIO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const MARIO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xcb9730; //Mario only
-const MARIO_VTABLE_ON_ATTACK_OFFSET: usize = 0x68d7e0; //Shared
 
 //Mario Reset Initialization
-#[skyline::hook(offset = MARIO_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn mario_reset_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_MARIO as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
-        mario_var(&mut *boma);
-    }
-    original!()(vtable, fighter)
+unsafe extern "C" fn mario_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    common_reset_variable_reset(&mut *boma);
+    mario_var(&mut *boma);
 }
 
 //Mario Death Initialization
 #[skyline::hook(offset = MARIO_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn mario_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
+unsafe extern "C" fn mario_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
     mario_var(&mut *boma);
-    original!()(vtable, fighter)
+    WorkModule::off_flag(boma, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HOP);
+    WorkModule::set_int(boma, 0, *FIGHTER_MARIO_INSTANCE_WORK_ID_INT_SPECIAL_LW_CHARGE);
+    WorkModule::set_int(boma, 0, *FIGHTER_MARIO_INSTANCE_WORK_ID_INT_SPECIAL_LW_REMOVE);
+    EffectModule::remove_common(boma, Hash40::new("charge_max"));
 }
 
 //Mario On Attack
-#[skyline::hook(offset = MARIO_VTABLE_ON_ATTACK_OFFSET)]
-unsafe extern "C" fn mario_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_MARIO as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let status_kind = StatusModule::status_kind(boma);
-        if [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_S_LOOP].contains(&status_kind) {
-            WorkModule::on_flag(boma, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
-        }
+unsafe extern "C" fn mario_on_attack(_vtable: u64, fighter: &mut Fighter, _log: u64) {
+    let boma = fighter.battle_object.module_accessor;
+    let status_kind = StatusModule::status_kind(boma);
+    if [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_MARIO_STATUS_KIND_SPECIAL_S_LOOP].contains(&status_kind) {
+        WorkModule::on_flag(boma, *FIGHTER_MARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
     }
-    call_original!(vtable, fighter, log)
 }
 
 pub fn install() {
-	skyline::install_hooks!(
-        mario_reset_initialization,
-        mario_death_initialization,
-        mario_on_attack
-    );
+    let _ = skyline::patching::Patch::in_text(0x4fe3160).data(mario_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x4fe3260).data(mario_on_attack as *const () as u64);
+	skyline::install_hook!(mario_death_initialization);
 }

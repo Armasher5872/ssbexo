@@ -24,6 +24,7 @@ use {
 };
 
 mod grounded;
+mod other;
 mod smashes;
 mod specials;
 mod throws;
@@ -31,6 +32,7 @@ mod tilts;
 
 pub fn install() {
     grounded::install();
+    other::install();
     smashes::install();
     specials::install();
     throws::install();

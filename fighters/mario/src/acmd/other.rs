@@ -1,5 +1,8 @@
 use super::*;
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_mario_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Down Taunt Effect
 unsafe extern "C" fn ssbexo_mario_down_taunt_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -107,6 +110,8 @@ unsafe extern "C" fn ssbexo_mario_crawl_expression(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("mario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .acmd("game_escapeair", ssbexo_mario_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_mario_airdodge_acmd, Low)
     .acmd("effect_appeallwr", ssbexo_mario_down_taunt_effect, Low)
     .acmd("sound_appeallwr", ssbexo_mario_down_taunt_sound, Low)
     .acmd("expression_appeallwr", ssbexo_mario_down_taunt_expression, Low)

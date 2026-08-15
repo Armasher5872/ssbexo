@@ -37,6 +37,7 @@ pub const FIGHTER_EDGE_STATUS_KIND_SPECIAL_LW_PARRY: LuaConst = LuaConst::new(0x
 pub const FIGHTER_EDGE_STATUS_KIND_SPECIAL_LW_PARRY_FLASH: LuaConst = LuaConst::new(0x1F9);
 pub const FIGHTER_EDGE_STATUS_KIND_SPECIAL_LW_ATTACK: LuaConst = LuaConst::new(0x1FA);
 pub const FIGHTER_EDGE_STATUS_KIND_SPECIAL_LW_ZANSHIN: LuaConst = LuaConst::new(0x1FB);
+pub const FIGHTER_EDGE_STATUS_KIND_SPECIAL_LW_APPEAL: LuaConst = LuaConst::new(0x1FC);
 pub const FIGHTER_EDGE_SPECIAL_N_XL: LuaConst = LuaConst::new(0x4);
 pub const FIGHTER_EDGE_SHIELD_GROUP_KIND_SPECIAL_LW_FLASH: LuaConst = LuaConst::new(0x2);
 pub const WEAPON_EDGE_FIRE_STATUS_KIND_FLY_XL: LuaConst = LuaConst::new(0x6);

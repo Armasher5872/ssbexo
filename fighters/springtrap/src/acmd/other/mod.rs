@@ -34,6 +34,7 @@ mod appeal_lw;
 mod appeal_s;
 mod cliff_attack;
 mod entry;
+mod escape_air;
 mod lose;
 mod walk_fast;
 mod walk_middle;
@@ -48,6 +49,7 @@ pub fn install() {
     appeal_s::install();
     cliff_attack::install();
     entry::install();
+    escape_air::install();
     lose::install();
     walk_fast::install();
     walk_middle::install();

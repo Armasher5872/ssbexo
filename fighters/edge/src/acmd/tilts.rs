@@ -282,6 +282,9 @@ unsafe extern "C" fn ssbexo_edge_sliding_charge_acmd(agent: &mut L2CAgentBase) {
 //Sliding Charge Effect
 unsafe extern "C" fn ssbexo_edge_sliding_charge_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("edge_catch_handaura"), false, true);
+    }
     frame(lua_state, 9.0);
     if is_excute(agent) {
         LANDING_EFFECT(agent, Hash40::new("sys_atk_smoke"), Hash40::new("top"), 6, 0, -3, 0, 0, 0, 0.8, 0, 0, 4, 0, 0, 0, false);

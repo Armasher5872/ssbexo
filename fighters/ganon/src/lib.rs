@@ -1,8 +1,10 @@
 use {
     exo_utils::{
         common::{
+            hook::*,
             status_end_control::*,
             var_reset::*,
+            vtable_funcs::*,
         },
         fighter::{
             armstrong::*,
@@ -10,8 +12,13 @@ use {
             springtrap::*,
         },
         status::damage::*,
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+        }
     },
     exo_var::{
+        armstrong::*,
         consts::*,
         ganon::*,
         globals::*,
@@ -25,8 +32,14 @@ use {
         },
         hash40,
         lib::lua_const::*,
+        phx::*,
+    },
+    smash2::app::{
+        LinkEvent,
+        LinkEventCapture
     },
     smashline::*,
+    smash_script::macros::*,
 };
 
 mod acmd;

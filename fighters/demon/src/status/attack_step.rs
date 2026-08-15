@@ -48,13 +48,18 @@ unsafe extern "C" fn demon_attack_step_main_loop(fighter: &mut L2CFighterCommon)
     if situation_kind == *SITUATION_KIND_AIR {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
-    if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+    if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623BLONG != 0 {
         fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2S.into(), true.into()); //Spinning Demon to Left Hook
     }
     if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623ALONG != 0 {
-        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY != 0 && rage_system {
-            WorkModule::set_flag(boma, rage_system, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_HEAVENS_DOOR);
-            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE.into(), true.into()); //Rage Drive
+        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY != 0 {
+            if rage_system {
+                WorkModule::set_flag(boma, rage_system, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_HEAVENS_DOOR);
+                fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE.into(), true.into()); //Rage Drive
+            }
+            else {
+                fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), true.into()); //Heaven's Door
+            }
         }
         else {
             WorkModule::off_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ELECTRIC_DRAGON_UPPERCUT);
@@ -66,8 +71,19 @@ unsafe extern "C" fn demon_attack_step_main_loop(fighter: &mut L2CFighterCommon)
         return 0.into();
     }
     if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623A != 0 {
-        fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2.into(), true.into()); //Wind God Fist
-        return 0.into();
+        if cmd_cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_ANY != 0 {
+            if rage_system {
+                WorkModule::set_flag(boma, rage_system, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_TO_HEAVENS_DOOR);
+                fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_RAGE.into(), true.into()); //Rage Drive
+            }
+            else {
+                fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), true.into()); //Heaven's Door
+            }
+        }
+        else {
+            fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ATTACK_STEP_2.into(), true.into()); //Wind God Fist
+            return 0.into();
+        }
     }
     if cmd_cat4 & *FIGHTER_PAD_CMD_CAT4_FLAG_COMMAND_623STRICT != 0 {
         if frame <= step2f_frame {

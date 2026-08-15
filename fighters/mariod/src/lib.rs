@@ -7,7 +7,6 @@ use {
         },
         structs::{
             collision_struct::*,
-            getter_funcs::*,
             ui_manager::*,
         }
     },
@@ -20,11 +19,9 @@ use {
             lua_bind::*,
             *
         },
-        hash40,
         lib::lua_const::*,
         lua2cpp::*,
     },
-    smash_script::*,
     smashline::*,
 };
 

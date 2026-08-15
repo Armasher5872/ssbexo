@@ -1,16 +1,11 @@
 use super::*;
 
-const PZENIGAME_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x68d5e0; //Shared
 const PZENIGAME_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xfef060; //Squirtle only
 
 //Squirtle Reset Initialization
-#[skyline::hook(offset = PZENIGAME_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn pzenigame_reset_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_PZENIGAME as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
-    }
-    original!()(vtable, fighter)
+unsafe extern "C" fn pzenigame_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    common_reset_variable_reset(&mut *boma);
 }
 
 //Squirtle Death Initialization
@@ -22,8 +17,6 @@ unsafe extern "C" fn pzenigame_death_initialization(vtable: u64, fighter: &mut F
 }
 
 pub fn install() {
-    skyline::install_hooks!(
-        pzenigame_reset_initialization,
-        pzenigame_death_initialization
-    );
+    let _ = skyline::patching::Patch::in_text(0x5020e78).data(pzenigame_reset_initialization as *const () as u64);
+    skyline::install_hook!(pzenigame_death_initialization);
 }

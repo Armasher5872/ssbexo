@@ -1,23 +1,6 @@
 use super::*;
 
-const SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
 const SHIZUE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x114c130; //Isabelle Only
-
-//Isabelle Reset Initialization
-#[skyline::hook(offset = SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn shizue_reset_initialization(vtable: u64, fighter: &mut Fighter) {
-    if fighter.battle_object.kind == *FIGHTER_KIND_SHIZUE as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
-        WorkModule::set_int(boma, 0, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_SPECIAL_N_OBJECT_NUM);
-        WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_SPECIAL_N_OBJECT_ID);
-        WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x100000C8);
-        WorkModule::set_int(boma, *BATTLE_OBJECT_ID_INVALID, 0x100000C9);
-        WorkModule::set_int(boma, 6, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_SPECIAL_N_OBJECT_CATEGORY);
-        WorkModule::set_int(boma, 6, *FIGHTER_MURABITO_INSTANCE_WORK_ID_INT_SPECIAL_N_OBJECT_CATEGORY_PREV);
-    }
-    original!()(vtable, fighter)
-}
 
 //Isabelle Death Initialization
 #[skyline::hook(offset = SHIZUE_VTABLE_DEATH_INITIALIZATION_OFFSET)]
@@ -28,8 +11,5 @@ unsafe extern "C" fn shizue_death_initialization(vtable: u64, fighter: &mut Figh
 }
 
 pub fn install() {
-	skyline::install_hooks!(
-        shizue_reset_initialization,
-        shizue_death_initialization
-    );
+	skyline::install_hook!(shizue_death_initialization);
 }

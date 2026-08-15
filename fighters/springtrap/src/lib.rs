@@ -2,12 +2,10 @@
 use {
     exo_utils::{
         common::{
-            hook::*,
             status_end_control::*,
             var_reset::*,
         },
         fighter::springtrap::*,
-        structs::collision_struct::*,
     },
     exo_var::{
         globals::*,
@@ -31,7 +29,6 @@ use {
 mod acmd;
 mod opff;
 mod status;
-mod vtable;
 
 pub fn install() {
     disable_kirby_copy(*FIGHTER_KIND_GANON, get_springtrap_costumes_non_acmd());
@@ -69,7 +66,6 @@ pub fn install() {
     acmd::install();
     opff::install();
     status::install();
-    vtable::install();
     unsafe {
         FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE += clone_weapon("krool", *WEAPON_KIND_KROOL_IRONBALL, "ganon", "ironballcloned", false);
         FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM += clone_weapon("koopajr", *WEAPON_KIND_KOOPAJR_CANNONBALL, "ganon", "cannonballcloned", false);

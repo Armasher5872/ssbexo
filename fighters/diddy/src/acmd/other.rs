@@ -1,5 +1,8 @@
 use super::*;
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_diddy_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Win 3 ACMD
 unsafe extern "C" fn ssbexo_diddy_win_3_acmd(agent: &mut L2CAgentBase) {
     let boma = agent.module_accessor;
@@ -60,6 +63,8 @@ unsafe extern "C" fn ssbexo_diddy_win_3_wait_sound(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("diddy")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .acmd("game_escapeair", ssbexo_diddy_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_diddy_airdodge_acmd, Low)
     .acmd("game_win3", ssbexo_diddy_win_3_acmd, Low)
     .acmd("effect_win3", ssbexo_diddy_win_3_effect, Low)
     .acmd("sound_win3", ssbexo_diddy_win_3_sound, Low)

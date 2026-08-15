@@ -1,17 +1,12 @@
 use {
     exo_utils::{
-        common::{
-            check_attack::*,
-            var_reset::*,
-        },
+        common::var_reset::*,
         fighter::sheik::*,
         status::damage::*,
-        structs::getter_funcs::*,
     },
     exo_var::{
         consts::*,
         globals::*,
-        sheik::*,
     },
     smash::{
         app::{
@@ -21,9 +16,7 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::*,
-        phx::*
     },
-    smash_script::macros::*,
     smashline::*,
 };
 

@@ -19,7 +19,6 @@ unsafe extern "C" fn wario_appeal_gas_main_status(fighter: &mut L2CFighterCommon
 
 unsafe extern "C" fn wario_appeal_gas_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
-    let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
     let damage = DamageModule::damage(boma, 0);
     if CancelModule::is_enable_cancel(boma) {
@@ -42,11 +41,6 @@ unsafe extern "C" fn wario_appeal_gas_main_loop(fighter: &mut L2CFighterCommon) 
                 }
             }
         }
-    }
-    if situation_kind == *SITUATION_KIND_AIR {
-        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
-        fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
     }
     if MotionModule::is_end(boma) {
         fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());

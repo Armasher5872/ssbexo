@@ -34,6 +34,7 @@ gamewatch = {path = "fighters/gamewatch"}
 ganon = {path = "fighters/ganon"}
 gaogaen = {path = "fighters/gaogaen"}
 gekkouga = {path = "fighters/gekkouga"}
+iceclimber = {path = "fighters/iceclimber"}
 ike = {path = "fighters/ike"}
 inkling = {path = "fighters/inkling"}
 jack = {path = "fighters/jack"}
@@ -152,6 +153,7 @@ gamewatch = { workspace = true, optional = true }
 ganon = { workspace = true, optional = true }
 gaogaen = { workspace = true, optional = true }
 gekkouga = { workspace = true, optional = true }
+iceclimber = { workspace = true, optional = true }
 ike = { workspace = true, optional = true }
 inkling = { workspace = true, optional = true }
 jack = { workspace = true, optional = true }
@@ -253,6 +255,7 @@ default = [
     "ganon",
     "gaogaen",
     "gekkouga",
+    "iceclimber",
     "ike",
     "inkling",
     "jack",

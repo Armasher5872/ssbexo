@@ -1,21 +1,12 @@
 use {
     exo_utils::{
         common::{
-            command_input::*,
             status_end_control::*,
             var_reset::*,
         },
         fighter::ken::*,
-        structs::{
-            buttons::cat4::*,
-            getter_funcs::*,
-        }
     },
-    exo_var::{
-        consts::*,
-        globals::*,
-        ken::*,
-    },
+    exo_var::globals::*,
     smash::{
         app::{
             lua_bind::*,
@@ -33,11 +24,9 @@ use {
 mod acmd;
 mod opff;
 mod status;
-mod vtable;
 
 pub fn install() {
     acmd::install();
     opff::install();
     status::install();
-    vtable::install();
 }

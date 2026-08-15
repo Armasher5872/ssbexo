@@ -1,36 +1,38 @@
 use super::*;
 
-const LINK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc28280; //Shared
-const LINK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc28860; //Shared
-const LINK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xc289e0; //Shared
+const LINK_TOONLINK_YOUNGLINK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc28280; //Shared
+const LINK_TOONLINK_YOUNGLINK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc28860; //Shared
+const LINK_TOONLINK_YOUNGLINK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xc289e0; //Shared
 
-//Link Reset Initialization
-#[skyline::hook(offset = LINK_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn link_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_LINK as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
+//Link & Toon Link & Young Link Reset Initialization
+#[skyline::hook(offset = LINK_TOONLINK_YOUNGLINK_VTABLE_RESET_INITIALIZATION_OFFSET)]
+unsafe extern "C" fn link_toonlink_younglink_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let kind = fighter.battle_object.kind as i32;
+    let boma = fighter.battle_object.module_accessor;
+    if kind == *FIGHTER_KIND_LINK {
         link_var(&mut *boma);
     }
+    common_reset_variable_reset(&mut *boma);
     original!()(vtable, fighter)
 }
 
-//Link Death Initialization
-#[skyline::hook(offset = LINK_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn link_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_LINK as u32 {
-        let boma = fighter.battle_object.module_accessor;
+//Link & Toon Link & Young Link Death Initialization
+#[skyline::hook(offset = LINK_TOONLINK_YOUNGLINK_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+unsafe extern "C" fn link_toonlink_younglink_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
+    let kind = fighter.battle_object.kind as i32;
+    let boma = fighter.battle_object.module_accessor;
+    if kind == *FIGHTER_KIND_LINK {
         let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
-        common_death_variable_reset(&mut *boma);
         link_var(&mut *boma);
         UiManager::set_link_wheel_info(entry_id, 0);
     }
+    common_death_variable_reset(&mut *boma);
     original!()(vtable, fighter)
 }
 
-//Link Once Per Fighter Frame
-#[skyline::hook(offset = LINK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn link_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+//Link & Toon Link & Young Link Once Per Fighter Frame
+#[skyline::hook(offset = LINK_TOONLINK_YOUNGLINK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+unsafe extern "C" fn link_toonlink_younglink_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_LINK as u32 {
         let boma = fighter.battle_object.module_accessor;
         let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -73,9 +75,9 @@ unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut s
     let opponent_object_id = (*log).opponent_object_id;
     let opponent_category = (*log).opponent_object_category;
     if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-        let opponent_boma = sv_battle_object::module_accessor(opponent_object_id);
         if opponent_category == 4 {
             WorkModule::set_int(boma, opponent_object_id as i32, *WN_LINK_BOOMERANG_INSTANCE_WORK_ID_INT_FUSE_ITEM_ID);
+            let opponent_boma = sv_battle_object::module_accessor(opponent_object_id);
             LinkModule::remove_model_constraint(opponent_boma, true);
             if LinkModule::is_link(opponent_boma, *ITEM_LINK_NO_HAVE) {
                 LinkModule::unlink(opponent_boma, *ITEM_LINK_NO_HAVE);
@@ -83,7 +85,7 @@ unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut s
             if !LinkModule::is_link(opponent_boma, *ITEM_LINK_NO_HAVE) {
                 VisibilityModule::set_whole(opponent_boma, true);
                 LinkModule::link(opponent_boma, *ITEM_LINK_NO_HAVE, (*weapon).battle_object.battle_object_id);
-                LinkModule::set_model_constraint_pos_ort(opponent_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("top"), *CONSTRAINT_FLAG_ORIENTATION as u32 | *CONSTRAINT_FLAG_POSITION as u32, true);
+                LinkModule::set_model_constraint_pos_ort(opponent_boma, *ITEM_LINK_NO_HAVE, Hash40::new("top"), Hash40::new("top"), (*CONSTRAINT_FLAG_ORIENTATION | *CONSTRAINT_FLAG_POSITION | *CONSTRAINT_FLAG_OFFSET_TRANSLATE) as u32, true);
             }
         }
         if opponent_category == 0 {
@@ -104,10 +106,10 @@ unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut s
 pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_LINK_BOOMERANG, ModuleInitModules::SearchModule);
     let _ = skyline::patching::Patch::in_text(0x51dcca8).data(link_swordbeam_on_attack_event as *const () as u64); //029
-    let _ = skyline::patching::Patch::in_text(0x51dbb10).data(link_boomerang_on_search_event as *const () as u64); //035
+    let _ = skyline::patching::Patch::in_text(0x51dbb08).data(link_boomerang_on_search_event as *const () as u64); //035
 	skyline::install_hooks!(
-        link_reset_initialization,
-        link_death_initialization,
-        link_opff
+        link_toonlink_younglink_reset_initialization,
+        link_toonlink_younglink_death_initialization,
+        link_toonlink_younglink_opff
     );
 }

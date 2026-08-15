@@ -1,10 +1,20 @@
 use {
-    exo_utils::common::{
-        status_end_control::*,
-        var_reset::*,
+    exo_utils::{
+        common::{
+            command_input::*,
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::ken::*,
+        structs::{
+            buttons::cat4::*,
+            getter_funcs::*,
+        }
     },
     exo_var::{
+        consts::*,
         globals::*,
+        ken::*,
         ryu::*,
     },
     smash::{

@@ -13,22 +13,24 @@ use {
         phx::Hash40
     },
     smash_script::{
-        *,
-        macros::*
+        macros::*,
+        *
     },
     smashline::{
-        *,
-        Priority::Low
+        Priority::Low,
+        *
     },
 };
 
 mod grounded;
+mod other;
 mod smashes;
 mod throws;
 mod tilts;
 
 pub fn install() {
     grounded::install();
+    other::install();
     smashes::install();
     throws::install();
     tilts::install();

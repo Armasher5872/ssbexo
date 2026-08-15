@@ -4,8 +4,10 @@ use {
         var_reset::*,
     },
     exo_var::{
+        consts::*,
         fox::*,
         globals::*,
+        variables::*,
     },
     smash::{
         app::{

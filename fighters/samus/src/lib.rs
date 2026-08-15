@@ -1,26 +1,19 @@
 use {
-    exo_utils::{
-        common::{
-            status_end_control::*,
-            var_reset::*,
-        },
-        status::attack_dash::*,
+    exo_utils::common::{
+        status_end_control::*,
+        var_reset::*,
     },
     exo_var::{
-        consts::*,
         globals::*,
+        samusd::*,
     },
     smash::{
         app::{
             lua_bind::*,
             *
         },
-        hash40,
         lib::lua_const::*,
-        lua2cpp::{
-            L2CFighterCommon,
-            *
-        }
+        lua2cpp::L2CFighterCommon,
     },
     smashline::*,
 };

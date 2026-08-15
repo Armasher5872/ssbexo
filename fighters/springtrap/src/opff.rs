@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn springtrap_on_start(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
     common_initialization_variable_reset(&mut *boma);
-    springtrap_var(boma);
+    springtrap_var(boma, false);
     fighter.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(springtrap_should_use_special_lw_callback as *const () as _));
     fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
 }

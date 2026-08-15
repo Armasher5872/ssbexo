@@ -32,10 +32,8 @@ unsafe extern "C" fn wario_special_s_hit_end_main_loop(fighter: &mut L2CFighterC
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
     if CancelModule::is_enable_cancel(boma) {
-        if fighter.sub_wait_ground_check_common(false.into()).get_bool() {
-            if fighter.sub_air_check_fall_common().get_bool() {
-                return 1.into();
-            }
+        if fighter.sub_air_check_fall_common().get_bool() {
+            return 1.into();
         }
     }
     if situation_kind == *SITUATION_KIND_GROUND {

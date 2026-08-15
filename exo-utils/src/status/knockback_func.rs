@@ -3,30 +3,37 @@ use super::*;
 pub unsafe extern "C" fn calculate_finishing_hit(defender: u32, attacker: u32, knockback_info: *const f32) {
     *(knockback_info.add(0x4C/4) as *mut u32) = 60; //Hitstop Frames forcibly set to 60
     let defender_battle_object = *get_battle_object_from_id(defender);
+    let defender_battle_object_id = defender_battle_object.battle_object_id;
     let defender_boma = defender_battle_object.module_accessor;
     let defender_agent = get_fighter_common_from_accessor(&mut *defender_boma);
     let attacker_battle_object = *get_battle_object_from_id(attacker);
     let attacker_boma = attacker_battle_object.module_accessor;
-    WorkModule::off_flag(&mut *defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STOCK);
+    if defender_battle_object_id >> 0x1C == 0 {
+        WorkModule::off_flag(&mut *defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STOCK);
+    }
     if !is_potential_finishing_hit(defender_battle_object, attacker_battle_object) { 
         return;
     }
     if !is_valid_finishing_hit(knockback_info, &mut *defender_boma) { 
         return;
     }
-    WorkModule::on_flag(&mut *defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STOCK);
+    if defender_battle_object_id >> 0x1C == 0  {
+        WorkModule::on_flag(&mut *defender_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FINAL_STOCK);
+    }
     call_finishing_hit_effects(&mut *defender_boma, defender_agent, &mut *attacker_boma);
 }
 
 unsafe extern "C" fn is_potential_finishing_hit(defender_battle_object: BattleObject, attacker_battle_object: BattleObject) -> bool {
+    let defender_id = defender_battle_object.battle_object_id;
     let defender_boma = &mut *(defender_battle_object.module_accessor);
-    let defender_category = sv_battle_object::category(defender_battle_object.battle_object_id);
+    let defender_category = (defender_id >> 0x1C) as i32;
+    let attacker_id = attacker_battle_object.battle_object_id;
     let attacker_boma = &mut *(attacker_battle_object.module_accessor);
-    let attacker_category = sv_battle_object::category(attacker_battle_object.battle_object_id);
+    let attacker_category = (attacker_id >> 0x1C) as i32;
     if defender_category != *BATTLE_OBJECT_CATEGORY_FIGHTER { 
-        return false; 
+        return false;
     }
-    if attacker_category != *BATTLE_OBJECT_CATEGORY_FIGHTER && attacker_category != *BATTLE_OBJECT_CATEGORY_WEAPON { 
+    if ![*BATTLE_OBJECT_CATEGORY_FIGHTER, *BATTLE_OBJECT_CATEGORY_WEAPON].contains(&attacker_category) { 
         return false; 
     }
     if WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_FINAL_ZOOM_COUNTER) > 0 {
@@ -43,16 +50,9 @@ unsafe extern "C" fn is_no_finishing_hit(attacker_boma: &mut BattleObjectModuleA
     for is_abs in [false, true] {
         for id in 0..8 {
             let attack_data = smash::app::lua_bind::AttackModule::attack_data(attacker_boma, id, is_abs);
-            let attr = (*attack_data).attr;
             let off = if is_abs { 0xd9 } else { 0xc9 };
             if smash::app::lua_bind::AttackModule::is_attack(attacker_boma, id, is_abs) 
-            && *attack_data.cast::<bool>().add(off)
-            && ![
-                hash40("collision_attr_bind"), hash40("collision_attr_bind_extra"), hash40("collision_attr_bury"), hash40("collision_attr_bury_f"), hash40("collision_attr_bury_r"),
-                hash40("collision_attr_fist_down"), hash40("collision_attr_fist_down2"), hash40("collision_attr_fist_down3"), hash40("collision_attr_lay"), hash40("collision_attr_saving"),
-                hash40("collision_attr_saving_ken"), hash40("collision_attr_search"), hash40("collision_attr_sleep"), hash40("collision_attr_sleep_ex"), hash40("collision_attr_slip"),
-                hash40("collision_attr_stop"), hash40("collision_attr_turn")
-            ].contains(&attr) {
+            && *attack_data.cast::<bool>().add(off) {
                 return true;
             }
         }
@@ -79,7 +79,15 @@ unsafe extern "C" fn is_valid_finishing_hit(knockback_info: *const f32, defender
         is_tumble,
     );
     let is_final = is_final_killing_hit(defender_boma);
-    return context.is_finishing_hit(is_final);
+    return if FighterUtil::is_hp_mode(defender_boma) {
+        let entry_id = WorkModule::get_int(defender_boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+        let fighter_info = lua_bind::FighterManager::get_fighter_information(singletons::FighterManager(), smash::app::FighterEntryID(entry_id as i32));
+        let hit_point = lua_bind::FighterInformation::hit_point(fighter_info);
+        hit_point <= 0.0
+    }
+    else {
+        context.is_finishing_hit(is_final)
+    };
 }
 
 pub unsafe extern "C" fn is_final_killing_hit(defender_boma: &mut BattleObjectModuleAccessor) -> bool {

@@ -719,6 +719,8 @@ unsafe extern "C" fn sub_rebirth_uniq_process_exit(fighter: &mut L2CFighterCommo
         HIT_NODE(fighter, Hash40::new("pizzapacman"), *HIT_STATUS_OFF);
     }
     if fighter_kind == *FIGHTER_KIND_KAMUI {
+        ArticleModule::remove(boma, *FIGHTER_KAMUI_GENERATE_ARTICLE_WATERDRAGON, ArticleOperationTarget(0));
+        VisibilityModule::set_whole(boma, true);
         VisibilityModule::set_int64(boma, hash40("front_hair") as i64, hash40("front_hair_normal") as i64);
         VisibilityModule::set_int64(boma, hash40("hair") as i64, hash40("hair_normal") as i64);
         VisibilityModule::set_int64(boma, hash40("dragon") as i64, hash40("dragon_none") as i64);

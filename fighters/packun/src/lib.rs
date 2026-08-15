@@ -5,7 +5,10 @@ use {
     },
     exo_var::globals::*,
     smash::{
-        app::*,
+        app::{
+            lua_bind::*,
+            *
+        },
         lib::{
             L2CValue,
             lua_const::*,

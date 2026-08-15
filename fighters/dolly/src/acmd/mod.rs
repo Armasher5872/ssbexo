@@ -30,12 +30,14 @@ use {
 };
 
 mod grounded;
+mod other;
 mod specials;
 mod throws;
 mod tilts;
 
 pub fn install() {
     grounded::install();
+    other::install();
     specials::install();
     throws::install();
     tilts::install();

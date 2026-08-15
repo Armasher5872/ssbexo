@@ -555,6 +555,7 @@ pub fn install() {
         ganon = "ganon",
         gaogaen = "gaogaen",
         gekkouga = "gekkouga",
+        iceclimber = "iceclimber",
         ike = "ike",
         inkling = "inkling",
         jack = "jack",

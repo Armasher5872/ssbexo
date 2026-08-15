@@ -23,9 +23,11 @@ use {
 };
 
 mod grounded;
+mod other;
 mod throws;
 
 pub fn install() {
     grounded::install();
+    other::install();
     throws::install();
 }

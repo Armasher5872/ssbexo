@@ -1,16 +1,11 @@
 use {
-    exo_utils::structs::vector::*,
-    exo_var::{
-        consts::*,
-        ganon::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
             sv_animcmd::{
                 execute,
                 frame,
-                wait_loop_sync_mot,
                 wait
             },
             *

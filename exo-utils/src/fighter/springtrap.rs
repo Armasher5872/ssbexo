@@ -34,17 +34,19 @@ pub fn get_springtrap_costumes_non_acmd() -> Vec<i32> {
     costumes.to_vec()
 }
 
-pub unsafe extern "C" fn springtrap_var(boma: *mut BattleObjectModuleAccessor) {
-    WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
+pub unsafe extern "C" fn springtrap_var(boma: *mut BattleObjectModuleAccessor, should_keep_active_article: bool) {
+    if !should_keep_active_article {
+        WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_AXE);
+        WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
+        WorkModule::set_int(boma, *SPRINGTRAP_PHANTOM_TYPE_BALLOON_BOY, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_LW_PHANTOM_TYPE);
+    }
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
     WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CRIT);
-    WorkModule::off_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_ACTIVE_PHANTOM);
     WorkModule::set_float(boma, 0.0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLOAT_SPECIAL_S_CHARGE);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_S_CRIT_TIME);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_TIME);
     WorkModule::set_int(boma, 0, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_EFFECT_ID);
-    WorkModule::set_int(boma, *SPRINGTRAP_PHANTOM_TYPE_BALLOON_BOY, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_LW_PHANTOM_TYPE);
 }
 
 pub unsafe extern "C" fn springtrap_axe_var(boma: *mut BattleObjectModuleAccessor) {

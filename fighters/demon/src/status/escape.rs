@@ -21,6 +21,7 @@ unsafe extern "C" fn demon_escape_main_loop(fighter: &mut L2CFighterCommon) -> L
     let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let cmd_cat4 = fighter.global_table[CMD_CAT4].get_i32();
     let boma = fighter.module_accessor;
+    let frame = MotionModule::frame(boma);
     let rage_system = WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_ENABLE_RAGE_SYSTEM);
     let is_attack = cmd_cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4 |*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) != 0;
     if WorkModule::is_flag(boma, *FIGHTER_DEMON_INSTANCE_WORK_ID_FLAG_MIST_STEP_ACTIVE) {
@@ -67,7 +68,7 @@ unsafe extern "C" fn demon_escape_main_loop(fighter: &mut L2CFighterCommon) -> L
             return 1.into();
         }
     }
-    if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
+    if frame >= 9.0 && frame < 20.0 && ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
         fighter.change_status(FIGHTER_DEMON_STATUS_KIND_ESCAPE_ATTACK.into(), false.into());
         return 1.into();
     }

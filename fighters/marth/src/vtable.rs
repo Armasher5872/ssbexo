@@ -1,31 +1,18 @@
 use super::*;
 
-const MARTH_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc732a0; //Shared
-const MARTH_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xcd99a0; //Shared
-
-//Marth Reset Initialization
-#[skyline::hook(offset = MARTH_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn marth_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_MARTH as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_reset_variable_reset(&mut *boma);
-    }
-    original!()(vtable, fighter)
+//Marth & Lucina Reset Initialization
+unsafe extern "C" fn marth_lucina_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    common_reset_variable_reset(&mut *boma);
 }
 
-//Marth Death Initialization
-#[skyline::hook(offset = MARTH_VTABLE_DEATH_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn marth_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_MARTH as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        common_death_variable_reset(&mut *boma);
-    }
-    original!()(vtable, fighter)
+//Marth & Lucina Death Initialization
+unsafe extern "C" fn marth_lucina_death_initialization(_vtable: u64, fighter: &mut Fighter) {
+    let boma = fighter.battle_object.module_accessor;
+    common_death_variable_reset(&mut *boma);
 }
 
 pub fn install() {
-	skyline::install_hooks!(
-        marth_reset_initialization,
-        marth_death_initialization
-    );
+    let _ = skyline::patching::Patch::in_text(0x4fe6fc0).data(marth_lucina_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(0x4fe6fd8).data(marth_lucina_death_initialization as *const () as u64);
 }

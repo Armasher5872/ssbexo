@@ -7,12 +7,10 @@ unsafe extern "C" fn ssbexo_edge_retaliation_stance_zanshin_acmd(agent: &mut L2C
     frame(lua_state, 16.0);
     if is_excute(agent) {
         ArticleModule::generate_article(boma, FIGHTER_EDGE_GENERATE_ARTICLE_ZANSHIN_SHOT, false, -1);
-        ATTACK(agent, 0, 0, Hash40::new("swordr1"), 9.0, 56, 76, 0, 37, 4.0, 0.0, -1.0, 4.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 2, 0, Hash40::new("swordr1"), 14.0, 67, 87, 0, 56, 4.0, 7.0, -1.0, 4.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 3, 0, Hash40::new("swordr1"), 14.0, 67, 87, 0, 56, 4.0, 15.0, -1.0, 4.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 4, 0, Hash40::new("swordr1"), 11.0, 61, 76, 0, 45, 4.0, 21.5, -1.0, 4.0, None, None, None, 0.9, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 1, 0, Hash40::new("top"), 9.0, 56, 76, 0, 37, 5.8, 0.0, 8.5, 6.5, Some(0.0), Some(8.5), Some(6.5), 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        ATTACK(agent, 5, 0, Hash40::new("top"), 14.0, 67, 87, 0, 56, 5.5, 0.0, 9.0, 16.5, Some(0.0), Some(9.0), Some(21.5), 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 0, 0, Hash40::new("swordr1"), 11.0, 67, 56, 0, 45, 4.0, 0.0, -1.0, 4.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 1, 0, Hash40::new("swordr1"), 11.0, 67, 56, 0, 45, 4.0, 7.0, -1.0, 4.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 2, 0, Hash40::new("swordr1"), 11.0, 67, 56, 0, 45, 4.0, 15.0, -1.0, 4.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        ATTACK(agent, 3, 0, Hash40::new("swordr1"), 14.0, 67, 87, 0, 56, 4.0, 21.5, -1.0, 4.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -25,14 +23,14 @@ unsafe extern "C" fn ssbexo_edge_grounded_retaliation_stance_zanshin_effect(agen
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_smash_flash"), Hash40::new("swordr2"), 0, 0, 0, 0, 180, -90, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_smash_flash"), Hash40::new("swordr2"), 0, 0, 0, 0, 0, -90, 1, true);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_edge_sword1"), Hash40::new("tex_edge_sword2"), 6, Hash40::new("swordr2"), -4, 0, -0.7, Hash40::new("swordr2"), 29.2, 0, 1.5, true, Hash40::new("null"), Hash40::new("swordr2"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_flare"), Hash40::new("swordr2"), 0, 0, 0, 0, 180, -90, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_flare"), Hash40::new("swordr2"), 0, 0, 0, 0, 0, -90, 1, true);
         LAST_EFFECT_SET_RATE(agent, 3);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_light3"), Hash40::new("swordr2"), 0, 0, 0, 0, 180, -90, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_light3"), Hash40::new("swordr2"), 0, 0, 0, 0, 0, -90, 1, true);
         LAST_EFFECT_SET_RATE(agent, 1.2);
     }
     frame(lua_state, 15.0);
@@ -43,9 +41,6 @@ unsafe extern "C" fn ssbexo_edge_grounded_retaliation_stance_zanshin_effect(agen
     frame(lua_state, 16.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("edge_sword_flare"), false, true);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword"), Hash40::new("top"), -1, 13.2, 3.5, 0, -50, 24, 0.95, true);
-        LAST_EFFECT_SET_RATE(agent, 1.1);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_slash_light"), Hash40::new("top"), -1, 13.2, 3.5, 0, 40, 24, 1.05, true);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
@@ -58,22 +53,19 @@ unsafe extern "C" fn ssbexo_edge_aerial_retaliation_stance_zanshin_effect(agent:
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_smash_flash"), Hash40::new("swordr2"), 0, 0, 0, 0, 180, -90, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_smash_flash"), Hash40::new("swordr2"), 0, 0, 0, 0, 0, -90, 1, true);
     }
     frame(lua_state, 14.0);
     if is_excute(agent) {
         AFTER_IMAGE4_ON_arg29(agent, Hash40::new("tex_edge_sword1"), Hash40::new("tex_edge_sword2"), 6, Hash40::new("swordr2"), -4, 0, -0.7, Hash40::new("swordr2"), 29.2, 0, 1.5, true, Hash40::new("null"), Hash40::new("swordl2"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.4, 0.1);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_flare"), Hash40::new("swordr2"), 0, 0, 0, 0, 180, -90, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_flare"), Hash40::new("swordr2"), 0, 0, 0, 0, 0, -90, 1, true);
         LAST_EFFECT_SET_RATE(agent, 3);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_light3"), Hash40::new("swordr2"), 0, 0, 0, 0, 180, -90, 1, true);
+        EFFECT_FOLLOW(agent, Hash40::new("edge_sword_light3"), Hash40::new("swordr2"), 0, 0, 0, 0, 0, -90, 1, true);
         LAST_EFFECT_SET_RATE(agent, 1.2);
     }
     frame(lua_state, 16.0);
     if is_excute(agent) {
         EFFECT_OFF_KIND(agent, Hash40::new("edge_sword_flare"), false, true);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_sword"), Hash40::new("top"), -1, 13.2, 3.5, 0, -50, 24, 0.95, true);
-        LAST_EFFECT_SET_RATE(agent, 1.1);
-        EFFECT_FOLLOW(agent, Hash40::new("edge_slash_light"), Hash40::new("top"), -1, 13.2, 3.5, 0, 40, 24, 1.05, true);
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {

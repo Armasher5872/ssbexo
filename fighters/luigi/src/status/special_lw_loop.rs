@@ -87,18 +87,7 @@ unsafe extern "C" fn luigi_special_lw_loop_end_status(fighter: &mut L2CFighterCo
         ArticleModule::change_status(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, *WEAPON_LUIGI_OBAKYUMU_STATUS_KIND_SPECIAL_LW, ArticleOperationTarget(0));
     }
     if status_kind != *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_PULL {
-        if LinkModule::is_link(boma, *LINK_NO_CAPTURE) {
-            let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-            if capture_id != 0x50000000 {
-                let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-                let pos = *PostureModule::pos(boma);
-                PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            }
-            fighter.clear_lua_stack();
-            lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
-            sv_module_access::_catch(fighter.lua_state_agent);
-            fighter.pop_lua_stack(1);
-        }
+        luigi_unlink_exit(fighter);
     }
     STOP_SE(fighter, Hash40::new("se_luigi_special_l03"));
     0.into()

@@ -30,7 +30,7 @@ unsafe extern "C" fn ssbexo_demon_hook_effect(agent: &mut L2CAgentBase) {
     }
     frame(lua_state, 9.0);
     if is_excute(agent) {
-        EFFECT(agent, Hash40::new("demon_attack_arc_d"), Hash40::new("top"), 0, 12.2, 4, 17, 10, -177, 0.85, 0, 0, 1, 0, 0, 0, true);
+        EFFECT(agent, Hash40::new("demon_attack_arc_d"), Hash40::new("top"), 0, 16.2, 0, 35, 10, -177, 0.85, 0, 0, 1, 0, 0, 0, true);
         LAST_EFFECT_SET_RATE(agent, 1.5);
     }
 }

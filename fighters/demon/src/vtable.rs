@@ -70,24 +70,43 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
             let opponent_battle_object_id = (*opponent_object).battle_object_id;
             let opponent_boma = (*opponent_object).module_accessor;
             if opponent_battle_object_id >> 0x1C == 0 {
+                let opponent_situation_kind = StatusModule::situation_kind(opponent_boma);
                 let opponent_status_kind = StatusModule::status_kind(opponent_boma);
+                let opponent_pos = *PostureModule::pos(opponent_boma);
+                let opponent_agent = get_fighter_common_from_accessor(&mut *opponent_boma);
+                let slip_check = [*FIGHTER_STATUS_KIND_SLIP, *FIGHTER_STATUS_KIND_SLIP_WAIT, *FIGHTER_STATUS_KIND_SLIP_DAMAGE, *FIGHTER_STATUS_KIND_SAVING_DAMAGE, *FIGHTER_STATUS_KIND_FIST_DOWN, *FIGHTER_STATUS_KIND_FIST_DOWN2, *FIGHTER_STATUS_KIND_FIST_DOWN3].contains(&opponent_status_kind);
                 println!("Last Attack Hitbox ID: {}", LAST_ATTACK_HITBOX_ID);
+                println!("Opponent Status Kind: {}", opponent_status_kind);
                 if status_kind == *FIGHTER_DEMON_STATUS_KIND_ESCAPE_ATTACK {
                     if LAST_ATTACK_HITBOX_ID == 0 {
                         if collision_kind == 1 {
-                            if [*FIGHTER_STATUS_KIND_SLIP, *FIGHTER_STATUS_KIND_SAVING_DAMAGE, *FIGHTER_STATUS_KIND_FIST_DOWN, *FIGHTER_STATUS_KIND_FIST_DOWN2, *FIGHTER_STATUS_KIND_FIST_DOWN3].contains(&opponent_status_kind) {
+                            if slip_check {
                                 MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_escapeattacktrip"), -1);
                             }
                         }
                     }
-                    if LAST_ATTACK_HITBOX_ID == 6 {
+                    if LAST_ATTACK_HITBOX_ID == 1 {
                         if collision_kind == 1 {
-                            StatusModule::change_status_force(opponent_boma, *FIGHTER_STATUS_KIND_TREAD_DAMAGE_AIR, false);
+                            let mut pos = Vector3f{x: opponent_pos.x, y: opponent_pos.y, z: opponent_pos.z};
+                            let distance_to_floor = GroundModule::get_distance_to_floor(opponent_boma, &pos, 8.0, true);
+                            let mut is_near_floor = false;
+                            if distance_to_floor != -1.0 {
+                                pos.y -= distance_to_floor;
+                                is_near_floor = true;
+                            }
+                            PostureModule::set_pos(opponent_boma, &pos);
+                            PostureModule::init_pos(opponent_boma, &pos, true, true);
+                            if is_near_floor {
+                                opponent_agent.set_situation(SITUATION_KIND_GROUND.into());
+                                GroundModule::attach_ground(opponent_boma, true);
+                                GroundModule::set_correct(opponent_boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
+                                StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_DOWN, false);
+                            }
                         }
                     }
                 }
                 if status_kind == *FIGHTER_DEMON_STATUS_KIND_ATTACK_DASH_3 {
-                    if LAST_ATTACK_HITBOX_ID < 3 {
+                    if opponent_situation_kind == *SITUATION_KIND_GROUND {
                         MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_attackdash3hit"), -1);
                     }
                 }
@@ -98,7 +117,7 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
                     }
                 }
                 if motion_kind == hash40("attack_stand_31") {
-                    if [*FIGHTER_STATUS_KIND_SLIP, *FIGHTER_STATUS_KIND_SAVING_DAMAGE, *FIGHTER_STATUS_KIND_FIST_DOWN, *FIGHTER_STATUS_KIND_FIST_DOWN2, *FIGHTER_STATUS_KIND_FIST_DOWN3].contains(&opponent_status_kind) {
+                    if slip_check {
                         if collision_kind == 1 {
                             MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_attackstand31saving"), -1);
                         }

@@ -39,17 +39,7 @@ unsafe extern "C" fn luigi_special_lw_catch_jump_main_loop(fighter: &mut L2CFigh
     let x_stick = stick_x*lr;
     let run_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("run_stick_x"));
     let jump_neutral_y = WorkModule::get_param_float(boma, hash40("common"), hash40("jump_neutral_y"));
-    let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-    if capture_id != 0x50000000 {
-        let pos = *PostureModule::pos(boma);
-        let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-        let clatter_time = ControlModule::get_clatter_time(capture_boma, 0);
-        ControlModule::set_clatter_time(capture_boma, clatter_time-1.0, 0);
-        if clatter_time <= 0.0 {
-            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            fighter.change_status(FIGHTER_STATUS_KIND_CATCH_CUT.into(), false.into());
-        }
-    }
+    handle_mash(fighter);
     if x_stick < -run_stick_x && is_attack {
         WorkModule::set_int(boma, 1, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
         fighter.change_status(FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW.into(), false.into());
@@ -73,56 +63,12 @@ unsafe extern "C" fn luigi_special_lw_catch_jump_exec_status(_fighter: &mut L2CF
 }
 
 unsafe extern "C" fn luigi_special_lw_catch_jump_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let boma = fighter.module_accessor;
-    let object_id = WorkModule::get_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-    if ![
-        *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WAIT, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_TURN, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WALK, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_JUMP, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW
-    ].contains(&status_kind) {
-        if CatchModule::is_catch(boma) {
-            let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-            if capture_id != 0x50000000 {
-                let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-                let pos = *PostureModule::pos(boma);
-                PostureModule::set_scale(capture_boma, 1.0, false);
-                PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            }
-            CatchModule::set_send_cut_event(boma, true);
-            CatchModule::catch_cut(boma, false, false);
-        }
-        ArticleModule::remove_exist_object_id(boma, object_id as u32);
-        ArticleModule::remove_exist(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-    }
+    luigi_special_lw_end(fighter);
     0.into()
 }
 
 unsafe extern "C" fn luigi_special_lw_catch_jump_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let status_kind = fighter.global_table[STATUS_KIND].get_i32();
-    let boma = fighter.module_accessor;
-    let object_id = WorkModule::get_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-    if ![
-        *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WAIT, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_TURN, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_WALK, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_CATCH_JUMP, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_LW_THROW
-    ].contains(&status_kind) {
-        if CatchModule::is_catch(boma) {
-            let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-            if capture_id != 0x50000000 {
-                let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-                let pos = *PostureModule::pos(boma);
-                PostureModule::set_scale(capture_boma, 1.0, false);
-                PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            }
-            CatchModule::set_send_cut_event(boma, true);
-            CatchModule::catch_cut(boma, false, false);
-        }
-        fighter.clear_lua_stack();
-        lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
-        sv_module_access::_catch(fighter.lua_state_agent);
-        fighter.pop_lua_stack(1);
-        ArticleModule::remove_exist_object_id(boma, object_id as u32);
-        ArticleModule::remove_exist(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
-        WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
-    }
+    luigi_special_lw_exit(fighter);
     0.into()
 }
 

@@ -1,5 +1,8 @@
 use super::*;
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_samus_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 //Final Smash Start ACMD
 unsafe extern "C" fn ssbexo_samus_final_smash_start_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -257,6 +260,8 @@ unsafe extern "C" fn ssbexo_samus_laser_2_upper_acmd(agent: &mut L2CAgentBase) {
 pub fn install() {
     Agent::new("samus")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .acmd("game_escapeair", ssbexo_samus_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_samus_airdodge_acmd, Low)
     .acmd("game_finalstart", ssbexo_samus_final_smash_start_acmd, Low)
     .acmd("game_finalairstart", ssbexo_samus_final_smash_start_acmd, Low)
     .acmd("game_final", ssbexo_samus_final_smash_acmd, Low)

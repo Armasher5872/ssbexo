@@ -5,6 +5,9 @@ unsafe extern "C" {
     #[link_name = "_ZN3app6camera13get_dead_areaEv"]
     pub fn get_dead_area() -> Rect;
 
+    #[link_name = "_ZN3app8lua_bind32HitModule__reset_status_all_implEPNS_26BattleObjectModuleAccessorEi"]
+    pub fn hit_module_reset_status_all(boma: *mut BattleObjectModuleAccessor, param_2: i32);
+
     #[link_name = "_ZN3app8lua_bind38FighterManager__get_fighter_entry_implEPNS_14FighterManagerENS_14FighterEntryIDE"]
     pub fn get_fighter_entry(manager: *mut smash::app::FighterManager, entry_id: u32) -> *mut u8;
 
@@ -16,9 +19,6 @@ unsafe extern "C" {
     
     #[link_name = "_ZN3app16kiiladarzmanager15set_visible_hudEb"]
     pub fn set_vis_hud(param_1: bool);
-
-    #[link_name = "_ZN7lua2cpp16L2CFighterCommon28status_LandingLightSub_paramEN3lib8L2CValueE"]
-    pub fn status_LandingLightSub_param(fighter: &mut L2CFighterCommon, param_2: L2CValue);
     
     #[link_name = "_ZN3app17sv_camera_manager10dead_rangeEP9lua_State"]
 	pub fn dead_range(lua_state: u64) -> Vector4f;
@@ -43,6 +43,9 @@ unsafe extern "C" {
 
     #[link_name = "_ZN3app28FighterInklingLinkEventPaint13new_l2c_tableEv"]
     pub fn FighterInklingLinkEventPaint__new_l2c_table() -> smash::lib::L2CValue;
+
+    #[link_name = "_ZN7lua2cpp16L2CFighterCommon28status_LandingLightSub_paramEN3lib8L2CValueE"]
+    pub fn status_LandingLightSub_param(fighter: &mut L2CFighterCommon, param_2: L2CValue);
 
     pub fn change_version_string(arg: u64, string: *const std::os::raw::c_char);
 }

@@ -1,7 +1,7 @@
 use super::*;
 
-//Neutral Special Back Throw ACMD
-unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_acmd(agent: &mut L2CAgentBase) {
+//Grounded Neutral Special Back Throw ACMD
+unsafe extern "C" fn ssbexo_wario_grounded_neutral_special_back_throw_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     if is_excute(agent) {
@@ -43,8 +43,28 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_acmd(agent: &mut L2
     }
 }
 
-//Neutral Special Back Throw Effect
-unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_effect(agent: &mut L2CAgentBase) {
+//Aerial Neutral Special Back Throw ACMD
+unsafe extern "C" fn ssbexo_wario_aerial_neutral_special_back_throw_acmd(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    if is_excute(agent) {
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 12.0, 41, 30, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_B, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+    }
+    frame(lua_state, 32.0);
+    if is_excute(agent) {
+        AttackModule::clear_all(boma);
+        CHECK_FINISH_CAMERA(agent, 18, 4);
+        lua_bind::FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
+    }
+    frame(lua_state, 33.0);
+    if is_excute(agent) {
+        WorkModule::on_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW);
+    }
+}
+
+//Grounded Neutral Special Back Throw Effect
+unsafe extern "C" fn ssbexo_wario_grounded_neutral_special_back_throw_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     frame(lua_state, 14.0);
     if is_excute(agent) {
@@ -79,8 +99,32 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_effect(agent: &mut 
     }
 }
 
-//Neutral Special Back Throw Sound
-unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_sound(agent: &mut L2CAgentBase) {
+//Aerial Neutral Special Back Throw Effect
+unsafe extern "C" fn ssbexo_wario_aerial_neutral_special_back_throw_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("wario_attack_air_n"), Hash40::new("wario_attack_air_n"), Hash40::new("rot"), 0, 3, 0, 0, -60, 0, 1, true, *EF_FLIP_YZ, 1);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("wario_attack_air_n"), Hash40::new("wario_attack_air_n"), Hash40::new("rot"), 0, 2, 0, 0, -60, 0, 1.8, true, *EF_FLIP_YZ, 0.6);
+    }
+    frame(lua_state, 14.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("wario_attack_air_n"), Hash40::new("wario_attack_air_n"), Hash40::new("rot"), 0, 3, 0, 0, -60, 0, 1, true, *EF_FLIP_YZ, 1);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("wario_attack_air_n"), Hash40::new("wario_attack_air_n"), Hash40::new("rot"), 0, 2, 0, 0, -60, 0, 1.8, true, *EF_FLIP_YZ, 0.6);
+    }
+    frame(lua_state, 24.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("wario_attack_air_n"), Hash40::new("wario_attack_air_n"), Hash40::new("rot"), 0, 3, 0, 0, -60, 0, 1, true, *EF_FLIP_YZ, 1);
+        EFFECT_FOLLOW_FLIP_ALPHA(agent, Hash40::new("wario_attack_air_n"), Hash40::new("wario_attack_air_n"), Hash40::new("rot"), 0, 2, 0, 0, -60, 0, 1.8, true, *EF_FLIP_YZ, 0.6);
+    }
+    frame(lua_state, 33.0);
+    if is_excute(agent) {
+        EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("throw"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
+    }
+}
+
+//Grounded Neutral Special Back Throw Sound
+unsafe extern "C" fn ssbexo_wario_grounded_neutral_special_back_throw_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     frame(lua_state, 2.0);
@@ -110,7 +154,7 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_sound(agent: &mut L
             let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final05"), true, false, false, false, smash::app::enSEType(0));
             SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
         }
-        else if rand <= 40.0 && rand > 20.0 {
+        else if rand > 20.0 {
             PLAY_SE(agent, Hash40::new("vc_wario_appeal03"));
         }
         else {
@@ -119,8 +163,44 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_sound(agent: &mut L
     }
 }
 
-//Neutral Special Back Throw Expression
-unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_expression(agent: &mut L2CAgentBase) {
+//Aerial Neutral Special Back Throw Sound
+unsafe extern "C" fn ssbexo_wario_aerial_neutral_special_back_throw_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 2.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    wait(lua_state, 17.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_01"));
+    }
+    wait(lua_state, 13.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_common_throw_02"));
+        let rand = sv_math::randf(hash40("fighter"), 100.0);
+        if rand > 80.0 {
+            PLAY_SE(agent, Hash40::new("vc_wario_007"));
+        }
+        else if rand > 60.0 {
+            let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final04"), true, false, false, false, smash::app::enSEType(0));
+            SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
+        }
+        else if rand > 40.0 {
+            let final_sfx = SoundModule::play_se(boma, Hash40::new("vc_wario_final05"), true, false, false, false, smash::app::enSEType(0));
+            SoundModule::set_se_vol(boma, final_sfx as i32, 0.75, 0);
+        }
+        else if rand > 20.0 {
+            PLAY_SE(agent, Hash40::new("vc_wario_appeal03"));
+        }
+        else {
+            PLAY_SEQUENCE(agent, Hash40::new("seq_wario_rnd_attack"));
+        }
+    }
+}
+
+//Grounded Neutral Special Back Throw Expression
+unsafe extern "C" fn ssbexo_wario_grounded_neutral_special_back_throw_expression(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     if is_excute(agent) {
@@ -142,21 +222,45 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_back_throw_expression(agent: &
     frame(lua_state, 48.0);
     if is_excute(agent) {
         ControlModule::set_rumble(boma, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
-    }
-    frame(lua_state, 48.0);
-    if is_excute(agent) {
         QUAKE(agent, *CAMERA_QUAKE_KIND_M);
         slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 4);
+    }
+}
+
+//Aerial Neutral Special Back Throw Expression
+unsafe extern "C" fn ssbexo_wario_aerial_neutral_special_back_throw_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    frame(lua_state, 15.0);
+    if is_excute(agent) {
+        RUMBLE_HIT(agent, Hash40::new("rbkind_attackm"), 0);
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(lua_state, 29.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_nohits"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(lua_state, 32.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_attackm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(lua_state, 33.0);
+    if is_excute(agent) {
+        QUAKE(agent, *CAMERA_QUAKE_KIND_M);
     }
 }
 
 pub fn install() {
     Agent::new("wario")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .acmd("game_specialnthrowb", ssbexo_wario_neutral_special_back_throw_acmd, Low)
-    .acmd("effect_specialnthrowb", ssbexo_wario_neutral_special_back_throw_effect, Low)
-    .acmd("sound_specialnthrowb", ssbexo_wario_neutral_special_back_throw_sound, Low)
-    .acmd("expression_specialnthrowb", ssbexo_wario_neutral_special_back_throw_expression, Low)
+    .acmd("game_specialnthrowb", ssbexo_wario_grounded_neutral_special_back_throw_acmd, Low)
+    .acmd("effect_specialnthrowb", ssbexo_wario_grounded_neutral_special_back_throw_effect, Low)
+    .acmd("sound_specialnthrowb", ssbexo_wario_grounded_neutral_special_back_throw_sound, Low)
+    .acmd("expression_specialnthrowb", ssbexo_wario_grounded_neutral_special_back_throw_expression, Low)
+    .acmd("game_specialairnthrowb", ssbexo_wario_aerial_neutral_special_back_throw_acmd, Low)
+    .acmd("effect_specialairnthrowb", ssbexo_wario_aerial_neutral_special_back_throw_effect, Low)
+    .acmd("sound_specialairnthrowb", ssbexo_wario_aerial_neutral_special_back_throw_sound, Low)
+    .acmd("expression_specialairnthrowb", ssbexo_wario_aerial_neutral_special_back_throw_expression, Low)
     .install()
     ;
 }

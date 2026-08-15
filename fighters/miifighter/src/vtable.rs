@@ -4,7 +4,6 @@ const MIIFIGHTER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xd56780; //Mii Bra
 const MIIFIGHTER_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xd56e70; //Mii Brawler only
 const MIIFIGHTER_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xd592c0; //Mii Brawler only
 const MIIFIGHTER_VTABLE_ON_SEARCH_OFFSET: usize = 0xd59650; //Mii Brawler only
-const MIIFIGHTER_VTABLE_ON_DAMAGE_OFFSET: usize = 0x68d9e0; //Shared
 
 //Mii Brawler Reset Initialization
 #[skyline::hook(offset = MIIFIGHTER_VTABLE_RESET_INITIALIZATION_OFFSET)]
@@ -100,28 +99,24 @@ unsafe extern "C" fn miifighter_on_search(vtable: u64, fighter: &mut Fighter, lo
 }
 
 //Mii Brawler On Damage
-#[skyline::hook(offset = MIIFIGHTER_VTABLE_ON_DAMAGE_OFFSET)]
-unsafe extern "C" fn miifighter_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) -> u64 {
-    if fighter.battle_object.kind == *FIGHTER_KIND_MIIFIGHTER as u32 {
-        let boma = fighter.battle_object.module_accessor;
-        let status_kind = StatusModule::status_kind(boma);
-        let customize_to = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO);
-        if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1 {
-            if [*FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW1_CHARGE].contains(&status_kind) {
-                DamageModule::set_no_reaction_mode_status(boma, DamageNoReactionMode{_address: *DAMAGE_NO_REACTION_MODE_NORMAL as u8}, -1.0, -1.0, -1);
-                WorkModule::off_flag(boma, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR);
-            }
+unsafe extern "C" fn miifighter_on_damage(_vtable: u64, fighter: &mut Fighter, _on_damage: u64) {
+    let boma = fighter.battle_object.module_accessor;
+    let status_kind = StatusModule::status_kind(boma);
+    let customize_to = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO);
+    if customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1 {
+        if [*FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_MIIFIGHTER_STATUS_KIND_SPECIAL_LW1_CHARGE].contains(&status_kind) {
+            DamageModule::set_no_reaction_mode_status(boma, DamageNoReactionMode{_address: *DAMAGE_NO_REACTION_MODE_NORMAL as u8}, -1.0, -1.0, -1);
+            WorkModule::off_flag(boma, *FIGHTER_MIIFIGHTER_INSTANCE_WORK_ID_FLAG_ARMOR_CRUSHING_THUNDER_KICK_ACTIVE_ARMOR);
         }
     }
-    original!()(vtable, fighter, on_damage)
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(0x4ff3150).data(miifighter_on_damage as *const () as u64);
 	skyline::install_hooks!(
         miifighter_reset_initialization,
         miifighter_death_initialization,
         miifighter_opff,
-        miifighter_on_search,
-        miifighter_on_damage
+        miifighter_on_search
     );
 }

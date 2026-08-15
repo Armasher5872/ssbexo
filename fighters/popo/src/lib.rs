@@ -8,10 +8,7 @@ use {
     },
     exo_var::globals::*,
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::lua_bind::*,
         lib::lua_const::*,
     },
   smashline::*,
@@ -19,10 +16,8 @@ use {
 
 mod acmd;
 mod opff;
-mod vtable;
 
 pub fn install() {
     acmd::install();
     opff::install();
-    vtable::install();
 }

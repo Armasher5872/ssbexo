@@ -20,11 +20,16 @@ unsafe extern "C" fn ssbexo_gekkouga_jump_aerial_back_acmd(agent: &mut L2CAgentB
     }
 }
 
+//Airdodge ACMD
+unsafe extern "C" fn ssbexo_gekkouga_airdodge_acmd(_agent: &mut L2CAgentBase) {}
+
 pub fn install() {
     Agent::new("gekkouga")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .acmd("game_dash", ssbexo_gekkouga_dash_acmd, Low)
     .acmd("game_jumpaerialback", ssbexo_gekkouga_jump_aerial_back_acmd, Low)
+    .acmd("game_escapeair", ssbexo_gekkouga_airdodge_acmd, Low)
+    .acmd("game_escapeairslide", ssbexo_gekkouga_airdodge_acmd, Low)
     .install()
     ;
 }

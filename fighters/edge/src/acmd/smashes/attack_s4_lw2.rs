@@ -24,6 +24,10 @@ unsafe extern "C" fn ssbexo_edge_aeolian_onslaught_2_acmd(agent: &mut L2CAgentBa
 //Aeolian Onslaught 2 Effect
 unsafe extern "C" fn ssbexo_edge_aeolian_onslaught_2_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    if is_excute(agent) {
+        AFTER_IMAGE_OFF(agent, 2);
+        EFFECT_OFF_KIND(agent, Hash40::new("edge_sword_flare"), false, true);
+    }
     frame(lua_state, 4.0);
     if is_excute(agent) {
         EFFECT_FOLLOW(agent, Hash40::new("edge_sword_smash_flash"), Hash40::new("swordl2"), 0, 0, 0, 0, 180, -90, 1, true);

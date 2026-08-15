@@ -4,10 +4,7 @@ use {
         var_reset::*,
     },
     exo_var::globals::*,
-    smash::{
-        app::*,
-        lib::lua_const::*,
-    },
+    smash::app::*,
     smashline::*,
 };
 

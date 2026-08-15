@@ -34,7 +34,7 @@ unsafe extern "C" fn demon_attack_step_2_main_loop(fighter: &mut L2CFighterCommo
             return 1.into();
         }
     }
-    if frame <= 8.0 {
+    if frame <= 12.0 {
         if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_ATTACK) {
             if !fighter.global_table[IS_STOP].get_bool() {
                 WorkModule::inc_int(boma, *FIGHTER_DEMON_STATUS_ATTACK_STEP_WORK_INT_HOLD_FRAME);

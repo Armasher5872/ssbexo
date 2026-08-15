@@ -30,6 +30,7 @@ unsafe extern "C" fn ssbexo_wario_neutral_special_forward_throw_effect(agent: &m
     }
     frame(lua_state, 18.0);
     if is_excute(agent) {
+        COL_NORMAL(agent);
         EFFECT(agent, Hash40::new("sys_smash_flash_s"), Hash40::new("top"), 0, 15, 12, 0, 0, 0, 1.5, 0, 0, 0, 0, 0, 0, true);
     }
     frame(lua_state, 19.0);

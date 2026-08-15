@@ -28,7 +28,7 @@ unsafe extern "C" fn wario_special_s_wall_end_init_status(fighter: &mut L2CFight
 unsafe extern "C" fn wario_special_s_wall_end_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     SoundModule::play_se(boma, Hash40::new("vc_wario_damagefly02"), true, false, false, false, smash::app::enSEType(0));
-    MotionModule::change_motion(boma, Hash40::new("stop_wall"), 0.0, 0.5, false, 0.0, false, false);
+    MotionModule::change_motion(boma, Hash40::new("stop_wall"), 0.0, 0.583, false, 0.0, false, false);
     fighter.sub_shift_status_main(L2CValue::Ptr(wario_special_s_wall_end_main_loop as *const () as _))
 }
 

@@ -1,17 +1,11 @@
 use {
-    exo_utils::{
-        common::{
-            status_end_control::*,
-            var_reset::*,
-        },
-        fighter::daisy::*,
+    exo_utils::common::{
+        status_end_control::*,
+        var_reset::*,
     },
     exo_var::globals::*,
     smash::{
-        app::{
-            lua_bind::*,
-            *
-        },
+        app::lua_bind::*,
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon
     },

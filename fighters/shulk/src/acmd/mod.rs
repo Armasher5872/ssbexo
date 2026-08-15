@@ -24,11 +24,13 @@ use {
 };
 
 mod grounded;
+mod other;
 mod throws;
 mod tilts;
 
 pub fn install() {
     grounded::install();
+    other::install();
     throws::install();
     tilts::install();
 }

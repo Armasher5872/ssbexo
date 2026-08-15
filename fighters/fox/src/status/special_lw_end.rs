@@ -1,7 +1,9 @@
 use super::*;
 
 unsafe extern "C" fn fox_special_lw_end_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
     fun_7100018450(fighter);
+    ReflectorModule::set_status(boma, *FIGHTER_FOX_REFLECTOR_KIND_REFLECTOR, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_EXTEND);
     fighter.sub_shift_status_main(L2CValue::Ptr(fox_special_lw_end_main_loop as *const () as _))
 }
 

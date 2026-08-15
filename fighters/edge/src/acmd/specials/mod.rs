@@ -33,6 +33,7 @@ use {
     },
 };
 
+mod fire_burst_m;
 mod fire_burst_s;
 mod fire_burst_xl;
 mod fire_special_n4;
@@ -40,6 +41,7 @@ mod flare1_fly;
 mod flare2_exp;
 mod flash_attack;
 mod special_hi2_end_wing;
+mod special_lw_appeal;
 mod special_lw_attack;
 mod special_lw_end;
 mod special_lw_loop;
@@ -59,6 +61,7 @@ mod zanshin_shot_hit;
 mod zanshin_shot_vanish;
 
 pub fn install() {
+    fire_burst_m::install();
     fire_burst_s::install();
     fire_burst_xl::install();
     fire_special_n4::install();
@@ -66,6 +69,7 @@ pub fn install() {
     flare2_exp::install();
     flash_attack::install();
     special_hi2_end_wing::install();
+    special_lw_appeal::install();
     special_lw_attack::install();
     special_lw_end::install();
     special_lw_loop::install();

@@ -5,11 +5,7 @@ use {
     },
     exo_var::globals::*,
     smash::{
-        app::{
-            Fighter,
-            lua_bind::*,
-        },
-        lib::lua_const::*,
+        app::Fighter,
         lua2cpp::*,
     },
     smashline::*,

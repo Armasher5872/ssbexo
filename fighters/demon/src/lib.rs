@@ -6,7 +6,10 @@ use {
             var_reset::*,
         },
         fighter::demon::*,
-        structs::collision_struct::*,
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+        }
     },
     exo_var::{
         demon::*,

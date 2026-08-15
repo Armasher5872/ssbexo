@@ -5,11 +5,7 @@ use {
     },
     exo_var::globals::*,
     smash::{
-        app::Fighter,
-        lib::{
-            L2CValue,
-            lua_const::*,
-        },
+        lib::L2CValue,
         lua2cpp::*,
     },
     smashline::*,
@@ -17,10 +13,8 @@ use {
 
 mod acmd;
 mod opff;
-mod vtable;
 
 pub fn install() {
     acmd::install();
     opff::install();
-    vtable::install();
 }

@@ -241,13 +241,12 @@ unsafe extern "C" fn inkling_opff(_vtable: u64, fighter: &mut Fighter) {
     let ink_const = FighterSpecializer_Inkling::get_ink_work_id(fighter.battle_object.kind as i32);
     let current_pos = PostureModule::pos_x(boma);
     let battle_object_slow = singletons::BattleObjectSlow() as *mut u8;
-    let param_accessor_2 = singletons::FighterParamAccessor2();
     let ink_height = WorkModule::get_float(boma, 0x4D);
     let ink_radius = WorkModule::get_float(boma, 0x4E);
     let ink = WorkModule::get_float(boma, ink_const);
-    let param_struct = *(param_accessor_2 as *const u64).add(0xea8/0x8);
-    let unk4 = *(param_struct as *const f32).add(0xc8/0x4);
-    let unk5 = *(param_struct as *const f32).add(0xf0/0x4);
+    let fpa2_accessor = (*((singletons::FighterParamAccessor2() as *const u8).add((0x41 as usize)*0x38+0x70) as *const u64)) as *const f32;
+    let unk4 = *(fpa2_accessor).add(0xc8/0x4);
+    let unk5 = *(fpa2_accessor).add(0xf0/0x4);
     let vtable_slow = *battle_object_slow.add(0x8) == 0 || *(battle_object_slow as *const u32) == 0;
     if vtable_slow {
         if !StopModule::is_stop(boma) {

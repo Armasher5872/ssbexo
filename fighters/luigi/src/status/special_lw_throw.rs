@@ -187,17 +187,7 @@ unsafe extern "C" fn luigi_special_lw_throw_main_loop(fighter: &mut L2CFighterCo
 unsafe extern "C" fn luigi_special_lw_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     let object_id = WorkModule::get_int(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_OBAKYUMU_OBJECT_ID);
-    if CatchModule::is_catch(boma) {
-        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-        if capture_id != 0x50000000 {
-            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-            let pos = *PostureModule::pos(boma);
-            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-        }
-        CatchModule::set_send_cut_event(boma, true);
-        CatchModule::catch_cut(boma, false, false);
-        HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
-    }
+    luigi_unlink_end(boma);
     ArticleModule::remove_exist_object_id(boma, object_id as u32);
     ArticleModule::remove_exist(boma, *FIGHTER_LUIGI_GENERATE_ARTICLE_OBAKYUMU, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
@@ -209,18 +199,7 @@ unsafe extern "C" fn luigi_special_lw_throw_exit_status(fighter: &mut L2CFighter
     let boma = fighter.module_accessor;
     WorkModule::set_int(boma, 0, *FIGHTER_LUIGI_INSTANCE_WORK_ID_INT_SPECIAL_LW_THROW_DIRECTION);
     WorkModule::off_flag(boma, *FIGHTER_LUIGI_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_PLUNGER_THROW);
-    if LinkModule::is_link(boma, *LINK_NO_CAPTURE) {
-        let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
-        if capture_id != 0x50000000 {
-            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-            let pos = *PostureModule::pos(boma);
-            PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-        }
-        fighter.clear_lua_stack();
-        lua_args!(fighter, *MA_MSC_CMD_CATCH_CLING_CUT);
-        sv_module_access::_catch(fighter.lua_state_agent);
-        fighter.pop_lua_stack(1);
-    }
+    luigi_unlink_exit(fighter);
     HitModule::set_whole(boma, HitStatus(*HIT_STATUS_NORMAL), 0);
     0.into()
 }

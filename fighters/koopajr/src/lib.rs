@@ -43,10 +43,7 @@ use {
         lua2cpp::L2CFighterCommon,
         phx::*
     },
-    smash_script::{
-        *,
-        macros::*
-    },
+    smash_script::*,
     smashline::*,
 };
 
