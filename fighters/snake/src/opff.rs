@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn snake_on_start(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
     common_initialization_variable_reset(&mut *boma);
-    WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    snake_var(&mut *boma);
     fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
 }
 

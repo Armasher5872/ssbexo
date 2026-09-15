@@ -1,13 +1,7 @@
 use super::*;
 
-const KOOPAJR_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xbe37e0; //Bowser Jr only
-const KOOPAJR_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xbe3830; //Bowser Jr only
-const KOOPAJR_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xbe3d20; //Bowser Jr only
-const KOOPAJR_CANNONBALL_VTABLE_INITIALIZATION_EVENT_OFFSET: usize = 0x3425870;
-const KOOPAJR_CANNONBALL_VTABLE_WEAPON_MODULE_ACCESSOR_INITIALIZATION_EVENT_OFFSET: usize = 0x34257f0;
-
 //Bowser Jr Reset Initialization
-#[skyline::hook(offset = KOOPAJR_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KOOPAJR, 4, false, false))]
 unsafe extern "C" fn koopajr_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -16,7 +10,7 @@ unsafe extern "C" fn koopajr_reset_initialization(vtable: u64, fighter: &mut Fig
 }
 
 //Bowser Jr Death Initialization
-#[skyline::hook(offset = KOOPAJR_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KOOPAJR, 7, false, false))]
 unsafe extern "C" fn koopajr_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -25,7 +19,7 @@ unsafe extern "C" fn koopajr_death_initialization(vtable: u64, fighter: &mut Fig
 }
 
 //Bowser Jr Once Per Fighter Frame
-#[skyline::hook(offset = KOOPAJR_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KOOPAJR, 13, false, false))]
 unsafe extern "C" fn koopajr_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
@@ -38,50 +32,43 @@ unsafe extern "C" fn koopajr_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Bowser Jr Cannonball Initialization Event Offset
-#[skyline::hook(offset = KOOPAJR_CANNONBALL_VTABLE_INITIALIZATION_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*WEAPON_KIND_KOOPAJR_CANNONBALL, 6, true, false))]
 unsafe extern "C" fn koopajr_cannonball_initialization_event(vtable: u64, weapon: *mut smash::app::Weapon, param_3: u64) -> u64 {
     let boma = (*weapon).battle_object.module_accessor;
     let owner_id = *(param_3 as *mut u32).add(0x2c/4);
     let owner_boma = sv_battle_object::module_accessor(owner_id);
     let owner_kind = utility::get_kind(&mut *owner_boma);
-    let ptr = get_module_vtable_func(boma, 0x108, 0x60);
-    let set_shield_group2: extern "C" fn(*mut u64, *mut ShieldGroupResource2, i32) = std::mem::transmute(ptr);
-    let reflector_module = *(boma as *mut *mut u64).add(0x108/8);
     if owner_kind == *FIGHTER_KIND_DONKEY {
         let shield_data = ShieldData::new(0.0, 4.0, 0.0, 0.0, 4.0, 0.0, 8.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
         let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
         let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
-        set_shield_group2(reflector_module, resource, *WEAPON_DONKEY_BARREL_SHIELD_KIND_BODY);
-        ReflectorModule::set_status(boma, *WEAPON_DONKEY_BARREL_SHIELD_KIND_BODY, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+        add_reflector_group(boma, resource, *WEAPON_DONKEY_BARREL_SHIELD_KIND_BODY);
     }
     if owner_kind == *FIGHTER_KIND_GANON {
         if !is_springtrap_slots(owner_boma) {
             let shield_data = ShieldData::new(6.0, 0.0, 0.0, 6.0, 0.0, 0.0, 10.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
             let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
             let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
-            set_shield_group2(reflector_module, resource, *WEAPON_GANON_VOLLEY_SHIELD_KIND_BODY);
-            ReflectorModule::set_status(boma, *WEAPON_GANON_VOLLEY_SHIELD_KIND_BODY, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+            add_reflector_group(boma, resource, *WEAPON_GANON_VOLLEY_SHIELD_KIND_BODY);
         }
         else {
-            let bb_shield_data = ShieldData::new(0.0, 6.0, 0.0, 0.0, 6.0, 0.0, 4.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_UNDEFINED as u8);
-            let bb_shield_datas = &mut (ShieldDatas2::new().add(bb_shield_data, 0));
-            let bb_resource = &mut ShieldGroupResource2::new(bb_shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
-            set_shield_group2(reflector_module, bb_resource, *WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY);
-            ReflectorModule::set_status(boma, *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD, ShieldStatus(*SHIELD_STATUS_NONE), *WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY);
+            let shield_data = ShieldData::new(0.0, 6.0, 0.0, 0.0, 6.0, 0.0, 4.0, Hash40::new("top"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_UNDEFINED as u8);
+            let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
+            let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
+            add_reflector_group(boma, resource, *WEAPON_SPRINGTRAP_PHANTOM_SHIELD_KIND_BALLOON_BOY_BODY);
         }
     }
     if owner_kind == *FIGHTER_KIND_GEKKOUGA {
         let shield_data = ShieldData::new(0.0, 0.0, 0.0, 30.0, 0.0, 0.0, 3.0, Hash40::new("tatami1"), *COLLISION_SHAPE_TYPE_CAPSULE as u8, *SHIELD_TYPE_JUST_SHIELD_REFLECTOR as u8);
         let shield_datas = &mut (ShieldDatas2::new().add(shield_data, 0));
         let resource = &mut ShieldGroupResource2::new(shield_datas, 1, 1.0, 1.0, 50.0, 0.0, false, 0);
-        set_shield_group2(reflector_module, resource, *WEAPON_GEKKOUGA_MAT_SHIELD_KIND_BODY);
-        ReflectorModule::set_status(boma, *WEAPON_GEKKOUGA_MAT_SHIELD_KIND_BODY, ShieldStatus(*SHIELD_STATUS_NONE), *FIGHTER_REFLECTOR_GROUP_JUST_SHIELD);
+        add_reflector_group(boma, resource, *WEAPON_GEKKOUGA_MAT_SHIELD_KIND_BODY);
     }
     call_original!(vtable, weapon, param_3)
 }
 
-//Bowser Jr Cannonball Reflector Clean Event Offset
-unsafe extern "C" fn koopajr_cannonball_reflector_clean_event(_vtable: u64, weapon: *mut smash::app::Weapon) {
+//Bowser Jr Cannonball On Despawn Offset
+unsafe extern "C" fn koopajr_cannonball_on_despawn(_vtable: u64, weapon: *mut smash::app::Weapon) {
     let boma = (*weapon).battle_object.module_accessor;
     let owner_id = WorkModule::get_int(boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
     let owner_boma = sv_battle_object::module_accessor(owner_id);
@@ -115,16 +102,16 @@ unsafe extern "C" fn koopajr_cannonball_on_attack(vtable: u64, weapon: *mut smas
                 AttackModule::clear_all(boma);
                 let total_hit_count = WorkModule::get_int(boma, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_TOTAL_HIT_COUNT);
                 if total_hit_count == 1 {
-                    WorkModule::set_int(boma, LAST_ATTACK_HITBOX_ID, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_FIRST_HIT_ID);
+                    WorkModule::set_int(boma, WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID), *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_FIRST_HIT_ID);
                 }
                 if total_hit_count == 2 {
-                    WorkModule::set_int(boma, LAST_ATTACK_HITBOX_ID, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_SECOND_HIT_ID);
+                    WorkModule::set_int(boma, WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID), *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_SECOND_HIT_ID);
                 }
                 if total_hit_count == 3 {
-                    WorkModule::set_int(boma, LAST_ATTACK_HITBOX_ID, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_THIRD_HIT_ID);   
+                    WorkModule::set_int(boma, WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID), *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_THIRD_HIT_ID);   
                 }
                 if total_hit_count == 4 {
-                    WorkModule::set_int(boma, LAST_ATTACK_HITBOX_ID, *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_FOURTH_HIT_ID);   
+                    WorkModule::set_int(boma, WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID), *WEAPON_GANON_VOLLEY_INSTANCE_WORK_ID_INT_FOURTH_HIT_ID);   
                 }
                 volley_hitbox_check(
                     weapon, 
@@ -192,7 +179,12 @@ unsafe extern "C" fn koopajr_cannonball_on_search_event(_vtable: u64, weapon: &m
                             StatusModule::change_status_request(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_ATTACK, false);
                             KineticModule::clear_speed_energy_id(opponent_boma, *FIGHTER_KINETIC_ENERGY_ID_STOP);
                             WorkModule::set_float(opponent_boma, 1.0, *FIGHTER_STATUS_WORK_ID_FLOAT_REBOUND_MOTION_RATE);
-                            StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_REBOUND, false);
+                            if StatusModule::situation_kind(opponent_boma) == *SITUATION_KIND_GROUND {
+                                StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_REBOUND, false);
+                            }
+                            else {
+                                StatusModule::change_status_request_from_script(opponent_boma, *FIGHTER_STATUS_KIND_REBOUND_JUMP, false);
+                            }
                         }
                     }
                 }
@@ -264,18 +256,22 @@ unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon
                 sv_kinetic_energy!(set_stable_speed, agent, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -get_sum_speed_x*speed_multiplier, 0.0);
             }
             else {
-                let opponent_angle = if vec > 360 {32} else {attack_data.vector} as f32;
-                let opponent_lr = PostureModule::lr(opponent_boma);
-                let speed = opponent_power/8.0;
-                let speed_x = ((opponent_angle+90.0).to_radians().sin()*speed)*opponent_lr;
-                let speed_y = (opponent_angle-90.0).to_radians().cos()*speed;
-                WorkModule::set_float(boma, speed_x, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
-                WorkModule::set_float(boma, speed_y, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
-                if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL].contains(&status_kind) {
-                    StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL, false);
-                }
-                if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_MOVE, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_TURN].contains(&status_kind) {
-                    StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_BREAK, false);
+                if opponent_power > 0.0 {
+                    let opponent_angle = if vec > 360 {32} else {attack_data.vector} as f32;
+                    let opponent_lr = PostureModule::lr(opponent_boma);
+                    let speed = opponent_power/8.0;
+                    let speed_x = opponent_angle.to_radians().cos()*speed*opponent_lr;
+                    let speed_y = opponent_angle.to_radians().sin()*speed;
+                    let hit_count = WorkModule::get_int(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_HIT_COUNT);
+                    WorkModule::set_float(boma, speed_x, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
+                    WorkModule::set_float(boma, speed_y, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
+                    WorkModule::dec_int(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_HIT_COUNT);
+                    if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_IDLE, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL].contains(&status_kind) {
+                        StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_BB_FALL, false);
+                    }
+                    if [*WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_MOVE, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_TURN].contains(&status_kind) && hit_count <= 0 {
+                        StatusModule::change_status_request_from_script(boma, *WEAPON_SPRINGTRAP_PHANTOM_STATUS_KIND_PHANTOM_BREAK, false);
+                    }
                 }
             }
         }
@@ -283,7 +279,7 @@ unsafe extern "C" fn koopajr_cannonball_on_reflection_event(_vtable: u64, weapon
 }
 
 //Bowser Jr Cannonball Initialize Weapon Module Accessor Event Offset
-#[skyline::hook(offset = KOOPAJR_CANNONBALL_VTABLE_WEAPON_MODULE_ACCESSOR_INITIALIZATION_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*WEAPON_KIND_KOOPAJR_CANNONBALL, 55, true, false))]
 unsafe extern "C" fn koopajr_cannonball_initialize_weapon_module_accessor(vtable: u64, boma: *mut BattleObjectModuleAccessor, param_3: u64) -> u64 {
     *(param_3 as *mut i32).add(0x288/4) = *COLLISION_KIND_SHIELD;
     call_original!(vtable, boma, param_3)
@@ -292,10 +288,10 @@ unsafe extern "C" fn koopajr_cannonball_initialize_weapon_module_accessor(vtable
 pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_KOOPAJR_CANNONBALL, ModuleInitModules::SearchModule);
     weapon_initialise_module(*WEAPON_KIND_KOOPAJR_CANNONBALL, ModuleInitModules::ReflectorModule);
-    let _ = skyline::patching::Patch::in_text(0x51d8348).data(koopajr_cannonball_reflector_clean_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x51d83e8).data(koopajr_cannonball_on_attack as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x51d8418).data(koopajr_cannonball_on_search_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x51d8468).data(koopajr_cannonball_on_reflection_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_KOOPAJR_CANNONBALL, 9, true, true)).data(koopajr_cannonball_on_despawn as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_KOOPAJR_CANNONBALL, 29, true, true)).data(koopajr_cannonball_on_attack as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_KOOPAJR_CANNONBALL, 35, true, true)).data(koopajr_cannonball_on_search_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_KOOPAJR_CANNONBALL, 45, true, true)).data(koopajr_cannonball_on_reflection_event as *const () as u64);
 	skyline::install_hooks!(
         koopajr_reset_initialization,
         koopajr_death_initialization,

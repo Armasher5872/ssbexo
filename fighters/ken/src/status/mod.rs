@@ -25,12 +25,12 @@ use {
 
 mod attack_dash;
 mod attack_s3;
-mod guard_off;
+//mod guard_off;
 mod wait;
 
 pub fn install() {
     attack_dash::install();
     attack_s3::install();
-    guard_off::install();
+    //guard_off::install();
     wait::install();
 }

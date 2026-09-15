@@ -1,7 +1,5 @@
 use super::*;
 
-const PALUTENA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xe5f350; //Palutena only
-
 //Palutena Reset Initialization
 unsafe extern "C" fn palutena_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -9,7 +7,7 @@ unsafe extern "C" fn palutena_reset_initialization(_vtable: u64, fighter: &mut F
 }
 
 //Palutena Death Initialization
-#[skyline::hook(offset = PALUTENA_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PALUTENA, 7, false, false))]
 unsafe extern "C" fn palutena_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     HitModule::set_status_joint_default(boma, Hash40::new("virtualshield"), HitStatus(*HIT_STATUS_OFF), 0);
@@ -19,6 +17,6 @@ unsafe extern "C" fn palutena_death_initialization(_vtable: u64, fighter: &mut F
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x5004c80).data(palutena_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_PALUTENA, 4, false, true)).data(palutena_reset_initialization as *const () as u64);
     skyline::install_hook!(palutena_death_initialization);
 }

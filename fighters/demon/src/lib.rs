@@ -12,9 +12,9 @@ use {
         }
     },
     exo_var::{
+        consts::*,
         demon::*,
         globals::*,
-        variables::*,
     },
     smash::{
         app::{
@@ -35,7 +35,7 @@ use {
         LinkEventCapture
     },
     */
-    smashline::*
+    smashline::*,
 };
 
 mod acmd;

@@ -59,6 +59,12 @@ pub fn install() {
         set_kirby_inhale_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, get_armstrong_costumes_non_acmd(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
         set_villager_pocket_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, get_armstrong_costumes_non_acmd(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_MISFIRE);
         set_rosetta_pull_behavior(FIGHTER_ARMSTRONG_GENERATE_ARTICLE_FIREPILLAR, get_armstrong_costumes_non_acmd(), *WEAPON_KIND_LUIGI_FIREBALL, POCKET_BEHAVIOR_DELETE);
+        set_kirby_inhale_behavior(FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE, get_springtrap_costumes_non_acmd(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_DELETE);
+        set_villager_pocket_behavior(FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE, get_springtrap_costumes_non_acmd(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_MISFIRE);
+        set_rosetta_pull_behavior(FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_AXE, get_springtrap_costumes_non_acmd(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_DELETE);
+        set_kirby_inhale_behavior(FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM, get_springtrap_costumes_non_acmd(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_DELETE);
+        set_villager_pocket_behavior(FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM, get_springtrap_costumes_non_acmd(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_MISFIRE);
+        set_rosetta_pull_behavior(FIGHTER_SPRINGTRAP_GENERATE_ARTICLE_PHANTOM, get_springtrap_costumes_non_acmd(), *WEAPON_KIND_KOOPAJR_CANNONBALL, POCKET_BEHAVIOR_DELETE);
     }
     update_int_2(-*WEAPON_KIND_MARIO_DOKAN, vec![-1].clone(), (hash40("article_use_type"), 0, *ARTICLE_USETYPE_FINAL));
     update_int_2(-*WEAPON_KIND_DONKEY_DKBARREL, vec![-1].clone(), (hash40("article_use_type"), 0, *ARTICLE_USETYPE_FINAL));

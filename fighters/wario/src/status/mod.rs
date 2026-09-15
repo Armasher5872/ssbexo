@@ -11,7 +11,6 @@ use {
     exo_var::{
         consts::*,
         globals::*,
-        variables::*,
         wario::*,
     },
     smash::{

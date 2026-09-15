@@ -1,12 +1,7 @@
 use super::*;
 
-const MIIFIGHTER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xd56780; //Mii Brawler only
-const MIIFIGHTER_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xd56e70; //Mii Brawler only
-const MIIFIGHTER_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xd592c0; //Mii Brawler only
-const MIIFIGHTER_VTABLE_ON_SEARCH_OFFSET: usize = 0xd59650; //Mii Brawler only
-
 //Mii Brawler Reset Initialization
-#[skyline::hook(offset = MIIFIGHTER_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MIIFIGHTER, 4, false, false))]
 unsafe extern "C" fn miifighter_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -15,7 +10,7 @@ unsafe extern "C" fn miifighter_reset_initialization(vtable: u64, fighter: &mut 
 }
 
 //Mii Brawler Death Initialization
-#[skyline::hook(offset = MIIFIGHTER_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MIIFIGHTER, 7, false, false))]
 unsafe extern "C" fn miifighter_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -24,7 +19,7 @@ unsafe extern "C" fn miifighter_death_initialization(vtable: u64, fighter: &mut 
 }
 
 //Mii Brawler OPFF
-#[skyline::hook(offset = MIIFIGHTER_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MIIFIGHTER, 13, false, false))]
 unsafe extern "C" fn miifighter_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let sticky = ControlModule::get_stick_y(boma);
@@ -39,7 +34,7 @@ unsafe extern "C" fn miifighter_opff(vtable: u64, fighter: &mut Fighter) -> u64 
 }
 
 //Mii Brawler On Search
-#[skyline::hook(offset = MIIFIGHTER_VTABLE_ON_SEARCH_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MIIFIGHTER, 48, false, false))]
 unsafe extern "C" fn miifighter_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = *(log as *const u64).add(0x10/0x8);
@@ -112,7 +107,7 @@ unsafe extern "C" fn miifighter_on_damage(_vtable: u64, fighter: &mut Fighter, _
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4ff3150).data(miifighter_on_damage as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_MIIFIGHTER, 68, false, true)).data(miifighter_on_damage as *const () as u64);
 	skyline::install_hooks!(
         miifighter_reset_initialization,
         miifighter_death_initialization,

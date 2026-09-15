@@ -1,10 +1,7 @@
 use super::*;
 
-const MURABITO_SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xdbab30; //Shared
-const MURABITO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xdbad80; //Murabito Only
-
 //Villager & Isabelle Reset Initialization
-#[skyline::hook(offset = MURABITO_SHIZUE_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MURABITO, 4, false, false))]
 unsafe extern "C" fn murabito_shizue_reset_initialization(vtable: u64, fighter: &mut Fighter) {
     if fighter.battle_object.kind == *FIGHTER_KIND_MURABITO as u32 {
         let boma = fighter.battle_object.module_accessor;
@@ -20,7 +17,7 @@ unsafe extern "C" fn murabito_shizue_reset_initialization(vtable: u64, fighter: 
 }
 
 //Villager Death Initialization
-#[skyline::hook(offset = MURABITO_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MURABITO, 7, false, false))]
 unsafe extern "C" fn murabito_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

@@ -12,8 +12,26 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_land_acmd(agent: &mut L2CAgent
 
 //Up Special Glide Land Sound
 unsafe extern "C" fn ssbexo_link_special_hi_glide_land_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 9.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_link_step_right_s"));
+    }
+    frame(lua_state, 11.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_link_step_left_m"));
+    }
+    frame(lua_state, 14.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_appear02"));
+    }
+    frame(lua_state, 33.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_link_appear03"));
+    }
+    frame(lua_state, 60.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("se_link_appear04"));
     }
 }
 
@@ -25,11 +43,11 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_land_expression(agent: &mut L2
         VisibilityModule::set_int64(boma, hash40("sword") as i64, hash40("sword_back") as i64);
         VisibilityModule::set_int64(boma, hash40("shield") as i64, hash40("shield_back") as i64);
     }
-    frame(lua_state, 16.0);
+    frame(lua_state, 36.0);
     if is_excute(agent) {
         VisibilityModule::set_int64(boma, hash40("shield") as i64, hash40("shield_normal") as i64);
     }
-    frame(lua_state, 17.0);
+    frame(lua_state, 37.0);
     if is_excute(agent) {
         VisibilityModule::set_int64(boma, hash40("sword") as i64, hash40("sword_normal") as i64);
     }

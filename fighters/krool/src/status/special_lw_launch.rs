@@ -33,6 +33,10 @@ unsafe extern "C" fn krool_special_lw_launch_main_loop(fighter: &mut L2CFighterC
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
     let lr = PostureModule::lr(boma);
+    let special_lw_charge = WorkModule::get_float(boma, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_CHARGE);
+    let fuel = WorkModule::get_float(boma, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_FUEL);
+    let speed = (2.5+special_lw_charge)*fuel;
+    let degrees = ControlModule::get_stick_angle(boma).to_degrees();
     if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -63,20 +67,8 @@ unsafe extern "C" fn krool_special_lw_launch_main_loop(fighter: &mut L2CFighterC
         LinkModule::set_constraint_rot_offset(blunderbuss_boma, &Vector3f{x: 0.0, y: -90.0*lr, z: 180.0});
     }
     if WorkModule::is_flag(boma, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_JUMP) {
-        let stick_x = fighter.global_table[STICK_X].get_f32();
-        let stick_y = fighter.global_table[STICK_Y].get_f32();
-        let lr = PostureModule::lr(boma);
-        let special_lw_charge = WorkModule::get_float(boma, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_CHARGE);
-        let fuel = WorkModule::get_float(boma, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_FUEL);
-        let speed = (2.5+special_lw_charge)*fuel;
-        let stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
-        let vec_stick_x = stick["x"].get_f32();
-        let vec_stick_y = stick["y"].get_f32();
-        let stick_angle = vec_stick_y.atan2(vec_stick_x*lr);
-        let stick_degrees = stick_angle.to_degrees();
-        let degrees = if stick_degrees > 65.0 {65.0} else if stick_degrees < 15.0 {15.0} else {stick_degrees};
-        let speed_x = ((degrees+90.0).to_radians().sin()*speed)*lr;
-        let speed_y = (degrees-90.0).to_radians().cos()*speed;
+        let speed_x = degrees.clamp(15.0, 65.0).to_radians().cos()*speed*lr;
+        let speed_y = degrees.clamp(15.0, 65.0).to_radians().sin()*speed;
         fighter.set_situation(SITUATION_KIND_AIR.into());
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);

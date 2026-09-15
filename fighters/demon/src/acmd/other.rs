@@ -83,6 +83,54 @@ unsafe extern "C" fn ssbexo_demon_up_taunt_sound(agent: &mut L2CAgentBase) {
     }
 }
 
+//Side Taunt ACMD
+unsafe extern "C" fn ssbexo_demon_side_taunt_acmd(_agent: &mut L2CAgentBase) {}
+
+//Side Taunt Effect
+unsafe extern "C" fn ssbexo_demon_side_taunt_effect(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        FOOT_EFFECT(agent, Hash40::new("sys_run_smoke"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        LAST_EFFECT_SET_RATE(agent, 1.3);
+    }
+    frame(lua_state, 8.0);
+    if is_excute(agent) {
+        EFFECT_FOLLOW_NO_STOP(agent, Hash40::new("demon_s_fujinken_elec"), Hash40::new("waist"), 2, 0, 0, 0, 0, 0, 1, true);
+    }
+    frame(lua_state, 55.0);
+    if is_excute(agent) {
+        EFFECT_OFF_KIND(agent, Hash40::new("demon_s_fujinken_elec"), false, false);
+    }
+}
+
+//Side Taunt Sound
+unsafe extern "C" fn ssbexo_demon_side_taunt_sound(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        PLAY_SE(agent, Hash40::new("vc_demon_attack02"));
+        PLAY_SE(agent, Hash40::new("se_demon_attackstep2l_01"));
+    }
+}
+
+//Side Taunt Expression
+unsafe extern "C" fn ssbexo_demon_side_taunt_expression(agent: &mut L2CAgentBase) {
+    let lua_state = agent.lua_state_agent;
+    let boma = agent.module_accessor;
+    if is_excute(agent) {
+        slope!(agent, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+    }
+    frame(lua_state, 5.0);
+    if is_excute(agent) {
+        RUMBLE_HIT(agent, Hash40::new("rbkind_80_attack_special_t"), 0);
+    }
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        ControlModule::set_rumble(boma, Hash40::new("rbkind_80_nohitll"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+}
+
 //Down Taunt ACMD
 unsafe extern "C" fn ssbexo_demon_down_taunt_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
@@ -197,6 +245,14 @@ pub fn install() {
     .acmd("effect_appealhir", ssbexo_demon_up_taunt_effect, Low)
     .acmd("sound_appealhil", ssbexo_demon_up_taunt_sound, Low)
     .acmd("sound_appealhir", ssbexo_demon_up_taunt_sound, Low)
+    .acmd("game_appealsl", ssbexo_demon_side_taunt_acmd, Low)
+    .acmd("game_appealsr", ssbexo_demon_side_taunt_acmd, Low)
+    .acmd("effect_appealsl", ssbexo_demon_side_taunt_effect, Low)
+    .acmd("effect_appealsr", ssbexo_demon_side_taunt_effect, Low)
+    .acmd("sound_appealsl", ssbexo_demon_side_taunt_sound, Low)
+    .acmd("sound_appealsr", ssbexo_demon_side_taunt_sound, Low)
+    .acmd("expression_appealsl", ssbexo_demon_side_taunt_expression, Low)
+    .acmd("expression_appealsr", ssbexo_demon_side_taunt_expression, Low)
     .acmd("game_appeallwl", ssbexo_demon_down_taunt_acmd, Low)
     .acmd("game_appeallwr", ssbexo_demon_down_taunt_acmd, Low)
     .acmd("effect_appeallwl", ssbexo_demon_down_taunt_effect, Low)

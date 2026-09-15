@@ -1,11 +1,7 @@
 use super::*;
 
-const SAMUS_SAMUSD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10f3630; //Shared
-const SAMUS_SAMUSD_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10f3650; //Shared
-const SAMUS_SAMUSD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x10f37a0; //Shared
-
 //Samus & Dark Samus Reset Initialization
-#[skyline::hook(offset = SAMUS_SAMUSD_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SAMUS, 4, false, false))]
 unsafe extern "C" fn samus_samusd_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
@@ -19,7 +15,7 @@ unsafe extern "C" fn samus_samusd_reset_initialization(_vtable: u64, fighter: &m
 }
 
 //Samus & Dark Samus Death Initialization
-#[skyline::hook(offset = SAMUS_SAMUSD_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SAMUS, 7, false, false))]
 unsafe extern "C" fn samus_samusd_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
@@ -31,7 +27,7 @@ unsafe extern "C" fn samus_samusd_death_initialization(vtable: u64, fighter: &mu
 }
 
 //Samus & Dark Samus Once Per Fighter Frame
-#[skyline::hook(offset = SAMUS_SAMUSD_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SAMUS, 13, false, false))]
 unsafe extern "C" fn samus_samusd_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_SAMUS as u32 {
         let boma = fighter.battle_object.module_accessor;

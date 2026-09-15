@@ -1,10 +1,7 @@
 use super::*;
 
-const DEDEDE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x904520; //Dedede only
-const DEDEDE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x904cf0; //Dedede only
-
 //Dedede Reset Initialization
-#[skyline::hook(offset = DEDEDE_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEDEDE, 4, false, false))]
 unsafe extern "C" fn dedede_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn dedede_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Dedede Death Initialization
-#[skyline::hook(offset = DEDEDE_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEDEDE, 7, false, false))]
 unsafe extern "C" fn dedede_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

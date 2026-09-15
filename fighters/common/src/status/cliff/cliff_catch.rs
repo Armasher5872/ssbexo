@@ -4,24 +4,23 @@ use super::*;
 unsafe extern "C" fn sub_cliff_catch_move_uniq_process_init_common(fighter: &mut L2CFighterCommon, motion_kind: L2CValue, bone: L2CValue) {
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let boma = fighter.module_accessor;
-    let hang_cliff_dir = GroundModule::hang_cliff_dir(boma);
     sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_ENV_WIND, 0, 0.0, 0.0, 0.0, 0.0, 0.0);
     if !GroundModule::is_status_cliff(boma) {
         return;
     }
     notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2dbe023abb));
-    PostureModule::set_lr(boma, -hang_cliff_dir);
+    PostureModule::set_lr(boma, -GroundModule::hang_cliff_dir(boma));
     GroundModule::set_shape_flag(boma, *GROUND_CORRECT_SHAPE_RHOMBUS_MODIFY_FLAG_FRONT_FIX as u16, true);
+    fighter.clear_lua_stack();
+    lua_args!(fighter, bone.get_hash());
     sv_fighter_util::adjust_joint_pos_change_motion(fighter.lua_state_agent, bone.get_hash());
     PostureModule::update_rot_y_lr(boma);
     MotionModule::change_motion(boma, motion_kind.get_hash(), 0.0, 1.0, false, 0.0, false, false);
     GroundModule::set_shape_flag(boma, *GROUND_CORRECT_SHAPE_RHOMBUS_MODIFY_FLAG_FRONT_FIX as u16, true);
     GroundModule::entry_cliff(boma);
     WorkModule::off_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_CLIFF_CATCH_MOVE);
-    if prev_status_kind == *FIGHTER_STATUS_KIND_AIR_LASSO_HANG {
-        if WorkModule::is_flag(boma, *FIGHTER_STATUS_CLIFF_CATCH_MOVE_FLAG_AIR_LASSO_CATCH) {
-            return;
-        }
+    if prev_status_kind == *FIGHTER_STATUS_KIND_AIR_LASSO_HANG && WorkModule::is_flag(boma, *FIGHTER_STATUS_CLIFF_CATCH_MOVE_FLAG_AIR_LASSO_CATCH) {
+        return;
     }
     WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_COUNT);
     if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SUB_FIGHTER) {
@@ -86,8 +85,12 @@ unsafe extern "C" fn sub_status_cliffcatch_maincommon(fighter: &mut L2CFighterCo
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
+        unsafe {
+            let base = (*info.module.ModuleObject).module_base as usize;
+            let _ = skyline::patching::nop_pointer((0xdf9b8+base) as *const u8);
+        }
         skyline::install_hooks!(
-            sub_cliff_catch_move_uniq_process_init_common,
+            //sub_cliff_catch_move_uniq_process_init_common,
             sub_status_cliffcatchcommon,
             sub_status_cliffcatch_maincommon
         );

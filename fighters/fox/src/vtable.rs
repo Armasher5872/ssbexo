@@ -1,16 +1,11 @@
 use super::*;
 
-const FOX_WOLF_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa617c0; //Shared
-const FOX_WOLF_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa62480; //Shared
-const FOX_WOLF_VTABLE_ON_ATTACK_OFFSET: usize = 0xa64ce0; //Shared
-
 //Fox & Wolf Reset Initialization
-#[skyline::hook(offset = FOX_WOLF_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_FOX, 4, false, false))]
 unsafe extern "C" fn fox_wolf_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
     if kind == *FIGHTER_KIND_FOX {
-        common_reset_variable_reset(&mut *boma);
         WorkModule::off_flag(boma, *FIGHTER_FOX_INSTANCE_WORK_ID_FLAG_REFLECTOR_HIT);
     }
     common_reset_variable_reset(&mut *boma);
@@ -49,15 +44,15 @@ unsafe extern "C" fn fox_wolf_death_initialization(_vtable: u64, fighter: &mut F
 }
 
 //Fox Wolf Once Per Fighter Frame
-#[skyline::hook(offset = FOX_WOLF_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_FOX, 13, false, false))]
 unsafe extern "C" fn fox_wolf_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_WOLF as u32 {
         let boma = fighter.battle_object.module_accessor;
         let status_kind = StatusModule::status_kind(boma);
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S {
+        if status_kind == *FIGHTER_WOLF_STATUS_KIND_SPECIAL_S_END {
             WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_S_DISABLE);
             WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DISABLE);
-            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && LAST_ATTACK_HITBOX_ID == 0 {
+            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) && WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID) == 0 {
                 CancelModule::enable_cancel(boma);
             }
         }
@@ -66,7 +61,7 @@ unsafe extern "C" fn fox_wolf_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Fox & Wolf On Attack
-#[skyline::hook(offset = FOX_WOLF_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_FOX, 36, false, false))]
 unsafe extern "C" fn fox_wolf_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
@@ -80,7 +75,7 @@ unsafe extern "C" fn fox_wolf_on_attack(vtable: u64, fighter: &mut Fighter, log:
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fb6740).data(fox_wolf_death_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_FOX, 7, false, true)).data(fox_wolf_death_initialization as *const () as u64);
     skyline::install_hooks!(
         fox_wolf_reset_initialization,
         fox_wolf_opff,

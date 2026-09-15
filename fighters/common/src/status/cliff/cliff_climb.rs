@@ -12,9 +12,7 @@ unsafe extern "C" fn status_end_cliffclimb(fighter: &mut L2CFighterCommon) -> L2
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hook!(
-            status_end_cliffclimb
-        );
+        skyline::install_hook!(status_end_cliffclimb);
     }
 }
 

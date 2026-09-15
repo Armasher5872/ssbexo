@@ -1,7 +1,5 @@
 use super::*;
 
-const MEWTWO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xd294e0; //Mewtwo only
-
 //Mewtwo Reset Initialization
 unsafe extern "C" fn mewtwo_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -9,7 +7,7 @@ unsafe extern "C" fn mewtwo_reset_initialization(_vtable: u64, fighter: &mut Fig
 }
 
 //Mewtwo Death Initialization
-#[skyline::hook(offset = MEWTWO_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MEWTWO, 7, false, false))]
 unsafe extern "C" fn mewtwo_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -23,6 +21,6 @@ unsafe extern "C" fn mewtwo_death_initialization(_vtable: u64, fighter: &mut Fig
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fed120).data(mewtwo_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_MEWTWO, 4, false, true)).data(mewtwo_reset_initialization as *const () as u64);
 	skyline::install_hook!(mewtwo_death_initialization);
 }

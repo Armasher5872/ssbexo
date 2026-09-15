@@ -31,7 +31,6 @@ use {
         globals::*,
         koopajr::*,
         springtrap::*,
-        variables::*,
     },
     smash::{
         app::{

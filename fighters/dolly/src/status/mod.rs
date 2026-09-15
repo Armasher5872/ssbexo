@@ -1,7 +1,7 @@
 use {
-    exo_utils::structs::vector::*,
+    //exo_utils::structs::vector::*,
     exo_var::{
-        consts::*,
+        //consts::*,
         dolly::*,
         globals::*,
     },
@@ -22,12 +22,12 @@ use {
     smashline::*,
 };
 
-mod guard_off;
+//mod guard_off;
 mod special_n;
 mod super_special2;
 
 pub fn install() {
-    guard_off::install();
+    //guard_off::install();
     special_n::install();
     super_special2::install();
 }

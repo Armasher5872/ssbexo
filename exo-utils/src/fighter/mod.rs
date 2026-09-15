@@ -41,6 +41,7 @@ use {
         pikachu::*,
         roy::*,
         sheik::*,
+        snake::*,
         sonic::*,
         springtrap::*,
         wario::*,
@@ -95,6 +96,7 @@ pub mod pikachu;
 pub mod robot;
 pub mod roy;
 pub mod sheik;
+pub mod snake;
 pub mod sonic;
 pub mod springtrap;
 pub mod wario;

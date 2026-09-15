@@ -45,7 +45,7 @@ unsafe extern "C" fn ssbexo_edge_win_3_sound(agent: &mut L2CAgentBase) {
     frame(lua_state, 62.0);
     if is_excute(agent) {
         let swing = SoundModule::play_se(boma, Hash40::new("se_edge_smash_l02"), false, false, false, false, enSEType(0));
-        SoundModule::set_se_vol(boma, swing as i32, 4.0, 0);
+        SoundModule::set_se_vol(boma, swing as i32, 3.0, 0);
     }
     frame(lua_state, 119.0);
     if is_excute(agent) {

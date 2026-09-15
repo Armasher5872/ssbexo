@@ -1,12 +1,6 @@
 use super::*;
 
 const LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET: usize = 0x68cda0; //Little Mac only
-const LITTLEMAC_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc44830; //Little Mac only
-const LITTLEMAC_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc448c0; //Little Mac only
-const LITTLEMAC_VTABLE_ONCE_PER_FIGHTER_FRAME: usize = 0xc44b80; //Little Mac only
-const LITTLEMAC_VTABLE_ON_ATTACK_OFFSET: usize = 0xc456a0; //Little Mac only
-const LITTLEMAC_VTABLE_ON_SEARCH_OFFSET: usize = 0xc463d0; //Little Mac only
-const LITTLEMAC_VTABLE_ON_DAMAGE_OFFSET: usize = 0xc45d70; //Little Mac only
 
 #[skyline::from_offset(LITTLEMAC_UI_UPDATE_INTERNAL_OFFSET)]
 fn update_littlemac_ui_internal(manager_offset: *mut u32, total_gauge: i32);
@@ -19,7 +13,7 @@ unsafe extern "C" fn update_littlemac_ui(entry_id: i32, total_gauge: f32) {
 }
 
 //Little Mac Reset Initialization
-#[skyline::hook(offset = LITTLEMAC_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LITTLEMAC, 4, false, false))]
 unsafe extern "C" fn littlemac_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -28,7 +22,7 @@ unsafe extern "C" fn littlemac_reset_initialization(_vtable: u64, fighter: &mut 
 }
 
 //Little Mac Death Initialization
-#[skyline::hook(offset = LITTLEMAC_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LITTLEMAC, 7, false, false))]
 unsafe extern "C" fn littlemac_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -37,7 +31,7 @@ unsafe extern "C" fn littlemac_death_initialization(vtable: u64, fighter: &mut F
 }
 
 //Little Mac Once Per Fighter Frame
-#[skyline::hook(offset = LITTLEMAC_VTABLE_ONCE_PER_FIGHTER_FRAME)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LITTLEMAC, 13, false, false))]
 unsafe extern "C" fn littlemac_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
@@ -71,7 +65,7 @@ unsafe extern "C" fn littlemac_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Little Mac On Attack
-#[skyline::hook(offset = LITTLEMAC_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LITTLEMAC, 36, false, false))]
 unsafe extern "C" fn littlemac_on_attack(meter: f32, vtable: u64, battle_object: *mut BattleObject, log: u64) -> u64 {
     let boma = &mut (*(*battle_object).module_accessor);
     let collision_log = log as *mut CollisionLogScuffed;
@@ -95,7 +89,7 @@ unsafe extern "C" fn littlemac_on_attack(meter: f32, vtable: u64, battle_object:
 }
 
 //Little Mac On Search
-#[skyline::hook(offset = LITTLEMAC_VTABLE_ON_SEARCH_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LITTLEMAC, 48, false, false))]
 unsafe extern "C" fn littlemac_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = log as *mut CollisionLogScuffed;
@@ -122,7 +116,7 @@ unsafe extern "C" fn littlemac_on_search(vtable: u64, fighter: &mut Fighter, log
 }
 
 //Little Mac On Damage
-#[skyline::hook(offset = LITTLEMAC_VTABLE_ON_DAMAGE_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LITTLEMAC, 68, false, false))]
 unsafe extern "C" fn littlemac_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let damage = *((*(on_damage as *const u64).add(0x10/0x8)) as *const f32).add(0x4/0x4);

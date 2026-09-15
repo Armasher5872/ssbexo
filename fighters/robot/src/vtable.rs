@@ -1,11 +1,7 @@
 use super::*;
 
-const ROBOT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x105bf20; //R.O.B only
-const ROBOT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x105bfa0; //R.O.B only
-const ROBOT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x105c7f0; //R.O.B only
-
 //R.O.B Reset Initialization
-#[skyline::hook(offset = ROBOT_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ROBOT, 4, false, false))]
 unsafe extern "C" fn robot_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_initialization_variable_reset(&mut *boma);
@@ -14,7 +10,7 @@ unsafe extern "C" fn robot_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //R.O.B Death Initialization
-#[skyline::hook(offset = ROBOT_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ROBOT, 7, false, false))]
 unsafe extern "C" fn robot_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: u32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_initialization_variable_reset(&mut *boma);
@@ -23,8 +19,7 @@ unsafe extern "C" fn robot_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //R.O.B Once Per Fighter Frame
-#[skyline::hook(offset = ROBOT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
-unsafe extern "C" fn robot_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
+unsafe extern "C" fn robot_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
     let burner_energy_value = WorkModule::get_float(boma, *FIGHTER_ROBOT_INSTANCE_WORK_ID_FLOAT_BURNER_ENERGY_VALUE);
@@ -39,13 +34,12 @@ unsafe extern "C" fn robot_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
         UiManager::change_robot_meter_color_yellow(entry_id);
     }
     UiManager::set_robot_meter_enable(entry_id, true);
-    original!()(vtable, fighter)
 }
 
 pub fn install() {
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_ROBOT, 13, false, true)).data(robot_opff as *const () as *const u64);
 	skyline::install_hooks!(
         robot_reset_initialization,
-        robot_death_initialization,
-        robot_opff
+        robot_death_initialization
     );
 }

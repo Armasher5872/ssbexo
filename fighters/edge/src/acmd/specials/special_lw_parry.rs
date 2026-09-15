@@ -44,22 +44,22 @@ unsafe extern "C" fn ssbexo_edge_retaliation_stance_parry_sound(agent: &mut L2CA
     let rand = sv_math::randf(hash40("fighter"), 1.0);
     let boma = agent.module_accessor;
     if WorkModule::is_flag(boma, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED) {
-        if rand > 0.5 {
+        if rand > 0.9 {
             if is_excute(agent) {
                 PLAY_SE(agent, Hash40::new("vc_edge_special_l02"));
             }
         }
-        else if rand > 0.5 {
+        else if rand > 0.8 {
             if is_excute(agent) {
                 PLAY_SE(agent, Hash40::new("vc_edge_special_s01"));
             }
         }
-        else if rand > 0.5 {
+        else if rand > 0.7 {
             if is_excute(agent) {
                 PLAY_SE(agent, Hash40::new("vc_edge_special_s02"));
             }
         }
-        else if rand > 0.5 {
+        else if rand > 0.6 {
             if is_excute(agent) {
                 PLAY_SE(agent, Hash40::new("vc_edge_special_s03"));
             }
@@ -74,7 +74,7 @@ unsafe extern "C" fn ssbexo_edge_retaliation_stance_parry_sound(agent: &mut L2CA
                 PLAY_SE(agent, Hash40::new("vc_edge_attack03"));
             }
         }
-        else if rand > 0.5 {
+        else if rand > 0.3 {
             if is_excute(agent) {
                 PLAY_SE(agent, Hash40::new("vc_edge_attack04"));
             }

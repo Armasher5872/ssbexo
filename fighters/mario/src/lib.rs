@@ -6,6 +6,7 @@ use {
         },
         fighter::mario::*,
         status::damage::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         consts::*,

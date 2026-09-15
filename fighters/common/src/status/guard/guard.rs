@@ -6,7 +6,7 @@ use super::*;
 unsafe extern "C" fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     let min_frame = WorkModule::get_int(boma, *FIGHTER_STATUS_GUARD_ON_WORK_INT_MIN_FRAME);
-    let shield_min_frame = WorkModule::get_param_int(boma, hash40("common"), hash40("shield_min_frame"));
+    //let shield_min_frame = WorkModule::get_param_int(boma, hash40("common"), hash40("shield_min_frame"));
     if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_GUARD) {
         if min_frame <= 0 {
             if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
@@ -15,12 +15,14 @@ unsafe extern "C" fn status_guard_main_common(fighter: &mut L2CFighterCommon) ->
             }
         }
     }
+    /*
     if min_frame > 0 && min_frame < shield_min_frame {
-        if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_GUARD) || ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_GUARD_HOLD) {
+        if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_CATCH) {
             WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ENABLE_PARRY);
             fighter.change_status(FIGHTER_STATUS_KIND_GUARD_OFF.into(), false.into());
         }
     }
+    */
     false.into()
 }
 

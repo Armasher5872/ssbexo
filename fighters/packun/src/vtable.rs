@@ -1,7 +1,5 @@
 use super::*;
 
-const PACKUN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xe09f70; //Piranha Plant only
-
 //Piranha Plant Reset Initialization
 unsafe extern "C" fn packun_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -9,7 +7,7 @@ unsafe extern "C" fn packun_reset_initialization(_vtable: u64, fighter: &mut Fig
 }
 
 //Piranha Plant Death Initialization
-#[skyline::hook(offset = PACKUN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PACKUN, 7, false, false))]
 unsafe extern "C" fn packun_death_initialization(_vtable: u64, fighter: &mut Fighter, param_3: i32) {
     let boma = fighter.battle_object.module_accessor;
     let special_s_charge_max_effect_handle = WorkModule::get_int(boma, *FIGHTER_PACKUN_INSTANCE_WORK_ID_INT_SPECIAL_S_CHARGE_MAX_EFFECT_HANDLE);
@@ -26,6 +24,6 @@ unsafe extern "C" fn packun_death_initialization(_vtable: u64, fighter: &mut Fig
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fff248).data(packun_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_PACKUN, 4, false, true)).data(packun_reset_initialization as *const () as u64);
 	skyline::install_hook!(packun_death_initialization);
 }

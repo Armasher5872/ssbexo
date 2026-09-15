@@ -16,7 +16,7 @@ unsafe extern "C" fn roy_special_s_init_status(fighter: &mut L2CFighterCommon) -
     }
     else {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
-        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+        GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
     }
     0.into()
 }
@@ -33,6 +33,7 @@ unsafe extern "C" fn roy_special_s_main_loop(fighter: &mut L2CFighterCommon) -> 
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
     let frame = MotionModule::frame(boma);
+    let charge = WorkModule::get_int(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SPECIAL_S_CHARGE);
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
@@ -53,8 +54,23 @@ unsafe extern "C" fn roy_special_s_main_loop(fighter: &mut L2CFighterCommon) -> 
         if prev_situation_kind == *SITUATION_KIND_AIR
         && situation_kind == *SITUATION_KIND_GROUND {
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_MOTION);
-            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+            GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
             MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_s"), -1.0, 1.0, 0.0, false, false);
+        }
+    }
+    if frame >= 5.0 && frame < 14.0 {
+        if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+            if charge < 36 {
+                MotionModule::set_rate(boma, 0.001*(charge as f32));
+                WorkModule::inc_int(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SPECIAL_S_CHARGE);
+            }
+        }
+        else {
+            MotionModule::set_rate(boma, 1.0);
+        }
+        if charge >= 36 && !WorkModule::is_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CHARGED) {
+            WorkModule::on_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CHARGED);
+            MotionModule::set_rate(boma, 1.0);
         }
     }
     if WorkModule::is_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT) {
@@ -92,13 +108,17 @@ unsafe extern "C" fn roy_special_s_exec_status(_fighter: &mut L2CFighterCommon) 
 
 unsafe extern "C" fn roy_special_s_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
+    WorkModule::off_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CHARGED);
     WorkModule::off_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
+    WorkModule::set_int(boma, 0, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SPECIAL_S_CHARGE);
     0.into()
 }
 
 unsafe extern "C" fn roy_special_s_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
+    WorkModule::off_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_CHARGED);
     WorkModule::off_flag(boma, *FIGHTER_ROY_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
+    WorkModule::set_int(boma, 0, *FIGHTER_ROY_INSTANCE_WORK_ID_INT_SPECIAL_S_CHARGE);
     0.into()
 }
 

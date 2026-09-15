@@ -20,6 +20,6 @@ unsafe extern "C" fn peach_daisy_death_initialization(_vtable: u64, fighter: &mu
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x5008a38).data(peach_daisy_reset_initialization as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x5008a50).data(peach_daisy_death_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_PEACH, 4, false, true)).data(peach_daisy_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_PEACH, 7, false, true)).data(peach_daisy_death_initialization as *const () as u64);
 }

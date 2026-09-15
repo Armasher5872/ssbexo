@@ -20,8 +20,12 @@ pub unsafe extern "C" fn edge_taunt_hold(fighter: &mut L2CFighterCommon, motion:
     let boma = fighter.module_accessor;
     let hi_check_on = ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_HI);
     let lw_check_on = ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_LW);
+    let sl_check_on = ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_S_L);
+    let sr_check_on = ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_S_R);
     let hi_check_off = ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_APPEAL_HI);
     let lw_check_off = ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_APPEAL_LW);
+    let sl_check_off = ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_APPEAL_S_L);
+    let sr_check_off = ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_APPEAL_S_R);
     let motion_kind = MotionModule::motion_kind(boma);
     if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_APPEAL_ENABLE_LOOP) {
         if motion == hash40("appeal_hi_l") {
@@ -35,12 +39,12 @@ pub unsafe extern "C" fn edge_taunt_hold(fighter: &mut L2CFighterCommon, motion:
             }
         }
         if motion == hash40("appeal_s_l") {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_S_L) {
+            if sl_check_on || sr_check_on {
                 MotionModule::change_motion(boma, Hash40::new("appeal_s_l_trans"), 0.0, 1.0, false, 0.0, false, false);
             }
         }
         if motion == hash40("appeal_s_r") {
-            if ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
+            if sl_check_on || sr_check_on {
                 MotionModule::change_motion(boma, Hash40::new("appeal_s_r_trans"), 0.0, 1.0, false, 0.0, false, false);
             }
         }
@@ -67,12 +71,12 @@ pub unsafe extern "C" fn edge_taunt_hold(fighter: &mut L2CFighterCommon, motion:
         }
     }
     if motion_kind == hash40("appeal_s_l_loop") {
-        if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_APPEAL_S_L) {
+        if sl_check_off && sr_check_off {
             MotionModule::change_motion_force_inherit_frame(boma, Hash40::new_raw(motion), restart_frame, 1.0, 0.0);
         }
     }
     if motion_kind == hash40("appeal_s_r_loop") {
-        if ControlModule::check_button_off(boma, *CONTROL_PAD_BUTTON_APPEAL_S_R) {
+        if sl_check_off && sr_check_off {
             MotionModule::change_motion_force_inherit_frame(boma, Hash40::new_raw(motion), restart_frame, 1.0, 0.0);
         }
     }
@@ -455,7 +459,7 @@ impl EdgeMateria {
                 set_pane_visible(self.wing_pane, false);
             }
         }
-        set_pane_pos(self.sphere, self.sphere_xy.0, 44.0+(10.0*self.percent));
+        set_pane_pos(self.sphere, self.sphere_xy.0, 45.0+(8.0*self.percent));
         set_tex_coords(self.sphere, [
             0.0, 1.0-self.percent,
             1.0, 1.0-self.percent,

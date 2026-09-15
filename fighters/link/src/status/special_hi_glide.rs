@@ -46,8 +46,18 @@ unsafe extern "C" fn link_special_hi_glide_main_loop(fighter: &mut L2CFighterCom
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return 1.into();
     }
-    if get_stick_prev_y < squat_stick_y || stamina <= 0 {
+    if get_stick_prev_y < squat_stick_y {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP.into(), false.into());
+    }
+    if stamina <= 0 {
+        fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP.into(), false.into());
+    }
+    if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
+        fighter.change_status(FIGHTER_STATUS_KIND_SPECIAL_N.into(), false.into());
+    }
+    if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_ATTACK) {
+        ControlModule::set_attack_air_kind(boma, *FIGHTER_COMMAND_ATTACK_AIR_KIND_LW);
+        fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_AIR.into(), false.into());
     }
     if situation_kind == *SITUATION_KIND_GROUND {
         fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND.into(), false.into());

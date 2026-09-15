@@ -18,19 +18,19 @@ unsafe extern "C" fn donkey_barrel_throw_init_status(weapon: &mut L2CWeaponCommo
     let brake_x = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("brake_x"));
     let gravity = WorkModule::get_param_float(boma, hash40("param_cannonballcloned"), hash40("gravity"));
     let angle = 25.0f32;
-    let speed_x = angle.to_radians().sin()*speed*owner_lr;
-    let speed_y = angle.to_radians().cos()*speed;
+    let speed_x = angle.to_radians().cos()*speed*owner_lr;
+    let speed_y = angle.to_radians().sin()*speed;
     WorkModule::set_int(boma, -1, *WEAPON_KOOPAJR_CANNONBALL_INSTANCE_WORK_ID_INT_GRAVITY_FRAME);
     KineticModule::enable_energy(boma, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL);
     if owner_situation_kind == *SITUATION_KIND_GROUND {
-        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x*2.5, 0.0);
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, 0.0);
         sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (-brake_x)*owner_lr, -gravity);
         sv_kinetic_energy!(set_stable_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
         sv_kinetic_energy!(set_limit_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 4.0, 4.0);
         PostureModule::set_pos(boma, &Vector3f{x: owner_pos_x+(20.0*owner_lr), y: owner_pos_y, z: owner_pos_z});
     }
     else {
-        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x*2.5, speed_y*0.5);
+        sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
         sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, (-brake_x)*owner_lr, -gravity);
         sv_kinetic_energy!(set_stable_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 0.0, -4.0);
         sv_kinetic_energy!(set_limit_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, 4.0, 4.0);

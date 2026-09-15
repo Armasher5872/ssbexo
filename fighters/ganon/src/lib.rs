@@ -4,7 +4,6 @@ use {
             hook::*,
             status_end_control::*,
             var_reset::*,
-            vtable_funcs::*,
         },
         fighter::{
             armstrong::*,

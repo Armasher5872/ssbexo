@@ -1,10 +1,7 @@
 use super::*;
 
-const ZELDA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x130e260; //Zelda only
-const ZELDA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x130e4f0; //Zelda only
-
 //Zelda Reset Initialization
-#[skyline::hook(offset = ZELDA_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ZELDA, 4, false, false))]
 unsafe extern "C" fn zelda_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn zelda_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Zelda Death Initialization
-#[skyline::hook(offset = ZELDA_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ZELDA, 7, false, false))]
 unsafe extern "C" fn zelda_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

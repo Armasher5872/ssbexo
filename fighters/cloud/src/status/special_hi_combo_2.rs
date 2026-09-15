@@ -34,18 +34,11 @@ unsafe extern "C" fn cloud_special_hi_combo_2_main_loop(fighter: &mut L2CFighter
     let stick_x = fighter.global_table[STICK_X].get_f32();
     let stick_y = fighter.global_table[STICK_Y].get_f32();
     let boma = fighter.module_accessor;
-    let lr = PostureModule::lr(boma);
     let move_frame = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
-    let mut stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
-    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
-        stick["x"].assign(&L2CValue::F32(0.0));
-        stick["y"].assign(&L2CValue::F32(1.0));
-    }
-    let normalize = fighter.Vector2__normalize(stick);
-    let vec_stick_x = normalize["x"].get_f32();
-    let vec_stick_y = normalize["y"].get_f32();
-    let stick_angle = vec_stick_y.atan2(vec_stick_x);
-    let stick_degrees = stick_angle.to_degrees();
+    let stick_degrees = ControlModule::get_stick_angle(boma).to_degrees();
+    let deadzone_check = stick_x.abs()+stick_y.abs() < 0.5;
+    let speed_x = if deadzone_check {0.0} else {stick_degrees.to_radians().cos()*2.0};
+    let speed_y = if deadzone_check {2.0} else {stick_degrees.to_radians().sin()*2.0};
     if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -72,7 +65,7 @@ unsafe extern "C" fn cloud_special_hi_combo_2_main_loop(fighter: &mut L2CFighter
     }
     if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN) {
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
-        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, ((stick_degrees+90.0).to_radians().sin())*lr, (stick_degrees-90.0).to_radians().cos());
+        sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, speed_y);
         sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.04, 0.04);
         WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN);
     }

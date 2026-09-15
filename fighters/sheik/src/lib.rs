@@ -3,6 +3,7 @@ use {
         common::var_reset::*,
         fighter::sheik::*,
         status::damage::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         consts::*,

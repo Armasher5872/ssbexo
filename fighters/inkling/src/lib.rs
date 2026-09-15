@@ -8,21 +8,13 @@ use {
         fighter::inkling::*,
         structs::getter_funcs::*,
     },
-    exo_var::{
-        globals::*,
-        inkling::*,
-    },
+    exo_var::inkling::*,
     smash::{
         app::{
             lua_bind::*,
             *
         },
-        hash40,
         lib::lua_const::*,
-        phx::{
-            Hash40,
-            Vector2f
-        }
     },
     smashline::*,
 };

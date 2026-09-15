@@ -6,6 +6,7 @@ use {
         },
         fighter::kirby::*,
         status::damage::*,
+        structs::getter_funcs::*,
     },
     exo_var::{
         consts::*,

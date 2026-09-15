@@ -5,7 +5,10 @@ use {
             var_reset::*,
         },
         fighter::robot::*,
-        structs::ui_manager::*,
+        structs::{
+            getter_funcs::*,
+            ui_manager::*,
+        }
     },
     exo_var::globals::*,
     smash::{

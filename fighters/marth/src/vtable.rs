@@ -13,6 +13,6 @@ unsafe extern "C" fn marth_lucina_death_initialization(_vtable: u64, fighter: &m
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fe6fc0).data(marth_lucina_reset_initialization as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4fe6fd8).data(marth_lucina_death_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_MARTH, 4, false, true)).data(marth_lucina_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_MARTH, 7, false, true)).data(marth_lucina_death_initialization as *const () as u64);
 }

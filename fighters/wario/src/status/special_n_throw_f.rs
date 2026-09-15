@@ -63,6 +63,7 @@ unsafe extern "C" fn wario_special_n_throw_f_main_loop(fighter: &mut L2CFighterC
     }
     handle_mash(fighter);
     if WorkModule::is_flag(boma, *FIGHTER_WARIO_INSTANCE_WORK_ID_FLAG_SPECIAL_N_THROW) {
+        STOP_SE(fighter, Hash40::new("se_wario_special_l02"));
         if capture_id != 0x50000000 {
             let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
             StatusModule::change_status_force(capture_boma, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN, false);

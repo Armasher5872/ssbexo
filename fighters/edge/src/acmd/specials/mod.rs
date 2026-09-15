@@ -33,6 +33,7 @@ use {
     },
 };
 
+mod fire_burst_l;
 mod fire_burst_m;
 mod fire_burst_s;
 mod fire_burst_xl;
@@ -61,6 +62,7 @@ mod zanshin_shot_hit;
 mod zanshin_shot_vanish;
 
 pub fn install() {
+    fire_burst_l::install();
     fire_burst_m::install();
     fire_burst_s::install();
     fire_burst_xl::install();

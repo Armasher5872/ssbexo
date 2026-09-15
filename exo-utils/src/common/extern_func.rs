@@ -13,9 +13,6 @@ unsafe extern "C" {
 
     #[link_name = "_ZN3app8lua_bind39ArticleModule__get_article_from_no_implEPNS_26BattleObjectModuleAccessorEii"]
     pub fn get_article_from_no(boma: *mut BattleObjectModuleAccessor, article_kind: i32, article_id: i32) -> *mut smash::app::Article;
-
-    #[link_name = "_ZN3app8lua_bind53FighterControlModuleImpl__set_command_life_count_implEPNS_26BattleObjectModuleAccessorEiih"]
-    pub fn fighter_control_module_set_command_life_count(boma: *mut BattleObjectModuleAccessor, command_category: i32, command: i32, life: i32);
     
     #[link_name = "_ZN3app16kiiladarzmanager15set_visible_hudEb"]
     pub fn set_vis_hud(param_1: bool);

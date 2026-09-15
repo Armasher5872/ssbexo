@@ -51,7 +51,7 @@ unsafe extern "C" fn edge_special_lw_parry_main_loop(fighter: &mut L2CFighterCom
             GroundModule::set_correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
         }
     }
-    if end_frame-frame <= 20.0 {
+    if end_frame-frame <= 27.0 {
         edge_try_cancel(fighter);
     }
     if MotionModule::is_end(boma) {

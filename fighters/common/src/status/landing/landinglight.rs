@@ -6,16 +6,12 @@ unsafe extern "C" fn status_pre_landing_light_param(fighter: &mut L2CFighterComm
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let boma = fighter.module_accessor;
     if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
-        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_DASH);
-        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_B);
-        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE_F);
-        ControlModule::clear_command_one(boma, *FIGHTER_PAD_COMMAND_CATEGORY1, *FIGHTER_PAD_CMD_CAT1_ESCAPE);
-        ControlModule::reset_main_stick_x(boma);
-        ControlModule::reset_flick_x(boma);
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_ENABLE_LANDING_CLIFF_STOP); //Makes wavedashes edge cancelable
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH);
     }
+    GroundModule::set_offset_y(boma, 0.0);
+    GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 0.0});
     StatusModule::init_settings(boma, SituationKind(*SITUATION_KIND_GROUND), param_5.get_i32(), *GROUND_CORRECT_KIND_GROUND as u32, GroundCliffCheckKind(*GROUND_CLIFF_CHECK_KIND_NONE), true, param_2.get_i32(), param_3.get_i32(), param_4.get_i32(), param_6.get_i32());
     FighterStatusModuleImpl::set_fighter_status_data(boma, true, *FIGHTER_TREADED_KIND_ENABLE, false, false, false, 0, *FIGHTER_STATUS_ATTR_INTO_DOOR as u32, 0, 0);
     0.into()
@@ -26,8 +22,9 @@ unsafe extern "C" fn status_pre_landing_light_param(fighter: &mut L2CFighterComm
 unsafe extern "C" fn status_landinglight_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
-    let flick_y = fighter.global_table[FLICK_Y].get_i32();
     let boma = fighter.module_accessor;
+    let left_stick_y = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {ControlModule::get_sub_stick_y(boma)} else {ControlModule::get_stick_y(boma)};
+    let left_flick_y = if Buttons::from_bits_retain(ControlModule::get_button(boma)).intersects(Buttons::CStickOverride) {WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LEFT_STICK_FLICK_Y)} else {fighter.global_table[FLICK_Y].get_i32()};
     let pass_flick_y = WorkModule::get_param_int(boma, hash40("common"), hash40("pass_flick_y"));
     let get_have_item_kind = ItemModule::get_have_item_kind(boma, 0);
     if situation_kind == *SITUATION_KIND_AIR {
@@ -35,7 +32,10 @@ unsafe extern "C" fn status_landinglight_main(fighter: &mut L2CFighterCommon) ->
         return 1.into();
     }
     if [*FIGHTER_STATUS_KIND_ESCAPE_AIR, *FIGHTER_STATUS_KIND_ESCAPE_AIR_SLIDE].contains(&prev_status_kind) {
-        if GroundModule::is_passable_ground(boma) && flick_y < pass_flick_y {
+        if GroundModule::is_passable_ground(boma) 
+        && left_stick_y <= 0.66 
+        && left_flick_y < pass_flick_y 
+        && fighter.global_table[FLICK_Y_DIR].get_i32() < 0 {
             fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), true.into());
             return 1.into();
         }

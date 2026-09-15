@@ -6,10 +6,7 @@ use {
             var_reset::*,
         },
         fighter::ken::*,
-        structs::{
-            buttons::cat4::*,
-            getter_funcs::*,
-        }
+        structs::getter_funcs::*,
     },
     exo_var::{
         consts::*,

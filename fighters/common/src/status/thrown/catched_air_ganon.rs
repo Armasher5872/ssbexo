@@ -17,7 +17,7 @@ unsafe extern "C" fn status_catched_air_ganon(fighter: &mut L2CFighterCommon) ->
     let mut motion_kind = hash40("catched_air_ganon");
     let damage_sum = damage-parent_damage;
     let damage_clatter_add = damage_sum*ganon_special_s_fall_clatter_add_frame;
-    let base_clatter ;
+    let base_clatter;
     if motion_share != *FIGHTER_MOTION_SHARE_TYPE_TARO {
         if motion_share == *FIGHTER_MOTION_SHARE_TYPE_GIRL {
             motion_kind = FighterMotionModuleImpl::add_body_type_hash(boma, Hash40::new_raw(motion_kind), *BODY_TYPE_MOTION_GIRL);

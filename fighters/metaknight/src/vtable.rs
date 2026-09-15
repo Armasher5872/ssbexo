@@ -1,15 +1,19 @@
 use super::*;
 
-const METAKNIGHT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xd12b90; //Meta Knight only
-const METAKNIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xd12be0; //Meta Knight only
-
-unsafe extern "C" fn metaknight_check_special_lw_uniq(fighter: &mut L2CFighterCommon) -> L2CValue {
+//Set Move Customizer is accredited to WuBor Patch
+unsafe extern "C" fn metaknight_waza_customize(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    if WorkModule::is_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_POWER) {
-        fighter.change_status(FIGHTER_METAKNIGHT_STATUS_KIND_SPECIAL_LW_END.into(), false.into());
-        return true.into();
+    let waza_customize_to = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_WAZA_CUSTOMIZE_TO);
+    if waza_customize_to == *FIGHTER_WAZA_CUSTOMIZE_TO_SPECIAL_LW_1 {
+        fighter.sv_set_status_func(FIGHTER_STATUS_KIND_SPECIAL_LW.into(), LUA_SCRIPT_STATUS_FUNC_STATUS_PRE.into(), std::mem::transmute(metaknight_special_lw_pre_status as *const ()));
+        0.into()
     }
-    true.into()
+    else if let Some(original) = get_original_customizer(fighter) {
+        original(fighter)
+    } 
+    else {
+        0.into()
+    }
 }
 
 //Meta Knight Startup Initialization
@@ -22,7 +26,8 @@ unsafe extern "C" fn metaknight_start_initialization(_vtable: u64, fighter: &mut
     common_initialization_variable_reset(&mut *boma);
     add_shield_group(boma, resource, *FIGHTER_METAKNIGHT_SHIELD_GROUP_KIND_SPECIAL_LW_GUARD);
     metaknight_var(&mut *boma);
-    agent.global_table[CHECK_SPECIAL_LW_UNIQ].assign(&L2CValue::Ptr(metaknight_check_special_lw_uniq as *const () as _));
+    set_move_customizer(agent, metaknight_waza_customize);
+    metaknight_waza_customize(agent);
     agent.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(common_end_control as *const () as _));
 }
 
@@ -34,7 +39,7 @@ unsafe extern "C" fn metaknight_reset_initialization(_vtable: u64, fighter: &mut
 }
 
 //Meta Knight Death Initialization
-#[skyline::hook(offset = METAKNIGHT_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_METAKNIGHT, 7, false, false))]
 unsafe extern "C" fn metaknight_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -44,7 +49,7 @@ unsafe extern "C" fn metaknight_death_initialization(_vtable: u64, fighter: &mut
 }
 
 //Meta Knight OPFF
-#[skyline::hook(offset = METAKNIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_METAKNIGHT, 13, false, false))]
 unsafe extern "C" fn metaknight_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     if WorkModule::is_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_POWER) {
@@ -77,19 +82,26 @@ unsafe extern "C" fn metaknight_shield_attack_detection_event(_vtable: u64, figh
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
     let pos = *PostureModule::pos(boma);
+    let shield_group_index = (*event).group_index;
     let collision_log = (*event).collision_log;
     let opponent_object_id = (*collision_log).opponent_object_id;
-    if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
-            let opponent_boma = sv_battle_object::module_accessor(opponent_object_id);
-            let attack_data = *AttackModule::attack_data(opponent_boma, (*collision_log).collider_id as i32, (*collision_log).x35);
-            let opponent_pos = *PostureModule::pos(opponent_boma);
-            let new_lr = if pos.x <= opponent_pos.x {1.0} else {-1.0};
-            PostureModule::set_lr(boma, new_lr);
-            PostureModule::update_rot_y_lr(boma);
-            WorkModule::on_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_SHIELD_HIT);
-            WorkModule::set_float(boma, attack_data.power, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_DAMAGE);
-        } 
+    if shield_group_index > 0 {
+        if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+            let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+            let opponent_battle_object_vtable: extern "C" fn(*mut BattleObject) -> bool = std::mem::transmute(**(opponent_battle_object as *const *const u64));
+            if !opponent_battle_object_vtable(opponent_battle_object) && 3 < *(opponent_battle_object as *const u8).add(0x34) {
+                if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
+                    let opponent_boma = (*opponent_battle_object).module_accessor;
+                    let attack_data = *AttackModule::attack_data(opponent_boma, (*collision_log).collider_id as i32, (*collision_log).x35);
+                    let opponent_pos = *PostureModule::pos(opponent_boma);
+                    let new_lr = if pos.x <= opponent_pos.x {1.0} else {-1.0};
+                    PostureModule::set_lr(boma, new_lr);
+                    PostureModule::update_rot_y_lr(boma);
+                    WorkModule::on_flag(boma, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_SHIELD_HIT);
+                    WorkModule::set_float(boma, attack_data.power, *FIGHTER_METAKNIGHT_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_DAMAGE);
+                } 
+            }
+        }
     }
 }
 
@@ -121,11 +133,11 @@ unsafe extern "C" fn metaknight_on_damage_event(_vtable: u64, fighter: &mut Figh
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4feb280).data(metaknight_start_initialization as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4feb2a0).data(metaknight_reset_initialization as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4feb410).data(metaknight_shield_attack_detection_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4feb418).data(metaknight_shield_attack_transition_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4feb4a0).data(metaknight_on_damage_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_METAKNIGHT, 0, false, true)).data(metaknight_start_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_METAKNIGHT, 4, false, true)).data(metaknight_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_METAKNIGHT, 50, false, true)).data(metaknight_shield_attack_detection_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_METAKNIGHT, 51, false, true)).data(metaknight_shield_attack_transition_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_METAKNIGHT, 68, false, true)).data(metaknight_on_damage_event as *const () as u64);
     skyline::install_hooks!(
         metaknight_death_initialization,
         metaknight_opff

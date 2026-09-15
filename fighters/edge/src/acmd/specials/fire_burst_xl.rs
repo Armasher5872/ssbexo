@@ -4,10 +4,9 @@ use super::*;
 unsafe extern "C" fn ssbexo_edge_fire_teraflare_burst_acmd(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
-    let owner_boma = get_owner_boma(agent);
     frame(lua_state, 6.0);
     if is_excute(agent) {
-        WorkModule::on_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         ControlModule::set_rumble(boma, Hash40::new("rbkind_explosionl"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
         QUAKE(agent, *CAMERA_QUAKE_KIND_XL);
         AttackModule::disable_tip(boma);
@@ -17,7 +16,7 @@ unsafe extern "C" fn ssbexo_edge_fire_teraflare_burst_acmd(agent: &mut L2CAgentB
     }
     frame(lua_state, 24.0);
     if is_excute(agent) {
-        WorkModule::off_flag(owner_boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
+        WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK_ENABLED);
         AttackModule::clear_all(boma);
     }
     frame(lua_state, 51.0);

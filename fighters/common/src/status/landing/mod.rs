@@ -1,4 +1,5 @@
 use {
+    exo_utils::structs::buttons::*,
     exo_var::{
         consts::*,
         globals::*,
@@ -16,7 +17,8 @@ use {
         lua2cpp::{
             L2CFighterCommon,
             *
-        }
+        },
+        phx::*
     }
 };
 

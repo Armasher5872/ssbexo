@@ -13,9 +13,24 @@ unsafe extern "C" fn fighter_status_capture_set_invalid_capture(fighter: &mut L2
     EffectModule::req_common(boma, Hash40::new("invalid_capture"), 0.0);
 }
 
+//Fighter Status Capture Set Invalid Capture Swing Gaogaen
+#[skyline::hook(replace = L2CFighterCommon_FighterStatusCapture_set_invalid_capture_SwingGaogaen)]
+unsafe extern "C" fn fighter_status_capture_set_invalid_capture_swing_gaogaen(fighter: &mut L2CFighterCommon) {
+    let boma = fighter.module_accessor;
+    let gaogaen_invalid_capture_frame = WorkModule::get_int(boma, *FIGHTER_STATUS_SWING_GAOGAEN_WORK_INT_INVALID_CAPTURE_FRAME);
+    if 0 < WorkModule::get_int(boma, *FIGHTER_STATUS_SWING_GAOGAEN_WORK_INT_INVALID_CAPTURE_FRAME) {
+        fighter.FighterStatusCapture_set_invalid_capture();
+        let invalid_capture_frame = if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CAPTURE_COOLDOWN) <= 0 {gaogaen_invalid_capture_frame} else {gaogaen_invalid_capture_frame*WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_INVALID_CAPTURE_TIMER_MULTIPLIER)};
+        WorkModule::set_int(boma, invalid_capture_frame, *FIGHTER_STATUS_SWING_GAOGAEN_WORK_INT_INVALID_CAPTURE_FRAME);
+    }
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hook!(fighter_status_capture_set_invalid_capture);
+        skyline::install_hooks!(
+            fighter_status_capture_set_invalid_capture,
+            fighter_status_capture_set_invalid_capture_swing_gaogaen
+        );
     }
 }
 

@@ -1,7 +1,5 @@
 use super::*;
 
-const MARIO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xcb9730; //Mario only
-
 //Mario Reset Initialization
 unsafe extern "C" fn mario_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -10,7 +8,7 @@ unsafe extern "C" fn mario_reset_initialization(_vtable: u64, fighter: &mut Figh
 }
 
 //Mario Death Initialization
-#[skyline::hook(offset = MARIO_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_MARIO, 7, false, false))]
 unsafe extern "C" fn mario_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -31,7 +29,7 @@ unsafe extern "C" fn mario_on_attack(_vtable: u64, fighter: &mut Fighter, _log: 
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fe3160).data(mario_reset_initialization as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4fe3260).data(mario_on_attack as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_MARIO, 4, false, true)).data(mario_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_MARIO, 36, false, true)).data(mario_on_attack as *const () as u64);
 	skyline::install_hook!(mario_death_initialization);
 }

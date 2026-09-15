@@ -1,15 +1,9 @@
 use super::*;
 
-const WARIO_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12864e0; //Wario only
-const WARIO_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x12868c0; //Wario only
-const WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x1286ae0; //Wario only
 const WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_2_OFFSET: usize = 0x128b0b0; //Wario only
-const WARIO_VTABLE_ON_ATTACK_OFFSET: usize = 0x1287320; //Wario only
-const WARIO_VTABLE_LINK_EVENT_OFFSET: usize = 0x12876c0; //Wario only
-const WARIO_VTABLE_ON_DAMAGE_OFFSET: usize = 0x12887e0; //Wario only
 
 //Wario Reset Initialization
-#[skyline::hook(offset = WARIO_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_WARIO, 4, false, false))]
 unsafe extern "C" fn wario_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -18,7 +12,7 @@ unsafe extern "C" fn wario_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Wario Death Initialization
-#[skyline::hook(offset = WARIO_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_WARIO, 7, false, false))]
 unsafe extern "C" fn wario_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -27,7 +21,7 @@ unsafe extern "C" fn wario_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Wario Once Per Fighter Frame
-#[skyline::hook(offset = WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_WARIO, 13, false, false))]
 unsafe extern "C" fn wario_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -69,12 +63,10 @@ unsafe extern "C" fn wario_opff(_vtable: u64, fighter: &mut Fighter) {
 
 //Wario Once Per Fighter Frame 2
 #[skyline::hook(offset = WARIO_VTABLE_ONCE_PER_FIGHTER_FRAME_2_OFFSET)]
-unsafe extern "C" fn wario_opff_2(_vtable: u64, _boma: &mut BattleObjectModuleAccessor) {
-
-}
+unsafe extern "C" fn wario_opff_2(_vtable: u64, _boma: &mut BattleObjectModuleAccessor) {}
 
 //Wario On Attack
-#[skyline::hook(offset = WARIO_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_WARIO, 36, false, false))]
 unsafe extern "C" fn wario_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
@@ -104,7 +96,7 @@ unsafe extern "C" fn wario_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
 }
 
 //Wario Link Event
-#[skyline::hook(offset = WARIO_VTABLE_LINK_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_WARIO, 46, false, false))]
 unsafe extern "C" fn wario_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if event.link_event_kind.0 == hash40("capture") {
@@ -121,7 +113,7 @@ unsafe extern "C" fn wario_link_event(vtable: u64, fighter: &mut Fighter, event:
 }
 
 //Wario On Damage
-#[skyline::hook(offset = WARIO_VTABLE_ON_DAMAGE_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_WARIO, 68, false, false))]
 unsafe extern "C" fn wario_on_damage(vtable: u64, fighter: &mut Fighter, on_damage: u64) {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);

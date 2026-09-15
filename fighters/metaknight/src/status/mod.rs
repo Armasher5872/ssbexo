@@ -35,7 +35,7 @@ mod glide_start;
 mod special_hi;
 mod special_lw_attack;
 mod special_lw_end;
-mod special_lw;
+pub mod special_lw;
 
 pub fn install() {
     beam_shoot::install();

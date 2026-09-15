@@ -3,6 +3,7 @@ use super::*;
 unsafe extern "C" fn gaogaen_catch_dash_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     ItemModule::set_have_item_visibility(boma, false, 0);
+    WorkModule::on_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
     gaogaen_sub_status_catch_dash(fighter);
     fighter.sub_shift_status_main(L2CValue::Ptr(gaogaen_catch_dash_main_loop as *const () as _))
 }
@@ -31,6 +32,7 @@ unsafe extern "C" fn gaogaen_sub_status_catch_dash(fighter: &mut L2CFighterCommo
 unsafe extern "C" fn gaogaen_catch_dash_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let stick_x = fighter.global_table[STICK_X].get_f32();
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
     let boma = fighter.module_accessor;
     let lr = PostureModule::lr(boma);
     let turn_run_stick_x = WorkModule::get_param_float(boma, hash40("common"), hash40("turn_run_stick_x"));
@@ -48,6 +50,17 @@ unsafe extern "C" fn gaogaen_catch_dash_main_loop(fighter: &mut L2CFighterCommon
     if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN) {
         if stick_x*lr <= turn_run_stick_x {
             fighter.change_status(FIGHTER_STATUS_KIND_CATCH_TURN.into(), true.into());
+        }
+    }
+    if WorkModule::is_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH)
+    && MotionModule::motion_kind(boma) == hash40("catch_dash") {
+        if stick_y >= 0.7 {
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("catch_dash_hi"), -1.0, 1.0, 0.0, false, false);
+            WorkModule::off_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
+        }
+        else if stick_y <= -0.7 {
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("catch_dash_lw"), -1.0, 1.0, 0.0, false, false);
+            WorkModule::off_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_CAN_ANGLE_CATCH);
         }
     }
     if WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_WAIT) {

@@ -1,37 +1,23 @@
 use super::*;
 
-const RYU_KEN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x10d4570; //Shared
-const RYU_KEN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x10d4620; //Shared
-const RYU_KEN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x10d5f30; //Shared
-
 //Ryu & Ken Reset Initialization
-#[skyline::hook(offset = RYU_KEN_VTABLE_RESET_INITIALIZATION_OFFSET)]
-unsafe extern "C" fn ryu_ken_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_RYU, 4, false, false))]
+unsafe extern "C" fn ryu_ken_reset_initialization(vtable: u64, fighter: &mut Fighter) {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
-    let control_energy = KineticModule::get_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-    *(control_energy as *mut u8).add(0xa4) = 1;
-    set_command_input_button(boma, SPECIAL_N_COMMAND, 0);
-    set_command_input_button(boma, SPECIAL_HI_COMMAND, 0);
     if kind == *FIGHTER_KIND_RYU {
         WorkModule::off_flag(boma, *FIGHTER_RYU_INSTANCE_WORK_ID_FLAG_IS_HASOGEKI);
-        set_command_input_button(boma, SPECIAL_S_COMMAND, 1);
     }
     if kind == *FIGHTER_KIND_KEN {
         ken_var(agent);
-        set_command_input_button(boma, SPECIAL_S_COMMAND, 2);
-        clone_command_input(boma, SPECIAL_N_COMMAND, ATTACK_COMMAND1);
-        set_command_input_button(boma, ATTACK_COMMAND1, 1);
     }
-    clone_command_input(boma, SPECIAL_S_COMMAND, SPECIAL_N2_COMMAND);
-    clone_command_input(boma, SPECIAL_HI_COMMAND, SPECIAL_N2_COMMAND);
-    set_command_input_button(boma, SPECIAL_N2_COMMAND, 0);
     common_reset_variable_reset(&mut *boma);
+    original!()(vtable, fighter)
 }
 
 //Ryu & Ken Death Initialization
-#[skyline::hook(offset = RYU_KEN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_RYU, 7, false, false))]
 unsafe extern "C" fn ryu_ken_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
@@ -47,7 +33,7 @@ unsafe extern "C" fn ryu_ken_death_initialization(vtable: u64, fighter: &mut Fig
 }
 
 //Ryu & Ken Once Per Fighter Frame
-#[skyline::hook(offset = RYU_KEN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_RYU, 13, false, false))]
 unsafe extern "C" fn ryu_ken_opff(vtable: u64, fighter: &mut Fighter) {
     let ret = original!()(vtable, fighter);
     let kind = fighter.battle_object.kind as i32;

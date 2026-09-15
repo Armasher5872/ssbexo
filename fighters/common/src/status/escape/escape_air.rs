@@ -6,21 +6,11 @@ use super::*;
 unsafe extern "C" fn status_pre_escapeair(fighter: &mut L2CFighterCommon) -> L2CValue {
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let boma = fighter.module_accessor;
-    let pos = *PostureModule::pos(boma);
-    let scale = PostureModule::scale(boma);
-    let dir_y = WorkModule::get_float(boma, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y);
-    let lower_bound = Vector2f::new(pos.x, pos.y-(6.0*scale));
-    let ground_pos_any = &mut Vector2f::zero();
-    let ground_pos_stage = &mut Vector2f::zero();
-    let is_touch_any = GroundModule::line_segment_check(boma, &Vector2f::new(pos.x, pos.y+(6.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_any, true);
-    let is_touch_stage = GroundModule::line_segment_check(boma, &Vector2f::new(pos.x, pos.y+(6.0*scale)), &lower_bound, &Vector2f::zero(), ground_pos_stage, false);
-    let can_snap = !(is_touch_any == 0 as *const *const u64 || (is_touch_stage != 0 as *const *const u64 && dir_y > 0.0));
-    if prev_status_kind != *FIGHTER_STATUS_KIND_DAMAGE_FALL && WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH) && can_snap {
+    if prev_status_kind != *FIGHTER_STATUS_KIND_DAMAGE_FALL && WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_PERFECT_WAVEDASH) && check_waveland_validity(fighter) {
+        fighter.set_situation(SITUATION_KIND_GROUND.into());
         GroundModule::attach_ground(boma, true);
         GroundModule::set_correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-        PostureModule::set_pos(boma, &Vector3f::new(pos.x, ground_pos_any.y, pos.z));
         WorkModule::off_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_ESCAPE_AIR);
-        fighter.set_situation(SITUATION_KIND_GROUND.into());
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
         return 0.into();
     }
@@ -71,6 +61,8 @@ unsafe extern "C" fn status_escapeair_main(fighter: &mut L2CFighterCommon) -> L2
         }
         if frame > freeze_end_frame {
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_FALL);
+            sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.11);
+            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.5);
             WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }
         if frame >= ledge_grab_enable_frame {
@@ -160,6 +152,7 @@ unsafe extern "C" fn setup_escape_air_slide_common(fighter: &mut L2CFighterCommo
         KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_GRAVITY, boma);
         KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_CONTROL, boma);
         sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.11);
+        sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, escape_air_slide_speed_vec.y);
         if escape_air_angle < 0.0 {
             lerp = (escape_air_angle*-1.0)/90.0;
             escape_air_slide_stiff_frame = Lerp::lerp(&lerp, &escape_air_slide_d_stiff_frame, &escape_air_slide_stiff_frame);

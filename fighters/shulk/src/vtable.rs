@@ -1,12 +1,10 @@
 use super::*;
 
-const SHULK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x1162490; //Shulk Only
-const SHULK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x1163580; //Shulk Only
 const SHULK_CHECK_VALID_ART_STATUSES_OFFSET: usize = 0x116a3d0; //Shulk Only
 const SHULK_CHECK_CAN_ACTIVATE_ART_WHEEL: usize = 0x116d8a0; //Shulk Only
 
 //Shulk Reset Initialization
-#[skyline::hook(offset = SHULK_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SHULK, 4, false, false))]
 unsafe extern "C" fn shulk_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -14,7 +12,7 @@ unsafe extern "C" fn shulk_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Shulk Death Initialization
-#[skyline::hook(offset = SHULK_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SHULK, 7, false, false))]
 unsafe extern "C" fn shulk_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

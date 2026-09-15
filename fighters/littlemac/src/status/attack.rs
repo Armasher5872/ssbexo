@@ -31,12 +31,8 @@ unsafe extern "C" fn littlemac_check_attack_mtrans(fighter: &mut L2CFighterCommo
 unsafe extern "C" fn littlemac_attack_mtrans_post_process(fighter: &mut L2CFighterCommon) {
     let status_kind_interrupt = fighter.global_table[STATUS_KIND_INTERRUPT].get_i32();
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
-    //let stick_x = fighter.global_table[STICK_X].get_f32();
-    //let stick_y = fighter.global_table[STICK_Y].get_f32();
-    //let cmd_cat1 = fighter.global_table[CMD_CAT1].get_i32();
     let boma = fighter.module_accessor;
     let count = ComboModule::count(boma);
-    //let lr = PostureModule::lr(boma);
     let mini_jump_attack_frame = WorkModule::get_int(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
     let reserve_log_attack_kind = WorkModule::get_int64(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     let attack_jump_mini_attack_enable_frame = WorkModule::get_param_int(boma, hash40("common"), hash40("attack_jump_mini_attack_enable_frame"));
@@ -91,22 +87,10 @@ unsafe extern "C" fn littlemac_attack_mtrans_post_process(fighter: &mut L2CFight
                 WorkModule::inc_int(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_INT_SUCCESSFUL_DREAMLAND_EXPRESS_INPUTS);
                 WorkModule::off_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_CAN_INPUT_DREAMLAND_EXPRESS);
             }
-            /*
-            if stick_x*lr > 0.7 || (cmd_cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_S4) != 0) {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_S3.into(), true.into());
-            }
-            else if stick_y > 0.7 || (cmd_cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_HI4) != 0) {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_HI3.into(), true.into());
-            }
-            else if stick_y < -0.7 || (cmd_cat1 & (*FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW3 | *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_LW4) != 0) {
-                fighter.change_status(FIGHTER_STATUS_KIND_ATTACK_LW3.into(), true.into());
-            }
-            else {*/
-                MotionModule::change_motion(boma, Hash40::new("attack_13"), 0.0, 1.0, false, 0.0, false, false);
-                fighter.clear_lua_stack();
-                sv_kinetic_energy::set_motion_energy_update_flag(fighter.lua_state_agent);
-                WorkModule::set_int64(boma, attack_13, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-            /*}*/
+            MotionModule::change_motion(boma, Hash40::new("attack_13"), 0.0, 1.0, false, 0.0, false, false);
+            fighter.clear_lua_stack();
+            sv_kinetic_energy::set_motion_energy_update_flag(fighter.lua_state_agent);
+            WorkModule::set_int64(boma, attack_13, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
         }
         else {
             if WorkModule::is_flag(boma, *FIGHTER_LITTLEMAC_INSTANCE_WORK_ID_FLAG_CAN_INPUT_DREAMLAND_EXPRESS) {

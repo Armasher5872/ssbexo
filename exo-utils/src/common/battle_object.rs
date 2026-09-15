@@ -21,7 +21,7 @@ fn get_active_battle_object_id_from_entry_id(entry_id: u32) -> Option<u32> {
     let object_battle_object_id = object.battle_object_id;
     let kind = object.kind as i32;
     let status = unsafe {StatusModule::status_kind(object.module_accessor)};
-    if status != *FIGHTER_STATUS_KIND_NONE && status != *FIGHTER_STATUS_KIND_STANDBY {
+    if ![*FIGHTER_STATUS_KIND_NONE, *FIGHTER_STATUS_KIND_STANDBY].contains(&status) {
         return Some(object_battle_object_id);
     }
     if [*FIGHTER_KIND_ELIGHT, *FIGHTER_KIND_EFLAME].contains(&kind) {

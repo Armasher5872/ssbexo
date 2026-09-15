@@ -1,11 +1,7 @@
 use super::*;
 
-const KIRBY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb96350; //Kirby only
-const KIRBY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xb96f70; //Kirby only
-const KIRBY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xb971d0; //Kirby only
-
 //Kirby Reset Initialization
-#[skyline::hook(offset = KIRBY_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KIRBY, 4, false, false))]
 unsafe extern "C" fn kirby_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -14,7 +10,7 @@ unsafe extern "C" fn kirby_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Kirby Death Initialization
-#[skyline::hook(offset = KIRBY_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KIRBY, 7, false, false))]
 unsafe extern "C" fn kirby_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -23,7 +19,7 @@ unsafe extern "C" fn kirby_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Kirby Once Per Fighter Frame
-#[skyline::hook(offset = KIRBY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KIRBY, 10, false, false))]
 unsafe extern "C" fn kirby_once_per_fighter_frame(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);

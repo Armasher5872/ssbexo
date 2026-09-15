@@ -42,3 +42,4 @@ pub mod sonic;
 pub mod springtrap;
 pub mod variables;
 pub mod wario;
+pub mod wolf;

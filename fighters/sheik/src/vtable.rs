@@ -1,11 +1,7 @@
 use super::*;
 
-const SHEIK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x1120910; //Sheik only
-const SHEIK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x1120c70; //Sheik only
-const SHEIK_VTABLE_ON_ATTACK_OFFSET: usize = 0x1121600; //Sheik only
-
 //Sheik Reset Initialization
-#[skyline::hook(offset = SHEIK_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SHEIK, 4, false, false))]
 unsafe extern "C" fn sheik_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -14,7 +10,7 @@ unsafe extern "C" fn sheik_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Sheik Death Initialization
-#[skyline::hook(offset = SHEIK_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SHEIK, 4, false, false))]
 unsafe extern "C" fn sheik_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -23,7 +19,7 @@ unsafe extern "C" fn sheik_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Sheik On Attack
-#[skyline::hook(offset = SHEIK_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SHEIK, 36, false, false))]
 unsafe extern "C" fn sheik_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
@@ -40,7 +36,7 @@ unsafe extern "C" fn sheik_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
             }
         }
     }
-    call_original!(vtable, fighter, log)
+    original!()(vtable, fighter, log)
 }
 
 pub fn install() {

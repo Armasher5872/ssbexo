@@ -1,10 +1,5 @@
 use super::*;
 
-const CLOUD_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x8dacd0; //Cloud only
-const CLOUD_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8db3b0; //Cloud only
-const CLOUD_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x8db780; //Cloud only
-const CLOUD_VTABLE_ON_ATTACK_OFFSET: usize = 0x8dc4f0; //Cloud only
-const CLOUD_VTABLE_ON_DAMAGE_OFFSET: usize = 0x8dd510; //Cloud only
 const CLOUD_LIMIT_MANAGER_OFFSET: usize = 0x8dc160; //Cloud only
 
 #[skyline::from_offset(CLOUD_LIMIT_MANAGER_OFFSET)]
@@ -37,7 +32,7 @@ unsafe extern "C" fn cloud_end_control(fighter: &mut L2CFighterCommon) -> L2CVal
 }
 
 //Cloud Startup Initialization
-#[skyline::hook(offset = CLOUD_VTABLE_START_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 0, false, false))]
 unsafe extern "C" fn cloud_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -54,7 +49,7 @@ unsafe extern "C" fn cloud_start_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Cloud Reset Initialization
-#[skyline::hook(offset = CLOUD_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 4, false, false))]
 unsafe extern "C" fn cloud_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -64,7 +59,7 @@ unsafe extern "C" fn cloud_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Cloud Death Initialization
-#[skyline::hook(offset = CLOUD_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 7, false, false))]
 unsafe extern "C" fn cloud_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
@@ -111,7 +106,7 @@ unsafe extern "C" fn cloud_opff(_vtable: u64, fighter: &mut Fighter) {
 }
 
 //Cloud On Attack
-#[skyline::hook(offset = CLOUD_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 36, false, false))]
 unsafe extern "C" fn cloud_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -149,21 +144,26 @@ unsafe extern "C" fn cloud_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
 //Cloud Shield Attack Detection Event
 unsafe extern "C" fn cloud_shield_attack_detection_event(_vtable: u64, fighter: &mut Fighter, event: *mut ShieldAttackCollisionEvent) {
     let boma = fighter.battle_object.module_accessor;
+    let shield_group_index = (*event).group_index;
     let collision_log = (*event).collision_log;
     let opponent_object_id = (*collision_log).opponent_object_id;
-    let opponent_object = get_battle_object_from_id(opponent_object_id);
-    let opponent_battle_object_id = (*opponent_object).battle_object_id;
     let status_kind = StatusModule::status_kind(boma);
     let pos = *PostureModule::pos(boma);
-    if opponent_battle_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
-        if sv_battle_object::category(opponent_battle_object_id) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            if [*FIGHTER_CLOUD_STATUS_KIND_GUARD_ON, *FIGHTER_CLOUD_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
-                let opponent_boma = (*opponent_object).module_accessor;
-                let opponent_pos = *PostureModule::pos(opponent_boma);
-                let new_lr = if pos.x <= opponent_pos.x {1.0} else {-1.0};
-                PostureModule::set_lr(boma, new_lr);
-                PostureModule::update_rot_y_lr(boma);
-                WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
+    if shield_group_index > 0 {
+        if opponent_object_id != *BATTLE_OBJECT_ID_INVALID as u32 {
+            let opponent_battle_object = get_battle_object_from_id(opponent_object_id);
+            let opponent_battle_object_vtable: extern "C" fn(*mut BattleObject) -> bool = std::mem::transmute(**(opponent_battle_object as *const *const u64));
+            if !opponent_battle_object_vtable(opponent_battle_object) && 3 < *(opponent_battle_object as *const u8).add(0x34) {
+                if (*opponent_battle_object).battle_object_id >> 0x1C == 0 {
+                    if [*FIGHTER_CLOUD_STATUS_KIND_GUARD_ON, *FIGHTER_CLOUD_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_SPECIAL_LW].contains(&status_kind) {
+                        let opponent_boma = (*opponent_battle_object).module_accessor;
+                        let opponent_pos = *PostureModule::pos(opponent_boma);
+                        let new_lr = if pos.x <= opponent_pos.x {1.0} else {-1.0};
+                        PostureModule::set_lr(boma, new_lr);
+                        PostureModule::update_rot_y_lr(boma);
+                        WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_PUNISH_COUNTER);
+                    }
+                }
             }
         }
     }
@@ -179,7 +179,7 @@ unsafe extern "C" fn cloud_shield_attack_transition_event(_vtable: u64, fighter:
 }
 
 //Cloud On Damage
-#[skyline::hook(offset = CLOUD_VTABLE_ON_DAMAGE_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 68, false, false))]
 unsafe extern "C" fn cloud_on_damage(limit: f32, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let limit_level = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_LIMIT_LEVEL);
@@ -254,9 +254,9 @@ unsafe extern "C" fn cloud_limit_manager(limit: f32, boma: *mut BattleObjectModu
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x8dd868).nop(); //The following nop disables Cloud's Waza Customize being enabled for Neutral Special, thusly preventing Limit Break Blade Beam from being used
     let _ = skyline::patching::Patch::in_text(0x8dc8a0).nop(); //Disables on attack limit manager
-    let _ = skyline::patching::Patch::in_text(0x4f9b950).data(cloud_opff as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4f9ba78).data(cloud_shield_attack_detection_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4f9ba80).data(cloud_shield_attack_transition_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 13, false, true)).data(cloud_opff as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 50, false, true)).data(cloud_shield_attack_detection_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_CLOUD, 51, false, true)).data(cloud_shield_attack_transition_event as *const () as u64);
 	skyline::install_hooks!(
         cloud_start_initialization,
         cloud_reset_initialization,

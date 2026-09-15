@@ -1,17 +1,28 @@
 use super::*;
 
+unsafe extern "C" fn edge_fire_on_start(weapon: &mut L2CWeaponCommon) {
+    let boma = weapon.module_accessor;
+    WorkModule::off_flag(boma, *WEAPON_EDGE_FIRE_INSTANCE_WORK_ID_FLAG_DISABLE_SOUND);
+    WorkModule::set_int(boma, 0, *WEAPON_EDGE_FIRE_INSTANCE_WORK_ID_INT_BGM_IDX);
+}
+
 unsafe extern "C" fn edge_flaredummy_on_start(weapon: &mut L2CWeaponCommon) {
     let boma = weapon.module_accessor;
-    WorkModule::off_flag(boma, *WEAPON_EDGE_FLARE2_INSTANCE_WORK_ID_FLAG_OWNER_CANCELED);
+    WorkModule::off_flag(boma, *WEAPON_EDGE_FLAREDUMMY_INSTANCE_WORK_ID_FLAG_OWNER_CANCELED);
 }
 
 unsafe extern "C" fn edge_flaredummy_frame(weapon: &mut L2CFighterBase) {
     let boma = weapon.module_accessor;
     if StatusModule::status_kind(boma) == *WEAPON_EDGE_FLAREDUMMY_STATUS_KIND_FLY {
-        if WorkModule::is_flag(boma, *WEAPON_EDGE_FLARE2_INSTANCE_WORK_ID_FLAG_OWNER_CANCELED) {
+        if WorkModule::is_flag(boma, *WEAPON_EDGE_FLAREDUMMY_INSTANCE_WORK_ID_FLAG_OWNER_CANCELED) {
             weapon.change_status(WEAPON_EDGE_FLAREDUMMY_STATUS_KIND_TRY.into(), false.into());
         }
     }
+}
+
+unsafe extern "C" fn edge_flare2_on_start(weapon: &mut L2CWeaponCommon) {
+    let boma = weapon.module_accessor;
+    WorkModule::off_flag(boma, *WEAPON_EDGE_FLARE2_INSTANCE_WORK_ID_FLAG_OWNER_CANCELED);
 }
 
 unsafe extern "C" fn edge_flash_on_start(weapon: &mut L2CWeaponCommon) {
@@ -22,10 +33,20 @@ unsafe extern "C" fn edge_flash_on_start(weapon: &mut L2CWeaponCommon) {
 }
 
 pub fn install() {
+    Agent::new("edge_fire")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .on_start(edge_fire_on_start)
+    .install()
+    ;
     Agent::new("edge_flaredummy")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
     .on_start(edge_flaredummy_on_start)
     .on_line(Main, edge_flaredummy_frame)
+    .install()
+    ;
+    Agent::new("edge_flare2")
+    .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
+    .on_start(edge_flare2_on_start)
     .install()
     ;
     Agent::new("edge_flash")

@@ -2,6 +2,7 @@ use {
     exo_utils::{
         status::glide::*,
         structs::{
+            buttons::*,
             getter_funcs::*,
             vector::*,
         }
@@ -43,10 +44,14 @@ mod glide_end;
 mod glide_start;
 mod glide;
 mod rebirth;
+mod sub_transition;
+mod sys_line;
 
 pub fn install() {
     glide_end::install();
     glide_start::install();
     glide::install();
     rebirth::install();
+    sub_transition::install();
+    sys_line::install();
 }

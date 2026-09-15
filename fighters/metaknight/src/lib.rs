@@ -1,9 +1,12 @@
 use {
+    crate::status::special_lw::*,
     exo_utils::{
         common::{
+            hook::*,
             status_end_control::*,
             var_reset::*,
             vtable_funcs::*,
+            waza_customize::*,
         },
         fighter::metaknight::*,
         structs::{
@@ -35,7 +38,7 @@ use {
 };
 
 mod acmd;
-mod status;
+pub mod status;
 mod vtable;
 
 pub fn install() {

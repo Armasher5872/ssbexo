@@ -31,15 +31,11 @@ use {
 };
 
 mod damage;
-mod damagefly;
-mod damageflyroll;
 mod shield_break_fall;
 mod shield_break_fly;
 
 pub fn install() {
     damage::install();
-    damagefly::install();
-    damageflyroll::install();
     shield_break_fall::install();
     shield_break_fly::install();
 }

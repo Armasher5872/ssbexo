@@ -1,12 +1,8 @@
 //Credited to WuBoyTH for the opff
 use super::*;
 
-const KOOPA_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xbc1dd0; //Bowser only
-const KOOPA_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xbc1e00; //Bowser only
-const KOOPA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xbc2290; //Bowser only
-
 //Bowser Reset Initialization
-#[skyline::hook(offset = KOOPA_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KOOPA, 4, false, false))]
 unsafe extern "C" fn koopa_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -16,7 +12,7 @@ unsafe extern "C" fn koopa_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Bowser Death Initialization
-#[skyline::hook(offset = KOOPA_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KOOPA, 7, false, false))]
 unsafe extern "C" fn koopa_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -26,7 +22,7 @@ unsafe extern "C" fn koopa_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Bowser OPFF
-#[skyline::hook(offset = KOOPA_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KOOPA, 13, false, false))]
 unsafe extern "C" fn koopa_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let battle_object_slow = singletons::BattleObjectSlow() as *mut u8;

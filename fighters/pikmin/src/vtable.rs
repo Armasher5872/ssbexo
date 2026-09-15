@@ -1,10 +1,7 @@
 use super::*;
 
-const PIKMIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf51390; //Olimar only
-const PIKMIN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xf51df0; //Olimar only
-
 //Olimar Reset Initialization
-#[skyline::hook(offset = PIKMIN_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PIKMIN, 4, false, false))]
 unsafe extern "C" fn pikmin_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn pikmin_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Olimar Death Initialization
-#[skyline::hook(offset = PIKMIN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PIKMIN, 7, false, false))]
 unsafe extern "C" fn pikmin_death_initialization(vtable: u64, fighter: &mut Fighter, pikmin_count: i32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

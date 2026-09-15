@@ -7,5 +7,5 @@ unsafe extern "C" fn ness_reset_initialization(_vtable: u64, fighter: &mut Fight
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4ffce90).data(ness_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_NESS, 4, false, true)).data(ness_reset_initialization as *const () as u64);
 }

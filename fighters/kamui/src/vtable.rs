@@ -1,10 +1,7 @@
 use super::*;
 
-const KAMUI_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb5c360; //Corrin only
-const KAMUI_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xb5cb30; //Corrin only
-
 //Corrin Reset Initialization
-#[skyline::hook(offset = KAMUI_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KAMUI, 4, false, false))]
 unsafe extern "C" fn kamui_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn kamui_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Corrin Death Initialization
-#[skyline::hook(offset = KAMUI_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KAMUI, 7, false, false))]
 unsafe extern "C" fn kamui_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: u32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

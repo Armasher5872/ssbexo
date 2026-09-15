@@ -1,10 +1,7 @@
 use super::*;
 
-const BUDDY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x891bf0; //Banjo & Kazooie only
-const BUDDY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x891270; //Banjo & Kazooie only
-
 //Banjo & Kazooie Reset Initialization
-#[skyline::hook(offset = BUDDY_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_BUDDY, 4, false, false))]
 unsafe extern "C" fn buddy_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn buddy_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Banjo & Kazooie Death Initialization
-#[skyline::hook(offset = BUDDY_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_BUDDY, 7, false, false))]
 unsafe extern "C" fn buddy_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: u32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

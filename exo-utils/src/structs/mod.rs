@@ -5,6 +5,7 @@ use {
         common::{
             battle_object::*,
             extern_func::*,
+            hook::*,
             ui_utility::*,
         },
         fighter::{

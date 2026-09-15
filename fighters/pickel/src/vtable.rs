@@ -1,10 +1,7 @@
 use super::*;
 
-const PICKEL_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf030d0; //Steve only
-const PICKEL_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xf036a0; //Steve only
-
 //Steve Reset Initialization
-#[skyline::hook(offset = PICKEL_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PICKEL, 4, false, false))]
 unsafe extern "C" fn pickel_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn pickel_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Steve Death Initialization
-#[skyline::hook(offset = PICKEL_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PICKEL, 7, false, false))]
 unsafe extern "C" fn pickel_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: i32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

@@ -1,8 +1,5 @@
 use super::*;
 
-const DIDDY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x956360; //Diddy only
-const DIDDY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x956600; //Diddy only
-
 //Diddy Kong Reset Initialization
 unsafe extern "C" fn diddy_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -12,7 +9,7 @@ unsafe extern "C" fn diddy_reset_initialization(_vtable: u64, fighter: &mut Figh
 }
 
 //Diddy Kong Death Initialization
-#[skyline::hook(offset = DIDDY_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DIDDY, 7, false, false))]
 unsafe extern "C" fn diddy_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -22,7 +19,7 @@ unsafe extern "C" fn diddy_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Diddy Once Per Fighter Frame
-#[skyline::hook(offset = DIDDY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DIDDY, 13, false, false))]
 unsafe extern "C" fn diddy_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
@@ -56,7 +53,7 @@ unsafe extern "C" fn diddy_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fa4118).data(diddy_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_DIDDY, 4, false, true)).data(diddy_reset_initialization as *const () as u64);
     skyline::install_hooks!(
         diddy_death_initialization,
         diddy_opff

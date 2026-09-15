@@ -23,7 +23,12 @@ unsafe extern "C" fn link_special_hi_glide_drop_main_loop(fighter: &mut L2CFight
         return 1.into();
     }
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-        fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND.into(), false.into());
+        if WorkModule::is_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_DELAY_LAND) {
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
+        }
+        else {
+            fighter.change_status(FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_LAND.into(), false.into());
+        }
     }
     if MotionModule::is_end(boma) {
         fighter.change_status(FIGHTER_STATUS_KIND_FALL_AERIAL.into(), false.into());
@@ -31,7 +36,15 @@ unsafe extern "C" fn link_special_hi_glide_drop_main_loop(fighter: &mut L2CFight
     0.into()
 }
 
-unsafe extern "C" fn link_special_hi_glide_drop_end_status(_fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_special_hi_glide_drop_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_DELAY_LAND);
+    0.into()
+}
+
+unsafe extern "C" fn link_special_hi_glide_drop_exit_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+    let boma = fighter.module_accessor;
+    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_DELAY_LAND);
     0.into()
 }
 
@@ -41,6 +54,7 @@ pub fn install() {
     .status(Pre, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_pre_status)
     .status(Main, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_main_status)
     .status(End, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_end_status)
+    .status(Exit, *FIGHTER_LINK_STATUS_KIND_SPECIAL_HI_DROP, link_special_hi_glide_drop_exit_status)
     .install()
     ;
 }

@@ -1,12 +1,7 @@
 use super::*;
 
-const ELIGHT_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa28640; //Mythra only
-const ELIGHT_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xa28a80; //Mythra only
-const ELIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa28dd0; //Mythra only
-const ELIGHT_VTABLE_ON_ATTACK_OFFSET: usize = 0xa29ab0; //Mythra only
-
 //Mythra Reset Initialization
-#[skyline::hook(offset = ELIGHT_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ELIGHT, 4, false, false))]
 unsafe extern "C" fn elight_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -15,7 +10,7 @@ unsafe extern "C" fn elight_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Mythra Death Initialization
-#[skyline::hook(offset = ELIGHT_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ELIGHT, 7, false, false))]
 unsafe extern "C" fn elight_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -24,7 +19,7 @@ unsafe extern "C" fn elight_death_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Mythra Once Per Fighter Frame
-#[skyline::hook(offset = ELIGHT_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ELIGHT, 13, false, false))]
 unsafe extern "C" fn elight_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -40,7 +35,7 @@ unsafe extern "C" fn elight_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Mythra On Attack
-#[skyline::hook(offset = ELIGHT_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ELIGHT, 36, false, false))]
 unsafe extern "C" fn elight_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);

@@ -78,9 +78,9 @@ unsafe extern "C" fn ssbexo_link_jab_2_acmd(agent: &mut L2CAgentBase) {
         ATTACK(agent, 0, 0, Hash40::new("sword2"), 3.0, 180, 15, 0, 15, 3.2, 8.5, 0.0, -2.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(agent, 1, 0, Hash40::new("sword2"), 3.0, 361, 20, 0, 20, 3.5, 3.0, 0.0, -2.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
         ATTACK(agent, 2, 0, Hash40::new("armr"), 3.0, 361, 20, 0, 20, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
-        AttackModule::set_add_reaction_frame_revised(boma, 0, 10.0, false);
-        AttackModule::set_add_reaction_frame_revised(boma, 1, 10.0, false);
-        AttackModule::set_add_reaction_frame_revised(boma, 2, 10.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 0, 14.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 1, 14.0, false);
+        AttackModule::set_add_reaction_frame_revised(boma, 2, 14.0, false);
     }
     frame(lua_state, 8.0);
     if is_excute(agent) {
@@ -256,6 +256,7 @@ unsafe extern "C" fn ssbexo_link_dash_attack_effect(agent: &mut L2CAgentBase) {
 //Dash Attack Sound
 unsafe extern "C" fn ssbexo_link_dash_attack_sound(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
+    let rand = sv_math::randf(hash40("fighter"), 1.0);
     frame(lua_state, 3.0);
     if is_excute(agent) {
         PLAY_SE (agent, Hash40::new("se_link_dash_stop_ft"));
@@ -263,6 +264,24 @@ unsafe extern "C" fn ssbexo_link_dash_attack_sound(agent: &mut L2CAgentBase) {
     frame(lua_state, 10.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_swing_ll"));
+    }
+    frame(lua_state, 13.0);
+    if is_excute(agent) {
+        if rand > 0.9 {
+            if is_excute(agent) {
+                PLAY_SE(agent, Hash40::new("vc_link_attack02"));
+            }
+        }
+        else if rand > 0.75 {
+            if is_excute(agent) {
+                PLAY_SE(agent, Hash40::new("vc_link_attack03"));
+            }
+        }
+        else if rand > 0.6 {
+            if is_excute(agent) {
+                PLAY_SE(agent, Hash40::new("vc_link_attack04"));
+            }
+        }
     }
     frame(lua_state, 25.0);
     if is_excute(agent) {

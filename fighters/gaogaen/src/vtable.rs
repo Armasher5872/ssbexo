@@ -1,10 +1,7 @@
 use super::*;
 
-const GAOGAEN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xab7cc0; //Incineroar only
-const GAOGAEN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xab8390; //Incineroar only
-
 //Incineroar Reset Initialization
-#[skyline::hook(offset = GAOGAEN_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GAOGAEN, 4, false, false))]
 unsafe extern "C" fn gaogaen_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -13,7 +10,7 @@ unsafe extern "C" fn gaogaen_reset_initialization(vtable: u64, fighter: &mut Fig
 }
 
 //Incineroar Death Initialization
-#[skyline::hook(offset = GAOGAEN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GAOGAEN, 7, false, false))]
 unsafe extern "C" fn gaogaen_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

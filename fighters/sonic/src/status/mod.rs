@@ -34,6 +34,7 @@ mod attack_s3;
 mod attack_s4_start;
 mod attack_s4;
 mod attack;
+mod dash;
 mod special_lw_hold;
 mod special_lw;
 mod special_n_cancel;
@@ -60,6 +61,7 @@ pub fn install() {
     attack_s4_start::install();
     attack_s4::install();
     attack::install();
+    dash::install();
     special_lw_hold::install();
     special_lw::install();
     special_n_cancel::install();

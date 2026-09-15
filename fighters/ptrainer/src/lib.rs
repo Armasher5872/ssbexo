@@ -1,12 +1,16 @@
 use {
-    exo_utils::common::var_reset::*,
-    smash::app::Fighter
+    exo_utils::{
+        common::var_reset::*,
+        structs::getter_funcs::*,
+    },
+    smash::{
+        app::Fighter,
+        lib::lua_const::*,
+    }
 };
 
-const PTRAINER_VTABLE_RESPAWN_INITIALIZATION_OFFSET: usize = 0xf96330; //Shared
-
 //Pokemon Trainer Respawn Initialization
-#[skyline::hook(offset = PTRAINER_VTABLE_RESPAWN_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PZENIGAME, 95, false, false))]
 unsafe extern "C" fn ptrainer_respawn_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

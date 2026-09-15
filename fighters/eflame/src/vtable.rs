@@ -1,12 +1,7 @@
 use super::*;
 
-const EFLAME_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xa0b8a0; //Pyra only
-const EFLAME_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xa0bce0; //Pyra only
-const EFLAME_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xa0c010; //Pyra only
-const EFLAME_VTABLE_ON_ATTACK_OFFSET: usize = 0xa0cec0; //Pyra only
-
 //Pyra Reset Initialization
-#[skyline::hook(offset = EFLAME_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EFLAME, 4, false, false))]
 unsafe extern "C" fn eflame_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -15,7 +10,7 @@ unsafe extern "C" fn eflame_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Pyra Death Initialization
-#[skyline::hook(offset = EFLAME_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EFLAME, 7, false, false))]
 unsafe extern "C" fn eflame_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -24,7 +19,7 @@ unsafe extern "C" fn eflame_death_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Pyra Once Per Fighter Frame
-#[skyline::hook(offset = EFLAME_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EFLAME, 13, false, false))]
 unsafe extern "C" fn eflame_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -40,7 +35,7 @@ unsafe extern "C" fn eflame_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Pyra On Attack
-#[skyline::hook(offset = EFLAME_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EFLAME, 36, false, false))]
 unsafe extern "C" fn eflame_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);

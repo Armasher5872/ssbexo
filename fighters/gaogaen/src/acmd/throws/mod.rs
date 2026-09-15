@@ -40,6 +40,7 @@ mod throw_b_revenge;
 mod throw_f_revenge;
 mod throw_hi_revenge;
 mod throw_lw_revenge;
+mod throw_lw;
 
 pub fn install() {
     catch_attack::install();
@@ -56,4 +57,5 @@ pub fn install() {
     throw_f_revenge::install();
     throw_hi_revenge::install();
     throw_lw_revenge::install();
+    throw_lw::install();
 }

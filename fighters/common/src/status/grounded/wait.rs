@@ -11,9 +11,7 @@ unsafe fn status_pre_wait_main_param(fighter: &mut L2CFighterCommon, param_1: L2
 
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hooks!(
-            status_pre_wait_main_param
-        );
+        skyline::install_hook!(status_pre_wait_main_param);
     }
 }
 

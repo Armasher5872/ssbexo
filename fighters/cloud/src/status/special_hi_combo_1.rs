@@ -37,18 +37,13 @@ unsafe extern "C" fn cloud_special_hi_combo_1_main_loop(fighter: &mut L2CFighter
     let lr = PostureModule::lr(boma);
     let rot_angle = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
     let move_frame = WorkModule::get_int(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_MOVE_FRAME);
-    let mut stick = fighter.Vector2__create(stick_x.into(), stick_y.into());
-    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
-        stick["x"].assign(&L2CValue::F32(0.0));
-        stick["y"].assign(&L2CValue::F32(1.0));
-    }
-    let normalize = fighter.Vector2__normalize(stick);
-    let vec_stick_x = normalize["x"].get_f32();
-    let vec_stick_y = normalize["y"].get_f32();
-    let stick_angle = vec_stick_y.atan2(vec_stick_x);
-    let stick_degrees = stick_angle.to_degrees();
-    let speed_x = ((stick_degrees+90.0).to_radians().sin()*2.0)*lr;
-    let speed_y = (stick_degrees-90.0).to_radians().cos()*2.0;
+    let stick_degrees = ControlModule::get_stick_angle(boma).to_degrees();
+    let deadzone_check = stick_x.abs()+stick_y.abs() < 0.5;
+    let speed_x = if deadzone_check {0.0} else {stick_degrees.to_radians().cos()*2.0};
+    let speed_y = if deadzone_check {2.0} else {stick_degrees.to_radians().sin()*2.0};
+    let reverse_check = if lr == 1.0 {stick_degrees > 90.0 || stick_degrees < -90.0} else {stick_degrees < 90.0 || stick_degrees > -90.0};
+    let attack_angle = if stick_degrees < 0.0 {stick_degrees+360.0} else {stick_degrees};
+    let rot = if deadzone_check {-90.0} else {if !reverse_check {-stick_degrees} else {stick_degrees-180.0}};
     if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -66,8 +61,14 @@ unsafe extern "C" fn cloud_special_hi_combo_1_main_loop(fighter: &mut L2CFighter
         && prev_situation_kind == *SITUATION_KIND_GROUND {
             GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
-            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_hi_combo_1"), -1.0, 1.0, 0.0, false, false);
+            MotionModule::change_motion_inherit_frame(boma, Hash40::new("special_hi"), -1.0, 1.0, 0.0, false, false);
         }
+    }
+    if cloud_can_limit_break(fighter, 2).get_bool() {
+        WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK);
+        WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SPECIAL);
+        WorkModule::on_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_LIMIT_BREAK_SET_CUSTOM);
+        fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_HI_LIMIT_BREAK.into(), false.into());
     }
     if WorkModule::is_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_DECIDE) {
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
@@ -77,23 +78,11 @@ unsafe extern "C" fn cloud_special_hi_combo_1_main_loop(fighter: &mut L2CFighter
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_BRAKE);
         sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, speed_y);
         sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.04, 0.04);
-        if stick_degrees < 0.0 {
-            WorkModule::set_int(boma, (stick_degrees+180.0) as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
-        }
-        else {
-            WorkModule::set_int(boma, stick_degrees as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
-        }
-        if (stick_degrees >= 0.0 && stick_degrees <= 90.0) || (stick_degrees >= -90.0 && stick_degrees < 0.0) {
-            WorkModule::set_int(boma, -stick_degrees as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
-        }
-        if stick_degrees > 90.0 && stick_degrees <= 180.0 {
-            WorkModule::set_int(boma, -(stick_degrees-90.0) as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
-        }
-        if stick_degrees >= -180.0 && stick_degrees < -90.0 {
-            WorkModule::set_int(boma, (stick_degrees+180.0) as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
-        }
-        if (stick_degrees > 90.0 && stick_degrees <= 180.0) || (stick_degrees >= -180.0 && stick_degrees < -90.0) {
+        WorkModule::set_int(boma, attack_angle as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ATTACK_ANGLE);
+        WorkModule::set_int(boma, rot as i32, *FIGHTER_CLOUD_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE);
+        if reverse_check {
             PostureModule::reverse_lr(boma);
+            PostureModule::set_stick_lr(boma, 0.0);
             PostureModule::update_rot_y_lr(boma);
         }
         WorkModule::off_flag(boma, *FIGHTER_CLOUD_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_DIRECTION_CHOSEN);
@@ -110,7 +99,7 @@ unsafe extern "C" fn cloud_special_hi_combo_1_main_loop(fighter: &mut L2CFighter
         }
     }
     if WorkModule::is_flag(boma, *FIGHTER_CLOUD_STATUS_SPECIAL_HI_FLAG_SHIFT) {
-        if vec_stick_x.abs()+vec_stick_y.abs() >= 0.5 {
+        if stick_x.abs()+stick_y.abs() >= 0.5 {
             fighter.change_status(FIGHTER_CLOUD_STATUS_KIND_SPECIAL_HI_COMBO_2.into(), false.into());
         }
     }

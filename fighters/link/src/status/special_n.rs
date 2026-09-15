@@ -124,7 +124,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                     WorkModule::set_float(boma, special_n_degree-change_degree_per_frame, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_DEGREE);
                 }
             }
-            change_angle(boma, special_n_degree, max_degree, "special_n_hi", "special_n_lw");
+            link_change_angle(boma, situation_kind, special_n_degree, max_degree, "special_n_hi", "special_n_lw", "special_air_n_hi", "special_air_n_lw");
         }
     }
     if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_HOLD {
@@ -141,7 +141,7 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
         link_guard_cancel(fighter);
     }
     if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_END {
-        change_angle(boma, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw");
+        link_change_angle(boma, situation_kind, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw", "special_air_n_end_hi", "special_air_n_end_lw");
     }
     if ArticleModule::is_exist(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW) {
         let bow_arrow_boma = get_article_boma(boma, *FIGHTER_LINK_GENERATE_ARTICLE_BOWARROW);
@@ -193,27 +193,27 @@ unsafe extern "C" fn link_special_n_main_loop(fighter: &mut L2CFighterCommon) ->
                     WorkModule::set_int(boma, *FIGHTER_LINK_STATUS_BOW_STEP_END, *FIGHTER_LINK_STATUS_BOW_WORK_INT_STEP);
                     WorkModule::off_flag(boma, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE);
                     link_change_motion(fighter, situation_kind, "special_n_end", "n_end", "special_air_n_end", "air_n_end", false);
-                    change_angle(boma, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw");
+                    link_change_angle(boma, situation_kind, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw", "special_air_n_end_hi", "special_air_n_end_lw");
                     link_shoot_arrow(fighter);
                 }
                 else {
                     WorkModule::inc_int(boma, *FIGHTER_LINK_STATUS_BOW_WORK_INT_STEP);
                     link_change_motion(fighter, situation_kind, "special_n", "n", "special_air_n", "air_n", false);
-                    change_angle(boma, special_n_degree, max_degree, "special_n_hi", "special_n_lw");
+                    link_change_angle(boma, situation_kind, special_n_degree, max_degree, "special_n_hi", "special_n_lw", "special_air_n_hi", "special_air_n_lw");
                 }
             }
         }
         if bow_step == *FIGHTER_LINK_STATUS_BOW_STEP_HOLD {
             if WorkModule::is_flag(boma, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE) && max_hold_count < max_hold_frame {
                 link_change_motion(fighter, situation_kind, "special_n", "n", "special_air_n", "air_n", false);
-                change_angle(boma, special_n_degree, max_degree, "special_n_hi", "special_n_lw");
+                link_change_angle(boma, situation_kind, special_n_degree, max_degree, "special_n_hi", "special_n_lw", "special_air_n_hi", "special_air_n_lw");
             }
             else {
                 WorkModule::on_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE);
                 WorkModule::set_int(boma, *FIGHTER_LINK_STATUS_BOW_STEP_END, *FIGHTER_LINK_STATUS_BOW_WORK_INT_STEP);
                 WorkModule::off_flag(boma, *FIGHTER_LINK_STATUS_BOW_FLAG_CHARGE);
                 link_change_motion(fighter, situation_kind, "special_n_end", "n_end", "special_air_n_end", "air_n_end", false);
-                change_angle(boma, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw");
+                link_change_angle(boma, situation_kind, special_n_degree, max_degree, "special_n_end_hi", "special_n_end_lw", "special_air_n_end_hi", "special_air_n_end_lw");
                 link_shoot_arrow(fighter);
             }
         }

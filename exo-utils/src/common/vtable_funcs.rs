@@ -29,13 +29,6 @@ pub unsafe fn add_reflector_group(boma: *mut BattleObjectModuleAccessor, resourc
     }
 }
 
-//Used to get the pointer for a vtable function within a specific module.
-pub unsafe fn get_module_vtable_func(boma: *mut BattleObjectModuleAccessor, module_offset: usize, func_offset: u64) -> u64 {
-    let module = (boma as *mut u64).add(module_offset/0x8);
-    let vtable = *module as *const u64;
-    *((*vtable + func_offset) as *const u64)
-}
-
 //Sets and enables lightweight
 pub unsafe fn set_lightweight(boma: *mut BattleObjectModuleAccessor, mut changes: Vec<StatChange>) {
     let ptr = changes.as_mut_ptr();

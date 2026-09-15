@@ -5,10 +5,12 @@ use {
             var_reset::*,
         },
         fighter::gaogaen::*,
+        structs::getter_funcs::*,
     },
     exo_var::globals::*,
     smash::{
         app::*,
+        lib::lua_const::*,
         lua2cpp::*,
     },
     smashline::*,

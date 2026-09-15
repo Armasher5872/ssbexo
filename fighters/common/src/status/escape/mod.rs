@@ -1,5 +1,8 @@
 use {
-    exo_utils::structs::vector::*,
+    exo_utils::{
+        status::escape_air::*,
+        structs::vector::*,
+    },
     exo_var::{
         consts::*,
         globals::*,
@@ -7,10 +10,7 @@ use {
     interpolation::Lerp,
     smash::{
         app::{
-            lua_bind::{
-                PostureModule,
-                *
-            },
+            lua_bind::*,
             *
         },
         hash40,

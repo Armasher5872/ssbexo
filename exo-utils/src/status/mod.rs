@@ -38,5 +38,6 @@ pub mod attack_xx4;
 pub mod attack;
 pub mod catch;
 pub mod damage;
+pub mod escape_air;
 pub mod glide;
 pub mod knockback_func;

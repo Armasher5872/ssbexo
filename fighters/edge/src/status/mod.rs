@@ -1,6 +1,7 @@
 use {
     exo_utils::{
         common::{
+            battle_object::*,
             check_attack::*,
             extern_func::*,
             hook::*,

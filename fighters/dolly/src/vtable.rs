@@ -1,11 +1,7 @@
 use super::*;
 
-const DOLLY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x970900; //Terry only
-const DOLLY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x970e40; //Terry only
-const DOLLY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x971c80; //Terry only
-
 //Terry Reset Initialization
-#[skyline::hook(offset = DOLLY_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DOLLY, 4, false, false))]
 unsafe extern "C" fn dolly_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -14,7 +10,7 @@ unsafe extern "C" fn dolly_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Terry Death Initialization
-#[skyline::hook(offset = DOLLY_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DOLLY, 7, false, false))]
 unsafe extern "C" fn dolly_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -23,7 +19,7 @@ unsafe extern "C" fn dolly_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Terry Once Per Fighter Frame
-#[skyline::hook(offset = DOLLY_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DOLLY, 13, false, false))]
 unsafe extern "C" fn dolly_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let frame = MotionModule::frame(boma);

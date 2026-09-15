@@ -1,10 +1,7 @@
 use super::*;
 
-const PACMAN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xe29320; //Pac-Man only
-const PACMAN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xe29340; //Pac-Man only
-
 //Pac-Man Reset Initialization
-#[skyline::hook(offset = PACMAN_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PACMAN, 4, false, false))]
 unsafe extern "C" fn pacman_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn pacman_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Pac-Man Death Initialization
-#[skyline::hook(offset = PACMAN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PACMAN, 7, false, false))]
 unsafe extern "C" fn pacman_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

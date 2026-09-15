@@ -1,9 +1,6 @@
 use {
     exo_utils::fighter::armstrong::*,
-    exo_var::{
-        consts::*,
-        globals::*,
-    },
+    exo_var::consts::*,
     smash::{
         app::{
             lua_bind::*,
@@ -19,16 +16,13 @@ use {
             *
         },
         phx::*,
-    },
-    smash_script::*,
+    }
 };
 
 mod capture;
 mod catched_air_ganon;
-mod shouldered_donkey;
 
 pub fn install() {
     capture::install();
     catched_air_ganon::install();
-    shouldered_donkey::install();
 }

@@ -1,13 +1,5 @@
 use super::*;
 
-const EDGE_VTABLE_START_INITIALIZATION_OFFSET: usize = 0x9d9e10; //Sephiroth only
-const EDGE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x9da390; //Sephiroth only
-const EDGE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x9da970; //Sephiroth only
-const EDGE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x9db070; //Sephiroth only
-const EDGE_VTABLE_ON_ATTACK_OFFSET: usize = 0x9df7b0; //Sephiroth only
-const EDGE_VTABLE_SHIELD_ATTACK_DETECTION_EVENT_OFFSET: usize = 0x9e02f0; //Sephiroth only
-const EDGE_VTABLE_SHIELD_ATTACK_TRANSITION_EVENT_OFFSET: usize = 0x9e05b0; //Sephiroth only
-
 unsafe extern "C" fn edge_end_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR || is_damaged(boma) {
@@ -19,7 +11,7 @@ unsafe extern "C" fn edge_end_control(fighter: &mut L2CFighterCommon) -> L2CValu
 }
 
 //Sephiroth Start Initialization
-#[skyline::hook(offset = EDGE_VTABLE_START_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EDGE, 0, false, false))]
 unsafe extern "C" fn edge_start_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -34,7 +26,7 @@ unsafe extern "C" fn edge_start_initialization(vtable: u64, fighter: &mut Fighte
 }
 
 //Sephiroth Reset Initialization
-#[skyline::hook(offset = EDGE_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EDGE, 4, false, false))]
 unsafe extern "C" fn edge_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -43,7 +35,7 @@ unsafe extern "C" fn edge_reset_initialization(vtable: u64, fighter: &mut Fighte
 }
 
 //Sephiroth Death Initialization
-#[skyline::hook(offset = EDGE_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EDGE, 7, false, false))]
 unsafe extern "C" fn edge_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let ret = original!()(vtable, fighter);
     let boma = fighter.battle_object.module_accessor;
@@ -53,7 +45,7 @@ unsafe extern "C" fn edge_death_initialization(vtable: u64, fighter: &mut Fighte
 }
 
 //Sephiroth Once Per Fighter Frame
-#[skyline::hook(offset = EDGE_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EDGE, 13, false, false))]
 unsafe extern "C" fn edge_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let ret = original!()(vtable, fighter);
     let boma = fighter.battle_object.module_accessor;
@@ -102,7 +94,7 @@ unsafe fn edge_opff_winged_form_check(ctx: &mut skyline::hooks::InlineCtx) {
 }
 
 //Sephiroth On Attack
-#[skyline::hook(offset = EDGE_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EDGE, 36, false, false))]
 unsafe extern "C" fn edge_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = log as *mut CollisionLogScuffed;
@@ -143,7 +135,7 @@ unsafe extern "C" fn edge_on_attack(vtable: u64, fighter: &mut Fighter, log: u64
 }
 
 //Sephiroth Shield Attack Detection Event
-#[skyline::hook(offset = EDGE_VTABLE_SHIELD_ATTACK_DETECTION_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EDGE, 50, false, false))]
 unsafe extern "C" fn edge_shield_attack_detection_event(_vtable: u64, fighter: &mut Fighter, event: *mut ShieldAttackCollisionEvent) {
     let boma = fighter.battle_object.module_accessor;
     let shield_group_index = (*event).group_index;
@@ -189,7 +181,7 @@ unsafe extern "C" fn edge_shield_attack_detection_event(_vtable: u64, fighter: &
 }
 
 //Sephiroth Shield Attack Transition Event
-#[skyline::hook(offset = EDGE_VTABLE_SHIELD_ATTACK_TRANSITION_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_EDGE, 51, false, false))]
 unsafe extern "C" fn edge_shield_attack_transition_event(_vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
@@ -233,7 +225,7 @@ unsafe extern "C" fn edge_flash_on_search_event(_vtable: u64, _weapon: &mut smas
 
 pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_EDGE_FLASH, ModuleInitModules::SearchModule);
-    let _ = skyline::patching::Patch::in_text(0x51c0ff0).data(edge_flash_on_search_event as *const () as u64); //035
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_EDGE_FLASH, 35, true, true)).data(edge_flash_on_search_event as *const () as u64); //035
     //fuck it we ball (disables almost all code in the winged form on check)
     let _ = skyline::patching::Patch::in_text(0x9dd3f8).nop();
     let _ = skyline::patching::Patch::in_text(0x9dd410).nop();

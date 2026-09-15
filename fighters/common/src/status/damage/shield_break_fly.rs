@@ -14,6 +14,9 @@ unsafe extern "C" fn sub_status_shield_break_fly_common(fighter: &mut L2CFighter
     let shield_break_xlu_frame = WorkModule::get_param_int(boma, hash40("common"), hash40("shield_break_xlu_frame"));
     WorkModule::set_float(boma, shield_reset, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
     WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_CHECK_DEAD_AREA_FORCE);
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_EDGE_FINAL_TARGET_END {
+        WorkModule::on_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HARD_BREAK);
+    }
     if FighterUtil::check_melee_rule_time(300.0, smash::app::FighterCheckMeleeRuleTime{0: group}, true) {
         if hard_break {
             HitModule::set_whole(boma, HitStatus(*HIT_STATUS_XLU), 0);

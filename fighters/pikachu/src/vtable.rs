@@ -1,8 +1,5 @@
 use super::*;
 
-const PIKACHU_PICHU_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xf2a530; //Shared
-const PIKACHU_PICHU_VTABLE_ON_ATTACK_OFFSET: usize = 0xf2ae00; //Shared
-
 //Pikachu & Pichu Reset Initialization
 unsafe extern "C" fn pikachu_pichu_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let kind = fighter.battle_object.kind as i32;
@@ -14,7 +11,7 @@ unsafe extern "C" fn pikachu_pichu_reset_initialization(_vtable: u64, fighter: &
 }
 
 //Pikachu & Pichu Death Initialization
-#[skyline::hook(offset = PIKACHU_PICHU_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PIKACHU, 7, false, false))]
 unsafe extern "C" fn pikachu_pichu_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
@@ -26,7 +23,7 @@ unsafe extern "C" fn pikachu_pichu_death_initialization(vtable: u64, fighter: &m
 }
 
 //Pikachu & Pichu On Attack
-#[skyline::hook(offset = PIKACHU_PICHU_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PIKACHU, 36, false, false))]
 unsafe extern "C" fn pikachu_pichu_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     if kind == *FIGHTER_KIND_PIKACHU {
@@ -41,7 +38,7 @@ unsafe extern "C" fn pikachu_pichu_on_attack(vtable: u64, fighter: &mut Fighter,
             if [1, 2].contains(&collision_kind) {
                 if opponent_battle_object_id >> 0x1C == 0 {
                     if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
-                        if LAST_ATTACK_HITBOX_ID == 1 {
+                        if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID) == 1 {
                             WorkModule::on_flag(boma, *FIGHTER_PIKACHU_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_WEAK);
                         }
                     }
@@ -53,7 +50,7 @@ unsafe extern "C" fn pikachu_pichu_on_attack(vtable: u64, fighter: &mut Fighter,
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x5012668).data(pikachu_pichu_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_PIKACHU, 4, false, true)).data(pikachu_pichu_reset_initialization as *const () as u64);
     skyline::install_hooks!(
         pikachu_pichu_death_initialization,
         pikachu_pichu_on_attack

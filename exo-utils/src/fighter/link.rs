@@ -6,6 +6,7 @@ pub unsafe extern "C" fn link_var(boma: &mut BattleObjectModuleAccessor) {
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_N_MAX_CHARGE);
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_JUMP);
     WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_GAIN);
+    WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_DELAY_LAND);
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_DEGREE);
     WorkModule::set_float(boma, 0.0, *FIGHTER_LINK_INSTANCE_WORK_ID_FLOAT_SPECIAL_HI_DEGREE);
     WorkModule::set_int(boma, *ITEM_KIND_NONE, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_CURRENT_BOOMERANG_FUSE);
@@ -135,6 +136,61 @@ pub unsafe extern "C" fn link_change_motion(fighter: &mut L2CFighterCommon, situ
         }
         else {
             MotionModule::change_motion(boma, Hash40::new(air_motion_kind), 0.0, 1.0, false, 0.0, false, false);
+        }
+    }
+}
+
+//Handles angling of Neutral Special
+pub unsafe extern "C" fn link_change_angle(boma: *mut BattleObjectModuleAccessor, situation_kind: i32, current_degree: f32, max_degree: f32, ground_motion_kind_max: &str, ground_motion_kind_min: &str, air_motion_kind_max: &str, air_motion_kind_min: &str) {
+    let frame = MotionModule::frame(boma);
+    let motion_kind_2nd = MotionModule::motion_kind_2nd(boma);
+    let rate = MotionModule::rate(boma);
+    let ground_motion = if current_degree <= 0.0 {hash40(ground_motion_kind_min)} else {hash40(ground_motion_kind_max)};
+    let air_motion = if current_degree <= 0.0 {hash40(air_motion_kind_min)} else {hash40(air_motion_kind_max)};
+    if situation_kind == *SITUATION_KIND_GROUND {
+        if motion_kind_2nd != ground_motion {
+            if current_degree <= 0.0 {
+                MotionModule::add_motion_2nd(boma, Hash40::new(ground_motion_kind_min), frame, rate, true, -(current_degree/max_degree));
+                MotionModule::set_weight(boma, 1.0+(current_degree/max_degree), true);
+            }
+            else {
+                MotionModule::add_motion_2nd(boma, Hash40::new(ground_motion_kind_max), frame, rate, true, current_degree/max_degree);
+                MotionModule::set_weight(boma, 1.0-(current_degree/max_degree), true);
+            }
+        }
+        else {
+            if current_degree < 0.0 {
+                MotionModule::set_weight(boma, 1.0+(current_degree/max_degree), true);
+            }
+            else if current_degree > 0.0 {
+                MotionModule::set_weight(boma, 1.0-(current_degree/max_degree), true);
+            }
+            else {
+                MotionModule::set_weight(boma, 1.0, true);
+            }
+        }
+    }
+    else {
+        if motion_kind_2nd != air_motion {
+            if current_degree <= 0.0 {
+                MotionModule::add_motion_2nd(boma, Hash40::new(air_motion_kind_min), frame, rate, true, -(current_degree/max_degree));
+                MotionModule::set_weight(boma, 1.0+(current_degree/max_degree), true);
+            }
+            else {
+                MotionModule::add_motion_2nd(boma, Hash40::new(air_motion_kind_max), frame, rate, true, current_degree/max_degree);
+                MotionModule::set_weight(boma, 1.0-(current_degree/max_degree), true);
+            }
+        }
+        else {
+            if current_degree < 0.0 {
+                MotionModule::set_weight(boma, 1.0+(current_degree/max_degree), true);
+            }
+            else if current_degree > 0.0 {
+                MotionModule::set_weight(boma, 1.0-(current_degree/max_degree), true);
+            }
+            else {
+                MotionModule::set_weight(boma, 1.0, true);
+            }
         }
     }
 }

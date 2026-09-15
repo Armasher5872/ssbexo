@@ -11,8 +11,8 @@ unsafe extern "C" fn link_swordbeam_fly_main_status(weapon: &mut L2CWeaponCommon
     let deccel_x = WorkModule::get_param_float(boma, hash40("param_swordbeam"), hash40("deccel_x"));
     let lr = PostureModule::lr(boma);
     let angle: f32 = 45.0;
-    let speed_x = angle.to_radians().sin()*max_speed_x*lr;
-    let speed_y = angle.to_radians().cos()*max_speed_x;
+    let speed_x = angle.to_radians().cos()*max_speed_x*lr;
+    let speed_y = angle.to_radians().sin()*max_speed_x;
     MotionModule::change_motion(boma, Hash40::new("fly"), 0.0, 1.0, false, 0.0, false, false);
     WorkModule::set_int(boma, max_life, *WEAPON_INSTANCE_WORK_ID_INT_LIFE);
     WorkModule::set_int(boma, max_life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);
@@ -20,11 +20,11 @@ unsafe extern "C" fn link_swordbeam_fly_main_status(weapon: &mut L2CWeaponCommon
         sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, 0.0);
     }
     else if owner_motion_kind == hash40("attack_s3_hi") {
-        PostureModule::set_rot(boma, &Vector3f{x: 0.0, y: 0.0, z: 45.0}, 0);
+        PostureModule::set_rot(boma, &Vector3f{x: 0.0, y: 0.0, z: 45.0*lr}, 0);
         sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, speed_y);
     }
     else {
-        PostureModule::set_rot(boma, &Vector3f{x: 0.0, y: 0.0, z: -45.0}, 0);
+        PostureModule::set_rot(boma, &Vector3f{x: 0.0, y: 0.0, z: -45.0*lr}, 0);
         sv_kinetic_energy!(set_speed, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, speed_x, -speed_y);
     }
     sv_kinetic_energy!(set_accel, weapon, *WEAPON_KINETIC_ENERGY_RESERVE_ID_NORMAL, -deccel_x);

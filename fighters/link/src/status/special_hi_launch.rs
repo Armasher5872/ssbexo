@@ -53,6 +53,7 @@ unsafe extern "C" fn link_special_hi_launch_main_loop(fighter: &mut L2CFighterCo
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let prev_situation_kind = fighter.global_table[PREV_SITUATION_KIND].get_i32();
+    let stick_x = fighter.global_table[STICK_X].get_f32();
     let boma = fighter.module_accessor;
     let special_hi_charge_frame = WorkModule::get_int(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_CHARGE_FRAME);
     let e1 = WorkModule::get_int(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_SPECIAL_HI_EFFECT_ID_1);
@@ -83,7 +84,15 @@ unsafe extern "C" fn link_special_hi_launch_main_loop(fighter: &mut L2CFighterCo
         fighter.set_situation(SITUATION_KIND_AIR.into());
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_AIR_STOP);
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
-        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 1.0+((special_hi_charge_frame/40) as f32), 0.0, 0.0, 0.0);
+        if stick_x.abs() > 0.5 {
+            KineticModule::enable_energy(boma, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+            sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, *ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST, 0.0, 0.0, 0.0, 0.0, 0.0);
+            sv_kinetic_energy!(controller_set_accel_x_mul, fighter, 0.02/*Maximum Horizontal Air Acceleration*/);
+            sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.02);
+            sv_kinetic_energy!(set_stable_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.1/*Maximum Horizontal Air Speed*/, 0.0);
+            sv_kinetic_energy!(set_limit_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.1/*Maximum Horizontal Air Speed*/, 0.0);
+        }
+        sv_kinetic_energy!(reset_energy, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, *ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, 1.15+((special_hi_charge_frame/35) as f32), 0.0, 0.0, 0.0);
         sv_kinetic_energy!(set_accel, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, -0.03);
         WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_JUMP);
     }

@@ -12,8 +12,8 @@ unsafe extern "C" fn ganon_special_hi_move_init_status(fighter: &mut L2CFighterC
     let is_charged = WorkModule::is_flag(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_CHARGED);
     let rot_angle = WorkModule::get_int(boma, *FIGHTER_GANON_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE) as f32;
     let speed: f32 = if is_charged {4.0} else {3.0};
-    let speed_x = (rot_angle+90.0).to_radians().sin()*speed;
-    let speed_y = (rot_angle-90.0).to_radians().cos()*speed;
+    let speed_x = rot_angle.to_radians().cos()*speed;
+    let speed_y = rot_angle.to_radians().sin()*speed;
     let brake = if is_charged {0.0} else {0.04};
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, speed_y);

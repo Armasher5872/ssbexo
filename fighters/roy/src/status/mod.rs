@@ -17,11 +17,19 @@ use {
     smashline::*,
 };
 
+mod special_hi_2;
+mod special_hi_3;
+mod special_hi_4;
+mod special_hi;
 mod special_n_loop;
 mod special_n_turn;
 mod special_s;
 
 pub fn install() {
+    special_hi_2::install();
+    special_hi_3::install();
+    special_hi_4::install();
+    special_hi::install();
     special_n_loop::install();
     special_n_turn::install();
     special_s::install();

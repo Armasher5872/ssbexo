@@ -1,3 +1,4 @@
+mod aerial;
 pub mod attack;
 mod catch;
 mod cliff;
@@ -11,6 +12,7 @@ mod misc;
 mod thrown;
 
 pub fn install() {
+    aerial::install();
     attack::install();
     catch::install();
     cliff::install();

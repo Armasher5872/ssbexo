@@ -16,9 +16,11 @@ use {
             mariod_meter::*,
             robot::*,
             sonic::*,
+            springtrap::*,
         },
         status::knockback_func::*,
         structs::{
+            buttons::*,
             getter_funcs::*,
             ui_manager::*,
             ui_object::*,
@@ -37,6 +39,7 @@ use {
         metaknight::*,
         pfushigisou::*,
         pikachu::*,
+        springtrap::*,
         variables::*,
         wario::*,
     },
@@ -71,11 +74,13 @@ use {
 
 mod article;
 mod attack;
+mod buffer;
 mod command_user;
 mod control;
 mod effect;
 mod energy;
 mod frame;
+mod ground;
 mod menu;
 mod misc;
 mod music;
@@ -84,11 +89,13 @@ mod ui;
 pub fn install() {
     article::install();
     attack::install();
+    buffer::install();
     command_user::install();
     control::install();
     effect::install();
     energy::install();
     frame::install();
+    ground::install();
     menu::install();
     misc::install();
     music::install();

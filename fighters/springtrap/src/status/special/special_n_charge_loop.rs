@@ -66,8 +66,7 @@ unsafe extern "C" fn springtrap_special_n_charge_loop_main_loop(fighter: &mut L2
             fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_LOW_FIRE.into(), false.into());
         }
     }
-    println!("Angle: {}", angle);
-    EffectModule::set_rot(boma, effect_id as u32, &Vector3f{x: 0.0, y: 0.0, z: angle-90.0});
+    EffectModule::set_rot(boma, effect_id as u32, &Vector3f{x: 0.0, y: 0.0, z: angle});
     if MotionModule::is_end(boma) {
         WorkModule::on_flag(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_FLAG_SPECIAL_N_CHARGED);
         fighter.change_status(FIGHTER_SPRINGTRAP_STATUS_KIND_SPECIAL_N_HIGH_FIRE.into(), false.into());

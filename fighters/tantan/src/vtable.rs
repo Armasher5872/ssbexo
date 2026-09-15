@@ -1,10 +1,7 @@
 use super::*;
 
-const TANTAN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x12241c0; //Min-Min only
-const TANTAN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x12247d0; //Min-Min only
-
 //Min-Min Reset Initialization
-#[skyline::hook(offset = TANTAN_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_TANTAN, 4, false, false))]
 unsafe extern "C" fn tantan_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma); 
@@ -12,7 +9,7 @@ unsafe extern "C" fn tantan_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Min-Min Death Initialization
-#[skyline::hook(offset = TANTAN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_TANTAN, 4, false, false))]
 unsafe extern "C" fn tantan_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma); 

@@ -6,7 +6,10 @@ use {
         },
         fighter::luigi::*,
         status::damage::*,
-        structs::collision_struct::*,
+        structs::{
+            collision_struct::*,
+            getter_funcs::*,
+        }
     },
     exo_var::{
         consts::*,

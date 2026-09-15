@@ -1,26 +1,24 @@
 use super::*;
 
-const SNAKE_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x11b5720; //Snake only
-const SNAKE_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11b5890; //Snake only
 pub static mut SNAKE_GRENADE_STATUS_FALL_STATUS: usize = 0x7c9ae0;
 pub static mut SNAKE_GRENADE_STATUS_LANDING_STATUS: usize = 0x7c9d10;
 pub static mut SNAKE_GRENADE_STATUS_THROWN_STATUS: usize = 0x7c9fc0;
 
 //Snake Reset Initialization
-#[skyline::hook(offset = SNAKE_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SNAKE, 4, false, false))]
 unsafe extern "C" fn snake_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_initialization_variable_reset(&mut *boma);
-    WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    snake_var(&mut *boma);
     original!()(vtable, fighter)
 }
 
 //Snake Death Initialization
-#[skyline::hook(offset = SNAKE_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SNAKE, 7, false, false))]
 unsafe extern "C" fn snake_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_initialization_variable_reset(&mut *boma);
-    WorkModule::set_int(boma, 0, *FIGHTER_SNAKE_INSTANCE_WORK_ID_INT_ATTACK_S4_COUNT);
+    snake_var(&mut *boma);
     original!()(vtable, fighter)
 }
 

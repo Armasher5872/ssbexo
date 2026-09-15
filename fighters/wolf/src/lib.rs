@@ -7,8 +7,9 @@ use {
         status::damage::*,
     },
     exo_var::{
-        globals::*,
         consts::*,
+        globals::*,
+        wolf::*,
     },
     smash::{
         app::lua_bind::*,
@@ -23,8 +24,10 @@ use {
 
 mod acmd;
 mod opff;
+mod status;
 
 pub fn install() {
     acmd::install();
     opff::install();
+    status::install();
 }

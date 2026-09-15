@@ -1,11 +1,7 @@
 use super::*;
 
-const KROOL_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc026a0; //King K Rool only
-const KROOL_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc04290; //King K Rool only
-const KROOL_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xc04c20; //King K Rool only
-
 //King K Rool Reset Initialization
-#[skyline::hook(offset = KROOL_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KROOL, 4, false, false))]
 unsafe extern "C" fn krool_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -14,7 +10,7 @@ unsafe extern "C" fn krool_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //King K Rool Death Initialization
-#[skyline::hook(offset = KROOL_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KROOL, 7, false, false))]
 unsafe extern "C" fn krool_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -23,7 +19,7 @@ unsafe extern "C" fn krool_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //King K Rool OPFF
-#[skyline::hook(offset = KROOL_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_KROOL, 13, false, false))]
 unsafe extern "C" fn krool_opff(vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let special_lw_fuel = WorkModule::get_float(boma, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLOAT_SPECIAL_LW_FUEL);
@@ -42,7 +38,7 @@ unsafe extern "C" fn krool_opff(vtable: u64, fighter: &mut Fighter) {
     original!()(vtable, fighter)
 }
 
-unsafe extern "C" fn krool_ironball_on_despawn_event(_vtable: u64, weapon: *mut smash::app::Weapon) {
+unsafe extern "C" fn krool_ironball_on_despawn(_vtable: u64, weapon: *mut smash::app::Weapon) {
     let boma = (*weapon).battle_object.module_accessor;
     let agent = get_weapon_common_from_accessor(&mut *boma);
     let owner_boma = get_owner_boma(agent);
@@ -123,9 +119,9 @@ unsafe extern "C" fn krool_ironball_on_search_event(_vtable: u64, weapon: &mut s
 
 pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_KROOL_IRONBALL, ModuleInitModules::SearchModule);
-    let _ = skyline::patching::Patch::in_text(0x51da808).data(krool_ironball_on_despawn_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x51da8a8).data(krool_ironball_on_attack_event as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x51da8d8).data(krool_ironball_on_search_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_KROOL_IRONBALL, 9, true, true)).data(krool_ironball_on_despawn as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_KROOL_IRONBALL, 29, true, true)).data(krool_ironball_on_attack_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_KROOL_IRONBALL, 35, true, true)).data(krool_ironball_on_search_event as *const () as u64);
 	skyline::install_hooks!(
         krool_reset_initialization,
         krool_death_initialization,

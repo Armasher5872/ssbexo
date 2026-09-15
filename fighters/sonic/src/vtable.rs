@@ -1,11 +1,5 @@
 use super::*;
 
-const SONIC_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x11d5820; //Sonic only
-const SONIC_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x11d7b20; //Sonic only
-const SONIC_VTABLE_ON_ATTACK_OFFSET: usize = 0x11d5a00; //Sonic only
-const SONIC_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0x11d63d0; //Sonic only
-const SONIC_VTABLE_ON_DAMAGE_OFFSET: usize = 0x11d7910; //Sonic only
-
 //Sonic Reset Initialization
 unsafe extern "C" fn sonic_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -14,7 +8,7 @@ unsafe extern "C" fn sonic_reset_initialization(_vtable: u64, fighter: &mut Figh
 }
 
 //Sonic Death Initialization
-#[skyline::hook(offset = SONIC_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SONIC, 7, false, false))]
 unsafe extern "C" fn sonic_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -23,7 +17,7 @@ unsafe extern "C" fn sonic_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Sonic OPFF
-#[skyline::hook(offset = SONIC_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SONIC, 13, false, false))]
 unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);
@@ -142,7 +136,7 @@ unsafe extern "C" fn sonic_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Sonic On Attack
-#[skyline::hook(offset = SONIC_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SONIC, 36, false, false))]
 unsafe extern "C" fn sonic_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let current_frame = MotionModule::frame(boma);
@@ -164,7 +158,7 @@ unsafe extern "C" fn sonic_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
             }
         }
         if status_kind == *FIGHTER_SONIC_STATUS_KIND_SPECIAL_S_RUSH {
-            if LAST_ATTACK_HITBOX_ID == 0 || LAST_ATTACK_HITBOX_ID == 1 {
+            if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID) == 0 || WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID) == 1 {
                 if current_frame >= 25.0 {
                     if !WorkModule::is_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT) {
                         WorkModule::on_flag(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLAG_SPECIAL_S_HIT);
@@ -177,7 +171,7 @@ unsafe extern "C" fn sonic_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
 }
 
 //Sonic On Search
-#[skyline::hook(offset = SONIC_VTABLE_ON_SEARCH_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SONIC, 48, false, false))]
 unsafe extern "C" fn sonic_on_search(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = *(log as *const u64).add(0x10/0x8);
@@ -212,7 +206,7 @@ unsafe extern "C" fn sonic_on_search(vtable: u64, fighter: &mut Fighter, log: u6
 
 
 //Sonic On Damage
-#[skyline::hook(offset = SONIC_VTABLE_ON_DAMAGE_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_SONIC, 68, false, false))]
 unsafe extern "C" fn sonic_on_damage(_vtable: u64, fighter: &mut Fighter, on_damage: u64) {
     let boma = fighter.battle_object.module_accessor;
     let boost_value = WorkModule::get_float(boma, *FIGHTER_SONIC_INSTANCE_WORK_ID_FLOAT_BOOST_VALUE);
@@ -229,7 +223,7 @@ unsafe extern "C" fn sonic_on_damage(_vtable: u64, fighter: &mut Fighter, on_dam
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x5045570).data(sonic_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_SONIC, 4, false, true)).data(sonic_reset_initialization as *const () as u64);
     skyline::install_hooks!(
         sonic_death_initialization,
         sonic_opff,

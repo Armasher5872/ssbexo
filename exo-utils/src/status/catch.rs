@@ -38,10 +38,10 @@ pub unsafe extern "C" fn handle_mash(fighter: &mut L2CFighterCommon) {
         let pos = *PostureModule::pos(boma);
         let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
         let clatter_time = ControlModule::get_clatter_time(capture_boma, 0);
-        ControlModule::set_clatter_time(capture_boma, clatter_time-1.0, 0);
         if clatter_time <= 0.0 {
             PostureModule::set_pos(capture_boma, &Vector3f{x: pos.x, y: pos.y, z: pos.z});
-            fighter.change_status(FIGHTER_STATUS_KIND_CATCH_CUT.into(), false.into());
+            CaptureModule::capture_cut(boma, false, false, false);
+            fighter.change_status(FIGHTER_STATUS_KIND_CAPTURE_CUT.into(), false.into());
         }
     }
 }

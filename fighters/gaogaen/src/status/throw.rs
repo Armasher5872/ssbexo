@@ -80,7 +80,6 @@ unsafe extern "C" fn gaogaen_throw_uniq(fighter: &mut L2CFighterCommon) -> L2CVa
 unsafe extern "C" fn gaogaen_throw_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
-    let special_zoom_gfx = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     if CancelModule::is_enable_cancel(boma) {
         if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
             if fighter.sub_air_check_fall_common().get_bool() {
@@ -89,24 +88,10 @@ unsafe extern "C" fn gaogaen_throw_main_loop(fighter: &mut L2CFighterCommon) -> 
         }
     }
     if WorkModule::is_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM) {
-        WorkModule::set_int(boma, 1, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
+        let mut pos = Vector3f{x: 0.0, y: 0.0, z: 0.0};
+        ModelModule::joint_global_position(boma, Hash40::new("throw"), &mut pos, true);
+        FighterUtil::request_critical_hit_cut_in_force(boma, LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE) as u32, &Vector2f{x: pos.x, y: pos.y}, *FIGHTER_KIND_GAOGAEN, Hash40::new("param_special_lw"), *LINK_NO_NONE, true, 0, true);
         WorkModule::off_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
-    }
-    if special_zoom_gfx > 0 && special_zoom_gfx < 4 {
-        WorkModule::inc_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
-    }
-    if special_zoom_gfx == 2 {
-        SlowModule::set_whole(boma, 8, 80);
-        CAM_ZOOM_IN_arg5(fighter, /*frames*/ 2.0,/*no*/ 0.0,/*zoom*/ 1.8,/*yrot*/ 0.0,/*xrot*/ 0.0);
-        EffectModule::req_follow(boma, Hash40::new("sys_bg_criticalhit"), Hash40::new("top"), &Vector3f::zero(), &Vector3f::zero(), 1.0, false, 0, 0, 0, 0, 0, false, false);
-        PLAY_SE(fighter, Hash40::new("se_common_criticalhit"));
-        QUAKE(fighter, *CAMERA_QUAKE_KIND_XL);
-    }
-    if special_zoom_gfx >= 4 {
-        SlowModule::clear_whole(boma);
-        CameraModule::reset_all(boma);
-        EffectModule::kill_kind(boma, Hash40::new("sys_bg_criticalhit"), false, false);
-        CAM_ZOOM_OUT(fighter);
     }
     if situation_kind == *SITUATION_KIND_AIR {
         let is_catch = {fighter.clear_lua_stack(); lua_args!(fighter, *MA_MSC_CMD_CATCH_IS_CATCH); sv_module_access::_catch(fighter.lua_state_agent); fighter.pop_lua_stack(1).get_bool()};
@@ -127,7 +112,6 @@ unsafe extern "C" fn gaogaen_throw_main_loop(fighter: &mut L2CFighterCommon) -> 
 
 unsafe extern "C" fn gaogaen_throw_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_SPECIAL_ZOOM_GFX);
     WorkModule::off_flag(boma, *FIGHTER_GAOGAEN_INSTANCE_WORK_ID_FLAG_THROW_CRITICAL_ZOOM);
     0.into()
 }

@@ -11,7 +11,6 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_init_status(fighter: &mut L2CFi
     let prev_status_kind = fighter.global_table[PREV_STATUS_KIND].get_i32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
     let boma = fighter.module_accessor;
-    let capture_id = LinkModule::get_node_object_id(boma, *LINK_NO_CAPTURE);
     if situation_kind == *SITUATION_KIND_GROUND {
         GroundModule::correct(boma, GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP_ATTACK));
         KineticModule::change_kinetic(boma, *FIGHTER_KINETIC_TYPE_GROUND_STOP);
@@ -29,14 +28,6 @@ unsafe extern "C" fn luigi_special_lw_catch_pull_init_status(fighter: &mut L2CFi
         lua_args!(fighter, *MA_MSC_SET_IGNORE_CATCHING, true);
         sv_module_access::capture(fighter.lua_state_agent);
         fighter.pop_lua_stack(1);
-        if capture_id != 0x50000000 {
-            let capture_boma = sv_battle_object::module_accessor(capture_id as u32);
-            let shouldered_frame_add= WorkModule::get_param_float(capture_boma, hash40("common"), hash40("shouldered_frame_add"));
-            let damage = DamageModule::damage(capture_boma, 0);
-            let get_clatter_time = ControlModule::get_clatter_time(capture_boma, 0);
-            let total_time = damage+shouldered_frame_add+get_clatter_time;
-            ControlModule::start_clatter(capture_boma, total_time, 0.0, 10.0, 127, 0, false, false);
-        }
     }
     0.into()
 }

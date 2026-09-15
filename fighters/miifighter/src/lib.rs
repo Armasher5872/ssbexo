@@ -21,6 +21,7 @@ use {
         status::damage::*,
         structs::{
             collision_struct::*,
+            getter_funcs::*,
             vector::*,
         }
     },
@@ -37,7 +38,7 @@ use {
         hash40,
         lib::lua_const::*,
         lua2cpp::L2CFighterCommon,
-        phx::Vector3f
+        phx::*
     },
     smashline::*,
 };

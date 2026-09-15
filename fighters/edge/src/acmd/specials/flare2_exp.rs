@@ -5,7 +5,6 @@ unsafe extern "C" fn ssbexo_edge_shadow_flare_explode_acmd(agent: &mut L2CAgentB
     let lua_state = agent.lua_state_agent;
     let boma = agent.module_accessor;
     let owner_boma = get_owner_boma(agent);
-    println!("Owner Canceled: {}", WorkModule::is_flag(boma, *WEAPON_EDGE_FLARE2_INSTANCE_WORK_ID_FLAG_OWNER_CANCELED));
     if WorkModule::is_flag(boma, *WEAPON_EDGE_FLARE2_INSTANCE_WORK_ID_FLAG_OWNER_CANCELED) {
         if is_excute(agent) {
             ControlModule::set_rumble(boma, Hash40::new("rbkind_attackl"), 2, false, *BATTLE_OBJECT_ID_INVALID as u32);

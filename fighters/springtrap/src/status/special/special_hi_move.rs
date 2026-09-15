@@ -8,9 +8,10 @@ unsafe extern "C" fn springtrap_special_hi_move_pre_status(fighter: &mut L2CFigh
 }
 
 unsafe extern "C" fn springtrap_special_hi_move_init_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let rot_angle = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE) as f32;
-    let speed_x = (rot_angle+90.0).to_radians().sin()*12.0;
-    let speed_y = (rot_angle-90.0).to_radians().cos()*12.0;
+    let boma = fighter.module_accessor;
+    let rot_angle = WorkModule::get_int(boma, *FIGHTER_SPRINGTRAP_INSTANCE_WORK_ID_INT_SPECIAL_HI_ROT_ANGLE) as f32;
+    let speed_x = rot_angle.to_radians().cos()*12.0;
+    let speed_y = rot_angle.to_radians().sin()*12.0;
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 0.0);
     sv_kinetic_energy!(set_speed, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, speed_x, speed_y);
     sv_kinetic_energy!(set_brake, fighter, *FIGHTER_KINETIC_ENERGY_ID_STOP, 0.04, 0.04);

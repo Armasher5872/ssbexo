@@ -1,12 +1,22 @@
 use super::*;
 
 //Up Special Hold ACMD
-unsafe extern "C" fn ssbexo_link_special_hi_hold_acmd(_agent: &mut L2CAgentBase) {}
+unsafe extern "C" fn ssbexo_link_special_hi_hold_acmd(agent: &mut L2CAgentBase) {
+    FT_MOTION_RATE(agent, 65.0/80.0);
+}
 
 //Up Special Hold Effect
 unsafe extern "C" fn ssbexo_link_special_hi_hold_effect(agent: &mut L2CAgentBase) {
     let lua_state = agent.lua_state_agent;
-    frame(lua_state, 28.0);
+    frame(lua_state, 10.0);
+    if is_excute(agent) {
+        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+    }
+    frame(lua_state, 20.0);
+    if is_excute(agent) {
+        LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
+    }
+    frame(lua_state, 30.0);
     if is_excute(agent) {
         LANDING_EFFECT_FLIP(agent, Hash40::new("sys_whirlwind_l"), Hash40::new("sys_whirlwind_r"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.4, 0, 0, 0, 0, 0, 0, false, *EF_FLIP_NONE);
     }
@@ -42,7 +52,7 @@ unsafe extern "C" fn ssbexo_link_special_hi_hold_sound(agent: &mut L2CAgentBase)
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_special_h01"));
     }
-    frame(lua_state, 24.0);
+    frame(lua_state, 10.0);
     if is_excute(agent) {
         PLAY_SE(agent, Hash40::new("se_link_special_h03"));
     }

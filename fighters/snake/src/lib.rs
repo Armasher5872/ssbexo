@@ -1,12 +1,13 @@
 use {
-    exo_utils::common::{
-        status_end_control::*,
-        var_reset::*,
+    exo_utils::{
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        fighter::snake::*,
+        structs::getter_funcs::*,
     },
-    exo_var::{
-        globals::*,
-        snake::*,
-    },
+    exo_var::globals::*,
     smash::{
         app::{
             lua_bind::*,

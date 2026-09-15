@@ -1,11 +1,7 @@
 use super::*;
 
-const LINK_TOONLINK_YOUNGLINK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xc28280; //Shared
-const LINK_TOONLINK_YOUNGLINK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xc28860; //Shared
-const LINK_TOONLINK_YOUNGLINK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xc289e0; //Shared
-
 //Link & Toon Link & Young Link Reset Initialization
-#[skyline::hook(offset = LINK_TOONLINK_YOUNGLINK_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LINK, 4, false, false))]
 unsafe extern "C" fn link_toonlink_younglink_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
@@ -17,7 +13,7 @@ unsafe extern "C" fn link_toonlink_younglink_reset_initialization(vtable: u64, f
 }
 
 //Link & Toon Link & Young Link Death Initialization
-#[skyline::hook(offset = LINK_TOONLINK_YOUNGLINK_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LINK, 7, false, false))]
 unsafe extern "C" fn link_toonlink_younglink_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let kind = fighter.battle_object.kind as i32;
     let boma = fighter.battle_object.module_accessor;
@@ -31,7 +27,7 @@ unsafe extern "C" fn link_toonlink_younglink_death_initialization(vtable: u64, f
 }
 
 //Link & Toon Link & Young Link Once Per Fighter Frame
-#[skyline::hook(offset = LINK_TOONLINK_YOUNGLINK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LINK, 13, false, false))]
 unsafe extern "C" fn link_toonlink_younglink_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     if fighter.battle_object.kind == *FIGHTER_KIND_LINK as u32 {
         let boma = fighter.battle_object.module_accessor;
@@ -105,8 +101,8 @@ unsafe extern "C" fn link_boomerang_on_search_event(_vtable: u64, weapon: &mut s
 
 pub fn install() {
     weapon_initialise_module(*WEAPON_KIND_LINK_BOOMERANG, ModuleInitModules::SearchModule);
-    let _ = skyline::patching::Patch::in_text(0x51dcca8).data(link_swordbeam_on_attack_event as *const () as u64); //029
-    let _ = skyline::patching::Patch::in_text(0x51dbb08).data(link_boomerang_on_search_event as *const () as u64); //035
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_LINK_SWORD_BEAM, 29, true, true)).data(link_swordbeam_on_attack_event as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_LINK_BOOMERANG, 35, true, true)).data(link_boomerang_on_search_event as *const () as u64);
 	skyline::install_hooks!(
         link_toonlink_younglink_reset_initialization,
         link_toonlink_younglink_death_initialization,

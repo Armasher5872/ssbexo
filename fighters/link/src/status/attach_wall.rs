@@ -52,9 +52,8 @@ unsafe extern "C" fn link_attach_wall_sub_status(fighter: &mut L2CFighterCommon)
 
 unsafe extern "C" fn link_attach_wall_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
-    let lr = PostureModule::lr(boma);
+    let lr = -fighter.FL_get_wall_lr().get_f32();
     let attach_side = if 0.0 <= lr {*GROUND_TOUCH_FLAG_LEFT} else {*GROUND_TOUCH_FLAG_RIGHT};
-    let remove_attach = !GroundModule::is_attachable(boma, GroundTouchFlag(attach_side));
     let motion_kind = MotionModule::motion_kind(boma);
     let cliff_count = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_CLIFF_COUNT);
     let stamina = WorkModule::get_int(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA)-1;
@@ -62,13 +61,14 @@ unsafe extern "C" fn link_attach_wall_main_loop(fighter: &mut L2CFighterCommon) 
     let sweat_rate = 10.0;
 	let sweat_size = 0.35;
 	let modulo = stamina as f32 % sweat_rate;
-    if GroundModule::can_entry_cliff(boma) != 0 || fighter.sub_transition_group_check_air_cliff().get_bool() || remove_attach {
+    if GroundModule::can_entry_cliff(boma) != 0 || fighter.sub_transition_group_check_air_cliff().get_bool() {
         if cliff_count < cliff_max_count {
             WorkModule::on_flag(boma, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_CLIFF_CATCH_MOVE);
             fighter.change_status(FIGHTER_STATUS_KIND_CLIFF_CATCH_MOVE.into(), true.into());
             return 1.into();
         }
         else{
+            GroundModule::detach(boma, attach_side);
             WorkModule::set_int(boma, 300, *FIGHTER_LINK_INSTANCE_WORK_ID_INT_STAMINA);
         }
     }

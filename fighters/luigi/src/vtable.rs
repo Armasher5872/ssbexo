@@ -1,11 +1,5 @@
 use super::*;
 
-const LUIGI_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xca0cf0; //Luigi only
-const LUIGI_VTABLE_ON_ATTACK_OFFSET: usize = 0xca13a0; //Luigi only
-const LUIGI_VTABLE_LINK_EVENT_OFFSET: usize = 0xca0e70; //Luigi only
-const LUIGI_VTABLE_ON_SEARCH_EVENT_OFFSET: usize = 0xca2960; //Luigi only
-const LUIGI_VTABLE_CHANGE_MOTION_CALLBACK_OFFSET: usize = 0xca1510; //Luigi only
-
 //Luigi Reset Initialization
 unsafe extern "C" fn luigi_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -14,7 +8,7 @@ unsafe extern "C" fn luigi_reset_initialization(_vtable: u64, fighter: &mut Figh
 }
 
 //Luigi Death Initialization
-#[skyline::hook(offset = LUIGI_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LUIGI, 7, false, false))]
 unsafe extern "C" fn luigi_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -23,7 +17,7 @@ unsafe extern "C" fn luigi_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Luigi On Attack
-#[skyline::hook(offset = LUIGI_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LUIGI, 36, false, false))]
 unsafe extern "C" fn luigi_on_attack(_vtable: u64, fighter: &mut Fighter, log: u64) {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
@@ -33,7 +27,7 @@ unsafe extern "C" fn luigi_on_attack(_vtable: u64, fighter: &mut Fighter, log: u
 }
 
 //Luigi Link Event
-#[skyline::hook(offset = LUIGI_VTABLE_LINK_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LUIGI, 46, false, false))]
 unsafe extern "C" fn luigi_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status_kind = StatusModule::status_kind(boma);
@@ -60,7 +54,7 @@ unsafe extern "C" fn luigi_link_event(vtable: u64, fighter: &mut Fighter, event:
 }
 
 //Luigi On Search
-#[skyline::hook(offset = LUIGI_VTABLE_ON_SEARCH_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LUIGI, 48, false, false))]
 unsafe extern "C" fn luigi_on_search(_vtable: u64, fighter: &mut Fighter, log: u64) {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = *(log as *const u64).add(0x10/0x8);
@@ -79,7 +73,7 @@ unsafe extern "C" fn luigi_on_search(_vtable: u64, fighter: &mut Fighter, log: u
 }
 
 //Fixes issues regarding Grab
-#[skyline::hook(offset = LUIGI_VTABLE_CHANGE_MOTION_CALLBACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_LUIGI, 59, false, false))]
 unsafe extern "C" fn luigi_change_motion_callback(_vtable: u64, _fighter: &mut Fighter, _some_struct: u64) {}
 
 //Luigi Fireball On Attack Offset
@@ -101,8 +95,8 @@ unsafe extern "C" fn luigi_fireball_on_attack(vtable: u64, weapon: *mut smash::a
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fe1158).data(luigi_reset_initialization as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x51e1898).data(luigi_fireball_on_attack as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_LUIGI, 4, false, true)).data(luigi_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*WEAPON_KIND_LUIGI_FIREBALL, 29, true, true)).data(luigi_fireball_on_attack as *const () as u64);
 	skyline::install_hooks!(
         luigi_death_initialization,
         luigi_on_attack,

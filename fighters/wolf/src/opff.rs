@@ -13,10 +13,12 @@ unsafe extern "C" fn wolf_end_control(fighter: &mut L2CFighterCommon) -> L2CValu
 
 unsafe extern "C" fn wolf_on_start(fighter: &mut L2CFighterCommon) {
     let boma = fighter.module_accessor;
+    let instruction = 0x7100001Fu32 | ((*FIGHTER_WOLF_STATUS_KIND_SPECIAL_S_RUSH as u32 & 0xFFF) << 10);
     common_initialization_variable_reset(&mut *boma);
     fighter.global_table[CHECK_SPECIAL_S_UNIQ].assign(&L2CValue::Ptr(should_use_special_s_callback as *const () as _));
     fighter.global_table[CHECK_SPECIAL_HI_UNIQ].assign(&L2CValue::Ptr(should_use_special_hi_callback as *const () as _));
     fighter.global_table[STATUS_END_CONTROL].assign(&L2CValue::Ptr(wolf_end_control as *const () as _));
+    let _ = skyline::patching::Patch::in_text(0x12c29c0).data(instruction);
 }
 
 pub fn install() {

@@ -28,6 +28,7 @@ use {
 
 mod appeal;
 mod dash;
+mod run_brake;
 mod run;
 mod turndash;
 mod wait;
@@ -35,6 +36,7 @@ mod wait;
 pub fn install() {
     appeal::install();
     dash::install();
+    run_brake::install();
     run::install();
     turndash::install();
     wait::install();

@@ -1,7 +1,7 @@
 #![allow(unused_assignments)] //Addresses value assigned to `ret` is never read
 use super::*;
 
-unsafe extern "C" fn link_attack_lw_4_hold_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_attack_lw4_hold_pre_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     let mut log_mask_flag = *FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_LW4 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_HAJIKI | *FIGHTER_STATUS_ATTR_ENABLE_ROCKETBELT_EJECT | *FIGHTER_STATUS_ATTR_INTO_DOOR;
     if 0 < WorkModule::get_int64(boma, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND) {
@@ -12,7 +12,7 @@ unsafe extern "C" fn link_attack_lw_4_hold_pre_status(fighter: &mut L2CFighterCo
     0.into()
 }
 
-unsafe extern "C" fn link_attack_lw_4_hold_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_attack_lw4_hold_main_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     let stick_x = fighter.global_table[STICK_X].get_f32()*PostureModule::lr(boma);
     let attack_4_hold_frame = WorkModule::get_param_float(boma, hash40("attack_4_hold_frame"), 0);
@@ -40,10 +40,10 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_status(fighter: &mut L2CFighterC
         fighter.sub_smash_hold_uniq(false.into());
     }
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_bind_address_call_sub_smash_hold_uniq as *const () as _));
-    fighter.sub_shift_status_main(L2CValue::Ptr(link_attack_lw_4_hold_main_loop as *const () as _))
+    fighter.sub_shift_status_main(L2CValue::Ptr(link_attack_lw4_hold_main_loop as *const () as _))
 }
 
-unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_attack_lw4_hold_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let is_stop = fighter.global_table[IS_STOP].get_bool();
     let current_frame = fighter.global_table[CURRENT_FRAME].get_f32();
     let situation_kind = fighter.global_table[SITUATION_KIND].get_i32();
@@ -128,7 +128,7 @@ unsafe extern "C" fn link_attack_lw_4_hold_main_loop(fighter: &mut L2CFighterCom
     ret.into()
 }
 
-unsafe extern "C" fn link_attack_lw_4_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn link_attack_lw4_hold_end_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = fighter.module_accessor;
     attack_4_hold(fighter);
     if WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_FULL_SMASH_ATTACK) {
@@ -140,9 +140,9 @@ unsafe extern "C" fn link_attack_lw_4_hold_end_status(fighter: &mut L2CFighterCo
 pub fn install() {
     Agent::new("link")
     .set_costume([0, 1, 2, 3, 4, 5, 6, 7].to_vec())
-    .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_pre_status)
-    .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_main_status)
-    .status(End, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw_4_hold_end_status)
+    .status(Pre, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw4_hold_pre_status)
+    .status(Main, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw4_hold_main_status)
+    .status(End, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, link_attack_lw4_hold_end_status)
     .install()
     ;
 }

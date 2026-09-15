@@ -1,12 +1,7 @@
 use super::*;
 
-const CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x8b7610; //Captain Falcon only
-const CAPTAIN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x8b7cf0; //Captain Falcon only
-const CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x8b7d20; //Captain Falcon only
-const CAPTAIN_VTABLE_ON_ATTACK_OFFSET: usize = 0x8b8b90; //Captain Falcon only
-
 //Captain Falcon Reset Initialization
-#[skyline::hook(offset = CAPTAIN_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CAPTAIN, 4, false, false))]
 unsafe extern "C" fn captain_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -15,7 +10,7 @@ unsafe extern "C" fn captain_reset_initialization(vtable: u64, fighter: &mut Fig
 }
 
 //Captain Falcon Death Initialization
-#[skyline::hook(offset = CAPTAIN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CAPTAIN, 7, false, false))]
 unsafe extern "C" fn captain_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -24,7 +19,7 @@ unsafe extern "C" fn captain_death_initialization(vtable: u64, fighter: &mut Fig
 }
 
 //Captain Falcon Once Per Fighter Frame
-#[skyline::hook(offset = CAPTAIN_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CAPTAIN, 13, false, false))]
 unsafe extern "C" fn captain_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if WorkModule::is_flag(boma, *FIGHTER_CAPTAIN_INSTANCE_WORK_ID_FLAG_SPECIAL_N_STORED) {
@@ -40,7 +35,7 @@ unsafe extern "C" fn captain_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Captain Falcon On Attack
-#[skyline::hook(offset = CAPTAIN_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_CAPTAIN, 36, false, false))]
 unsafe extern "C" fn captain_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let agent = get_fighter_common_from_accessor(&mut *boma);

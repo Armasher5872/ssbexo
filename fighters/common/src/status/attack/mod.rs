@@ -2,6 +2,7 @@ use {
     exo_utils::status::{
         attack_dash::*,
         attack_xx4::*,
+        attack::*,
     },
     exo_var::{
         consts::*,

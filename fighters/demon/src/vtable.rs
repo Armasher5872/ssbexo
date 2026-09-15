@@ -1,14 +1,7 @@
 use super::*;
 
-const DEMON_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x930ff0; //Kazuya only
-const DEMON_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x931680; //Kazuya only
-const DEMON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0x932a00; //Kazuya only
-const DEMON_VTABLE_ON_ATTACK_OFFSET: usize = 0x932f50; //Kazuya only
-//const DEMON_VTABLE_LINK_EVENT_OFFSET: usize = 0x933800; //Kazuya only
-const DEMON_VTABLE_ON_GRAB_OFFSET: usize = 0x934310; //Kazuya only
-
 //Kazuya Reset Initialization
-#[skyline::hook(offset = DEMON_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEMON, 4, false, false))]
 unsafe extern "C" fn demon_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -17,7 +10,7 @@ unsafe extern "C" fn demon_reset_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Kazuya Death Initialization
-#[skyline::hook(offset = DEMON_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEMON, 7, false, false))]
 unsafe extern "C" fn demon_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -26,7 +19,7 @@ unsafe extern "C" fn demon_death_initialization(vtable: u64, fighter: &mut Fight
 }
 
 //Kazuya Once Per Fighter Frame
-#[skyline::hook(offset = DEMON_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEMON, 13, false, false))]
 unsafe extern "C" fn demon_opff(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let battle_object_slow = singletons::BattleObjectSlow() as *mut u8;
@@ -55,12 +48,13 @@ unsafe extern "C" fn demon_opff(_vtable: u64, fighter: &mut Fighter) {
 }
 
 //Kazuya On Attack
-#[skyline::hook(offset = DEMON_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEMON, 36, false, false))]
 unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let frame = MotionModule::frame(boma);
     let motion_kind = MotionModule::motion_kind(boma);
     let status_kind = StatusModule::status_kind(boma);
+    let last_attack_hitbox_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID);
     let collision_log = log as *mut CollisionLogScuffed;
     let collision_kind = (*collision_log).collision_kind;
     let opponent_object_id = (*collision_log).opponent_object_id;
@@ -75,17 +69,15 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
                 let opponent_pos = *PostureModule::pos(opponent_boma);
                 let opponent_agent = get_fighter_common_from_accessor(&mut *opponent_boma);
                 let slip_check = [*FIGHTER_STATUS_KIND_SLIP, *FIGHTER_STATUS_KIND_SLIP_WAIT, *FIGHTER_STATUS_KIND_SLIP_DAMAGE, *FIGHTER_STATUS_KIND_SAVING_DAMAGE, *FIGHTER_STATUS_KIND_FIST_DOWN, *FIGHTER_STATUS_KIND_FIST_DOWN2, *FIGHTER_STATUS_KIND_FIST_DOWN3].contains(&opponent_status_kind);
-                println!("Last Attack Hitbox ID: {}", LAST_ATTACK_HITBOX_ID);
-                println!("Opponent Status Kind: {}", opponent_status_kind);
                 if status_kind == *FIGHTER_DEMON_STATUS_KIND_ESCAPE_ATTACK {
-                    if LAST_ATTACK_HITBOX_ID == 0 {
+                    if last_attack_hitbox_id == 0 {
                         if collision_kind == 1 {
                             if slip_check {
                                 MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_escapeattacktrip"), -1);
                             }
                         }
                     }
-                    if LAST_ATTACK_HITBOX_ID == 1 {
+                    if last_attack_hitbox_id == 1 {
                         if collision_kind == 1 {
                             let mut pos = Vector3f{x: opponent_pos.x, y: opponent_pos.y, z: opponent_pos.z};
                             let distance_to_floor = GroundModule::get_distance_to_floor(opponent_boma, &pos, 8.0, true);
@@ -107,7 +99,9 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
                 }
                 if status_kind == *FIGHTER_DEMON_STATUS_KIND_ATTACK_DASH_3 {
                     if opponent_situation_kind == *SITUATION_KIND_GROUND {
-                        MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_attackdash3hit"), -1);
+                        if collision_kind == 1 {
+                            MotionAnimcmdModule::call_script_single(boma, 0, Hash40::new("game_attackdash3hit"), -1);
+                        }
                     }
                 }
                 if [hash40("attack_stand_22"), hash40("attack_stand_23")].contains(&motion_kind) {
@@ -145,7 +139,7 @@ unsafe extern "C" fn demon_on_attack(vtable: u64, fighter: &mut Fighter, log: u6
 
 /*
 //Kazuya Link Event
-#[skyline::hook(offset = DEMON_VTABLE_LINK_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEMON, 46, false, false))]
 pub unsafe extern "C" fn demon_link_event(vtable: u64, fighter: &mut Fighter, log: *mut u64) -> u64 {
     let ret = original!()(vtable, fighter, log);
     let boma = fighter.battle_object.module_accessor;
@@ -204,14 +198,14 @@ unsafe extern "C" fn demon_on_search(_vtable: u64, fighter: &mut Fighter, log: u
 }
 
 //Kazuya On Grab
-#[skyline::hook(offset = DEMON_VTABLE_ON_GRAB_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DEMON, 138, false, false))]
 unsafe extern "C" fn demon_on_grab(_vtable: u64, _fighter: &mut Fighter, catch_status: i32) -> i32 {
     return catch_status
 }
 
 pub fn install() {
     let _ = skyline::patching::Patch::in_text(0x933454).nop(); //Removes the call_script_single that creates the EWGF Unblockable Windbox
-    let _ = skyline::patching::Patch::in_text(0x4fa2220).data(demon_on_search as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_DEMON, 48, false, true)).data(demon_on_search as *const () as u64);
     skyline::install_hooks!(
         demon_reset_initialization,
         demon_death_initialization,

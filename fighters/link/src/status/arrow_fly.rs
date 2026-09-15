@@ -87,8 +87,8 @@ unsafe extern "C" fn link_bowarrow_fly_init_status(weapon: &mut L2CWeaponCommon)
     let power = power_max-power_min;
     let power_charge = power*charge;
     let lerp_speed = weapon.lerp(speed_min.into(), speed_max.into(), charge.into());
-    let speed_x = (shot_angle+90.0).to_radians().sin()*lerp_speed.get_f32()*lr;
-    let speed_y = (shot_angle-90.0).to_radians().cos()*lerp_speed.get_f32();
+    let speed_x = shot_angle.to_radians().cos()*lerp_speed.get_f32()*lr;
+    let speed_y = shot_angle.to_radians().sin()*lerp_speed.get_f32();
     let x_speed_mod = ((80.0-shot_angle.abs())/60.0)*lr;
     let x_pos = (10.0-(0.105*shot_angle.abs()))*lr;
     let y_pos = 13.0+(0.09*shot_angle);

@@ -13,7 +13,7 @@ unsafe extern "C" fn mariod_drcapsule_regular_init_status(weapon: &mut L2CWeapon
     let lr = PostureModule::lr(boma);
     if pill_id == 1 /*Red*/ {
         let life = 60;
-        let speed_x = 2.4*lr;
+        let speed_x = 2.5*lr;
         let speed_y = 0.0;
         let gravity_accel = 0.0;
         let gravity_acl_max = 0.0;
@@ -27,8 +27,8 @@ unsafe extern "C" fn mariod_drcapsule_regular_init_status(weapon: &mut L2CWeapon
     else if pill_id == 2 /*Yellow*/ {
         let life = 55;
         let angle: f32 = 86.0;
-        let speed_x = angle.to_radians().sin()*0.4*lr;
-        let speed_y = angle.to_radians().cos()*4.8;
+        let speed_x = angle.to_radians().cos()*4.8*lr;
+        let speed_y = angle.to_radians().sin()*4.8;
         let gravity_accel = 0.2;
         let gravity_acl_max = 4.0;
         MotionModule::set_frame_material(boma, 8.0, MaterialAnimeKind{_address: 0});
@@ -41,8 +41,8 @@ unsafe extern "C" fn mariod_drcapsule_regular_init_status(weapon: &mut L2CWeapon
     else if pill_id == 3 /*Blue*/ {
         let life = 240;
         let angle: f32 = 72.0;
-        let speed_x = angle.to_radians().sin()*0.05*lr;
-        let speed_y = angle.to_radians().cos()*0.2;
+        let speed_x = angle.to_radians().cos()*0.05*lr;
+        let speed_y = angle.to_radians().sin()*0.2;
         let gravity_accel = 0.004;
         let gravity_acl_max = 0.5;
         MotionModule::set_frame_material(boma, 4.0, MaterialAnimeKind{_address: 0});
@@ -56,8 +56,8 @@ unsafe extern "C" fn mariod_drcapsule_regular_init_status(weapon: &mut L2CWeapon
         let life = WorkModule::get_param_int(boma, hash40("param_drcapsule"), hash40("life"));
         let speed = WorkModule::get_param_float(boma, hash40("param_drcapsule"), hash40("speed"));
         let angle: f32 = 45.0;
-        let speed_x = angle.to_radians().sin()*speed*lr;
-        let speed_y = angle.to_radians().cos()*speed;
+        let speed_x = angle.to_radians().cos()*speed*lr;
+        let speed_y = angle.to_radians().sin()*speed;
         let gravity_accel = WorkModule::get_param_float(boma, hash40("param_drcapsule"), hash40("gravity_accel"));
         let gravity_acl_max = WorkModule::get_param_float(boma, hash40("param_drcapsule"), hash40("gravity_acl_max"));
         WorkModule::set_int(boma, life, *WEAPON_INSTANCE_WORK_ID_INT_INIT_LIFE);

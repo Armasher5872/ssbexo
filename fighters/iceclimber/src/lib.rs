@@ -1,7 +1,10 @@
 use {
     exo_utils::{
         common::var_reset::*,
-        structs::ui_manager::*,
+        structs::{
+            getter_funcs::*,
+            ui_manager::*,
+        }
     },
     smash::{
         app::{
@@ -12,12 +15,8 @@ use {
     }
 };
 
-const ICECLIMBER_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xfb6a50; //Shared
-const ICECLIMBER_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xfb6c40; //Shared
-const ICECLIMBER_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xfb5a10; //Shared
-
 //Popo & Nana Reset Initialization
-#[skyline::hook(offset = ICECLIMBER_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_POPO, 4, false, false))]
 unsafe extern "C" fn iceclimber_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
@@ -27,7 +26,7 @@ unsafe extern "C" fn iceclimber_reset_initialization(vtable: u64, fighter: &mut 
 }
 
 //Popo & Nana Death Initialization
-#[skyline::hook(offset = ICECLIMBER_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_POPO, 7, false, false))]
 unsafe extern "C" fn iceclimber_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: i32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;
@@ -37,7 +36,7 @@ unsafe extern "C" fn iceclimber_death_initialization(vtable: u64, fighter: &mut 
 }
 
 //Popo & Nana Once Per Fighter Frame
-#[skyline::hook(offset = ICECLIMBER_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_POPO, 13, false, false))]
 unsafe extern "C" fn iceclimber_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as u32;

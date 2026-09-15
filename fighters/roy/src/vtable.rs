@@ -22,6 +22,6 @@ unsafe extern "C" fn roy_chrom_death_initialization(_vtable: u64, fighter: &mut 
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x5030f78).data(roy_chrom_reset_initialization as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x5030f90).data(roy_chrom_death_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_ROY, 4, false, true)).data(roy_chrom_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_ROY, 7, false, true)).data(roy_chrom_death_initialization as *const () as u64);
 }

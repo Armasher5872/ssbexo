@@ -1,10 +1,7 @@
 use super::*;
 
-const ROCKMAN_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x107db60; //Mega-Man only
-const ROCKMAN_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x107e890; //Mega-Man only
-
 //Megaman Reset Initialization
-#[skyline::hook(offset = ROCKMAN_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ROCKMAN, 4, false, false))]
 unsafe extern "C" fn rockman_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn rockman_reset_initialization(vtable: u64, fighter: &mut Fig
 }
 
 //Mega-Man Death Initialization
-#[skyline::hook(offset = ROCKMAN_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_ROCKMAN, 7, false, false))]
 unsafe extern "C" fn rockman_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

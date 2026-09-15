@@ -1,7 +1,5 @@
 use super::*;
 
-const PFUSHIGISOU_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xea03e0; //Ivysaur only
-
 //Ivysaur Reset Initialization
 unsafe extern "C" fn pfushigisou_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -9,7 +7,7 @@ unsafe extern "C" fn pfushigisou_reset_initialization(_vtable: u64, fighter: &mu
 }
 
 //Ivysaur Death Initialization
-#[skyline::hook(offset = PFUSHIGISOU_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PFUSHIGISOU, 7, false, false))]
 unsafe extern "C" fn pfushigisou_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -17,6 +15,6 @@ unsafe extern "C" fn pfushigisou_death_initialization(vtable: u64, fighter: &mut
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x500ace8).data(pfushigisou_reset_initialization as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_PFUSHIGISOU, 4, false, true)).data(pfushigisou_reset_initialization as *const () as u64);
     skyline::install_hook!(pfushigisou_death_initialization);
 }

@@ -1,10 +1,6 @@
 //Certain hooks are accredited to HDR and WuBor Patch
 use super::*;
 
-const JACK_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xb2fd70; //Joker only
-const JACK_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xb303a0; //Joker only
-const JACK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET: usize = 0xb31350; //Joker only
-const JACK_VTABLE_ON_ATTACK_OFFSET: usize = 0xb33d30; //Joker only
 const JACK_CUSTOMIZER_OFFSET: usize = 0xb2f820; //Joker only
 const JACK_FIGHTERSPECIALIZER_CHECK_DOYLE_SUMMON_DISPATCH_OFFSET: usize = 0xb30954; //Joker only
 
@@ -12,7 +8,7 @@ const JACK_FIGHTERSPECIALIZER_CHECK_DOYLE_SUMMON_DISPATCH_OFFSET: usize = 0xb309
 extern "C" fn jack_customizer(boma: *mut BattleObjectModuleAccessor, customize_to: u32);
 
 //Joker Reset Initialization
-#[skyline::hook(offset = JACK_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_JACK, 4, false, false))]
 unsafe extern "C" fn jack_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -20,7 +16,7 @@ unsafe extern "C" fn jack_reset_initialization(vtable: u64, fighter: &mut Fighte
 }
 
 //Joker Death Initialization
-#[skyline::hook(offset = JACK_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_JACK, 7, false, false))]
 unsafe extern "C" fn jack_death_initialization(vtable: u64, fighter: &mut Fighter, param_3: i32) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -28,7 +24,7 @@ unsafe extern "C" fn jack_death_initialization(vtable: u64, fighter: &mut Fighte
 }
 
 //Joker Once Per Fighter Frame
-#[skyline::hook(offset = JACK_VTABLE_ONCE_PER_FIGHTER_FRAME_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_JACK, 13, false, false))]
 unsafe extern "C" fn jack_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let rebel_gauge = WorkModule::get_float(boma, 0x4D);
@@ -39,7 +35,7 @@ unsafe extern "C" fn jack_opff(vtable: u64, fighter: &mut Fighter) -> u64 {
 }
 
 //Joker On Attack
-#[skyline::hook(offset = JACK_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_JACK, 36, false, false))]
 unsafe extern "C" fn jack_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);

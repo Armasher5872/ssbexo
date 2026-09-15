@@ -58,30 +58,23 @@ pub unsafe extern "C" fn springtrap_axe_var(boma: *mut BattleObjectModuleAccesso
 }
 
 pub unsafe extern "C" fn springtrap_phantom_var(boma: *mut BattleObjectModuleAccessor) {
+    WorkModule::off_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_WAS_INIT_SPAWN);
     WorkModule::on_flag(boma, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLAG_CAN_EXPLODE);
     WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_OWNER_INIT_LR);
     WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_X);
     WorkModule::set_float(boma, 0.0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_FLOAT_BB_SPEED_Y);
     WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_PHANTOM_TYPE);
+    WorkModule::set_int(boma, 0, *WEAPON_SPRINGTRAP_PHANTOM_INSTANCE_WORK_ID_INT_HIT_COUNT);
 }
 
 pub unsafe extern "C" fn determine_launch_angle(boma: *mut BattleObjectModuleAccessor, is_weapon: bool) -> f32 {
     let module_accessor = if is_weapon {get_owner_boma(&mut *get_weapon_common_from_accessor(&mut *boma))} else {boma};
     let agent = if is_weapon {get_fighter_common_from_accessor(&mut *module_accessor)} else {get_fighter_common_from_accessor(&mut *module_accessor)};
-    let lr = PostureModule::lr(module_accessor);
     let stick_x = agent.global_table[STICK_X].get_f32();
     let stick_y = agent.global_table[STICK_Y].get_f32();
-    let mut stick = agent.Vector2__create(stick_x.into(), stick_y.into());
-    if stick["x"].get_f32().abs()+stick["y"].get_f32().abs() < 0.5 {
-        stick["x"].assign(&L2CValue::F32(1.0));
-        stick["y"].assign(&L2CValue::F32(0.0));
-    }
-    let normalize = agent.Vector2__normalize(stick);
-    let vec_stick_x = normalize["x"].get_f32()*lr;
-    let vec_stick_y = normalize["y"].get_f32();
-    let stick_angle = vec_stick_y.atan2(vec_stick_x);
-    let stick_degrees = if stick_angle.to_degrees() == 180.0 {0.0} else {stick_angle.to_degrees().clamp(30.0, 70.0)};
-    stick_degrees
+    let deadzone_check = stick_x.abs()+stick_y.abs() < 0.5;
+    let degrees = if deadzone_check {30.0} else {ControlModule::get_stick_angle(boma).to_degrees()};
+    degrees.clamp(30.0, 70.0)
 }
 
 pub unsafe extern "C" fn should_remove_axe(weapon: &mut L2CWeaponCommon) -> bool {

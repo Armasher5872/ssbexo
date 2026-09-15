@@ -1,12 +1,18 @@
 use {
-    exo_utils::common::{
-        status_end_control::*,
-        var_reset::*,
+    exo_utils::{
+        common::{
+            status_end_control::*,
+            var_reset::*,
+        },
+        structs::getter_funcs::*,
     },
     exo_var::globals::*,
     smash::{
         app::Fighter,
-        lib::L2CValue,
+        lib::{
+            L2CValue,
+            lua_const::*,
+        },
         lua2cpp::*,
     },
     smashline::*,

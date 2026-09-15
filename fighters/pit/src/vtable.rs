@@ -1,10 +1,7 @@
 use super::*;
 
-const PIT_PITB_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0xf6d1c0; //Shared
-const PIT_PITB_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xf6e050; //Shared
-
 //Pit & Dark Pit Reset Initialization
-#[skyline::hook(offset = PIT_PITB_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PIT, 4, false, false))]
 unsafe extern "C" fn pit_pitb_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -12,7 +9,7 @@ unsafe extern "C" fn pit_pitb_reset_initialization(vtable: u64, fighter: &mut Fi
 }
 
 //Pit & Dark Pit Death Initialization
-#[skyline::hook(offset = PIT_PITB_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_PIT, 7, false, false))]
 unsafe extern "C" fn pit_pitb_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);

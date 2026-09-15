@@ -160,6 +160,11 @@ unsafe extern "C" fn ssbexo_edge_grounded_retaliation_stance_attack_sound(agent:
             PLAY_SE(agent, Hash40::new("se_edge_final01_02"));
         }
     }
+    else if charge >= 1 {
+        if is_excute(agent) {
+            PLAY_SE(agent, Hash40::new("se_edge_attackair_b02"));
+        }
+    }
     else {
         if rand > 0.857 {
             if is_excute(agent) {

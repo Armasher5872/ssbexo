@@ -9,10 +9,10 @@ use {
     smashline::*,
 };
 
-mod guard_off;
+//mod guard_off;
 mod wait;
 
 pub fn install() {
-    guard_off::install();
+    //guard_off::install();
     wait::install();
 }

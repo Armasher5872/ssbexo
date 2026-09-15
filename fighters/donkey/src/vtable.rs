@@ -1,11 +1,7 @@
 use super::*;
 
-const DONKEY_VTABLE_RESET_INITIALIZATION_OFFSET: usize = 0x993ae0; //Donkey Kong only
-const DONKEY_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0x993b40; //Donkey Kong only
-const DONKEY_VTABLE_LINK_EVENT_OFFSET: usize = 0x993ee0; //Donkey Kong only
-
 //Donkey Kong Reset Initialization
-#[skyline::hook(offset = DONKEY_VTABLE_RESET_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DONKEY, 4, false, false))]
 unsafe extern "C" fn donkey_reset_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_reset_variable_reset(&mut *boma);
@@ -14,7 +10,7 @@ unsafe extern "C" fn donkey_reset_initialization(vtable: u64, fighter: &mut Figh
 }
 
 //Donkey Kong Death Initialization
-#[skyline::hook(offset = DONKEY_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DONKEY, 7, false, false))]
 unsafe extern "C" fn donkey_death_initialization(vtable: u64, fighter: &mut Fighter) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     common_death_variable_reset(&mut *boma);
@@ -50,7 +46,7 @@ unsafe extern "C" fn donkey_opff(_vtable: u64, fighter: &mut Fighter) {
 }
 
 //Donkey Kong Link Event
-#[skyline::hook(offset = DONKEY_VTABLE_LINK_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_DONKEY, 46, false, false))]
 unsafe extern "C" fn donkey_link_event(vtable: u64, fighter: &mut Fighter, event: &mut smash2::app::LinkEvent) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     if event.link_event_kind.0 == hash40("capture") {
@@ -97,8 +93,8 @@ unsafe extern "C" fn donkey_on_search(_vtable: u64, fighter: &mut Fighter, log: 
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fa8ce8).data(donkey_opff as *const () as u64);
-    let _ = skyline::patching::Patch::in_text(0x4fa8e00).data(donkey_on_search as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_DONKEY, 13, false, true)).data(donkey_opff as *const () as u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_DONKEY, 68, false, true)).data(donkey_on_search as *const () as u64);
 	skyline::install_hooks!(
         donkey_reset_initialization,
         donkey_death_initialization,

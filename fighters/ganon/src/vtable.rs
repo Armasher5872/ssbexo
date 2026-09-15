@@ -1,11 +1,6 @@
 //Credited to WuBoyTH
 use super::*;
 
-const GANON_ARMSTRONG_SPRINGTRAP_VTABLE_DEATH_INITIALIZATION_OFFSET: usize = 0xaa6520; //Ganondorf only
-const GANON_ARMSTRONG_SPRINGTRAP_VTABLE_ON_ATTACK_OFFSET: usize = 0xaa6540; //Ganondorf only
-const GANON_ARMSTRONG_SPRINGTRAP_VTABLE_STATUS_TRANSITION_OFFSET: usize = 0xaa6800; //Ganondorf only
-const GANON_ARMSTRONG_SPRINGTRAP_VTABLE_LINK_EVENT_OFFSET: usize = 0xaa6990; //Armstrong only
-
 //Ganondorf & Armstrong & Springtrap Reset Initialization
 unsafe extern "C" fn ganon_armstrong_springtrap_reset_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
@@ -22,7 +17,7 @@ unsafe extern "C" fn ganon_armstrong_springtrap_reset_initialization(_vtable: u6
 }
 
 //Ganondorf & Armstrong & Springtrap Death Initialization
-#[skyline::hook(offset = GANON_ARMSTRONG_SPRINGTRAP_VTABLE_DEATH_INITIALIZATION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GANON, 7, false, false))]
 unsafe extern "C" fn ganon_armstrong_springtrap_death_initialization(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     if is_armstrong_slots(boma) {
@@ -48,7 +43,7 @@ unsafe extern "C" fn ganon_armstrong_springtrap_opff(_vtable: u64, fighter: &mut
 }
 
 //Ganondorf & Armstrong & Springtrap On Attack
-#[skyline::hook(offset = GANON_ARMSTRONG_SPRINGTRAP_VTABLE_ON_ATTACK_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GANON, 36, false, false))]
 unsafe extern "C" fn ganon_armstrong_springtrap_on_attack(vtable: u64, fighter: &mut Fighter, log: u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let collision_log = log as *mut CollisionLogScuffed;
@@ -117,7 +112,7 @@ unsafe extern "C" fn ganon_armstrong_springtrap_on_attack(vtable: u64, fighter: 
 }
 
 //Ganondorf & Armstrong & Springtrap Status Transition
-#[skyline::hook(offset = GANON_ARMSTRONG_SPRINGTRAP_VTABLE_STATUS_TRANSITION_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GANON, 43, false, false))]
 unsafe extern "C" fn ganon_armstrong_springtrap_status_transition(_vtable: u64, fighter: &mut Fighter) {
     let boma = fighter.battle_object.module_accessor;
     let prev_status = StatusModule::prev_status_kind(boma, 0) as u64;
@@ -188,7 +183,7 @@ unsafe extern "C" fn ganon_armstrong_springtrap_status_transition(_vtable: u64, 
 }
 
 //Ganondorf & Armstrong & Springtrap Link Event
-#[skyline::hook(offset = GANON_ARMSTRONG_SPRINGTRAP_VTABLE_LINK_EVENT_OFFSET)]
+#[skyline::hook(offset = get_agent_virtual_function(*FIGHTER_KIND_GANON, 46, false, false))]
 unsafe extern "C" fn ganon_armstrong_springtrap_link_event(_vtable: u64, fighter: &mut Fighter, log: *mut u64) -> u64 {
     let boma = fighter.battle_object.module_accessor;
     let status = StatusModule::status_kind(boma);
@@ -369,11 +364,11 @@ unsafe extern "C" fn ganon_armstrong_springtrap_on_damage(_vtable: u64, fighter:
 }
 
 pub fn install() {
-    let _ = skyline::patching::Patch::in_text(0x4fbb308).data(ganon_armstrong_springtrap_reset_initialization as *const () as *const u64);
-    let _ = skyline::patching::Patch::in_text(0x4fbb350).data(ganon_armstrong_springtrap_opff as *const () as *const u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_GANON, 4, false, true)).data(ganon_armstrong_springtrap_reset_initialization as *const () as *const u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_GANON, 13, false, true)).data(ganon_armstrong_springtrap_opff as *const () as *const u64);
     let _ = skyline::patching::Patch::in_text(0xaa6618).nop(); //Nops the original location where Neutral Special inflicts critical zoom, as I want both Ganon and Armstrong to have different places where they inflict critical zoom
-    let _ = skyline::patching::Patch::in_text(0x4fbb468).data(ganon_armstrong_springtrap_on_search as *const () as *const u64);
-    let _ = skyline::patching::Patch::in_text(0x4fbb508).data(ganon_armstrong_springtrap_on_damage as *const () as *const u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_GANON, 48, false, true)).data(ganon_armstrong_springtrap_on_search as *const () as *const u64);
+    let _ = skyline::patching::Patch::in_text(get_agent_virtual_function(*FIGHTER_KIND_GANON, 68, false, true)).data(ganon_armstrong_springtrap_on_damage as *const () as *const u64);
 	skyline::install_hooks!(
         ganon_armstrong_springtrap_death_initialization,
         ganon_armstrong_springtrap_on_attack,

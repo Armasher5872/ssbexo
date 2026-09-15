@@ -8,6 +8,10 @@ unsafe extern "C" fn ssbexo_link_special_hi_glide_drop_acmd(agent: &mut L2CAgent
     if is_excute(agent) {
         ArticleModule::remove_exist(boma, *FIGHTER_LINK_GENERATE_ARTICLE_PARASAIL, ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL));
     }
+    frame(lua_state, 12.0);
+    if is_excute(agent) {
+        WorkModule::off_flag(boma, *FIGHTER_LINK_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_NO_DELAY_LAND);
+    }
 }
 
 //Up Special Glide Drop Sound

@@ -9,9 +9,31 @@ unsafe extern "C" fn status_pre_landing_attack_air(fighter: &mut L2CFighterCommo
     0.into()
 }
 
+//ECB related fixes
+#[skyline::hook(replace = L2CFighterCommon_status_LandingAttackAirSub)]
+unsafe extern "C" fn status_landing_attack_air_sub(fighter: &mut L2CFighterCommon) {
+    let boma = fighter.module_accessor;
+    if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_HAMMER) {
+        if !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GENESISSET) {
+            if ItemModule::get_have_item_kind(boma, 0) == *ITEM_KIND_ASSIST {
+                return;
+            }
+            if !StopModule::is_stop(boma) {
+                fighter.sub_landing_uniq_check_attack_air();
+            }
+            fighter.global_table[PREV_SUB_STATUS].assign(&L2CValue::Ptr(L2CFighterCommon_bind_address_call_sub_landing_uniq_check_attack_air as *const () as _));
+        }
+    }
+    GroundModule::set_offset_y(boma, 0.0);
+    GroundModule::set_rhombus_offset(boma, &Vector2f{x: 0.0, y: 0.0});
+}
+
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
-        skyline::install_hook!(status_pre_landing_attack_air);
+        skyline::install_hooks!(
+            status_pre_landing_attack_air,
+            status_landing_attack_air_sub
+        );
     }
 }
 

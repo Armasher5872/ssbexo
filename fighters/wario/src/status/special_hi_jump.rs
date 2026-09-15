@@ -10,7 +10,7 @@ unsafe extern "C" fn wario_special_hi_jump_check_attack_status(fighter: &mut L2C
     if category == *BATTLE_OBJECT_CATEGORY_FIGHTER {
         if collision_kind == *COLLISION_KIND_HIT {
             if current_frame >= 24.0 {
-                if LAST_ATTACK_HITBOX_ID != 0 {
+                if WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_LAST_ATTACK_HITBOX_ID) != 0 {
                     let coin_sfx = SoundModule::play_se(boma, Hash40::new("se_common_coin"), true, false, false, false, smash::app::enSEType(0));
                     SoundModule::set_se_vol(boma, coin_sfx as i32, 4.0, 0);
                 }
